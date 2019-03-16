@@ -1,0 +1,151 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSet
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using Nest;
+@using Newtonsoft.Json.Schema;
+
+@{
+    var reg = Model.Registration();
+
+    ViewBag.Title = "Datový zdroj " + Model.Registration().name;
+    ViewBag.SubTitle = "Testování dat";
+
+    string jsonData = ViewBag.jsondata ?? "";
+
+    bool valid = true;
+    string result = "";
+    if (string.IsNullOrEmpty(jsonData))
+    {
+        result = "Nedostali jsme žádná data k otestování.";
+        valid = false;
+    }
+    IList<string> errors = new List<string>();
+    if (Model.Registration().jsonSchema != null && !string.IsNullOrEmpty(jsonData))
+    {
+        Newtonsoft.Json.Schema.JSchema schema = Model.Registration().jsonSchema;
+        Newtonsoft.Json.Linq.JObject obj = null;
+        try
+        {
+            obj = Newtonsoft.Json.Linq.JObject.Parse(jsonData);
+        }
+        catch (Newtonsoft.Json.JsonReaderException e)
+        {
+            errors.Add($"Zaslaná data nejsou v JSON formátu. Popis chyby: {e.Message}. line {e.LineNumber}, position {e.LinePosition}.");
+            valid = false;
+        }
+        catch (Exception e)
+        {
+            HlidacStatu.Util.Consts.Logger.Error("datasetTextJson", e);
+            errors.Add($"Zaslaná data způsobila nečekanou chybu. Koukneme se na to. {e.Message}.");
+            valid = false;
+        }
+
+        if (obj != null)
+        {
+            if (!obj.IsValid(schema, out errors))
+            {
+                valid = false;
+            }
+            jsonData = obj.ToString(Newtonsoft.Json.Formatting.Indented);
+        }
+    }
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="/scripts/highlight/styles/default.css">
+    <script src="/scripts/highlight/highlight.pack.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.highlightme pre').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        });
+
+    </script>
+    <style>
+        #data-detail-content pre {
+            white-space: pre-wrap !important;
+            font-size: 80%
+        }
+    </style>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@reg.name</li>
+        <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+    }
+    <div id="data-detail-content">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <b>@reg.name</b>
+                        @if (!string.IsNullOrEmpty(reg.description))
+                        {
+                            <p>@reg.description</p>
+                        }
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DatasetId</td>
+                    <td>@reg.datasetId</td>
+                </tr>
+                <tr>
+                    <td>Výsledek testu</td>
+                    <td>
+                        @if (valid)
+                        {
+                            <span class="text-success">Formát dat je v pořádku.</span>
+                        }
+                        else
+                        {
+                            <h3 class="text-danger">Chyba</h3>
+                            <div class="text-danger">@result</div>
+                            <ol>
+                                @foreach (var verr in errors)
+                                {
+                                    <li>@verr;</li>
+                                }
+                            </ol>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Testovaná data</td>
+                    <td>
+                        <div class="highlightme">
+                            <pre>
+@jsonData
+                        </pre>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>JSON Schéma popisující strukturu<br />a požadavky na data</td>
+                    <td>
+                        <div class="highlightme">
+                            <pre>
+@reg.jsonSchema
+                        </pre>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    @Html.Partial("_beta")

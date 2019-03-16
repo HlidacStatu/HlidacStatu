@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="urn:cz:mfcr:monitor:schemas:MonitorRequest:v1"
+    xmlns:mon="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+    targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorRequest:v1" elementFormDefault="qualified"
+    attributeFormDefault="unqualified" version="1">
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+        schemaLocation="monitorTypes.xsd"/>
+    <xs:element name="MonitorRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hlavicka" type="mon:HlavickaRequestType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

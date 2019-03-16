@@ -1,0 +1,648 @@
+﻿@using HlidacStatu.Lib.Data;
+@using HlidacStatu.Lib.Data.External.Zabbix;
+@using Devmasters.Core;
+@using HlidacStatu.Util;
+
+
+@{
+
+    ViewBag.Title = "Hlídač státu";
+    ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
+    ViewBag.HideTitle = true;
+    ViewBag.HideAd = true;
+
+
+    double platnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0];
+    double neplatnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1];
+    double celkemKc = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2];
+
+
+}
+@section scripts
+{
+    <script>
+        _showFAD = false;
+    </script>
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section title
+{
+    <div class="header__content ">
+        <!-- desktop menu items only -->
+        <div class="navbar__level2">
+            <ul>
+                <li class=""><a href="/data">Datové sady</a></li>
+                <li class=""><a href="/reporty">Analýzy a reporty</a></li>
+                <li class=""><a href="/texty">Komentáře</a></li>
+                <li class=""><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="/pridatse">Přidat se</a>
+                    @*<a href="https://github.com/HlidacStatu/Web/issues" target="_blank" style="color:orange"><span class="glyphicon glyphicon-alert"></span>&nbsp;Nahlásit chybu</a>*@
+                    <a href="https://www.darujme.cz/projekt/1200384">Podpořit nás</a>
+                </li>
+            </ul>
+        </div>
+        <div class="header__title">
+            <h1>Hlídač státu</h1>
+            <span>Hlídáme je, protože si to zaslouží!</span>
+        </div>
+        <!-- desktop menu items only -->
+
+        <div class="header__search">
+            <label class="label" for="Q">Prohledat všechny Hlídače státu:</label>
+            <form class="header__search__input-wrapper" action="/hledat" method="get">
+                <input value="" id="Q" name="Q" type="text" class="header__search__input" placeholder="Smluvní strana, Název instituce, Jméno osoby, IČO, téma smlouvy …">
+                <button class="header__search__btn">Hledat</button>
+            </form>
+            <div>
+                <a class="header__search__hint" href="/napoveda">
+                    Jak vyhledávat?
+                </a>
+                <a class="header__search__hint pull-right" style="padding-top:2px;" href="/snadnehledani">
+                    Snadné hledání
+                </a>
+            </div>
+        </div>
+
+    </div>
+}
+
+<div class="watcher-blocks">
+    <div class="watcher-blocks__title">
+        Prohlédněte si a hledejte v konkrétních oblastech hlídače státu
+    </div>
+
+    <div class="watcher-blocks__wrapper">
+
+        <!-- block 1 -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-contracts.svg">
+                <h2 class="new-title">
+                    Hlídač smluv
+                </h2>
+            </div>
+            <div class="block-col ">
+                <p>
+                    Informace o smlouvách a jejich návaznost na stát a firmy
+                    <br>
+                    Celkem <strong>@RenderData.NiceNumber((int)platnych)</strong> smluv za <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true))</strong>
+                </p>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Hledat v registru smluv
+                </div>
+                <div class="block-tags">
+                    <a href="/porovnat" class="tag">
+                        Porovnání libovolných úřadů <span class="badge badge-warning">Novinka</span>
+                    </a>
+    
+                    <a href="/Report/4" class="tag">Nejdražší smlouvy</a>
+                    <a href="/Report/16" class="tag">Zvolení poslanci do parlamentu </a>
+                    <a href="/Report/7" class="tag">Základní statistiky reg.smluv</a>
+                </div>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Aféry a zajímavosti
+                </div>
+                <div class="block-tags">
+                    <span class="tag">
+                        <a href="/hledat?Q=icoPlatce%3A70888337+AND+icoPrijemce%3A41694155+Jižn%C3%AD+Morava">
+                            Logo pro Jihomoravský kraj
+                        </a>
+                        <a href="https://www.lidovky.cz/domov/nove-logo-jihomoravskeho-kraje-pritahlo-posmech-hodiny-od-vydani-stalo-skoro-2-miliony.A181214_110142_ln_domov_mber" target="_blank"><span class="glyphicon glyphicon-share"></span></a>
+                    </span>
+                    <span class="tag">
+                        <a href="/Hledat?Q=%22elektronické%20mýto%22">
+                            Elektronické mýto
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="/Hledat?Q=icoPlatce:65993390%20AND%20(%20%22stavebn%C3%AD%20práce%20v%20užš%C3%ADm%20ř%C3%ADzen%C3%AD%22%20OR%20%22jednac%C3%AD%20ř%C3%ADzen%C3%AD%20bez%20uveřejněn%C3%AD%22)">
+                            Smlouvy ŘSD s omezenou soutěží
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="/Subjekt/03211223">
+                            ITS - prázdná schránka obchodující s ŘSD
+                        </a>
+                        <a href="https://domaci.ihned.cz/c7-66389160-ofaba-b8b64364b636a5b" target="_blank"><span class="glyphicon glyphicon-share"></span></a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/smlouvy" class="btn btn-default btn-default-new">zobrazit více v Hlídači smluv</a>
+            </div>
+        </div>
+
+        <!-- block 2 -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Hlídač osob
+                </h2>
+            </div>
+
+            <div class="block-col ">
+                <p>
+                    Informace o politicích, sponzorech a osobách spjatých s politiky
+                    <br>
+                    <strong>@RenderData.NiceNumber(HlidacStatu.Lib.StaticData.Politici.Get().Count)</strong> osob v databázi
+                </p>
+            </div>
+
+            <div class="block-row block-part">
+                <div class="block-col block-col--50">
+                    <div class="block-subtitle">
+                        TOP politici
+                    </div>
+                    <ul class="block-list">
+                        @{
+                            string[] topPolitici = new string[] { "andrej-babis", "pavel-belobradek",
+                                                    "richard-brabec", "milan-feranec", "martin-pecina", "ivo-valenta", "jiri-mihola" };
+                        }
+                        @foreach (var oid in topPolitici)
+                        {
+                            var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(oid);
+                            <li>
+                                <a href="@o.GetUrl(true)" class="">@o.FullName()</a>@Html.Raw(o.NarozeniYear(true))
+                            </li>
+                        }
+                    </ul>
+                    <a href="/osoby" class="link">Další politici</a>
+                </div>
+                <!-- right col -->
+                <div class="block-col block-col--50">
+                    <div class="block-subtitle">
+                        Sponzoři s nej vazbou na stát
+                    </div>
+                    <ul class="block-list">
+                        @{
+                            string[] topSponzori = new string[] { "jan-bauer", "stanislav-juranek", "jana-cernochova", "martin-baxa", "jaromir-fischer-2", "jaroslav-dolecek", "richard-mrazek" };
+                        }
+                        @foreach (var oid in topSponzori)
+                        {
+                            var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(oid);
+                            <li>
+                                <a href="@o.GetUrl(true)" class="">@o.FullName()</a>@Html.Raw(o.NarozeniYear(true))
+                            </li>
+                        }
+                    </ul>
+                    <a href="/osoby" class="link">Další sponzoři</a>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/osoby" class="btn btn-default btn-default-new">zobrazit Více v Hlídači osob</a>
+            </div>
+        </div>
+
+        <!-- block Verejne zakazky -->
+        <div class="watcher-block">
+            <div class="watcher__title watcher__title--nowrap">
+                <img src="/Content/img/icon-government.svg">
+                <h2 class="new-title">
+                    Hlídač veřejných zakázek
+                </h2>
+            </div>
+            <div class="block-col ">
+                <p>
+                    Informace o veřejných zakázkách, plánovaných i ukončených
+                    <br>
+
+                    Celkem <strong>
+                        @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+                              new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0 }).Total
+                        )
+                    </strong> zakázek,
+                           <strong>
+                               @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+                                                 new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0 }).Total)
+                               </strong> letos.
+                </p>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Nejvíce veřejných zakázek za 3 měsíce z
+                </div>
+                @{
+                    List<Tuple<string, string, long>> topVZ = new List<Tuple<string, string, long>>();
+                    foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
+                    {
+                        var num3M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+                            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+                            {
+                                Q = "zverejneno:[" + DateTime.Now.Date.AddMonths(-3).ToString("yyyy-MM-dd") + " TO *]",
+                                Oblast = obl.Value,
+                                Page = 0,
+                                PageSize = 0
+                            }).Total;
+                        topVZ.Add(
+                            new Tuple<string, string, long>(
+                                $"/verejnezakazky/hledat?q=*&oblast={HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.NormalizeOblastValue(obl.Value)}&order=1",
+                                $"{obl.Key} ({RenderData.NiceNumber(num3M)})",
+                                num3M
+                            )
+                        );
+                    }
+                    topVZ = topVZ.OrderByDescending(o => o.Item3).Take(6).ToList();
+                }
+                <div class="block-tags">
+                    @foreach (var item in topVZ)
+                    {
+                        <a href="@item.Item1" class="tag">@item.Item2</a>
+                    }
+                </div>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Nejvyhledávanější výrazy
+                </div>
+                <div class="block-tags">
+                    <a href="/verejnezakazky/hledat?Q=zverejneno%3A%5B@(DateTime.Now.Date.ToString("yyyy-MM-dd"))+TO+*%5D&Zahajeny=false&Oblast=&Order=4" class="tag">Největší zakázky za poslední měsíc</a>
+                    <a href="/verejnezakazky/hledat?Q=*%20oblast:IT&order=1" class="tag">Poslední  zakázky v oblasti IT</a>
+                    <a href="/verejnezakazky/hledat?Q=*&order=1" class="tag">Poslední veřejné zakázky</a>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/verejnezakazky" class="btn btn-default btn-default-new">zobrazit více v hlídači veřejných zakázek</a>
+            </div>
+        </div>
+
+
+        <!-- block Sponzori -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-finance.svg">
+                <h2 class="new-title">
+                    Hlídač sponzorů
+                </h2>
+            </div>
+
+            <div class="block-col ">
+                <p>
+                    Informace o osobních a firemních sponzorech politických stran, hnutí
+                </p>
+            </div>
+
+            <div class="block-col block-part">
+                @{
+                    string[] topStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
+                                                                        "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
+                }
+                <div class="block-subtitle">
+                    Sponzori hlavních politických stran
+                </div>
+                <div class="block-tags">
+                    @foreach (var strana in topStrany)
+                    {
+                        <a class="tag" href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(strana)#sponzori">@strana</a>
+                    }
+                </div>
+                <a href="/ucty/subjektyTypu?id=Politick%C3%A1+strana" class="link">Další subjekty</a>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Největší sponzoři za poslední rok
+                </div>
+                <div class="block-table">
+                    @{
+                        foreach (var sponzor in
+                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby
+                            .Get()
+                            .GroupBy(g => g.Strana, sp => sp, (g, sp) => sp.OrderByDescending(o => o.CastkaCelkem).First())
+                            .Where(w => HlidacStatu.Web.Framework.Shared.Data.TopStrany.Contains(w.Strana))
+                            )
+                        {
+                            <div class="table-row">
+                                <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                            </div>
+                        }
+
+                    }
+
+                </div>
+                <a href="/ucty" class="link">Další transakce</a>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/ucty" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
+            </div>
+        </div>
+
+
+
+        <!-- block  transp.ucty -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-finance.svg">
+                <h2 class="new-title">
+                    Hlídač polit. financí
+                </h2>
+            </div>
+
+            <div class="block-col ">
+                <p>
+                    Informace o příjmech a výdajích z transparentních účtů politických stran, hnutí a osobností
+                </p>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Transparetní účty stran
+                </div>
+                <div class="block-tags">
+                    @foreach (var strana in topStrany)
+                    {
+                        <a class="tag" href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(strana)#sponzori">@strana</a>
+                    }
+                </div>
+                <a href="/ucty/subjektyTypu?id=Politick%C3%A1+strana" class="link">Další subjekty</a>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Nejvyšší transakce za poslední měsíc
+                </div>
+                <div class="block-table">
+                    @{
+                        var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                                .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
+                                    .Size(6)
+                                    .From(0)
+                                    .Query(q => q
+                                        .DateRange(dr => dr.GreaterThan("now-1M/d").Field(f => f.Datum))
+                                        )
+                                    .Sort(s => s.Descending(ss => ss.Castka))
+                                    );
+                    }
+                    @foreach (var item in res.Hits)
+                    {
+                        <div class="table-row">
+                            <div class="table-col">
+                                <a href='@item.Source.GetUrl(true)'>
+                                    @Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(item.Source.Castka, html: true))
+                                </a>
+                            </div>
+                            <div class="table-col">
+                                pro <a href="@item.Source.BU.GetSubjektUrl(true)">@item.Source.BU.Subjekt</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <a href="/ucty" class="link">Další transakce</a>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/ucty" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
+            </div>
+        </div>
+
+
+
+        <!-- block  weby -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-pc.svg">
+                <h2 class="new-title">
+                    Hlídač webů
+                </h2>
+            </div>
+            <div class="block-col ">
+                <p>
+                    Informace o dostupnosti a funkčnosti státních webů
+                    <br>
+                    Hlídáme <strong>@ZabTools.Weby().Count()</strong> státních webů
+                </p>
+            </div>
+
+            <div class="block-row block-part">
+                <div class="block-col block-col--50">
+                    <div class="block-subtitle">
+                        Vybrané důležité služby v posledních 15 minutách
+                    </div>
+                    <ul class="block-status-list">
+                        @{
+                            var dataWeby = ZabTools.WebyDataLastHour("0")
+                                ?.OrderBy(o => o.Host.publicname)
+                                ?.Reverse()
+                                ?.ToList();
+                            List<ZabHostAvailability> stats
+                                = new List<ZabHostAvailability>();
+
+                            stats = dataWeby
+                            .OrderBy(o => o.Statistics().PercentOfTime.OK)
+                            .Take(10)
+                            .ToList();
+
+                            decimal dynamicLength = 9m;
+                        }
+                        @foreach (var wkv in stats.OrderByDescending(w => w.WorstStatus(TimeSpan.FromMinutes(15))))
+                        {
+                            var statusWK = wkv.WorstStatus(TimeSpan.FromMinutes(15));
+                            switch (statusWK)
+                            {
+                                case Statuses.Pomalé:
+                                    dynamicLength -= 1.5m;
+                                    <li class="status-item status-item--warning">
+                                        <div class="status-row">
+                                            <div class="status-point"></div>
+                                            <a href="/statniweby/info/@(wkv.Host.hostid)?h=@(wkv.Host.hash)" class="">@wkv.Host.publicname</a>
+                                        </div>
+                                        <div class="status-row--message">
+                                            Pomalá odezva
+                                        </div>
+                                    </li>
+                                    break;
+                                case Statuses.Nedostupné:
+                                case Statuses.TimeOuted:
+                                case Statuses.BadHttpCode:
+                                    dynamicLength -= 1.5m;
+                                    <li class="status-item status-item--error">
+                                        <div class="status-row">
+                                            <div class="status-point"></div>
+                                            <a href="/statniweby/info/@(wkv.Host.hostid)?h=@(wkv.Host.hash)" class="">@wkv.Host.publicname</a>
+                                        </div>
+                                        <div class="status-row--message">
+                                            Nepracuje správně
+                                        </div>
+                                    </li>
+
+                                    break;
+                                case Statuses.OK:
+                                case Statuses.Unknown:
+                                    dynamicLength -= 1m;
+                                    <li class="status-item">
+                                        <div class="status-row">
+                                            <div class="status-point"></div>
+                                            <a href="/statniweby/info/@(wkv.Host.hostid)?h=@(wkv.Host.hash)" class="">@wkv.Host.publicname</a>
+                                        </div>
+                                    </li>
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (dynamicLength <= 0)
+                            {
+                                break;
+                            }
+                        }
+
+                    </ul>
+                    <a href="/statniweby" class="link">Další weby</a>
+                </div>
+                <!-- right col ssl -->
+                <div class="block-col block-col--50">
+                    <div class="block-subtitle">
+                        Weby s nejhorším HTTPS
+                    </div>
+                    <ul class="block-status-list">
+
+                        @{
+                            var webIds = ZabTools.Weby("0").Select(w => w.hostid).ToArray(); //ustredni
+                            var sslWebs = ZabTools.SslStatuses()
+                                ?.Where(m => webIds.Contains(m.Host.hostid))
+                                ?.Where(m => m.Status() >= SSLLabsGrades.B)
+                                ?.OrderByDescending(m => m.Status())
+                                ?.Take(15)
+                                ?.ToArray()
+                                ?.OrderBy(o => Guid.NewGuid())
+                                ?.Take(5)
+                                ?.ToArray();
+
+
+                            if (sslWebs.Count() < 6)
+                            {
+                                webIds = ZabTools.Weby("ustredni").Select(w => w.hostid).ToArray(); //ustredni
+                                sslWebs = sslWebs.Concat(ZabTools.SslStatuses()
+                                            ?.Where(m => webIds.Contains(m.Host.hostid))
+                                            ?.Where(m => m.Status() >= SSLLabsGrades.B)
+                                            ?.OrderByDescending(m => m.Status())
+                                            ?.Take(10)
+                                            ?.ToArray()
+                                            ?.OrderBy(o => Guid.NewGuid())
+                                            ?.Take(5)
+                                            ?.ToArray()
+                                        )
+                                        .ToArray();
+                            }
+                            dynamicLength = 9m;
+                        }
+                        @foreach (var item in sslWebs.OrderByDescending(o => o.Status()).Take(5))
+                        {
+                            switch (item.Status())
+                            {
+                                case SSLLabsGrades.B:
+                                case SSLLabsGrades.C:
+                                case SSLLabsGrades.D:
+                                case SSLLabsGrades.E:
+                                    dynamicLength -= 1.5m;
+                                    <li class="status-item status-item--warning">
+                                        <div class="status-row">
+                                            <div class="status-point"></div>
+                                            <a href="/statniweby/info/@(item.Host.hostid)?h=@(item.Host.hash)" class="">@item.Host.publicname</a>
+                                        </div>
+                                        <div class="status-row--message">
+                                            <b>@item.Status().ToNiceDisplayName()</b> -
+                                            @Devmasters.Core.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
+                                        </div>
+                                    </li>
+
+                                    break;
+                                case SSLLabsGrades.F:
+                                case SSLLabsGrades.M:
+                                case SSLLabsGrades.T:
+                                case SSLLabsGrades.X:
+                                    dynamicLength -= 1.5m;
+                                    <li class="status-item status-item--error">
+                                        <div class="status-row">
+                                            <div class="status-point"></div>
+                                            <a href="/statniweby/info/@(item.Host.hostid)?h=@(item.Host.hash)" class="">@item.Host.publicname</a>
+                                        </div>
+                                        <div class="status-row--message">
+                                            <b>@item.Status().ToNiceDisplayName()</b> -
+                                            @Devmasters.Core.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
+                                        </div>
+                                    </li>
+
+                                    break;
+                                default:
+                                    break;
+                            }
+
+
+                        }
+                    </ul>
+                    <a href="/StatniWeby/Https" class="link">Další info o HTTPS</a>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/StatniWeby" class="btn btn-default btn-default-new">zobrazit více v Hlídači webů</a>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+@*
+        <div class="reviews">
+        <h2 class="new-title">Psali o nás</h2>
+        <div class="reviews__carousel">
+            <!-- control arrows -->
+            <!-- TODO: doimplementovat JS - staci posouvat oveflow scroll -->
+            <div class="carousel__arrow">
+                <img class="" src="/Content/img/chevron-reviews.svg">
+            </div>
+            <div class="carousel__arrow carousel__arrow--right">
+                <img class="" src="/Content/img/chevron-reviews.svg">
+            </div>
+
+            <!-- logos with links below -->
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/1.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/2.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/3.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/4.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/5.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/3.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/2.png">
+            </a>
+            <a href="/">
+                <img class="reviews__logo" src="/Content/img/reviews/1.png">
+            </a>
+        </div>
+    </div>
+*@

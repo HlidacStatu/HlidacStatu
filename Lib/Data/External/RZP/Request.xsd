@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="urn:cz:isvs:rzp:schemas:VerejnaCast:v1" elementFormDefault="qualified"
+xmlns="urn:cz:isvs:rzp:schemas:VerejnaCast:v1" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.7">
+  <xs:element name="VerejnyWebDotaz" type="TVerejnyWebDotaz" /> <xs:complexType name="TVerejnyWebDotaz">
+    <xs:choice>
+      <!-- alespon jedna podminka se musi vyskytovat -->
+      <!-- pozadavek na vyhledani podnikatele -->
+      <xs:element name="Kriteria" type="TKriteria" />
+      <!-- pozadavek na detail podnikatele -->
+      <xs:group ref="GdetailPodnikatele" />
+      <!-- pozadavek na detail osoby a seznam subjektu, na ktere je vazana -->
+      <xs:group ref="GdetailOsoby" />
+      <!-- pozadavek na vyhledani osoba -->
+      <xs:element name="KriteriaOsoba" type="TKriteriaOsoba" />
+      <!-- pozadavek na detail podnikatele -->
+      <xs:group ref="GdetailStatutarnihoOrganuPravnickeOsoby" />
+    </xs:choice>
+    <xs:attribute name="version" type="xs:decimal" use="required" />
+  </xs:complexType>
+  <xs:group name="GdetailPodnikatele">
+    <xs:sequence>
+      <xs:element name="PodnikatelID" type="xs:string" />
+      <!-- Historie: 0 (bez) /1 (s)-->
+      <xs:element name="Historie" type="VyberovaPodminka" /> <!-- DruhVypisu: xml / pdf -->
+      <!-- neni-li uvedeno, bere se xml jako default -->
+      <xs:element name="DruhVypisu" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="TKriteria">
+    <xs:sequence>
+      <xs:choice>
+        <!-- alespon jedna podminka se musi vyskytovat -->
+        <!-- pozadavek hledani dle IC -->
+        <xs:element name="IdentifikacniCislo" type="xs:unsignedInt" />
+        <!-- pozadavek na vyhledani adresy -->
+        <xs:element name="Adresa" type="TAdresa" />
+        <!-- pozadavek na vyhledani obchodniho jmena a adresy -->
+        <xs:group ref="GObchodniJmenoAdresa" />
+      </xs:choice>
+      <!-- role subjektu -->
+      <xs:element name="SubjektRole" type="SeznamRoliSubjektu" minOccurs="0"/>
+      <!-- pozadavek na platnost vyhledanych zaznamu (1 - jen platne/ 0 - vcetne neplatnych) -->
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TKriteriaOsoba">
+    <xs:sequence>
+      <!-- jmeno osoby -->
+      <xs:element name="OsobaJmeno" type="xs:string" minOccurs="0"/>
+      <!-- prijmeni osoby -->
+      <xs:element name="OsobaPrijmeni" type="xs:string" />
+      <!-- datum narozeni osoby -->
+      <xs:element name="OsobaDatumNarozeni" type="xs:string" />
+      <!-- role osoby -->
+      <xs:element name="OsobaRole" type="SeznamRoliOsoby" minOccurs="0"/>
+      <!-- pozadavek na platnost vyhledanych zaznamu (1 - jen platne/ 0 - vcetne neplatnych) -->
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="GdetailOsoby">
+    <xs:sequence>
+      <xs:element name="OsobaID" type="xs:string" />
+      <xs:element name="OsobaRole" type="SeznamRoliOsoby" minOccurs="0"/>
+      <!-- pozadavek na platnost vyhledanych zaznamu (1 - jen platne/ 0 - vcetne neplatnych) -->
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="GdetailStatutarnihoOrganuPravnickeOsoby">
+    <xs:sequence>
+      <xs:element name="StatutarniOrganPravnickeOsobyID" type="xs:string" />
+      <!-- pozadavek na platnost vyhledanych zaznamu (1 - jen platne/ 0 - vcetne neplatnych) -->
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="GObchodniJmenoAdresa">
+    <xs:sequence>
+      <xs:element name="ObchodniJmeno" type="xs:string" />
+      <!-- pozadavek na castecne dohledani - zacinajici na (1 - castecne dohledani / 0 - vyhledani na presnost) -->
+      <xs:element name="CastecneDohledani" type="VyberovaPodminka" />
+      <xs:element name="Adresa" type="TAdresa" minOccurs="0"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="TAdresa">
+    <xs:sequence>
+      <xs:element name="KodOkresu" type="xs:unsignedShort" minOccurs="0" />
+      <!-- nazev obce je v adrese povinny -->
+      <xs:element name="Obec" type="xs:string" />
+      <!-- vyber konkretni obce ze seznamu: 0 (neni ze seznamu) /1 (je ze seznamu)-->
+      <xs:element name="VyberKonkretniObce" type="VyberovaPodminka" minOccurs="0" />
+      <xs:element name="NazevCastiObce" type="xs:string" minOccurs="0" />
+      <xs:element name="NazevUlice" type="xs:string" minOccurs="0" />
+      <xs:element name="CisloOrientacni" type="xs:unsignedShort" minOccurs="0" />
+      <xs:element name="ZnakCislaOrientacniho" type="xs:string" minOccurs="0" />
+      <xs:element name="CisloDomovni" type="xs:unsignedShort" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType id="VyberovaPodminka" name="VyberovaPodminka">
+    <xs:restriction base="xs:int">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType id="SeznamRoliOsoby" name="SeznamRoliOsoby">
+    <xs:restriction base="xs:string">
+      <!-- vedouci organizacni slozky -->
+      <xs:enumeration value="O"/>
+      <!-- podnikatel -->
+      <xs:enumeration value="P"/>
+      <!-- statutarni organ -->
+      <xs:enumeration value="S"/>
+      <!-- odpovedny zastupce -->
+      <xs:enumeration value="Z"/>
+      <!-- pokracovatel -->
+      <xs:enumeration value="D"/>
+      <!-- osoba opravnena zastupovat pravnickou osobu -->
+      <xs:enumeration value="ZS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType id="SeznamRoliSubjektu" name="SeznamRoliSubjektu">
+    <xs:restriction base="xs:string">
+      <!-- podnikatel -->
+      <xs:enumeration value="P"/>
+      <!-- statutarni organ pravnicka osoba -->
+      <xs:enumeration value="S"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="nonNegativeInt" id="nonNegativeInt">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" id="nonNegativeInt.minInclusive"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

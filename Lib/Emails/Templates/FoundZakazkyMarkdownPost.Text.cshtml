@@ -1,0 +1,29 @@
+﻿Content-Type: text/html; charset=utf-8
+
+### Nové zakázky v období @Model.Interval
+
+
+@foreach (HlidacStatu.Lib.Data.VZ.VerejnaZakazka item in @Model.Zakazky)
+{
+<text>
+---
+**[@Raw(Devmasters.Core.TextUtil.NormalizeToBlockText(item.NazevZakazky ?? "")) (@Raw(item.EvidencniCisloZakazky))](@Raw(item.GetUrl(false))?utm_source=hlidac&utm_medium=platforma&utm_campaign=detail)**
+*@Raw(item.DatumUverejneni == null ? "" : item.DatumUverejneni.Value.ToShortDateString() + " - ")
+@Raw(item.LastestFormular() == null ? "" : item.LastestFormular().DruhFormulareName())*
+
+Zadavatel: **@Raw(item.Zadavatel == null ? "neuveden" : item.Zadavatel.Jmeno)**
+@if (item.KonecnaHodnotaBezDPH.HasValue)
+{<text>Cena: **@Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value))**</text>
+}
+else if (item.OdhadovanaHodnotaBezDPH.HasValue)
+{<text>Odhadovaná cena: **@Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value))**</text>
+}
+</text>
+}
+
+---
+[Zobrazit všechny nalezené zakázky](https://www.hlidacstatu.cz/VerejneZakazky/Hledat?Q=@Raw(System.Net.WebUtility.UrlEncode(Model.SpecificQuery ?? ""))&utm_source=hlidac&utm_medium=platforma&utm_campaign=more) (celkem @Model.Total)
+
+
+
+

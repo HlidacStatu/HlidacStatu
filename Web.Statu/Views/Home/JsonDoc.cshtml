@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Popis JSON smlouvy";
+}
+@section scripts
+{
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script>
+
+                //$('p.code').each(function (i, block) {
+                //    hljs.highlightBlock(block);
+                //});
+    </script>
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index","ApiV1")">API pro vývojáře</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    <p>
+<pre class="prettyprint linenums">
+// tučná properties jsou doplněné údaje od hlidacstatu.cz nad rámec XML dat z registru smluv = https://smlouvy.gov.cz/stranka/otevrena-data
+// struktura dat přebírá strukturu dat z XML z registru dat
+// popisujeme properties jak námi přidané, tak z original z XML
+//
+{
+    "Prilohy": [  //pole příloh smlouvy
+      {
+        <span style="font-weight:bolder;">"fileMetadata"</span> [  //atributy načtené z originálního souboru přílohy
+           {
+              "key": "pdf:PDFVersion",
+              "value": "1.5"
+           },
+           {
+              "key": "access_permission:modify_annotations",
+              "value": "true"
+           },
+           {
+              "key": "access_permission:can_print",
+              "value": "true"
+           }
+        ],
+        <span style="font-weight:bolder;">"plainTextContent"</span>: ".......",  //obsah smlouvy v plaintextu vyparsované z přílohy
+        <span style="font-weight:bolder;">"plainTextContentQuality"</span>: 3,   //kvalita plaintextu, zavisí z způsobu získání. 
+                                            // 3=Parsed: vyparsováno ze strojově zpracovatelného formátu (DOC, DOCX, TXT, PDF s textem)
+                                            // 4=Estimated: získáno ze scanu smlouvy pomocí OCR. Nižší přesnost než 3
+        "contentType": "application/pdf", 
+        <span style="font-weight:bolder;">"lenght"</span>: 1497, //délka textu v plain-textu
+        <span style="font-weight:bolder;">"wordCount"</span>: 182, //počet slov v plain-textu
+        "nazevSouboru": "Objednavka stravenky cervenec - VZ Praha-vychod.pdf",  //původní název souboru
+        "hash": {
+           "algoritmus": "sha256",
+           "value": "5f7f10af0338ae1e7c9d46622621e0f915208e6f59a596470c678eaacd74f64e"
+        },
+        "odkaz": "https://smlouvy.gov.cz/smlouva/soubor/45425/Objednavka%20stravenky%20cervenec%20-%20VZ%20Praha-vychod.pdf", //odkaz na přílohu na RS
+        <span style="font-weight:bolder;">"lastParsed"</span>: "2016-08-29T08:57:49.2133964+02:00" // datum posledního pokusu zpracování přílohy
+      }
+   ],
+   "identifikator": {
+      "idSmlouvy": "34009", // id smlouvy je číslo smlouvy, pokud má smlouva více verzí (1 platná, ostatní neplatné, pak se v DB opakuje)
+      "idVerze": "35205"    // id verze je unikatní číslo smlouvy
+   },
+   "odkaz": "https://smlouvy.gov.cz/smlouva/35205", // odkaz na smlouvu v registru smluv
+   "casZverejneni": "2016-07-27T19:24:18+02:00", //datum zverejneni smlouvy v RS
+   "smlouva": { 
+      "subjekt": {  //subjekt muze byt jak objednatel, tak prijemce penez, coz ukazuje pole "platce". nyni API RS nevraci, oprava byla slibena 
+        "datovaSchranka": "wmjmahj",
+        "nazev": "Zdravotnická záchranná služba Středočeského kraje, příspěvková organizace",
+        "ico": "75030926",
+        "adresa": "Vančurova 1544, 27201 Kladno, CZ",
+        "platceSpecified": false,
+        "platce": true //bool, 1/true = plátce, 0/false = příjemce
+      },
+      "smluvniStrana": [ //smluvnich stran bývá více
+        {
+           "datovaSchranka": "hdrvhcu",
+           "nazev": "Edenred CZ s.r.o.",
+           "ico": "24745391",
+           "adresa": "Na poříčí 1076/5, 11000, Praha 1, Nové Město",
+           "prijemce": true,
+           "prijemceSpecified": true //1 = příjemce, 0 = plátce
+        }
+      ],
+      "predmet": "Objednání stravenek Praha-východ",
+      "datumUzavreni": "2016-07-27T00:00:00", //datum uzavření smlouvy, mělo by být max 30 dní od uveřejnění smlouvy
+      "cisloSmlouvy": "OBJ/6/2016/PN", //interní označení smlouvy zadavatele
+      "schvalil": "PN",                 //jméno osoby, co smlouvu u zadavatele schválila
+      "hodnotaBezDph": 77575,
+      "hodnotaBezDphSpecified": true,
+      "hodnotaVcetneDphSpecified": false,
+      "ciziMena": {                     //pokud je smlouva v cizí měně, existuje tato struktura
+            "hodnota": 117214.7,
+            "mena": "EUR"
+      },
+      "navazanyZaznam": "31221"         // navazaná smlouva. Typicka jiná verze této smlouvy (ale nemusí být pravidlem)
+   },
+   "platnyZaznam": true,                //pokud false, jde o neplatnou smlouvu, typicky je nahrazena v RS novou platnou verzí
+        <span style="font-weight:bolder;">"lastSaved"</span>: "2016-08-29T08:57:49.2213953+02:00",   //poslední úprava v DB HlidacSmluv
+        <span style="font-weight:bolder;">"calculatedPriceWithVATinCZK"</span>: 93865.75,       //zkalkulovaná cena s DPH ze všech cenových polí, používáno pro hledání, třídění, agregace
+        <span style="font-weight:bolder;">"calcutatedPriceQuality"</span>: 2,       // způsob spočítání ceny. 
+                                                //2 = spočítana, 
+                                                //4 = Odhadnutá, typicky když cena není určena a je možné ji najít v textu smluv, 
+                                                //5=Manual - zadaná ručně analytikem HlidacSmluv
+        <span style="font-weight:bolder;">"issues"</span>: [  // pole chyb nalezených u záznamu smlouvy
+      {
+        "created": "2016-08-18T21:14:06.3315183+02:00",             
+        "title": "Cena s DPH nulová",                                   //titulek problému
+        "textDescription": "Smlouva uvádí nulovou cenu s DPH.",         //podrobnější popis
+        "public": true,                                                 //veřejně prezentovaný problém
+        "importance": 1,                        //závažnost problému (Ok = 0,Formal = 1,Minor = 5,Major = 20,Fatal = 100)
+        "affectedParams": [             //dodatečná data analyzeru
+           {
+              "key": "hodnotaVcetneDph",
+              "value": "0"
+           }
+        ],
+        "analyzerType": "HlidacStatu.Plugin.IssueAnalyzers.Price"   //interní jméno analyzéru 
+      },
+      {
+        "created": "2016-08-18T21:14:06.3315183+02:00",
+        "title": "Nečitelnost smlouvy",
+        "textDescription": "Text smlouvy/přílohy Objednavka stravenky cervenec - VZ Praha-vychod.pdf není strojově čitelný",
+        "public": true,
+        "importance": 5,
+        "analyzerType": "HlidacStatu.Plugin.IssueAnalyzers.Text"
+      }
+   ],
+        <span style="font-weight:bolder;">"confidenceValue"</span>: 6,          //Důveryhodnost smlouvy, čím vyšší číslo, tím nižší důvěryhodnost a vyšší chybovost. 
+                                  //Dnes počítáno jako suma Issues.Importance
+        <span style="font-weight:bolder;">"id"</span>: "35205"                  //interní ID smlouvy v hlidacstatu.cz, stejné jako identifikator.IdVerze
+}
+</pre>
+    </p>

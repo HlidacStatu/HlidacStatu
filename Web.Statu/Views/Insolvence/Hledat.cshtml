@@ -1,0 +1,36 @@
+﻿@model HlidacStatu.Lib.ES.InsolvenceSearchResult
+@using System.Linq;
+@using Devmasters.Core;
+@{
+
+    ViewBag.Title = "Hlídač insolvencí: Hledání";
+    ViewBag.SubTitle = Model?.Q;
+
+    ViewBag.ShowBookmarkUrl = true;
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+    <link href="/scripts/typeahead/jquery.typeahead.min.css" media="all" rel="stylesheet" />
+    <script src="/scripts/typeahead/jquery.typeahead.min.js"></script>
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index","Insolvence")">Hlídač Insolvencí</a></li>
+        <li>@ViewBag.SubTitle</li>
+    </ol>
+}
+@Html.Partial("_SearchForm", Model)
+
+
+@Html.Partial("_SearchResult", Model)
+
+

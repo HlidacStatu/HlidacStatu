@@ -1,0 +1,256 @@
+﻿@using Devmasters.Core
+@using HlidacStatu.Lib
+@using HlidacStatu.Lib.Analysis
+@using System.Linq;
+@using HlidacStatu.Web.Framework;
+@using HlidacStatu.Web.Models;
+
+@{
+    ViewBag.Title = "Politici a osoby s vazbou na politiku";
+    ViewBag.MoreHtml = "<p><b>Tady najdete <a href='/Report/5'>smlouvy soukromých firem s vazbou na politiky</a></b></p>";
+
+    List<HlidacStatu.Lib.Data.Osoba> showList = null;
+    List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, BasicData<string>>> topSponzori = null;
+    IEnumerable<HlidacStatu.Lib.Data.Sponsors.Strany.PerStrana> vsichniSponzori = WebCache.Get("VsichniSponzoriPerStrana");
+
+    string prefix = "";
+
+    bool Search = false;
+
+    if (!string.IsNullOrEmpty(Request.QueryString["prefix"]))
+    {
+        prefix = Request.QueryString["prefix"].ToString().ToUpper();
+        string prefixascii = Devmasters.Core.TextUtil.RemoveDiacritics(prefix).ToLower();
+
+        showList = HlidacStatu.Lib.StaticData.Politici.Get()
+            .Where(p => p.Prijmeni.ToUpper().StartsWith(prefix))
+            .OrderBy(m => m.Prijmeni)
+            .ThenBy(m => m.Jmeno)
+            .ToList();
+        Search = true;
+    }
+    else if (!string.IsNullOrEmpty(Request.QueryString["q"]))
+    {
+        showList = HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(Request.QueryString["q"])
+            .OrderBy(m => m.Prijmeni)
+            .ThenBy(m => m.Jmeno)
+            .ToList();
+        Search = true;
+        if (ViewBag.SearchFtx == true)
+        {
+            showList = showList.Concat(
+                HlidacStatu.Lib.Data.Osoba.GetPolitikByQueryFromFirmy(Request.QueryString["q"])
+                ).ToList();
+        }
+    }
+    else
+    {
+        string[] vip = new string[] {
+"andrej-babis","jaroslav-faltynek","bohuslav-sobotka","pavel-belobradek",
+"richard-brabec","ivan-pilny","jiri-havlicek-1","dan-tok","miloslav-ludvik","marta-novakova-29"
+};
+
+
+
+        //TODO lepsi vyber politiku
+        showList = WebCache.Get("TopPolitici");
+        if (showList == null)
+        {
+            var topOsoby = HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby.Get()
+                .Where(m => m.Sponzor.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.Politik);
+
+            showList = topOsoby
+                .OrderByDescending(o => o.CastkaCelkem)
+                .Take(20)
+                .Select(to=>to.Sponzor)
+                .Union(vip.Select(s => HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(s)), EqualityComparerFactory<HlidacStatu.Lib.Data.Osoba>.CreateComparer(o => o.InternalId.GetHashCode(), (a, b) => a.InternalId == b.InternalId))
+                .OrderBy(m => m.Prijmeni)
+                .ToList();
+
+            WebCache.Set("TopPolitici", showList, 120);
+
+        }
+
+        topSponzori = StaticData.SponzorisVazbouNaStat.Get()
+                .OrderByDescending(m => m.Value.CelkemCena)
+                .Take(30)
+                .ToList();
+
+
+    }
+
+    if (vsichniSponzori == null)
+    {
+        vsichniSponzori = HlidacStatu.Lib.Data.Sponsors.Strany.AllSponsored();
+        WebCache.Set("VsichniSponzoriPerStrana", vsichniSponzori, 120);
+    }
+
+}
+
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (Search)
+{
+    <h3>Nalezené osoby</h3>
+    <table class="table table-hover table-bordered">
+        @foreach (var politik in showList)
+        {
+            <tr>
+                <td>
+                    @Util.AddBookmark(this.User, politik)
+                </td>
+                <td style="width:25%;">
+                    <b>@Html.Raw(politik.FullName(true))</b>
+                    @if (this.User?.IsInRole("canEditData") == true)
+                    {
+                        <span> ( @(politik.Narozeni?.ToString("dd.MM.yyyy") ?? " ??? ") )</span><br />
+                        <span>
+                            <a href="/manage/editosoba?id=@politik.InternalId">Edit</a>
+                            <a href="/manage/editosoba?id=@politik.InternalId&del=1" onclick="return confirm('Opravdu smazat?');">Del</a>
+                        </span>
+                    }
+                    <br />@Html.Raw(Devmasters.Core.TextUtil.ShortenText(politik.Description(false, m => true, 3), 250).Replace("\n", "<br />"))
+                </td>
+                <td style="width:55%;">
+                    @if (politik.Vazby() != null)
+                    {
+                        foreach (var v in politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Take(2))
+                        {
+                            @RenderVazba(v)
+                        }
+                        if (politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length == 3)
+                        {
+                            @RenderVazba(politik.Vazby()[2])
+                        }
+                        else if (politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
+                        {
+                            <span>@HlidacStatu.Util.PluralForm.Get(politik.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>
+                        }
+                    }
+                </td>
+                <td style="width:20%;">
+                    @if (politik.Vazby() != null)
+                    {
+                        <a href="@Url.Action("Politik","Home",new { id = politik.NameId })">Podrobnosti o angažovanosti a smlouvách</a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+else //noSearch
+{
+    <div class="row">
+        <div class="col-xs-6 col-sm-4">
+            <h3>Top politici</h3>
+            <div>
+                <ul>
+                    @foreach (var politik in showList)
+                    {
+                        <li>
+                            @Util.AddBookmark(this.User, politik)
+                            <a href="@politik.GetUrlOnWebsite()">@politik.FullName()</a> @(politik.Narozeni.HasValue ? string.Format("(*{0})", politik.Narozeni.Value.Year) : "")
+                            <br />@if (politik.Vazby() != null)
+                            {
+                                <span>@HlidacStatu.Util.PluralForm.Get(politik.Vazby().Length, "{0} vazba na firmy;{0} vazby na firmy;{0} vazeb na firmy")</span>
+                            }
+                            else
+                            {
+                                <span>&nbsp;</span>
+                            }
+
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-4">
+            <h3>Sponzoři s nej vazbou na stát</h3>
+            <div>
+                <ul>
+                    @foreach (var kv in topSponzori)
+                    {
+                        <li>
+                            @Util.AddBookmark(this.User, kv.Key)
+                            <a href="@kv.Key.GetUrlOnWebsite()">@kv.Key.FullName()</a> @(kv.Key.Narozeni.HasValue ? string.Format("(*{0})", kv.Key.Narozeni.Value.Year) : "")
+                            <br />@Html.Raw(kv.Key.Description(true, itemDelimeter: "; ", predicate: m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, numOfRecords: 5))
+                            @*<br />@kv.Value.ToNiceString("", false);*@
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-4">
+            <h3>Sponzoři</h3>
+            <div>
+                <ul>
+                    @{
+
+                        foreach (var item in vsichniSponzori.OrderByDescending(m => m.Sum))
+                        {
+                            <li>
+                                <a href="/sponzori?strana=@item.Strana">
+                                    @item.Strana
+                                </a><br />
+                                @HlidacStatu.Util.PluralForm.Get(item.Num, "{0} dar;{0} dary;{0} darů"); @HlidacStatu.Util.RenderData.ShortNicePrice(item.Sum, "výši neznáme"),
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+
+
+@helper RenderVazba(HlidacStatu.Lib.Data.Graph.Edge v)
+{
+
+    var fname = v.To.PrintName();
+    if (string.IsNullOrEmpty(fname))
+    {
+        fname = HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(v.To.Id, true);
+    }
+    @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
+
+    if (v.RelFrom.HasValue && v.RelTo.HasValue)
+    {
+        @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
+
+    }
+    else if (v.RelTo.HasValue)
+    {
+        @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
+
+    }
+    else if (v.RelFrom.HasValue)
+    {
+        @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
+
+    }
+
+    <br />
+
+}

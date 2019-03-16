@@ -1,0 +1,50 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+<p>
+    Našli jsme nové záznamy pro hlídače nových smluv <b>@Model.WDName</b>.
+</p>
+<p>
+    V době @Model.Interval @Model.TotalTxt pro tento dotaz: <br/>
+    <b>@Model.Query</b>
+</p>
+@if (Model.AddResults > 0)
+{
+    <p>Zobrazujeme prvních 30 smluv s nejvyšší hodnotou</p>
+}
+
+
+<p>
+    <table border="1" cellpadding="5">
+        @foreach (HlidacStatu.Lib.Emails.Templates.FoundContractItem smlouva in @Model.Smlouvy)
+        {
+            <text>
+                <tr>
+                    <td><a href="@Raw("https://www.hlidacstatu.cz/Detail/" + smlouva.Id + "?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail")">Detail smlouvy</a></td>
+                    <td>@Raw(smlouva.PlatceHtml)</td>
+                    <td>@Raw(smlouva.PrijemceHtml)</td>
+                    <td>@Raw(smlouva.Cena)</td>
+                </tr>
+                <tr>
+                    <td colspan="4">@Raw(smlouva.Predmet)</td>
+                </tr>
+            </text>
+        }
+    </table>
+
+    @if (Model.AddResults > 0)
+    {
+        <p>Zobrazujeme prvních 30 smluv s nejvyšší hodnotou, ale nalezli jsme celkem @Model.TotalTxt.<br /> 
+        Zde můžete <a href="https://www.hlidacstatu.cz/HledatSmlouvy?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">zobrazit všechny nalezené smlouvy</a>
+        </p>
+    }
+
+<p>Chcete <a href="https://www.hlidacstatu.cz/manage/Watchdogs?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=settings">změnit nastavení</a> tohoto hlídače nových smluv?</p>
+
+
+@Raw(Model.EmailFooterHtml)
+
+
+
+
+

@@ -1,0 +1,32 @@
+﻿@model HlidacStatu.Lib.Analysis.TemplatedQuery
+@using Nest;
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@*id;p;q;title;description;moreUrl;embed*@
+@Html.Action("Analyza_Child");

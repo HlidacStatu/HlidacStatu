@@ -1,0 +1,92 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Hlídač státu";
+    ViewBag.SubTitle = "Další datové zdroje";
+
+    var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 100)
+        .Result
+        .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<HlidacStatu.Lib.Data.External.DataSets.Registration>(s.Item2));
+
+    if (string.IsNullOrEmpty(Request.QueryString["beta"])) //pokud neni parametr beta, pak beta datasety neukazuj
+    {
+        datasets = datasets.Where(m => m.betaversion == false);
+    }
+    int count = 0;
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+        <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+}
+
+<div class="bs-callout bs-callout-primary">
+    <h4>Datové sady</h4>
+    <div>
+        Na této stránce je přehled datových sad, které jsou na Hlídač Státu nahrány pomocí <a href="/api">našeho API</a>. Data sem může zdarma nahrát každý registrovaný uživatel Hlídače státu, a zpřístupnit je tak všem
+    </div>
+    <div>
+        Pokud máte tip na zajímavý zdroj dat, <a onclick="return trackOutLink(this,'data');" href="https://platforma.hlidacstatu.cz/t/datove-zdroje-vhodne-pro-zpracovani-tipy-a-napady/320" target="_blank">podělte se s ostatními</a>.
+        Anebo se <a onclick="return trackOutLink(this,'data');" href="https://platforma.hlidacstatu.cz/t/datove-zdroje-vhodne-pro-zpracovani-tipy-a-napady/320" target="_blank">koukněte na nápady ostatních</a>.
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var ds in datasets)
+    {
+        try
+        {
+            count++;
+            var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
+
+            <div class="col-xs-12 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">@ds.name<span class="pull-right" style="font-size:80%">(<b>@dsContent.SearchData("", 1, 0).Total</b> záznamů)</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            @if (!string.IsNullOrEmpty(ds.description))
+                            {
+                                @(ds.description.ToString())
+                            }
+                        </p>
+
+                        <div>
+                            <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
+                                <div class="form-group form-group">
+                                    <input type="text" class="form-control" id="q" name="q" placeholder="hledaný text">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Prohledat</button>
+                            </form>
+                        </div>
+                        <div>
+                            <a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default">Vypsat poslední data</a>
+                            <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px">Více info o datasetu</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            if (count % 2 == 0)
+            {
+                <div class="clearfix"></div>
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+
+}
+    </div>
+

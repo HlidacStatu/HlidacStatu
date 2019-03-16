@@ -1,0 +1,72 @@
+﻿<?xml version="1.0"?>
+
+<!-- For more information on using HlidacStatu.Web.config transformation visit http://go.microsoft.com/fwlink/?LinkId=301874 -->
+
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <connectionStrings>
+    <!-- connection for SQL server db -->
+    <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->
+    <add name="CnnString"
+      connectionString="data source=#sqlIP#;initial catalog=#dbName#;persist security info=True;user id=#sqllogin#;password=#sqlpassword#;MultipleActiveResultSets=True;App=EntityFramework"
+      providerName="System.Data.SqlClient" xdt:Transform="Insert" />
+
+    <!-- connection for SQL server db-->
+    <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->
+    <add name="DbEntities" connectionString="metadata=res://*/Data.Db.csdl|res://*/Data.Db.ssdl|res://*/Data.Db.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=#sqlIP#;initial catalog=#dbName#;persist security info=True;user id=#sqllogin#;password=#sqlpassword#;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" xdt:Transform="Insert" />
+  </connectionStrings>
+
+
+  <appSettings>
+
+    <!-- MANDATORY PARAMETERS -->
+
+    <!-- elastic server address -->
+    <add xdt:Transform="Insert" key="ESConnection" value="http://localhost:9200" />
+
+    <!-- connection for SQL server db-->
+    <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->
+    <add xdt:Transform="Insert" key="CnnString"
+         value="data source=#sqlIP#;initial catalog=#dbName#;persist security info=True;user id=#sqllogin#;password=#sqlpassword#;MultipleActiveResultSets=True;App=EntityFramework" />
+
+    <!-- path for Prilohy -->
+    <add xdt:Transform="Insert" key="PrilohyDataPath" value="c:\Data\HlidacStatu\Prilohy" />
+    <!-- path for Photos of politicians -->
+    <add xdt:Transform="Insert" key="OsobaFotkyDataPath" value="c:\Data\HlidacStatu\OsobaFotky" />
+
+    <!-- path for cache files -->
+    <add xdt:Transform="Insert" key="FileCachePath" value="c:\Data\HlidacSmluv\FileCache" />
+
+    <!-- path App_Data directory in the root of web app -->
+    <add xdt:Transform="Insert" key="WebAppDataPath" value="c:\Projects\HlidacStatu\trunk\Web.Statu\App_Data" />
+
+    <!-- OPTIONAL PARAMETERS -->
+    <add xdt:Transform="Insert" key="MerkAPIKey" value=""/>
+    <!-- key for MERK.CZ api -->
+
+    <add xdt:Transform="Insert" key="ZabbixServerUrl" value="https://zabbix.local/zabbix" />
+    <add xdt:Transform="Insert" key="ZabbixServer" value="zabbix.local" />
+    <add xdt:Transform="Insert" key="ZabbixAPIUser" value=""/>
+    <add xdt:Transform="Insert" key="ZabbisAPIPassword" value=""/>
+
+    <add xdt:Transform="Insert" key="DiscourseAPIUsername" value=""/>
+    <add xdt:Transform="Insert" key="DiscourseAPIKey" value=""/>
+    <add xdt:Transform="Insert" key="DiscourseAPIBaseUrl" value="https://discourse.local/"/>
+
+
+  </appSettings>
+
+
+  <system.web>
+    <!--
+      In the example below, the "Replace" transform will replace the entire
+      <customErrors> section of your Web.config file.
+      Note that because there is only one customErrors section under the
+      <system.web> node, there is no need to use the "xdt:Locator" attribute.
+
+      <customErrors defaultRedirect="GenericError.htm"
+        mode="RemoteOnly" xdt:Transform="Replace">
+        <error statusCode="500" redirect="InternalError.htm"/>
+      </customErrors>
+    -->
+  </system.web>
+</configuration>

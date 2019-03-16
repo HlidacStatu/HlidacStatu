@@ -1,0 +1,39 @@
+﻿@model IEnumerable<HlidacStatu.Lib.Data.WatchdogSmlouva>
+@using HlidacStatu.Lib.Data;
+@using System.Data.Entity;
+@using System.Data.Entity.Core.Objects;
+@using Microsoft.Owin.Security;
+
+
+
+@{
+    ViewBag.Title = "Confirmation code";
+
+
+}
+UserId: @ViewBag.UserId
+Code: @ViewBag.Code
+
+@using (Html.BeginForm("ShowAccountConfirmationCode", "Manage", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.Hidden("action", "test")
+    <h4>Test Code</h4>
+    <hr />
+    <div class="form-group">
+UserId:
+        <div class="col-md-10">
+            @Html.TextBox("userid", (string)ViewBag.UserId, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        Code:
+        <div class="col-md-10">
+            @Html.TextBox("code", (string)ViewBag.Code, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Test" class="btn btn-default" />
+        </div>
+    </div>
+}

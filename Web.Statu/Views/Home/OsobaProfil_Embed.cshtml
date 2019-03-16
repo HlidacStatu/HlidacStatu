@@ -1,0 +1,21 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq
+@using HlidacStatu.Util;
+
+@{
+    Layout = null;
+
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+
+}
+<div class="onlyembed">
+    <div class="container text">
+        <h3>@ViewBag.Title</h3>
+        <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 2, true, true, html: true)) </p>
+        <p><a href="@Model.GetUrl(false)" target="_top">Více informací o osobě</a></p>
+    </div>
+    <img src="@($"/socialbanner/osoba?d={DateTime.Now.ToString("yyMMdd")}&v={Model.NameId}")"
+         style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
+</div>

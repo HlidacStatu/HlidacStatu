@@ -1,0 +1,133 @@
+﻿@using System.Linq
+@using Devmasters.Core.Collections
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    @{
+        ViewBag.ThisIsEmbeded = true;
+        HlidacStatu.Web.Framework.Visit.AddVisit(this.Request.Url.PathAndQuery, HlidacStatu.Web.Framework.Visit.VisitChannel.Embed);
+
+        string title = ViewBag.Title;
+        if (string.IsNullOrEmpty(title))
+        {
+            title = "Hlídač smluv státních a veřejných institucí. Vylepšený Registr smluv.";
+        }
+        else
+        {
+            title = title + " - " + "Hlídač smluv.";
+        }
+        string description = ViewBag.Description + " Vylepšený Registr smluv." ?? "Hlídač a analýza smluv státních a veřejných institucí z registru smluv ČR. Vylepšený Registr smluv. Veřejnoprospěšný projekt.";
+    }
+    <title>@title</title>
+    <meta name="description" content="@description" />
+    <meta name="author" content="Michal Bláha" />
+    <meta name="keywords" content="Registr smluv, Hlídač smluv, politici, smlouvy státu">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&amp;subset=latin-ext" rel="stylesheet">
+
+
+    @RenderSection("metatags", required: false)
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+    <base target="_top">
+
+    <style>
+        #embLogo {
+            position: relative;
+            z-index: 0;
+        }
+
+            #embLogo .logo {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                opacity: 0.3;
+                font-size: 20px;
+                text-decoration: none;
+            }
+    </style>
+    <script>
+        var _showFAD = true;
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-154075-22', 'auto');
+        ga('send', 'pageview',
+            {
+                'dimension1': '@(Request.QueryString["calledfrom"] ?? "1")'
+            }
+            );
+
+    </script>
+
+</head>
+<body class="embed">
+    <div class="body embed">
+        <div class="container">
+            <div id="embLogo">
+                <a href="@(Request.Url.AbsoluteUri.Replace("embed=1",""))" target="_top" class="logo">
+                    <img src="/content/img/logoonly.svg" width="45" height="45" style="vertical-align:text-bottom" />
+                </a>
+            </div>
+
+
+            @if (IsSectionDefined("onlyembed"))
+            {
+                IgnoreBody();
+                IgnoreSection("title");
+                IgnoreSection("breadcrumb");
+
+                @RenderSection("onlyembed", false)
+            }
+            else
+            {
+                IgnoreSection("onlyembed");
+                IgnoreSection("title");
+                IgnoreSection("breadcrumb");
+
+                @RenderBody()
+
+            }
+
+        </div>
+
+        <footer>
+            <div class="center-block text-center">&copy; 2016 - @DateTime.Now.Year Hlídač Státu z.ú. <a href="/texty/licence">Licence</a></div>
+        </footer>
+    </div>
+
+    @RenderSection("footerscripts", required: false)
+    <script type="text/javascript" src="/Scripts/iframeResizer.contentWindow.min.js"></script>
+
+</body>
+</html>
+
+@functions 
+{
+    void IgnoreSection(string name)
+    {
+        if (IsSectionDefined(name))
+        {
+            WriteTo(TextWriter.Null, RenderSection(name));
+        }
+    }
+
+    void IgnoreBody()
+    {
+        WriteTo(TextWriter.Null, RenderBody());
+    }
+
+}

@@ -1,0 +1,146 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+
+@{
+
+
+    int size = 0;
+
+
+    //chart
+
+
+    var model = new HlidacStatu.Lib.Render.ReportModel();
+    model.Add("price_year_chart", "Hodnota uzavřených smluv v Kč v jednotlivých letech",
+UtilChart.SimpleBarChart(true, true, 400, "price_year_chart", "Rok", "Kč",
+HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+ );
+    model.Add("year_chart", "Počet vložených smluv v jednotlivých letech",
+UtilChart.SimpleBarChart(true, true, 400, "year_chart", "Rok", "Počet smluv",
+HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+);
+
+
+    model.Add("price_month_chart", "Hodnota uzavřených smluv v Kč po měsících",
+UtilChart.SimpleBarChart(true, true, 400, "price_month_chart", "Měsíc", "Kč",
+HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Nest.DateInterval.Month))
+);
+
+
+    model.Add("month_chart", "Počet vložených smluv po měsících",
+UtilChart.SimpleBarChart(true, true, 400, "month_chart", "Měsíc", "Počet smluv",
+HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Month))
+);
+
+
+
+    model.Add("tPercentPerSum", "Smlouvy podle hodnoty", HlidacStatu.Web.Framework.Report.GlobalStatistics.SmlouvyPodleCeny());
+
+    model.Add("PercentPerSum", "Smlouvy podle hodnoty",
+UtilChart.SimpleBarChart(true, false, 300, "PercentPerSum", "Hodnota smlouvy", "% smluv",
+HlidacStatu.Web.Framework.Report.GlobalStatistics.SmlouvyPodleCeny())
+);
+
+    model.Add("week", "Počet vložených smluv po týdnech",
+        UtilChart.SimpleBarChart(true, true, 400, "week_chart", "Týden", "Počet smluv",
+            HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Week))
+        );
+    model.Add("day", "Počet vložených smluv po dnech",
+        UtilChart.SimpleBarChart(true, true, 400, "day_chart", "Den", "Počet smluv",
+            HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Day))
+        );
+
+
+
+    double platnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0];
+    double neplatnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1];
+    double celkemKc = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2];
+
+
+
+    var sumCountZad = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerCount(true);
+    model.Add("perIcoChartZad", "Nejaktivnější plátci podle počtu smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perIcoZad",
+             "Firmy", "Počet smluv",
+            sumCountZad.Filter(10))
+        );
+    model.Add("perIcoTableZad", "",sumCountZad);
+
+
+    var sumPriceZad = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerSum(true);
+    model.Add("perPriceChartZad", "Největší plátci podle celkové hodnoty smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perPriceZad",
+             "Firmy", "Kč",
+            sumPriceZad.Filter(10))
+        );
+    model.Add("perPriceTableZad", "",sumPriceZad);
+
+    var sumCount = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerCount(false);
+    model.Add("perIcoChart", "Nejúspěšnější dodavatelé podle počtu smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perIco",
+            "Firmy", "Počet smluv",
+            sumCount.Filter(10))
+        );
+    model.Add("perIcoTable", "",sumCount);
+
+
+    var sumPrice = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerSum(false);
+    model.Add("perPriceChart", "Nejúspěšnější dodavatelé podle celkové hodnoty smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perPrice",
+            "Firmy", "Kč",
+            sumPrice.Filter(10))
+        );
+    model.Add("perPriceTable", "", sumPrice);
+
+
+}
+
+
+
+<div class="jumbotron small">
+    <h1>Základní statistiky Registru smluv</h1>
+    <p>Celkem platných smluv: @platnych</p>
+    <p>
+        Celkem zneplatněných smluv: @neplatnych
+    </p>
+    <p>Celková suma smluv: @celkemKc.ToString("N0") Kč s DPH (@Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true)))</p>
+</div>
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        @foreach (var q in model.GetQueue())
+        {
+            @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+        }
+
+
+    </div>
+</div>

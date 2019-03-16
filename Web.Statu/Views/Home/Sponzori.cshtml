@@ -1,0 +1,64 @@
+﻿@model HlidacStatu.Lib.Render.ReportDataSource<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>
+
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq;
+@using HlidacStatu.Web.Framework
+
+@{
+
+    if (ViewBag.SponzoriFirmy == true)
+    {
+        ViewBag.Title = "Firemní sponzoři";
+        ViewBag.SubTitle = ViewBag.Strana + (ViewBag.Rok == null ? "" : " v roce " + ViewBag.Rok);
+    }
+    else
+    {
+        ViewBag.Title = "Sponzorující osoby";
+        ViewBag.SubTitle = ViewBag.Strana + (ViewBag.Rok == null ? "" : " v roce " + ViewBag.Rok);
+    }
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/osoby">Hlídač Osob</a></li>
+        <li class="active">Sponzoři @ViewBag.Strana</li>
+    </ol>
+    }
+<div class="col-xs-12">
+        <h3>
+            @Util.AddBookmarkUrl(this.User, ViewBag.Title, Request.Url.AbsoluteUri)
+            Sponzoři @ViewBag.Strana
+        </h3>
+        <h4>
+            Vyberte rok, pro který chcete zobrazit sponzory.
+        </h4>
+    </div>
+    @Html.Raw( UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>("", Model, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
+                },
+                'ordering': false,
+                'order': [0,'asc'],
+                'lengthChange': false,
+                'info': false,
+                'paging': false
+                }")
+    )
+
+
+
+    @Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+

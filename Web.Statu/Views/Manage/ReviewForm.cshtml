@@ -1,0 +1,44 @@
+﻿@using Devmasters.Core;
+@{
+    Layout = null;
+    var formid = Request.QueryString["formid"];
+}
+
+<form id="form@(formid)" class="form-horizontal">
+    @*<input type="hidden" name="url" value="@(Request.QueryString["url"])" />
+    <input type="hidden" name="t" value="@(Request.QueryString["t"])" />*@
+    @foreach (var k in Request.QueryString.AllKeys)
+    {
+        if (k == "email")
+        {
+        }
+        else
+        {
+            <input type="hidden" name="@k" value="@(Request.QueryString[k])" />
+        }
+    }
+
+    @if (this.User?.Identity?.IsAuthenticated == true)
+    {
+        <input type="hidden" name="email" value="@(this.User.Identity.Name)" />
+    }
+    else
+    {
+        <div class="form-group">
+            <label for="email_@formid" class="col-sm-2 control-label">Váš email</label>
+            <div class="col-sm-10">
+                <input type="email" required id="email_@formid" name="email" value="" placeholder="Vaše email adresa." />
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <label for="txt_@formid" class="col-sm-2 control-label">Co máme špatně?</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" rows="3" id="txt_@formid" name="newV" ></textarea>
+        </div>
+    </div>
+
+
+</form>
+
+

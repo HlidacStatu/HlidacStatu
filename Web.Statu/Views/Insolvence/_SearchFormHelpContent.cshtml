@@ -1,0 +1,96 @@
+﻿<h3>Textové hledání</h3>
+<dl>
+	<dt>Hledat všechna slova v různých tvarech</dt>
+	<dd>
+		<kbd>konkurs ksos 2018</kbd>
+		<br />Hledá insolvence obsahující všechna uvedená slova v různých mluvnických tvarech
+
+	</dd>
+	<dt>Kterékoliv z těchto slov</dt>
+	<dd>
+		mezi všechna požadovaná slova vložte operátor OR:<br /> <kbd>oddluzeni OR konkurs</kbd>
+		<br />Hledá smlouvy obsahující alespoň jedno z uvedených slov
+	</dd>
+	<dt>Toto slovo tam být nesmí </dt>
+	<dd>
+		Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>-ksos</kbd>
+		nebo pro sousloví <kbd>-"Jack Russell"</kbd>
+	</dd>
+</dl>
+<h3>Specifické hledání</h3>
+<dl>
+	<dt>Prohledávat specifické položky v insolvenčních řízeních</dt>
+	<dd>
+		napište prefix s ":" bez mezery následovaný hledanou hodnotou<br /><kbd>spisovaZnacka:"INS 23128/2017"</kbd>
+		hledá insolvenční řízení s konkrétní spisovou značkou
+	</dd>
+	<br />
+	<dt>Podporované prefixy / hledatelné položky v insolvenčních řízeních</dt>
+	<dd>
+		<kbd>spisovaZnacka:"INS 23128/2017"</kbd> - konkrétní insolvenční řízení<br />
+		<kbd>soud:ksos</kbd> - řešené konkrétním soudem <br />
+		<kbd>stav:konkurs</kbd> - řízení ve stavu<br />
+		<kbd>datumZalozeni:rok-mesic-den</kbd> - insolvenční řízení s datem založení, formát data YYYY-MM-DD <span style="color:red;font-weight:bold">TODO</span><br />
+		<kbd>datumZalozeni:[2016-07-01 TO 2016-07-31]</kbd> - insolvenční řízení založené v srpnu 2016. <span style="color:red;font-weight:bold">TODO</span><br />
+		<kbd>posledniZmena:rok-mesic-den</kbd> - insolvenční řízení změněné dne. <span style="color:red;font-weight:bold">TODO</span><br />
+		<kbd>posledniZmena:[2016-01-01 TO 2016-12-31]</kbd> - insolvenční řízení změněné v roce 2016. <span style="color:red;font-weight:bold">TODO</span><br />
+		<kbd>ico:12345678</kbd> - jedna ze stran má uvedené IČO <span style="color:red;font-weight:bold">TODO</span><br />
+		<kbd>nazev:"Petr Novák"</kbd> - jméno osoby či společnosti jedné ze stran <span style="color:red;font-weight:bold">TODO</span><br />
+	</dd>
+</dl>
+<h3>Podporované stavy řízení</h3>
+<dl>
+	<dd>
+		<kbd>NEVYRIZENA</kbd> -  nevyřízená (<i>před rozhodnutím o úpadku</i>)<br />
+		<kbd>MORATORIUM</kbd> -  moratorium (<i>povoleno moratorium</i>)<br />
+		<kbd>ÚPADEK</kbd> -  úpadek (<i>v úpadku</i>)<br />
+		<kbd>KONKURS</kbd> -  konkurs (<i>prohlášený konkurs</i>)<br />
+		<kbd>ODDLUŽENÍ</kbd> -  oddlužení (<i>povoleno oddlužení</i>)<br />
+		<kbd>REORGANIZ</kbd> -  reorganizace (<i>povolena reorganizace</i>)<br />
+		<kbd>VYRIZENA</kbd> -  vyřízená (<i>vyřízená věc</i>)<br />
+		<kbd>PRAVOMOCNA</kbd> -  pravomocná (<i>pravomocně skončená věc</i>)<br />
+		<kbd>ODSKRTNUTA</kbd> -  odškrtnutá (<i>odškrtnutá - skončená věc</i>)<br />
+		<kbd>ZRUŠENO VS</kbd> -  zrušeno vrchním soudem (<i>zrušeno vrchním soudem</i>)<br />
+		<kbd>K-PO ZRUŠ.</kbd> -  konkurs po zrušení (<i>prohlášený konkurs po zrušení VS</i>)<br />
+		<kbd>OBZIVLA</kbd> -  obživlá (<i>obživlá věc</i>)<br />
+		<kbd>MYLNÝ ZÁP.</kbd> -  mylný zápis (<i>mylný zápis do rejstříku</i>)<br />
+		<kbd>NEVYR-POST</kbd> -  postoupená (<i>věc postoupená věc</i>)<br />
+	</dd>
+</dl>
+<h3>Zkratky soudů</h3>
+<dl>
+	<dd>
+		<kbd>MSPH</kbd> - Městský soud v Praze<br />
+		<kbd>KSPH</kbd> - Krajský soud v Praze<br />
+		<kbd>KSCB</kbd> - Krajský soud v Českých Budějovicích<br />
+		<kbd>KSTB</kbd> - Krajský soud v Českých Budějovicích – pobočka v Táboře<br />
+		<kbd>KSPL</kbd> - Krajský soud v Plzni<br />
+		<kbd>KSKV</kbd> - Krajský soud v Plzni – pobočka v Karlových Varech<br />
+		<kbd>KSUL</kbd> - Krajský soud v Ústí nad Labem<br />
+		<kbd>KSLB</kbd> - Krajský soud v Ústí nad Labem – pobočka v Liberci<br />
+		<kbd>KSHK</kbd> - Krajský soud v Hradci Králové<br />
+		<kbd>KSPA</kbd> - Krajský soud v Hradci Králové – pobočka v Pardubicích<br />
+		<kbd>KSBR</kbd> - Krajský soud v Brně<br />
+		<kbd>KSJI</kbd> - Krajský soud v Brně – pobočka v Jihlavě<br />
+		<kbd>KSZL</kbd> - Krajský soud v Brně – pobočka ve Zlíně<br />
+		<kbd>KSOS</kbd> - Krajský soud v Ostravě<br />
+		<kbd>KSOL</kbd> - Krajský soud v Ostravě – pobočka v Olomouci<br />
+		<kbd>VSPH</kbd> - Vrchní soud v Praze<br />
+		<kbd>VSOL</kbd> - Vrchní soud v Olomouci<br />
+		<kbd>NSCR</kbd> - Nejvyšší soud České republiky<br />
+	</dd>
+</dl>
+<h3>Pro experty</h3>
+<dl>
+	<dt>Logické a rozšiřující operátory</dt>
+	<dd>
+		Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br />
+		Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující více znaků. Příklad:<kbd>ks*</kbd><br />
+		Příklad: <kbd>ico:27295567 AND soud:ksos</kbd>
+	</dd>
+	<dt>Opravdu pro odvážné a pokročilé</dt>
+	<dd>
+		Protože vyhledávání běží nad Elastic Serverem, můžete použít většinu operátorů <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax" target="_blank">Query string syntaxe</a> Elastic serveru. Hezkou zábavu.
+
+	</dd>
+</dl>

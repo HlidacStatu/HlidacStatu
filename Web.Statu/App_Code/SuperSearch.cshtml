@@ -1,0 +1,240 @@
+﻿@using System.Web.Mvc;
+@using Devmasters.Core;
+
+
+@functions
+{
+    private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper Url
+    {
+        get { return ((WebViewPage)CurrentPage).Url; }
+    }
+}
+
+@helper Form(string Q, int active = 1,  string AdditionalHtml = "", bool showInfo = true, KeyValuePair<string,string>[] hiddenInputs = null)
+{
+string t1 = "", t2 = "", t3 = "", t4 = "";
+if (active == 1)
+{
+    t1 = "active";
+}
+else if (active == 2)
+{
+    t2 = "active";
+}
+else if (active == 3)
+{
+    t3 = "active";
+}
+else if (active == 4)
+{
+    t4 = "active";
+}
+else
+{
+    t1 = "active";
+}
+
+
+
+
+    <div class="row">
+        <div class="col-xs-offset-0 col-xs-12 col-md-offset-0 col-md-12">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="@t1"><a href="#smlouvy" aria-controls="smlouvy" role="tab" data-toggle="tab" style="background-color:">Hledat smlouvy</a></li>
+                <li role="presentation" class="@t2"><a href="#osoby" aria-controls="osoby" role="tab" data-toggle="tab">Hledat politiky a sponzory</a></li>
+                @*<li role="presentation" class="@t3"><a href="#firmy" aria-controls="firmy" role="tab" data-toggle="tab">Hledat firmy</a></li>*@
+                <li role="presentation" class="@t4"><a href="#ucty" aria-controls="ucty" role="tab" data-toggle="tab">Prohledat transparentní účty</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane @t1" id="smlouvy" style="">
+                    <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">Hledání v registru smluv <small><button type="button" class="btn btn-info btn-link" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button><a class="btn btn-info btn-link" href="/SnadneHledani">Snadné hledání podle více kritérií</a></small></h3>
+                    <form method="get" action="https://www.hlidacstatu.cz/hledat" class="form-inline" role="form">
+                        @if (hiddenInputs != null)
+                        {
+                            foreach (var kv in hiddenInputs)
+                            {
+                                <input type="hidden" name="@kv.Key" id="@kv.Key" value="@kv.Value" />
+                            }
+                        }
+                        <div id="custom-search-input" class="col-xs-12 custom-search-input" style="">
+                            <div class="input-group col-xs-12">
+
+                                <input class="form-control input" id="Q" name="Q" placeholder="Název úřadu, smluvní strany, IČO, ..." style="max-width: none;" type="text" value="@Q">
+
+                                <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                                    <button class="btn btn-default btn" type="submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-info btn" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    @if (showInfo)
+                    {
+                        <div class='row'>
+                            <p style='margin-top:10px;' class='col-xs-12 text-muted small'>
+                                Prohledáváme jak metadata (informace o smlouvě), tak samotné texty smluv.
+                                Hledejte IČO, datové schránky, jména firem, jména lidí a úředníků
+                                anebo obsahu a tématu smlouvy.
+
+                            </p>
+                        </div>
+                    }
+                </div>
+                <div role="tabpanel" class="tab-pane @t2" id="osoby">
+                    <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">Hledání politiků a dalších osob</h3>
+                    <form method="get" action="https://www.hlidacstatu.cz/osoby" class="form-inline" role="form">
+                        <div id="personsForm" class="input-group col-xs-12 custom-search-input">
+                            <input class="form-control typeahead input" type="text" style="width:100%;max-width: none;" placeholder="Jméno osoby" id="Q" name="Q">
+                            <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                                <button class="btn btn-default btn" type="submit">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                    @if (showInfo)
+                    {
+                        <div class='row'>
+                            <p style='margin-top:10px;' class='col-xs-12 text-muted small'>
+                                Prohledáváme databázi současných a bývalých politiků, sponzorů politických stran a osob navázaných na politiku.
+                                Politiky hledáme podle jména (s i bez diakritiky). Stačí začít psát a začneme vám průběžně nabízet nejvhodnější osoby.
+                            </p>
+                        </div>
+                    }
+                    <div class="clearfix"></div>
+                    <div class="col-xs-offset-0 col-xs-12 col-md-offset-0 col-md-10">
+
+                        <div class="small">
+                            <h4>Politici a osoby podle příjmení</h4>
+                            @{
+                                string prefix = "";
+                                if (!string.IsNullOrEmpty(Request.QueryString["prefix"])) //all, show with biggest angazovanost
+                                {
+                                    prefix = Request.QueryString["prefix"].ToString().ToUpper();
+                                }
+                            }
+                            @foreach (var prf in HlidacStatu.Lib.StaticData.Politici.Get().Select(m => m.Prijmeni.First().ToString().ToUpper()).Distinct().Concat(new string[] { "CH" }).OrderBy(m => m))
+                            {
+                                <span style="padding-left:5px;">
+                                    @if (prf == prefix)
+                                    {
+                                        <b>@prf</b>
+                                    }
+                                    else
+                                    {
+                                        <a href="https://www.hlidacstatu.cz/politici?prefix=@prf">@prf</a>
+                                    }
+                                </span>
+                            }
+                        </div>
+                    </div>
+                    <script>
+                        $(function () {
+
+                            persons = new Bloodhound({
+                                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                remote: {
+                                    url: 'https://www.hlidacstatu.cz/api/v1/persons?q=%QUERY',
+                                    wildcard: '%QUERY'
+                                }
+                            });
+
+                            $('#personsForm .typeahead').typeahead(null, {
+                                display: 'name',
+                                name: "person",
+                                source: persons,
+                                limit: 30,
+                            });
+
+                            $('#personsForm .typeahead').bind('typeahead:select', function (ev, suggestion) {
+                                //$("#AddressId").val(suggestion.id).trigger('change');
+                                document.location.href = 'https://www.hlidacstatu.cz/politik/' + suggestion.nameId;
+
+                            });
+
+                        }); //jquery.start
+                    </script>
+                </div>
+
+                                @*<div role="tabpanel" class="tab-pane @t3" id="firmy">
+            <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">Hledání firem</h3>
+            <form method="get" action="https://www.hlidacstatu.cz/hledatFirmy" class="form-inline" role="form">
+                <div id="custom-search-input" class="col-xs-12">
+                    <div class="input-group col-xs-12">
+
+                        <input class="form-control input" id="Q" name="Q" placeholder="Název úřadu, smluvní strany, IČO, ..." style="max-width: none;" type="text" value="@Q">
+
+                        <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                            <button class="btn btn-default btn" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-info btn" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            @if (showInfo)
+            {
+                <div class='row'>
+                    <p style='margin-top:10px;' class='col-xs-12 text-muted small'>
+                        Prohledáváme databázi firem a podnikatelů z Obchodního rejstříku a Živnostenského rejstříku, aktivních i zrušených.
+                        Firmy hledáme podle jména a IČO.
+                    </p>
+                </div>
+            }
+
+
+        </div>*@
+
+                <div role="tabpanel" class="tab-pane @t4" id="ucty">
+
+                    <form method="get" action="https://www.hlidacstatu.cz/ucty/hledat" class="form-inline" role="form">
+                        <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">
+                            Prohledávání transakcích na transparentních účtech
+                            @*<small><button type="button" class="btn btn-info btn-link" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button></small>*@
+                        </h3>
+                        <div id="custom-search-input" class="col-xs-12 custom-search-input">
+                            <div class="input-group col-xs-12">
+
+                                <input class="form-control input" id="Q" name="Q" placeholder="Jméno dárce peněz politické straně nebo číslo účtu" style="max-width: none;" type="text" value="@Q">
+
+                                <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                                    <button class="btn btn-default btn" type="submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    @*<button type="button" class="btn btn-info btn-lg" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button>*@
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    @if (showInfo)
+                    {
+                        <div class='row'>
+                            <p style='margin-top:10px;' class='col-xs-12 text-muted small'>
+                                Prohledáváme transakce na transparentních účtech politických stran a hnutí, politických osob a vybraných organizacích.
+                                Můžete hledat jména firem, jména osob, čísla účtů a podobně.
+                            </p>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div>@Html.Raw(AdditionalHtml)</div>
+
+        </div>
+    </div>
+
+<hr style="margin-top: 35px;;padding-bottom:15px;" />
+
+}

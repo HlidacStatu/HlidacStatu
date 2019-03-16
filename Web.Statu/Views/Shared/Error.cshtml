@@ -1,0 +1,25 @@
+﻿
+@using HlidacStatu.Web;
+
+@using System.Linq;
+@using Devmasters.Core;
+@{ 
+    ViewBag.Title = "Chyba";
+    Response.StatusCode = 404;
+    string url = ViewBag.SourceUrl;
+    if (!string.IsNullOrEmpty(Request.QueryString["from"]))
+    {
+        url  = Request.QueryString["from"];
+    }
+}
+
+@section scripts
+{
+}
+
+
+<script>
+    ga('send', 'event', 'errorpage', '404', '@url');
+</script>
+<h3 class="text-center" style="padding-bottom:30px;">Něco jsme pokazili, omlouváme se. V každém případě již o tom víme.</h3>
+<p class="text-center"><a class="btn btn-primary btn-lg" href="/" role="button">Pokračovat na titulní stránce</a></p>

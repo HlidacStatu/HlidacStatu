@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:element name="znepristupneni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idSmlouvy" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">ID smlouvy, která má být stažena</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="emailProPotvrzeni" type="ns1:tEmail" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Email pro zaslání potvrzení</xs:documentation>
+						<xs:documentation xml:lang="cs">Pokud je email vyplněn, systém ISRS na zadanou adresu odesílá kopii potvrzovacích zpráv, které standardně zasílá do datové schránky odesilatele</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

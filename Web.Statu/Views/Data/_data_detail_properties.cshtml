@@ -1,0 +1,55 @@
+﻿@model HlidacStatu.Web.Models.DataDetailModel
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+
+
+@{
+    JObject obj = null;
+    try
+    {
+        obj = JObject.Parse(Model.Data);
+
+    }
+    catch (Exception e)
+    {
+        HlidacStatu.Util.Consts.Logger.Error("", e);
+        return;
+    }
+
+    IEnumerable<JProperty> props = obj.Properties();
+    var chosenProps = Model.Dataset.Registration().searchResultTemplate?.properties?.ToList() ?? new List<string>
+        ();
+    if (chosenProps.Count > 0)
+    {
+        props = props.Where(m => chosenProps.Contains(m.Name)).OrderBy(o => chosenProps.IndexOf(o.Name));
+    }
+}
+    <table class="table table-hover">
+        <tbody>
+            @foreach (JProperty jtoken in props)
+            {
+                var sValue = Fn.RenderProperty(jtoken, 0, 1) ?? "";
+
+                <tr>
+                    <td>@jtoken.Name</td>
+                    <td>
+                        @if (sValue.Length > 1000)
+                        {
+                            <pre>
+                            @sValue
+                            </pre>
+                        }
+                        else
+                        {
+                            <span>@sValue</span>
+                        }
+                    </td>                    
+                </tr>
+            }
+        </tbody>
+    </table>

@@ -1,0 +1,602 @@
+﻿@{
+    ViewBag.Title = "Poslanci parlamentu ČR v období 2013-2017, kteří odmítali kontrolu veřejných prostředků občany";
+
+
+
+    int[] poslanciCSSD = new int[] {
+467, 6002, 6136, 6182, 5447, 5342, 354, 5456, 5911,  5462, 6194, 5918, 5921, 5926, 6113, 5402, 6206,6173,5991,5310,
+68, 6212, 5433, 5279, 5269, 5487, 6232, 5490, 5960, 5965, 5999, 6238, 6284,
+422, 5979, 5866, 5272, 6160, 252, 6157, 5989
+};
+    int[] poslanciKSCM = new int[] {
+5768, 6149,  6183, 5307,
+6188, 5261, 303, 305, 4778,
+5461, 5920, 5934, 5313, 309,
+6279, 6220, 5290, 5938, 5948,
+6223,  5322, 6228, 6233,
+5962, 5502, 5282, 5506, 6169,
+6164, 5268, 6159
+};
+    int[] poslanciODS = new int[] {
+5700, 4, 346, 6079, 5903, 6074, 6197, 6208, 401, 6175, 5969, 6007, 5520, 5844
+};
+    int[] poslanciKDU = new int[] {
+6178,
+6142, 6205,
+6210, 6217,
+};
+    int[] poslanciOstatni = new int[] {
+6191
+};
+
+    int[] prycB1 = new int[] { //všechny státní podniky bez ohledu na jejich povahu. B1
+//cssd
+467, 6002, 6136, 6182,
+5447, 5342, 354, 5456, 5911,
+5462, 6194, 5918, 5921,
+6113, 5402, 6206,
+68, 6212, 5433, 5279, 5269,
+5991, 5487, 6232, 5490,
+5960, 5310, 5965, 5999,
+6238, 6284,
+422, 5979, 5866, 5272,
+6160, 6157, 5989,
+
+//kscm
+5768, 6149,  6183, 5307,
+6188, 5261, 303, 305, 4778,
+5461, 5920, 5934, 5313, 309,
+6279, 6220, 5290, 5938, 5948,
+6223,  5322, 6228, 6233,
+5962, 5502, 5282, 5506, 6169,
+6164, 5268, 6159,
+
+//ods
+5700,4,346,6079,
+5903,6074,6197,401,5969,6007,6208,6175,5520,5844,
+
+//kdu
+6217,
+
+//
+6191
+};
+    int[] prycJ6 = new int[] {
+//CSSD
+467, 6002, 6136, 6182,
+5447, 5342, 354, 5456, 5911,
+5462, 6194, 5918, 5921,
+6113, 5402, 6206,5402,
+68, 6212, 5433, 5279, 5269,
+5991, 5487, 6232, 5490,
+5960, 5310, 5965, 5999,
+6238, 6284,
+422, 5979, 5866, 5272,
+6160, 6157, 5989,
+
+//kscm
+5768, 6149,  6183, 5307,
+6188, 5261, 303, 305, 4778,
+5461, 5920, 5934, 5313, 309,
+6279, 6220, 5290, 5938, 5948,
+6223,  5322, 6228, 6233,
+5962, 5502, 5282, 5506, 6169,
+6164, 5268, 6159,
+
+//ods
+5700,4,346,6079,
+5903,6074,6197,401,5969,6007,6208,6175,5520,5844,
+
+//kdu
+6178,6210,
+
+//
+6191
+
+
+}; //Schválen byl návrh J6, který vyjímá - v písmenu m) jsou uvedeny i veřejně ovládané podniky ve smyslu - vlastněných obcí, kraji, které ale musí mít průmyslovou a obchodní povahu, pak jsou tímto návrhem z registru smluv vyňaty.
+
+
+    int[] finalniHlasovani = new int[]
+    {
+//cssd
+467, 6002, 6136, 6182,
+5447, 5342, 354, 5456, 5911,
+5462, 6194, 5918, 5921,
+6113, 5402, 6206,
+68, 6212, 5433, 5279, 5269,
+5487, 6232, 5490,
+5960, 5965, 5999,
+6238, 6284,
+422, 5979, 5866, 5272,
+6160, 252, 6157, 5989,
+
+//kscm
+5768, 6149,  6183, 5307,
+6188, 5261, 303, 305, 4778,
+5461, 5920, 5934, 5313, 309,
+6279, 6220, 5290, 5938, 5948,
+6223,  5322, 6228, 6233,
+5962, 5502, 5282, 5506, 6169,
+6164, 5268, 6159,
+
+//ods
+4,5903,6208,6175,5520,5844,
+
+//kdu
+6178,6142,6205,6210,6217,
+
+//
+6191
+    };
+
+    Tuple<int[], int[], int[]> hlasovani = new Tuple<int[], int[], int[]>(prycB1, prycJ6, finalniHlasovani);
+
+    string poslanci = @"467|Bc.|Adámek|František| |28.02.1955|M|||
+5891|MUDr.|Antonín|Pavel| |05.06.1962|M|||
+6002|MUDr.|Běhounek|Jiří| |13.05.1952|M|||
+6136|Mgr.|Benešová|Marie| |17.04.1948|Ž|||
+6182| |Birke|Jan| |01.06.1969|M|||
+5447|Mgr.|Bohdalová|Vlasta| |18.09.1957|Ž|||
+5342|PhDr.|Böhnisch|Robin| |23.11.1976|M|||
+354| |Černý|Karel| |12.01.1965|M|07.12.1998||
+5456| |Dolejš|Richard| |13.08.1970|M|||
+5911| |Foldyna|Jaroslav| |26.06.1960|M|||
+6268|Ing.|Gabrhel|Vlastimil| |26.04.1978|M|||
+5462| |Hamáček|Jan| |04.11.1978|M|||
+6194|MUDr.|Havíř|Pavel| |21.02.1955|M|||
+5918|MUDr.|Holík|Pavel| |23.05.1957|M|||
+5921|Mgr.|Huml|Stanislav| |30.07.1955|M|||
+6200| |Chovanec|Milan| |31.01.1970|M|||
+5926|JUDr.|Chvojka|Jan| |17.12.1980|M|||
+6113|Mgr.|Jakubčík|Igor| |12.05.1967|M|||
+5402|Mgr.|Jandák|Vítězslav| |03.08.1947|M|||
+6206|Bc.|Kailová|Zuzana| |21.07.1974|Ž|||
+68|Ing.|Klučka|Václav| |20.07.1953|M|||
+6212|Mgr.|Kořenek|Petr| |23.08.1966|M|||
+5433|MUDr.|Koskuba|Jiří| |14.12.1955|M|||
+5279|MUDr.|Krákora|Jaroslav| |25.10.1955|M|||
+5269|Ing.|Mládek|Jan|CSc.|01.06.1960|M|||
+5991|PaedDr.|Novotný|Josef| |14.12.1952|M|||
+6173|Ing.|Nytrová|Pavlína| |06.03.1968|Ž|||
+5487|Ing.|Petrů|Jiří| |17.08.1956|M|||
+6232|JUDr. Ing.|Pleticha|Lukáš| |18.10.1974|M|||
+5490| |Ploc|Pavel| |15.06.1964|M|||
+5960|Ing.|Rykala|Adam| |03.09.1986|M|||
+5310|Ing.|Seďa|Antonín| |12.12.1960|M|||
+5965|Mgr.|Sklenák|Roman| |23.07.1970|M|||
+237|Mgr.|Sobotka|Bohuslav| |23.10.1971|M|08.12.1998||
+5999| |Strnadlová|Miroslava| |20.11.1954|Ž|||
+6238|JUDr.|Stupčuk|Štěpán| |09.03.1976|M|||
+6284|Bc.|Syblík|Zdeněk| |07.05.1956|M|||
+5507|Ing.|Šincl|Ladislav| |20.09.1965|M|||
+5513|JUDr.|Tejc|Jeroným| |23.08.1977|M|||
+6239|Ing.|Toufar|Lubomír| |26.03.1954|M|||
+422|Ing.|Urban|Milan| |15.10.1958|M|09.12.1998||
+5979|Mgr.|Váhalová|Dana| |28.05.1966|Ž|||
+5980|Ing.|Váňa|Roman| |01.11.1966|M|||
+5866| |Velebný|Ladislav| |11.04.1957|M|||
+5272|Ing.|Votava|Václav| |18.06.1956|M|||
+6160|Ing.|Wernerová|Markéta| |02.08.1983|Ž|||
+252|PhDr.|Zaorálek|Lubomír| |06.09.1956|M|09.12.1998||
+6157| |Zavadil|Jaroslav| |12.04.1944|M|||
+5987|Mgr.|Zemánek|Jiří| |03.01.1965|M|||
+5989|Ing.|Zemek|Václav| |13.04.1974|M|||
+6150|Ing.|Babiš|Andrej| |02.09.1954|M|||
+6151| |Babiš|Miloš| |12.05.1960|M|||
+6177| |Balaštíková|Margita| |16.09.1967|Ž|||
+6180|Mgr.|Berdychová|Martina| |29.04.1971|Ž|||
+6143|Mgr.|Berkovec|Stanislav| |31.05.1956|M|||
+6184|Mgr.|Brabec|Richard| |05.07.1966|M|||
+6185|MUDr.|Brázdil|Milan| |05.11.1962|M|||
+6187|Ing.|Čihák|Pavel| |22.01.1960|M|||
+6189|PaedDr.|Dobešová|Ivana| |12.07.1960|Ž|||
+6190|Ing.|Faltýnek|Jaroslav| |28.04.1962|M|||
+6192|PhDr. Ing.|Fichtner|Matěj|MBA|02.06.1984|M|||
+6139|Ing.|Hájek|Josef| |03.07.1956|M|||
+6196|Bc.|Holeček|Jiří| |26.04.1972|M|||
+6199|Ing.|Chalupa|Bohuslav| |15.06.1960|M|||
+6201|MUDr.|Janulík|Miloslav| |21.09.1962|M|||
+6209|MUDr.|Kasal|David| |01.01.1969|M|||
+6211|Ing.|Kolovratník|Martin| |11.04.1975|M|||
+6140|PhDr.|Komárek|Martin| |13.02.1961|M|||
+6246|Ing.|Kott|Josef| |15.11.1970|M|||
+6215|Ing.|Kubíček|Roman|Ph.D.|06.05.1963|M|||
+6219| |Lorencová|Jana| |02.04.1940|Ž|||
+6221|Ing.|Maxová|Radka| |02.12.1968|Ž|||
+6174|MUDr.|Nykl|Igor| |11.09.1963|M|||
+6172| |Okleštěk|Ladislav| |10.03.1961|M|||
+6225|Mgr.|Pastuchová|Jana| |21.07.1965|Ž|||
+6409|Ing.|Petrtýl|František| |09.03.1959|M|||
+6230| |Pfléger|Stanislav| |14.05.1958|M|||
+6231|Ing.|Pilný|Ivan| |06.07.1944|M|||
+6171|MUDr.|Plzák|Pavel| |18.08.1960|M|||
+6235|Ing.|Procházka|Roman| |23.11.1968|M|||
+6158|prof. Ing.|Rais|Karel|CSc., MBA|14.10.1949|M|||
+6379|Mgr.|Rutová|Miloslava| |10.11.1947|Ž|||
+6226| |Sedláček|Jan| |08.06.1979|M|||
+6153| |Sedlář|Martin| |21.12.1972|M|||
+6236|Ing.|Schwarz|Bronislav| |07.10.1966|M|||
+6237|PhDr.|Soukup|Zdeněk| |06.12.1952|M|||
+443|MgA.|Stropnický|Martin| |19.12.1956|M|||
+6288|Ing.|Šánová|Zuzana| |24.05.1959|Ž|||
+6144|Ing.|Šrámek|Pavel|MBA|25.03.1965|M|||
+6240|Ing.|Tureček|Karel| |01.02.1971|M|||
+6168|prof. JUDr.|Válková|Helena|CSc.|07.01.1951|Ž|||
+6167|MUDr.|Volčík|Pavel| |07.09.1950|M|||
+6166|Ing.|Volný|Jan| |15.06.1959|M|||
+6165|Mgr.|Vondráček|Radek| |30.12.1973|M|||
+6162|Ing.|Vozka|Vlastimil| |20.03.1954|M|||
+6161|prof. MUDr.|Vyzula|Rostislav|CSc.|03.12.1952|M|||
+5718|prof. RNDr.|Zlatuška|Jiří|CSc.|15.09.1957|M|||
+5768|MUDr.|Adam|Vojtěch| |12.09.1950|M|||
+6149|Ing.|Aulická Jírovcová|Hana| |07.04.1981|Ž|||
+312|JUDr.|Bebarová Rujbrová|Zuzka| |13.01.1951|Ž|08.12.1998||
+6183|Mgr.|Borka|Jaroslav| |18.10.1952|M|||
+5307|RSDr.|Černý|Alexander| |21.05.1953|M|||
+6188|Ing.|Číp|René| |10.12.1974|M|||
+5261|Ing.|Dolejš|Jiří| |24.01.1961|M|||
+303|JUDr.|Filip|Vojtěch| |13.01.1955|M|07.12.1998||
+305|doc. PhDr.|Grebeníček|Miroslav|CSc.|21.03.1947|M|07.12.1998||
+4778|JUDr.|Grospič|Stanislav| |25.07.1964|M|||
+5461|PaedDr.|Halíková|Milada| |06.01.1950|Ž|||
+5920| |Hubáčková|Gabriela| |28.01.1975|Ž|||
+5934|Mgr.|Klán|Jan| |29.11.1982|M|||
+5313|RNDr.|Koníček|Vladimír| |23.02.1964|M|||
+309|Ing.|Kováčik|Pavel| |02.07.1955|M|07.12.1998||
+6279|Ing.|Luzar|Leo| |06.12.1964|M|||
+6220|Bc.|Mackovík|Stanislav| |11.03.1967|M|||
+5290|Mgr.|Marková|Soňa| |25.02.1963|Ž|||
+5938|Ing.|Matušovská|Květa| |04.06.1984|Ž|||
+5948|RSDr.|Nekl|Josef| |28.05.1953|M|||
+6223| |Nohavová|Alena| |07.04.1960|Ž|||
+6224|JUDr. PhDr.|Ondráček|Zdeněk|Ph.D.|28.07.1969|M|||
+5322|RSDr.|Opálka|Miroslav| |09.10.1952|M|||
+6228|Ing.|Pěnčíková|Marie| |31.12.1979|Ž|||
+6233|Mgr.|Pojezný|Ivo| |21.05.1961|M|||
+5962|Mgr.|Semelová|Marta| |01.03.1960|Ž|||
+5502|Mgr.|Snopek|Václav|CSc.|20.08.1951|M|||
+5282|Ing.|Šenfeld|Josef| |13.11.1961|M|||
+5506|Ing.|Šidlo|Karel| |01.11.1957|M|||
+6169|PhDr. Ing.|Valenta|Jiří| |28.12.1965|M|||
+6164|Ing.|Vondrášek|Josef| |25.07.1950|M|||
+5268|Ing.|Vostrá|Miloslava| |26.05.1965|Ž|||
+6159| |Zahradníček|Josef| |18.03.1957|M|||
+5897|Mgr.|Bezecný|Zdeněk|Ph.D.|01.12.1971|M|||
+5909|Mgr.|Farský|Jan| |11.07.1979|M|||
+5914|Mgr.|Gazdík|Petr| |26.06.1974|M|||
+5917|doc. MUDr.|Heger|Leoš|CSc.|11.02.1948|M|||
+5919|Mgr.|Horáček|Václav| |17.08.1956|M|||
+5922|MUDr.|Chalánková|Jitka| |23.03.1957|Ž|||
+377|Ing.|Kalousek|Miroslav| |17.12.1960|M|07.12.1998||
+5939|PhDr.|Korte|Daniel| |26.02.1953|M|||
+5940|prof. MUDr.|Kostřica|Rom|CSc.|13.03.1949|M|||
+6213|Mgr.|Koubek|Jiří| |28.05.1976|M|||
+6214|Ing.|Kovářová|Věra| |20.01.1964|Ž|||
+6216|Ing.|Kučera|Michal| |04.10.1968|M|||
+5943|Mgr.|Langšádlová|Helena| |14.10.1963|Ž|||
+5476|Ing.|Laudát|František| |13.03.1960|M|||
+392|Ing.|Lobkowicz|Jaroslav| |16.08.1942|M|08.12.1998||
+6176|Mgr.|Nováková|Nina| |14.03.1954|Ž|||
+6227|Mgr.|Pavera|Herbert| |04.01.1958|M|||
+5955|MUDr.|Pecková|Gabriela| |19.01.1957|Ž|||
+6147|Ing.|Pekarová Adamová|Markéta| |02.10.1984|Ž|||
+6280|Mgr.|Plíšek|Martin| |11.11.1974|M|||
+5957|doc. RNDr.|Putnová|Anna|Ph.D., MBA|24.07.1960|Ž|||
+5558| |Schwarzenberg|Karel| |10.12.1937|M|||
+5964|PharmDr.|Skalický|Jiří|Ph.D.|03.08.1954|M|||
+6137|prof. RNDr.|Vácha|František|Ph.D.|11.09.1966|M|||
+6154|PhDr.|Ženíšek|Marek|Ph.D.|26.11.1978|M|||
+5700|Mgr.|Adamec|Ivan| |21.03.1960|M|||
+4| |Benda|Marek| |10.11.1968|M|07.12.1998||
+346|Ing.|Bendl|Petr| |24.01.1966|M|13.04.2000||
+6181|Ing.|Beznoska|Adolf| |25.12.1961|M|||
+6079|JUDr.|Blažek|Pavel|Ph.D.|08.04.1969|M|||
+5903|Mgr.|Černochová|Jana| |26.10.1973|Ž|||
+6074|Prof. PhDr.|Fiala|Petr|Ph.D., LL.M.|01.09.1964|M|||
+5990|Ing.|Fischerová|Jana|CSc.|20.08.1955|Ž|||
+6197|Mgr. Bc.|Holeček|Radim| |21.06.1976|M|||
+6208|prof. Ing.|Karamazov|Simeon|Dr.|19.12.1963|M|||
+401| |Němcová|Miroslava| |17.11.1952|Ž|08.12.1998||
+6175| |Novotný|Martin| |21.01.1972|M|||
+5969|Ing.|Stanjura|Zbyněk| |15.02.1964|M|||
+6007|Doc. MUDr.|Svoboda|Bohuslav|CSc.|08.02.1944|M|||
+5520|Ing.|Vilímec|Vladislav| |05.07.1963|M|||
+5844|RNDr.|Zahradník|Jan| |23.03.1949|M|||
+6178|Ing.|Bartošek|Jan| |10.11.1971|M|||
+6138|MVDr.|Bělobrádek|Pavel|Ph.D., MPA|25.12.1976|M|||
+6179|Mgr.|Benešík|Ondřej| |27.06.1976|M|||
+6193|PhDr.|Gabal|Ivan| |15.01.1951|M|||
+6292|Mgr. Bc.|Golasowská|Pavla|DiS.|18.05.1964|Ž|||
+6142|Mgr.|Herman|Daniel| |28.04.1963|M|||
+5314|Ing.|Hovorka|Ludvík| |13.06.1963|M|||
+6204|Mgr.|Junek|Jiří| |25.11.1973|M|||
+6205|Ing.|Jurečka|Marian| |15.03.1981|M|||
+6207|MUDr.|Kaňkovský|Vít| |05.02.1970|M|||
+6210|Ing. arch.|Klaška|Jaroslav| |28.06.1962|M|||
+6217|Ing.|Kudela|Petr| |10.03.1969|M|||
+6222|Mgr.|Mihola|Jiří|Ph.D.|01.06.1972|M|||
+6170|Ing.|Uhlík|Josef| |27.02.1963|M|||
+6148|PaedDr. Mgr.|Andrle Sylor|Augustin Karel| |25.10.1946|M|||
+6186| |Černoch|Marek| |11.08.1969|M|||
+6141| |Havlová|Olga| |25.07.1953|Ž|||
+6195| |Hnyková|Jana| |06.12.1963|Ž|||
+5933| |Kádner|David| |12.10.1976|M|||
+6218| |Lank|Martin| |10.08.1976|M|||
+5975|MUDr.|Štětina|Jiří| |09.08.1941|M|||
+6146|Mgr.|Adam|Petr| |12.08.1982|M|||
+5459|Ing.|Fiala|Radim| |24.07.1969|M|||
+6191|Ing.|Fiedler|Karel| |31.12.1961|M|||
+6198|Ing.|Holík|Jaroslav| |29.06.1953|M|||
+6105| |Okamura|Tomio| |04.07.1972|M|||
+6234| |Pražák|Karel| |11.01.1945|M|||
+6145|Ing. Mgr.|Šarapatka|Milan|Ph.D.|05.12.1955|M|||
+6156|Ing.|Zelienková|Kristýna| |06.08.1974|Ž|||
+";
+
+
+    string[] p = poslanci.Split(new string[] { "\n" }, StringSplitOptions.None);
+
+    string all = poslanciOstatni
+                    .Select(id =>
+                    { return p.Where(s => s.StartsWith(id.ToString() + "|")).First(); }
+                    )
+                    .Aggregate((f, s) => f + "\n" + s);
+
+
+
+
+
+}
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h1>Poslanci odmítající veřejnou kontrolu utrácení státu</h1>
+            <div style="padding-top: 20px;">
+                <div style="font-size: 16px;padding-top:10px;">
+                    Tito poslanci dne 22. února 2017 podpořili řadu plošných výjimek ze zveřejňování smluv státu.
+                </div>
+                <div style="font-size: 16px;padding-top:10px;">
+                    Řada poslanců tak porušila svůj slib, který dali veřejnosti před čtyřmi lety - podporovat zveřejňování smluv státu na internetu. Poslanci ČSSD, KSČM, a část poslanců ODS a KDU-ČSL dnes podpořili nejrozsáhlejší výjimky ze zákona o registru smluv a řadu dalších drobnějších.
+                </div>
+                <div style="font-size: 16px;padding-top:10px;">
+                    Vyprázdnili tak čtvrtinu obsahu (smlouvy cca za 148 miliard korun ročně) jediného zákona této sněmovny, který má zabraňovat plýtvání veřejnými prostředky. Přijali plošné výjimky pro státní a městské firmy, které ročně potajmu hospodaří se stovkami veřejných miliard - jde například o všechny dopravní podniky, městské holdingy, Českou poštu, České dráhy či Lesy ČR.
+                </div>
+                <div style="font-size: 16px;padding-top:10px;">
+                    Komentáře zakladatele hlidacstatu.cz a HlidacStatu.cz:
+                    <a onclick="return trackOutLink(this, 'Zatmivaci');" href="http://nazory.ihned.cz/komentare/c1-65635410-politici-vzkazuji-obcane-do-toho-za-co-utracime-tve-penize-ti-vubec-nic-neni">Politici vzkazují: občane, do toho, za co utrácíme tvé peníze, ti vůbec nic není</a>,
+                    <a onclick="return trackOutLink(this,'Zatmivaci');" href="http://www.denik.cz/z_domova/david-blaha-perverzni-cssd-kscm-ods-a-kdu-csl-20170223.html">Perverzní ČSSD, KSČM, ODS a KDU-ČSL</a>
+                </div>
+                <div style="font-size: 19px;padding-top:10px;">
+                    <a onclick="return trackOutLink(this,'Zatmivaci');" href="http://zatmivaci.cz">Přehled poslanců, kteří předložili výjimky do Registru smluv. Takové výjimky, že ze zákona zůstal jen název.</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    <p class="text-muted">
+        Skok na poslance
+        <ul>
+            <li><a href="#CSSD">ČSSD</a></li>
+            <li><a href="#ODS">ODS</a></li>
+            <li><a href="#KDU">KDU-ČSL</a></li>
+            <li><a href="#OSTATNI">nezařazené</a></li>
+            <li><a href="#KSCM">KSČM</a></li>
+            <li><a href="#POZNAMKY">Poznámky a další informace</a></li>
+        </ul>
+    </p>
+
+
+    <hr />
+
+    <div id="CSSD" class="row">
+        <h1>Poslanci ČSSD</h1>
+        <div class="row text-center center-block">
+            @Render(p, hlasovani, 237, "předseda ČSSD", "Zásadní odpovědnost za hlasování má předseda ČSSD Bohuslav Sobotka. Sám nebyl na hlasování přítomen, je však za hlasování svých straníků odpovědný."))
+        </div>
+        @{ int num = 0;
+            for (int i = 0; i < poslanciCSSD.Count(); i++)
+            {
+                num++;
+                @Render(p, hlasovani, poslanciCSSD[i], "ČSSD");
+                if (num % 2 == 0)
+                {
+                    <div class='clearfix visible-sm-block'></div>
+                }
+                if (num % 3 == 0)
+                {
+                    <div class='clearfix visible-md-block'></div>
+                    <div class='clearfix visible-lg-block'></div>
+                }
+            }
+        }
+    </div>
+
+
+
+    <div id="ODS" class="row">
+        <h1>Poslanci ODS</h1>
+        <div class="row text-center center-block">
+            @Render(p, hlasovani, 6074, "předseda ODS", "Zásadní odpovědnost za hlasování má předseda ODS Petr Fiala. Sám se hlasování zdržel, je však za hlasování svých straníků odpovědný."));
+        </div>
+        @{
+            num = 0;
+            for (int i = 0; i < poslanciODS.Count(); i++)
+            {
+                num++;
+                @Render(p, hlasovani, poslanciODS[i], "ODS");
+                if (num % 2 == 0)
+                {
+                    <div class='clearfix visible-sm-block'></div>
+                }
+                if (num % 3 == 0)
+                {
+                    <div class='clearfix visible-md-block'></div>
+                    <div class='clearfix visible-lg-block'></div>
+                }
+            }
+        }
+    </div>
+
+    <div id="KDU" class="row">
+        <h1>Poslanci KDU-ČSL</h1>
+        <div class="row text-center center-block">
+            @Render(p, hlasovani, 6138, "předseda KDU", "Zásadní odpovědnost za hlasování má předseda KDU-ČSL Pavel Bělobrádek. Sám se hlasování zdržel, je však za hlasování svých straníků odpovědný."));
+        </div>
+        @{ num = 0;
+            for (int i = 0; i < poslanciKDU.Count(); i++)
+            {
+                num++;
+                @Render(p, hlasovani, poslanciKDU[i], "KDU-ČSL");
+                if (num % 2 == 0)
+                {
+                    <div class='clearfix visible-sm-block'></div>
+                }
+                if (num % 3 == 0)
+                {
+                    <div class='clearfix visible-md-block'></div>
+                    <div class='clearfix visible-lg-block'></div>
+                }
+            }
+        }
+    </div>
+    <div id="OSTATNI" class="row">
+        <h1>Ostatní</h1>
+        @{ for (int i = 0; i < poslanciOstatni.Count(); i++)
+            {
+                @Render(p, hlasovani, poslanciOstatni[i], "Nezařazený");
+            }
+        }
+    </div>
+
+    <div id="KSCM" class="row">
+        <h1>Poslanci KSČM</h1>
+        @{ num = 0; for (int i = 0; i < poslanciKSCM.Count(); i++)
+            {
+                num++;
+                @Render(p, hlasovani, poslanciKSCM[i], "KSČM");
+                if (num % 2 == 0)
+                {
+                    <div class='clearfix visible-sm-block'></div>
+                }
+                if (num % 3 == 0)
+                {
+                    <div class='clearfix visible-md-block'></div>
+                    <div class='clearfix visible-lg-block'></div>
+                }
+            }
+        }
+    </div>
+
+    <hr id="POZNAMKY" />
+    <h1>Poznámky a další informace</h1>
+    <p class="text-muted">
+        <ul>
+            <li><a onclick="return trackOutLink(this, 'Zatmivaci');" target="_blank" href="http://www.psp.cz/sqw/hlasy.sqw?g=65423&l=cz">Hlasování o zákonu jako celku</a></li>
+            <li><a onclick="return trackOutLink(this, 'Zatmivaci');" target="_blank" href="http://www.psp.cz/sqw/hlasy.sqw?G=65387">Hlasovaní o vyjmutí všech státních podniků bez ohledu na jejich povahu z registru smluv.</a></li>
+            <li><a onclick="return trackOutLink(this, 'Zatmivaci');" target="_blank" href="http://www.psp.cz/sqw/hlasy.sqw?G=65391">Hlasovaní o všech krajských a měststkých podniků s průmyslovou a obchodní povahou z registru smluv</a></li>
+        </ul>
+    </p>
+
+
+
+
+
+    <div class="clearfix"></div>
+
+    @helper Render(string[] p, Tuple<int[], int[], int[]> hlasovani, int id, string strana, string popis = "")
+    {
+        int[] slibili = new int[] {
+//237,
+467, 6002, 6182, 5447, 5342, 354, 5462, 6194, 5921, 6113, 5402, 6212, 5433, 5269, 5487, 6232, 5490, 5960, 5965, 5999, 6238, 6284, 422, 5979, 5899, 5272, 252, 6157, 5989,
+
+5768, 6188, 5261, 305, 4778, 5461, 5920, 5934, 5313, 6279, 5290, 5938, 6223, 5322,6233, 5962, 5502, 5282, 5506, 6169, 6164,
+
+//6074,
+6208,
+
+//6138,
+6178, 6142, 6205, 6210,
+
+6191
+};
+        int[] odhlaseniList = new int[] { //odhlasili se pri poslednim hlasovani aby zakon prosel
+5310, 6173, 5926
+};
+
+        string jmenoLine = p.Where(m => m.StartsWith(id.ToString() + "|")).First();
+        string[] jmenoparts = jmenoLine.Split('|');
+        string jmeno = string.Format("{0} {1} {2} {3}", jmenoparts[1], jmenoparts[3], jmenoparts[2], jmenoparts[4]);
+        bool slib = slibili.Contains(id);
+        bool zena = jmenoparts[2].EndsWith("ová");
+
+        bool hlasProCelek = hlasovani.Item3.Contains(id);
+        bool hlasProB1 = hlasovani.Item1.Contains(id);
+        bool hlasProJ9 = hlasovani.Item2.Contains(id);
+        bool odhlaseni = odhlaseniList.Contains(id);
+
+
+
+        <div class='col-xs-12 col-sm-6 col-md-4 text-center center-block' style='border-top:1px solid #ddd'>
+
+            <h3><a onclick="return trackOutLink(this, 'Zatmivaci');" href='http://www.psp.cz/sqw/detail.sqw?id=@id'>@jmeno (@strana)</a></h3>
+            <p class='text-center center-block'>
+                <a onclick="return trackOutLink(this, 'Zatmivaci');" href='http://www.psp.cz/sqw/detail.sqw?id=@id'>
+                    <img src='http://www.psp.cz/eknih/cdrom/2013ps/eknih/2013ps/poslanci/i@(id).jpg' height='180' />
+                </a>
+                <br />@popis
+            </p>
+            @if (hlasProCelek)
+            {
+                <p style='color:red;'>
+                    <b><span class='glyphicon glyphicon-thumbs-down'></span></b>
+                    @Util.IfExists(zena, "Hlasovala pro zmrzačený zákon jako celek.", "Hlasoval pro zmrzačený zákon jako celek.")
+                </p>
+            }
+            @if (hlasProB1)
+            {
+                <p style='color:#ff6a00;'>
+                    <b><span class='glyphicon glyphicon-thumbs-down'></span></b>
+                    @Util.IfExists(zena, "Hlasovala pro vyjmutí zpod kontroly všech státních podniků bez ohledu na jejich povahu.", "Hlasoval pro vyjmutí zpod kontroly všech státních podniků bez ohledu na jejich povahu.")
+                </p>
+            }
+            @if (hlasProJ9)
+            {
+                <p style='color:#ff6a00;'>
+                    <b><span class='glyphicon glyphicon-thumbs-down'></span></b>
+                    @Util.IfExists(zena, "Hlasovala pro vyjmutí zpod kontroly všech krajských a měststkých podniků s průmyslovou a obchodní povahou.", "Hlasoval pro vyjmutí zpod kontroly všech krajských a měststkých podniků s průmyslovou a obchodní povahou.")
+                </p>
+            }
+            @if (odhlaseni)
+            {
+                <p style='color:red;'>
+                    <b><span class='glyphicon glyphicon-thumbs-down'></span></b>
+                    @Util.IfExists(zena, "Při opakovaném finálním hlasování se záměrně odhlásila jako nepřítomna, aby se snížil počet potřebných hlasů pro projití zákona. Styděla se pro zákon otevřeně hlasovat.", "Při opakovaném finálním hlasování se záměrně odhlásil jako nepřítomen, aby se snížil počet potřebných hlasů pro projití zákona. Styděl se pro zákon otevřeně hlasovat.")
+                </p>
+            }
+            @if (slib)
+            {
+                if (zena)
+                {
+                    <p class='text-danger'>Porušila slib voličům</p>
+                    <p class=''>Tato poslankyně před volbami slíbila podporovat a schválit plnohodnotný Registr smluv. Tímto hlasování podvedla své voliče a porušila svůj předvolební slib.</p>
+                }
+                else
+                {
+                    <p class='text-danger'>Porušil slib voličům</p>
+                    <p class=''>Tento poslanec před volbami slíbil podporovat a schválit zcela plnohodnotný Registr smluv. Tímto hlasování podvedl své voliče a porušil svůj předvolební slib.</p>
+                }
+            }
+
+        </div>
+    }

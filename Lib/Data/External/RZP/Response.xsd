@@ -1,0 +1,975 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    targetNamespace="urn:cz:isvs:rzp:schemas:VerejnaCast:v1"
+    elementFormDefault="qualified"
+    xmlns="urn:cz:isvs:rzp:schemas:VerejnaCast:v1"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    version="2.6">
+  <xs:element name="VerejnyWebOdpoved" type="TVerejnyWebOdpoved" />
+  <xs:complexType name="TVerejnyWebOdpoved">
+    <xs:sequence>
+      <xs:element name="Datum" type="xs:string" />
+      <xs:choice>
+        <!-- alespon jedna podminka se musi vyskytovat -->
+        <!-- seznam vyhledanych podnikatelu -->
+        <xs:sequence>
+          <xs:element name="Kriteria" type="TKriteria" />
+          <xs:element name="PodnikatelSeznam" type="TPodnikatelSeznam" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <!-- seznam vyhledanych osob -->
+        <xs:sequence>
+          <xs:element name="KriteriaOsoba" type="TKriteriaOsoba" />
+          <xs:element name="OsobaSeznam" type="TOsobaSeznam" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <!-- detail podnikatele -->
+        <xs:sequence>
+          <xs:element name="PodnikatelID" type="xs:string" />
+          <xs:element name="Historie" type="VyberovaPodminka" />
+          <xs:choice>
+            <xs:element name="PodnikatelVypis" type="TPodnikatelVypis" />
+            <xs:element name="PodnikatelPdf" type="xs:base64Binary" />
+          </xs:choice>
+        </xs:sequence>
+        <!-- detail osoby -->
+        <xs:sequence>
+          <xs:element name="OsobaID" type="xs:string" />
+          <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+          <xs:element name="OsobaDetail" type="TOsobaDetail" />
+          <xs:element name="PodnikatelSeznam" type="TPodnikatelSeznam" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <!-- detail statutarniho organu pravnicke Osoby -->
+        <xs:sequence>
+          <xs:element name="StatutarniOrganPravnickeOsobyID" type="xs:string" />
+          <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+          <xs:element name="StatutarniOrganPravnickeOsobyDetail" type="TStatutarniOrganPravnickeOsobyDetail" />
+          <xs:element name="PodnikatelSeznam" type="TPodnikatelSeznam" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <!-- chyba -->
+        <xs:element name="Chyba" type="TChyba" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPodnikatelSeznam">
+    <xs:sequence>
+      <xs:element name="PodnikatelID" type="xs:string" />
+      <xs:element name="ObchodniJmenoSeznam" type="TObchodniJmenoSeznam" />
+      <xs:element name="IdentifikacniCisloSeznam" type="TIdentifikacniCisloSeznam" minOccurs="0" />
+      <xs:element name="TypPodnikatele" type="TTypPodnikatele" />
+      <xs:element name="AdresaPodnikaniSeznam" type="TAdresaPodnikaniSeznam" />
+      <xs:element name="TypAdresy" type="TTypAdresy" minOccurs="0" />
+      <xs:element name="RoleSubjektu" type="TRoleSubjektu" minOccurs="0" />
+      <xs:element name="EvidujiciUrad" type="TEvidujiciUrad" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TObchodniJmenoSeznam">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TIdentifikacniCisloSeznam">
+    <xs:simpleContent>
+      <xs:extension base="xs:unsignedInt">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TRoleSubjektu">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TTypPodnikatele">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TAdresaPodnikaniSeznam">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TTypAdresy">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TRole">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TEvidujiciUrad">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPodnikatelVypis">
+    <xs:sequence>
+      <xs:element name="Hlavicka" type="THlavicka" />
+      <xs:element name="PodnikatelDetail" type="TPodnikatelDetail" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="THlavicka">
+    <xs:sequence>
+      <xs:element name="CasVytvoreni" type="TCasVytvoreni" />
+    </xs:sequence>
+    <xs:attribute name="Nadpis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TCasVytvoreni">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPodnikatelDetail">
+    <xs:sequence>
+      <xs:element name="Upozorneni" type="xs:string" minOccurs="0" />
+      <xs:element name="Konkurz" type="TKonkurz" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Likvidace" type="TLikvidace" minOccurs="0" />
+      <xs:element name="Prekazky" type="TPrekazky" minOccurs="0" />
+      <xs:choice>
+        <!-- alespon jedna podminka se musi vyskytovat -->
+        <xs:sequence>
+          <!-- fyzicka osoba -->
+          <xs:element name="PodnikatelOsoba" type="TPodnikatelOsoba" />
+          <xs:element name="ObchodniJmeno" type="TObchodniJmeno" minOccurs="0" />
+        </xs:sequence>
+        <xs:sequence>
+          <!-- pravnicka osoba -->
+          <xs:element name="ObchodniJmeno" type="TObchodniJmeno" />
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="AdresaPodnikani" type="TAdresaPodnikani" />
+      <xs:element name="OrganizacniSlozkaOznaceni" type="TOrganizacniSlozkaOznaceni" minOccurs="0" />
+      <xs:element name="OrganizacniSlozka" type="TOrganizacniSlozka" minOccurs="0" />
+      <xs:element name="IdentifikacniCislo" type="TIdentifikacniCislo" />
+      <xs:element name="PrvovypisDoruceni" type="TPrvovypisDoruceni" minOccurs="0" />
+      <xs:element name="IdRzp" type="TIdRzp" minOccurs="0" />
+      <xs:element name="DoplnkoveInformace" type="TDoplnkoveInformace" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="StatutarniOrganClen" type="TStatutarniOrganClen" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="OrganizacniSlozkaVedouci" type="TOrganizacniSlozkaVedouci" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="SeznamZivnosti" type="TSeznamZivnosti" minOccurs="0" />
+      <xs:element name="Provozovny" type="TProvozovny" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="VyporadaniZavazku" type="TVyporadaniZavazku" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="ZucastnenaOsobaSeznam" type="TZucastnenaOsobaSeznam" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="EvidujiciUrad" type="TEvidujiciUrad" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TObchodniJmeno">
+    <xs:sequence>
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TIdentifikacniCislo">
+    <xs:sequence>
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TAdresaPodnikani">
+    <xs:sequence>
+      <xs:element name="PlatnostAdresy" type="TPlatnostAdresy" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TOrganizacniSlozkaOznaceni">
+    <xs:sequence>
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPrvovypisDoruceni">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TIdRzp">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TOrganizacniSlozka">
+    <xs:sequence>
+      <xs:element name="PlatnostAdresy" type="TPlatnostAdresy" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TKonkurz">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TLikvidace">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPlatnostAdresy">
+    <xs:sequence>
+      <xs:element name="ZmenaAdresy" type="TZmenaAdresy" />
+      <xs:element name="Platnost" type="TPlatnost" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPlatnostHodnoty">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="Platnost" type="TPlatnost" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="THodnota">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TDoplnkoveInformace">
+    <xs:sequence>
+      <xs:group ref="GDoplnkoveInformace" maxOccurs="unbounded" />
+      <xs:element name="Platnost" type="TPlatnost" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:group name="GDoplnkoveInformace">
+    <xs:choice>
+      <!-- alespon jedna podminka se musi vyskytovat -->
+      <xs:element name="DetailDoplnkoveInformace" type="xs:string" />
+      <xs:element name="TextDoplnkoveInformace" type="xs:string" />
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="TSeznamZivnosti">
+    <xs:sequence>
+      <xs:element name="Zivnost" type="TZivnost" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TZivnost">
+    <xs:sequence>
+      <xs:element name="Predmet" type="TPredmet" />
+      <xs:element name="Obor" type="TObor" minOccurs="0" />
+      <xs:element name="Prumysl" type="TPrumysl" minOccurs="0" />
+      <xs:element name="Rozsah" type="TRozsah" minOccurs="0" />
+      <xs:element name="Druh" type="TDruh" />
+      <xs:element name="Vznik" type="TVznik" minOccurs="0" />
+      <xs:element name="PlatnostOpravneni" type="TPlatnostOpravneni" minOccurs="0" />
+      <xs:element name="ProvozovaniBezOdpZastupce" type="TProvozovaniBezOdpZastupce" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Prekazky" type="TPrekazky" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Pozastaveni" type="TPozastaveni" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="PozastaveniVprovozovne" type="TPozastaveniVprovozovne" minOccurs="0" />
+      <xs:element name="Preruseni" type="TPreruseni" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Zanik" type="TZanik" minOccurs="0" />
+      <xs:element name="OdpovednyZastupce" type="TOdpovednyZastupce" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Pokracovatel" type="TPokracovatel" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPredmet">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="Drive" type="TDrive" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="TObor">
+    <xs:sequence>
+      <xs:element name="Vycet" type="TVycet" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPrumysl">
+    <xs:sequence>
+      <xs:element name="Vycet" type="TVycet" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPrekazky">
+    <xs:sequence>
+      <xs:element name="Prekazka" type="TPrekazka" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPrekazka">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="PrekazkaOd" type="TPrekazkaOd" minOccurs="0" />
+        <xs:element name="PrekazkaObdobi" type="TPrekazkaObdobi" minOccurs="0" />
+      </xs:choice>
+      <xs:element name="PrekazkaDuvod" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPrekazkaObdobi">
+    <xs:sequence>
+      <xs:element name="PrekazkaOd" type="TPrekazkaOd" />
+      <xs:element name="PrekazkaDo" type="TPrekazkaDo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPrekazkaOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPrekazkaDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TProvozovaniBezOdpZastupce">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="ProvozovaniBezOdpZastupceOd" type="TProvozovaniBezOdpZastupceOd" minOccurs="0" />
+        <xs:element name="ProvozovaniBezOdpZastupceObdobi" type="TProvozovaniBezOdpZastupceObdobi" minOccurs="0" />
+      </xs:choice>
+      <xs:element name="ProvozovaniBezOdpZastupceRozsah" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TProvozovaniBezOdpZastupceObdobi">
+    <xs:sequence>
+      <xs:element name="ProvozovaniBezOdpZastupceOd" type="TProvozovaniBezOdpZastupceOd" />
+      <xs:element name="ProvozovaniBezOdpZastupceDo" type="TProvozovaniBezOdpZastupceDo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TProvozovaniBezOdpZastupceOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TProvozovaniBezOdpZastupceDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveni">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="PozastaveniAktivni" type="TPozastaveniAktivni" minOccurs="0" />
+        <xs:element name="PozastaveniUkoncene" type="TPozastaveniUkoncene" minOccurs="0" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniAktivni">
+    <xs:sequence>
+      <xs:element name="PozastaveniOd" type="TPozastaveniOd" />
+      <xs:element name="PozastaveniDo" type="TPozastaveniDo" minOccurs="0" />
+      <xs:element name="PozastaveniRozsah" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniUkoncene">
+    <xs:sequence>
+      <xs:element name="PozastaveniOd" type="TPozastaveniOd" />
+      <xs:element name="PozastaveniDo" type="TPozastaveniDo" />
+      <xs:element name="PozastaveniRozsah" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniVprovozovne">
+    <xs:sequence>
+      <xs:element name="PozastaveniVprovozovneAktivni" type="TPozastaveniVprovozovneAktivni" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="PozastaveniVprovozovneUkoncene" type="TPozastaveniVprovozovneUkoncene" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniVprovozovneAktivni">
+    <xs:sequence>
+      <xs:element name="Provozovna" type="TProvozovna" />
+      <xs:element name="PozastaveniVprovozovneOd" type="TPozastaveniVprovozovneOd" />
+      <xs:element name="PozastaveniVprovozovneDo" type="TPozastaveniVprovozovneDo" />
+      <xs:element name="PozastaveniVprovozovneRozsah" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniVprovozovneUkoncene">
+    <xs:sequence>
+      <xs:element name="Provozovna" type="TProvozovna" />
+      <xs:element name="PozastaveniVprovozovneOd" type="TPozastaveniVprovozovneOd" />
+      <xs:element name="PozastaveniVprovozovneDo" type="TPozastaveniVprovozovneDo" />
+      <xs:element name="PozastaveniVprovozovneRozsah" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniVprovozovneOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPozastaveniVprovozovneDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPreruseni">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="PreruseniAktivni" type="TPreruseniAktivni" minOccurs="0" />
+        <xs:element name="PreruseniObdobi" type="TPreruseniObdobi" minOccurs="0" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPreruseniAktivni">
+    <xs:sequence>
+      <xs:element name="PreruseniOd" type="TPreruseniOd" />
+      <xs:element name="PreruseniDo" type="TPreruseniDo" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPreruseniObdobi">
+    <xs:sequence>
+      <xs:element name="PreruseniOd" type="TPreruseniOd" />
+      <xs:element name="PreruseniDo" type="TPreruseniDo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPreruseniOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPreruseniDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TZanik">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TDruh">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="Drive" type="TDrive" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TRozsah">
+    <xs:sequence>
+      <xs:element name="Platnost" type="TPlatnost" minOccurs="0"/>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="Drive" type="TDrive" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPlatnostOpravneni">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="Prodlouzeno" type="xs:string" minOccurs="0" />
+      <xs:element name="Drive" type="TDrive" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TVznik">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TVycet">
+    <xs:sequence>
+      <xs:element name="Drive" type="TDrive" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="TDrive">
+    <xs:sequence>
+      <xs:element name="Platnost" type="TPlatnost" minOccurs="0"/>
+      <xs:element name="Hodnota" type="THodnota" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TProvozovny">
+    <xs:sequence>
+      <xs:element name="Predmet" type="TPredmet" />
+      <xs:element name="Provozovna" type="TProvozovna" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TProvozovna">
+    <xs:sequence>
+      <xs:element name="OborNaProvozovne" type="TOborNaProvozovne" minOccurs="0" />
+      <xs:element name="NazevProvozovny" type="TNazevProvozovny" minOccurs="0" />
+      <xs:element name="UmisteniProvozovny" type="TUmisteniProvozovny" minOccurs="0" />
+      <xs:element name="ZmenaAdresy" type="TZmenaAdresy" minOccurs="0" />
+      <xs:element name="IdentifikacniCisloProvozovny" type="TIdentifikacniCisloProvozovny" minOccurs="0" />
+      <xs:element name="ZahajeniProvozovani" type="TZahajeniProvozovani" minOccurs="0" />
+      <xs:element name="UkonceniProvozovani" type="TUkonceniProvozovani" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOborNaProvozovne">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TNazevProvozovny">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TUmisteniProvozovny">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TIdentifikacniCisloProvozovny">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPlatnost">
+    <xs:sequence>
+      <xs:element name="DatumPlatnostiOd" type="TDatumPlatnostiOd" minOccurs="0" />
+      <xs:element name="DatumPlatnostiDo" type="TDatumPlatnostiDo" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="TDatumPlatnostiOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TDatumPlatnostiDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TZahajeniProvozovani">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TUkonceniProvozovani">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TVyporadaniZavazku">
+    <xs:sequence>
+      <xs:element name="VyporadaniAdresa" type="TVyporadaniAdresa" />
+      <xs:element name="VyporadaniProvozovna" type="TVyporadaniProvozovna" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TVyporadaniAdresa">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TVyporadaniProvozovna">
+    <xs:sequence>
+      <xs:element name="OborNaProvozovne" type="TOborNaProvozovne" minOccurs="0" />
+      <xs:element name="NazevProvozovny" type="TNazevProvozovny" minOccurs="0" />
+      <xs:element name="UmisteniProvozovny" type="TUmisteniProvozovny" minOccurs="0" />
+      <xs:element name="ZmenaAdresy" type="TZmenaAdresy" minOccurs="0" />
+      <xs:element name="IdentifikacniCisloProvozovny" type="TIdentifikacniCisloProvozovny" minOccurs="0" />
+      <xs:element name="UkonceniCinnosti" type="TUkonceniCinnosti" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TUkonceniCinnosti">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TZmenaAdresy">
+    <xs:sequence>
+      <xs:element name="TextAdresy" type="xs:string" maxOccurs="unbounded" />
+      <xs:element name="DetailZmenyAdresy" type="TDetailZmenyAdresy" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="optional" />
+  </xs:complexType >
+  <xs:complexType name="TDetailZmenyAdresy">
+    <xs:sequence>
+      <xs:element name="Platnost" type="TPlatnost" />
+      <xs:element name="StaryDetail" type="TStaryDetail" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TStaryDetail">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TChyba">
+    <xs:sequence>
+      <!--
+          -1 pozadavek neobsahuje XML dokument pro namespace poplatny aplikaci
+          -2 chybne cislo verze
+          -3 chybna kombinace nebo hodnoty elementu a atributu v XML pozadavku
+          -4 nejednoznacna vyhledavaci kriteria
+          -5 podnikatel s pozadovanym ID nenalezen
+          -6 osoba s pozadovanym ID nenalezena
+          -7 nepovolena kombinace vyhledavacich kriterii
+          -8 pozadavek obsahuje xml element, ktery neodpovida definici rozhrani
+          -99 vnitrni chyba aplikace
+      -->
+      <xs:element name="KodChyby" type="xs:byte" />
+      <xs:element name="PopisChyby" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <!-- upresneni, cim byla chyba vyvolana-->
+      <xs:group ref="GVyvolano" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="GVyvolano">
+    <xs:choice>
+      <!-- alespon jedna podminka se musi vyskytovat -->
+      <!-- pozadavek na vyhledani podnikatele -->
+      <xs:group ref="GKriteriaZpresni" />
+      <!-- detail podnikatele -->
+      <xs:sequence>
+        <xs:element name="PodnikatelID" type="xs:string" />
+        <xs:element name="Historie" type="VyberovaPodminka" />
+      </xs:sequence>
+      <!-- detail osoby -->
+      <xs:sequence>
+        <xs:element name="OsobaID" type="xs:string" />
+        <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+      </xs:sequence>
+      <!-- detail statutarniho organu pravnicke osoby -->
+      <xs:sequence>
+        <xs:element name="StatutarniOrganPravnickeOsobyID" type="xs:string" />
+        <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" />
+      </xs:sequence>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="GKriteriaZpresni">
+    <xs:sequence>
+      <xs:element name="Kriteria" type="TKriteria" minOccurs="0" />
+      <xs:element name="KriteriaOsoba" type="TKriteriaOsoba" minOccurs="0" />
+      <xs:element name="SeznamObci" type="TSeznamObci" minOccurs="0" />
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="TKriteria">
+    <xs:sequence>
+      <xs:element name="IdentifikacniCislo" type="xs:unsignedInt" minOccurs="0" />
+      <xs:element name="ObchodniJmeno" type="xs:string" minOccurs="0" />
+      <xs:element name="CastecneDohledani" type="VyberovaPodminka" minOccurs="0" />
+      <xs:element name="SubjektRole" type="SeznamRoliSubjektu" minOccurs="0"/>
+      <xs:element name="Adresa" type="TAdresa" minOccurs="0" />
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TKriteriaOsoba">
+    <xs:sequence>
+      <xs:element name="OsobaJmeno" type="xs:string" minOccurs="0"/>
+      <xs:element name="OsobaPrijmeni" type="xs:string" minOccurs="0" />
+      <xs:element name="OsobaDatumNarozeni" type="xs:string" minOccurs="0" />
+      <xs:element name="OsobaRole" type="SeznamRoliOsoby" minOccurs="0"/>
+      <xs:element name="OsobaAdresa" type="TAdresa" minOccurs="0"/>
+      <xs:element name="PlatnostZaznamu" type="VyberovaPodminka" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOsobaSeznam">
+    <xs:sequence>
+      <xs:element name="OsobaID" type="xs:string" />
+      <xs:element name="OsobaJmenoPrijmeni" type="TOsobaJmenoPrijmeni" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOsobaDetail">
+    <xs:sequence>
+      <xs:element name="OsobaJmenoPrijmeni" type="TOsobaJmenoPrijmeni" />
+      <xs:element name="OsobaDatumNarozeni" type="TOsobaDatumNarozeni" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TStatutarniOrganPravnickeOsobyDetail">
+    <xs:sequence>
+      <xs:element name="ObchodniJmeno" type="TOsobaJmenoPrijmeni" />
+      <xs:element name="IdentifikacniCislo" type="TOsobaDatumNarozeni" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TSeznamObci">
+    <xs:sequence>
+      <xs:element name="Obec" type="xs:string" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TAdresa">
+    <xs:sequence>
+      <xs:element name="KodOkresu" type="xs:unsignedShort" minOccurs="0" />
+      <xs:element name="Obec" type="xs:string" minOccurs="0" />
+      <xs:element name="VyberKonkretniObce" type="VyberovaPodminka" minOccurs="0" />
+      <xs:element name="NazevCastiObce" type="xs:string" minOccurs="0" />
+      <xs:element name="NazevUlice" type="xs:string" minOccurs="0" />
+      <xs:element name="CisloOrientacni" type="xs:unsignedShort" minOccurs="0" />
+      <xs:element name="ZnakCislaOrientacniho" type="xs:string" minOccurs="0" />
+      <xs:element name="CisloDomovni" type="xs:unsignedShort" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOsobaJmenoPrijmeni">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TOsobaDatumNarozeni">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPodnikatelOsoba">
+    <xs:sequence>
+      <xs:element name="ZucastnenaOsobaDetail" type="TZucastnenaOsobaDetail" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TStatutarniOrganClen">
+    <xs:sequence>
+      <xs:element name="ZapsanaOsoba" type="TZapsanaOsoba" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="ZapsanyStatutarniOrganPO" type="TZapsanyStatutarniOrganPO" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TOrganizacniSlozkaVedouci">
+    <xs:sequence>
+      <xs:element name="ZapsanaOsoba" type="TZapsanaOsoba" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TOdpovednyZastupce">
+    <xs:sequence>
+      <xs:element name="OsobaVeFunkci" type="TOsobaVeFunkci" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TPokracovatel">
+    <xs:sequence>
+      <xs:element name="OsobaVeFunkci" type="TOsobaVeFunkci" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TStatutarniOrganClenZastupce">
+    <xs:sequence>
+      <xs:element name="ZapsanaOsoba" type="TZapsanaOsoba" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TOsobaVeFunkci">
+    <xs:sequence>
+      <xs:element name="OsobaJmenoPrijmeni" type="TOsobaJmenoPrijmeni" />
+      <xs:element name="VeFunkci" type="TVeFunkci" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TZapsanaOsoba">
+    <xs:sequence>
+      <xs:element name="OsobaJmenoPrijmeni" type="TOsobaJmenoPrijmeni" />
+      <xs:element name="Zapsano" type="TZapsano" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TZapsanyStatutarniOrganPO">
+    <xs:sequence>
+      <xs:element name="ObchodniJmeno" type="TObchodniJmeno" />
+      <xs:element name="Zapsano" type="TZapsano" minOccurs="0" />
+      <xs:element name="StatutarniOrganClenZastupce" type="TStatutarniOrganClenZastupce" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TVeFunkci">
+    <xs:sequence>
+      <xs:element name="Ustanoven" type="TUstanoven" minOccurs="0" />
+      <xs:element name="ObdobiFunkce" type="TObdobiFunkce" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TZapsano">
+    <xs:sequence>
+      <xs:element name="DatumZapisuOd" type="TDatumZapisuOd" minOccurs="0" />
+      <xs:element name="ObdobiZapisu" type="TObdobiZapisu" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TDatumZapisuOd">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TUstanoven">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TObdobiFunkce">
+    <xs:sequence>
+      <xs:element name="Ustanoven" type="TUstanoven"/>
+      <xs:element name="Ukoncen" type="TUkoncen"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TObdobiZapisu">
+    <xs:sequence>
+      <xs:element name="DatumZapisuOd" type="TDatumZapisuOd"/>
+      <xs:element name="DatumZapisuDo" type="TDatumZapisuDo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDatumZapisuDo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TUkoncen">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Popis" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TZucastnenaOsobaSeznam">
+    <xs:sequence>
+      <xs:element name="ZucastnenaOsobaDetail" type="TZucastnenaOsobaDetail" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="StatutarniOrganPoDetail" type="TStatutarniOrganPoDetail" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TZucastnenaOsobaDetail">
+    <xs:sequence>
+      <xs:element name="JmenoPrijmeni" type="TJmenoPrijmeni" />
+      <xs:element name="DatumNarozeni" type="TDatumNarozeni" />
+      <xs:element name="Obcanstvi" type="TObcanstvi" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TStatutarniOrganPoDetail">
+    <xs:sequence>
+      <xs:element name="ObchodniJmeno" type="TObchodniJmeno" />
+      <xs:element name="IdentifikacniCislo" type="TIdentifikacniCislo" minOccurs="0"/>
+      <xs:element name="AdresaPodnikani" type="TAdresaPodnikani" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TJmenoPrijmeni">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TDatumNarozeni">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TObcanstvi">
+    <xs:sequence>
+      <xs:element name="Hodnota" type="THodnota" />
+      <xs:element name="PlatnostHodnoty" type="TPlatnostHodnoty" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TAdresaOsoby">
+    <xs:sequence>
+      <xs:element name="PlatnostAdresy" type="TPlatnostAdresy" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Popis" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:simpleType id="VyberovaPodminka" name="VyberovaPodminka">
+    <xs:restriction base="xs:int">
+      <xs:enumeration value="0" />
+      <xs:enumeration value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType id="SeznamRoliOsoby" name="SeznamRoliOsoby">
+    <xs:restriction base="xs:string">
+      <!-- vedouci organizacni slozky -->
+      <xs:enumeration value="O"/>
+      <!-- podnikatel -->
+      <xs:enumeration value="P"/>
+      <!-- statutarni organ -->
+      <xs:enumeration value="S"/>
+      <!-- odpovedny zastupce -->
+      <xs:enumeration value="Z"/>
+      <!-- pokracovatel -->
+      <xs:enumeration value="D"/>
+      <!-- osoba opravnena zastupovat pravnickou osobu -->
+      <xs:enumeration value="ZS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType id="SeznamRoliSubjektu" name="SeznamRoliSubjektu">
+    <xs:restriction base="xs:string">
+      <!-- podnikatel -->
+      <xs:enumeration value="P"/>
+      <!-- statutarni organ pravnicka osoba -->
+      <xs:enumeration value="S"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="nonNegativeInt" id="nonNegativeInt">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" id="nonNegativeInt.minInclusive"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

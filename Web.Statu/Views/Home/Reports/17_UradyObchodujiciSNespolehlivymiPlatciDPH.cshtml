@@ -1,0 +1,202 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+@using HlidacStatu.Lib.Analysis
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+
+@{
+
+    var tableSloupce = new ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column[]
+{
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() { Name="Úřad",
+HtmlRender = (s) => {
+var d = s;
+return string.Format("<a href='/subjekt/{0}'>{1}</a> <br/> {2}", d.Ico,
+Firmy.GetJmeno(s.Ico), ACore.GetBasicStatisticForICO(s.Ico).Summary.ToNiceString(null,true,"/subjekt/" + d.Ico));
+},
+OrderValueRender = (s) => {
+var d = s;
+            return Firmy.GetJmeno(s.Ico);
+}
+},
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
+Name ="Počet smluv",
+HtmlRender = (s) => {
+var d = s;
+return d.Pocet.ToString();
+},
+OrderValueRender = (s) => {
+var d = s;
+return d.Pocet.ToString();
+}
+},
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
+Name ="% všech smluv",
+HtmlRender = (s) => {
+var d = s;
+var stat = ACore.GetBasicStatisticForICO(s.Ico);
+if (stat.Summary.Pocet > 0)
+{
+return ((double)d.Pocet/(double)stat.Summary.Pocet).ToString("P2");
+}
+else
+return "0";
+},
+OrderValueRender = (s) => {
+var d = s;
+var stat = ACore.GetBasicStatisticForICO(s.Ico);
+if (stat.Summary.Pocet > 0)
+{
+return ((double)d.Pocet/(double)stat.Summary.Pocet).ToString("N2",HlidacStatu.Util.Consts.enCulture);
+}
+else
+return "0";
+}
+},
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
+Name ="Hodnota smluv",
+HtmlRender = (s) => {
+var d = s;
+return Smlouva.NicePrice(d.CelkemCena,html:true, shortFormat:true);
+},
+OrderValueRender = (s) => {
+var d = s;
+return d.CelkemCena.ToString("G",HlidacStatu.Util.Consts.enCulture);
+}
+},
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
+Name ="% hodnoty všech smluv",
+HtmlRender = (s) => {
+var d = s;
+var stat = ACore.GetBasicStatisticForICO(s.Ico);
+if (stat.Summary.CelkemCena > 0)
+{
+return (d.CelkemCena/stat.Summary.CelkemCena).ToString("P1");
+}
+else
+return "0";
+},
+OrderValueRender = (s) => {
+var d = s;
+var stat = ACore.GetBasicStatisticForICO(s.Ico);
+if (stat.Summary.CelkemCena > 0)
+{
+return (d.CelkemCena/stat.Summary.CelkemCena).ToString("N1", HlidacStatu.Util.Consts.enCulture);
+}
+else
+return "0";
+}
+},
+
+
+
+new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
+Name ="Dodavatelé",
+HtmlRender = (s) => {
+var d = s;
+System.Text.StringBuilder sb = new System.Text.StringBuilder();
+sb.Append("<ul>");
+int previewCount = 3;
+foreach (var f in d.Detail.OrderByDescending(m=>m.CelkemCena).Take(previewCount))
+{
+sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - <a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{3}</a></li>"
+,d.Ico, f.Item,
+Firmy.GetJmeno(s.Ico)
+, f.ToNiceString(null,false, string.Format("", d.Ico, f.Item))
+);
+
+//sb.AppendFormat("<li><a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{2}</a> {3}</li>"
+//    ,d.Ico, f.Ico, f.Name, f.StatForIco.ToNiceString("",false)
+//    );
+
+}
+sb.Append("</ul>");
+if (d.Detail.Count > previewCount)
+{
+string rand = Guid.NewGuid().ToString("N");
+sb.Append("<a class='btn btn-link' role='button' data-toggle='collapse' href='#allData" + rand + "' aria-expanded='false' aria-controls='allData'>Ukázat všechny</a>");
+sb.Append("<ul class='collapse' id='allData" + rand + "'>");
+foreach (var f in d.Detail.OrderByDescending(m=>m.CelkemCena).Skip(previewCount))
+{
+sb.AppendFormat("<li><a href='/Subjekt/'{1}>{2}</a> - <a href=''>{3}</a></li>"
+,d.Ico, f.Item, Firmy.GetJmeno(f.Item)
+, f.ToNiceString(null,false, string.Format("/Hledat?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}", d.Ico, f.Item))
+);
+
+//sb.AppendFormat("<li><a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{2}</a> {3}</li>"
+//    ,d.Ico, f.Ico, f.Name, f.StatForIco.ToNiceString("",false)
+//    );
+
+}
+sb.Append("</ul>");
+}
+return sb.ToString();
+},
+}
+
+};
+
+
+    var data = StaticData.UradyObchodujiciSNespolehlivymiPlatciDPH_Cache.Get();
+
+    ReportDataSource<BasicDataForSubject<List<BasicData<string>>>> rds1
+        = new ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>(tableSloupce);
+    //foreach (var bf in data.SoukromeFirmy.Where(o => o.StatForIco.CelkemCena > 500000))
+    foreach (var bf in data.StatniFirmy) //.Where(o => o.StatForIco.Pocet > 7))
+    {
+        rds1.AddRow(bf);
+    }
+
+    var topCountUrad = data.StatniFirmy.OrderByDescending(m => m.Pocet).First();
+    var topSumFirma = StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get()
+        .SoukromeFirmy.OrderByDescending(m => m.CelkemCena).First();
+    //var topCountFirma = StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get()
+    //    .SoukromeFirmy.OrderBy(m => m.StatForIco.Pocet).First();
+
+}
+
+
+
+<div class="bs-callout bs-callout-primary small">
+    <h4>Kdo je nespolehlivý plátce DPH?</h4>
+    <p>
+        Označení <mark>nespolehlivý plátce</mark> má plátce DPH, který závažným způsobem neplní své povinnosti ve vztahu ke správě daně.
+        Pro plátce DPH je nespolehlivý plátce "nebezpečný" tím, že pokud od něj plátce DPH odebere zboží nebo službu, bude ručit za DPH, kterou má nespolehlivý plátce odvést finančnímu úřadu.
+    </p>
+</div>
+
+<h2>Souhrnné údaje</h2>
+<p>
+    S <mark>nespolehlivými plátci DPH</mark> uzavřelo  @data.StatniFirmy.Count() úřadů smlouvy ve výši celkem @HlidacStatu.Util.RenderData.ShortNicePrice(data.StatniFirmy.Sum(m => m.CelkemCena))
+</p>
+<p>
+    Nejvíce smlouv s nespolehlivými plátci uzavřela organizace <b>@Firmy.GetJmeno(topCountUrad.Ico)</b>, a to <b>@topCountUrad.Pocet</b> smluv.
+    Nejúspěšnější firmou - <mark>nespolehlivým plátcem DPH</mark> - je <b>@Firmy.GetJmeno(topSumFirma.Ico)</b>, které se podařilo uzavřít <b>
+        @topSumFirma.Pocet smluv
+    </b> za <b>@HlidacStatu.Util.RenderData.ShortNicePrice(topSumFirma.CelkemCena)</b>.
+</p>
+
+@UtilChart.RenderReport(typeof(BasicDataForSubject<List<BasicData<string>>>),
+        new HlidacStatu.Lib.Render.ReportModel.QueueItem()
+        {
+            Type = ReportModel.QueueItem.types.table,
+            Data = rds1
+        }
+        , @"{
+        'language': {
+        'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+        },
+        'order': [[3, 'desc']],
+        'lengthChange': false,
+        'info': false,
+        }", "t1")
+)

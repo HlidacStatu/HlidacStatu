@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "API pro vývojáře";
+    ViewBag.SubTitle = "Informace o našem API, datových strukturách a způsobech, jak získat obsah databáze hlidacstatu.cz";
+    System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.App_Data_Path + "dump\\smlouvy.dump.zip");
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+
+    <p>
+        <h3>Autorizační token</h3>
+
+        <div class="bs-callout bs-callout-success" style="font-size:120%">
+            <div>Autorizace je prováděna pomocí autentifikačního tokenu, který je Vám přidělen. Autorizační token je nutno odesílat v hlavičce každého požadavku na API.</div>
+            <div>Autorizační token: <code>@ViewBag.Token</code></div>
+            <div>
+                Příklad k použití:<br />
+                <code>curl -X GET https://www.hlidacstatu.cz/Api/v1/Detail/204737 -H 'Authorization: Token @ViewBag.Token'</code><br />
+            </div>
+        </div>
+
+        <div class="bs-callout bs-callout-default">
+            <div class="" style="font-size:120%">
+                <table class="table table-hover">
+                    <tr>
+                        <td>Kompletní dokumentace</td>
+                        <td><a style="font-size:130%" href="https://hlidacstatu.docs.apiary.io/">https://hlidacstatu.docs.apiary.io/</a></td>
+                    </tr>
+                    <tr>
+                        <td>GitHub</td>
+                        <td><a style="font-size:130%" href="https://github.com/HlidacStatu/">https://github.com/HlidacStatu/</a></td>
+                    </tr>
+                    <tr>
+                        <td>Kontakt, API support</td>
+                        <td><a style="font-size:130%" href="mailto:api@hlidacstatu.cz">api@hlidacstatu.cz</a></td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </p>

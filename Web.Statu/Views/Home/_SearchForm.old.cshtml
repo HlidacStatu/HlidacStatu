@@ -1,0 +1,32 @@
+﻿@model HlidacStatu.Lib.ES.SmlouvaSearchResult
+
+<div class="row">
+    <p class="col-xs-offset-0 col-xs-12 col-md-offset-0 col-md-12">
+        @using (Html.BeginForm("Hledat", "Home", FormMethod.Get, new { @class = "form-inline", role = "form" }))
+        {
+            <h2>Hledání v registru smluv <small><button type="button" class="btn btn-info btn-link" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button></small></h2>
+            <div id="custom-search-input" class="col-xs-12">
+                <div class="input-group col-xs-12">
+
+                    <input class="form-control input-lg" id="Q" name="Q" placeholder="Název úřadu, smluvní strany, IČO, ..." style="max-width: none;" type="text" value="@Model.OrigQuery">
+
+                    <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                        <button class="btn btn-default btn-lg" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-lg" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button>
+                    </span>
+                </div>
+            </div>
+        }
+        @if (Model.OrigQuery != Model.Q && !string.IsNullOrWhiteSpace(Model.Q))
+        {
+            <div class="text-muted">Pro hledání jsme použili dotaz <mark>@Model.OrigQuery</mark> namísto <mark class="text-muted">@Model.Q</mark></div>
+        }
+    </p>
+</div>
+
+
+@Html.Partial("~/Views/Home/_SearchFormHelp.cshtml")
+
+

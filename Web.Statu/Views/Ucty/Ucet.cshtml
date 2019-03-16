@@ -1,0 +1,98 @@
+﻿@model Tuple<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet, HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka[]>
+
+@using Nest
+@using HlidacStatu.Lib
+@using System.Linq
+@using Devmasters.Core
+
+@{
+    var bu = Model.Item1;
+    HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka[] polozky = Model.Item2;
+    ViewBag.Title = string.Format("Transparentní účet {0} ({1})", bu.Subjekt, bu.CisloUctu);
+
+    if (this.Request.QueryString["filter"] == "vydaje")
+    {
+        polozky = polozky.Where(m => m.Castka <= 0).ToArray();
+    }
+    else if (this.Request.QueryString["filter"] == "prijmy")
+    {
+        polozky = polozky.Where(m => m.Castka > 0).ToArray();
+
+    }
+
+    var sponzori = HlidacStatu.Lib.Data.Sponsors.Strany.PerYears(bu.Subjekt);
+
+
+}
+
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>Hlídač politických financí</h2>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var hash = window.location.hash.substr(1);
+            if (hash) {
+                $('#' + hash).addClass('bg-warning');
+            }
+        });
+    </script>
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/ucty">Hlídač financí</a></li>
+        <li><a href="@(bu.GetSubjektUrl(true))">@bu.Subjekt</a></li>
+        <li class="active">@bu.CisloUctu</li>
+    </ol>
+    }
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>
+                @Util.AddBookmark(this.User, Model.Item1)
+                <a href="@bu.GetSubjektUrl(true)">@bu.Subjekt</a> : @bu.CisloUctu - @bu.TypUctu.ToNiceDisplayName()
+            </h2>
+            <div>
+                @bu.Nazev
+                <div class="pull-right"><a href="https://www.hlidacstatu.cz/api/v1/ucetexport?id=@(System.Net.WebUtility.UrlEncode(bu.CisloUctu))" target="_blank">Export do JSON</a></div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="clearfix"></div>
+
+            @if (sponzori.Count() > 0)
+            {
+                <h3>Nalezli jsme @HlidacStatu.Util.PluralForm.Get(sponzori.Count(), "{0} sponzora;{0} sponzory;{0} sponzorů") @bu.Subjekt.</h3>
+                <a href="https://www.hlidacstatu.cz/sponzori?strana=@System.Net.WebUtility.UrlEncode(bu.Subjekt)">Zobrazit sponzorující osoby a firmy @bu.Subjekt</a>
+            }
+
+
+            @if (polozky.Count() == 0)
+            {
+                <h2>Žádné pohyby na účtu</h2>
+            }
+            else
+            {
+                <h2>Nalezli jsme @HlidacStatu.Util.PluralForm.Get(polozky.Count(), "{0} transakci;{0} transakce;{0} transakcí") na bankovním účtě.</h2>
+
+                <table class="table table-hover">
+                    @SearchResults.UcetHeader(bu)
+                    <tbody>
+                        @foreach (var p in polozky.OrderByDescending(m => m.Datum))
+                        {
+                            @SearchResults.UcetRow(this.User, p, false)
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+
+    <div class="clearfix"></div>
+
+    <div class="alert alert-warning" role="alert">Zkušební provoz, data bez záruky!</div>

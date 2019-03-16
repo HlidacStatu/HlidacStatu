@@ -1,0 +1,390 @@
+﻿@using System.Web.Mvc;
+@using System.Web.Mvc;
+@using System.Linq;
+@using Microsoft.AspNet.Identity;
+@using System.Reflection;
+
+@functions
+{
+    private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper Url
+    {
+        get { return ((WebViewPage)CurrentPage).Url; }
+    }
+    private static WebViewPage CurrPage
+    {
+        get { return (WebViewPage)CurrentPage; }
+    }
+}
+
+
+
+@helper RenderReport(HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+{
+    if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+        @RenderReportChart(item.Title,item.Data as DotNet.Highcharts.Highcharts)
+    }
+    else
+    {
+        @Html.Raw(RenderReportTableObj(item.Title,item, JsDataTableOptions, JsDataTableId))
+    }
+}
+
+@helper RenderReport(Type type, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+{
+    if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+        @RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts)
+    }
+    else
+    {
+        System.Reflection.MethodInfo mi = typeof(ASP.UtilChart).GetMethod("RenderReportTable",
+            new Type[] {
+                typeof(string),
+                typeof(HlidacStatu.Lib.Render.ReportModel.QueueItem),
+                typeof(string),
+                typeof(string) }
+            //HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null
+            );
+        MethodInfo genericMethod = mi.MakeGenericMethod(type);
+        var res = (string)genericMethod.Invoke(null, new object[] { item.Title, item, JsDataTableOptions, JsDataTableId });
+        @Html.Raw(res)
+    }
+}
+
+@helper RenderReport(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem.types type, object data, string JsDataTableOptions, string JsDataTableId = null)
+{
+    if (type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+        @RenderReportChart(title, data as DotNet.Highcharts.Highcharts)
+    }
+    else
+    {
+        @Html.Raw(RenderReport(new HlidacStatu.Lib.Render.ReportModel.QueueItem() { Title= title, Type = type, Data = data }, JsDataTableOptions, JsDataTableId))
+    }
+}
+@helper RenderReportChart(string title, DotNet.Highcharts.Highcharts chart)
+{
+    <div class='col-md-12'>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>@Html.Raw(title)</div><div class='panel-body'>
+                @(chart)
+            </div>
+        </div>
+    </div>
+}
+@helper RenderReportTable(string title, HlidacStatu.Lib.Render.ReportDataSource item, string JsDataTableOptions, string JsDataTableId = null)
+{
+    @Html.Raw(UtilChart.DataToHTMLTable<object>
+        (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
+            , JsDataTableId, JsDataTableOptions)
+            )
+}
+
+
+@functions {
+
+    public static string RenderReportTableObj(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+    {
+        return RenderReportTable<object>(title, item, JsDataTableOptions, JsDataTableId);
+    }
+    public static string RenderReportTable<T>(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+    //where T : class
+    {
+        if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.table)
+        {
+            return UtilChart.RenderReportTableT<T>(title, item.Data as HlidacStatu.Lib.Render.ReportDataSource<T>, JsDataTableOptions, JsDataTableId);
+        }
+        if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+        return string.Empty;
+    }
+
+
+    public static string RenderReportTableT<T>(string title, HlidacStatu.Lib.Render.ReportDataSource<T> item,
+        string JsDataTableOptions = null, string JsDataTableId = null)
+    //  where T : class
+    {
+        return UtilChart.DataToHTMLTable<T>(title, item, JsDataTableId, JsDataTableOptions);
+    }
+
+
+    public static string DataToHTMLTable<T>(string title, HlidacStatu.Lib.Render.ReportDataSource<T> rds,
+        string tableId = "", string dataTableOptions = "", string customTableHeader = null)
+    //   where T : class
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+        string _tableId = tableId;
+        if (string.IsNullOrEmpty(tableId))
+        {
+            _tableId = Devmasters.Core.TextUtil.GenRandomString("abcdefghijklmnopqrstuvwxyz", 10);
+        }
+
+        sb.AppendLine(@"<script>
+var tbl_" + _tableId + @";
+$(document).ready(function () {
+tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions + @");
+});
+</script>");
+
+        sb.AppendFormat("<h3>{0}</h3>", rds?.Title ?? "");
+        sb.AppendFormat("<table id=\"{0}\" class=\"table-sorted table table-bordered table-striped\">", _tableId);
+        if (customTableHeader == null)
+        {
+            sb.Append("<thead><tr>");
+            foreach (var column in rds.Columns)
+            {
+                sb.AppendFormat("<th>{0}</th>", column.Name);
+            }
+            sb.Append("</tr></thead>");
+        }
+        else
+        {
+            sb.AppendFormat(customTableHeader, _tableId);
+        }
+        sb.Append("<tbody class=\"list\">");
+        foreach (var row in rds.Data)
+        {
+            sb.Append("<tr>");
+            foreach (var d in row)
+            {
+                sb.AppendFormat("<td {2} class=\"{0}\">{1}</td>",
+                    d.Column.CssClass,
+                    d.Column.HtmlRender(d.Value),
+                    string.IsNullOrEmpty(d.Column.OrderValueRender(d.Value))
+                            ? string.Empty : string.Format("data-order=\"{0}\"", d.Column.OrderValueRender(d.Value))
+                    );
+
+            }
+            sb.Append("</tr>");
+        }
+        sb.Append("</table>");
+        return sb.ToString();
+    }
+
+
+    public static DotNet.Highcharts.Highcharts SimpleBarChart<T>(bool columnType, bool timeData, int height,
+    string name, string xAxisName, string yAxisName,
+    HlidacStatu.Lib.Render.ReportDataSource<T> rds, string tooltipValueSuffix = "",
+    string xValueFormat = null, string yValueFormat = null, string tooltipFormatFull = null,
+    string loadEvents = null, string backgroundColor = null
+)
+    //where T : class
+    {
+        return SimpleBarChart(columnType, timeData, height,
+        name, xAxisName, yAxisName,
+         new HlidacStatu.Lib.Render.ReportDataSource<T>[] { rds },
+         tooltipValueSuffix, xValueFormat, yValueFormat, tooltipFormatFull,
+         backgroundColor);
+    }
+
+    public static DotNet.Highcharts.Highcharts SimpleBarChart<T>(bool columnType, bool timeData, int height,
+        string name, string xAxisName, string yAxisName,
+        HlidacStatu.Lib.Render.ReportDataSource<T>[] rds, string tooltipValueSuffix = "",
+        string xValueFormat = null, string yValueFormat = null, string tooltipFormatFull = null,
+        string loadEvents = null, string backgroundColor = null
+        )
+    //where T : class
+    {
+        if (string.IsNullOrEmpty(name))
+            name = "chart" + Guid.NewGuid().ToString("N");
+        //init
+        double min = 0; var ytype = DotNet.Highcharts.Enums.AxisTypes.Linear;
+        rds = rds.Where(d => d != null).ToArray();
+
+
+        if (string.IsNullOrEmpty(xValueFormat))
+            xValueFormat = timeData ? "{value:%b \'%y}" : "{value}";
+
+        if (string.IsNullOrEmpty(yValueFormat))
+            yValueFormat = "{point.y:,.0f}";
+
+        string tooltipFormat = xValueFormat.Replace("{value", "{point.x")
+        + ": " + yValueFormat
+        + (!string.IsNullOrEmpty(tooltipValueSuffix) ? " " + tooltipValueSuffix : "");
+
+        if (tooltipFormatFull != null)
+        {
+            tooltipFormat = tooltipFormatFull;
+        }
+
+
+        //check linear/logarithmic
+        //if (false && rds.Data != null && rds.Data.Count > 5)
+        //{
+        //    var stdDev = CalculateStdDev(
+        //        rds.Data
+        //            .Select(v => v[1].Column.ValueRender(v[1].Value))
+        //            .Select(v=> double.Parse(v.ToString().Replace(".",","), HlidacStatu.Util.Consts.czCulture))
+        //        );
+        //    if (stdDev > 3.0)
+        //    {
+        //        min = 0.1; ytype = DotNet.Highcharts.Enums.AxisTypes.Logarithmic;
+        //    }
+        //}
+
+        var chart = new DotNet.Highcharts.Highcharts(name)
+.InitChart(new DotNet.Highcharts.Options.Chart()
+{
+    Type = columnType ? DotNet.Highcharts.Enums.ChartTypes.Column : DotNet.Highcharts.Enums.ChartTypes.Bar,
+    Height = rds.Count() > 1 ? height + 62 : height,
+    Events = loadEvents == null ? (DotNet.Highcharts.Options.ChartEvents)null : new DotNet.Highcharts.Options.ChartEvents() { Load = loadEvents },
+    BackgroundColor = backgroundColor == null
+        ? (DotNet.Highcharts.Helpers.BackColorOrGradient)null
+        : new DotNet.Highcharts.Helpers.BackColorOrGradient(new DotNet.Highcharts.Helpers.Gradient() { LinearGradient = new int[] { 0, 0, 0, height }, Stops = new object[,] { { 0, backgroundColor }, { 1, "#fff" } } })
+
+})
+.SetNavigation(new DotNet.Highcharts.Options.Navigation() { ButtonOptions = new DotNet.Highcharts.Options.NavigationButtonOptions() { Enabled = false } })
+//.SetTitle(new DotNet.Highcharts.Options.Title() { Text = "" })
+.SetTitle(new DotNet.Highcharts.Options.Title() { Text = null})
+.SetTooltip(new DotNet.Highcharts.Options.Tooltip()
+{
+    HeaderFormat = "",
+            //PointFormat = "{point.category}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix) ? " " + tooltipValueSuffix : ""),
+            PointFormat = tooltipFormat,
+    UseHTML = true
+})
+.SetLegend(new DotNet.Highcharts.Options.Legend.Legend()
+{
+    Enabled = (rds.Count() > 1) ? true : false,
+    Reversed = true
+            //Layout = DotNet.Highcharts.Enums.Layouts.Vertical,
+            //Align = DotNet.Highcharts.Enums.HorizontalAligns.Right,
+
+        }
+)
+.SetPlotOptions(new DotNet.Highcharts.Options.PlotOptions.PlotOptions()
+{
+    Column = new DotNet.Highcharts.Options.PlotOptions.PlotOptionsColumn()
+    {
+        Animation = new DotNet.Highcharts.Helpers.Animation(true),
+        BorderWidth=0,
+        GroupPadding = 0,
+        Shadow = true
+    },
+    Bar = new DotNet.Highcharts.Options.PlotOptions.PlotOptionsBar()
+    {
+        Animation = new DotNet.Highcharts.Helpers.Animation(true),
+        BorderWidth = 0,
+        GroupPadding = 0,
+        Shadow = true
+    },
+
+})
+.SetXAxis(new DotNet.Highcharts.Options.XAxis.XAxis()
+{
+Type = timeData ? DotNet.Highcharts.Enums.AxisTypes.Datetime : DotNet.Highcharts.Enums.AxisTypes.Category,
+Title = new DotNet.Highcharts.Options.XAxis.XAxisTitle() { Text = xAxisName },
+Categories = timeData ? null : rds[0].Data.Select(v => v[0].Column.TextRender(v[0].Value)).ToArray(),
+Labels = new DotNet.Highcharts.Options.XAxis.XAxisLabels()
+{
+StaggerLines = 1,
+Format = xValueFormat,
+        //Rotation = (rds.Data.Count>25) ? 30 : 0,
+    }
+})
+.SetYAxis(new DotNet.Highcharts.Options.YAxis.YAxis()
+{
+Min = min,
+Type = ytype,
+Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName },
+}
+)
+.SetSeries(
+rds
+.Select(d =>
+new DotNet.Highcharts.Options.Series.Series()
+{
+Name = d.Title,
+Data = new DotNet.Highcharts.Helpers.Data(
+d.Data
+    .Select(v => new object[] {
+                        v[0].Column.ValueRender(v[0].Value)
+                        ,
+                        v[1].Column.ValueRender(v[1].Value)
+        }
+    )
+    .ToArray() //v[1] contains value, v[0] contains x-axis value
+)
+}
+)
+.ToArray()
+);
+        return chart;
+    }
+
+
+    public static DotNet.Highcharts.Highcharts SimpleBarChartTimeData_OLD(bool columnType, int height,
+    string name, string title, string xAxisName, string yAxisName,
+    HlidacStatu.Lib.Render.ReportDataSource rds, string tooltipValueSuffix = "")
+    {
+
+        var chart = new DotNet.Highcharts.Highcharts(name)
+        .InitChart(new DotNet.Highcharts.Options.Chart()
+        {
+            Type = columnType ? DotNet.Highcharts.Enums.ChartTypes.Column : DotNet.Highcharts.Enums.ChartTypes.Bar,
+            Height = height,
+        })
+        .SetTitle(new DotNet.Highcharts.Options.Title() { Text = title })
+        .SetTooltip(new DotNet.Highcharts.Options.Tooltip()
+        {
+            HeaderFormat = "",
+            //PointFormat = "{point.x:" + xValueFormat + "}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix)? " " + tooltipValueSuffix : "") ,
+        })
+        .SetLegend(new DotNet.Highcharts.Options.Legend.Legend()
+        {
+            Enabled = false
+        }
+        )
+        .SetPlotOptions(new DotNet.Highcharts.Options.PlotOptions.PlotOptions()
+        {
+            Column = new DotNet.Highcharts.Options.PlotOptions.PlotOptionsColumn()
+            {
+                Animation = new DotNet.Highcharts.Helpers.Animation(true)
+            }
+        })
+        .SetXAxis(new DotNet.Highcharts.Options.XAxis.XAxis()
+        {
+            Type = DotNet.Highcharts.Enums.AxisTypes.Datetime,
+            Title = new DotNet.Highcharts.Options.XAxis.XAxisTitle() { Text = xAxisName },
+            Labels = new DotNet.Highcharts.Options.XAxis.XAxisLabels()
+            {
+                StaggerLines = 1,
+                //Format = "{value:" + xValueFormat + "}",
+                //Rotation = (rds.Data.Count>25) ? 30 : 0,
+
+            }
+        })
+        .SetYAxis(new DotNet.Highcharts.Options.YAxis.YAxis()
+        {
+            Min = 0,
+            Type = DotNet.Highcharts.Enums.AxisTypes.Linear,
+            Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName }
+        }
+        )
+        .SetSeries(new DotNet.Highcharts.Options.Series.Series()
+        {
+            Data = new DotNet.Highcharts.Helpers.Data(
+                rds.Data
+                    .Select(v => new object[] {
+v[0].Column.ValueRender(v[0].Value)
+,
+v[1].Column.ValueRender(v[1].Value)
+                        }
+                    )
+                    .ToArray() //v[1] contains value, v[0] contains x-axis value
+                )
+
+        });
+        return chart;
+    }
+
+
+}

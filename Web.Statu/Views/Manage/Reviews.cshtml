@@ -1,0 +1,50 @@
+﻿@model IEnumerable<HlidacStatu.Lib.Data.Review>
+@using Devmasters.Core;
+@{
+    ViewBag.Title = "Reviews";
+}
+
+@if (Model.Count() == 0)
+{
+    <p class="text-info">Nic k review tu není.</p>
+
+    return;
+}
+
+<table class="table table-hover">
+    <tr>
+        <th>Typ</th>
+        <th>Původní hodnota</th>
+        <th>Nová hodnota</th>
+        <th>Čas</th>
+        <th>Autor</th>
+        <th>Akce</th>
+    </tr>
+
+    @foreach (var r in Model)
+    {
+    <tr>
+        <td>@r.ItemType.ToString()</td>
+        <td>@Html.Raw(r.RenderOldValueToHtml())</td>
+        <td>@Html.Raw(r.RenderNewValueToHtml())</td>
+        <td>@r.created.ToShortDateString()</td>
+        <td>@r.createdBy</td>
+        <td>
+            <a href="/manage/reviews?id=@r.Id&a=accepted" class="btn btn-default">Schválit</a>
+            <a href="#" onclick="no(@r.Id);" class="btn btn-warning">Odmítnout</a>
+        </td>
+
+    </tr>
+
+    }
+
+</table>
+
+<script>
+    function no(id) {
+        var reason = prompt("Důvod odmítnutí", "");
+
+        window.location = "/manage/reviews?a=denied&id=" + id + "&reason=" + encodeURI(reason);
+    }
+
+</script>

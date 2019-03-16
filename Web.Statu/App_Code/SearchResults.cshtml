@@ -1,0 +1,326 @@
+﻿@using System.Web.Mvc;
+@using Devmasters.Core;
+
+
+@functions
+{
+    private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper Url
+    {
+        get { return ((WebViewPage)CurrentPage).Url; }
+    }
+}
+
+@helper SmlouvyHead(bool small = false)
+{
+    <tr>
+        <th></th>
+        <th>&nbsp;</th>
+        <th>Smlouva podepsána</th>
+        @if (small == false)
+        {
+            <th>Smlouva zveřejněna</th>
+        }
+        <th>&nbsp;</th>
+        <th title="Publikující smluvní strana">Plátce</th>
+        <th title="Smluvní strana/y">Dodavatel/é</th>
+        <th>Popis smlouvy</th>
+        <th>Hodnota smlouvy</th>
+    </tr>
+}
+
+@helper SmlouvyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Smlouva rec, HlidacStatu.Lib.ES.SmlouvaSearchResult Model, bool small = false)
+{
+    var confLevel = rec.GetConfidenceLevel();
+    string bgLevel = "", iconLevel = "";
+
+
+    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
+    {
+        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
+        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
+    }
+
+    <tr class="bg@(bgLevel)">
+        <td>
+            @{
+                @Util.AddBookmark(user, rec)
+            }
+        </td>
+        <td>@Html.Raw(iconLevel)</td>
+        <td>@rec.datumUzavreni.ToShortDateString()</td>
+        @if (small == false)
+        {
+            <td>
+                @if (rec.platnyZaznam)
+                {
+                    @rec.casZverejneni.ToShortDateString()
+                }
+                else
+                {
+                    <span class="text-warning">Zneplatněná smlouva</span>
+                }
+            </td>
+        }
+        @if (small == false)
+        {
+            <td><a href="@Url.Action("Detail", new { id = rec.Id, Q = Model.Q })">Detail smlouvy</a></td>
+        }
+        else
+        {
+            <td><a href="@Url.Action("Detail", new { id = rec.Id, Q = Model.Q })">Detail</a></td>
+        }
+        <td>
+            @if (!string.IsNullOrEmpty(rec.Platce?.ico))
+            {
+                <a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a>
+            }
+            else
+            {
+                @(rec.Platce?.nazev)
+            }
+        </td>
+        <td>
+            @if (rec.Prijemce.Count() == 1)
+            {
+                if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
+                {
+                    <a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a>
+                }
+                else
+                {
+                    @rec.Prijemce[0].nazev
+                }
+            }
+            else
+            {
+                <ol>
+                    @foreach (var subj in rec.Prijemce.Take(2))
+                    {
+                        if (!string.IsNullOrEmpty(subj.ico))
+                        {
+                            <li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li>
+                        }
+                        else
+                        {
+                            <li>@subj.nazev</li>
+                        }
+                    }
+                </ol>
+                @Util.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+            }
+        </td>
+        <td>@rec.predmet</td>
+        <td>@Html.Raw(rec.NicePrice(html: true))</td>
+
+    </tr>
+}
+@helper SmlouvyRowChyby(HlidacStatu.Lib.Data.Smlouva rec)
+{
+    var confLevel = rec.GetConfidenceLevel();
+    string bgLevel = "", iconLevel = "";
+
+
+    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
+    {
+        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
+        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
+    }
+    if (rec.Issues != null && rec.Issues.Where(m => m.Public).Count() > 0)
+    {
+        <tr class="bg@(bgLevel)">
+            <td class="joined">&nbsp;</td>
+            <td colspan="5" class="joined">
+                <h5>
+                    Počet nedostatků: @(rec.Issues.Where(m => m.Public).Count())
+                    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseRec_@(rec.Id)" aria-expanded="false" aria-controls="collapseRec_@(rec.Id)">
+                        Ukázat
+                    </button>
+                </h5>
+                <div class="collapse issueCol" id="collapseRec_@(rec.Id)">
+
+                    <ul class="list-group">
+
+                        @foreach (var iss in rec.Issues.Where(m => m.Public).OrderByDescending(m => m.Importance))
+                        {
+                            if (iss.Public && iss.Importance != HlidacStatu.Lib.Issues.ImportanceLevel.NeedHumanReview)
+                            {
+                                <li title="@iss.Importance.ToNiceDisplayName()" class="list-group-item list-group-item@(HlidacStatu.Lib.Issues.Importance.GetCssClass(iss.Importance, true))">
+                                    <span class="glyphicon glyphicon-eye-open" style="font-size:75%;" aria-hidden="true"></span>&nbsp;@iss.Title : @iss.TextDescription
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </td>
+            <td class="joined">&nbsp;</td>
+        </tr>
+    }
+}
+
+
+@helper VZHeader()
+{
+    <tr>
+        <th>&nbsp;</th>
+        <th>Zakázka</th>
+        <th>Poslední změna</th>
+        <th>Lhůta pro nabídky</th>
+        <th>Zadavatel</th>
+        <th>Dodavatelé</th>
+        <th>Název</th>
+        <th>Cena</th>
+    </tr>
+}
+
+
+@helper VZRow(System.Security.Principal.IPrincipal user, HttpRequestBase req, HlidacStatu.Lib.Data.VZ.VerejnaZakazka item)
+{
+    <tr>
+        <td>
+            @{
+                @Util.AddBookmark(user, item)
+            }
+        </td>
+
+        <td style="white-space: nowrap;">
+            @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req))
+            {
+                <a href="@item.GetUrl(true)">@item.EvidencniCisloZakazky</a>
+            }
+            else
+            {
+                <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/zakazka/@item.Id">@item.EvidencniCisloZakazky</a>
+            }
+        </td>
+        <td>
+            @(item.PosledniZmena?.ToShortDateString())
+        </td>
+        <td>
+            @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena" )
+        </td>
+        <td>
+            @if (item.Zadavatel != null)
+            {
+                if (HlidacStatu.Lib.Validators.CheckCZICO(item.Zadavatel.ICO))
+                {
+                    <a href="https://www.hlidacstatu.cz/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
+                }
+                else
+                {
+                    <span>@item.Zadavatel.Jmeno</span>
+                }
+            }
+        </td>
+        <td>
+            @if (item.Dodavatele != null && item.Dodavatele.Count() > 0)
+            {
+                foreach (var d in item.Dodavatele)
+                {
+                    if (HlidacStatu.Lib.Validators.CheckCZICO(d.ICO))
+                    {
+                        <a href="https://www.hlidacstatu.cz/subjekt/@d.ICO">@d.Jmeno</a><br />
+                    }
+                    else
+                    {
+                        <span>@d.Jmeno</span><br />
+                    }
+
+                }
+            }
+        </td>
+        <td>
+            @item.NazevZakazky
+        </td>
+        <td>
+            <b>
+                @if (item.KonecnaHodnotaBezDPH.HasValue)
+                {
+                    @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value, html: true))
+                }
+                else if (item.OdhadovanaHodnotaBezDPH.HasValue)
+                {
+                    <span>odhad.cena </span> @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value, html: true))
+                }
+                else
+                {
+                    <span></span>
+                }
+            </b>
+        </td>
+    </tr>
+
+}
+
+
+@helper UcetHeader(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet bu, bool showUcet = false)
+{
+    <thead>
+        <tr>
+            <th></th>
+            <th>&nbsp;</th>
+            <th>Datum</th>
+            @if (showUcet)
+            {
+                <th>Účet</th>
+            }
+            <th>Název/číslo protiúčtu</th>
+            <th>Částka</th>
+            <th>Zpráva</th>
+        </tr>
+    </thead>
+}
+
+@helper UcetRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka p, bool showUcet = false, bool showSponzor = true, bool showZpravuProProjemce = true)
+{
+    var protiucetShown = false;
+    <tr>
+        <td>@Util.AddBookmark(user, p)</td>
+        <td><a href="@p.GetUrl(true,false)" style="padding-right:10px;">Detail</a></td>
+        <td>@Util.XContent(p.Datum.ToString("d.M.yy"))</td>
+        @if (showUcet)
+        {
+            HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet bu = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.Get(p.CisloUctu);
+            <td><a href="@bu.GetUrl()">@bu.CisloUctu</a> 
+                    (<a href="@bu.GetSubjektUrl(true)">@HlidacStatu.Util.RenderData.StranaZkratka(bu.Subjekt)</a> - 
+                        @Util.IfExists(string.IsNullOrEmpty(bu.Nazev), "",  Devmasters.Core.TextUtil.ShortenText(bu.Nazev,20, "…"))
+                    )
+            </td>
+        }
+        <td>
+            @if (showSponzor && p.Comments.Any(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaFirmu))
+            {
+                var f = HlidacStatu.Lib.Data.Firmy.Get(p.Comments.Where(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaFirmu).First().ValueInt);
+                if (f.Valid)
+                {
+                    protiucetShown = true;
+                    <a title="Identifikovaný sponzor" href="@f.GetUrlOnWebsite(false)">@f.Jmeno (ICO: @f.ICO)</a>
+                }
+            }
+            else if (showSponzor && p.Comments.Any(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaOsobu))
+            {
+                var o = HlidacStatu.Lib.Data.Osoby.GetById.Get(p.Comments.Where(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaOsobu).First().ValueInt);
+                if (o != null)
+                {
+                    protiucetShown = true;
+                    <a title="Identifikovaný sponzor" href="@o.GetUrlOnWebsite()">@o.FullNameWithYear()</a>
+                }
+            }
+            else
+            {
+                @Util.IfExists(string.IsNullOrEmpty(p.NazevProtiuctu), p.CisloProtiuctu, string.Format("<span title='{1}'>{0}</span>", p.NazevProtiuctu, p.CisloProtiuctu))
+            }
+        </td>
+        <td>@Util.XContent(HlidacStatu.Util.RenderData.NicePrice(p.Castka, showDecimal:HlidacStatu.Util.RenderData.ShowDecimalVal.Show, html: true), true)</td>
+        @if (@showZpravuProProjemce)
+        {
+            <td>@Util.XContent(p.ZpravaProPrijemce)</td>
+        }
+    </tr>
+
+
+}

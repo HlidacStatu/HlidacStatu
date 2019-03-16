@@ -1,0 +1,145 @@
+﻿@model HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    var bu = Model.BU;
+    ViewBag.Title = string.Format("Transakce {2} - {0} ({1})", bu.Subjekt, bu.CisloUctu, Model.Id);
+
+    HlidacStatu.Lib.Data.Osoba identifSponzor = HlidacStatu.Lib.Data.Osoba.GetByTransactionId(Model);
+    HlidacStatu.Lib.Data.Firma identifSponzorF = HlidacStatu.Lib.Data.Firma.FromTransactionId(Model);
+
+
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>Hlídač politických financí</h2>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var hash = window.location.hash.substr(1);
+            if (hash) {
+                $('#' + hash).addClass('bg-warning');
+            }
+        });
+    </script>
+}
+
+<div class="alert alert-warning" role="alert">Zkušební provoz, data bez záruky!</div>
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/ucty">Hlídač financí</a></li>
+        <li><a href="@(bu.GetSubjektUrl(true))">@bu.Subjekt</a></li>
+        <li><a href="@(Model.GetUrl(true, true))">@bu.CisloUctu</a></li>
+        <li class="active">Transakce @Model.Id</li>
+    </ol>
+    }
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>
+                @Util.AddBookmark(this.User, Model)
+                <a href="@bu.GetSubjektUrl(true)">@bu.Subjekt</a> : @bu.CisloUctu - @bu.TypUctu.ToNiceDisplayName()
+            </h2>
+            <div>
+                @bu.Nazev
+
+            </div>
+            <div>&nbsp;</div>
+            <div class="clearfix"></div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>Naše ID Transakce</th>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <th>Datum</th>
+                    <td>@Model.Datum</td>
+                </tr>
+                <tr>
+                    <th>Popis</th>
+                    <td>
+                        @Model.PopisTransakce
+                    </td>
+                </tr>
+                <tr>
+                    <th>Částka</th>
+                    <td>
+                        @HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.Castka)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Číslo protiúčtu</th>
+                    <td>@Model.CisloProtiuctu</td>
+                </tr>
+                <tr>
+                    <th>Název protiúčtu</th>
+                    <td>@Model.NazevProtiuctu</td>
+                </tr>
+                <tr>
+                    <th>Zpráva pro příjemce</th>
+                    <td>@Model.ZpravaProPrijemce</td>
+                </tr>
+                <tr>
+                    <th>VS</th>
+                    <td>@Model.VS</td>
+                </tr>
+                <tr>
+                    <th>SS</th>
+                    <td>@Model.SS</td>
+                </tr>
+                <tr>
+                    <th>KS</th>
+                    <td>@Model.KS</td>
+                </tr>
+                <tr>
+                    <th>Další info</th>
+                    <td>@Model.AddId</td>
+                </tr>
+                @if (identifSponzor != null)
+                {
+                    <tr>
+                        <th>Identifikovaný sponzor</th>
+                        <td><a href="@identifSponzor.GetUrlOnWebsite()" target="_blank">@identifSponzor.FullNameWithYear(false)</a></td>
+                    </tr>
+                }
+                @if (identifSponzorF != null)
+                {
+                    <tr>
+                        <th>Identifikovaný firemní sponzor</th>
+                        <td><a href="@identifSponzorF.GetUrlOnWebsite()" target="_blank">@identifSponzorF.Jmeno</a></td>
+                    </tr>
+                }
+                <tr>
+                    <th>Transakce v bance</th>
+                    <td><a href="@Model.ZdrojUrl" target="_blank">@Model.ZdrojUrl</a></td>
+                </tr>
+                <tr>
+                    <th>Odkaz na tuto transakci</th>
+                    <td><a href="@Model.GetUrl(false, false)">@Model.GetUrl(false, false)</a></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+
+    <div class="clearfix"></div>

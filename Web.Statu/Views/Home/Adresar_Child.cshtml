@@ -1,0 +1,277 @@
+﻿@using HlidacStatu.Web;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Framework;
+@using System.Threading.Tasks;
+@using HlidacStatu.Web.Models;
+
+@{
+    Layout = null;
+
+    int count = 0;
+    bool firstSubjectRender = true;
+    /*
+
+    <TypSubjektu id="2">Hospodářská komora</TypSubjektu>
+    <TypSubjektu id="3">Krajský úřad</TypSubjektu>
+    <TypSubjektu id="4">Ministerstvo</TypSubjektu>
+    <TypSubjektu id="5">Obec I. Typu</TypSubjektu> (5870)
+    <TypSubjektu id="6">Obec II. Typu</TypSubjektu> (183)
+    <TypSubjektu id="7">Obec III. Typu</TypSubjektu> (182)
+    <TypSubjektu id="8">Statutární města (Magistráty) a jejich obvody</TypSubjektu> (164)
+    <TypSubjektu id="10">Notáři</TypSubjektu>
+    <TypSubjektu id="11">Orgán státní správy</TypSubjektu> 484, ruzne pravni formy podle http://www.szrcr.cz/uploads/Dokumenty/ROS/cisFORMA_ROS_062016_2.xlsx
+    <TypSubjektu id="13">Exekutoři</TypSubjektu>
+    <TypSubjektu id="17">PO zřízená ze zákona</TypSubjektu> (54)
+    <TypSubjektu id="18">PO</TypSubjektu>
+    <TypSubjektu id="22">Orgán veřejné moci</TypSubjektu>
+    <TypSubjektu id="23">Organizační složka státu</TypSubjektu>
+    <TypSubjektu id="24">Daňoví poradci</TypSubjektu>
+     */
+
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> Ministerstva = null;
+    Ministerstva = StaticData.MinisterstvaCache.Get();
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> VysokeSkoly = null;
+    VysokeSkoly = StaticData.VysokeSkolyCache.Get();
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> KrajskeUrady = null;
+    KrajskeUrady = StaticData.KrajskeUradyCache.Get();
+
+
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> ManualChoosen = StaticData.ManualChoosenCache.Get();
+
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> StatutarniMestaAll = null;
+
+    StatutarniMestaAll = StaticData.StatutarniMestaAllCache.Get();
+
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> PrahaManual = null;
+    PrahaManual = StaticData.PrahaManualCache.Get();
+
+
+    var Praha = PrahaManual.ToList();
+    Praha.AddRange(StatutarniMestaAll.
+                        Where(m => m.Jmeno.ToLower().Contains("městská část praha"))
+                        );
+
+    var MestaOstatniChunk = StatutarniMestaAll
+        .Except(Praha)
+        .ToList().Chunk(30);
+
+    var PrahaChunk = Praha.Chunk(30);
+    var ManualChunk = ManualChoosen.Chunk(30);
+
+
+    IEnumerable<HlidacStatu.Lib.Data.Firma> OrganizacniSlozkyStatu = null;
+
+    OrganizacniSlozkyStatu = HlidacStatu.Lib.StaticData.OrganizacniSlozkyStatuCache.Get();
+
+}
+
+<h3>Typy úřadů</h3>
+<p>
+    <a href="#ministerstva">Ministerstva</a> |
+    <a href="#krajskeurady">Krajské úřady</a> |
+    <a href="#vybrane">Vybrané úřady a organizace</a> |
+    <a href="#vysokeskoly">Vysoké školy</a> |
+    <a href="#praha">Praha</a> |
+    <a href="#mesta">Další města a obvody</a> |
+    <a href="#organizacnislozky">Další organizační složky státu</a> |
+</p>
+<p>
+    <button class="btn btn-primary" type="button" id="btnAll" onclick="ShowAll();">Ukázat všechny úřady</button>
+    <button class="btn btn-danger" type="button" id="btnBad" onclick="ShowBad();">Ukázat pouze úřady bez dat v Registru smluv</button>
+</p>
+<div class="row">
+    <div id="ministerstva" class="col-xs-12 col-sm-6">
+        <h3>Ministerstva</h3>
+        <p><a href="/porovnat/subjekty?ico=66003008,00006947,00023671,60162694,00551023,66002222,47609109,00025429,00022985,00007064,45769851,00024341,00020478,00164801&title=Porovnán%C3%AD%20ministerstev">Ukázat přehledné porovnání ministerstev mezi sebou</a></p>
+        <ul>
+            @foreach (var item in Ministerstva)
+            {
+                @SubjectStatistic(item)
+            }
+        </ul>
+    </div>
+    <div id="krajskeurady" class="col-xs-12 col-sm-6">
+        <h3>Krajské úřady</h3>
+        <p><a href="/porovnat/subjekty?ico=70890650,70888337,70891168,70890749,70889546,70891508,70890692,60609460,70892822,70890366,70891095,70892156,70891320&title=Porovnán%C3%AD%20krajských%20úřadů">Ukázat přehledné porovnání krajských úřadů mezi sebou</a></p>
+
+        <ul>
+            @foreach (var item in KrajskeUrady)
+            {
+                @SubjectStatistic(item)
+            }
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+
+    <div id="vybrane" class="col-xs-12 col-sm-6">
+        <h3>Vybrané centrální úřady a organizace</h3>
+
+        <ul>
+            @foreach (var item in ManualChunk.First())
+            {
+                @SubjectStatistic(item)
+            }
+        </ul>
+    </div>
+
+    @foreach (var chunk in ManualChunk.Skip(1))
+    {
+        <div class="col-xs-12 col-sm-6">
+            <h3>Vybrané centrální úřady a organizace</h3>
+            <ul>
+                @foreach (var item in chunk)
+                {
+                    @SubjectStatistic(item)
+                }
+            </ul>
+        </div>
+    }
+    <div class="clearfix"></div>
+
+    <span id="vysokeskoly"></span>
+    @foreach (var SMchunk in VysokeSkoly.Chunk(VysokeSkoly.Count() / 2))
+    {
+        <div class="col-xs-12 col-sm-6">
+            <h3>Vysoké školy</h3>
+            <p><a href="/porovnat/subjekty?ico=61384984,60461446,60460709,68407700,62156462,60076658,00216224,62156489,61988987,48135445,47813059,46747885,62690094,44555601,00216208,61989592,00216275,70883521,62157124,61989100,61384399,60461373,71226401,75081431,60461071,00216305,49777513&title=Porovnán%C3%AD%20vysokých%20škol">Ukázat přehledné porovnání vysokých škol mezi sebou</a></p>
+
+            <ul>
+                @foreach (var item in SMchunk)
+                {
+                    @SubjectStatistic(item)
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="clearfix"></div>
+
+    <div id="praha" class="col-xs-12 col-sm-6">
+        <h3>Praha</h3>
+        <p><a href="/porovnat/special?specialvalue=Hlavn%C3%AD+město+Praha&specialtype=mestavkraji">Ukázat přehledné porovnání pražských částí mezi sebou</a></p>
+
+        <ul>
+            @foreach (var item in PrahaChunk.First())
+            {
+                @SubjectStatistic(item)
+            }
+
+        </ul>
+    </div>
+    @{
+        count = 0;
+    }
+    @foreach (var SMchunk in PrahaChunk.Skip(1))
+    {
+        count = count + 1;
+        <div class="col-xs-12 col-sm-6">
+            <h3>Praha</h3>
+
+            <ul>
+                @foreach (var item in SMchunk)
+                {
+                    @SubjectStatistic(item)
+                }
+            </ul>
+        </div>
+        if (count % 2 == 0)
+        {
+            <div class="clearfix"></div>
+        }
+    }
+
+    <div class="clearfix"></div>
+    @{
+        count = 0;
+    }
+    <span id="mesta"></span>
+    @foreach (var SMchunk in MestaOstatniChunk)
+    {
+        count = count + 1;
+        <div class="col-xs-12 col-sm-6">
+            <h3>Další města a obvody</h3>
+            <p><a href="/porovnat">Ukázat přehledné porovnání měst mezi sebou</a></p>
+
+            <ul>
+                @foreach (var item in SMchunk)
+                {
+                    @SubjectStatistic(item)
+                }
+            </ul>
+        </div>
+        if (count % 2 == 0)
+        {
+            <div class="clearfix"></div>
+        }
+    }
+    <div class="clearfix"></div>
+    <span id="organizacnislozky"></span>
+
+    @foreach (var SMchunk in OrganizacniSlozkyStatu.Chunk(50))
+    {
+        count = count + 1;
+        <div class="col-xs-12 col-sm-6">
+            <h3>Další organizační složky státu</h3>
+            <p><a href="/porovnat">Ukázat přehledné porovnání ostatních úřadů mezi sebou</a></p>
+
+            <ul>
+                @foreach (var item in SMchunk)
+                {
+                    @SubjectStatistic(item)
+                }
+            </ul>
+        </div>
+        if (count % 2 == 0)
+        {
+            <div class="clearfix"></div>
+        }
+    }
+
+</div>
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+
+
+@helper SubjectStatistic(HlidacStatu.Lib.Data.Firma firma)
+{
+    HlidacStatu.Lib.Analysis.SubjectStatistic item = new HlidacStatu.Lib.Analysis.SubjectStatistic(firma);
+
+    string icon = string.Empty;
+    string sclass = "ok";
+
+    if (item.BasicStatPerYear.Summary.Pocet == 0)
+    {
+        icon = @"&nbsp;<span class='text-danger glyphicon glyphicon-exclamation-sign' style='font-size:90%;' aria-hidden='true'></span>";
+        sclass = "invalid";
+    }
+    else if (item.BasicStatPerYear.Summary.CelkemCena < 50000)
+    {
+        icon = @"&nbsp;<span class='text-warning glyphicon glyphicon-exclamation-sign' style='font-size:90%;' aria-hidden='true' ></span>";
+        sclass = "invalid";
+    }
+    <li class="@sclass">
+        <a href="/subjekt/@item.Subject().ICO">@(item.Subject().Jmeno)</a> (
+        @HlidacStatu.Util.PluralForm.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
+        celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true))
+
+        @Html.Raw(
+                 item.Subject()?.ICO == "66003008" ?
+                 string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} smluv skrývá cenu</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                 :
+                 string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} bez ceny</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                )
+        )@Html.Raw(icon)
+    </li>
+
+}
+

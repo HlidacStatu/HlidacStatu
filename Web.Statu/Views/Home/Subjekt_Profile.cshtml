@@ -1,0 +1,606 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+    Layout = null;
+
+
+    var resMinDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 1, HlidacStatu.Lib.ES.SearchTools.OrderResult.DateSignedAsc, platnyZaznam: 1);
+
+    var minMaxDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 0,
+        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, platnyZaznam: 1,
+        anyAggregation:
+        new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+            .Min("min", m => m
+                .Field(ff => ff.datumUzavreni)
+            )
+            .Max("max", m => m
+                .Field(ff => ff.datumUzavreni)
+            )
+    );
+
+    var aggMin = minMaxDate.Result.Aggregations["min"] as Nest.ValueAggregate;
+    var aggMax = minMaxDate.Result.Aggregations["max"] as Nest.ValueAggregate;
+
+    double? minEpoch = aggMin?.Value;
+    double? maxEpoch = aggMax?.Value;
+
+    DateTime? firstInRS = minEpoch.HasValue ? Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)minEpoch.Value / 1000).ToLocalTime() : (DateTime?)null;
+    DateTime? lastInRS = maxEpoch.HasValue ? Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)maxEpoch.Value / 1000).ToLocalTime() : (DateTime?)null;
+
+    if (firstInRS < new DateTime(1990, 1, 1) || firstInRS > DateTime.Now.AddYears(2))
+    {
+        firstInRS = null;
+    }
+    if (lastInRS < new DateTime(1990, 1, 1) || lastInRS > DateTime.Now.AddYears(2))
+    {
+        lastInRS = null;
+    }
+
+
+
+    var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model);
+
+    int chartMinDate = 2016;
+    int chartMaxDate = DateTime.Now.Year;
+
+
+}
+
+
+<h2>
+    @Util.AddBookmark(this.User, Model)
+    @Model.Jmeno
+</h2>
+@if (Model.JsemOVM())
+{
+    <h4>Úřad - orgán veřejné moci</h4>
+}
+else if (Model.JsemStatniFirma())
+{
+    <h4>firma (spolu)vlastněná státem či samosprávou</h4>
+}
+else
+{
+    <h4>soukromá firma</h4>
+}
+@if (Model.Jmeno == Model.ICO)
+{
+    <div class="col-xs-12">Tuto firmu a informace o ni se nám nepodařilo dohledat</div>
+}
+else
+{
+
+    <table class="table table-new table-new--dotted">
+        <tbody>
+            @if (Model.Datum_Zapisu_OR.HasValue)
+            {
+
+                <tr>
+                    <td>Založena</td>
+                    <td>
+                        <div>@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
+                        @if (firstInRS.HasValue)
+                        {
+                            <div>
+
+                                @HlidacStatu.Lib.RenderTools.DateDiffShort(Model.Datum_Zapisu_OR.Value, firstInRS.Value,
+ "První známá smlouva podepsána {0} po založení firmy.",
+ "První známá smlouva podepsána {0} před založením firmy.")
+
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (Model.ICO != null && @Model.ICO.Length > 0)
+            {
+                <tr>
+                    <td>IČO</td>
+                    <td>@Model.ICO</td>
+                </tr>
+            }
+            @if (Model.DatovaSchranka != null && @Model.DatovaSchranka.Length > 0)
+            {
+                <tr>
+                    <td>Datová schránka</td>
+                    <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
+                </tr>
+            }
+            <tr>
+                <td>Dceřinné společnosti</td>
+                <td>
+                    <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Další informace o subjektu</td>
+                <td>
+                    @Util.FirmaMoreInfoLinks(Model.ICO)
+                </td>
+            </tr>
+            @if (firstInRS.HasValue)
+            {
+                <tr>
+                    <td>První smlouva v RS uveřejněna</td>
+                    <td>
+                        @firstInRS.Value.ToString("d.M.yyyy")
+                    </td>
+                </tr>
+
+            }
+            @if (lastInRS.HasValue)
+            {
+                <tr>
+                    <td>Poslední smlouva v RS uveřejněna</td>
+                    <td>
+                        @lastInRS.Value.ToString("d.M.yyyy")
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>Sdílení</td>
+                <td>
+
+                    @Util.ShareFacebook(Model.GetUrl(false))
+                    @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                    @Util.ShareWidget(Model.GetUrl(false))
+                </td>
+            </tr>
+
+            @{
+                long numFatalIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
+                long numVazneIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
+            }
+            @if (numFatalIssue + numVazneIssue > 0)
+            {
+                <tr>
+                    <td colspan="2">
+                        <h3 class="text-danger">Problémy a varování</h3>
+                        <ul>
+                            @if (numFatalIssue > 0)
+                            {
+                            <li>
+                                @Model.ObecneJmeno() má v registru smluv
+                                <span class="text-danger">
+                                    <b>
+                                        <span style="font-size:130%">@Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")</span>
+                                        tak závažné nedostatky v rozporu se zákonem,
+                                    </b>
+                                </span> že jsou velmi pravděpodobně neplatné.
+                                @Util.AddSearchBtn("/hledatsmlouvy", "ico:" + Model.ICO + " chyby:zasadni", "Ukázat tyto smlouvy")
+                                @Util.AddWatchDog(this.User, "ico:" + Model.ICO + " chyby:zasadni", typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat tyto smlouvy", "", prefillWDname: "Smlouvy s zásadními chybami pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+
+                            </li>
+                            }
+                            @if (numVazneIssue > 0)
+                            {
+                            <li>
+                                @if (numFatalIssue == 0)
+                                {
+                                    <span>
+                                        @Model.ObecneJmeno() má v registru smluv
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>Současně má v registru smluv</span>
+                                }
+                                <span class="text-danger">
+                                    @Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")
+                                    vážné nedostatky
+                                </span>.
+
+                                @Util.AddSearchBtn("/hledatsmlouvy", "ico:" + Model.ICO + " chyby:vazne","Ukázat tyto smlouvy")
+                                @Util.AddWatchDog(this.User, "ico:" + Model.ICO + " chyby:vazne", typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat tyto smlouvy", "", prefillWDname: "Smlouvy s vážnými chybami pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                            </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+
+            }
+
+            <tr>
+                <td colspan="2">
+                    <h3>Statistiky z registru smluv</h3>
+                    <p class="small text-muted">
+                        Vysvětlení: Registr smluv je platný od poloviny roku 2016. První rok, od 1.7.2016 do 30.6.2017, probíhal v "testovacím" režimu, kdy za neuveřejnění smlouvy nehrozila žádná sankce.
+                        Proto statistiky za 2016 neobsahují smlouvy za celý rok a rok 2017 nemusí být úplný.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                            @{
+                                ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                        statistics.BasicStatPerYear.Data
+                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkemCena)
+                                        );
+
+                                @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
+                                         true, true, 150, "rdsSumPerY",
+                                          "", "",
+                                         rdsSumPerY, "Kč", xValueFormat: "{value:%Y}")
+                                 )
+
+                            }
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                            @{
+                                ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                            statistics.BasicStatPerYear.Data
+                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.Pocet)
+                                            );
+
+                                @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
+                                        true, true, 150, "rdsCountPerY",
+                                        "", "",
+                                        rdsCountPerY, "", xValueFormat: "{value:%Y}")
+                                )
+
+                            }
+
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                            @{
+                                ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                            statistics.RatingPerYear.Data
+                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentBezCeny * 100)
+                                            );
+
+                                @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
+                                            true, true, 150, "rdsbezCenyPerY",
+                                            "", "%",
+                                            rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
+                                    )
+
+                            }
+
+                        </div>
+                        @if (Model.JsemStatniFirma() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
+                        {
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                @{
+                                    ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
+                                            statistics.RatingPerYear.Data
+                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                            .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSPolitiky)
+                                            );
+
+                                    @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                                             true, true, 150, "rdsPolitikPerYKc",
+                                              "", "Kč",
+                                             rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
+                                     )
+
+                                }
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                @{
+                                    ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                            statistics.RatingPerYear.Data
+                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                            .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSPolitiky * 100)
+                                            );
+
+                                    @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                                                     true, true, 150, "rdsPolitikPerY",
+                                                      "", "%",
+                                                     rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
+                                             )
+
+                                }
+                            </div>
+                        }
+                    </div>
+
+
+                </td>
+            </tr>
+            @if (Model.JsemStatniFirma() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
+            {
+                double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
+                numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
+                <tr>
+                    <td>Smlouvy s vazbou na politiky</td>
+                    <td>
+                        <a href="#vazbyNaPolitik">Zde najdete přehled navázaných osob a firem</a>.
+
+                        <table class="table table-condensed table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Rok</th>
+                                    <th>Počet smluv</th>
+                                    <th>% podíl</th>
+                                    <th>Hodnota smluv v Kč</th>
+                                    <th>% podíl</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bs in statistics.RatingPerYear.RegistrSmluvTime)
+                                {
+                                    <tr>
+                                        <td>@bs.Key</td>
+                                        <td class="number">@bs.Value.NumSPolitiky</td>
+                                        <td class="number">@bs.Value.PercentSPolitiky.ToString("P2")</td>
+                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSPolitiky, html: true))</td>
+                                        <td class="number">@bs.Value.PercentKcSPolitiky.ToString("P2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Celkem</th>
+                                    <th class="number">@statistics.RatingPerYear.Summary.NumSPolitiky</th>
+                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
+                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(statistics.RatingPerYear.Summary.SumKcSPolitiky, html: true))</th>
+                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            }
+            @if (!string.IsNullOrEmpty(Model.Description(false)))
+            {
+
+                <tr>
+                    <td>Další info</td>
+                    <td>
+                        @Html.Raw(Model.Description(true))
+                    </td>
+                </tr>
+            }
+
+
+
+            @if (Model.IsNespolehlivyPlatceDPH())
+            {
+                <tr>
+                    <td><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma je nespolehlivý plátce DPH</span></td>
+                    <td>
+                        <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")</span>
+                    </td>
+                </tr>
+
+                if (Model.NespolehlivyPlatceDPH_obchodSuradyStat() != null)
+                {
+                    <tr>
+                        <td><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Které úřady s touto firmou přesto obchodovaly?</span></td>
+                        <td>
+                            <ul>
+                                @foreach (var ustat in Model.NespolehlivyPlatceDPH_obchodSuradyStat().Detail)
+                                {
+                                    var query = string.Format("%28icoPlatce%3A{0}+AND+icoPrijemce%3A{1}%29+OR+%28icoPlatce%3A{1}+AND+icoPrijemce%3A{0}%29", Model.ICO, ustat.Item);
+                                    if (Model.NespolehlivyPlatceDPH().FromDate.HasValue)
+                                    {
+                                        DateTime toDate = Model.NespolehlivyPlatceDPH().ToDate.HasValue ? Model.NespolehlivyPlatceDPH().ToDate.Value : DateTime.Now.AddDays(1);
+                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]", Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"), toDate.ToString("yyyy-MM-dd")
+                                            ); //podepsano:[2016-01-01 TO 2016-12-31]
+                                    }
+                                    <li>
+                                        <div><a href="/subjekt/@ustat.Item">@HlidacStatu.Lib.Data.Firmy.GetJmeno(ustat.Item)</a></div>
+                                        <div style="margin-left:5px">
+                                            <a href='/HledatSmlouvy?Q=@query'>@ustat.ToNiceString(null, false)</a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+
+                }
+            }
+
+
+
+            @{
+                var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForFirma(Model.ICO, null, 0);
+                var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(Model.JmenoBezKoncovky(), null, 0);
+                if (numAnalyzed.Total + numByName.Total > 0)
+                {
+                    <tr>
+                        <td>Podpora politických stran</td>
+                        <td>
+                            @if (Model.IsSponzor())
+                            {
+                                <div>@Model.Jmeno je sponzorem politické strany:</div>
+                            }
+                            <ul>
+                                @if (numAnalyzed.Total > 0)
+                                {
+                                    <li>
+                                        Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")</b>
+                                        (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))</b>)
+                                        politickým stranám. <a href="/ucty/hledat?ico=@Model.ICO">Ukázat bankovní transakce s identifikovanými dary</a>
+                                    </li>
+                                }
+                                @if (numByName.Total > 0)
+                                {
+                                    <li>
+                                        Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí") </b>
+                                        (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))</b>)
+                                        s politickými stranami se subjektem se stejným jménem <b>@Model.JmenoBezKoncovky()</b>.
+                                        <a href="/ucty/hledat?q=@(System.Net.WebUtility.UrlEncode(Model.JmenoBezKoncovky()))">Ukázat bankovní transakce</a>
+                                        <br /><span class="text-info">Upozornění: Jedná se o transakce ve kterých se vyskytuje subjekt stejného jména. Nemusí jít o stejnou právnickou osobu.</span>
+                                    </li>
+                                }
+                            </ul>
+
+                        </td>
+                    </tr>
+                }
+            }
+
+            <tr>
+                <td>Základní dotazy pro tento subjekt</td>
+                <td>
+                    <p>
+                        <a href="/Hledat?Q=ico:@Model.ICO">
+                            
+                        </a>
+                        @Util.AddSearchBtn("/hledat", "ico:" + Model.ICO , "Prohledat všechny databáze, kde se " + Devmasters.Core.TextUtil.ShortenText( Model.Jmeno,35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                    </p>
+                    <p>
+                        @Util.AddSearchBtn("/hledatSmlouvy", "ico:" + Model.ICO, "Ukázat všechny smlouvy, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno,35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                    </p>
+                    <p>
+                        @Util.AddSearchBtn("/VerejneZakazky/hledat", "ico:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno,35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    </p>
+
+                </td>
+            </tr>
+            @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+            {
+                <tr>
+                    <td>
+                        Základní dotazy pro tento subjekt<br />a všechny provázané společnosti
+                        <br />
+                        (celkem
+                        @(Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(),
+                                                                                                                            "1 subjekt", "{0} subjekty", "{0} subjektů"))
+                        - <a href="/subjektVazby/@Model.ICO">jejich seznam</a>)
+                    </td>
+                    <td>
+                        <p>
+                            @Util.AddSearchBtn("/hledat", "holding:" + Model.ICO, "Prohledat všechny databáze, kde se vyskytuje vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno,25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                        </p>
+                        <p>
+                            @Util.AddSearchBtn("/hledatSmlouvy", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno,25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                        </p>
+                        <p>
+                            @Util.AddSearchBtn("/VerejneZakazky/hledat", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno,25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        </p>
+                        <hr />
+                        <p>
+                            <a href="/manage/SubjektHlidac/@Model.ICO" class="btn btn-warning btn-sm"
+                               style="padding-left:15px;padding-right:15px"
+                               alt="Nastavit hlídače @Model.Jmeno" title="Nastavit hlídače @Model.Jmeno"
+                               onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'authenticated');" role="button">
+                                <span class="glyphicon glyphicon-eye-open dark"></span>Hlídat pouze vybrané provázané společnosti k @Model.Jmeno
+                            </a>
+
+                        </p>
+                    </td>
+                </tr>
+            }
+
+            @if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(Model.ICO))
+            {
+                <tr>
+                    <td>Námi sledované angažovanosti</td>
+                    <td>
+                        @foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[Model.ICO])
+                        {
+                            HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.Politici
+                            .Get()
+                            .Where(m => m.InternalId == pId)
+                            .FirstOrDefault();
+                            if (p != null)
+                            {
+                                <p>
+                                    <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
+                                    <div style="padding-left:20px;">
+                                        @Util.RenderVazby(p.VazbyProICO(Model.ICO))
+                                    </div>
+                                </p>
+                            }
+                        }
+                    </td>
+                </tr>
+
+            }
+
+
+
+            @{
+                //dalsi data
+                var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 0, 1);
+
+                //dalsi data
+                //var ruohs = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rozhodnuti-uohs");
+                //var resUOHS = ruohs.SearchData("Ucastnici.ICO:" + Model.ICO, 1, 0);
+            }
+            <tr>
+                <td colspan="2">
+                    <h3>Další informace</h3>
+                </td>
+            </tr>
+            @if (resVZ.IsValid && resVZ.Total > 0)
+            {
+                <tr>
+                    <td>Veřejné zakázky</td>
+                    <td>
+                        @Model.Jmeno se účastní nejméně @resVZ.Total veřejných zakázek.<br />
+                        @Util.AddSearchBtn(Url.Action("Hledat", "VZ"), "ico:" + Model.ICO, "Vypsat všechny tyto veřejné zakázky")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat VZ", "", prefillWDname: "veřejné zakázky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+
+                    </td>
+                </tr>
+            }
+            @{
+                try
+                {
+
+                    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
+
+                    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
+                    if (dsSearch.IsValid && dsSearch.Total > 0)
+                    {
+                        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+                        {
+                            <tr>
+                                <td>@dss.DataSet.Registration().name</td>
+                                <td>
+                                    Tato firma se vyskytuje v databázi <b>@(dss.Total)-krát</b>.<br/>
+                                    @Util.AddSearchBtn(Url.Action("Hledat", "Data", dss.ToRouteValues(1)),null, "Vyhledat všechny záznamy s " + Model.Jmeno)
+
+                                    @Util.AddWatchDog(this.User, "ico:" + Model.ICO + "", typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), "", "", prefillWDname: Model.Jmeno + " v databázi " + dss.DataSet.Registration().name, btnCss: "btn btn-warning btn-xs", showWDList: false, datasetId: dss.DataSet.DatasetId)
+
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    HlidacStatu.Util.Consts.Logger.Error("GetSpecificQueriesForDatasets error", e);
+                }
+            }
+        </tbody>
+    </table>
+
+
+
+}
+

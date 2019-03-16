@@ -1,0 +1,74 @@
+﻿@model HlidacStatu.Web.Controllers.HomeController.ImageBannerCoreData
+
+@{
+    Layout = "";
+    string width = "1000px";
+    string height = "1000px";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/textFit.min.js"></script>
+    <link rel='stylesheet' href='~/Content/bootstrap.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
+    <link rel='stylesheet' href='~/Content/socialBanner.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
+
+</head>
+<body style="width:@width;height:@height;background:url(/Content/Img/social-banner-1x1.png) no-repeat;">
+
+    @if (!string.IsNullOrEmpty(Model.img))
+    {
+        <span class="picture" style="position:absolute;top:105px;left:35px;background-image: url('@Model.img');width:90px;height:90px;"></span>
+    }
+    <div class="jtextfill" style="position: absolute;top: 110px;left: 150px;width: 770px;height: 80px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+        <span class="mytxt" style="font-weight:700">
+            @Html.Raw(Model.title)
+        </span>
+    </div>
+
+    <div class="jtextfill" style="position: absolute;top: 190px;left: 150px;width: 770px;height: 40px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+        <span class="mytxt" style="font-weight:100">
+            @Html.Raw(Model.subtitle)
+        </span>
+    </div>
+    <div class="jtextfill" style="position: absolute;top: 290px;left: 150px;width: 770px;height: 500px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+
+        <span class="mytxt">
+            @Html.Raw(Model.body)
+        </span>
+
+    </div>
+
+
+    <div class="jtextfill" style="position:absolute;top:880px;left:90px;width:550px;height: 40px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+
+        <span class="mytxt">
+            @Html.Raw(Model.footer)
+        </span>
+
+
+    </div>
+
+
+
+
+
+    <script>
+        textFit(document.getElementsByClassName('jtextfill'), {
+            multiLine: true, detectMultiLine: true, minFontSize: 20, maxFontSize: 400, alignVert: false, alignHoriz: false
+        });
+
+    </script>
+</body>
+</html>
+

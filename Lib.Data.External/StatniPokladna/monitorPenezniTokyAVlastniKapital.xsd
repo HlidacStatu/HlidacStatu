@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="urn:cz:mfcr:monitor:schemas:MonitorPenezniTokyAVlastniKapital:v1"
+    xmlns:mon="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+    targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorPenezniTokyAVlastniKapital:v1"
+    elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+        schemaLocation="monitorTypes.xsd"/>
+    <xs:element name="PenezniTokyAVlastniKapital">
+        <xs:complexType>
+            <xs:sequence>    
+                <xs:element name="PenezniToky">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="Radek">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Polozka" type="mon:PolozkaType"/>
+                                        <xs:element name="Castka" type="mon:FinancniCastkaType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="VlastniKapital">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="Radek">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Polozka" type="mon:PolozkaType"/>
+                                        <xs:element name="ObdobiMinule" type="mon:FinancniCastkaType"/>
+                                        <xs:element name="StavZvyseni" type="mon:FinancniCastkaType"/>
+                                        <xs:element name="StavSnizeni" type="mon:FinancniCastkaType"/>
+                                        <xs:element name="ObdobiBezne" type="mon:FinancniCastkaType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>      
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>          
+</xs:schema>

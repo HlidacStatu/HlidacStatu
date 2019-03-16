@@ -1,0 +1,48 @@
+﻿Content-Type: text/plain; charset=utf-8
+
+Dobrý den.
+
+V době @Model.Interval @Model.TotalTxt pro tento dotaz
+Za přibylo do Registru smluv @Model.TotalTxt pro tento dotaz:
+@Model.Query
+
+
+@foreach (HlidacStatu.Lib.Emails.Templates.FoundContractItem smlouva in @Model.Smlouvy)
+{
+<text>
+============================================
+| @Raw(smlouva.PlatceTxt) |  @Raw(smlouva.PrijemceTxt)
+--------------------------------------------
+@Raw(smlouva.Predmet)
+@Raw(smlouva.Cena)
+
+@if (smlouva.Issues != null && smlouva.Issues.Count() > 0)
+{
+    foreach (string s in smlouva.Issues)
+    {
+    <text>
+! @Raw(s) 
+    </text>
+    }
+}
+else
+{
+    <text>
+Bez nedostatků
+    </text>
+
+}
+
+
+Více: @Raw("https://www.hlidacstatu.cz/Detail/" + smlouva.Id + "?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail")
+============================================
+
+</text>
+}
+
+
+Chcete změnit nastavení? Zde je to možné: https://www.hlidacstatu.cz/manage/Watchdogsutm_source=hlidac&utm_medium=emailtxt&utm_campaign=settings
+
+
+@Raw(Model.EmailFooterText)
+

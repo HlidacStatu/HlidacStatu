@@ -1,0 +1,181 @@
+﻿@using Nest
+@using Devmasters.Core;
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost;
+    if (!Enum.TryParse<HlidacStatu.Lib.Data.Relation.AktualnostType>(Request.QueryString["aktualnost"], true, out aktualnost))
+    {
+        aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+    }
+
+    HlidacStatu.Lib.Data.AnalysisCalculation.VazbyFiremNaPolitiky vazbyNaPolitiky = null;
+    QueryContainer qc = null;
+
+    switch (aktualnost)
+    {
+        case HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni:
+            vazbyNaPolitiky = StaticData.FirmySVazbamiNaPolitiky_aktualni_Cache.Get();
+            qc = new QueryContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Term(t => t.Field(f => f.SVazbouNaPolitikyAktualni == true));
+            break;
+        case HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny:
+            vazbyNaPolitiky = StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get();
+            qc = new QueryContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Term(t => t.Field(f => f.SVazbouNaPolitikyNedavne == true));
+            break;
+        case HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni:
+        case HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny:
+            vazbyNaPolitiky = StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get();
+            qc = new QueryContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Term(t => t.Field(f => f.SVazbouNaPolitiky == true));
+            break;
+    }
+
+
+
+    Func<HlidacStatu.Lib.Data.Smlouva, string> renderPolitiky = (item) =>
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append("<tr>");
+
+        sb.Append("<td class=\"joined\">&nbsp;</td>");
+        sb.Append("<td colspan=\"5\" class=\"joined\">");
+        sb.Append("<ul class='list-inline'><li>Angažovaní politici:</li>");
+
+        foreach (var ss in item.Prijemce)
+        {
+            if (!string.IsNullOrEmpty(ss.ico) && vazbyNaPolitiky.SoukromeFirmy.ContainsKey(ss.ico))
+            {
+                List<HlidacStatu.Lib.Data.Osoba> persons = new List<HlidacStatu.Lib.Data.Osoba>();
+                persons = vazbyNaPolitiky.SoukromeFirmy[ss.ico]
+                            .Select(pid => HlidacStatu.Lib.StaticData.Politici
+                                    .Get()
+                                    .Where(m => m.InternalId == pid)
+                                    .FirstOrDefault())
+                            .Where(p => p != null && p.VazbyProICO(ss.ico).Count() > 0)
+                            .OrderByDescending(p => p.VazbyProICO(ss.ico).Min(m => m.RelFrom ?? DateTime.MaxValue))//setridit podle zacatku angazovanosti, nejnovejsi na zacatek
+                            .ToList();
+
+                foreach (var p in persons)
+                {
+            //doby angazovanosti politika v ICO
+            HlidacStatu.Lib.Data.Relation.AktualnostType akt = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny;
+                    List<string> dates = new List<string>();
+                    foreach (var v in p.VazbyProICO(ss.ico))
+                    {
+                        if (v.RelFrom.HasValue && v.RelTo.HasValue)
+                        {
+                            dates.Add(string.Format("{0}-{1}", v.RelFrom.Value.ToString("yyyy"), v.RelTo.Value.ToString("yyyy")));
+                        }
+                        else if (v.RelTo.HasValue)
+                        {
+                            dates.Add(string.Format("do {0}", v.RelTo.Value.ToString("yyyy")));
+                        }
+                        else if (v.RelFrom.HasValue)
+                        {
+                            dates.Add(string.Format("od {0}", v.RelFrom.Value.ToString("yyyy")));
+                        }
+
+                        if (akt == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny)
+                        {
+                            akt = v.Aktualnost;
+                        }
+                        if (akt == HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni &&
+                            (v.Aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni
+                            || v.Aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
+                        )
+                        {
+                            akt = v.Aktualnost;
+                        }
+                        if (akt == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny &&
+                            (v.Aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni)
+                        )
+                        {
+                            akt = v.Aktualnost;
+                        }
+
+
+
+                    }
+                    string color = "muted";
+                    if (akt == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni)
+                    {
+                        color = "danger";
+                    }
+                    else if (akt == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
+                    {
+                        color = "warning";
+                    }
+
+                    if (dates.Count == 0)
+                    {
+                        sb.AppendFormat("<li class='text-{0}' title='{3}'><a href='{2}'>{1}</a></li>"
+                            , color, p.FullName(true), "/politik/" + p.NameId, aktualnost.ToNiceDisplayName());
+                    }
+                    else
+                    {
+                        sb.AppendFormat("<li class='text-{0}' title='{4}'><a href='{2}'>{1}</a> ({3})</li>",
+                            color, p.FullName(true)
+                            , "/politik/" + p.NameId, dates.Aggregate((f, s) => f + ", " + s)
+                            , aktualnost.ToNiceDisplayName());
+                    }
+
+                }
+            }
+        }
+
+        sb.Append("</ul>");
+        sb.Append("</td>");
+        sb.Append("<td class=\"joined\">&nbsp;</td>");
+        sb.Append("</tr>");
+        return sb.ToString();
+    };
+
+
+    var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.ES.SearchTools.OrderResult.PriceDesc);
+
+    model.Result = HlidacStatu.Lib.ES.SearchTools.RawSearch(qc, model.Page,
+        100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)));
+
+    model.Chyby = false;
+    model.AdditionalRender = renderPolitiky;
+}
+
+
+
+@{
+
+    ViewBag.MoreHtml = "<p><b>Tady najdete <a href='/Politici'>Seznam politiků a jejich vazby na soukromé firmy</a></b></p>";
+}
+
+
+
+
+<p>
+    <a href="@Url.Action("Report", new { id = 5, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
+    </a>
+    <a href="@Url.Action("Report", new { id = 5,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
+    </a>
+    <a href="@Url.Action("Report", new { id = 5,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
+    </a>
+</p>
+
+
+
+
+@Html.Partial("_SearchResult", model)
+
+@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+

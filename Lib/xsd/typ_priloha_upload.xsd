@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:complexType name="tPrilohaUpload">
+		<xs:sequence>
+			<xs:element name="nazevSouboru" type="ns1:tNazevSouboru">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název přiloženého souboru</xs:documentation>
+					<xs:documentation xml:lang="cs">Musí přesně odpovídat názvu v elementu dmFileDescr datové zprávy</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

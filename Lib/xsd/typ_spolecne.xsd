@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:simpleType name="tEmail">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50" />
+			<xs:pattern value="([0-9a-zA-Z]([-_.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*\.)+[a-zA-Z]{2,9})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDatovaSchranka">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([a-zA-Z0-9]{7})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tDatovaZprava">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tText">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tTextNoEmpty">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tIco">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tCisloSmlouvy">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tMena">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([a-zA-Z]{3})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tNazevSouboru">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="tHash">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="algoritmus" type="xs:string">
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

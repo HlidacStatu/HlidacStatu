@@ -1,0 +1,85 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq
+@using HlidacStatu.Util;
+
+@{
+    ViewBag.Title = "" + Model.FullNameWithYear();
+
+    ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
+    ViewBag.SocialShareText = Model.FullName() + ": " + Model.InfoFacts().RenderInfoFacts(2, true, true);
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/osoba?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.NameId;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                + "<meta property=\"og:image:height\" content=\"1080\" />"
+                + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                ;
+
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+
+    var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
+
+}
+
+@section scripts
+{
+
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Osoby", "Home")">Hlídač Osob</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil" })
+
+<div style="margin-top:40px"></div>
+
+@if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
+{
+    <span>
+        @{
+            @Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby" })
+        }
+    </span>
+}
+
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+
+
+
+
+
+@section onlyembed
+{
+    @Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_embed" })
+
+}
+
+
+@section footerscripts
+{
+    <script type="text/javascript">
+        SocialShareKit.init({
+            url: 'https://www.hlidacstatu.cz@(Url.Action("Politik", new { id = Model.NameId }))',
+            twitter: {
+                via: 'HlidacSmluv'
+            }
+        }
+        );
+    </script>
+}
+
+

@@ -1,0 +1,303 @@
+﻿@model HlidacStatu.Web.Models.IndexViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Správa účtu " + User.Identity.Name;
+
+
+}
+
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <dl class="dl-horizontal">
+        <dt>Hlídači nových smluv, veřejných zakázek a datových sad:</dt>
+        @if (Model.HasWatchdogs)
+        {
+            <dd>
+                [@Html.ActionLink("Seznam vašich hlídačů", "Watchdogs")]
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <a href="#" data-toggle="modal" data-target="#addWDhelp">Přidat hlídače nových smluv, veřejných zakázek a datových sad</a>
+                <!-- Modal -->
+                <div class="modal fade" id="addWDhelp" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Jak přidat nového hlídače</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p><code>Hlídač nových smluv</code> nebo <code>Hlídač veřejných zakázek</code> je jednoduše vyhledávací dotaz, který se spustí vždy po vložení nových smluv.</p>
+                                <p>
+                                    Před vytvořením dalšího <code>hlídače nových smluv</code> je dobré si ověřit, že vyhledávací dotaz funguje jak si představujete.
+                                    Proto jediným místem, kde můžete přidat dalšího <code>hlídače nových smluv</code> je vyhledávání.
+                                </p>
+                                <p>
+                                    Nechte vyhledat údaje, které potřebujete
+                                    a nad samotnými výsledky hledání najdete tlačítko pro přidání <code>hlídače nových smluv</code> pro hledané údaje.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+                                <a href="/" role="button" class="btn btn-primary">Přejít na hledání a vytvořit prvního hlídače</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </dd>
+        }
+
+        <dt>Heslo:</dt>
+        <dd>
+            [
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Změnit heslo", "ChangePassword")
+            }
+            else
+            {
+                @Html.ActionLink("Zadat heslo", "SetPassword")
+            }
+            ]
+        </dd>
+
+    </dl>
+    <hr />
+    <dl>
+        <dt>Pro adminy</dt>
+        <dd>
+            @if (this.User.IsInRole("canEditData"))
+            {
+                <dl>
+                    <dt>Reviews:</dt>
+                    <dd>
+                        <a href="/manage/reviews">Reviews</a>
+                    </dd>
+
+                    <dt>Spojení dvou osob do jedné:</dt>
+                    <dd>
+                        <form class="form-inline" action="/manage/osobamerge">
+                            <div class="form-group-sm">
+                                <label for="osoba1">Hlavní osoba (nameId)</label>
+                                <input class="form-control" type="text" name="osoba1" id="osoba1" />
+                                <label for="osoba1">Duplikátní záznam</label>
+                                <input class="form-control" type="text" name="osoba2" id="osoba2" />
+                                <button type="submit" class="btn btn-sm btn-default">Spojit do hlavní osoby</button>
+                            </div>
+                        </form>
+                    </dd>
+                    <dt>Editace zaznamů:</dt>
+                    <dd>
+                        <ul>
+                            <li>
+                                <input id="Sm" type="number" placeholder="ID verze smlouvy" onchange="$('#linkSm').attr('href','/manage/EditSmlouva?id=' + $('#Sm').val());" />
+                                <a id="linkSm" href="#">Editace záznamu smlouvy</a>
+                            </li>
+                            <li>
+                                <input id="Per" type="text" placeholder="ID cloveka" onchange="$('#linkPer').attr('href','/manage/EditOsoba?id=' + $('#Per').val());" />
+                                <a id="linkPer" href="#">Editace záznamu osoby</a>
+                            </li>
+                            <li>
+                                <input id="BU" type="text" placeholder="Cislo uctu" onchange="$('#linkBU').attr('href', '/manage/EditObject?type=bankovniucet&id=' + $('#BU').val());" />
+                                <a id="linkBU" href="/manage/EditObject?type=bankovniucet&id=">Novy/Editace bankovniho uctu</a>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>
+                        Hledat mezi vsemi osobami
+                    </dt>
+                    <dd>
+                        <form action="/manage/hledejosoby" method="get" class="form-inline">
+                            <div class="form-group">
+                                <label for="jmeno">Jmeno</label>
+                                <input type="text" class="form-control" id="jmeno" name="jmeno" placeholder="Jmeno">
+                            </div>
+                            <div class="form-group">
+                                <label for="prijmeni">Prijmeni</label>
+                                <input type="text" class="form-control" id="prijmeni" name="prijmeni" placeholder="Prijmeni">
+                            </div>
+                            <div class="form-group">
+                                <label for="narozeni">Jmeno</label>
+                                <input type="date" class="form-control" id="narozeni" name="narozeni" placeholder="Datum narozeni">
+                            </div>
+                            <button type="submit" class="btn btn-default">Hledej</button>
+
+                        </form>
+                    </dd>
+
+                    <dt>Debug info:</dt>
+                    <dd>
+                        <a href="/manage/debug">debug</a>
+                    </dd>
+                    <dt><h2>Social Image</h2></dt>
+                    <dd></dd>
+                    <dt><h3>Custom quote</h3></dt>
+                    <dd>
+
+                        <h4>uvozovky: „ … “ </h4>
+                        @*/SocialBanner?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
+                        <form action="/socialbanner/quote" method="get" class="form-horizontal" target="_blank">
+
+                            <div class="form-group-sm">
+                                <label for="jmeno" class="col-sm-2 control-label">Titulek (nepovinne)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control--240" name="t" placeholder="titulek">
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                <label for="prijmeni" class="col-sm-2 control-label">body</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control--240" name="b" placeholder="text">
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                <label for="prijmeni" class="col-sm-2 control-label">footer</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control--240" name="f" placeholder="text">
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                <label for="jmeno" class="col-sm-2 control-label">sub footer</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control--240" name="st" placeholder="titulek">
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                <label for="img" class="col-sm-2 control-label">img</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control--240" name="img" placeholder="img url">
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                <label for="img" class="col-sm-2 control-label">pomer stran</label>
+                                <div class="col-sm-10" style="border-bottom: 1px solid gray;">
+                                    <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                    <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                                </div>
+                            </div>
+                        </form>
+                    </dd>
+
+                    <dt>
+                        <h3>Subjekt</h3>
+                    </dt>
+                    <dd>
+                        @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
+                        <form action="/socialbanner/subjekt" method="get" class="form">
+                            <div class="row">
+
+                                <div class="col-xs-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        <label for="v">ICO</label>
+                                        <input type="text" class="form-control--240" name="v" placeholder="ico">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        <label for="img">pomer stran</label>
+                                        <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                        <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </dd>
+                    <dt><h3>osoba</h3></dt>
+                    <dd>
+                        @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
+                        <form action="/socialbanner/osoba" method="get" class="form">
+                            <div class="row">
+
+                                <div class="col-xs-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        <label for="v">Osoba NameId</label>
+                                        <input type="text" class="form-control--240" name="v" placeholder="osoba nameId">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-4">
+                                    <div class="form-group-sm">
+                                        <label for="img">pomer stran</label>
+                                        <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                        <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </dd>
+
+
+                </dl>
+            }
+
+        </dd>
+    </dl>
+    @*
+        <dt>External Logins:</dt>
+        <dd>
+            @Model.Logins.Count [
+            @Html.ActionLink("Manage", "ManageLogins") ]
+        </dd>
+            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
+
+             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+
+             Uncomment the following block after you have set up two-factor authentication
+
+                <dt>Phone Number:</dt>
+                <dd>
+                    @(Model.PhoneNumber ?? "None")
+                    @if (Model.PhoneNumber != null)
+                    {
+                        <br />
+                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
+                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
+                        }
+                    }
+                    else
+                    {
+                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
+                    }
+                </dd>
+
+            <dt>Two-Factor Authentication:</dt>
+            <dd>
+                <p>
+                    There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                    for details on setting up this ASP.NET application to support two-factor authentication.
+                </p>
+                @if (Model.TwoFactor)
+                    {
+                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>Enabled
+                            <input type="submit" value="Disable" class="btn btn-link" />
+                            </text>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>Disabled
+                            <input type="submit" value="Enable" class="btn btn-link" />
+                            </text>
+                        }
+                    }
+            </dd>*@
+
+</div>

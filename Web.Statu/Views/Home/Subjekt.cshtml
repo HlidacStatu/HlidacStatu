@@ -1,0 +1,115 @@
+﻿@model HlidacStatu.Web.Models.SubjektReportModel
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+
+
+@{
+    ViewBag.Title = "Informace o " + Model.firma.Jmeno;
+
+    ViewBag.statDescription =
+    (HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet > 0) ?
+        string.Format("<span><a href=\"/Hledat?Q=ico:{0}\">{1}</a><br />za celkem {2}</span>",
+            Model.ICO,
+            HlidacStatu.Util.PluralForm.Get((int)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet, "{0} smlouva v registru;{0} smlouvy v registru;celkem {0} smluv v registru"),
+            HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.CelkemCena, html: true, shortFormat: true)
+
+        )
+        : "Nenalezli jsme žádné smlouvy";
+
+    ViewBag.SocialShareTitle = Model.firma.Jmeno + " na HlidacStatu.cz";
+    ViewBag.SocialShareText = $"{Model.firma.Jmeno} : {Devmasters.Core.TextUtil.RemoveHTML((string)ViewBag.statDescription)}";
+    ViewBag.SocialShareType = "article";
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/subjekt?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.ICO;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                + "<meta property=\"og:image:height\" content=\"1080\" />"
+                + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                ;
+}
+
+@section scripts
+{
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+
+
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<div class="dontembed">
+
+    @Util.AddVisitImg("/subjekt/" + Model.ICO)
+
+    @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Profile", firma = Model.firma })
+
+
+    <div style="height:34px"></div>
+
+    @if (Model.firma.JsemStatniFirma())
+    {
+        @*@Html.Partial("Subjekt_Vztahy", Model.firma)*@
+
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
+
+    }
+    else
+    {
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
+    }
+
+    <hr class="morespace" />
+    @if (Request.QueryString["verze"] == "b1")
+    {
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })
+    }
+    else
+    {
+        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })
+    }
+</div>
+
+@section onlyembed
+{
+    <div class="container text">
+        <h3>@ViewBag.Title</h3>
+        <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.firma.InfoFacts(), 2, true, true, html: true)) </p>
+        <p><a href="@Model.firma.GetUrl(false)" target="_top">Více informací o smlouvě</a></p>
+    </div>
+    <img src="@($"/socialbanner/subjekt?d={DateTime.Now.ToString("yyMMdd")}&v={Model.ICO}")"
+         style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
+}
+
+@section footerscripts
+{
+    <script type="text/javascript">
+    SocialShareKit.init({
+        url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.ICO }))',
+        twitter: {
+            via: 'HlidacSmluv'
+        }
+    }
+    );
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿
+@{
+    /**/
+
+    HlidacStatu.Lib.Data.Osoba o = ViewBag.Osoba;
+
+    ViewBag.Title = "Změna fotky " + o.FullNameWithYear();
+
+}
+
+<div class="row">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#filetab" aria-controls="home" role="tab" data-toggle="tab">Nahrát fotku z počítače</a></li>
+        <li role="presentation"><a href="#urltab" aria-controls="profile" role="tab" data-toggle="tab">Stáhnout fotku z webu</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="filetab">
+            <form enctype="multipart/form-data" method="post">
+                <input type="hidden" name="phase" value="start" />
+                <input type="hidden" name="id" value="@o.NameId" />
+                @if (this.User?.Identity?.IsAuthenticated == true)
+                {
+                    <input type="hidden" name="email" value="@this.User.Identity.Name" />
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label for="exampleInputFile">Váš email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                        <p class="help-block">Napište váš email. O přijetí vaší změny vás budeme informovat emailem.</p>
+                    </div>
+                }
+                <div class="form-group">
+                    <label for="file1">Nahrát fotku z počítače</label>
+                    <input type="file" id="file1" name="file1">
+                    <p class="help-block">Nejlepší je portrét, čím větší fotka, tím lépe.</p>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFile">Zdroj/autor fotky</label>
+                    <input type="text" class="form-control" id="source" name="source" placeholder="Zdroj obrázku">
+                    <p class="help-block">Napište URL, odkud fotka je anebo popis autorství. Nepoužívejte obrázky z neznámých zdrojů.</p>
+                </div>
+                <a href="@o.GetUrlOnWebsite(true)" class="btn btn-default">&lt;&lt; Zpět</a>
+                <button type="submit" class="btn btn-success">Poslat</button>
+            </form>
+
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="urltab">
+
+            <form method="post">
+                <input type="hidden" name="phase" value="start" />
+                <input type="hidden" name="id" value="@o.NameId" />
+                @if (this.User?.Identity?.IsAuthenticated == true)
+                {
+                    <input type="hidden" name="email" value="@this.User.Identity.Name" />
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label for="exampleInputFile">Váš email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                        <p class="help-block">Napište váš email. O přijetí vaší změny vás budeme informovat emailem.</p>
+                    </div>
+                }
+                <div class="form-group">
+                    <label for="exampleInputFile">Použít fotku z webu</label>
+                    <input type="url" class="form-control" id="url" name="url" placeholder="URL obrazku">
+                    <p class="help-block">Napište URL obrázku, ne URL stránky kde je obrázek.</p>
+                </div>
+
+                <button type="submit" class="btn btn-success">Odeslat</button>
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
+

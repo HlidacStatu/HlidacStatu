@@ -1,0 +1,123 @@
+﻿@model HlidacStatu.Lib.Data.Smlouva
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+
+    ViewBag.SubTitle = Model.FullTitle();
+    ViewBag.Title = "Textová podoba smlouvy";
+
+
+
+    bool found = false;
+
+    string query = Request.QueryString["q"];
+    string plainText = string.Empty;
+
+    if (Model.Prilohy != null && Model.Prilohy.Count() > 0)
+    {
+
+        foreach (var priloha in Model.Prilohy)
+        {
+            if (priloha.hash.Value == ViewBag.hashValue)
+            {
+                found = true;
+                plainText = priloha.PlainTextContent;
+            }
+        }
+    }
+
+    if (!string.IsNullOrEmpty(query) && !string.IsNullOrEmpty(plainText))
+    {
+        System.Text.RegularExpressions.RegexOptions replaceoptions =
+            (System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace
+                //| System.Text.RegularExpressions.RegexOptions.Multiline
+                | System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled
+                );
+
+        int numOfReplace = 0;
+        var regex = new System.Text.RegularExpressions.Regex(System.Text.RegularExpressions.Regex.Escape(query), replaceoptions);
+        plainText = regex.Replace(plainText,
+            (m) =>
+            {
+                if (m.Success)
+                {
+                    numOfReplace++;
+                    return "<span class='bg-warning' style='font-width:bold;font-size:150%;' id='found" + numOfReplace + "'>" + m.Value + "</span>";
+                }
+                else
+                {
+                    return m.Value;
+                }
+            });
+
+
+    }
+
+    if (!string.IsNullOrEmpty(plainText))
+    {
+        //remove /n/r on the beginning
+        plainText = System.Text.RegularExpressions.Regex.Replace(plainText, "^(\\s)*", "");
+
+    }
+}
+
+
+@section footerscripts
+{
+    @if (!string.IsNullOrEmpty(query))
+    {
+        <script>
+            var first = document.getElementById("found1");
+            if (first != null)
+                first.scrollIntoView();   //Even IE6 supports this
+        </script>
+    }
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li><a href="@Url.Action("Detail","Home", new { id = Model.Id })">@Model.FullTitle()</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    @if (Model.Prilohy != null && Model.Prilohy.Count() > 0)
+    {
+
+        foreach (var priloha in Model.Prilohy)
+        {
+            if (priloha.hash.Value == ViewBag.hashValue)
+            {
+                found = true;
+                <h3>
+                    @Util.AddBookmark(this.User, Model)
+                    Příloha @priloha.nazevSouboru
+                </h3>
+                <p>
+                    <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
+                    <a href="@priloha.odkaz" target="_blank">originál smlouvy stáhnete odsud</a>
+                </p>
+
+                <hr />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <pre>
+                        @Html.Raw(plainText)
+                    </pre>
+                    </div>
+
+                </div>
+            }
+        }
+    }
+
+    @if (found == false)
+    {
+        <span class="text-danger">Odkazovaná příloha nebyla nalezena</span>
+    }
+
+
+
+

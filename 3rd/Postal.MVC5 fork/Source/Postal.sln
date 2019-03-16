@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postal", "Postal.AspNetCore\Postal.csproj", "{779257EF-F8DD-495B-8B54-1F2E6AC5FA9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{779257EF-F8DD-495B-8B54-1F2E6AC5FA9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779257EF-F8DD-495B-8B54-1F2E6AC5FA9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779257EF-F8DD-495B-8B54-1F2E6AC5FA9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779257EF-F8DD-495B-8B54-1F2E6AC5FA9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B373FB77-D31D-4DD8-ADF4-CD8A000E260C}
+	EndGlobalSection
+EndGlobal

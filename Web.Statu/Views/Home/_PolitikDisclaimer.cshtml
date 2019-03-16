@@ -1,0 +1,56 @@
+﻿<div class="bs-callout bs-callout-primary small">
+    <h4>Politici, osoby a jejich vazby</h4>
+    <p>
+        Pracujeme s daty politiků a dalších osob s vazbami na politiku (příbuzní, lobisté, poradci, sponzoři politických stran apod.). 
+        Pokud někde použijeme zkratkovité pojmenování "politik", vždy tím myslíme tuto širší skupinu lidí.
+    </p>
+    <p>
+        Pracujeme s přímými a nepřímými vazbami (majitel, statutární orgán) mezi českými ekonomickými subjekty a politiky.
+        Zobrazujeme nejen aktuální, ale i historické (neplatné) vazby osob na firmy.
+        U historických vazeb rozlišujeme vazby nedávné (@(HlidacStatu.Lib.Data.Relation.NedavnyVztahDelka.Days/365) let neaktuální) a historické.
+        Nedávné a aktuální vazby jsou vazby, které nás zajímají nejvíce a pokud není určeno jinak, zobrazujeme a pracujeme s těmito vazbami.
+        (<a class="" style="cursor:pointer;" data-toggle="modal" data-target="#politiciProc">Proč vás zajímají neaktuální vztahy? Vysvětlete mi to</a>)
+    </p>
+    <p>
+       Nezobrazujeme smlouvy se subjekty vlastněné státem či místními úřady, ve kterých je angažovanost politiků daná zákony či pracovní náplní.
+    </p>
+    @if (!string.IsNullOrEmpty(ViewBag.MoreHtml))
+    {
+        @Html.Raw(ViewBag.MoreHtml)
+    }
+</div>
+
+<div id="politiciProc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Podrobnější vysvětlení</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Proč nás zajímají neaktuální vazby politiků a dalších osob?</h4>
+                <p>
+                    Důvodem je nedůvěra k politikům a odmítnutí čistého formalismu.
+                    Nejjednoduším způsobem jak může politik <b>formálně</b> odejít z firmy je její prodej příbuznému, právníkovi, nastrčenému bílému koni.
+                    A po konci aktivit v politice se již potichu, bez pozornosti médií a veřejnosti, k vlastnictví firmy vrátit.
+                </p>
+                <p>
+                    Typickým příkladem je <b>Ing.Jaroslav Faltýnek</b>, kterým je pravou rukou předsedy
+                    Hnutí ANO Andreje Babiše, před vstupem do politiky byl statutárním orgánem v <a href="/politikvazby?id=b492286d-cc29-48da-a895-1be1dafd65f2">158 firmách napojených na Agrofert</a>,
+                    po vstupu do politiky <a href="/politikvazby?id=b492286d-cc29-48da-a895-1be1dafd65f2&aktualnost=Aktualni">není v žádné firmě</a>. Přitom jeho přímý i nepřímý vliv na Agrofert je stále stejný.
+                </p>
+                <h4>Proč nás obzvláště zajímají @(HlidacStatu.Lib.Data.Relation.NedavnyVztahDelka.Days / 365) let neaktuální vazby politiků a dalších osob?</h4>
+                <p>
+                    Hlavní důvod je popsán v odstavci výše, a proč @(HlidacStatu.Lib.Data.Relation.NedavnyVztahDelka.Days / 365) let? 
+                    4 roky je obvyklá doba trvání volebního období pro většinu volených pozic, a malý překryv (4+1 rok) 
+                    považujeme za přiměřeně dlouhou dobu na kterou se lze efektivně koukat zpětně.
+                </p>
+                <h4>Proč nás zajímají nepřímé vazby politiků a dalších osob?</h4>
+                <p>
+                    Podobným trikem jak skrýt vlastnictví či vliv na firmu je vlastnit firmu obchodující se státem prostřednictvím jiných firem.
+                    Proto pracujeme nejenom s přímou vazbou politika na firmu (vlastník, statutární orgán), ale také s dalšími vztahy politikem vlastněných firem.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

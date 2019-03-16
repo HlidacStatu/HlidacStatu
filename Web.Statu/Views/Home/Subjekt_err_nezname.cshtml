@@ -1,0 +1,39 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+
+
+@{
+    ViewBag.Title = "Neznámá firma";
+    Response.StatusCode = 404;
+
+}
+
+@section scripts
+{
+
+
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+
+
+}
+
+
+
+<p>
+    Omlouváme se, tuto firmu neznáme. Má opravdu platné ICO?
+</p>
+<p>
+    Pokud si myslíte, že bychom tuto firmu měli znát, .
+    @Util.FeedbackModal("napište nám prosím podrobnosti").
+
+
+</p>

@@ -1,0 +1,94 @@
+﻿@model HlidacStatu.Lib.Data.VZ.VerejnaZakazka
+@using HlidacStatu.Lib
+@using System.Linq;
+@{
+
+    ViewBag.SubTitle = Model.NazevZakazky;
+    ViewBag.Title = "Text dokumentu";
+
+
+
+    bool found = false;
+
+    string hash = Request.QueryString["hash"];
+    string plainText = string.Empty;
+
+    HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Document doc = Model.Dokumenty.Where(m => m.StorageId == hash).FirstOrDefault();
+    plainText = doc?.PlainText ?? "";
+
+
+    if (!string.IsNullOrEmpty(plainText))
+    {
+        //remove /n/r on the beginning
+        plainText = System.Text.RegularExpressions.Regex.Replace(plainText, "^(\\s)*", "");
+    }
+}
+
+
+@section footerscripts
+{
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index", "VZ")">Hlídač Veřejných zakázek</a></li>
+        <li><a href="@Url.Action("Index", "VZ", new { id=Model.Id })">Zakázka @Model.NazevZakazky</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+
+    @if (!HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
+    {
+        <h3>Omezený přístup pouze pro registrované uživatele.</h3>
+        <p>
+            Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
+            Registrace je zdarma a je velmi jednoduchá.
+        </p>
+        <p>Pokud jste již zaregistrováni, <a href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
+        <p>
+            <a href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
+        </p>
+        <script>
+        $(function () {
+            $("#VZInfoAnon").modal('show');
+        });
+        </script>
+    }
+    else
+    {
+
+        if (!string.IsNullOrEmpty(plainText))
+        {
+            <h3>
+                @Util.AddBookmark(this.User, Model)
+                Příloha @doc.Name
+            </h3>
+            <p>
+                <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
+                <a href="http://bpapi.datlab.eu/document/@doc.StorageId" target="_blank">originál dokumentu</a>
+            </p>
+
+            <hr />
+            <div class="row">
+                <div class="col-xs-12">
+                    <pre>
+                @Html.Raw(plainText)
+            </pre>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <span class="text-danger">
+                V odkazovaném dokumentu jsme nenašli žádný text.
+                <a href="http://bpapi.datlab.eu/document/@doc.StorageId" target="_blank">Stáhněte si originál</a>.
+            </span>
+        }
+
+
+
+
+    }

@@ -1,0 +1,169 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+    ViewBag.Title = "Hierarchický přehled vazeb";
+    ViewBag.SubTitle = "Politik " + Model.FullNameWithYear(false);
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="/Scripts/treant.js/Treant.css" type="text/css" />
+    <script src="/Scripts/treant.js/raphael.js"></script>
+    <script src="/Scripts/treant.js/Treant.js"></script>
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+    <style>
+        #nestedlist, #nestedlist ul {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            list-style-type: none;
+            margin-left: 0;
+            padding-left: 30px;
+            /* text-indent: -4px; Not used due to class .connect below */
+        }
+
+        /* UL Layer 1 Rules */
+        #nestedlist {
+            font-weight: bold;
+        }
+
+            /* UL Layer 2 Rules */
+            #nestedlist ul {
+                font-size: 12px;
+                font-weight: normal;
+                margin-top: 3px;
+            }
+
+                /* UL Layer 3 Rules */
+                #nestedlist ul ul {
+                }
+
+                    /* UL 4 Rules */
+                    #nestedlist ul ul ul {
+                    }
+
+            #nestedlist li {
+                margin-bottom: 0px;
+                padding-bottom: 3px;
+                padding-left: 0px;
+            }
+
+                #nestedlist li a {
+                    text-decoration: none;
+                    font-weight: bold;
+                    border-left: 1px solid #000;
+                    border-radius: 0 0 0 10px;
+                    background: rgba(8,8,8,1);
+                    background: -moz-linear-gradient(left, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 2%, rgba(9,9,9,0.02) 52%, rgba(10,10,10,0.02) 100%);
+                    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(8,8,8,1)), color-stop(2%, rgba(8,8,8,0.96)), color-stop(52%, rgba(9,9,9,0.02)), color-stop(100%, rgba(10,10,10,0.02)));
+                    background: -webkit-linear-gradient(left, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 2%, rgba(9,9,9,0.02) 52%, rgba(10,10,10,0.02) 100%);
+                    background: -o-linear-gradient(left, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 2%, rgba(9,9,9,0.02) 52%, rgba(10,10,10,0.02) 100%);
+                    background: -ms-linear-gradient(left, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 2%, rgba(9,9,9,0.02) 52%, rgba(10,10,10,0.02) 100%);
+                    background: linear-gradient(to right, rgba(8,8,8,1) 0%, rgba(8,8,8,0.96) 2%, rgba(9,9,9,0.02) 52%, rgba(10,10,10,0.02) 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#080808', endColorstr='#0a0a0a', GradientType=1 );
+                    background-position: bottom left;
+                    background-size: 100px 1px;
+                    background-repeat: no-repeat;
+                    padding-bottom: 2px;
+                }
+
+                #nestedlist li.aktualnost0, #nestedlist li.aktualnost0 a {
+                    color: #999;
+                }
+
+                #nestedlist li.aktualnost1, #nestedlist li.aktualnost1 a {
+                    color: #777;
+                }
+
+                #nestedlist li.aktualnost2, #nestedlist li.aktualnost2 a {
+                    color: #000;
+                }
+
+            #nestedlist .connect {
+                border-left: 1px solid black;
+            }
+
+            #nestedlist li a:before {
+                content: '...';
+                color: transparent;
+            }
+    </style>
+
+}
+
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>@Model.FullName()</h2>
+            <p>@Model.StatusOsoby().ToNiceDisplayName()</p>
+            <p>Přehled vazeb politika na firmy</p>
+        </div>
+    </div>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Osoby","Home")">Hlídač Osob</a></li>
+        <li><a href="@Url.Action("Osoba","Home", new { id = Model.NameId })">@Model.FullNameWithYear(false)</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+
+
+
+    <p>
+        <a href="@Url.Action("Politik", new { id = Model.NameId })">Kompletní seznam angažovanosti politika v jednotlivých firmách</a>
+    </p>
+
+    <p>
+        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
+        </a>
+        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
+        </a>
+        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
+        </a>
+    </p>
+
+
+    <p style="padding-top:30px;">
+        @Html.Raw(
+                        HlidacStatu.Lib.Data.Relation.TiskVazeb(
+                            Model.FullName(false),
+                            Model.AktualniVazby(aktualnost),
+                            HlidacStatu.Lib.Data.Relation.TiskEnum.Html
+                        )
+                    )
+
+    </p>
+
+    @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+
+    @section footerscripts
+{
+        <script>
+        @*var hier_config = {
+                chart: {
+                    container: "#hierarchy",
+                    rootOrientation: "WEST",
+                    type: "bCurve",
+                },
+                nodeStructure: @Html.Raw(nodeStructure)
+            };
+            new Treant( hier_config );*@
+        </script>
+
+    }

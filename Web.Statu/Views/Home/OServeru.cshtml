@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "O serveru";
+    //ViewBag.HideAd = true;
+}
+
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h1>Hlídáme je, protože si to zaslouží!</h1>
+            <p>
+                V historii ČR po 1989 považuji za zásadní existenci tří zákonů.
+                <a href="http://www.psp.cz/docs/laws/constitution.html" target="_blank" onclick="return trackOutLink(this,'OServeru');">Ústavy ČR</a>,
+                <a href="http://www.zakonyprolidi.cz/cs/1999-106" onclick="return trackOutLink(this,'OServeru');">Zákon o svobodném přístupu k informacím (106/1999 Sb.)</a>
+                a <a href="http://www.zakonyprolidi.cz/cs/2015-340" onclick="return trackOutLink(this,'OServeru');">Zákon o registru smluv (340/2015 Sb)</a>.
+            </p>
+            <p>
+                Všechny tyto zákony garantují lidem svobodu a právo kontrolovat stát, samosprávné orgány a politiky. Jsou základními kameny nutné digitalizace státu.
+            </p>
+            <p>
+                Od roku 1990 do dneška došlo a stále dochází k obrovským ztrátam a úniků peněz ze státního a místních rozpočtů, a to v důsledků klientelismu,
+                úplatků a katastrofální neefektivity státu. Mohl bych vyjmenovat stovky zakázek a aktivit státu,
+                které v prostředí soukromých firem vznikají zcela běžně za 1/10 ceny, 1/10 provozních nákladů a ve výrazně vyšší kvalitě.
+            </p>
+        </div>
+    </div>
+}
+<ol class="breadcrumb">
+    <li><a href="/">Hlídač Státu</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
+
+<div class="clearfix"></div>
+<h2>Tento server má za cíl</h2>
+<p>
+    <ul>
+        <li>zpřístupnit registr smluv</li>
+        <li>informace v něm obohatit o informace ze souvisejících databází</li>
+        <li>identifikovat plýtvání a zneužití moci v úřadech</li>
+        <li>analyzovat a umožnit veřejnosti data z rejstříku analyzovat</li>
+        <li>zvýšit kontrolu veřejných prostředků ze strany občanů</li>
+    </ul>
+</p>
+
+<h2>Jak zpracováváme data z registru smluv</h2>
+<p>
+    Základem je pravidelné stahování metadat registru smluv z měsíčních XML dumpů.<br />
+    Poté pro všechny nové smlouvy (či změněné) stáhneme přílohy - to jsou obvykle texty smluv a příloh v PDF a Office formátech.
+</p>
+<p>
+    PDF s texty smluv a Office dokumenty jsou relativně snadné na zpracování, z nich vytáhneme texty smluv a uložíme je do systému, takže se dají prohledávat i texty smluv.
+    Horší je to s oscanovanými smlouvami, které tvoří téměř 30 % dokumentů. V takovém případě provedeme OCR analýzu dokumentu a pokud byla úspěšnost
+    převodu scanu na text vyšší než 80 %, pak tento text uložíme do databáze.
+</p>
+<p>
+    Tím je hotové hrubé zpracování záznamů a poté nad každou smlouvou provádíme analýzu z několika hledisek:
+    <ol>
+        <li>Ověření platnosti formálních údajů</li>
+        <li>Kontrola uvedených cen s DPH a bez DPH, zda jsou spočítány správně (tisíce smluv nejsou)</li>
+        <li>Kontrola úplnosti údajů o smlouvě, včetně validace a ověření v obchodních a dalších rejstřících</li>
+        <li>Analýza protiprávních kroků - typicky podepsání smlouvy dříve, než vznikla dodavatelská firma</li>
+        <li>Analýza vztahu politiků k dodavateli ve smlouvě a nalezení konfliktu zájmů</li>
+        <li>Statistické výpočty (např. dodavatelé s největším podílem na zakázkách)</li>
+        <li>Hledání podezřelých okolností (dělení zakázek, smlouvy s novými firmami, apod.)</li>
+    </ol>
+</p>
+
+<h1>Poděkování</h1>
+
+<p>
+    Server vznikl v polovině srpna 2016 a nevznikl by bez pomoci těchto lidí a institucí:
+    <ul>
+        <li><a href="http://www.michalblaha.cz" onclick="return trackOutLink(this,'OServeru');">Michal Bláha</a>, autor</li>
+        <li><a onclick="return trackOutLink(this,'OServeru');" href="http://www.svejda-goldmann.cz/">Švejda & Goldmann</a> - top UX a UI design. Jsou autory designu HlidacEET a log HlidacEET, HlidacSmluv a všech ostatních "hlídačů".</li>
+        <li><a onclick="return trackOutLink(this,'OServeru');" href="http://www.mediatoring.com/">Mediatoring.com</a> - monitoring médií v reálném čase včetně TV, rozhlasu a webu</li>
+        <li><a href="http://www.twitter.com/kondrej" onclick="return trackOutLink(this,'OServeru');">Ondřej Kokeš</a> za pionýrskou analýzu rejstříku, neutuchající odhalování chyb, cennou spolupráci a cenná data.</li>
+        <li><a href="http://www.twitter.com/PetrBoros" onclick="return trackOutLink(this,'OServeru');">Petr Boroš</a> za pomoc se zpracováním dat z různých zdrojů.</li>
+        <li>Petr Siegel za pomoc s doplňováním dalších politiků.</li>
+        <li>
+            <a href="http://www.firmo.cz?apc=4801" onclick="return trackOutLink(this,'OServeru');">Firmo.cz</a> a
+            <a href="http://www.govdata.cz" onclick="return trackOutLink(this,'OServeru');">GovData.cz</a> a
+            <a href="http://www.merk.cz" onclick="return trackOutLink(this,'OServeru');">Merk.cz</a> za skvělý přístup k různým zdrojům dat
+        </li>
+
+    </ul>
+    Další partneři a poskytovatelé dat:
+    <ul>
+        <li><a href="http://www.nasipolitici.cz" onclick="return trackOutLink(this,'OServeru');">NasiPolitici.cz</a></li>
+        <li><a href="http://wiki.idnes.cz" onclick="return trackOutLink(this,'OServeru');">iDnes.cz</a></li>
+        <li><a href="http://www.rekonstrukcestatu.cz/cs" onclick="return trackOutLink(this,'OServeru');">Rekonstrukce státu</a></li>
+    </ul>
+</p>
+<p>
+    Chcete využít data ze serveru pro vlastní potřebu či prezentaci? <a href="/licence">Licence k použití je jednoduchá</a>.
+</p>
+<p>
+    Chtěli byste pomoci? Pomocí či penězi? <a href="@Url.Action("Kontakt")">Bez obav mě kontaktujte</a>. Díky
+</p>
+
+<p class="text-right">Michal Bláha<br />15.8.2016</p>

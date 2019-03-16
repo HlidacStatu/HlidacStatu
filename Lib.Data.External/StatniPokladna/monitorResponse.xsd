@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="urn:cz:mfcr:monitor:schemas:MonitorResponse:v1"
+    xmlns:mon="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+    xmlns:roz="urn:cz:mfcr:monitor:schemas:MonitorRozvaha:v1"
+    xmlns:vzz="urn:cz:mfcr:monitor:schemas:MonitorVykazZiskuAZtrat:v1"
+    xmlns:fin212m="urn:cz:mfcr:monitor:schemas:MonitorFin212M:v1"
+    xmlns:fin204u="urn:cz:mfcr:monitor:schemas:MonitorFin204U:v1"
+    xmlns:penvk="urn:cz:mfcr:monitor:schemas:MonitorPenezniTokyAVlastniKapital:v1" 
+    xmlns:ukaz="urn:cz:mfcr:monitor:schemas:MonitorUkazatele:v1"
+    targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorResponse:v1" elementFormDefault="qualified"
+    attributeFormDefault="unqualified" version="1">
+
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+        schemaLocation="monitorTypes.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorRozvaha:v1"
+        schemaLocation="monitorRozvaha.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorVykazZiskuAZtrat:v1"
+        schemaLocation="monitorVykazZiskuAZtrat.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorPenezniTokyAVlastniKapital:v1"
+        schemaLocation="monitorPenezniTokyAVlastniKapital.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorFin212M:v1"
+        schemaLocation="monitorFin212M.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorFin204U:v1"
+        schemaLocation="monitorFin204U.xsd"/>
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorUkazatele:v1"
+        schemaLocation="monitorUkazatele.xsd"/>    
+
+    <xs:element name="MonitorResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hlavicka" type="mon:HlavickaResponseType"/>
+                <xs:element name="VykazData">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element ref="roz:Rozvaha"/>
+                            <xs:element ref="vzz:VykazZiskuAZtrat"/>
+                            <xs:element ref="penvk:PenezniTokyAVlastniKapital"/>
+                            <xs:element ref="fin212m:Fin212M"/>
+							<xs:element ref="fin204u:Fin204U"/>
+							<xs:element ref="ukaz:UkazateleUJ"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

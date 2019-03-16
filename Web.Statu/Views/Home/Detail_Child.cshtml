@@ -1,0 +1,559 @@
+﻿@model HlidacStatu.Lib.Data.Smlouva
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+    Layout = null;
+
+
+    bool angPolitiku = false;
+    bool isSponzorStrany = false;
+    if (Model.Prijemce != null)
+    {
+        angPolitiku = Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce })
+            .Where(m => !string.IsNullOrEmpty(m.ico))
+            .Any(m => HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(m.ico));
+        isSponzorStrany = Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce })
+            .Where(m => !string.IsNullOrEmpty(m.ico))
+            .Any(m => HlidacStatu.Lib.Data.Firmy.Get(m.ico).Valid && HlidacStatu.Lib.Data.Firmy.Get(m.ico).IsSponzor());
+    }
+
+    string bookmarkId = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(Model);
+    bool bookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(Model, User?.Identity?.Name);
+
+    bool znepristupnena = Model.znepristupnenaSmlouva();
+
+
+
+}
+@section scripts
+{
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy", "Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<div class="dontembed">
+
+    <h3>
+        @Util.AddBookmark(this.User, Model)
+        @ViewBag.Title
+    </h3>
+    <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+        <tbody>
+            <tr>
+                <td>
+                    Základní informace
+                </td>
+                <td>
+                    @if (Model.platnyZaznam == false)
+                    {
+                        if (Model.OtherVersions().Length == 0)
+                        {
+                            <div class="alert alert-danger">Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy. Nenašli jsme v registru smluv platnou verzi této smlouvy, tato smlouva byla nejspíše odstraněna bez náhrady.</div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy.</div>
+                            if (Model.OtherVersions().Any(m => m.platnyZaznam))
+                            {
+                                <div class="alert alert-info"><a href="/Detail/@(Model.OtherVersions().Where(m => m.platnyZaznam).First().Id)">Ukázat platnou verzi této smlouvy</a></div>
+
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        if (Model.Issues.Any(m => m.Importance == HlidacStatu.Lib.Issues.ImportanceLevel.Fatal))
+                        {
+                            <div class="alert alert-danger">
+
+                                Tato smlouva je formálně v registru smluv platná, ale <b>
+                                    obsahuje tak závažné
+                                    nedostatky v rozporu se zákonem
+                                </b>, že ve skutečnosti platná velmi pravděpodobně není!
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success">Toto je platná smlouva</div>
+                        }
+
+                    }
+                    <div>Zveřejněna <b>@Model.casZverejneni.ToShortDateString() @(Model.casZverejneni.ToLongTimeString())</b></div>
+                    <div>
+                        ID smlouvy @(Model.identifikator.idSmlouvy)
+                    </div>
+                    <div>ID Verze: @(Model.identifikator.idVerze)</div>
+                    <div>
+                        Uzavřena @Model.datumUzavreni.ToShortDateString(), číslo smlouvy @Model.cisloSmlouvy
+                        @Util.IfExists(Model.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", Model.navazanyZaznam))
+                        @Util.IfExists(Model.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(Model.schvalil), Model.schvalil))
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <h4>Publikující strana do Rejstříku smluv</h4>
+                </td>
+                <td>
+                    @RenderSubjekt(Model.VkladatelDoRejstriku, 3)
+                </td>
+            </tr>
+            <tr>
+                <td><h4>Plátce/Objednatel</h4></td>
+                <td>
+                    @RenderSubjekt(Model.Platce, 1)
+                </td>
+            </tr>
+            <tr>
+                <td><h4>Dodavatelé</h4></td>
+                <td>
+                    @for (int i = 0; i < Model.Prijemce.Length; i++)
+                    {
+                        @RenderSubjekt(Model.Prijemce[i], 2)
+                        if (i < Model.Prijemce.Length - 1)
+                        {
+                            @Html.Raw("<hr/>")
+                        }
+
+                    }
+                </td>
+
+            </tr>
+            <tr>
+                <td>Hodnota smlouvy</td>
+                <td>
+
+                    @Util.IfExists(Model.hodnotaBezDph.HasValue, "<p>Cena bez DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaBezDph, html: true) + "</b></p>")
+                    @Util.IfExists(Model.hodnotaVcetneDph.HasValue, "<p>Cena s DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaVcetneDph, html: true) + "</b></p>")
+                    @if (Model.ciziMena != null && Model.ciziMena.mena != null)
+                    {
+                        @Util.IfExists(Model.ciziMena.hodnota > 0
+                                                && Model.ciziMena.mena != "CZK",
+                                           "<p>Cena v cizí měně: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.ciziMena.hodnota, Model.ciziMena.mena, html: true) + "</b></p>")
+                    }
+
+                </td>
+
+
+
+
+
+            </tr>
+            <tr>
+                <td>Přílohy</td>
+                <td>
+                    @if (Model.Prilohy != null && Model.Prilohy.Count() > 0)
+                    {
+                        <ol>
+                            @foreach (var priloha in Model.Prilohy)
+                            {
+
+                                bool weHaveCopy = false;
+                                if (System.IO.File.Exists(Init.PrilohaLocalCopy.GetFullPath(Model, priloha)))
+                                {
+                                    weHaveCopy = true;
+                                }
+                                <li>
+                                    @if (znepristupnena)
+                                    {
+                                        <div>
+                                            @priloha.nazevSouboru
+                                            @if (weHaveCopy)
+                                            {
+                                                if (this.User?.IsInRole("novinar") == true)
+                                                {
+                                                    <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value })" data-link="kopie">(naše kopie)</a>
+                                                }
+                                                else
+                                                {
+                                                    @*<a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value})" data-link="kopie">(naše kopie)</a>*@
+                                                    @Util.FeedbackPriloha("Zpřístupnění přílohy", "", Model.Id, priloha.odkaz)
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+
+                                        <div>
+                                            @priloha.nazevSouboru :
+                                            <a href="@priloha.odkaz" target="_blank">Originál</a>
+                                            @if (weHaveCopy)
+                                            {
+                                                @Html.Raw(";&nbsp;")
+                                                <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value })" data-link="kopie">(naše kopie)</a>
+                                            }
+                                            @if (priloha.WordCount > 10)
+                                            {
+                                                @Html.Raw(";&nbsp;")
+                                                <a href="@Url.Action("TextSmlouvy", new { id = @Model.Id, hash = priloha.hash.Value, q = Request.QueryString["Q"] })">zobrazit čistý text přílohy</a>
+                                                <span>(@priloha.WordCount slov)</span>
+                                            }
+
+                                        </div>
+
+                                        if (priloha.HasClassification())
+                                        {
+                                            <blockquote class="small">
+                                                @Util.IfExists(priloha.DatlClassification.GetDocType().HasValue, "<div>Dokument: <b>" + priloha.DatlClassification.GetDocType()?.ToNiceDisplayName() + "</b></div>")
+                                                @Util.IfExists(priloha.DatlClassification.GetContractType().HasValue, "<div>Typ: <b>" + priloha.DatlClassification.GetContractType()?.ToNiceDisplayName() + "</b></div>")
+                                                @Util.IfExists(priloha.DatlClassification.GetContractSubjectTypes() != null, "<div>Témata: <b>" + priloha.DatlClassification.GetContractSubjectTypes()?.Select(m => m.ToNiceDisplayName()).Aggregate((f, s) => f + ", " + s) + "</b></div>")
+                                                <footer style="font-size:100%;">Texty smluv analyzovány ve spolupráci s <a href="http://www.datlowe.cz" target="_blank"><img src="~/Content/Img/Datlowe_B_male.png" alt="Datlowe" style="height:1.1em;margin-left:10px;" /></a></footer>
+
+                                            </blockquote>
+                                        }
+
+                                    }
+                                </li>
+                            }
+                        </ol>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Žádné smlouvy publikující strana nezveřejnila!</span>
+                    }
+                </td>
+
+            </tr>
+            @if (Model.OtherVersions().Length > 0)
+            {
+                <tr>
+                    <td>
+                        <h4>Provázané smlouvy</h4>
+                    </td>
+                    <td>
+                        <div>
+                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.OtherVersions().Length, "jednu provázanou smlouvu", "{0} provázané smluvy", "{0} provázaných smluv")):
+                            <ul>
+                                @foreach (var os in Model.OtherVersions())
+                                {
+                                    <li><a href="/Detail/@os.Id">Verze @os.Id; zveřejněna @os.casZverejneni.ToString("dd.MM.yyyy HH.mm"); @(os.platnyZaznam ? "platná" : "zneplatněna")</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <span class="text-muted small">Toto je seznam smluv, které jsou zneplatněnými verzemi této smlouvy anebo jsou velmi podobné této smlouvě a je vysoká pravděpodobnost, že se jedná zneplatněné verze smlouvy, které nejsou správně označeny jako provázané.</span>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.PodobneSmlouvy().Length > 0)
+            {
+                <tr>
+                    <td>
+                        Podobné smlouvy
+                    </td>
+                    <td>
+                        <div>
+                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.PodobneSmlouvy().Length, "jednu podobnou smlouvu", "{0} podobné smluvy", "{0} podobných smluv")):
+                            <ul>
+                                @foreach (var os in Model.PodobneSmlouvy())
+                                {
+                                    <li><a href="/Detail/@os.Id">Zveřejněna @os.casZverejneni.ToString("dd.MM.yyyy HH.mm"); částka @HlidacStatu.Util.RenderData.NicePrice(os.CalculatedPriceWithVATinCZK) s DPH; @(os.platnyZaznam ? "platná" : "zneplatněna")</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <span class="text-muted small">Toto je seznam smluv, které jsou velmi podobné této smlouvě, mají stejné smluvní strany a předmět smlouvy.</span>
+                    </td>
+                </tr>
+            }
+
+
+
+            @if (angPolitiku)
+            {
+                <tr>
+                    <td>
+                        Angažovanost politicky aktivních osob v soukromé firmě u této smlouvy
+                    </td>
+                    <td>
+
+                        @foreach (var ss in Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce }))
+                        {
+                            if (!string.IsNullOrEmpty(ss.ico) && HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(ss.ico))
+                            {
+                                bool first = true;
+                                foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[ss.ico])
+                                {
+                                    HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.Politici
+                                        .Get()
+                                        .Where(m => m.InternalId == pId)
+                                        .FirstOrDefault();
+
+                                    if (first)
+                                    {
+                                        first = false;
+                                        <h3>@ss.nazev </h3>
+                                        <p>
+                                            <a href="/subjekt/@ss.ico">Další smlouvy firmy</a>
+                                        </p>
+                                    }
+                                    if (p != null)
+                                    {
+                                        <p>
+                                            <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
+                                            <div style="padding-left:20px;">
+                                                @Util.RenderVazby(p.VazbyProICO(ss.ico))
+                                            </div>
+                                        </p>
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    </td>
+                </tr>
+            }
+            @if (isSponzorStrany)
+            {
+                <tr>
+                    <td>
+                        Sponzoring politických stran
+                    </td>
+                    <td>
+
+                        @foreach (var subj in Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce }))
+                        {
+                            var firma = HlidacStatu.Lib.Data.Firmy.Get(subj.ico);
+                            if (firma.Valid && firma.IsSponzor() && firma.JsemSoukromaFirma())
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">@firma.Jmeno</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        @Html.Raw(firma.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+                                    </div>
+                                </div>
+                            }
+
+                        }
+
+                    </td>
+                </tr>
+            }
+
+            @if (Model.IsPartOfRegistrSmluv() && Model.znepristupnenaSmlouva() == false && Model.Issues != null && Model.Issues.Where(m => m.Public).Count() > 0)
+            {
+                <tr>
+                    <td>
+                        Nedostatky ve smlouvách
+                    </td>
+                    <td>
+                        <ul class="list-group">
+
+                            @foreach (var iss in Model.Issues.Where(m => m.Public).OrderByDescending(m => m.Importance))
+                            {
+                                if (znepristupnena && iss.IssueTypeId == -1) //vypis pouze info o znepristupneni
+                                {
+                                    <li title="@(((HlidacStatu.Lib.Issues.ImportanceLevel)iss.Importance).ToNiceDisplayName())" class="list-group-item list-group-item@(HlidacStatu.Lib.Issues.Importance.GetCssClass(iss.Importance, true))">
+                                        <b>@iss.Title</b> : @iss.TextDescription
+                                    </li>
+                                }
+                                else if (!znepristupnena && iss.Public && iss.Importance != HlidacStatu.Lib.Issues.ImportanceLevel.NeedHumanReview)
+                                {
+                                    <li title="@(((HlidacStatu.Lib.Issues.ImportanceLevel)iss.Importance).ToNiceDisplayName())" class="list-group-item list-group-item@(HlidacStatu.Lib.Issues.Importance.GetCssClass(iss.Importance, true))">
+                                        <b>@iss.Title</b> : @iss.TextDescription
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+
+                    </td>
+                </tr>
+            }
+
+
+            @if (Model.platnyZaznam)
+            {
+                <tr>
+                    <td>
+                        Právní rámec smlouvy vzhledem <a href="/ORegistru">k platnosti registru smluv</a>
+                    </td>
+                    <td>
+                        @switch (Model.PravniRamec)
+                        {
+                            case HlidacStatu.Lib.Data.Smlouva.PravniRamce.MimoRS:
+                                <span>Smlouva <b>nespadá</b> pod zákon o registru smluv</span>
+                                break;
+                            case HlidacStatu.Lib.Data.Smlouva.PravniRamce.Do072017:
+                                <span>
+                                    Smlouva <b>nepodléhá</b> možné sankci neplatnosti smlouvy <a class="small" href="https://www.hlidacstatu.cz/texty/O-Registru#zmena01072017"><span style="font-weight:normal;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Vysvětlení co to znamená zde</a>
+                                </span>
+
+                                break;
+                            case HlidacStatu.Lib.Data.Smlouva.PravniRamce.Od072017:
+                                <span>
+                                    Smlouva <b>podléhá</b> možné sankci neplatnosti smlouvy <a class="small" href="https://www.hlidacstatu.cz/texty/O-Registru#zmena01072017"><span style="font-weight:normal;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Vysvětlení co to znamená zde</a>
+                                </span>
+
+                                break;
+                            default:
+                                break;
+                        }
+
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td>
+                    Stálé URL tohoto záznamu na tomto serveru:
+                </td>
+                <td>
+                    <a href="@Url.Action("Detail", new { id = Model.Id })" target="_blank">https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Util.IfExists(Model.IsPartOfRegistrSmluv(), "Tento záznam na Registru smluv:", "Zdroj dat:")
+                </td>
+                <td>
+                    <a href="@Model.odkaz" target="_blank">@Model.odkaz</a>
+                    @if (Model.IsPartOfRegistrSmluv() == false)
+                    {
+                        <div class="text-danger">
+                            Smlouva není součástí Registru smluv a nevztahují se na ni pravidla zákona o Registru smluv. Smlouva byla získána z uvedeného zdroje.
+                        </div>
+                    }
+                    @if (znepristupnena)
+                    {
+                        <div>Smlouva byla znepřístupněna, originální záznam už nemusí být dostupný.</div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tento záznam jako JSON:
+                </td>
+                <td>
+                    <a href="@Url.Action("Detail", "ApiV1", new { id = Model.Id, json = 1, nice = 1 })" target="_blank">https://www.hlidacstatu.cz@(Url.Action("Detail", "ApiV1", new { id = Model.Id, json = 1, nice = 1 }).ToString())</a>
+                    <br />
+                    <small class="text-muted">Popis JSON <a href="@Url.Action("Index", "ApiV1")">zde</a></small>
+                    <small class="text-muted">Chcete všechna data najednou? Koukněte <a href="@Url.Action("Index", "ApiV1")">sem</a>.</small>
+                </td>
+            </tr>
+            <tr>
+                <td>Sdílení</td>
+                <td>
+                    <div class="ssk-group"
+                         data-url=""
+                         data-text="@Model.predmet">
+                        @Util.ShareFacebook(Model.GetUrl(false))
+                        @Util.ShareTwitter(Model.GetUrl(false), Model.predmet)
+                        @Util.ShareWidget(Model.GetUrl(false))
+                    </div>
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    @Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+
+
+    @Html.Partial("_Symbols", Model)
+
+</div>
+
+
+@section footerscripts
+{
+    <style>
+        /* Popover */
+        /* Popover Header */
+        .popover-title {
+            background-color: #fcf8e3;
+        }
+        /* Popover Body */
+        .popover-content {
+            font-size: 80%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        SocialShareKit.init({
+            url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))',
+            twitter: {
+                via: 'HlidacSmluv'
+            }
+        }
+        );
+        $(document).ready(function () {
+            $("a[data-link='kopie']").popover({
+                placement: 'top',
+                trigger: "hover",
+                title: "Upozornění",
+                content: "Jedná se o naši kopii zveřejněné smlouvy. Nemusí se jedna o stejný, správný či úplný dokument."
+            });
+        });
+    </script>
+}
+
+
+@helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt, int typSubjektu)
+{
+    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
+    <p>
+        <b>@subjekt.nazev</b>&nbsp;&nbsp;&nbsp;
+        @Util.FirmaMoreInfoLinks(subjekt.ico)
+
+        <br />
+        @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+
+        @subjekt.adresa<br />
+        ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka
+
+        @if (typSubjektu == 1)
+        {
+            <text>
+                <br />Plátce peněz
+            </text>
+        }
+        else if (typSubjektu == 2)
+        {
+            <text>
+                <br />Příjemce peněz
+                <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
+            </text>
+        }
+        else if (typSubjektu == 3) //vkladatel do rejstriku
+        {
+            <text>
+            </text>
+        }
+        @if (firma != null && firma.IsNespolehlivyPlatceDPH())
+        {
+            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrlOnWebsite(false)">více</a>)</div>
+        }
+
+
+        @if (!string.IsNullOrEmpty(subjekt.ico))
+        {
+            <br />
+        }
+    </p>
+}
+
+
+

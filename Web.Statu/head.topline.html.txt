@@ -1,0 +1,21 @@
+﻿    <li class="navbar__watchers">
+        <span class="watcher">Hlídače:</span>
+        <a href="https://www.hlidacstatu.cz/smlouvy">Smluv</a>
+        <a href="https://www.hlidacstatu.cz/osoby">Osob</a>
+        <a href="https://www.hlidacstatu.cz/ucty">Financí</a>
+        <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejných zakázek</a>
+        <a href="https://www.hlidacstatu.cz/StatniWeby">Webů</a>
+    </li>
+
+
+    <!-- mobile menu items below -->
+    <li class="level2"><a href="https://www.hlidacstatu.cz/data">Datové sady</a></li>
+    <li class="level2"><a href="https://www.hlidacstatu.cz/reporty">Analýzy a reporty</a></li>
+    <li class="level2"><a href="https://www.hlidacstatu.cz/texty">Komentáře</a></li>
+    <li class="level2"><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
+
+    <li class="level2">
+        <a href="https://www.darujme.cz/projekt/1200384">Podpořte nás</a>
+        <a href="https://www.hlidacstatu.cz/PridatSe">Přidejte se k nám</a>
+    </li>
+

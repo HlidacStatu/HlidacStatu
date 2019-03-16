@@ -1,0 +1,19 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+
+<p>Děkujeme za registraci na serveru HlidacStatu.cz.</p>
+
+<p>
+    Všimli jsme si, že jste dosud nepotvrdil registraci na našem serveru. 
+    Bez potvrzení registrace jsou funkce serveru HlidacStatu.cz neaktivní.
+</p>
+<p>
+    Potvrďte prosím registraci na této stránce:<br/>
+    <a href='@Model.CallbackUrl'>@Model.CallbackUrl</a>.
+</p>
+
+
+
+@Raw(Model.EmailFooterHtml)
+

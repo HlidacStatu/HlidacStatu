@@ -1,0 +1,196 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@{
+
+    var allNames = StaticData.Poslanci2017Vsichni;
+    var newNames = StaticData.Poslanci2017Novacci;
+
+
+    List<HlidacStatu.Lib.Data.Osoba> showList = null;
+    showList = HlidacStatu.Lib.StaticData.Politici.Get()
+        .Where(p => allNames.Contains(p.NameId))
+        .OrderBy(m => m.Prijmeni)
+        .ThenBy(m => m.Jmeno)
+        .ToList();
+    bool Search = true;
+
+    ReportDataSource poslanciTable = new ReportDataSource(new ReportDataSource.Column[]
+   {
+        new ReportDataSource.Column() { Name="novacek",
+            HtmlRender = (s) =>
+            {
+                Osoba o = (Osoba)s;
+                bool novacek = newNames.Contains(o.NameId);
+                return novacek ? "1" : "0";
+            },
+            OrderValueRender = (s) => {
+                Osoba o = (Osoba)s;
+                return o.FullName(false);
+            }
+        },
+        new ReportDataSource.Column() { Name="Poslanec (nováčci s <span style='padding-left:5px;' class='glyphicon glyphicon-star text-success' aria-hidden='true'></span> )",
+            HtmlRender = (s) => {
+                Osoba o = (Osoba)s;
+                bool novacek = newNames.Contains(o.NameId);
+                return string.Format("<a href='{0}'>{1}</a>", o.GetUrlOnWebsite(), o.FullNameWithYear(true))
+                + (novacek ? "<span style='padding-left:5px;' title='Nováček ve sněmovně' class='glyphicon glyphicon-star text-success' aria-hidden='true'></span>" :  "")
+                + "<br />"
+                + Devmasters.Core.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3), 250).Replace("\n", "<br />");
+            },
+            OrderValueRender = (s) => {
+                Osoba o = (Osoba)s;
+                return o.FullName(false);
+            }
+        },
+        new ReportDataSource.Column() {
+            Name ="Strana/Hnutí",
+            HtmlRender = (s) => {
+                Osoba o = (Osoba)s;
+                OsobaEvent oe = o.Events()
+                    .Where(m=>m.Type==(int)OsobaEvent.Types.Poslanec)
+                    .OrderByDescending(m=>m.DatumOd)
+                    .FirstOrDefault();
+                if (oe == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return oe.AddInfo;
+                }
+            },
+            OrderValueRender = (s) => {
+                Osoba o = (Osoba)s;
+                OsobaEvent oe = o.Events()
+                    .Where(m=>m.Type==(int)OsobaEvent.Types.Poslanec)
+                    .OrderByDescending(m=>m.DatumOd)
+                    .FirstOrDefault();
+                if (oe == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return oe.AddInfo;
+                }
+
+            }
+        },
+        new ReportDataSource.Column() { Name="Angažovanost",
+            HtmlRender = (s) => {
+                Osoba o = (Osoba)s;
+                string sout = "";
+
+                if (o.Vazby() != null)
+                {
+                    foreach (var v in o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(2))
+                    {
+                        sout = sout + v.Value.ToNiceString(true) + "<br/>";
+                    }
+                    if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() == 3)
+                    {
+                        sout = sout + o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy
+                        .Skip(2).First()
+                        .Value.ToNiceString(true);
+                    }
+                    else if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
+                    {
+                        sout = sout + "<a href='" + o.GetUrlOnWebsite() + "'>" + HlidacStatu.Util.PluralForm.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
+                    }
+                }
+                return sout;
+            },
+            OrderValueRender = (s) => {
+                Osoba o = (Osoba)s;
+                return o.FullName(false);
+            }
+        },
+        new ReportDataSource.Column() { Name="Sponzor",
+            HtmlRender = (s) => {
+                Osoba o = (Osoba)s;
+                var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
+                if (sum==0)
+                    return "Ne";
+                else
+                    return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:true) + string.Format("<br /><a href='{0}'>podrobnosti</a>", o.GetUrlOnWebsite()) ;
+            },
+            OrderValueRender = (s) => {
+                Osoba o = (Osoba)s;
+                return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
+            }
+        },
+   });
+
+
+    foreach (var p in showList)
+    {
+        poslanciTable.AddRow(p);
+    }
+}
+
+
+<button id="btnNovacci" class="btn btn-default">Ukázat pouze poslance - nováčky</button>
+
+
+<h3 id="tblHead">Všichni poslanci zvolení ve volbách 2017</h3>
+@UtilChart.RenderReport("",ReportModel.QueueItem.types.table, poslanciTable, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [4,'desc'],
+                'lengthChange': false,
+                'info': false,
+                'paging': true,
+                'pageLength': 50,
+                'columnDefs': [{ 'visible': false, 'targets': 0 }]
+                }", "tbPoslanci")
+<script>
+    var filtered = false;
+    $(function () {
+        $("#btnNovacci").click(function () {
+            if (filtered) {
+                filtered = false;
+                showAll();
+                $("#btnNovacci").text("Ukázat pouze poslance - nováčky");
+                $("#tblHead").text("Všichni poslanci zvolení ve volbách 2017");
+
+            }
+            else {
+                filtered = true;
+                showFiltered();
+                $("#btnNovacci").text("Ukázat všechny pouze poslance");
+                $("#tblHead").text("Poslanci - nováčci zvolení ve volbách 2017");
+            }
+        });
+    });
+    function showAll() {
+        $.fn.dataTable.ext.search.pop();
+        tbl_tbPoslanci.draw();
+
+    }
+    function showFiltered() {
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var res = parseFloat(data[0]);
+                if (res == 1)
+                    return true;
+                else
+                    return false;
+            }
+        );
+        tbl_tbPoslanci.draw();
+    }
+</script>

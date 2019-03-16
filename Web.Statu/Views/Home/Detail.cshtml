@@ -1,0 +1,79 @@
+﻿@model HlidacStatu.Lib.Data.Smlouva
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+
+    ViewBag.Title = Devmasters.Core.TextUtil.ShortenText(Model.predmet ?? "", 70);
+    ViewBag.SubTitle = "Smlouva číslo " + Model.Id;
+
+    ViewBag.SocialShareTitle = $"Smlouva {Model.Id}. {Model.predmet}";
+    ViewBag.SocialShareText = HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 4, true, true, ", ");
+    ViewBag.SocialShareType = "article";
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/smlouva?d={DateTime.Now.ToString("yyMMdd")}&v=" + Model.Id;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                + "<meta property=\"og:image:height\" content=\"1080\" />"
+                + "<meta property=\"og:image:type\" content=\"image/png\" />";
+
+}
+@section scripts
+{
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy", "Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })
+
+
+
+@section onlyembed
+{
+    @Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child_embed" })
+
+}
+
+@section footerscripts
+{
+    <style>
+        /* Popover */
+        /* Popover Header */
+        .popover-title {
+            background-color: #fcf8e3;
+        }
+        /* Popover Body */
+        .popover-content {
+            font-size: 80%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        SocialShareKit.init({
+            url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))',
+            twitter: {
+                via: 'HlidacSmluv'
+            }
+        }
+        );
+        $(document).ready(function () {
+            $("a[data-link='kopie']").popover({
+                placement: 'top',
+                trigger: "hover",
+                title: "Upozornění",
+                content: "Jedná se o naši kopii zveřejněné smlouvy. Nemusí se jedna o stejný, správný či úplný dokument."
+            });
+        });
+    </script>
+}
+
+

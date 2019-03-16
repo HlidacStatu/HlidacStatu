@@ -1,0 +1,130 @@
+﻿@*@Html.Raw(System.IO.File.ReadAllText(HlidacStatu.Lib.Init.WebAppRoot + "footer.html.txt"))*@
+
+
+<div class="funding">
+    <!-- <div class="funding__inner-container container"> -->
+    <div class="container hidden-xs">
+        <div class="row">
+         
+            @if (false)
+            {
+            <div class="col-sm-6 col-md-5" style="display:none">
+                <div>
+                    <h2 class="new-title">
+                        Přidejte se k nám
+                    </h2>
+                </div>
+                <div>
+                    <p class="new-p">
+                        Vítáme pomoc detektivní, programátorskou, právní,
+                        analytickou, redakční i všechnu ostatní, nebo finanční
+                        příspěvek
+                    </p>
+                </div>
+                <form>
+                    <div class="form-group-new">
+                        <label class="label" for="input-name">Jméno a příjmení</label>
+                        <input id="input-name" type="text" class="form-control-new">
+                    </div>
+                    <div class="form-group-new">
+                        <label class="label" for="input-email">E-mail</label>
+                        <input id="input-email" type="text" class="form-control-new">
+                    </div>
+                    <div class="form-group-new">
+                        <label class="label" for="input-phone">Telefonní číslo</label>
+                        <input id="input-phone" type="text" class="form-control-new form-control-new--240">
+                    </div>
+                    <div class="form-group-new">
+                        <label class="label" for="input-work">Oblast, ve které nám můžete pomoci</label>
+                        <div class="select-wrapper">
+                            <select id="input-work" class="form-control-new form-control-new--240">
+                                <option disabled="" selected="" value=""></option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-new">
+                        <label class="label" for="input-message">Zpráva pro nás</label>
+                        <textarea id="input-message" type="text" class="form-control"></textarea>
+                    </div>
+                    <div style="margin-top: 4px;">
+                        <button class="btn-primary-new">
+                            přidat se
+                        </button>
+                    </div>
+                </form>
+
+                <div style="height: 56px"></div>
+            </div>
+            }
+
+
+            <!-- right column -->
+            <div class="col-sm-6 col-sm-push-3" >
+                <div>
+                    <h2 class="new-title">
+                        Podpořte nás
+                    </h2>
+                </div>
+                <div>
+                    <div data-darujme-widget-token="lc07w7pgo6lw198i">&nbsp;</div>
+                    <script type="text/javascript">
+	+function(w, d, s, u, a, b) {
+		w['DarujmeObject'] = u;
+		w[u] = w[u] || function () { (w[u].q = w[u].q || []).push(arguments) };
+		a = d.createElement(s); b = d.getElementsByTagName(s)[0];
+		a.async = 1; a.src = "https:\/\/www.darujme.cz\/assets\/scripts\/widget.js";
+		b.parentNode.insertBefore(a, b);
+	}(window, document, 'script', 'Darujme');
+	Darujme(1, "lc07w7pgo6lw198i", 'render', "https:\/\/www.darujme.cz\/widget?token=lc07w7pgo6lw198i", "550px");
+                    </script>
+                </div>
+                <div style="height: 56px"></div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="footer">
+    <div class="footer__content">
+        <div class="footer__content__col">
+            <a href="/texty/vize">Vize hlídače státu</a>
+            <a href="/texty/o-registru">O registru smluv</a>
+            <a href="/texty/kontakt">Kontakt</a>
+        </div>
+        <div class="footer__content__gap"></div>
+        <div class="footer__content__col">
+            <a href="https://www.darujme.cz/projekt/1200384">Finanční podpora</a>
+            <a href="/api">API a opendata pro vývojáře</a>
+            <a href="/texty/provoznipodminky/">Podmínky užívání a ochrana soukromí</a>
+        </div>
+        <div class="footer__content__gap"></div>
+        <div class="footer__content__col">
+            <a href="https://status.HlidacStatu.cz" target="_blank"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;Status služeb</a>
+            <a href="https://www.hlidacstatu.cz/texty/kontakt/" target="_blank" style="color:orange"><span class="glyphicon glyphicon-alert"></span>&nbsp;Nahlásit chybu</a>
+            <span>Sledujte nás</span>
+            <div>
+                <a href="https://www.facebook.com/hlidacstatu"><img src="/Content/img/icon-fb.svg" alt="icon facebook"></a>
+                <a href="https://twitter.com/hlidacstatu"><img src="/Content/img/icon-twitter.svg" alt="icon twitter"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<span id="headtopline"></span>
+<script>
+    $(function () {
+        $.get("/head.topline.html.txt", function (data, status) {
+            $("#headtopline").html(data);
+            $('[data-toggle="popover"]').popover();
+        });
+    });
+</script>*@

@@ -1,0 +1,1144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FirmyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserTokens">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Token" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="LastAccess" Type="datetime" />
+          <Property Name="Count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="userId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="operation" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="objectType" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="objectId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="valueBefore" Type="nvarchar(max)" />
+          <Property Name="valueAfter" Type="nvarchar(max)" />
+          <Property Name="IP" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="Bookmarks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Folder" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Url" Type="varchar" MaxLength="4000" Nullable="false" />
+          <Property Name="ItemType" Type="int" Nullable="false" />
+          <Property Name="ItemId" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="DatoveSchranky">
+          <Key>
+            <PropertyRef Name="DS" />
+          </Key>
+          <Property Name="DS" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Identifikator" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DetailJson" Type="nvarchar(max)" />
+          <Property Name="Url" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="FirmaEvent">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="DatumOd" Type="date" />
+          <Property Name="DatumDo" Type="date" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="AddInfo" Type="nvarchar(max)" />
+          <Property Name="AddInfoNum" Type="decimal" Precision="18" Scale="9" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Zdroj" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="FirmaVazby">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="VazbakICO" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="TypVazby" Type="int" />
+          <Property Name="PojmenovaniVazby" Type="nvarchar" MaxLength="150" />
+          <Property Name="podil" Type="decimal" Precision="18" Scale="9" />
+          <Property Name="DatumOd" Type="date" />
+          <Property Name="DatumDo" Type="date" />
+          <Property Name="Zdroj" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastUpdate" Type="date" Nullable="false" />
+          <Property Name="RucniZapis" Type="int" />
+          <Property Name="Poznamka" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="InvoiceItems">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Invoice" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_ShopItem" Type="int" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Discount" Type="money" Nullable="false" />
+          <Property Name="Expires" Type="datetime" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="VAT" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Invoices">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Customer" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="VAT" Type="money" Nullable="false" />
+          <Property Name="TotalPriceNoVat" Type="money" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Paid" Type="datetime" />
+          <Property Name="Company" Type="nvarchar" MaxLength="100" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="100" />
+          <Property Name="City" Type="nvarchar" MaxLength="100" />
+          <Property Name="Zip" Type="nvarchar" MaxLength="10" />
+          <Property Name="Country" Type="nvarchar" MaxLength="100" />
+          <Property Name="VatID" Type="nvarchar" MaxLength="30" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="InvoiceNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="CompanyID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="NespolehlivyPlatceDPH">
+          <Key>
+            <PropertyRef Name="Ico" />
+          </Key>
+          <Property Name="Ico" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FromDate" Type="date" />
+          <Property Name="ToDate" Type="date" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="20" />
+          <Property Name="DIC" Type="nvarchar" MaxLength="50" />
+          <Property Name="Jmeno" Type="nvarchar" MaxLength="150" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="PaidUntil" Type="date" />
+          <Property Name="Deleted" Type="datetime" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Osoba">
+          <Key>
+            <PropertyRef Name="InternalId" />
+          </Key>
+          <Property Name="InternalId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TitulPred" Type="nvarchar" MaxLength="50" />
+          <Property Name="Jmeno" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Prijmeni" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="TitulPo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Pohlavi" Type="char" MaxLength="1" />
+          <Property Name="Narozeni" Type="date" />
+          <Property Name="Umrti" Type="date" />
+          <Property Name="Ulice" Type="nvarchar" MaxLength="500" />
+          <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
+          <Property Name="PSC" Type="nvarchar" MaxLength="25" />
+          <Property Name="CountryCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="OnRadar" Type="bit" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="LastUpdate" Type="datetime" Nullable="false" />
+          <Property Name="NameId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PuvodniPrijmeni" Type="nvarchar" MaxLength="150" />
+          <Property Name="JmenoAscii" Type="nvarchar" MaxLength="150" />
+          <Property Name="PrijmeniAscii" Type="nvarchar" MaxLength="150" />
+          <Property Name="PuvodniPrijmeniAscii" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="OsobaEvent">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OsobaId" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="DatumOd" Type="date" />
+          <Property Name="DatumDo" Type="date" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="AddInfo" Type="nvarchar(max)" />
+          <Property Name="AddInfoNum" Type="decimal" Precision="18" Scale="9" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Zdroj" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="OsobaExternalId">
+          <Key>
+            <PropertyRef Name="OsobaId" />
+            <PropertyRef Name="ExternalId" />
+            <PropertyRef Name="ExternalSource" />
+          </Key>
+          <Property Name="OsobaId" Type="int" Nullable="false" />
+          <Property Name="ExternalId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ExternalSource" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OsobaVazby">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OsobaID" Type="int" Nullable="false" />
+          <Property Name="VazbakICO" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="TypVazby" Type="int" />
+          <Property Name="PojmenovaniVazby" Type="nvarchar" MaxLength="150" />
+          <Property Name="podil" Type="decimal" Precision="18" Scale="9" />
+          <Property Name="DatumOd" Type="date" />
+          <Property Name="DatumDo" Type="date" />
+          <Property Name="Zdroj" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastUpdate" Type="date" Nullable="false" />
+          <Property Name="VazbakOsobaId" Type="int" />
+          <Property Name="RucniZapis" Type="int" />
+          <Property Name="Poznamka" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="itemType" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="oldValue" Type="nvarchar(max)" />
+          <Property Name="newValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="reviewed" Type="datetime" />
+          <Property Name="reviewedBy" Type="nvarchar" MaxLength="150" />
+          <Property Name="reviewResult" Type="int" />
+          <Property Name="comment" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="SmlouvyIds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="updated" Type="datetime" Nullable="false" />
+          <Property Name="active" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserOptions">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="OptionId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="LanguageId" Type="int" />
+        </EntityType>
+        <EntityType Name="WatchDog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Expires" Type="datetime" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="SearchTerm" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SearchRawQuery" Type="nvarchar(max)" />
+          <Property Name="RunCount" Type="int" Nullable="false" />
+          <Property Name="SentCount" Type="int" Nullable="false" />
+          <Property Name="PeriodId" Type="int" Nullable="false" />
+          <Property Name="LastSent" Type="datetime" />
+          <Property Name="LastSearched" Type="datetime" />
+          <Property Name="ToEmail" Type="int" Nullable="false" />
+          <Property Name="ShowPublic" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="FocusId" Type="int" Nullable="false" />
+          <Property Name="dataType" Type="nvarchar" MaxLength="50" />
+          <Property Name="SpecificContact" Type="nvarchar(max)" />
+          <Property Name="LatestRec" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceItems_Invoices">
+          <End Role="Invoices" Type="Self.Invoices" Multiplicity="1" />
+          <End Role="InvoiceItems" Type="Self.InvoiceItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoices">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceItems">
+              <PropertyRef Name="ID_Invoice" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Firma_Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ICO" Type="nvarchar" Mode="In" />
+          <Parameter Name="DIC" Type="nvarchar" Mode="In" />
+          <Parameter Name="Datum_zapisu_OR" Type="date" Mode="In" />
+          <Parameter Name="Stav_subjektu" Type="tinyint" Mode="In" />
+          <Parameter Name="Jmeno" Type="nvarchar" Mode="In" />
+          <Parameter Name="JmenoAscii" Type="nvarchar" Mode="In" />
+          <Parameter Name="Kod_PF" Type="int" Mode="In" />
+          <Parameter Name="Source" Type="nvarchar" Mode="In" />
+          <Parameter Name="Popis" Type="nvarchar" Mode="In" />
+          <Parameter Name="VersionUpdate" Type="int" Mode="In" />
+          <Parameter Name="VazbyRaw" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="SmlouvaId_Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+          <Parameter Name="active" Type="int" Mode="In" />
+          <Parameter Name="created" Type="datetime" Mode="In" />
+          <Parameter Name="updated" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="UserOption_Add" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="optionId" Type="int" Mode="In" />
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="value" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="languageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UserOption_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="optionId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="languageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UserOption_Remove" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="optionId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="languageId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="FirmyModelStoreContainer">
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserTokens" EntityType="Self.AspNetUserTokens" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Bookmarks" EntityType="Self.Bookmarks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirmaEvent" EntityType="Self.FirmaEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirmaVazby" EntityType="Self.FirmaVazby" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceItems" EntityType="Self.InvoiceItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invoices" EntityType="Self.Invoices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NespolehlivyPlatceDPH" EntityType="Self.NespolehlivyPlatceDPH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Osoba" EntityType="Self.Osoba" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OsobaEvent" EntityType="Self.OsobaEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OsobaExternalId" EntityType="Self.OsobaExternalId" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OsobaVazby" EntityType="Self.OsobaVazby" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SmlouvyIds" EntityType="Self.SmlouvyIds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserOptions" EntityType="Self.UserOptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchDog" EntityType="Self.WatchDog" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItems_Invoices" Association="Self.FK_InvoiceItems_Invoices">
+            <End Role="Invoices" EntitySet="Invoices" />
+            <End Role="InvoiceItems" EntitySet="InvoiceItems" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FirmyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ICO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DIC" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Jmeno" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PaidUntil" Type="DateTime" Precision="0" />
+          <Property Name="Deleted" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <FunctionImport Name="Firma_Save">
+            <Parameter Name="ICO" Mode="In" Type="String" />
+            <Parameter Name="DIC" Mode="In" Type="String" />
+            <Parameter Name="Datum_zapisu_OR" Mode="In" Type="DateTime" />
+            <Parameter Name="Stav_subjektu" Mode="In" Type="Byte" />
+            <Parameter Name="Jmeno" Mode="In" Type="String" />
+            <Parameter Name="JmenoAscii" Mode="In" Type="String" />
+            <Parameter Name="Kod_PF" Mode="In" Type="Int32" />
+            <Parameter Name="Source" Mode="In" Type="String" />
+            <Parameter Name="Popis" Mode="In" Type="String" />
+            <Parameter Name="VersionUpdate" Mode="In" Type="Int32" />
+            <Parameter Name="VazbyRaw" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="DatoveSchrankies" EntityType="FirmyModel.DatoveSchranky" />
+          <EntitySet Name="WatchDogs" EntityType="FirmyModel.WatchDog" />
+          <EntitySet Name="AspNetUserRoles" EntityType="FirmyModel.AspNetUserRole" />
+          <EntitySet Name="AspNetUsers" EntityType="FirmyModel.AspNetUser" />
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="FirmyModel.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRole" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUserTokens" EntityType="FirmyModel.AspNetUserToken" />
+          <EntitySet Name="SmlouvyIds" EntityType="FirmyModel.SmlouvyId" />
+          <FunctionImport Name="SmlouvaId_Save">
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="active" Mode="In" Type="Int32" />
+            <Parameter Name="created" Mode="In" Type="DateTime" />
+            <Parameter Name="updated" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="FirmaVazby" EntityType="FirmyModel.FirmaVazby" />
+          <EntitySet Name="Osoba" EntityType="FirmyModel.Osoba" />
+          <EntitySet Name="OsobaEvent" EntityType="FirmyModel.OsobaEvent" />
+          <EntitySet Name="OsobaExternalId" EntityType="FirmyModel.OsobaExternalId" />
+          <EntitySet Name="OsobaVazby" EntityType="FirmyModel.OsobaVazby" />
+          <EntitySet Name="FirmaEvent" EntityType="FirmyModel.FirmaEvent" />
+          <EntitySet Name="InvoiceItems" EntityType="FirmyModel.InvoiceItems" />
+          <EntitySet Name="Invoices" EntityType="FirmyModel.Invoices" />
+          <AssociationSet Name="FK_InvoiceItems_Invoices" Association="FirmyModel.FK_InvoiceItems_Invoices">
+            <End Role="Invoices" EntitySet="Invoices" />
+            <End Role="InvoiceItems" EntitySet="InvoiceItems" />
+          </AssociationSet>
+          <EntitySet Name="Audit" EntityType="FirmyModel.Audit" />
+          <EntitySet Name="NespolehlivyPlatceDPH" EntityType="FirmyModel.NespolehlivyPlatceDPH" />
+          <EntitySet Name="Review" EntityType="FirmyModel.Review" />
+          <EntitySet Name="Bookmark" EntityType="FirmyModel.Bookmark" />
+          <EntitySet Name="UserOptions" EntityType="FirmyModel.UserOptions" />
+          <FunctionImport Name="UserOption_Add" ReturnType="Collection(Int32)">
+            <Parameter Name="optionId" Mode="In" Type="Int32" />
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="value" Mode="In" Type="String" />
+            <Parameter Name="languageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UserOption_Get" ReturnType="Collection(FirmyModel.UserOption_Get_Result)">
+            <Parameter Name="optionId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="languageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UserOption_Remove">
+            <Parameter Name="optionId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="languageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="DatoveSchranky">
+          <Key>
+            <PropertyRef Name="DS" />
+          </Key>
+          <Property Name="DS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Identifikator" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DetailJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WatchDog" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" Abstract="false">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Expires" Type="DateTime" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="SearchTerm" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SearchRawQuery" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RunCount" Type="Int32" Nullable="false" />
+          <Property Name="SentCount" Type="Int32" Nullable="false" />
+          <Property Name="PeriodId" Type="Int32" Nullable="false" />
+          <Property Name="LastSent" Type="DateTime" Precision="3" />
+          <Property Name="LastSearched" Type="DateTime" Precision="3" />
+          <Property Name="ToEmail" Type="Int32" Nullable="false" />
+          <Property Name="ShowPublic" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FocusId" Type="Int32" Nullable="false" />
+          <Property Name="dataType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SpecificContact" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LatestRec" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="AspNetUserRole">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="RoleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="FirmyModel.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" FromRole="AspNetUserRole" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserRoles" Relationship="FirmyModel.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserRole" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Type="FirmyModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FirmyModel.AspNetUserRole" Role="AspNetUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AspNetUserToken">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Token" Type="Guid" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastAccess" Type="DateTime" Precision="3" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SmlouvyId">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="updated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="active" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FirmaVazby">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="VazbakICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TypVazby" Type="Int32" />
+          <Property Name="PojmenovaniVazby" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="podil" Type="Decimal" Precision="18" Scale="9" />
+          <Property Name="Zdroj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DatumOd" Type="DateTime" Precision="0" Nullable="true" />
+          <Property Name="DatumDo" Type="DateTime" Precision="0" Nullable="true" />
+          <Property Name="RucniZapis" Type="Int32" />
+          <Property Name="Poznamka" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Osoba">
+          <Key>
+            <PropertyRef Name="InternalId" />
+          </Key>
+          <Property Name="InternalId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TitulPred" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Jmeno" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Prijmeni" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="TitulPo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pohlavi" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Narozeni" Type="DateTime" Precision="0" Nullable="true" />
+          <Property Name="Umrti" Type="DateTime" Precision="0" Nullable="true" />
+          <Property Name="Ulice" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PSC" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="CountryCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="OnRadar" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NameId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PuvodniPrijmeni" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="JmenoAscii" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PrijmeniAscii" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PuvodniPrijmeniAscii" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OsobaEvent">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OsobaId" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="DatumOd" Type="DateTime" Precision="0" />
+          <Property Name="DatumDo" Type="DateTime" Precision="0" Nullable="true" />
+          <Property Name="AddInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddInfoNum" Type="Decimal" Precision="18" Scale="9" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OsobaExternalId">
+          <Key>
+            <PropertyRef Name="OsobaId" />
+            <PropertyRef Name="ExternalId" />
+            <PropertyRef Name="ExternalSource" />
+          </Key>
+          <Property Name="OsobaId" Type="Int32" Nullable="false" />
+          <Property Name="ExternalId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ExternalSource" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OsobaVazby">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OsobaID" Type="Int32" Nullable="false" />
+          <Property Name="VazbakICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TypVazby" Type="Int32" />
+          <Property Name="PojmenovaniVazby" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="podil" Type="Decimal" Precision="18" Scale="9" />
+          <Property Name="Zdroj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastUpdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DatumOd" Type="DateTime" Precision="0" />
+          <Property Name="DatumDo" Type="DateTime" Precision="0" />
+          <Property Name="VazbakOsobaId" Type="Int32" />
+          <Property Name="RucniZapis" Type="Int32" />
+          <Property Name="Poznamka" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="FirmaEvent">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DatumOd" Type="DateTime" Precision="0" />
+          <Property Name="DatumDo" Type="DateTime" Precision="0" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="AddInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddInfoNum" Type="Decimal" Precision="18" Scale="9" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="InvoiceItems">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Invoice" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ID_ShopItem" Type="Int32" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Discount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Expires" Type="DateTime" Precision="3" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VAT" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="Invoices" Relationship="FirmyModel.FK_InvoiceItems_Invoices" FromRole="InvoiceItems" ToRole="Invoices" />
+        </EntityType>
+        <EntityType Name="Invoices">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Customer" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VAT" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="TotalPriceNoVat" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Paid" Type="DateTime" Precision="3" />
+          <Property Name="Company" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VatID" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="InvoiceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="InvoiceItems" Relationship="FirmyModel.FK_InvoiceItems_Invoices" FromRole="Invoices" ToRole="InvoiceItems" />
+        </EntityType>
+        <Association Name="FK_InvoiceItems_Invoices">
+          <End Type="FirmyModel.Invoices" Role="Invoices" Multiplicity="1" />
+          <End Type="FirmyModel.InvoiceItems" Role="InvoiceItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoices">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceItems">
+              <PropertyRef Name="ID_Invoice" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="operation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="objectType" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="objectId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="valueBefore" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="valueAfter" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IP" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="NespolehlivyPlatceDPH">
+          <Key>
+            <PropertyRef Name="Ico" />
+          </Key>
+          <Property Name="Ico" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FromDate" Type="DateTime" Precision="0" />
+          <Property Name="ToDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="itemType" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="oldValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="newValue" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="createdBy" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="reviewed" Type="DateTime" Precision="3" />
+          <Property Name="reviewedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="reviewResult" Type="Int32" />
+          <Property Name="comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Bookmark">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Folder" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="ItemType" Type="Int32" Nullable="false" />
+          <Property Name="ItemId" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="UserOptions" Abstract="false">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="OptionId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" a:SetterAccess="Protected" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Protected" />
+          <Property Name="LanguageId" Type="Int32" />
+        </EntityType>
+        <ComplexType Name="UserOption_Get_Result">
+          <Property Type="Int32" Name="pk" Nullable="false" />
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="Int32" Name="OptionId" Nullable="false" />
+          <Property Type="DateTime" Name="Created" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Value" Nullable="true" />
+          <Property Type="Int32" Name="LanguageId" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FirmyModelStoreContainer" CdmEntityContainer="DbEntities">
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="FirmyModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="DIC" ColumnName="DIC" />
+                <ScalarProperty Name="Jmeno" ColumnName="Jmeno" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="PaidUntil" ColumnName="PaidUntil" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Firma_Save" FunctionName="FirmyModel.Store.Firma_Save" />
+          <EntitySetMapping Name="DatoveSchrankies">
+            <EntityTypeMapping TypeName="FirmyModel.DatoveSchranky">
+              <MappingFragment StoreEntitySet="DatoveSchranky">
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="DetailJson" ColumnName="DetailJson" />
+                <ScalarProperty Name="Identifikator" ColumnName="Identifikator" />
+                <ScalarProperty Name="DS" ColumnName="DS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchDogs">
+            <EntityTypeMapping TypeName="FirmyModel.WatchDog">
+              <MappingFragment StoreEntitySet="WatchDog">
+                <ScalarProperty Name="LatestRec" ColumnName="LatestRec" />
+                <ScalarProperty Name="SpecificContact" ColumnName="SpecificContact" />
+                <ScalarProperty Name="dataType" ColumnName="dataType" />
+                <ScalarProperty Name="FocusId" ColumnName="FocusId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ShowPublic" ColumnName="ShowPublic" />
+                <ScalarProperty Name="ToEmail" ColumnName="ToEmail" />
+                <ScalarProperty Name="LastSearched" ColumnName="LastSearched" />
+                <ScalarProperty Name="LastSent" ColumnName="LastSent" />
+                <ScalarProperty Name="PeriodId" ColumnName="PeriodId" />
+                <ScalarProperty Name="SentCount" ColumnName="SentCount" />
+                <ScalarProperty Name="RunCount" ColumnName="RunCount" />
+                <ScalarProperty Name="SearchRawQuery" ColumnName="SearchRawQuery" />
+                <ScalarProperty Name="SearchTerm" ColumnName="SearchTerm" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Expires" ColumnName="Expires" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserRoles">
+            <EntityTypeMapping TypeName="FirmyModel.AspNetUserRole">
+              <MappingFragment StoreEntitySet="AspNetUserRoles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="FirmyModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserTokens">
+            <EntityTypeMapping TypeName="FirmyModel.AspNetUserToken">
+              <MappingFragment StoreEntitySet="AspNetUserTokens">
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="LastAccess" ColumnName="LastAccess" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SmlouvyIds">
+            <EntityTypeMapping TypeName="FirmyModel.SmlouvyId">
+              <MappingFragment StoreEntitySet="SmlouvyIds">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="updated" ColumnName="updated" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SmlouvaId_Save" FunctionName="FirmyModel.Store.SmlouvaId_Save" />
+          <EntitySetMapping Name="FirmaVazby">
+            <EntityTypeMapping TypeName="FirmyModel.FirmaVazby">
+              <MappingFragment StoreEntitySet="FirmaVazby">
+                <ScalarProperty Name="Poznamka" ColumnName="Poznamka" />
+                <ScalarProperty Name="RucniZapis" ColumnName="RucniZapis" />
+                <ScalarProperty Name="DatumDo" ColumnName="DatumDo" />
+                <ScalarProperty Name="DatumOd" ColumnName="DatumOd" />
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
+                <ScalarProperty Name="podil" ColumnName="podil" />
+                <ScalarProperty Name="PojmenovaniVazby" ColumnName="PojmenovaniVazby" />
+                <ScalarProperty Name="TypVazby" ColumnName="TypVazby" />
+                <ScalarProperty Name="VazbakICO" ColumnName="VazbakICO" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Osoba">
+            <EntityTypeMapping TypeName="FirmyModel.Osoba">
+              <MappingFragment StoreEntitySet="Osoba">
+                <ScalarProperty Name="PuvodniPrijmeniAscii" ColumnName="PuvodniPrijmeniAscii" />
+                <ScalarProperty Name="PrijmeniAscii" ColumnName="PrijmeniAscii" />
+                <ScalarProperty Name="JmenoAscii" ColumnName="JmenoAscii" />
+                <ScalarProperty Name="PuvodniPrijmeni" ColumnName="PuvodniPrijmeni" />
+                <ScalarProperty Name="Ulice" ColumnName="Ulice" />
+                <ScalarProperty Name="NameId" ColumnName="NameId" />
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OnRadar" ColumnName="OnRadar" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="PSC" ColumnName="PSC" />
+                <ScalarProperty Name="Mesto" ColumnName="Mesto" />
+                <ScalarProperty Name="Umrti" ColumnName="Umrti" />
+                <ScalarProperty Name="Narozeni" ColumnName="Narozeni" />
+                <ScalarProperty Name="Pohlavi" ColumnName="Pohlavi" />
+                <ScalarProperty Name="TitulPo" ColumnName="TitulPo" />
+                <ScalarProperty Name="Prijmeni" ColumnName="Prijmeni" />
+                <ScalarProperty Name="Jmeno" ColumnName="Jmeno" />
+                <ScalarProperty Name="TitulPred" ColumnName="TitulPred" />
+                <ScalarProperty Name="InternalId" ColumnName="InternalId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OsobaEvent">
+            <EntityTypeMapping TypeName="FirmyModel.OsobaEvent">
+              <MappingFragment StoreEntitySet="OsobaEvent">
+                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="AddInfoNum" ColumnName="AddInfoNum" />
+                <ScalarProperty Name="AddInfo" ColumnName="AddInfo" />
+                <ScalarProperty Name="DatumDo" ColumnName="DatumDo" />
+                <ScalarProperty Name="DatumOd" ColumnName="DatumOd" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OsobaExternalId">
+            <EntityTypeMapping TypeName="FirmyModel.OsobaExternalId">
+              <MappingFragment StoreEntitySet="OsobaExternalId">
+                <ScalarProperty Name="ExternalSource" ColumnName="ExternalSource" />
+                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
+                <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OsobaVazby">
+            <EntityTypeMapping TypeName="FirmyModel.OsobaVazby">
+              <MappingFragment StoreEntitySet="OsobaVazby">
+                <ScalarProperty Name="Poznamka" ColumnName="Poznamka" />
+                <ScalarProperty Name="RucniZapis" ColumnName="RucniZapis" />
+                <ScalarProperty Name="VazbakOsobaId" ColumnName="VazbakOsobaId" />
+                <ScalarProperty Name="DatumDo" ColumnName="DatumDo" />
+                <ScalarProperty Name="DatumOd" ColumnName="DatumOd" />
+                <ScalarProperty Name="LastUpdate" ColumnName="LastUpdate" />
+                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
+                <ScalarProperty Name="podil" ColumnName="podil" />
+                <ScalarProperty Name="PojmenovaniVazby" ColumnName="PojmenovaniVazby" />
+                <ScalarProperty Name="TypVazby" ColumnName="TypVazby" />
+                <ScalarProperty Name="VazbakICO" ColumnName="VazbakICO" />
+                <ScalarProperty Name="OsobaID" ColumnName="OsobaID" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FirmaEvent">
+            <EntityTypeMapping TypeName="FirmyModel.FirmaEvent">
+              <MappingFragment StoreEntitySet="FirmaEvent">
+                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="AddInfoNum" ColumnName="AddInfoNum" />
+                <ScalarProperty Name="AddInfo" ColumnName="AddInfo" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="DatumDo" ColumnName="DatumDo" />
+                <ScalarProperty Name="DatumOd" ColumnName="DatumOd" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceItems">
+            <EntityTypeMapping TypeName="FirmyModel.InvoiceItems">
+              <MappingFragment StoreEntitySet="InvoiceItems">
+                <ScalarProperty Name="VAT" ColumnName="VAT" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Expires" ColumnName="Expires" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="ID_ShopItem" ColumnName="ID_ShopItem" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID_Invoice" ColumnName="ID_Invoice" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Invoices">
+            <EntityTypeMapping TypeName="FirmyModel.Invoices">
+              <MappingFragment StoreEntitySet="Invoices">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="VatID" ColumnName="VatID" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="TotalPriceNoVat" ColumnName="TotalPriceNoVat" />
+                <ScalarProperty Name="VAT" ColumnName="VAT" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="ID_Customer" ColumnName="ID_Customer" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Audit">
+            <EntityTypeMapping TypeName="FirmyModel.Audit">
+              <MappingFragment StoreEntitySet="Audit">
+                <ScalarProperty Name="IP" ColumnName="IP" />
+                <ScalarProperty Name="valueAfter" ColumnName="valueAfter" />
+                <ScalarProperty Name="valueBefore" ColumnName="valueBefore" />
+                <ScalarProperty Name="objectId" ColumnName="objectId" />
+                <ScalarProperty Name="objectType" ColumnName="objectType" />
+                <ScalarProperty Name="operation" ColumnName="operation" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NespolehlivyPlatceDPH">
+            <EntityTypeMapping TypeName="FirmyModel.NespolehlivyPlatceDPH">
+              <MappingFragment StoreEntitySet="NespolehlivyPlatceDPH">
+                <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="Ico" ColumnName="Ico" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Review">
+            <EntityTypeMapping TypeName="FirmyModel.Review">
+              <MappingFragment StoreEntitySet="Review">
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="reviewResult" ColumnName="reviewResult" />
+                <ScalarProperty Name="reviewedBy" ColumnName="reviewedBy" />
+                <ScalarProperty Name="reviewed" ColumnName="reviewed" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="newValue" ColumnName="newValue" />
+                <ScalarProperty Name="oldValue" ColumnName="oldValue" />
+                <ScalarProperty Name="itemType" ColumnName="itemType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bookmark">
+            <EntityTypeMapping TypeName="FirmyModel.Bookmark">
+              <MappingFragment StoreEntitySet="Bookmarks">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserOptions">
+            <EntityTypeMapping TypeName="FirmyModel.UserOptions">
+              <MappingFragment StoreEntitySet="UserOptions">
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="OptionId" ColumnName="OptionId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UserOption_Add" FunctionName="FirmyModel.Store.UserOption_Add" />
+          <FunctionImportMapping FunctionImportName="UserOption_Get" FunctionName="FirmyModel.Store.UserOption_Get">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FirmyModel.UserOption_Get_Result">
+                <ScalarProperty Name="pk" ColumnName="pk" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OptionId" ColumnName="OptionId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UserOption_Remove" FunctionName="FirmyModel.Store.UserOption_Remove" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

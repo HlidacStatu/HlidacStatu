@@ -1,0 +1,37 @@
+﻿@model HlidacStatu.Lib.Data.Smlouva
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+    Layout = null;
+}
+@{
+    string hlavni = $"Smlouva mezi subjekty <a href='/Subjekt/{ Model.Platce.ico}'>{Devmasters.Core.TextUtil.ShortenText(Model.Platce.nazev, 60)}</a> a "
++ $"<a href='/Subjekt/{Model.Prijemce.First().ico}'>{Devmasters.Core.TextUtil.ShortenText(Model.Prijemce.First().nazev, 60)}</a>";
+    if (Model.Prijemce.Count() == 0)
+    {
+        hlavni += $".";
+    }
+    else if (Model.Prijemce.Count() == 1)
+    {
+        hlavni += $" a 1 dalším.";
+    }
+    else if (Model.Prijemce.Count() > 1)
+    {
+        hlavni += $" a {Model.Prijemce.Count() - 1} dalšími.";
+    }
+    var hlavni1 = $"ID smlouvy je {Model.Id}, smlouva byla podepsána <b>{Model.datumUzavreni.ToShortDateString()}</b> a zveřejněna {Model.casZverejneni.ToShortDateString()} {(Model.casZverejneni.ToLongTimeString())}";
+    var hlavni2 = (Model.CalculatedPriceWithVATinCZK == 0
+        ? " Hodnota smlouvy je <b>utajena</b>."
+        : " Hodnota smlouvy je <b>" + HlidacStatu.Util.RenderData.ShortNicePrice(Model.CalculatedPriceWithVATinCZK, html: true)) + "</b>";
+
+
+}
+<div class="container text">
+    <h3>@ViewBag.Title</h3>
+    <p>@Html.Raw(hlavni) @Html.Raw(hlavni1)</p>
+    <p>@Html.Raw(hlavni2)</p>
+    <p><a href="@Model.GetUrl(false)" target="_top">Více informací o smlouvě</a></p>
+</div>
+<img src="@($"/socialbanner/smlouva?d={DateTime.Now.ToString("yyMMdd")}&v={Model.Id}")"
+     style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />

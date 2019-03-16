@@ -1,0 +1,158 @@
+﻿@model int
+@using HlidacStatu.Web;
+@using HlidacStatu.Web.Framework
+@using System.Linq;
+@using Devmasters.Core;
+@{
+    ViewBag.ShowBookmarkUrl = true;
+
+    switch (Model)
+    {
+        case 1:
+            ViewBag.Title = "Nejčastější smluvní partneři";
+            ViewBag.SubTitle = "Firmy s největším příjmem ze smluv a firmy s největším množstvím uzavřených smluv.";
+            break;
+        case 2:
+            ViewBag.Title = "Smlouvy s chybami";
+            ViewBag.SubTitle = "Každou smlouvu analyzujeme a hledáme v ní chyby. Zde jsou ty nejhorší smlouvy.";
+            break;
+        case 3:
+            ViewBag.Title = "Smlouvy s chybami s cenou alespoň 5 mil Kč.";
+            ViewBag.SubTitle = "Každou smlouvu analyzujeme a hledáme v ní chyby. Zde jsou ty nejhorší smlouvy na vyšší částky.";
+            break;
+        case 4:
+            ViewBag.Title = "Smlouvy na nejvyšší částky";
+            break;
+        case 5:
+            ViewBag.Title = "Smlouvy, u kterých existuje vazba mezi firmami a politiky";
+            ViewBag.SubTitle = "Smlouvy se soukromými ekonomickými subjekty, u kterých existuje přímá a nepřímá vazba na politiky.";
+            break;
+        case 6:
+            ViewBag.Title = "Nové smluvní strany";
+            ViewBag.SubTitle = "Firmy a úřady, které se nyní objevili v rejstříku poprvé.";
+            break;
+        case 7:
+            ViewBag.Title = "Základní statistiky registru smluv";
+            break;
+        case 8:
+            break;
+        case 9:
+            ViewBag.Title = "Firmy založené blízko data uzavření smlouvy";
+            ViewBag.SubTitle = "Přehled firem založených těsně před uzavřením smlouvy nebo až po uzavření smlouvy.";
+            break;
+        case 10:
+            ViewBag.Title = "Smlouvy s utajenými informacemi";
+            break;
+        case 11:
+            ViewBag.Title = "Úřady nejvíce skrývající své dodavatele";
+            break;
+        case 12:
+            ViewBag.Title = "Úřady nejvíce skrývající hodnotu smluv";
+            break;
+        case 13:
+            ViewBag.Title = "Report - Smlouvy s utajenými informacemi";
+            break;
+        case 14:
+            ViewBag.Title = "Report - Úřady nejvíce obchodující s podezřele založenými firmami";
+            break;
+        case 15:
+            ViewBag.Title = "Report - Úřady nejvíce obchodující s firmami navázanými na politiky";
+            break;
+        case 16:
+            ViewBag.Title = "Poslanci - členové Poslanecké sněmovny Parlamentu České republiky po volbách 2017";
+            ViewBag.SubTitle = "Sponzorují noví poslanci politické strany? A mají obchodní vztahy se státem?";
+            break;
+        case 17:
+            ViewBag.Title = "Úřady obchodující s nespolehlivými plátci DPH";
+            break;
+        case 18:
+            ViewBag.Title = "Hejtmani krajů ČR";
+            ViewBag.SubTitle = "Stav k 1.4.2018";
+            break;
+        case 19:
+            ViewBag.Title = "Poradci na úřadu vlády";
+            ViewBag.SubTitle = "Stav k 5.4.2018";
+            break;
+        case 20:
+            ViewBag.Title = "Porovnání srovnatelných úřadů podle utajování údajů";
+            ViewBag.SubTitle = "";
+            break;
+        case 21:
+            ViewBag.Title = "České vlády od 2014";
+            ViewBag.SubTitle = "Stav k 15.4.2018";
+            break;
+        case 22:
+            ViewBag.Title = "";
+            ViewBag.SubTitle = "";
+            break;
+        case 23:
+            ViewBag.Title = "Firmy a holdingy s největšími obchodními vztahy se státem ";
+            ViewBag.SubTitle = "Za rok 2018";
+            ViewBag.SocialShareHtml = @"<b>V roce 2018 se státem nejvíce obchodovaly</b> tyto holdingy:
+<br/>
+Česká spořitelna (692mld),
+Metrostav (97mld),
+UniCredit Bank (69mld),
+<br/><br/>
+<b>Největší nárůst v 2018</b> zaznamenaly:<br/>
+PPF (0->26mld),
+ZVI (0->1mld),
+XINTEXT (0->0.7mld),
+";
+            ViewBag.SocialShareHtmlSubFooter = "Nekomentovaný přehled za rok 2018";
+            ViewBag.SocialShareHtmlFooter = "Holdingy s největšími obchodními vztahy se státem";
+            break;
+        case 24:
+            ViewBag.Title = "Osoby s největšími obchodními vztahy se státem dle registru smluv ";
+            ViewBag.SubTitle = "Za rok 2018";
+            break;
+        default:
+            break;
+    }
+
+
+
+    var reportsRoot = new DirectoryInfo(HlidacStatu.Lib.StaticData.Web_Root + "\\Views\\Home\\Reports");
+    var views = reportsRoot.EnumerateFiles("*.cshtml");
+    var view = views.Where(m => m.Name.StartsWith(Model.ToString() + "_")).Select(m => m.Name.Replace(".cshtml", "")).FirstOrDefault();
+    if (string.IsNullOrEmpty(view))
+    {
+        Response.Redirect("/");
+        Response.End();
+    }
+}
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy", "Home")">Hlídač Smluv</a></li>
+        <li><a href="@Url.Action("Reporty", "Home")">Analytické a souhrnné reporty</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@Util.AddVisitImg("/report/" + Model.ToString())
+
+@{
+    RouteValueDictionary data = ViewContext.RequestContext.RouteData.Values;
+    if (!data.ContainsKey("id"))
+    {
+        data.Add("id", Model);
+    }
+    if (!data.ContainsKey("nameOfView"))
+    {
+        data.Add("nameOfView", view);
+    }
+}
+@Html.Action("Report_child",new { routedata = data })
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+

@@ -1,0 +1,539 @@
+﻿@{
+    ViewBag.Title = "Hlídač smluv";
+    ViewBag.SubTitle = "Registr smluv přehledně. Větší veřejná kontrola obchodování státu a místní správy, politiků a firem.";
+    ViewBag.HideAd = true;
+
+
+
+    double platnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0];
+    double neplatnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1];
+    double celkemKc = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2];
+
+
+
+}
+@section scripts
+{
+    <script>
+        _showFAD = false;
+    </script>
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+
+    <div class="clearfix"></div>
+
+    <div class="row hidden-xs">
+        <div class="col-sm-4">
+            <h3 style="margin-top:0;">Přehledy</h3>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/7">Základní statistiky Registru smluv</a></h3>
+                <p>
+                    Celkem smlouvy za @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true)) s DPH, @(platnych.ToString("N0")) platných smluv, @(neplatnych.ToString("N0")) neplatných.
+                </p>
+                <p><a class="btn btn-default" href="/report/7" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/Hledat?Q=*&order=1">Nejnovější smlouvy</a></h3>
+                <p>
+                    Naposledy uveřejněné smlouvy v registru smluv.
+                    Smlouvy uveřejněné
+                    @for (int i = 1; i < 8; i++)
+                    {
+                        <a href="/Hledat?Q=zverejneno:@(DateTime.Now.AddDays(-1*i).ToString("yyyy-MM-dd"))">@(i == 1 ? "včera" : DateTime.Now.AddDays(-1 * i).ToString("d.M"))</a>
+                        @(i < 7 ? ", " : ".")
+
+                    }
+                </p>
+                <p><a class="btn btn-default" href="/Hledat?Q=*&order=1" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a class="nostyle" href="/adresar">Důležité úřady</a></h3>
+                <p>Přehled nejdůležitějších úřadů a institucí ČR a jejich uveřejněné smlouvy.</p>
+                <p><a class="btn btn-default" href="#" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a class="nostyle" href="/adresar?bad=1">Důležité úřady dosud bez smluv v Registru smluv</a></h3>
+                <p>Přehled nejdůležitějších úřadů, které dosud v registru neuveřejnily žádnou smlouvu (anebo pouze smlouvy bez uvedené ceny).</p>
+                <p><a class="btn btn-default" href="#" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/2">Smlouvy s nejvíce chybami</a></h3>
+                <p>Každou smlouvu analyzujeme a hledáme v ní chyby. Zde jsou ty nejhorší smlouvy.</p>
+                <p><a class="btn btn-default" href="/Report/2" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/Report/3">Smlouvy s chybami nad 5mil Kč </a></h3>
+                <p>Smlouvy s nejvíce chybami a hodnotou alespoň 5mil Kč.</p>
+                <p><a class="btn btn-default" href="/Report/3" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/4">Nejdražší smlouvy</a></h3>
+                <p>Smlouvy uzavřené na nejvyšší částky.</p>
+                <p><a class="btn btn-default" href="/Report/4" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/1">Nejčastější smluvní partneři</a></h3>
+                <p>Firmy s největším příjmem ze smluv a firmy s největším množstvím uzavřených smluv.</p>
+                <p><a class="btn btn-default" href="/Report/1" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/6">Nové úřady a firmy v rejstříku smluv</a></h3>
+                <p>Firmy a úřady, které se nyní objevili v rejstříku poprvé.</p>
+                <p><a class="btn btn-default" href="/Report/6" role="button">Podrobnosti »</a></p>
+            </div>
+
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-sm-4">
+            <h3 style="margin-top:0;">Analytické reporty</h3>
+            <div class="col-block-shadow newbadge top-right">
+                <h3><a href="/Report/16">Poslanci zvolení do parlamentu v 2017</a></h3>
+                <p>Sponzorují noví poslanci politické strany? A mají obchodní vztahy se státem?</p>
+                <p><a class="btn btn-default" href="/Report/16" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/Report/15">Úřady obchodující s firmami navázanými na politiky</a></h3>
+                <p>Úřady, které nejvíce obchodují s firmami navázanými na politiky.</p>
+                <p><a class="btn btn-default" href="/Report/15" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/report/11">Úřady nejvíce skrývající své dodavatele</a></h3>
+                <p>Přehled největších odběratelů skrývajících smluvní strany s odkazem na obchodní tajemství. Ukázat <a href="/Report/10">všechny smlouvy se skrytým dodavatelem</a>.</p>
+                <p><a class="btn btn-default" href="/report/11" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/report/12">Úřady nejvíce skrývající zaplacené ceny</a></h3>
+                <p>Odběratelé skrývající nebo neuvádějící hodnotu smluv. Ukázat <a href="/Report/13">všechny smlouvy s utajenou cenou</a>.</p>
+                <p><a class="btn btn-default" href="/report/12" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/9">Firmy založené kolem data uzavření smlouvy</a></h3>
+                <p>Všechny firmy založené těsně před uzavřením smlouvy nebo až po uzavření smlouvy.</p>
+                <p><a class="btn btn-default" href="/Report/9" role="button">Podrobnosti »</a></p>
+            </div>
+            @*<div class="col-block-shadow newbadge top-right">
+                    <h3><a href="/Report/14">Úřady nejvíce obchodující s podezřele založenými firmami</a></h3>
+                    <p>Úřady, které nejvíce obchodují s firmami založenými těsně před uzavřením smlouvy anebo dokonce až po podepsání smlouvy.</p>
+                    <p><a class="btn btn-default" href="/Report/14" role="button">Podrobnosti »</a></p>
+                </div>*@
+
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/5">Smlouvy soukromých firem s vazbou na politiky</a></h3>
+                <p>Smlouvy se soukromými ekonomickými subjekty, u kterých existuje přímá a nepřímá vazba (majitel, statutární orgán) na politiky.</p>
+                <p><a class="btn btn-default" href="/Report/5" role="button">Podrobnosti »</a></p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <h3 style="margin-top:0;">Komentáře, analýzy</h3>
+            @if (HlidacStatu.Lib.StaticData.LastBlogPosts.Get() != null)
+            {
+                foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(5))
+                {
+                    <dl>
+                        <dt><a href="@post.link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.title.rendered))</a></dt>
+                        <dd>
+                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.excerpt.rendered)), 130, "...")
+                        </dd>
+                    </dl>
+                }
+            }
+
+        </div>
+
+    </div>
+    <div class="row visible-xs-block">
+
+        <div class="col-xs-12">
+            <h3>Přehledy</h3>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/7">Základní statistiky Registru smluv</a></h3>
+                <p>
+                    Celkem smlouvy za @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true)) s DPH, @(platnych.ToString("N0")) platných smluv, @(neplatnych.ToString("N0")) neplatných.
+                </p>
+                <p><a class="btn btn-default" href="/report/7" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/Hledat?Q=*&order=1">Nejnovější smlouvy</a></h3>
+                <p>
+                    Naposledy uveřejněné smlouvy v registru smluv.
+                    Smlouvy uveřejněné
+                    @for (int i = 1; i < 8; i++)
+                    {
+                        <a href="/Hledat?Q=zverejneno:@(DateTime.Now.AddDays(-1*i).ToString("yyyy-MM-dd"))">@(i == 1 ? "včera" : DateTime.Now.AddDays(-1 * i).ToString("d.M"))</a>
+                        @(i < 7 ? ", " : ".")
+
+                    }
+                </p>
+                <p><a class="btn btn-default" href="/Hledat?Q=*&order=1" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a class="nostyle" href="/adresar">Důležité úřady</a></h3>
+                <p>Přehled nejdůležitějších úřadů a institucí ČR a jejich uveřejněné smlouvy.</p>
+                <p><a class="btn btn-default" href="#" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a class="nostyle" href="/adresar?bad=1">Důležité úřady dosud bez smluv v Registru smluv</a></h3>
+                <p>Přehled nejdůležitějších úřadů, které dosud v registru neuveřejnily žádnou smlouvu (anebo pouze smlouvy bez uvedené ceny).</p>
+                <p><a class="btn btn-default" href="#" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/2">Smlouvy s nejvíce chybami</a></h3>
+                <p>Každou smlouvu analyzujeme a hledáme v ní chyby. Zde jsou ty nejhorší smlouvy.</p>
+                <p><a class="btn btn-default" href="/Report/2" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/Report/3">Smlouvy s chybami nad 5mil Kč </a></h3>
+                <p>Smlouvy s nejvíce chybami a hodnotou alespoň 5mil Kč.</p>
+                <p><a class="btn btn-default" href="/Report/3" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/4">Nejdražší smlouvy</a></h3>
+                <p>Smlouvy uzavřené na nejvyšší částky.</p>
+                <p><a class="btn btn-default" href="/Report/4" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/1">Nejčastější smluvní partneři</a></h3>
+                <p>Firmy s největším příjmem ze smluv a firmy s největším množstvím uzavřených smluv.</p>
+                <p><a class="btn btn-default" href="/Report/1" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/6">Nové úřady a firmy v rejstříku smluv</a></h3>
+                <p>Firmy a úřady, které se nyní objevili v rejstříku poprvé.</p>
+                <p><a class="btn btn-default" href="/Report/6" role="button">Podrobnosti »</a></p>
+            </div>
+
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-xs-12">
+            <h3 style="margin-top:0;">Analytické reporty</h3>
+            <div class="col-block-shadow newbadge top-right">
+                <h3><a href="/Report/15">Úřady obchodující s firmami navázanými na politiky</a></h3>
+                <p>Úřady, které nejvíce obchodují s firmami navázanými na politiky.</p>
+                <p><a class="btn btn-default" href="/Report/15" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/report/11">Úřady nejvíce skrývající své dodavatele</a></h3>
+                <p>Přehled největších odběratelů skrývajících smluvní strany s odkazem na obchodní tajemství. Ukázat <a href="/Report/10">všechny smlouvy se skrytým dodavatelem</a>.</p>
+                <p><a class="btn btn-default" href="/report/11" role="button">Podrobnosti »</a></p>
+            </div>
+            <div class="col-block-shadow">
+                <h3><a href="/report/12">Úřady nejvíce skrývající zaplacené ceny</a></h3>
+                <p>Odběratelé skrývající nebo neuvádějící hodnotu smluv. Ukázat <a href="/Report/13">všechny smlouvy s utajenou cenou</a>.</p>
+                <p><a class="btn btn-default" href="/report/12" role="button">Podrobnosti »</a></p>
+            </div>
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/9">Firmy založené kolem data uzavření smlouvy</a></h3>
+                <p>Všechny firmy založené těsně před uzavřením smlouvy nebo až po uzavření smlouvy.</p>
+                <p><a class="btn btn-default" href="/Report/9" role="button">Podrobnosti »</a></p>
+            </div>
+            @*<div class="col-block-shadow newbadge top-right">
+                    <h3><a href="/Report/14">Úřady nejvíce obchodující s podezřele založenými firmami</a></h3>
+                    <p>Úřady, které nejvíce obchodují s firmami založenými těsně před uzavřením smlouvy anebo dokonce až po podepsání smlouvy.</p>
+                    <p><a class="btn btn-default" href="/Report/14" role="button">Podrobnosti »</a></p>
+                </div>*@
+
+
+            <div class="col-block-shadow">
+                <h3><a href="/Report/5">Smlouvy soukromých firem s vazbou na politiky</a></h3>
+                <p>Smlouvy se soukromými ekonomickými subjekty, u kterých existuje přímá a nepřímá vazba (majitel, statutární orgán) na politiky.</p>
+                <p><a class="btn btn-default" href="/Report/5" role="button">Podrobnosti »</a></p>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <h3 style="margin-top:0;">Komentáře, analýzy</h3>
+            @if (HlidacStatu.Lib.StaticData.LastBlogPosts.Get() != null)
+            {
+                foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(5))
+                {
+                    <dl>
+                        <dt><a href="@post.link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.title.rendered))</a></dt>
+                        <dd>
+                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.excerpt.rendered)), 130, "...")
+                        </dd>
+                    </dl>
+                }
+            }
+
+
+
+        </div>
+    </div>
+
+    @if (false)
+    {
+        <div style="margin-top:26px;" class="row">
+
+            <div class="col-xs-12">
+                <table class="table table-bordered table-striped table-hover">
+                    <tr>
+                        <td width="25%" class="newbadge top-right"></td>
+                        <td>
+                            <a class="nostyle" href="/Report/7">
+                                Celkem smlouvy za @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true)) s DPH, @(platnych.ToString("N0")) platných smluv, @(neplatnych.ToString("N0")) neplatných.
+                            </a><a class="nostyle" href="/Report/7"><b>Více statistik</b></a>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            Úřady
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="25%">
+                            <a class="nostyle" href="/adresar">
+                                <b>Důležité úřady</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/adresar">
+                                Přehled nejdůležitějších úřadů a institucí ČR a jejich uveřejněné smlouvy
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%" class="newbadge top-right">
+                            <a class="nostyle" href="/adresar?bad=1">
+                                <b>Důležité úřady dosud bez smluv v Registru smluv</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/adresar?bad=1">
+                                Přehled nejdůležitějších úřadů, které dosud v registru neuveřejnily žádnou smlouvu (anebo pouze smlouvy bez uvedené ceny)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%" class="newbadge top-right">
+                            <a class="nostyle" href="/report/11">
+                                <b></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/report/11">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%" class="newbadge">
+                            <a class="nostyle" href="/report/12">
+                                <b>Úřady nejvíce skrývající zaplacené ceny</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/report/12">
+                                Odběratelé skrývající nebo neuvádějící hodnotu smluv.
+                            </a>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th colspan="2">
+                            Politici, firmy a jejich vzájemné vztahy
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Politici">
+                                <b>Čeští politici a jejich vazby na soukromé firmy</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/5">
+
+                                <i>Tuto funkčnost testujeme, děkujeme za připomínky a opravy.</i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="">
+                                <b></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/5">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Report/1">
+
+                                <b></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/1">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Report/6">
+                                <b>Nové úřady a firmy v rejstříku smluv</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/6">
+
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="newbadge top-right">
+                            <a class="nostyle" href="">
+                                <b></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/9">
+                                Všechny firmy založené po uzavření smlouvy anebo nedávno před uzavřením smlouvy.
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            Analýzy samotných smluv
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="">
+
+                                <b>Nejdražší smlouvy</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/4">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Hledat?Q=*&order=1">
+                                <b>Nejnovější smlouvy</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Hledat?Q=*&order=1">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Report/2">
+
+                                <b>Smlouvy s nejvíce chybami</b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/2">
+                                Každou smlouvu analyzujeme na možné chyby. Zde jsou ty nejhorší.
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="nostyle" href="/Report/3">
+
+                                <b></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/3">
+
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="newbadge top-right">
+                            <a class="nostyle" href="/Report/10">
+                                <b></b>
+                            </a>
+
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/10">
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="newbadge top-right">
+                            <a class="nostyle" href="/Report/13">
+                                <b>Smlouvy bez ceny</b>
+                            </a>
+
+                        </td>
+                        <td>
+                            <a class="nostyle" href="/Report/13">
+
+                            </a>
+                        </td>
+                    </tr>
+
+
+
+                </table>
+            </div>
+
+
+            @*<div class="col-xs-12 col-sm-5">
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><b>Tip:</b> Nejdražší smlouvy</h3>
+                        </div>
+                        <div class="panel-body">
+                            <a style="margin-left:10px;" class="btn btn-default pull-right" role="button" href="/Report/4">Ukázat</a>
+                            Smlouvy uzavřené na nejvyšší částky.
+                        </div>
+                    </div>
+                </div>*@
+            <div class="clearfix"></div>
+
+
+
+
+
+
+
+
+        </div>
+
+    }
+    <div class="clearfix"></div>

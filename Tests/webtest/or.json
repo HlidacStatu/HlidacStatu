@@ -1,0 +1,250 @@
+﻿{"edges":[{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2014-08-15T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967297,
+  "target": 4294967298,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967297,
+  "target": 4294967299,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967297,
+  "target": 4294967300,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967299,
+  "target": 4294967301,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967298,
+  "target": 4294967300,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967302,
+  "target": 4294967303,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "zakladatel obecně prospěšné společnosti",
+  "od": "2007-06-20T00:00:00",
+  "podil": -1.0,
+  "typVazby": 33,
+  "source": 4294967305,
+  "target": 4294967297,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1990-04-19T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934593,
+  "target": 4294967297,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934593,
+  "target": 4294967298,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934595,
+  "target": 4294967299,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934596,
+  "target": 4294967300,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934600,
+  "target": 4294967305,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934597,
+  "target": 4294967301,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934598,
+  "target": 4294967302,
+  "caption": "vazba",
+  "type": "vazba"
+},{
+  "do": "9999-12-31T23:59:59.9999999",
+  "jmenoVazby": "Člen statutárního orgánu",
+  "od": "1991-06-03T00:00:00",
+  "podil": -1.0,
+  "typVazby": 1,
+  "source": 8589934599,
+  "target": 4294967303,
+  "caption": "vazba",
+  "type": "vazba"
+}],
+"nodes":[{
+  "ico": "1",
+  "name": "a1",
+  "id": 4294967297,
+  "type": "company"
+},{
+  "ico": "2",
+  "name": "a2",
+  "id": 4294967298,
+  "type": "company"
+},{
+  "ico": "3",
+  "name": "a3",
+  "id": 4294967299,
+  "type": "company"
+},{
+  "ico": "4",
+  "name": "a4",
+  "id": 4294967300,
+  "type": "company"
+},{
+  "ico": "5",
+  "name": "a5",
+  "id": 4294967301,
+  "type": "company"
+},{
+  "ico": "6",
+  "name": "a6",
+  "id": 4294967302,
+  "type": "company"
+},{
+  "ico": "7",
+  "name": "a7",
+  "id": 4294967303,
+  "type": "company"
+},{
+  "ico": "8",
+  "name": "a8",
+  "id": 4294967304,
+  "type": "company"
+},{
+  "ico": "9",
+  "name": "a9",
+  "id": 4294967305,
+  "type": "company"
+},{
+  "ico": "10",
+  "name": "a10",
+  "id": 4294967306,
+  "type": "company"
+},{
+  "internalId": 1,
+  "name": "O1",
+  "nameId": "",
+  "id": 8589934593,
+  "type": "person"
+},{
+  "internalId": 2,
+  "name": "o2",
+  "nameId": "",
+  "id": 8589934594,
+  "type": "person"
+},{
+  "internalId": 3,
+  "name": "o3",
+  "nameId": "",
+  "id": 8589934595,
+  "type": "person"
+},{
+  "internalId": 4,
+  "name": "o4",
+  "nameId": "",
+  "id": 8589934596,
+  "type": "person"
+},{
+  "internalId": 5,
+  "name": "o5",
+  "nameId": "",
+  "id": 8589934597,
+  "type": "person"
+},{
+  "internalId": 6,
+  "name": "o6",
+  "nameId": "",
+  "id": 8589934598,
+  "type": "person"
+},{
+  "internalId": 7,
+  "name": "o7",
+  "nameId": "",
+  "id": 8589934599,
+  "type": "person"
+},{
+  "internalId": 8,
+  "name": "o8",
+  "nameId": "",
+  "id": 8589934600,
+  "type": "person"
+}]}

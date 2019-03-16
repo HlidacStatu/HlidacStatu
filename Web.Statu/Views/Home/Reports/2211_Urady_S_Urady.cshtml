@@ -1,0 +1,120 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@{
+    UradsUrad[] urady = Newtonsoft.Json.JsonConvert.DeserializeObject<UradsUrad[]>(
+        System.IO.File.ReadAllText(StaticData.App_Data_Path + "UradySUrady.json")
+        );
+
+    var poUradech = urady
+               .GroupBy(
+                   k => k.Dodavatel.ICO,
+                   v => v,
+                   (k, v) => new
+                   {
+                       DodavatelIco = k,
+                       SumStat = new HlidacStatu.Lib.Analysis.BasicData()
+                       {
+                           Pocet = v.Sum(m => m.Statistic.Summary.Pocet),
+                           CelkemCena = v.Sum(m => m.Statistic.Summary.CelkemCena) //urady.Where(u => u.Dodavatel.ICO == v.Dodavatel.ICO).Sum(m => m.Statistic.Summary.CelkemCena)
+               },
+                       Odberatele = v.ToArray()
+                   }
+               )
+               .ToDictionary(k => k.DodavatelIco, v => v);
+    ;
+    var topDodavUrady = poUradech
+        .OrderByDescending(o => o.Value.SumStat.CelkemCena)
+        .Take(50)
+        .ToArray();
+
+
+    //.OrderBy(o => o.Statistic.Summary.CelkemCena).Take(50);
+}
+
+<h2>Největší dodavatelé</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <td>Dodávající úřad</td>
+            <td>Celkova statistika dodavatele</td>
+            <td>Top odběratelé</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uu in topDodavUrady)
+        {
+            <tr>
+                <td><a href="/subject/@uu.Key">@Firmy.GetJmeno(uu.Key)</a></td>
+                <td>@uu.Value.SumStat.ToNiceString(null, false)</td>
+                <td>
+                    @foreach (var odb in uu.Value.Odberatele.OrderByDescending(o => o.Statistic.Summary.CelkemCena).Take(10))
+                    {
+                        <div>
+                            <a href="/subject/@odb.Odberatel.ICO">@odb.Odberatel.Nazev</a> - @odb.Statistic.Summary.ToNiceString(null, false)
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<h2>Největší vztahy</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <td>Dodávající úřad</td>
+            <td>Odběratel</td>
+            <td>Top smlouvy</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uu in urady.OrderByDescending(o => o.Statistic.Summary.CelkemCena).Take(50))
+        {
+            <tr>
+                <td><a href="/subject/@uu.Dodavatel.ICO">@uu.Dodavatel.Nazev</a></td>
+                <td><a href="/subject/@uu.Odberatel.ICO">@uu.Odberatel.Nazev</a></td>
+                <td>
+                    @foreach (var sm in uu.Smlouvy.OrderByDescending(o => o.CalculatedPriceWithVATinCZK).Take(6))
+                    {
+                        <div>
+                            @sm.datumUzavreni.ToString("dd.MM.yyyy") <a href="/detail/@sm.Id">@sm.predmet</a> za @HlidacStatu.Util.RenderData.ShortNicePrice(sm.CalculatedPriceWithVATinCZK)
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@functions
+{
+    public class UradsUrad
+    {
+        public class Subjekt
+        {
+            public string ICO { get; set; }
+            public string Nazev { get; set; }
+        }
+
+        public Subjekt Dodavatel { get; set; }
+        public Subjekt Odberatel { get; set; }
+        public List<Smlouva> Smlouvy { get; set; } = new List<Smlouva>();
+        public HlidacStatu.Lib.Analysis.BasicDataPerYear Statistic { get; set; }
+    }
+}
+

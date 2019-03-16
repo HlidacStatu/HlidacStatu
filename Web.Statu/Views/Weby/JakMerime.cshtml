@@ -1,0 +1,125 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.Zabbix;
+
+@{
+    ViewBag.Title = "Hlídač státních webů";
+    ViewBag.SubTitle = "Jak měříme dostupnost";
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index","Weby")">Hlídač Webů</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+    <div class="row">
+        <div class="col-xs-12 col-sm-10">
+            <h2>Jak měříme dostupnost státních webů</h2>
+            <p>
+                Měříme každou minutu, zda důležité weby státu vůbec běží, a pokud ano, tak jak rychle odpovídají. A tomu odpovídají i zobrazené barvy.
+                Pokud služba odpovídá rychle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">zelenou - v pořádku</b>.
+                Pokud odpovídá déle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">oranžovou - pomalá odpověď.</b>.
+                Pokud neodpoví nebo odpoví za dlouhou dobu, použijeme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">červenou za nedostupnost</b>.
+            </p>
+            <p>
+                Rychlost odpovědi je snadno a přesně měřitelná a současně je z hlediska uživatele velmi důležitá.
+            </p><p>
+                Pokud služba reaguje déle než 0.5 sekundy, uživatel má dojem, že je služba pomalá.
+                Pokud odpoví pomaleji než za 2 sekundy, pak většina uživatelů předpokládá, že služba neběží. <br />
+                <small><i>(zkuste kliknout na odkaz, pak si v hlavě pomalu odříkat 21, 22 a teprve poté uvidíte reakci na předchozí kliknutí)</i></small><br />
+            </p>
+            <p>
+                Dlouhodobá doporučení pro internetové služby říkají, že server má reagovat maximálně do půl sekundy, aby to bylo pro uživatele komfortní a očekávané. <a href="https://developers.google.com/speed/docs/insights/Server" target="_blank">Google doporučuje dokonce reakci do 0.2 sekundy</a>.
+            </p>
+            <div class="alert alert-info" role="alert">
+                My hodnotíme dostupnost služeb státu mírně:
+                <ul>
+                    <li>Pokud služba <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">odpoví do 1s</b>, považujeme to za dostatečně dobrý výsledek a dáváme hodnocení <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">v pořádku</b>.</li>
+                    <li>Pokud služba <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">odpoví do 2s</b>, považujeme službu <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">za pomalou</b>.</li>
+                    <li>Pokud služba <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">odpoví později než za 2s</b> či neodpoví vůbec, považujeme službu <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">za nedostupnou</b>.</li>
+                </ul>
+
+            </div>
+
+
+            <h2>Více do hloubky</h2>
+            <p>
+                Technicky řečeno měříme <code>response time</code> HTTP(s) rozhraní služby, neboli čas od odeslání <code>HTTP/1.1</code> požadavku
+                do doručení posledních dat stránky v milisekundách.
+                Pokud některé služby měříme pomocí volání více stránek, pak počítáme aritmerický průměr <code>response time</code> jednotlivých stránek.
+                Součástí měření je pouze požadavek na HTML stránku (či stránky) služby, nenačítáme a neměříme <code>response time</code> ve stránce používané obrázky, CSS styly, javascript a další odkazovaný obsah.
+            </p>
+            <div class="alert alert-warning" role="alert">
+                Reálný čas na zobrazení stránky uživatele je proto <b>ve skutečnosti delší než námi naměřený čas</b>, protože prohlížeč musí před zobrazením stránky načíst více obsahu.
+            </div>
+            <p>
+                Pro samotné měření používáme profesionální systém <a href="https://www.zabbix.com">Zabbix</a> z jednoho měřícího bodu v síti Master Internet.
+                Druhé a třetí měřící místo v ČR připravujeme.
+                <div class="alert alert-info" role="alert">
+                    Pokud nám chcete nabídnou virtuální server (2GHz CPU, 2-GB RAM, 30GB HDD, Debian, přenosy do 100GB/m NIX) na měřící bod, napište na michal@michalblaha.cz, domluvíme se.
+                </div>
+            </p>
+
+            <h2>Rating HTTPS webů</h2>
+            <p>
+                HTTPS (Hypertext Transfer Protocol Secure) je v protokol umožňující zabezpečenou komunikaci protokoly HTTP a SSL/TLS mezi prohlížečem uživatele a vzdáleným serverem státu.
+                Všeobecně se <a href="https://www.michalspacek.cz/prednasky/https-vsude-proc-f5forum" onclick="return trackOutLink(this,'statniweby/info');">doporučuje podporovat HTTPS</a> místo nezabezpečeného HTTP pro všechny webové stránky.
+                Proč?
+            </p>
+            <p>
+                HTTPS zajišťuje <b>nejen utajení (šifrování) přenášeného obsahu</b>, ale zejména <b>prokazuje identitu serveru</b>, tj. dává uživateli jistotu, že komunikuje <b>skutečně se správným serverem, ne podvrženým</b>.
+                Proto je nezbytností nejenom na webech, kde se zadávají citlivé údaje, ale i na webech, které publikují jakékoliv veřejné informace, které mají být důvěryhodné.
+            </p>
+            <p>
+                Pro hodnocení používáme světovou autoritu v této oblasti, <a href="https://www.ssllabs.com/ssltest/" onclick="return trackOutLink(this,'statniweby/jakmerime');">SSL Server Test</a> od Qualys SSL Labs.
+                <br />
+                Systém hodnocení HTTPS je jednoduchý:
+                <dl class="dl-horizontal">
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.A)">Zelená známka A+, A nebo A-</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.A, true)</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.B)">Žlutá známka B,C,D,E</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.B, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.F)">Červené F</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.F, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.M)">Červené M</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.M, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.T)">Červené T</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.T, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.X)">Červené X</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.X, true).</dd>
+                </dl>
+
+            </p>
+
+            <h2>Open data</h2>
+            <p>
+                Naměřená data dáváme volně k dispozici v JSON formátu. Více informací <a href="opendata">na stránce Open dat</a>.
+            </p>
+
+            <h2>Poděkování a spoluautorství</h2>
+            <p>
+                Na vzniku a provozu této služby se podíleli a podílí
+                <a href="https://twitter.com/michalblaha">Michal Bláha (Web, Zabbix, API, data)</a>,
+                <a href="https://twitter.com/filipsheva">Filip Ševčík (Zabbis, Node.js, Google API, data)</a>,
+                <a href="http://canda-pd.cz">Štefan Čanda (data)</a>,
+                <a href="http://www.nasehulvaky.cz/">Ivo Večeřa (data)</a>,
+                <a href="https://www.rider.cz">Michal Altair Valášek (Dev, SSL Labs, texty)</a>.
+                <br /><br />Díky moc.
+
+            </p>
+
+            @UtilWebyChart.TableNextGroups("")
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    @section footerscripts{
+    }
+

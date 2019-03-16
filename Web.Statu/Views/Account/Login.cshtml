@@ -1,0 +1,68 @@
+﻿@model LoginViewModel
+
+@using HlidacStatu.Web.Models
+@{
+    ViewBag.Title = "Přihlášení";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @*@Html.AntiForgeryToken()*@
+                if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                {
+                    <div class="alert alert-warning">
+                        Pro přístup na požadovanou stránku musíte být přihlášeni pod svým uživatelským účtem.
+                    </div>
+                }
+                <h4>Přihlášení do Hlídače smluv.</h4>
+                <p>Pokud účet ještě nemáte, @Html.ActionLink("tady se snadno a zdarma zaregistrujte", "Register",new { nextUrl = ViewBag.ReturnUrl }).</p>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-sm-8">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                                <div class="text-warning small">
+                                    Nezaškrtávejte, pokud sdílíte počítač s více lidmi nebo jste u veřejného počítače.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <input type="submit" value="Přihlásit se do Hlídače smluv" class="btn btn-primary" />
+                            <a class="btn btn-default" href="@Url.Action("ForgotPassword")" role="button">Nepamatuji si heslo</a>
+                        </div>
+                    </div>
+            }
+        </section>
+    </div>
+    @*<div class="col-md-4">
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            </section>
+        </div>*@
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

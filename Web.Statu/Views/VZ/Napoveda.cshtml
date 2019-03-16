@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Nápověda - jak hledat v HlídačiSmluv";
+}
+
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+
+    <p>
+        @Html.Partial("~/Views/Home/_SearchFormHelpContent.cshtml")
+
+
+    </p>

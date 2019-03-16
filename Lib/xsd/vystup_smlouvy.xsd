@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:include schemaLocation="typ_smlouva.xsd" />
+	<xs:include schemaLocation="typ_priloha_download.xsd" />
+	<xs:include schemaLocation="typ_identifikator.xsd" />
+	<xs:element name="zaznam">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="data" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Datová část obsahuje všechny údaje o smlouvě</xs:documentation>
+						<xs:documentation xml:lang="cs">Z celého obsahu tohoto elementu je počítán kontrolní hash</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="identifikator" type="ns1:tIdentifikator">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Identifikátory smlouvy</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="odkaz" type="xs:anyURI">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">URL záznamu</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="casZverejneni" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Datum a čas zveřejnění záznamu na portálu</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="smlouva" type="ns1:tSmlouva">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Meta data smlouvy</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="prilohy">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Souborové přílohy smlouvy vč. dat a kontrolních hashů</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="priloha" type="ns1:tPrilohaDownload" minOccurs="1" maxOccurs="unbounded"></xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="casGenerovani" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Datum a čas vygenerování tohoto XML</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="platnyZaznam" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Příznak platnosti záznamu udává, zda v okamžik vygenerování XML byla daná meta data poslední platnou verzí</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="potvrzeni">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Potvrzení dat vč. hashe a značek</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="hash" type="ns1:tHash">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Hash záznamu</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="elektronickaZnacka" type="xs:base64Binary">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Elektronická značka</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

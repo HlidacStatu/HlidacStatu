@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:complexType name="tIdentifikator">
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation xml:lang="cs">Stáhnout je možné buď celou smlouvu nebo jen jednu konkrétní verzi</xs:documentation>
+				<xs:documentation xml:lang="cs">V XML je tedy možné uvést vždy právě jeden element idSmlouvy nebo idVerze</xs:documentation>
+			</xs:annotation>
+			<xs:element name="idSmlouvy" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">ID smlouvy, která se má celá stáhnout</xs:documentation>
+					<xs:documentation xml:lang="cs">Jedná se o identifikátor vrácený v odpovědi na původně publikovaný záznam</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="idVerze" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">ID verze smlouvy, která se má stáhnot</xs:documentation>
+					<xs:documentation xml:lang="cs">Jedná se o identifikátor vrácený v odpovědi na původně publikovaný záznam</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:element name="index">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="dump" minOccurs="1" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Indexový záznam o jednom dumpu</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="mesic" type="xs:integer"></xs:element>
+							<xs:element name="rok" type="xs:integer"></xs:element>
+							<xs:element name="hashDumpu" type="ns1:tHash"></xs:element>
+							<xs:element name="velikostDumpu" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">V bytech</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="casGenerovani" type="xs:dateTime"></xs:element>
+							<xs:element name="dokoncenyMesic" type="xs:boolean"></xs:element>
+							<xs:element name="odkaz" type="xs:string"></xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

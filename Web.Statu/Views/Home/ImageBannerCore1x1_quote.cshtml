@@ -1,0 +1,60 @@
+﻿@model HlidacStatu.Web.Controllers.HomeController.ImageBannerCoreData
+
+@{
+    Layout = "";
+    string width = "1000px";
+    string height = "1000px";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/textFit.min.js"></script>
+    <link rel='stylesheet' href='~/Content/socialBanner.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
+</head>
+<body style="width:@width;height:@height;background:url(/Content/Img/bublina-banner-1x1.png) no-repeat;">
+
+    <div class="jtextfill" style="position: absolute;top:120px;left:120px;width:760px;height:550px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+
+        <span class="mytxt">
+            @Html.Raw((string.IsNullOrEmpty(Model.title) ? "" : Model.title + "<br/>") + Model.body)
+        </span>
+
+    </div>
+
+
+    @if (!string.IsNullOrEmpty(Model.img))
+    {
+        <span class="picture" style="position:absolute;top:770px;left:70px;background-image: url('@Model.img');width:100px;height:100px;"></span>
+    }
+    <div class="jtextfill" style="position:absolute;top:770px;left:260px;width:450px;height:70px;
+         /*background-color:rgba(222,222,222,0.7);*/
+         ">
+        <span class="mytxt">
+            @Html.Raw(Model.footer)
+        </span>
+    </div>
+    <div class="jtextfill" style="position:absolute;top:840px;left:260px;width:450px;height:50px;
+         /*background-color:rgba(222,222,222,0.7);*/
+         ">
+        <span class="mytxt">
+            @Html.Raw(Model.subtitle)
+        </span>
+    </div>
+
+
+
+    <script>
+        textFit(document.getElementsByClassName('jtextfill'), {
+            multiLine: true, detectMultiLine: true, minFontSize: 20, maxFontSize: 400, alignVert: false, alignHoriz: false
+        });
+
+    </script>
+
+</body>
+</html>
+

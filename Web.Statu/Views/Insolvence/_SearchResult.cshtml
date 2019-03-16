@@ -1,0 +1,178 @@
+﻿@model HlidacStatu.Lib.ES.InsolvenceSearchResult
+@using HlidacStatu.Lib
+@using Devmasters.Core
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+@using HlidacStatu.Web.Models;
+@using HlidacStatu.Util;
+
+@if (Model?.Result?.IsValid == false || Model.Result == null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
+            <div>
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší straně, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-link", null).
+                Zkontrolujeme to.
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @*if (Model.ShowWatchdog && Model.Q != null)
+        {
+            @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+        }*@
+
+    if (Model.Result == null)
+    {
+        <span></span>
+    }
+    else if (Model.Result.Total == 0)
+    {
+        <h2>Žádné insolvence jsme nenalezli.</h2>
+    }
+    else if (Model.Result.Total > 0)
+    {
+        <hr />
+
+
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <h2>Nalezeno @(PluralForm.Get((int)Model.Result.Total, "{0} insolvenční řízení;{0} insolvenční řízení;{0} insolvenčních řízení")).</h2>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Spisová značka</th>
+                    <th>Datum vzniku</th>
+                    <th>Poslední změna</th>
+                    <th>Stav řízení</th>
+                    <th>Dlužník/ci</th>
+                    <th>Věřitelé</th>
+                    <th>Soud</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hit in Model.Result.Hits)
+                {
+                    var item = hit.Source;
+                <tr>
+                    <td>
+                        @{
+                            @Util.AddBookmark(this.User, item)
+                        }
+                    </td>
+                    <td style="white-space: nowrap;">
+                        @if (LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
+                        {
+                            <a href="Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
+                        }
+                        else
+                        {
+                            <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
+                        }
+                    </td>
+                    <td>
+                        @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
+                    </td>
+                    <td>
+                        @item.PosledniZmena.Date.ToString("d.MM.yyyy")
+                    </td>
+
+                    <td>
+                        @Html.Partial("_StavRizeni", new StavRizeniViewModel { Stav = item.Stav })
+                    </td>
+                    <td>
+                        @if (item.Dluznici?.Count > 0)
+                        {
+                            foreach (var o in item.Dluznici.Take(2))
+                            {
+                                <div>@Html.Raw(o.ToHtml())</div>
+                            }
+                            if (item.Dluznici.Count == 3)
+                            {
+                                <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
+                            }
+                            else if (item.Dluznici.Count > 3)
+                            {
+                                <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count-2,"a jeden další dlužník","a další {0} dlužníci", "a dalších {0} dlužníků")</div>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Veritele?.Count > 0)
+                        {
+                            foreach (var o in item.Veritele.Take(2))
+                            {
+                                <div>@Html.Raw(o.ToHtml())</div>
+                            }
+                            if (item.Veritele.Count == 3)
+                            {
+                                <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
+                            }
+                            else if (item.Veritele.Count > 3)
+                            {
+                                <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.Partial("_Soud", new SoudViewModel { Soud = item.Soud })
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+        <div class="text-center">
+            <ul class="pagination pagination-lg">
+                @{
+
+                    int page = Model.Page;
+                    string firstPageClass = "";
+                    string lastPageClass = "";
+
+                    if (page <= 1)
+                    {
+                        page = 1;
+                    }
+                    if (page == 1)
+                    {
+                        firstPageClass = "disabled";
+                    }
+                    if (Model.Result.Total < page * Model.DefaultPageSize())
+                    {
+                        lastPageClass = "disabled";
+                    }
+                    Model.Page = page;
+
+                }
+                @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
+                {
+                    <li class="@firstPageClass">
+                        @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+                    </li>
+                }
+                @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
+                {
+                    <li class="@lastPageClass">
+                        @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+                    </li>
+                }
+            </ul>
+        </div>
+
+
+    }
+}
+
+
+<div style="margin-bottom:50px;"></div>

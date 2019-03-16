@@ -1,0 +1,25 @@
+﻿@using HlidacStatu.Lib
+
+@{
+    ViewBag.Title = "";
+
+}
+
+
+<div style="background-color:lightgray">
+
+<h2>@DateTime.Now.ToString()</h2>
+</div>
+
+<hr />
+<div class="toReview">
+    @Util.AddReview(HlidacStatu.Lib.Data.Review.ItemTypes.osobaPopis.ToString(), "")
+
+    <p>
+        If you're creating controls with no other text (such as a that only contains an icon), you should always provide alternative content to identify the purpose of the control, so that it will make sense to users of assistive technologies. In this case, you could add an aria-label attribute on the control itself.
+    </p>
+</div>
+
+
+<div class="clearfix"></div>
+

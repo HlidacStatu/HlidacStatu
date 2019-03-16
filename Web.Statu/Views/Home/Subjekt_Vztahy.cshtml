@@ -1,0 +1,214 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+
+    string ico = Model.ICO;
+    int size = 1000;
+
+    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
+
+    aggs
+        .Terms("perIco", m => m
+            .Field("platce.ico")
+            .Size(size)
+        ).Terms("perPrice", m => m
+            .Order(o => o.Descending("sumincome"))
+            .Field("platce.ico")
+            .Size(size)
+            .Aggregations(agg => agg
+               .Sum("sumincome", s => s
+                   .Field(ff => ff.CalculatedPriceWithVATinCZK)
+               )
+            )
+        );
+
+    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + ico, 1, 0,
+        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
+        anyAggregation: aggs, platnyZaznam: 1);
+
+
+    Dictionary<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic> topPartnersIcos = null;
+    Dictionary<string, int> allPartnersIcos = null;
+
+    allPartnersIcos =  //top per sumIncome
+        ((BucketAggregate)res.Result.Aggregations["perPrice"]).Items
+        .Cast<Nest.KeyedBucket<object>>()
+        .OrderByDescending(o => o.Sum("sumincome").Value)
+        .Select((s, idx) => new { ico = (string)s.Key, index = idx })
+        .Concat(
+        ((BucketAggregate)res.Result.Aggregations["perIco"]).Items
+        .Cast<Nest.KeyedBucket<object>>()
+        .OrderByDescending(o => o.DocCount)
+        .Select((s, idx) => new { ico = (string)s.Key, index = idx })
+        )
+        .GroupBy(k => k.ico, (k, v) => new { ico = k, index = v.Min(m => m.index) })
+        .ToDictionary(k => k.ico, v => v.index);
+
+    topPartnersIcos = allPartnersIcos
+            .OrderBy(o => o.Value)
+            .Take(25)
+            .ToDictionary(k => k.Key, v => new HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic(v.Key, ico));
+
+
+
+    int year = DateTime.Now.Year;
+
+    ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>> rdsTable
+        = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>(
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = "Dodavatel pro ",
+            HtmlRender = (s) =>
+            {
+                return $@"<a href='/subjekt/{s.Key}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key)}</a>";
+            },
+            TextRender = (s) => { return HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key); }
+        }
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Počet smluv v {year - 2}",
+            HtmlRender = (s) => { return s.Value.BasicStatPerYear[year - 2].Pocet.ToString(); },
+            TextRender = (s) => { return s.Value.BasicStatPerYear[year - 2].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year - 2].Pocet); }
+        },
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Počet smluv v {year - 1}",
+            HtmlRender = (s) => { return s.Value.BasicStatPerYear[year - 1].Pocet.ToString(); },
+            TextRender = (s) => { return s.Value.BasicStatPerYear[year - 1].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year - 1].Pocet); }
+        }
+                ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Počet smluv v {year}",
+            HtmlRender = (s) => { return s.Value.BasicStatPerYear[year].Pocet.ToString(); },
+            TextRender = (s) => { return s.Value.BasicStatPerYear[year].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year].Pocet); }
+        }
+
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Hodnota smluv v {year - 2}",
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year - 2].CelkemCena, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year - 2].CelkemCena, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year - 2].CelkemCena); }
+        }
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Hodnota smluv v {year - 1}",
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year - 1].CelkemCena, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year - 1].CelkemCena, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year - 1].CelkemCena); }
+        }
+                ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"Hodnota smluv v {year}",
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year].CelkemCena, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear[year].CelkemCena, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear[year].CelkemCena); }
+        }
+
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"% se skrytou cenou v {year - 2}",
+            HtmlRender = (s) => { return s.Value.RatingPerYear[year - 2].PercentBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value.RatingPerYear[year - 2].PercentBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.RatingPerYear[year - 2].PercentBezSmluvniStrany); }
+        }
+
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"% se skrytou cenou v {year - 1}",
+            HtmlRender = (s) => { return s.Value.RatingPerYear[year - 1].PercentBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value.RatingPerYear[year - 1].PercentBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.RatingPerYear[year - 1].PercentBezSmluvniStrany); }
+        }
+
+
+        ,
+        new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>.Column()
+        {
+            Name = $"% se skrytou cenou v {year}",
+            HtmlRender = (s) => { return s.Value.RatingPerYear[year].PercentBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value.RatingPerYear[year].PercentBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.RatingPerYear[year].PercentBezSmluvniStrany); }
+        }
+
+
+        );
+
+
+
+    //fill data
+
+    foreach (var kv in topPartnersIcos)
+    {
+        rdsTable.AddRow(kv);
+    }
+
+
+    var model = new HlidacStatu.Lib.Render.ReportModel();
+
+    model.Add("perIcoTable","", rdsTable);
+
+
+    System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+    sb.Append("<table id=\"{0}\" class=\"table-sorted table table-bordered table-striped\">");
+    sb.Append("<thead>");
+    sb.Append($@"<tr>
+<th rowspan=2>{Model.Jmeno} jako dodavatel pro </th>
+<th colspan=3 style=""text-align:center;"">Počet smluv</th>
+<th colspan=3 style=""text-align:center;"">Hodnota smluv</th>
+<th colspan=3 style=""text-align:center;"">% se skrytou cenou </th>
+</tr>
+<tr>
+<td>2016</td><td>2017</td><td>2018</td>
+<td>2016</td><td>2017</td><td>2018</td>
+<td>2016</td><td>2017</td><td>2018</td>
+</tr>
+");
+    sb.Append("</thead>");
+
+
+}
+
+@if (allPartnersIcos.Count > 0)
+{
+    <hr class="morespace" style="width:50%;" />
+
+    <h4 style="padding-bottom:20px;">@Model.Jmeno jako dodavatel  (příjemce peněz)</h4>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+                @Html.Raw(
+                    UtilChart.DataToHTMLTable<KeyValuePair<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic>>(
+                         "",rdsTable, "rdsTable", @"{
+                         'language': {
+                            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                        },
+                        'order': [],
+                        'lengthChange': false,
+                        'info': false,
+                        }", customTableHeader: sb.ToString())
+                    )
+        </div>
+    </div>
+}

@@ -1,0 +1,39 @@
+﻿@model HlidacStatu.Web.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registrace účtu";
+}
+
+
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.Hidden("nextUrl",Request.QueryString["nextUrl"])
+    @Html.AntiForgeryToken()
+    <h4>Vytvořit účet na Hlídači smluv.</h4>
+
+    <p>Bez účtu si nemůžete nechat kontrolovat smlouvy, ukládat dotazy a spoustu dalších věcí. Pokud už účet máte, <a href="@Url.Action("Login","Account", new { nextUrl = Request.QueryString["nextUrl"] })">zalogujte se tady</a>.</p>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        <div class="col-sm-8">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-sm-8">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            <div class="help-block">Minimální délka hesla je 6 znaků.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-sm-8">
+            <input type="submit" class="btn btn-primary" value="Zaregistrovat" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

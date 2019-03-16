@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://seznam.gov.cz/ovm/ws/v1"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="GetInfoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element type="xs:string" name="Ico" nillable="false"/>
+                    <xs:element type="xs:string" name="DataboxId" nillable="false"/>
+                    <!--<xs:element type="xs:string" name="Zkratka" nillable="false"/>-->
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetInfoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Osoba" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element type="xs:string" name="Ico"/>
+                            <xs:element type="xs:string" name="NazevOsoby"/>
+                            <xs:element type="xs:string" name="ISDS"/>
+                            <xs:element type="xs:boolean" name="PDZ"/>
+                            <xs:element type="xs:string" name="TypSubjektu"/>
+                            <xs:element name="AdresaSidla">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="AdresaTextem"/>
+                                        <xs:element type="xs:string" name="OkresNazev"/>
+                                        <xs:element type="xs:string" name="ObecNazev"/>
+                                        <xs:element type="xs:string" name="CastObceNazev"/>
+                                        <xs:element type="xs:string" name="UliceNazev"/>
+                                        <xs:element type="xs:string" name="PostaKod"/>
+                                        <xs:element type="xs:string" name="TypCislaDomovnihoKod"/>
+                                        <xs:element type="xs:string" name="CisloDomovni"/>
+                                        <xs:element type="xs:string" name="CisloOrientacni"/>
+                                        <xs:element type="xs:string" name="CisloOrientacniPismeno"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="IdentifikatorOvm" minOccurs="0"/>
+                            <xs:element type="xs:string" name="KategorieOvm" minOccurs="0"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SearchSubjectRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="TypSubjektu" minOccurs="0" maxOccurs="1" nillable="false"/>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element type="xs:string" name="Ico" nillable="false"/>
+                    <xs:element type="xs:string" name="Nazev" nillable="false"/>
+                    <xs:element type="xs:string" name="Ulice" nillable="false"/>
+                    <xs:element type="xs:string" name="Mesto" nillable="false"/>
+                </xs:choice>
+                <!--<xs:element type="xs:string" name="Kraj" minOccurs="0" maxOccurs="1" nillable="false"/>-->
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SearchSubjectResponse">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="ResultList" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Osoba" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element type="xs:string" name="Ico"/>
+                                        <xs:element type="xs:string" name="NazevOsoby"/>
+                                        <xs:element type="xs:string" name="ISDS"/>
+                                        <xs:element type="xs:boolean" name="PDZ"/>
+                                        <xs:element type="xs:string" name="IdentifikatorOvm" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="KategorieOvm" minOccurs="0"/>
+                                    </xs:all>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="DenType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PO"/>
+            <xs:enumeration value="UT"/>
+            <xs:enumeration value="ST"/>
+            <xs:enumeration value="CT"/>
+            <xs:enumeration value="PA"/>
+            <xs:enumeration value="SO"/>
+            <xs:enumeration value="NE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CasType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-2]?[0-9]\:[0-5][0-9]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="SouradniceGPSType">
+        <xs:sequence>
+            <xs:element type="xs:double" name="Sirka" nillable="false"/>
+            <xs:element type="xs:double" name="Delka" nillable="false"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ErrorResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Message" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

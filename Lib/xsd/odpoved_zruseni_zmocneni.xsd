@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:include schemaLocation="typ_zmocneni.xsd" />
+	<xs:include schemaLocation="typ_potvrzeni.xsd" />
+	<xs:element name="odpovedZruseniZmocneni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="puvodniZprava" type="ns1:tDatovaZprava">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">ID datové zprávy původní operace (pro možnost spárování odpovědi k původnímu požadavku)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="data">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Datová část obsahuje potvrzení přijatých dat</xs:documentation>
+						<xs:documentation xml:lang="cs">Z celého obsahu tohoto elementu je počítán kontrolní hash</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="zmocnitel" type="ns1:tDatovaSchranka">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">ID datové schránky zmocnitele, který zrušil zmocnění</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="zmocnenec" type="ns1:tDatovaSchranka">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">ID datové schránky zmocněnce, který ztratil zmocnění</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="potvrzeni" type="ns1:tPotvrzeni">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Potvrzení zpracování operace vč. hashe a značek</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

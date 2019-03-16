@@ -1,0 +1,11 @@
+﻿@Html.Raw(System.IO.File.ReadAllText(HlidacStatu.Lib.Init.WebAppRoot + "head.topline.html.txt"))
+
+@*<span id="headtopline"></span>
+<script>
+    $(function () {
+        $.get("/head.topline.html.txt", function (data, status) {
+            $("#headtopline").html(data);
+            $('[data-toggle="popover"]').popover();
+        });
+    });
+</script>*@

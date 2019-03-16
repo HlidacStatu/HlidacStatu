@@ -1,0 +1,27 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+    var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.ES.SearchTools.OrderResult.DateAddedDesc);
+    model.Q = "issues.issueTypeId:100";
+    model = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(model.Q, model.Page,
+100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: 1);
+
+    //model.Chyby = true;
+}
+
+
+<p class="text-muted">Smlouvy bez uvedené ceny</p>
+<p><a href="/Report/12">Přehledný souhrn největších odběratelů skrývajících nebo neuvádějícíxh hodnotu smlouvy</a></p>
+
+@Html.Partial("_SearchResult", model)
+
+

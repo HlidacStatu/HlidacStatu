@@ -1,0 +1,152 @@
+﻿
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-push-1">
+
+        <h2>Textové hledání</h2>
+        <dl>
+            <dt>Hledat všechna slova v různých tvarech</dt>
+            <dd>
+                <kbd>trojbarevný velký deštník</kbd>
+                <br />Hledá smlouvy obsahující všechna uvedená slova v různých mluvnických tvarech
+            </dd>
+            <dt>Hledat přesně slovo nebo sousloví</dt>
+            <dd>
+                <kbd>"velký deštník"</kbd>
+                <br />Hledá smlouvy obsahující uvedená slova či sousloví v přesném tvaru jako je v uvozovkách
+            </dd>
+            <dt>Kterékoliv z těchto slov</dt>
+            <dd>
+                mezi všechna požadovaná slova vložte operátor OR:<br /> <kbd>miniaturní OR standardní</kbd>
+                <br />Hledá smlouvy obsahující alespoň jedno z uvedených slov
+            </dd>
+            <dt>Toto slovo tam být nesmí </dt>
+            <dd>
+                Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>-hlodavec</kbd>
+                nebo pro sousloví <kbd>-"Jack Russell"</kbd>
+            </dd>
+            <dt>Kombinace výrazů</dt>
+            <dd>
+                Všechny výše i níže uvedené výrazy hledání je možné kombinovat logickými operátory <kbd>AND</kbd>
+                a <kbd>OR</kbd> (velká písmena jsou nutná).
+                Pokud jsou výrazy odděleny mezerou, je to stejné jako použití operátora <kbd>AND</kbd>.
+            </dd>
+            <dt>Logické a rozšiřující operátory</dt>
+            <dd>
+                Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br />
+                Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující více znaků. Příklad:<kbd>Ministerstvo z*</kbd><br />
+                Příklad: <kbd>ico:27295567 AND smlouva.predmet:"Kupní smlouva"</kbd>
+            </dd>
+
+        </dl>
+        <h2>Specifické hledání podle konkrétních položek v databázích</h2>
+
+        <dl>
+            <dt>Prohledávat specifické položky v databázích</dt>
+            <dd>
+                napište prefix s ":" bez mezery následovaný hledanou hodnotou<br /><kbd>ico:00007064</kbd>
+                hledá smlouvy kde je jednou ze stran Ministerstvo vnitra (ICO 00007064)
+            </dd>
+        </dl>
+        <h2>Podporované prefixy / hledatelné položky v DB</h2>
+        <dl>
+            <dt>Fungující ve většině databází</dt>
+            <dd>
+                <kbd>ico:12345678</kbd> - jedna ze smluvních stran má uvedené IČO<br />
+                <kbd>osobaid:oznaceni-osoby</kbd> - smlouvy s vazbou na osobu. Oznacení osoby najdete u profilu osoby (např. andrej-babis)<br />
+                <kbd>holding:12345678</kbd> - IČO matky holdingu, hledá se pro všechny firmy holdingu<br />
+                <br />
+                <br />
+                <kbd>cena:castka</kbd> - smlouvy s cenou s DPH (námi vypočítaná cena)<br />
+                <kbd>cena:&gt;castka</kbd> - smlouvy s cenou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd> <kbd>&lt;</kbd><br />
+            </dd>
+        </dl>
+
+        <h2>Podporované prefixy / hledatelné položky v Hlídači smluv</h2>
+        <dl>
+            <dd>
+                <kbd>ds:abcd1234</kbd> - jedna ze smluvních stran má uvedené jméno datové schránky<br />
+                <kbd>dsPrijemce:abcd1234</kbd> - dodavatel má uvedenou datovou schránku<br />
+                <kbd>dsPlatce:abcd1234</kbd> - zadavatel/úřad má uvedenou datovou schránku<br />
+                <kbd>icoPrijemce:12345678</kbd> - dodavatel uvedené IČO<br />
+                <kbd>icoPlatce:12345678</kbd> - zadavatel/úřad uvedené IČO<br />
+                <kbd>jmenoPrijemce:abcd1234</kbd> - hledat podle jména (či části jména) dodavatele<br />
+                <kbd>jmenoPlatce:abcd1234</kbd> - hledat podle jména (či části jména) zadavatele/úřadu<br />
+                <br />
+                <kbd>cena:castka</kbd> - smlouvy s cenou s DPH (námi vypočítaná cena)<br />
+                <kbd>cena:&gt;castka</kbd> - smlouvy s cenou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd> <kbd>&lt;</kbd><br />
+                <kbd>cenasDPH:castka</kbd> - smlouvy s uvedenou hodnotou <br />
+                <kbd>cenasDPH:&gt;castka</kbd> - smlouvy s hodnotou větší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd> <kbd>&lt;</kbd><br />
+                <kbd>cenabezDPH:castka</kbd> - totéž můžete provádět s cenou bez DPH<br />
+                <br />
+                <kbd>zverejneno:rok-mesic-den</kbd> - smlouvy s datem zvěřejnění, formát data YYYY-MM-DD<br />
+                <kbd>zverejneno:[2016-07-01 TO 2016-07-31]</kbd> - smlouvy zveřejněné v srpnu 2016.<br />
+                <kbd>zverejneno:[2016-07-01 TO *]</kbd> - smlouvy zveřejněné po 1. srpnu 2016.<br />
+                <kbd>zverejneno:[* TO 2016-07-01]</kbd> - smlouvy zveřejněné do 1. srpnu 2016.<br />
+                <kbd>podepsano:rok-mesic-den</kbd> - smlouvy podepsané dne.<br />
+                <kbd>podepsano:[2016-01-01 TO 2016-12-31]</kbd> - smlouvy podepsané v roce 2016. I zde fungují <kbd>*</kbd> jako u zveřejněno.<br />
+                <br />
+                <kbd>id:cislo</kbd> - hledat smlouvu s číslem verze z registru smluv. Číslo verze je unikátní<br />
+                <kbd>idSmlouvy:cislo</kbd> - hledat smlouvu s číslem smlouvy z registru smluv. Smlouva může mít více verzí.<br />
+                <kbd>predmet:text</kbd> - smlouvy s předmětem text<br />
+                <kbd>mena:zkratka</kbd> - smlouvy s hodnoutou v uvedené měně (napr. EUR)<br />
+                <br />
+                <kbd>schvalil:jmeno</kbd> - jméno osoby, které smlouvy schválila.<br />
+                <kbd>textSmlouvy:text</kbd> - prohledává se pouze text smlouvy, pokud je k dispozici.<br />
+
+            </dd>
+        </dl>
+
+        <h2>Podporované prefixy / hledatelné položky v Hlídači veřejných zakázek</h2>
+        <dl>
+            <dd>
+                <kbd>ico:12345678</kbd> - jedna ze smluvních stran má uvedené IČO<br />
+                <kbd>holding:12345678</kbd> - IČO matky holdingu, hledá se pro všechny firmy holdingu<br />
+                <kbd>icododavatel:12345678</kbd> - dodavatel uvedené IČO<br />
+                <kbd>icozadavatel:12345678</kbd> - zadavatel/úřad uvedené IČO<br />
+                <kbd>jmenododavatel:abcd1234</kbd> - hledat podle jména (či části jména) dodavatele<br />
+                <kbd>jmenozadavatel:abcd1234</kbd> - hledat podle jména (či části jména) zadavatele/úřadu<br />
+                <br />
+                <kbd>oblast:jmenoOblasti</kbd> - oblast ve které veřejná zakázka je.<br />
+                <div style="margin-left:60px">
+                    Seznam oblastí:
+                    @Html.Raw(Enum.GetNames(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)).OrderBy(m => m).Select(m => $"<kbd>{m}</kbd>").Aggregate((f, s) => f + ", " + s))
+                </div>
+                <kbd>cpv:cpvkod</kbd> - zadávací dokumentace s uvedeným CPV kódem. Stačí napsat jeho začátek a vyhledáme i podřízené CPV kódy.<br />
+                <kbd>text:text</kbd> - prohledává se pouze texty zadávacích dokumentací, pokud jsou k dispozici.<br />
+                <br />
+                <kbd>cena:castka</kbd> - zakázky s cenou s DPH (námi vypočítaná cena)<br />
+                <kbd>cena:&gt;castka</kbd> - zakázky s cenou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd> <kbd>&lt;</kbd><br />
+                <br />
+                <kbd>zverejneno:rok-mesic-den</kbd> - zakázky s datem zvěřejnění, formát data YYYY-MM-DD<br />
+                <kbd>zverejneno:[2016-07-01 TO 2016-07-31]</kbd> - zakázky zveřejněné v srpnu 2016.<br />
+                <kbd>zverejneno:[2016-07-01 TO *]</kbd> - zakázky zveřejněné po 1. srpnu 2016.<br />
+                <kbd>zverejneno:[* TO 2016-07-01]</kbd> - zakázky zveřejněné do 1. srpnu 2016.<br />
+                <kbd>podepsano:rok-mesic-den</kbd> - zakázky podepsané dne.<br />
+                <kbd>podepsano:[2016-01-01 TO 2016-12-31]</kbd> - zakázky podepsané v roce 2016. I zde fungují <kbd>*</kbd> jako u zveřejněno.<br />
+                <br />
+                <kbd>id:cislo</kbd> - hledat zakázku s číslem zakázky.<br />
+                <kbd>predmet:text</kbd> - smlouvy s předmětem text<br />
+                <kbd>mena:zkratka</kbd> - smlouvy s hodnoutou v uvedené měně (napr. EUR)<br />
+
+            </dd>
+        </dl>
+
+
+        <h2>Pro experty</h2>
+        <dl>
+            <dt>Logické a rozšiřující operátory</dt>
+            <dd>
+                Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br />
+                Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující více znaků. Příklad:<kbd>Ministerstvo z*</kbd><br />
+                Příklad: <kbd>ico:27295567 AND smlouva.predmet:"Kupní smlouva"</kbd>
+            </dd>
+            <dt>Opravdu pro odvážné a pokročilé</dt>
+            <dd>
+                Protože vyhledávání běží nad Elastic Serverem, můžete použít většinu operátorů <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax" target="_blank">Query string syntaxe</a> Elastic serveru. Hezkou zábavu.
+
+            </dd>
+        </dl>
+
+
+    </div>
+</div>

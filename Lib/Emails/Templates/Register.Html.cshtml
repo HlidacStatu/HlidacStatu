@@ -1,0 +1,26 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+
+<p>Děkujeme za registraci na serveru HlidacStatu.cz.</p>
+
+<p>
+    Potvrďte prosím registraci na této stránce kliknutím na odkaz níže:<br/>
+    <a href='@Model.CallbackUrl'>@Model.CallbackUrl</a>.
+</p>
+<p>
+    Potvrzením registrace souhlasíte s tím, že
+    <ul>
+        <li>budeme váš email a další váme vyplněné kontaktní údaje uchovávat pouze pro potřeby authentifikace a notifikací na serveru Hlídač Státu;</li>
+        <li>budeme vám zasílat emailem či jinými vámi zvolenými komunikačními kanaly upozornění na nové smlouvy podle vašeho vlastního zadání;</li>
+        <li>občas, max. 1x týdně, a ne častěji, vám pošleme upozornění na novinky na serveru Hlídač Státu.</li>
+    </ul>
+    (podrobně v <a href="https://www.hlidacstatu.cz/texty/provoznipodminky">provozních podmínkách serveru</a>).
+</p>
+<p>
+    <b>Bez potvrzení registrace jsou funkce serveru HlidacStatu.cz neaktivní</b>. 
+</p>
+
+
+@Raw(Model.EmailFooterHtml)
+

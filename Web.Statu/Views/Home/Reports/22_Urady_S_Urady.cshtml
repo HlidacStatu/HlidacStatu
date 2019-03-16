@@ -1,0 +1,105 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@{
+    string dodavico = this.Request.QueryString["dodavatelico"];
+
+}
+<h2>Které úřady dodávají jiným úřadům?</h2>
+<form class="form-horizontal" method="get">
+    <div class="form-group">
+        <label for="dodavatelico" class="col-sm-2 control-label">IČO úřadu, který dodává ostatním</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" value="@dodavico" name="dodavatelico" placeholder="IČO dodavatele">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Najít obchodní vztahy</button>
+        </div>
+    </div>
+</form>
+
+
+@if (!string.IsNullOrEmpty(dodavico))
+{
+    UradsUrad[] urady = Newtonsoft.Json.JsonConvert.DeserializeObject<UradsUrad[]>(
+        System.IO.File.ReadAllText(StaticData.App_Data_Path + "UradySUrady.json")
+        );
+
+    //.OrderBy(o => o.Statistic.Summary.CelkemCena).Take(50);
+    <hr />
+    <h2>Největší vztahy pro @Firmy.GetJmeno(dodavico)</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <td>Dodávající úřad</td>
+                <td>Odběratel</td>
+                <td>10 top smlouv</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var uu in urady
+                                    .Where(m => m.Dodavatel.ICO == dodavico)
+                                    .OrderByDescending(o => o.Statistic.Summary.CelkemCena)
+                                    )
+            {
+                <tr>
+                    <td><a href="/subject/@uu.Dodavatel.ICO">@uu.Dodavatel.Nazev</a></td>
+                    <td><a href="/subject/@uu.Odberatel.ICO">@uu.Odberatel.Nazev</a></td>
+                    <td>
+                        <ul>
+                            @foreach (var sm in uu.Smlouvy.OrderByDescending(o => o.CalculatedPriceWithVATinCZK).Take(10))
+                            {
+                            <li>
+                                <a href="/detail/@sm.Id">@Devmasters.Core.TextUtil.ShortenText(sm.predmet,40, "…")</a> za @HlidacStatu.Util.RenderData.ShortNicePrice(sm.CalculatedPriceWithVATinCZK) (z @sm.datumUzavreni.ToString("dd.MM.yyyy"))
+                            </li>
+                            }
+                        </ul>
+                        <div style="margin-top:10px">
+                            @if (uu.Smlouvy.Count > 10)
+                            {
+                                <a href="/hledatsmlouvy?q=icoplatce:@uu.Odberatel.ICO+AND+icoprijemce:@uu.Dodavatel.ICO">Všechny smlouvy mezi dodavatelem a odběratelem</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@functions
+{
+    public class UradsUrad
+    {
+        public class Subjekt
+        {
+            public string ICO { get; set; }
+            public string Nazev { get; set; }
+        }
+
+        public Subjekt Dodavatel { get; set; }
+        public Subjekt Odberatel { get; set; }
+        public List<Smlouva> Smlouvy { get; set; } = new List<Smlouva>();
+        public HlidacStatu.Lib.Analysis.BasicDataPerYear Statistic { get; set; }
+    }
+}
+
+
+
+
+

@@ -1,0 +1,347 @@
+﻿@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "Ceník nadstandardních služeb";
+
+    string tooltipattrs = @"data-toggle='tooltip'
+data-placement='top' data-html='true'
+title='<span style=""font-weight:bold;font-style: italic;font-size:130%;border-bottom:1px solid white;line-height:30px;"">Hlídač nových smluv</span></i><br/>sleduje nové smlouvy odpovídající libovolnému dotazu a každý den či týden vás na ně sám upozorní emailem'
+";
+
+}
+@section scripts
+{
+    <style>
+        .panel-pricing {
+            -moz-transition: all .3s ease;
+            -o-transition: all .3s ease;
+            -webkit-transition: all .3s ease;
+        }
+
+            .panel-pricing:hover {
+                box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .panel-pricing .panel-heading {
+                padding: 20px 10px;
+            }
+
+                .panel-pricing .panel-heading .fa {
+                    margin-top: 10px;
+                    font-size: 58px;
+                }
+
+            .panel-pricing .list-group-item {
+                color: #777777;
+                border-bottom: 1px solid rgba(250, 250, 250, 0.5);
+            }
+
+                .panel-pricing .list-group-item:last-child {
+                    border-bottom-right-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                }
+
+                .panel-pricing .list-group-item:first-child {
+                    border-top-right-radius: 0px;
+                    border-top-left-radius: 0px;
+                }
+
+            .panel-pricing .panel-body {
+                background-color: #f0f0f0;
+                font-size: 40px;
+                color: #777777;
+                padding: 20px;
+                margin: 0px;
+            }
+
+        .ribbon-wrapper-green {
+            width: 88px;
+            height: 88px;
+            overflow: hidden;
+            position: absolute;
+            top: -3px;
+            right: 10px;
+        }
+
+        .ribbon-green {
+            font: bold 15px Sans-Serif;
+            color: #333;
+            text-align: center;
+            text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            position: relative;
+            padding: 7px 0;
+            left: -5px;
+            top: 15px;
+            width: 120px;
+            background-color: #BFDC7A;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
+            background-image: -webkit-linear-gradient(top, #BFDC7A, #8EBF45);
+            background-image: -moz-linear-gradient(top, #BFDC7A, #8EBF45);
+            background-image: -ms-linear-gradient(top, #BFDC7A, #8EBF45);
+            background-image: -o-linear-gradient(top, #BFDC7A, #8EBF45);
+            color: #6a6340;
+            -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+            -moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+            box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+        }
+
+            .ribbon-green:before, .ribbon-green:after {
+                content: "";
+                border-top: 3px solid #6e8900;
+                border-left: 3px solid transparent;
+                border-right: 3px solid transparent;
+                position: absolute;
+                bottom: -3px;
+            }
+
+            .ribbon-green:before {
+                left: 0;
+            }
+
+            .ribbon-green:after {
+                right: 0;
+            }
+    </style>
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    <div class="clearfix"></div>
+
+    <!-- Plans -->
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>99% obsahu a funkcí hlidacstatu.cz je zdarma pro všechny</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Veškerá funkčnost a všechna data hlidacstatu.cz jsou zdarma dostupné pro všechny uživatele s těmito omezeními:
+                    <ul>
+                        <li>max. 3 <abbr @Html.Raw(tooltipattrs)>hlídači nových smluv</abbr> (<a href="https://www.hlidacstatu.cz/texty/hlidani-novych-smluv-na-hlidacsmluv-cz/" target="_blank">stručně co a k čemu je hlídač nových smluv</a>)</li>
+                        <li>data možné používat pouze <a href="https://www.hlidacstatu.cz/Licence">pod licencí CC BY 3.0</a> </li>
+                    </ul>
+                </p>
+                <p>
+                    <b>
+                        Zpoplatnění malé části funkcionalit nám umožní dále rozvíjet služby hlidacstatu.cz a pomoci tak státní správě zefektivnit svůj provoz
+                        a zlepšit veřejnou kontrolu státu občany.
+                    </b>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <section id="plans">
+        <div class="container">
+            <div class="row">
+
+                <!-- item -->
+                <div class="col-xs-12 col-sm-4 text-center">
+                    <div class="panel panel-danger panel-pricing">
+                        <div class="ribbon-wrapper-green"><div class="ribbon-green">Oblíbené</div></div>
+                        <div class="panel-heading">
+                            <i class="fa fa-desktop"></i>
+                            <h3>Kompletní</h3>
+                            <p>
+                                pro úřady s podřízenými organizacemi a firmami
+                                <br />pro firemní holdingy
+                            </p>
+                        </div>
+                        <div class="panel-body text-center">
+                            <p><strong>24.900Kč / rok</strong></p>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Neomezený počet <abbr @Html.Raw(tooltipattrs)>hlídačů či kontrol nových smluv</abbr></li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Denní nebo týdenní zasílání upozornění</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Kontrola uveřejnění vlastních i holdingových smluv</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> <b>Snadné hlídání podřízených organizací a holdingových struktur na 1 klik</b></li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Minimální riziko zneplatnění smluv</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Licence k libovolnému použití dat</li>
+                        </ul>
+                        <div class="panel-footer">
+                            <a class="btn btn-lg btn-block btn-danger" onclick="return trackInLink(this,'Cenik');" href="/manage/Objednavka/3">Objednat</a>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Ceny bez DPH, platba fakturou, splatnost 30 dní.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /item -->
+                <!-- item -->
+                <div class="col-xs-12 col-sm-4 text-center">
+                    <div class="panel panel-warning panel-pricing">
+                        <div class="panel-heading">
+                            <i class="fa fa-desktop"></i>
+                            <h3>Základní</h3>
+                            <p>pro malé úřady a státní firmy<br />pro firmy</p>
+                        </div>
+                        <div class="panel-body text-center">
+                            <p><strong>14.900Kč / rok</strong></p>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Max. 10 <abbr @Html.Raw(tooltipattrs)>hlídačů či kontrol nových smluv</abbr></li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Denní nebo týdenní zasílání upozornění</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Kontrola uveřejnění vlastních smluv</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Snížení rizika zneplatnění smluv</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Licence k libovolnému použití dat</li>
+                            <li class="list-group-item">&nbsp;<br />&nbsp;</li>
+                        </ul>
+                        <div class="panel-footer">
+                            <a class="btn btn-lg btn-block btn-warning" onclick="return trackInLink(this,'Cenik');" href="/manage/Objednavka/2">Objednat</a>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Ceny bez DPH, platba fakturou, splatnost 30 dní.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /item -->
+                <!-- item -->
+                <div class="col-xs-12 col-sm-4 text-center">
+                    <div class="panel panel-success panel-pricing">
+                        <div class="panel-heading">
+                            <i class="fa fa-desktop"></i>
+                            <h3>Nevládní</h3>
+                            <p>pro neziskové organizace, školy, pro novináře, angažované občany, velké podporovatele</p>
+                        </div>
+                        <div class="panel-body text-center">
+                            <p>zdarma</p>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Neomezený počet <abbr @Html.Raw(tooltipattrs)>hlídačů či kontrol smluv</abbr></li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Snadné hlídání podřízených organizací na 1 klik</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Snadné hlídání holdingových struktur na 1 klik</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Hodinové, denní, týdenní upozornění</li>
+                            <li class="list-group-item"><i class="fa fa-check"></i> Data podléhají <a href="https://www.hlidacstatu.cz/Licence">licenci CC BY 3.0</a></li>
+                            <li class="list-group-item">&nbsp;<br />&nbsp;</li>
+                        </ul>
+                        <div class="panel-footer">
+                            @if (this.User?.Identity?.IsAuthenticated == true)
+                            {
+                                <a class="btn btn-lg btn-block btn-success" href="#" onclick="return trackInLink(this,'Cenik');" data-toggle="modal" data-target="#cenik_fbForm">Napište nám</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-lg btn-block btn-success" href="/account/Register" onclick="return trackInLink(this,'Register');">První se zdarma zaregistrujte</a>
+                            }
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-check"></i> Podléhá ověření a schválení ze strany HlidacSmluv</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /item -->
+
+
+            </div>
+            <div class="clearfix"></div>
+
+
+
+        </div>
+    </section>
+    <!-- /Plans -->
+    @section footerscripts
+{
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        $(document).ready(function () {
+            ga('send', 'event', 'pageload', 'cenik', '@(this.User.Identity.GetUserName())', {
+                nonInteraction: true
+            });
+        });
+
+        </script>
+    }
+
+    <!-- Modal -->
+    <div class="modal fade" id="cenik_fbForm" tabindex="-1" role="dialog"
+         aria-labelledby="cenik_fbTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="cenik_fbTitle">
+                        Zpřístupnění všech funkcí hlidacstatu.cz
+                    </h4>
+                    <p>
+                        Pokud jste novinář, uveďte pracovní email a telefon.
+                    </p>
+                    <p>
+                        Napište nám info o vás či vaší organizaci pro kterou potřebujete data z hlidacstatu.cz
+                    </p>
+                </div>
+
+                <!-- Modal Body -->
+                <form class="form-horizontal" role="form">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="cenik_fbInputTxt">Vzkaz, odůvodnění</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" id="cenik_fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="cenik_fbInputEmail">Váš email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control"
+                                       id="cenik_fbInputEmail" placeholder="Email" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="cenik_fbInputEmail">Váš telefon</label>
+                            <div class="col-sm-10">
+                                <input type="tel" class="form-control"
+                                       id="cenik_fbInputTel" placeholder="Telefonní číslo" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Zrušit
+                        </button>
+                        <button type="button" onclick="sendcenik_();" class="btn btn-primary" data-dismiss="modal">
+                            Odeslat vzkaz
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    function sendcenik_() {
+        var prf = '#cenik_';
+        var typ = "Zadost o aktivaci sluzby pro neziskovky, skoly apod.";
+        var email = $(prf + "fbInputEmail").val();
+        var text = $(prf + "fbInputTxt").val();
+        text = "tel: " + $(prf + "fbInputTel").val() + " \n" + text;
+        var url = $(prf + "fbUrl").val();
+        $.get("/sendFeedbackMail", { typ: typ, email: email, txt: text, url: url })
+            .always(function () {
+                alert("Děkujeme za zaslání zprávy, ozveme se co nejdříve.");
+            });
+
+    }
+    </script>

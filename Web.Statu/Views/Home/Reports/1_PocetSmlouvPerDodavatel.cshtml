@@ -1,0 +1,72 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+    //chart
+
+
+    var model = new HlidacStatu.Lib.Render.ReportModel();
+    var sumCount = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerCount(false);
+    model.Add("perIcoChart", "Nejúspěšnější dodavatelé podle počtu smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perIco",
+            "Firmy", "Počet smluv",
+            sumCount.Filter(10))
+        );
+    model.Add("perIcoTable", "",sumCount);
+
+
+    var sumPrice = HlidacStatu.Web.Framework.Report.GlobalStatistics.TopListPerSum(false);
+    model.Add("perPriceChart", "Nejúspěšnější dodavatelé podle celkové hodnoty smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perPrice",
+             "Firmy", "Kč",
+            sumPrice.Filter(10))
+        );
+    model.Add("perPriceTable", "",sumPrice);
+
+}
+
+
+<div class="row">
+    <div class="col-sm-6 col-xs-12">
+        @foreach (var q in model.GetQueue("perIcoChart", "perIcoTable"))
+        {
+            @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+        }
+
+
+    </div>
+    <div class="col-sm-6 col-xs-12">
+        @foreach (var q in model.GetQueue("perPriceChart", "perPriceTable"))
+        {
+            @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+        }
+    </div>
+</div>

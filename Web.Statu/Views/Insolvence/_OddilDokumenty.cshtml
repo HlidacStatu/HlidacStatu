@@ -1,0 +1,21 @@
+﻿@using System.Linq;
+@model HlidacStatu.Lib.Data.Insolvence.Dokument[]
+
+<table class="table table-condensed table-striped table-hover">
+	<tbody>
+		@foreach (var item in Model.OrderByDescending(d => d.DatumVlozeni))
+		{
+		<tr>
+			<td>@item.Popis</td>
+			<td style="width:100px">@item.DatumVlozeni.ToShortDateString()</td>
+			<td style="width:80px"><a href="@item.Url">originál</a></td>
+			<td style="width:150px">
+				@if (item.Lenght > 0)
+				{
+					<a href="@Url.Action("TextDokumentu", "Insolvence", new { Id = item.Id })">zobrazit čistý text</a>
+				}
+			</td>
+		</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,43 @@
+﻿@model HlidacStatu.Lib.Data.Insolvence.DokumentSeSpisovouZnackou
+
+@{
+	ViewBag.Title = "Insolvenční řízení " + Model.SpisovaZnacka;
+	ViewBag.SubTitle = "Textová podoba dokumentu " + Model.Dokument.Popis + " ze dne " + Model.Dokument.DatumVlozeni.ToShortDateString();
+}
+
+@section breadcrumb
+{
+		<ol class="breadcrumb">
+			<li><a href="/">Hlídač Státu</a></li>
+			<li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
+			<li><a href="@Url.Action("Rizeni", "Insolvence", new { id = Model.UrlId })">Insolvence @Model.SpisovaZnacka</a></li>
+			<li><a href="@Url.Action("Dokumenty", "Insolvence", new { id = Model.UrlId })">Dokumenty</a></li>
+			<li class="active">@ViewBag.SubTitle</li>
+		</ol>
+}
+
+@if (Model != null)
+{
+	<p>
+		<b>Upozornění</b>: Text dokumentu byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných dokumentů, kde jsme použili OCR.
+		<a href="@Model.Dokument.Url" target="_blank">originál dokument stáhnete odsud</a>
+	</p>
+
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<pre>
+                @Html.Raw(Model.Dokument.PlainText)
+            </pre>
+		</div>
+
+	</div>
+}
+else
+{
+	<span class="text-danger">Odkazovaný dokument nebyl nalezen</span>
+}
+
+
+
+

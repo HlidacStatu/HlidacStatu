@@ -1,0 +1,19 @@
+﻿@model HlidacStatu.Web.Models.IndexViewModel
+
+@{
+    ViewBag.Title = "Analyza firem " + User.Identity.Name;
+
+    var qs = Request.QueryString["ico"];
+
+    string[] icos = qs?.Split(',') ?? new string[] { };
+
+    foreach (string ico in icos)
+    {
+
+
+    }
+
+}
+
+<div>
+</div>

@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Licenční ujednání";
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    <div class="alert alert-warning" role="alert">
+        Toto je zkrácené, snadno srozumitelné znění plného textu licenčních podmínek. <a href="https://creativecommons.org/licenses/by/3.0/cz/legalcode" onclick="return trackOutLink(this,'Licence');">Plný text licenčních podmínek naleznete zde</a>.
+        Tato zjednodušená verze nenahrazuje plný text licence.
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Licenční ujednání <small>CC BY 3.0 CZ</small></h3>
+        </div>
+        <div class="panel-body">
+            <h3>Dílo a obsah serveru smíte:</h3>
+
+            <ul>
+                <li><b>Sdílet</b> — rozmnožovat a distribuovat materiál prostřednictvím jakéhokoli média v jakémkoli formátu</li>
+                <li><b>Upravit</b> — remixovat, změnit a vyjít z původního díla pro jakýkoliv účel, a to i komerční.</li>
+                <li>Poskytovatel licence nemůže odvolat tato oprávnění do té doby, dokud dodržujete licenční podmínky.</li>
+            </ul>
+
+            <h3>Za těchto podmínek</h3>
+
+            <ul>
+                <li>
+                    <b>Uveďte původ</b><br />
+                    — <b>Je Vaší povinností uvést autorství, poskytnout s dílem odkaz na licenci a vyznačit Vámi provedené změny</b>.
+                    Toho můžete docílit jakýmkoli rozumným způsobem, nicméně nikdy ne způsobem naznačujícím, že by poskytovatel licence schvaloval nebo podporoval Vás nebo Váš způsob užití díla.
+                </li>
+                <li>
+                    <b>Žádná další omezení</b><br />
+                    — <b>
+                        Nesmíte použít právní omezení nebo účinné technické prostředky ochrany
+                    </b>, které by omezovaly ostatní v možnostech poskytnutých touto licencí či omezili další použítí těchto dat.
+                </li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <a href="https://creativecommons.org/licenses/by/3.0/cz/legalcode" onclick="return trackOutLink(this,'Licence');">Plný text licenčních podmínek</a>.<br />
+            Pokud máte pochyby či vám tato licence nevyhovuje, <a href="@Url.Action("Kontakt")">kontaktujte nás</a>.
+        </div>
+    </div>
+

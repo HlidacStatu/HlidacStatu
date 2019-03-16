@@ -1,0 +1,74 @@
+﻿@using Devmasters.Core;
+@using Microsoft.AspNet.Identity;
+
+@{
+    ViewBag.Title = "Hlídači nových smluv - více jich nejde přidat";
+    string tooltipattrs = @"data-toggle='tooltip'
+        data-placement='top' data-html='true'
+        title='Sleduje nové smlouvy odpovídající libovolnému dotazu a každý den či týden vás na ně sám upozorní emailem'
+    ";
+    int maxW = HlidacStatu.Lib.Data.Invoices.GetMaxNumberOfWatchdogs(this.User.Identity.GetUserId());
+}
+
+<div class="row">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h4>Upozornění - více hlídačů nyní nemůžeme přidat</h4>
+        </div>
+        <div class="panel-body">
+            <p>
+                Můžete si založit maximálně
+                <b>@HlidacStatu.Util.PluralForm.Get(maxW, "{0} hlídače;{0} hlídače;{0} hlídačů")</b> nových smluv.
+            </p>
+            <p>
+                <h4>Pokud potřebujete přidat více hlídačů nových smluv</h4>
+                <div>
+                    <b>a jste z veřejné správy nebo firmy</b>,
+                    <a  onclick="return trackInLink(this,'OurOfWatchdogs');" href="/cenik">objednejte si některou z placených služeb</a>.
+                </div>
+                <div>
+                    <b>a jste neziskové sféry, školství, novinář nebo aktivní občan</b>,
+                    <a  onclick="return trackInLink(this,'OurOfWatchdogs');" href="/cenik">kontaktujte nás a vyřešíme to</a>.
+                </div>
+                <div>
+                    anebo smažte některého ze <a onclick="return trackInLink(this,'OurOfWatchdogs');" href="/manage/watchdogs">stávajících hlídačů nových smluv</a>.
+                </div>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>99% obsahu a funkcí hlidacstatu.cz je zdarma pro všechny</h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                Veškerá funkčnost a všechna data hlidacstatu.cz jsou zdarma dostupné pro všechny uživatele s těmito omezeními:
+                <ul>
+                    <li>max. 3 <abbr @Html.Raw(tooltipattrs)>hlídači nových smluv</abbr> (<a href="https://www.hlidacstatu.cz/texty/hlidani-novych-smluv-na-hlidacsmluv-cz/" target="_blank">stručně co a k čemu je hlídač nových smluv</a>)</li>
+                    <li>data možné používat pouze <a href="https://www.hlidacstatu.cz/Licence">pod licencí CC BY 3.0</a> </li>
+                </ul>
+            </p>
+            <p>
+                <b>
+                    Zpoplatnění malé části funkcionalit nám umožní dále rozvíjet služby hlidacstatu.cz a pomoci tak státní správě zefektivnit svůj provoz
+                    a zlepšit veřejnou kontrolu státu občany.
+                </b>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+@section footerscripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ga('send', 'event', 'pageload', 'OutOfWatchDogs', '@(this.User.Identity.GetUserName())', {
+                nonInteraction: true
+            });
+        });
+    </script>
+}

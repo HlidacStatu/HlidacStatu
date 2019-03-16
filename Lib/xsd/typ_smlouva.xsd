@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:complexType name="tSmlouva">
+		<xs:sequence>
+			<xs:element name="subjekt">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="datovaSchranka" type="ns1:tDatovaSchranka" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Identifikátor datové schránky</xs:documentation>
+								<xs:documentation xml:lang="cs">Pokud se liší od ID publikujícího, musí existovat registrované zmocnění mezi publikujícím a subjektem. Není-li vyplněno, bude nastaveno shodně s ID publikujícího.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="nazev" type="ns1:tText" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Název subjektu</xs:documentation>
+								<xs:documentation xml:lang="cs">Textové označení subjektu</xs:documentation>
+								<xs:documentation xml:lang="cs">Pokud se liší ID publikujícího od ID subjektu, bude doplněno z ISDS. Pokud není vyplněno, bude nastaveno shodně s označením publikujícího.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ico" type="ns1:tIco" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">IČO</xs:documentation>
+								<xs:documentation xml:lang="cs">Identifikační číslo subjektu</xs:documentation>
+								<xs:documentation xml:lang="cs">údaj je získáván automaticky z ISDS na základě údaje id</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="adresa" type="ns1:tText" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Adresa subjektu</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="utvar" type="ns1:tText" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Útvar</xs:documentation>
+								<xs:documentation xml:lang="cs">Útvar / Odbor / Organizační složka</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="platce" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Plátce / Příjemce</xs:documentation>
+								<xs:documentation xml:lang="cs">1 = plátce, 0 = příjemce</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="smluvniStrana" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="datovaSchranka" type="ns1:tDatovaSchranka" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">ID smluvní strany</xs:documentation>
+								<xs:documentation xml:lang="cs">Identifikátor datové schránky smluvní strany</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="nazev" type="ns1:tTextNoEmpty">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Smluvní partner</xs:documentation>
+								<xs:documentation xml:lang="cs">Textové označení smluvní strany</xs:documentation>
+								<xs:documentation xml:lang="cs">Pokud subjekt postupuje dle § 5 odst. 6 uvede "Údaj není veřejný na základě § 5 odst. 6 zákona č. 340/2015 Sb., o registru smluv."</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ico" type="ns1:tIco" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">IČO</xs:documentation>
+								<xs:documentation xml:lang="cs">Identifikační číslo smluvní strany</xs:documentation>
+								<xs:documentation xml:lang="cs">syntaxe IČO (modulo 11), pokud je uvedeno id, musí se IČO shodovat s IČO v ISDS</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="adresa" type="ns1:tText" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Adresa smluvní strany</xs:documentation>
+								<xs:documentation xml:lang="cs">není-li vyplněna, použije se adresa z ISDS</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="utvar" type="ns1:tText" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Útvar</xs:documentation>
+								<xs:documentation xml:lang="cs">Útvar / Odbor / Organizační složka</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="prijemce" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Plátce / Příjemce</xs:documentation>
+								<xs:documentation xml:lang="cs">1 = příjemce, 0 = plátce</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="predmet" type="ns1:tTextNoEmpty">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Předmět smlouvy</xs:documentation>
+					<xs:documentation xml:lang="cs">Textové označení smlouvy</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="datumUzavreni" type="xs:date">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Datum uzavření</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cisloSmlouvy" type="ns1:tCisloSmlouvy" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Čislo smlouvy</xs:documentation>
+					<xs:documentation xml:lang="cs">Číslo smlouvy / číslo jednací</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="schvalil" type="ns1:tText" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Schválil</xs:documentation>
+					<xs:documentation xml:lang="cs">Označení osoby, která smlouvu podepsala</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="hodnotaBezDph" type="xs:decimal" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Hodnota bez DPH</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="hodnotaVcetneDph" type="xs:decimal" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Hodnota včetně DPH</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ciziMena" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="hodnota" type="xs:decimal">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Hodnota v cizí měně</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="mena" type="ns1:tMena">
+							<xs:annotation>
+								<xs:documentation xml:lang="cs">Cizí měna</xs:documentation>
+								<xs:documentation xml:lang="cs">Označení cizí měny</xs:documentation>
+								<xs:documentation xml:lang="cs">Údaj je povinný, pokud byla vyplněna hodnota v cizí měně</xs:documentation>
+								<xs:documentation xml:lang="cs">Musí odpovídat textovému ISO kódu dle http://www.currency-iso.org/dam/downloads/lists/list_one.xml</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="navazanyZaznam" type="xs:integer" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">ID navázaného záznamu</xs:documentation>
+					<xs:documentation xml:lang="cs">Navázaný záznam</xs:documentation>
+					<xs:documentation xml:lang="cs">Volitelná vazba na existující záznam v ISRS dle ID záznamu, které je vráceno jako odpověď na tuto zprávu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

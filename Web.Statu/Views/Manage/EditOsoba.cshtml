@@ -1,0 +1,58 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@{
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("EditOsoba", "Manage", FormMethod.Post, new { @id="jsonForm", @class = "form", role = "form" }))
+        {
+            @Html.Hidden("json", "")
+            @Html.Hidden("id", Model?.InternalId ?? 0 )
+
+            <h3>Editor osob</h3>
+
+            <div id="osoba"></div>
+
+            <button type="button" onclick="SaveForm();" class="btn btn-info">Uložit</button>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script src="/scripts/jsoneditor.js"></script>
+
+
+    <script>
+        var editor ;
+        var initValue = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model?.ToJsonEditor()));
+        function SaveForm()
+        {
+            //printJSON();
+            var data = editor.getValue();
+            $("#json").val(JSON.stringify(data,null,2));
+            $("#jsonForm").submit();
+        }
+
+        $(document).ready(function () {
+
+            JSONEditor.defaults.options.theme = 'bootstrap3';
+            JSONEditor.defaults.options.iconlib = "bootstrap3";
+
+            editor = new JSONEditor(document.getElementById('osoba'),{
+
+                schema: @Html.Raw(System.IO.File.ReadAllText(HlidacStatu.Lib.StaticData.App_Data_Path + "newperson.schema.json")) ,
+                startval: initValue
+
+            });
+
+
+        });
+
+
+
+
+    </script>
+}

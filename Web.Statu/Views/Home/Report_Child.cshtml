@@ -1,0 +1,18 @@
+﻿@model int
+@using HlidacStatu.Web;
+
+@using System.Linq;
+@using Devmasters.Core;
+
+@{ 
+    Layout = null;
+}
+
+    @Util.AddVisitImg("/report/" + Model.ToString())
+
+    @Html.Partial("Reports\\" + (string)ViewBag.NameOfView)
+
+    @Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+

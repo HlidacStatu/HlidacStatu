@@ -1,0 +1,33 @@
+﻿
+@using HlidacStatu.Web;
+
+@using System.Linq;
+@using Devmasters.Core;
+@{ 
+    Response.StatusCode = 404;
+    string url = ViewBag.SourceUrl;
+    if (!string.IsNullOrEmpty(Request.QueryString["from"]))
+    {
+        url  = Request.QueryString["from"];
+    }
+}
+
+@section scripts
+{
+}
+
+
+
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h1>Stránka nenalezena</h1>
+        </div>
+    </div>
+}
+
+<script>
+    ga('send', 'event', 'errorpage', '404', '@url');
+</script>
+<h3 class="text-center" style="padding-bottom:30px;">Omlouváme se, ale stránku kterou hledáte, tu nemáme. </h3>
+<p class="text-center"><a class="btn btn-primary btn-lg" href="@(string.IsNullOrEmpty(ViewBag.NextUrl) ? Html.Raw("/") : Html.Raw(Model))" role="button">@(string.IsNullOrEmpty(ViewBag.NextUrlText) ? "Pokračovat na titulní stránce" : (string)ViewBag.NextUrlText)</a></p>

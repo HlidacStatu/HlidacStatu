@@ -1,0 +1,40 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+
+
+@{
+    ViewBag.Title = "Neplatné ICO";
+            Response.StatusCode = 404;
+
+}
+
+@section scripts
+{
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+
+
+}
+
+
+
+<p>
+    Omlouváme se, tuto firmu neznáme, domníváme se, že má neplatné IČO.
+</p>
+<p>
+    České IČO je osmimístné číslo, včetně '0' na začátku. Zde najdete <a href="https://cs.wikipedia.org/wiki/Identifikačn%C3%AD_č%C3%ADslo_osoby#Struktura_I.C4.8CO">podrobnosti o struktuře a ověření platnosti ICO</a>.
+</p>
+<p>
+    Pokud si myslíte, že bychom tuto firmu měli znát či je chyba na naší straně, 
+    @Util.FeedbackModal("napište nám prosím podrobnosti").
+
+
+</p>

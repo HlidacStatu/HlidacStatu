@@ -1,0 +1,94 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+<p>
+    Našli jsme nové záznamy pro hlídače nových veřejných zakázek <b>@Model.WDName</b>.
+</p>
+<p>
+    V době @Model.Interval @Model.TotalTxt pro tento dotaz: <br/>
+    <b>@Model.Query</b>
+</p>
+@if (Model.AddResults > 0)
+{
+    <p>Zobrazujeme prvních 30 nalezených zakázek</p>
+}
+
+
+<p>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Zakázka</th>
+                <th>Poslední změna</th>
+                <th>Lhůta pro nabídky</th>
+                <th>Zadavatel</th>
+                <th>Název</th>
+                <th>Cena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (HlidacStatu.Lib.Data.VZ.VerejnaZakazka item in @Model.Zakazky)
+    {
+        <text>
+            <tr>
+                <td style="white-space: nowrap;">
+                    <a href="@Raw(item.GetUrl(false))">@Raw(item.EvidencniCisloZakazky)</a>
+                </td>
+                <td>
+                    @Raw(item.DatumUverejneni == null ? "" : item.DatumUverejneni.Value.ToShortDateString())
+                </td>
+                <td>
+                    @Raw(item.LhutaDoruceni != null ? item.LhutaDoruceni.Value.ToShortDateString() : "neuvedena" )
+                </td>
+                <td>
+                    <span>@Raw(item.Zadavatel == null ? "neuveden" : item.Zadavatel.Jmeno)</span>
+                </td>
+                <td>
+                    @item.NazevZakazky
+                </td>
+                <td>
+                    <b>
+                        @if (item.KonecnaHodnotaBezDPH.HasValue)
+                        {
+                            @Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value, "0 {0}", "Kč",true))
+                        }
+                        else if (item.OdhadovanaHodnotaBezDPH.HasValue)
+                        {
+                            <span>odhad.cena </span> @Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value, "0 {0}", "Kč", true))
+                        }
+                        else
+                        {
+                                <span></span>
+                        }
+                    </b>
+                </td>
+            </tr>
+            <tr style="border-bottom:2px #777 solid">
+                <td colspan="3" style="font-size:80%">@Raw(item.LastestFormular() != null ? item.LastestFormular().DruhFormulareName() : "")</td>
+                <td colspan="4">
+                    <span style="font-size:80%">
+                        @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 300, "...")
+                    </span>
+                </td>
+            </tr>
+        </text>
+}
+        </tbody>
+    </table>
+
+    @if (Model.AddResults > 0)
+    {
+        <p>Zobrazujeme prvních 30 zakázek, ale nalezli jsme celkem @Model.TotalTxt.<br /> 
+        Zde můžete <a href="https://www.hlidacstatu.cz/VerejneZakazky/Hledat?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">zobrazit všechny nalezené zakázky</a>
+        </p>
+    }
+
+@*<p>Chcete <a href="https://www.hlidacstatu.cz/manage/Watchdogs?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=settings">změnit nastavení</a> tohoto hlídače nových smluv?</p>*@
+
+
+@Raw(Model.EmailFooterHtml)
+
+
+
+
+

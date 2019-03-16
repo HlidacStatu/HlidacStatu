@@ -1,0 +1,1395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{74208849-F4AB-4A1F-B250-6723C10E9DF9}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HlidacStatu.Web</RootNamespace>
+    <AssemblyName>HlidacStatu.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+    <ApplicationInsightsResourceId>/subscriptions/d6a43991-8370-4371-9aed-a738e4e9b87d/resourcegroups/Insights/providers/microsoft.insights/components/HlidacStatu.Web</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/d6a43991-8370-4371-9aed-a738e4e9b87d/resourcegroups/Insights/providers/microsoft.insights/components/HlidacStatu.Web</ApplicationInsightsAnnotationResourceId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Devmasters.Cache, Version=1.472.4.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Devmasters.Cache.dll</HintPath>
+    </Reference>
+    <Reference Include="Devmasters.Core, Version=1.472.3.35, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.3.35\lib\net40\Devmasters.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Devmasters.Imaging, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Imaging.1.472.1.1\lib\net40\Devmasters.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Devmasters.Net, Version=1.472.3.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Net.1.472.3.24\lib\Net45\Devmasters.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Elasticsearch.Net, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.6.4.0\lib\net461\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Enyim.Caching, Version=2.9.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.11.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.8.11\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.8.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.8.1\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.8.1\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.8.1\lib\net45\Microsoft.AI.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.8.1\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.8.1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights.Log4NetAppender, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Log4NetAppender.2.8.1\lib\net45\Microsoft.ApplicationInsights.Log4NetAppender.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.2\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.5\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.0\lib\net451\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.0\lib\net451\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.0.0\lib\net451\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.4.0.0\lib\net451\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.4.0.0\lib\net451\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.0\lib\net451\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.4.0.0\lib\net451\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nest, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.6.4.0\lib\net461\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.10\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Collections.NonGeneric, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.NonGeneric.4.3.0\lib\net46\System.Collections.NonGeneric.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Process, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Process.4.3.0\lib\net461\System.Diagnostics.Process.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.StackTrace.4.3.0\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.TraceSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.TraceSource.4.3.0\lib\net46\System.Diagnostics.TraceSource.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Watcher, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Watcher.4.3.0\lib\net46\System.IO.FileSystem.Watcher.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.IPNetwork, Version=2.1.2.0, Culture=neutral, PublicKeyToken=717343cc2c25edcf, processorArchitecture=MSIL">
+      <HintPath>..\packages\IPNetwork2.2.1.2\lib\net46\System.Net.IPNetwork.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.5.1\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Serialization.Formatters.4.3.0\lib\net46\System.Runtime.Serialization.Formatters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Thread, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="netstandard" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
+    </Reference>
+    <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GenericAuthController.cs" />
+    <Compile Include="Controllers\ApiV1Controller.StatniWeby.cs" />
+    <Compile Include="Controllers\ApiV1Controller.DataSets.cs" />
+    <Compile Include="Controllers\ApiV1Controller.Watchdogs.cs" />
+    <Compile Include="Controllers\ApiV1Controller.ZabbixProxyScripts.cs" />
+    <Compile Include="Controllers\ApiV1Controller.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeController.Reports.cs" />
+    <Compile Include="Controllers\InsolvenceController.cs" />
+    <Compile Include="Controllers\ManageController.Api.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\VZController.cs" />
+    <Compile Include="Controllers\WebyController.cs" />
+    <Compile Include="Controllers\UctyController.cs" />
+    <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
+    <Compile Include="Framework\ApiAuth.cs" />
+    <Compile Include="Framework\FileFromWebCacheManager.cs" />
+    <Compile Include="Framework\Html2Png.cs" />
+    <Compile Include="Framework\Shared\Data.cs" />
+    <Compile Include="Framework\LimitedAccess.cs" />
+    <Compile Include="Framework\Visit.cs" />
+    <Compile Include="Framework\DisableController.cs" />
+    <Compile Include="Framework\Extensions.Html.cs" />
+    <Compile Include="Framework\Extensions.Routing.cs" />
+    <Compile Include="Framework\Report\Statistics.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ApiV1Models.cs" />
+    <Compile Include="Models\DataViewModels.cs" />
+    <Compile Include="Models\InsolvenceViewModels.cs" />
+    <Compile Include="Models\WebyViewModels.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\HomeViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="404.html" />
+    <Content Include="500.html" />
+    <Content Include="App_Data\haarcascade_frontalface_default.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\defs.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\GlobalSite.css" />
+    <Content Include="Content\icons\android-chrome-192x192.png" />
+    <Content Include="Content\icons\apple-touch-icon-114x114.png" />
+    <Content Include="Content\icons\apple-touch-icon-120x120.png" />
+    <Content Include="Content\icons\apple-touch-icon-144x144.png" />
+    <Content Include="Content\icons\apple-touch-icon-152x152.png" />
+    <Content Include="Content\icons\apple-touch-icon-180x180.png" />
+    <Content Include="Content\icons\apple-touch-icon-57x57.png" />
+    <Content Include="Content\icons\apple-touch-icon-60x60.png" />
+    <Content Include="Content\icons\apple-touch-icon-72x72.png" />
+    <Content Include="Content\icons\apple-touch-icon-76x76.png" />
+    <Content Include="Content\icons\favicon-16x16.png" />
+    <Content Include="Content\icons\favicon-32x32.png" />
+    <Content Include="Content\icons\favicon-96x96.png" />
+    <Content Include="Content\icons\favicon.ico" />
+    <Content Include="Content\icons\largetile.png" />
+    <Content Include="Content\icons\mediumtile.png" />
+    <Content Include="Content\icons\smalltile.png" />
+    <Content Include="Content\icons\widetile.png" />
+    <Content Include="Content\Img\backg.jpeg" />
+    <Content Include="Content\Img\firmo-logo.png" />
+    <Content Include="Content\Img\HlidacSmluv-Logo-50px.png" />
+    <Content Include="Content\Img\neplatna.gif" />
+    <Content Include="Content\Img\neplatna.png" />
+    <Content Include="Content\Img\nove_yellow.png" />
+    <Content Include="Content\Img\Tenderman_Logo.svg" />
+    <Content Include="Content\Img\top_red.png" />
+    <Content Include="Content\Img\_Hlidac smluv.svg" />
+    <Content Include="Content\jsoneditor.css" />
+    <Content Include="Content\new.css" />
+    <Content Include="Content\socialBanner.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\social-share-kit.css" />
+    <Content Include="Content\typeaheadjs.css" />
+    <Content Include="Content\visavail.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\social-share-kit.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Footer.html.txt" />
+    <Content Include="head.toplineL2m.html.txt" />
+    <Content Include="head.toplineL2.html.txt" />
+    <Content Include="head.topline.html.txt" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\d3\LICENSE" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\font-awesome\less\animated.less" />
+    <Content Include="Scripts\font-awesome\less\bordered-pulled.less" />
+    <Content Include="Scripts\font-awesome\less\core.less" />
+    <Content Include="Scripts\font-awesome\less\fixed-width.less" />
+    <Content Include="Scripts\font-awesome\less\font-awesome.less" />
+    <Content Include="Scripts\font-awesome\less\icons.less" />
+    <Content Include="Scripts\font-awesome\less\larger.less" />
+    <Content Include="Scripts\font-awesome\less\list.less" />
+    <Content Include="Scripts\font-awesome\less\mixins.less" />
+    <Content Include="Scripts\font-awesome\less\path.less" />
+    <Content Include="Scripts\font-awesome\less\rotated-flipped.less" />
+    <Content Include="Scripts\font-awesome\less\screen-reader.less" />
+    <Content Include="Scripts\font-awesome\less\stacked.less" />
+    <Content Include="Scripts\font-awesome\less\variables.less" />
+    <Content Include="Scripts\font-awesome\scss\font-awesome.scss" />
+    <Content Include="Scripts\font-awesome\scss\_animated.scss" />
+    <Content Include="Scripts\font-awesome\scss\_bordered-pulled.scss" />
+    <Content Include="Scripts\font-awesome\scss\_core.scss" />
+    <Content Include="Scripts\font-awesome\scss\_fixed-width.scss" />
+    <Content Include="Scripts\font-awesome\scss\_icons.scss" />
+    <Content Include="Scripts\font-awesome\scss\_larger.scss" />
+    <Content Include="Scripts\font-awesome\scss\_list.scss" />
+    <Content Include="Scripts\font-awesome\scss\_mixins.scss" />
+    <Content Include="Scripts\font-awesome\scss\_path.scss" />
+    <Content Include="Scripts\font-awesome\scss\_rotated-flipped.scss" />
+    <Content Include="Scripts\font-awesome\scss\_screen-reader.scss" />
+    <Content Include="Scripts\font-awesome\scss\_stacked.scss" />
+    <Content Include="Scripts\font-awesome\scss\_variables.scss" />
+    <Content Include="Scripts\fuckadblock.js" />
+    <Content Include="Scripts\fuckadblock.min.js" />
+    <Content Include="Scripts\Highcharts-6\css\highcharts.scss" />
+    <Content Include="Scripts\Highcharts-6\highcharts-3d.js.map" />
+    <Content Include="Scripts\Highcharts-6\highcharts-more.js.map" />
+    <Content Include="Scripts\Highcharts-6\highcharts.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-3d.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-more.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\accessibility.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\annotations.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost-canvas.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\broken-axis.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\bullet.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\data.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drag-panes.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drilldown.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\export-data.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\exporting.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\funnel.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\gantt.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\grid-axis.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\heatmap.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\histogram-bellcurve.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\item-series.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\no-data-to-display.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\offline-exporting.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\oldie.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\overlapping-datalabels.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\parallel-coordinates.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\pareto.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sankey.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\series-label.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\solid-gauge.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\static-scale.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\stock.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\streamgraph.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sunburst.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\tilemap.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\treemap.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variable-pie.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variwide.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\vector.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\windbarb.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\wordcloud.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\modules\xrange.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\avocado.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-blue.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-green.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-unica.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\gray.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid-light.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sand-signika.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\skies.js.map" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sunset.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\accessibility.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\annotations.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\boost-canvas.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\boost.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\broken-axis.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\bullet.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\data.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\drag-panes.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\drilldown.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\export-data.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\exporting.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\funnel.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\gantt.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\grid-axis.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\heatmap.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\histogram-bellcurve.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\item-series.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\no-data-to-display.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\offline-exporting.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\oldie.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\overlapping-datalabels.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\parallel-coordinates.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\pareto.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\sankey.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\series-label.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\solid-gauge.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\static-scale.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\stock.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\streamgraph.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\sunburst.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\tilemap.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\treemap.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\variable-pie.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\variwide.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\vector.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\windbarb.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\wordcloud.js.map" />
+    <Content Include="Scripts\Highcharts-6\modules\xrange.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\avocado.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-blue.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-green.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-unica.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\gray.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\grid-light.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\grid.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\sand-signika.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\skies.js.map" />
+    <Content Include="Scripts\Highcharts-6\themes\sunset.js.map" />
+    <Content Include="App_Code\UtilWebyChart.cshtml" />
+    <Content Include="App_Code\SuperSearch.cshtml" />
+    <Content Include="App_Code\Util.cshtml" />
+    <Content Include="Scripts\d3\d3.js" />
+    <Content Include="Scripts\d3\d3.min.js" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.css" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts.js" />
+    <Content Include="Scripts\Highcharts-6\css\highcharts.css" />
+    <Content Include="Scripts\Highcharts-6\highcharts-3d.js" />
+    <Content Include="Scripts\Highcharts-6\highcharts-3d.src.js" />
+    <Content Include="Scripts\Highcharts-6\highcharts-more.js" />
+    <Content Include="Scripts\Highcharts-6\highcharts-more.src.js" />
+    <Content Include="Scripts\Highcharts-6\highcharts.js" />
+    <Content Include="Scripts\Highcharts-6\highcharts.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-3d.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-3d.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-more.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts-more.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts.js" />
+    <Content Include="Scripts\Highcharts-6\js\highcharts.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\accessibility.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\accessibility.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\annotations.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\annotations.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost-canvas.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost-canvas.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\boost.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\broken-axis.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\broken-axis.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\bullet.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\bullet.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\data.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\data.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drag-panes.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drag-panes.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drilldown.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\drilldown.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\export-data.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\export-data.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\exporting.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\exporting.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\funnel.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\funnel.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\gantt.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\gantt.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\grid-axis.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\grid-axis.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\heatmap.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\heatmap.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\histogram-bellcurve.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\histogram-bellcurve.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\item-series.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\item-series.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\no-data-to-display.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\no-data-to-display.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\offline-exporting.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\offline-exporting.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\oldie.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\oldie.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\overlapping-datalabels.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\overlapping-datalabels.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\parallel-coordinates.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\parallel-coordinates.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\pareto.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\pareto.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sankey.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sankey.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\series-label.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\series-label.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\solid-gauge.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\solid-gauge.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\static-scale.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\static-scale.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\stock.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\stock.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\streamgraph.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\streamgraph.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sunburst.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\sunburst.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\tilemap.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\tilemap.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\treemap.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\treemap.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variable-pie.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variable-pie.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variwide.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\variwide.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\vector.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\vector.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\windbarb.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\windbarb.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\wordcloud.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\wordcloud.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\xrange.js" />
+    <Content Include="Scripts\Highcharts-6\js\modules\xrange.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\avocado.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\avocado.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-blue.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-blue.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-green.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-green.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-unica.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\dark-unica.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\gray.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\gray.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid-light.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid-light.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\grid.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sand-signika.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sand-signika.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\skies.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\skies.src.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sunset.js" />
+    <Content Include="Scripts\Highcharts-6\js\themes\sunset.src.js" />
+    <Content Include="Scripts\Highcharts-6\lib\canvg.js" />
+    <Content Include="Scripts\Highcharts-6\lib\canvg.src.js" />
+    <Content Include="Scripts\Highcharts-6\lib\jspdf.js" />
+    <Content Include="Scripts\Highcharts-6\lib\jspdf.src.js" />
+    <Content Include="Scripts\Highcharts-6\lib\rgbcolor.js" />
+    <Content Include="Scripts\Highcharts-6\lib\rgbcolor.src.js" />
+    <Content Include="Scripts\Highcharts-6\lib\svg2pdf.js" />
+    <Content Include="Scripts\Highcharts-6\lib\svg2pdf.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\accessibility.js" />
+    <Content Include="Scripts\Highcharts-6\modules\accessibility.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\annotations.js" />
+    <Content Include="Scripts\Highcharts-6\modules\annotations.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\boost-canvas.js" />
+    <Content Include="Scripts\Highcharts-6\modules\boost-canvas.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\boost.js" />
+    <Content Include="Scripts\Highcharts-6\modules\boost.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\broken-axis.js" />
+    <Content Include="Scripts\Highcharts-6\modules\broken-axis.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\bullet.js" />
+    <Content Include="Scripts\Highcharts-6\modules\bullet.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\data.js" />
+    <Content Include="Scripts\Highcharts-6\modules\data.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\drag-panes.js" />
+    <Content Include="Scripts\Highcharts-6\modules\drag-panes.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\drilldown.js" />
+    <Content Include="Scripts\Highcharts-6\modules\drilldown.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\export-data.js" />
+    <Content Include="Scripts\Highcharts-6\modules\export-data.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\exporting.js" />
+    <Content Include="Scripts\Highcharts-6\modules\exporting.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\funnel.js" />
+    <Content Include="Scripts\Highcharts-6\modules\funnel.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\gantt.js" />
+    <Content Include="Scripts\Highcharts-6\modules\gantt.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\grid-axis.js" />
+    <Content Include="Scripts\Highcharts-6\modules\grid-axis.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\heatmap.js" />
+    <Content Include="Scripts\Highcharts-6\modules\heatmap.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\histogram-bellcurve.js" />
+    <Content Include="Scripts\Highcharts-6\modules\histogram-bellcurve.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\item-series.js" />
+    <Content Include="Scripts\Highcharts-6\modules\item-series.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\no-data-to-display.js" />
+    <Content Include="Scripts\Highcharts-6\modules\no-data-to-display.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\offline-exporting.js" />
+    <Content Include="Scripts\Highcharts-6\modules\offline-exporting.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\oldie.js" />
+    <Content Include="Scripts\Highcharts-6\modules\oldie.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\overlapping-datalabels.js" />
+    <Content Include="Scripts\Highcharts-6\modules\overlapping-datalabels.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\parallel-coordinates.js" />
+    <Content Include="Scripts\Highcharts-6\modules\parallel-coordinates.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\pareto.js" />
+    <Content Include="Scripts\Highcharts-6\modules\pareto.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\sankey.js" />
+    <Content Include="Scripts\Highcharts-6\modules\sankey.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\series-label.js" />
+    <Content Include="Scripts\Highcharts-6\modules\series-label.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\solid-gauge.js" />
+    <Content Include="Scripts\Highcharts-6\modules\solid-gauge.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\static-scale.js" />
+    <Content Include="Scripts\Highcharts-6\modules\static-scale.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\stock.js" />
+    <Content Include="Scripts\Highcharts-6\modules\stock.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\streamgraph.js" />
+    <Content Include="Scripts\Highcharts-6\modules\streamgraph.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\sunburst.js" />
+    <Content Include="Scripts\Highcharts-6\modules\sunburst.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\tilemap.js" />
+    <Content Include="Scripts\Highcharts-6\modules\tilemap.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\treemap.js" />
+    <Content Include="Scripts\Highcharts-6\modules\treemap.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\variable-pie.js" />
+    <Content Include="Scripts\Highcharts-6\modules\variable-pie.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\variwide.js" />
+    <Content Include="Scripts\Highcharts-6\modules\variwide.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\vector.js" />
+    <Content Include="Scripts\Highcharts-6\modules\vector.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\windbarb.js" />
+    <Content Include="Scripts\Highcharts-6\modules\windbarb.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\wordcloud.js" />
+    <Content Include="Scripts\Highcharts-6\modules\wordcloud.src.js" />
+    <Content Include="Scripts\Highcharts-6\modules\xrange.js" />
+    <Content Include="Scripts\Highcharts-6\modules\xrange.src.js" />
+    <Content Include="Scripts\Highcharts-6\readme.txt" />
+    <Content Include="Scripts\Highcharts-6\themes\avocado.js" />
+    <Content Include="Scripts\Highcharts-6\themes\avocado.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-blue.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-blue.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-green.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-green.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-unica.js" />
+    <Content Include="Scripts\Highcharts-6\themes\dark-unica.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\gray.js" />
+    <Content Include="Scripts\Highcharts-6\themes\gray.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\grid-light.js" />
+    <Content Include="Scripts\Highcharts-6\themes\grid-light.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\grid.js" />
+    <Content Include="Scripts\Highcharts-6\themes\grid.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\sand-signika.js" />
+    <Content Include="Scripts\Highcharts-6\themes\sand-signika.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\skies.js" />
+    <Content Include="Scripts\Highcharts-6\themes\skies.src.js" />
+    <Content Include="Scripts\Highcharts-6\themes\sunset.js" />
+    <Content Include="Scripts\Highcharts-6\themes\sunset.src.js" />
+    <Content Include="Scripts\highcharts.global.options.js" />
+    <Content Include="Scripts\highlight\highlight.pack.js" />
+    <Content Include="Scripts\highlight\styles\agate.css" />
+    <Content Include="Scripts\highlight\styles\androidstudio.css" />
+    <Content Include="Scripts\highlight\styles\arduino-light.css" />
+    <Content Include="Scripts\highlight\styles\arta.css" />
+    <Content Include="Scripts\highlight\styles\ascetic.css" />
+    <Content Include="Scripts\highlight\styles\atelier-cave-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-cave-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-dune-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-dune-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-estuary-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-estuary-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-forest-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-forest-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-heath-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-heath-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-lakeside-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-lakeside-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-plateau-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-plateau-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-savanna-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-savanna-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-seaside-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-seaside-light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-sulphurpool-dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-sulphurpool-light.css" />
+    <Content Include="Scripts\highlight\styles\atom-one-dark.css" />
+    <Content Include="Scripts\highlight\styles\atom-one-light.css" />
+    <Content Include="Scripts\highlight\styles\brown-paper.css" />
+    <Content Include="Scripts\highlight\styles\brown-papersq.png" />
+    <Content Include="Scripts\highlight\styles\codepen-embed.css" />
+    <Content Include="Scripts\highlight\styles\color-brewer.css" />
+    <Content Include="Scripts\highlight\styles\darcula.css" />
+    <Content Include="Scripts\highlight\styles\dark.css" />
+    <Content Include="Scripts\highlight\styles\darkula.css" />
+    <Content Include="Scripts\highlight\styles\default.css" />
+    <Content Include="Scripts\highlight\styles\docco.css" />
+    <Content Include="Scripts\highlight\styles\dracula.css" />
+    <Content Include="Scripts\highlight\styles\far.css" />
+    <Content Include="Scripts\highlight\styles\foundation.css" />
+    <Content Include="Scripts\highlight\styles\github-gist.css" />
+    <Content Include="Scripts\highlight\styles\github.css" />
+    <Content Include="Scripts\highlight\styles\googlecode.css" />
+    <Content Include="Scripts\highlight\styles\grayscale.css" />
+    <Content Include="Scripts\highlight\styles\gruvbox-dark.css" />
+    <Content Include="Scripts\highlight\styles\gruvbox-light.css" />
+    <Content Include="Scripts\highlight\styles\hopscotch.css" />
+    <Content Include="Scripts\highlight\styles\hybrid.css" />
+    <Content Include="Scripts\highlight\styles\idea.css" />
+    <Content Include="Scripts\highlight\styles\ir-black.css" />
+    <Content Include="Scripts\highlight\styles\kimbie.dark.css" />
+    <Content Include="Scripts\highlight\styles\kimbie.light.css" />
+    <Content Include="Scripts\highlight\styles\magula.css" />
+    <Content Include="Scripts\highlight\styles\mono-blue.css" />
+    <Content Include="Scripts\highlight\styles\monokai-sublime.css" />
+    <Content Include="Scripts\highlight\styles\monokai.css" />
+    <Content Include="Scripts\highlight\styles\obsidian.css" />
+    <Content Include="Scripts\highlight\styles\ocean.css" />
+    <Content Include="Scripts\highlight\styles\paraiso-dark.css" />
+    <Content Include="Scripts\highlight\styles\paraiso-light.css" />
+    <Content Include="Scripts\highlight\styles\pojoaque.css" />
+    <Content Include="Scripts\highlight\styles\pojoaque.jpg" />
+    <Content Include="Scripts\highlight\styles\purebasic.css" />
+    <Content Include="Scripts\highlight\styles\qtcreator_dark.css" />
+    <Content Include="Scripts\highlight\styles\qtcreator_light.css" />
+    <Content Include="Scripts\highlight\styles\railscasts.css" />
+    <Content Include="Scripts\highlight\styles\rainbow.css" />
+    <Content Include="Scripts\highlight\styles\routeros.css" />
+    <Content Include="Scripts\highlight\styles\school-book.css" />
+    <Content Include="Scripts\highlight\styles\school-book.png" />
+    <Content Include="Scripts\highlight\styles\solarized-dark.css" />
+    <Content Include="Scripts\highlight\styles\solarized-light.css" />
+    <Content Include="Scripts\highlight\styles\sunburst.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-blue.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-bright.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-eighties.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow.css" />
+    <Content Include="Scripts\highlight\styles\vs.css" />
+    <Content Include="Scripts\highlight\styles\vs2015.css" />
+    <Content Include="Scripts\highlight\styles\xcode.css" />
+    <Content Include="Scripts\highlight\styles\xt256.css" />
+    <Content Include="Scripts\highlight\styles\zenburn.css" />
+    <Content Include="Scripts\hlidac.v1.2.js" />
+    <Content Include="App_Code\SearchResults.cshtml" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Connected Services\Application Insights\ConnectedService.json" />
+    <Content Include="App_Code\Fn.cshtml" />
+    <Content Include="Content\_bootstrap-datetimepicker.less" />
+    <Content Include="Content\bootstrap-datetimepicker-build.less" />
+    <Content Include="App_Code\UtilChart.cshtml" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\wells.less" />
+    <Content Include="Content\bootstrap\variables.less" />
+    <Content Include="Content\bootstrap\utilities.less" />
+    <Content Include="Content\bootstrap\type.less" />
+    <Content Include="Content\bootstrap\tooltip.less" />
+    <Content Include="Content\bootstrap\thumbnails.less" />
+    <Content Include="Content\bootstrap\theme.less" />
+    <Content Include="Content\bootstrap\tables.less" />
+    <Content Include="Content\bootstrap\scaffolding.less" />
+    <Content Include="Content\bootstrap\responsive-utilities.less" />
+    <Content Include="Content\bootstrap\responsive-embed.less" />
+    <Content Include="Content\bootstrap\progress-bars.less" />
+    <Content Include="Content\bootstrap\print.less" />
+    <Content Include="Content\bootstrap\popovers.less" />
+    <Content Include="Content\bootstrap\panels.less" />
+    <Content Include="Content\bootstrap\pagination.less" />
+    <Content Include="Content\bootstrap\pager.less" />
+    <Content Include="Content\bootstrap\normalize.less" />
+    <Content Include="Content\bootstrap\navs.less" />
+    <Content Include="Content\bootstrap\navbar.less" />
+    <Content Include="Content\bootstrap\modals.less" />
+    <Content Include="Content\bootstrap\mixins\vendor-prefixes.less" />
+    <Content Include="Content\bootstrap\mixins\text-overflow.less" />
+    <Content Include="Content\bootstrap\mixins\text-emphasis.less" />
+    <Content Include="Content\bootstrap\mixins\table-row.less" />
+    <Content Include="Content\bootstrap\mixins\tab-focus.less" />
+    <Content Include="Content\bootstrap\mixins\size.less" />
+    <Content Include="Content\bootstrap\mixins\responsive-visibility.less" />
+    <Content Include="Content\bootstrap\mixins\resize.less" />
+    <Content Include="Content\bootstrap\mixins\reset-text.less" />
+    <Content Include="Content\bootstrap\mixins\reset-filter.less" />
+    <Content Include="Content\bootstrap\mixins\progress-bar.less" />
+    <Content Include="Content\bootstrap\mixins\panels.less" />
+    <Content Include="Content\bootstrap\mixins\pagination.less" />
+    <Content Include="Content\bootstrap\mixins\opacity.less" />
+    <Content Include="Content\bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="Content\bootstrap\mixins\nav-divider.less" />
+    <Content Include="Content\bootstrap\mixins\list-group.less" />
+    <Content Include="Content\bootstrap\mixins\labels.less" />
+    <Content Include="Content\bootstrap\mixins\image.less" />
+    <Content Include="Content\bootstrap\mixins\hide-text.less" />
+    <Content Include="Content\bootstrap\mixins\grid.less" />
+    <Content Include="Content\bootstrap\mixins\grid-framework.less" />
+    <Content Include="Content\bootstrap\mixins\gradients.less" />
+    <Content Include="Content\bootstrap\mixins\forms.less" />
+    <Content Include="Content\bootstrap\mixins\clearfix.less" />
+    <Content Include="Content\bootstrap\mixins\center-block.less" />
+    <Content Include="Content\bootstrap\mixins\buttons.less" />
+    <Content Include="Content\bootstrap\mixins\border-radius.less" />
+    <Content Include="Content\bootstrap\mixins\background-variant.less" />
+    <Content Include="Content\bootstrap\mixins\alerts.less" />
+    <Content Include="Content\bootstrap\mixins.less" />
+    <Content Include="Content\bootstrap\media.less" />
+    <Content Include="Content\bootstrap\list-group.less" />
+    <Content Include="Content\bootstrap\labels.less" />
+    <Content Include="Content\bootstrap\jumbotron.less" />
+    <Content Include="Content\bootstrap\input-groups.less" />
+    <Content Include="Content\bootstrap\grid.less" />
+    <Content Include="Content\bootstrap\glyphicons.less" />
+    <Content Include="Content\bootstrap\forms.less" />
+    <Content Include="Content\bootstrap\dropdowns.less" />
+    <Content Include="Content\bootstrap\component-animations.less" />
+    <Content Include="Content\bootstrap\code.less" />
+    <Content Include="Content\bootstrap\close.less" />
+    <Content Include="Content\bootstrap\carousel.less" />
+    <Content Include="Content\bootstrap\buttons.less" />
+    <Content Include="Content\bootstrap\button-groups.less" />
+    <Content Include="Content\bootstrap\breadcrumbs.less" />
+    <Content Include="Content\bootstrap\bootstrap.less" />
+    <Content Include="Content\bootstrap\badges.less" />
+    <Content Include="Content\bootstrap\alerts.less" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\iframeResizer.contentWindow.min.js" />
+    <Content Include="Scripts\iframeResizer.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\moment\moment-with-locales.js" />
+    <Content Include="Scripts\moment\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment\moment.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\typeahead\jquery.typeahead.min.css" />
+    <Content Include="Scripts\typeahead\jquery.typeahead.min.js" />
+    <Content Include="Scripts\visavail.js" />
+    <Content Include="Scripts\widget.js" />
+    <Content Include="Views\Home\IndexHlidacStatu.cshtml" />
+    <Content Include="Views\Home\NovyClenTeamu.cshtml" />
+    <Content Include="Views\Home\PridatSe.cshtml" />
+    <Content Include="Views\Home\Reports\10_SmlouvyUtajovane.cshtml" />
+    <Content Include="Views\Home\Reports\11_SmlouvyUtajovaneSouhrn.cshtml" />
+    <Content Include="Views\Home\Reports\12_SmlouvyBezUvedeneCenySouhrn.cshtml" />
+    <Content Include="Views\Home\Reports\13_SmlouvyBezUvedeneCeny.cshtml" />
+    <Content Include="Views\Home\Reports\14_UradyObchodujiciSNovymiFirmami.cshtml" />
+    <Content Include="Views\Home\Reports\15_UradyObchodujiciSFirmamiCoSVazbouNaPolitiky.cshtml" />
+    <Content Include="Views\Home\Reports\16_Poslanci2017.cshtml" />
+    <Content Include="Views\Home\Reports\17_UradyObchodujiciSNespolehlivymiPlatciDPH.cshtml" />
+    <Content Include="Views\Home\Reports\1_PocetSmlouvPerDodavatel.cshtml" />
+    <Content Include="Views\Home\Reports\2_SmlouvySChybami.cshtml" />
+    <Content Include="Views\Home\Reports\3_DraheSmlouvySChybami.cshtml" />
+    <Content Include="Views\Home\Reports\4_NejDrazsiSmlouvy.cshtml" />
+    <Content Include="Views\Home\Reports\5_SmlouvySPolitiky.cshtml" />
+    <Content Include="Views\Home\Reports\6_NejnovejsiFirmy.cshtml" />
+    <Content Include="Views\Home\Reports\7_Statistiky.cshtml" />
+    <Content Include="Views\Home\Reports\8_TopPrijmyProPolitiky.cshtml" />
+    <Content Include="Views\Home\Reports\9_SmlouvySNovymiFirmami.cshtml" />
+    <Content Include="Views\Home\Tmp.cshtml" />
+    <Content Include="Views\Home\Zatmivaci.cshtml" />
+    <Content Include="Views\Home\_SearchFormHelp.cshtml" />
+    <Content Include="Views\Home\_SearchFormHelpContent.cshtml" />
+    <Content Include="Zatmivaci_1\default.aspx" />
+    <Content Include="robots.txt" />
+    <Content Include="Scripts\autosize.js" />
+    <Content Include="Scripts\autosize.min.js" />
+    <Content Include="Scripts\bloodhound.min.js" />
+    <Content Include="Scripts\jquery-1.11.3.min.js" />
+    <Content Include="fonts\social-share-kit.eot" />
+    <Content Include="fonts\social-share-kit.ttf" />
+    <Content Include="fonts\social-share-kit.woff" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.jsoneditor.js" />
+    <Content Include="Scripts\jquery.jsoneditor.min.js" />
+    <Content Include="Scripts\jquery.tablesorter\images\black-asc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\black-desc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\black-unsorted.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\bootstrap-black-unsorted.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\bootstrap-white-unsorted.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\dragtable-handle.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\dragtable-handle.svg" />
+    <Content Include="Scripts\jquery.tablesorter\images\dropbox-asc-hovered.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\dropbox-asc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\dropbox-desc-hovered.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\dropbox-desc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\first.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\green-asc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\green-desc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\green-header.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\green-unsorted.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\ice-asc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\ice-desc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\ice-unsorted.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\last.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\loading.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-black-asc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-black-desc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-loading.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-unsorted.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-white-asc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\metro-white-desc.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\next.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\prev.png" />
+    <Content Include="Scripts\jquery.tablesorter\images\white-asc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\white-desc.gif" />
+    <Content Include="Scripts\jquery.tablesorter\images\white-unsorted.gif" />
+    <Content Include="Logger.log4net">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\social-share-kit.js" />
+    <Content Include="Scripts\social-share-kit.min.js" />
+    <Content Include="Scripts\treant.js\raphael.js" />
+    <Content Include="Scripts\treant.js\Treant.css" />
+    <Content Include="Scripts\treant.js\Treant.js" />
+    <Content Include="Scripts\typeahead.bundle.min.js" />
+    <Content Include="Scripts\typeahead.jquery.min.js" />
+    <Content Include="_app_offline.htm" />
+    <Content Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <None Include="Scripts\_references.js" />
+    <Content Include="WebApp.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="WebApp.Debug.config">
+      <DependentUpon>WebApp.config</DependentUpon>
+    </Content>
+    <Content Include="WebApp.Release.config">
+      <DependentUpon>WebApp.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="WebApp.Stage.config">
+      <DependentUpon>WebApp.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Manage\EditSmlouva.cshtml" />
+    <Content Include="Views\Manage\AddPersons.cshtml" />
+    <Content Include="Views\Manage\EditPerson.cshtml" />
+    <Content Include="Views\Account\InfoConfirmCode.cshtml" />
+    <Content Include="Views\Shared\Error404.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Web.config" />
+    <Content Include="Views\Ucty\Index.cshtml" />
+    <Content Include="Views\Ucty\Ucty.cshtml" />
+    <Content Include="Views\Ucty\Ucet.cshtml" />
+    <Content Include="Views\Ucty\Hledat.cshtml" />
+    <Content Include="Views\Ucty\_SearchForm.cshtml" />
+    <Content Include="Views\Ucty\Transakce.cshtml" />
+    <Content Include="Views\Ucty\SubjektyTypu.cshtml" />
+    <Content Include="Views\Weby\Index.cshtml" />
+    <Content Include="Views\Weby\Info.cshtml" />
+    <Content Include="Views\Weby\JakMerime.cshtml" />
+    <Content Include="Views\Weby\Dalsi.cshtml" />
+    <Content Include="Views\Weby\Https.cshtml" />
+    <Content Include="Views\Shared\Error401.cshtml" />
+    <Content Include="Views\Weby\opendata.cshtml" />
+    <Content Include="Views\VZ\Index.cshtml" />
+    <Content Include="Views\VZ\Zakazka.cshtml" />
+    <Content Include="Views\VZ\IT.cshtml" />
+    <Content Include="Views\VZ\_SearchResult.cshtml" />
+    <Content Include="Views\VZ\Hledat.cshtml" />
+    <Content Include="Views\Ucty\Prezidenti.cshtml" />
+    <Content Include="Views\VZ\_SearchForm.cshtml" />
+    <Content Include="Views\Home\Adresar.cshtml" />
+    <Content Include="Views\Home\Afery.cshtml" />
+    <Content Include="Views\Home\Cenik.cshtml" />
+    <Content Include="Views\Home\Detail.cshtml" />
+    <Content Include="Views\Home\err404.cshtml" />
+    <Content Include="Views\Home\HledatOld.cshtml" />
+    <Content Include="Views\Home\JsonDoc.cshtml" />
+    <Content Include="Views\Home\Kontakt.cshtml" />
+    <Content Include="Views\Home\Licence.cshtml" />
+    <Content Include="Views\Home\Napoveda.cshtml" />
+    <Content Include="Views\Home\Osoba.cshtml" />
+    <Content Include="Views\Home\OsobaVazby.cshtml" />
+    <Content Include="Views\Home\Osoby.cshtml" />
+    <Content Include="Views\Home\PoliticiChybejici.cshtml" />
+    <Content Include="Views\Home\PravniPomoc.cshtml" />
+    <Content Include="Views\Home\PridatPolitika.cshtml" />
+    <Content Include="Views\Home\Report.cshtml" />
+    <Content Include="Views\Home\Reporty.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\SnadneHledani.cshtml" />
+    <Content Include="Views\Home\Subjekt.cshtml" />
+    <Content Include="Views\Home\SubjektVazby.cshtml" />
+    <Content Include="Views\Home\Subjekt_Dodavatel.cshtml" />
+    <Content Include="Views\Home\Subjekt_err_nezname.cshtml" />
+    <Content Include="Views\Home\Subjekt_err_spatneICO.cshtml" />
+    <Content Include="Views\Home\Subjekt_Odberatel.cshtml" />
+    <Content Include="Views\Home\Subjekt_Profile.cshtml" />
+    <Content Include="Views\Home\TextSmlouvy.cshtml" />
+    <Content Include="Views\Home\_PolitikDisclaimer.cshtml" />
+    <Content Include="Views\Home\_PolitikSearchForm.cshtml" />
+    <Content Include="Views\Home\_SearchForm.old.cshtml" />
+    <Content Include="Views\Home\_SearchFormPerson.cshtml" />
+    <Content Include="Views\Home\_SearchResult.cshtml" />
+    <Content Include="Views\Home\_SimpleSearchForm.cshtml" />
+    <Content Include="Views\Home\_Symbols.cshtml" />
+    <Content Include="Views\ApiV1\Index.cshtml" />
+    <Content Include="Views\Manage\AnalyzeSubjekt.cshtml" />
+    <Content Include="Views\Manage\EditObject.cshtml" />
+    <Content Include="Views\Manage\EditOsoba.cshtml" />
+    <Content Include="Views\Manage\HledejOsoby.cshtml" />
+    <Content Include="Views\Manage\Objednavka.cshtml" />
+    <Content Include="Views\Manage\Objednavka2.cshtml" />
+    <Content Include="Views\Manage\ObjednavkaPotvrzeni.cshtml" />
+    <Content Include="Views\Manage\OutOfWatchdogs.cshtml" />
+    <Content Include="Views\Manage\ShowAccountConfirmationCode.cshtml" />
+    <Content Include="Views\Manage\SubjektHlidac.cshtml" />
+    <Content Include="Views\Manage\Watchdogs.cshtml" />
+    <Content Include="Views\Manage\WatchdogsAdminList.cshtml" />
+    <Content Include="Views\Shared\_Embedded.cshtml" />
+    <Content Include="Views\Shared\_TopLine.cshtml" />
+    <Content Include="Views\Shared\_TopLineLevel2.cshtml" />
+    <Content Include="Views\Shared\_TopLineLevel2_mobile.cshtml" />
+    <Content Include="Views\Home\Smlouvy.cshtml" />
+    <Content Include="Views\VZ\Napoveda.cshtml" />
+    <Content Include="Views\VZ\_SearchFormHelp.cshtml" />
+    <Content Include="Views\VZ\_SearchFormHelpContent.cshtml" />
+    <Content Include="Views\Home\Subjekt_Stat.cshtml" />
+    <Content Include="Views\Home\Reports\18_Hejtmani2018.cshtml" />
+    <Content Include="Views\Home\Hledat.cshtml" />
+    <Content Include="Views\Home\Reports\19_PoradciVlady.cshtml" />
+    <Content Include="Views\Home\Reports\20_PorovnaniUradu.cshtml" />
+    <Content Include="Views\Manage\ChangePhoto.cshtml" />
+    <Content Include="Views\Manage\ChangePhoto_choose.cshtml" />
+    <Content Include="Views\Manage\ChangePhoto_finish.cshtml" />
+    <Content Include="Views\Home\Reports\21_VladyCR.cshtml" />
+    <Content Include="Views\Manage\Reviews.cshtml" />
+    <Content Include="Views\Manage\ReviewForm.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Home\PorovnatSubjekty.cshtml" />
+    <Content Include="Views\Manage\Debug.cshtml" />
+    <Content Include="Views\Home\Sponzori.cshtml" />
+    <Content Include="Views\Home\SponzoriList.cshtml" />
+    <Content Include="Views\Home\OsobaProfil_Vazby.cshtml" />
+    <Content Include="Views\Data\Index.cshtml" />
+    <Content Include="Views\Data\Hledat.cshtml" />
+    <Content Include="Views\Data\Detail.cshtml" />
+    <Content Include="Views\Data\_data_noTemplate.cshtml" />
+    <Content Include="Views\Data\_data_detail_properties.cshtml" />
+    <Content Include="Views\Data\_data_hledat_properties.cshtml" />
+    <Content Include="Views\Data\Dataset.cshtml" />
+    <Content Include="Views\Data\_beta.cshtml" />
+    <Content Include="Views\Manage\Zalozky.cshtml" />
+    <Content Include="Views\VZ\TextDokumentu.cshtml" />
+    <Content Include="Views\Data\DatasetTextJson.cshtml" />
+    <Content Include="Views\Home\HledatSmlouvy.cshtml" />
+    <Content Include="Views\Data\TechnickeInfo.cshtml" />
+    <Content Include="Views\Home\Porovnat.cshtml" />
+    <Content Include="Views\Home\Reports\2211_Urady_S_Urady.cshtml" />
+    <Content Include="Views\Home\Reports\22_Urady_S_Urady.cshtml" />
+    <Content Include="Views\Home\Subjekt_Vztahy.cshtml" />
+    <Content Include="Views\Home\Reports\23_TopSubjektyStat.cshtml" />
+    <Content Include="Views\Home\Reports\24_TopOsobyStat.cshtml" />
+    <Content Include="Views\Home\AnalyzaPlatcu.cshtml" />
+    <Content Include="Views\Home\Subjekt_Profile2.cshtml" />
+    <Content Include="Views\Home\Subjekt_Stat2.cshtml" />
+    <Content Include="Views\Home\ImageBannerCore1x1_social.cshtml" />
+    <Content Include="Views\Home\ImageBannerCore16x9_social.cshtml" />
+    <Content Include="Views\Home\ImageBannerCore16x9_quote.cshtml" />
+    <Content Include="Views\Home\ImageBannerCore1x1_quote.cshtml" />
+    <Content Include="Views\Insolvence\Index.cshtml" />
+    <Content Include="Views\Insolvence\_SearchForm.cshtml" />
+    <Content Include="Views\Insolvence\_SearchFormHelpContent.cshtml" />
+    <Content Include="Views\Insolvence\_SearchResult.cshtml" />
+    <Content Include="Views\Insolvence\Hledat.cshtml" />
+    <Content Include="Views\Insolvence\Rizeni.cshtml" />
+    <Content Include="Views\Insolvence\_PeopleList.cshtml" />
+    <Content Include="Views\Insolvence\_Soud.cshtml" />
+    <Content Include="Views\Insolvence\_StavRizeni.cshtml" />
+    <Content Include="Views\Insolvence\_SearchFormHelp.cshtml" />
+    <Content Include="Views\Insolvence\Dokumenty.cshtml" />
+    <Content Include="Views\Insolvence\_OddilDokumenty.cshtml" />
+    <Content Include="Views\Insolvence\TextDokumentu.cshtml" />
+    <Content Include="Views\Home\Analyza.cshtml" />
+    <Content Include="Views\Home\OsobaProfil.cshtml" />
+    <Content Include="Views\Home\Detail_Child.cshtml" />
+    <Content Include="Views\Home\Detail_Child_embed.cshtml" />
+    <Content Include="Views\Home\OsobaProfil_Embed.cshtml" />
+    <Content Include="Views\Home\Report_Child.cshtml" />
+    <Content Include="Views\Home\Adresar_Child.cshtml" />
+    <Content Include="Views\Home\Porovnat_Child.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\" />
+    <Folder Include="Content\Api\" />
+    <Folder Include="Scripts\jquery.tablesorter\themes\blue\" />
+    <Folder Include="Scripts\jquery.tablesorter\themes\green\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.11.3.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
+      <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
+      <Name>DotNet.Highcharts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rd\Postal.MVC5 fork\Source\Postal.AspNetCore\Postal.Mvc5.4.6.csproj">
+      <Project>{ca00867c-d9bc-42d9-b04a-bf1957324882}</Project>
+      <Name>Postal.Mvc5.4.6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rd\ZabbixApi\ZabbixApi.csproj">
+      <Project>{2834dafd-eade-4076-9d80-0827e185efe1}</Project>
+      <Name>ZabbixApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PrivateInternals\HlidacWebu.CustomMonitors\HlidacWebu.CustomMonitors.csproj">
+      <Project>{dda06de1-d9ac-4cff-92d8-a7d051779cff}</Project>
+      <Name>HlidacWebu.CustomMonitors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
+      <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>
+      <Name>Lib.Data.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PrivateInternals\Lib.Data.VZ.Import\Lib.Data.VZ.Import.csproj">
+      <Project>{68bd6a30-cb86-42e1-945d-f14dfc4f9439}</Project>
+      <Name>Lib.Data.VZ.Import</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\Lib.csproj">
+      <Project>{40133098-338c-4a5b-bfaa-69a748d73a87}</Project>
+      <Name>Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugin.IssueAnalyzers\Plugin.IssueAnalyzers.csproj">
+      <Project>{2547bded-06a2-4c2b-a3ad-c719713140da}</Project>
+      <Name>Plugin.IssueAnalyzers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugin.TransparetniUcty\Plugin.TransparetniUcty.csproj">
+      <Project>{480f76e1-55a5-47bb-9412-c90e943cbd4d}</Project>
+      <Name>Plugin.TransparetniUcty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{1e06f060-4ba2-45b7-8340-c166c9b2b830}</Project>
+      <Name>Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50012</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://local.hlidacstatu.cz</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://local.hlidacstatu.cz/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="TransformWebConfig" AfterTargets="BeforeBuild">
+    <TransformXml Source="WebApp.config" Transform="WebApp.$(Configuration).config" Destination="Web.config" />
+    <!-- <ItemGroup>
+      <LinkedFiles Include="..\Web\App_Code\SuperSearch.cshtml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(LinkedFiles)" DestinationFolder=".\App_Code" SkipUnchangedFiles="true" />
+    -->
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterBuild" Condition="Exists('WebApp.$(Configuration).config')">
+    <!--Generate transformed config in the output directory-->
+    <TransformXml Source="WebApp.config" Destination="$(OutputPath)WebApp.config" Transform="WebApp.$(Configuration).config" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.10.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+</Project>

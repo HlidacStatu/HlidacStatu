@@ -1,0 +1,223 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+
+
+    var tableColumns = new ReportDataSource.Column[]
+        {
+new ReportDataSource.Column() { Name="IČO",
+HtmlRender = (s) => {
+HlidacStatu.Lib.Analysis.SubjectStatistic data = (HlidacStatu.Lib.Analysis.SubjectStatistic)s;
+return string.Format(@"<a title='{1}' href='/subjekt/{0}'>{2}</a>", data.Subject().ICO, data.Subject().Jmeno, Devmasters.Core.TextUtil.ShortenText(data.Subject().Jmeno, 50));
+},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).Subject().Jmeno; }
+},
+new ReportDataSource.Column() {
+Name ="Počet všech smluv",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet.ToString();},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet.ToString(); }
+},
+new ReportDataSource.Column() {
+Name ="Počet smluv bez uvedené ceny",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny.ToString();},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny.ToString(); }
+},
+new ReportDataSource.Column() {
+Name ="% smluv bez cen",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny.ToString("P1");},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny.ToString("G"); }
+},
+new ReportDataSource.Column() {
+Name ="Počet smluv bez smluvní strany",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany.ToString();},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany.ToString(); }
+},
+new ReportDataSource.Column() {
+Name ="% smluv bez smluvní strany",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1");},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("G"); }
+},
+new ReportDataSource.Column() {
+Name ="Počet smluv s firmami s vazbou na politiky",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky.ToString();},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky.ToString(); }
+},
+new ReportDataSource.Column() {
+Name ="% smluv s firmami s vazbou na politiky",
+HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky.ToString("P1");},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky.ToString("G"); }
+},
+new ReportDataSource.Column() {
+Name ="Hodnota smluv s firmami s vazbou na politiky",
+HtmlRender = (s) => { return  HlidacStatu.Util.RenderData.ShortNicePrice(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky,html:true);},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky.ToString("G"); }
+},
+        }
+        ;
+
+    var ministerstva = new ReportDataSource(tableColumns);
+    var vybraneurady = new ReportDataSource(tableColumns);
+
+    var kraje = new ReportDataSource(tableColumns);
+    var vysokeskoly = new ReportDataSource(tableColumns);
+    var praha = new ReportDataSource(tableColumns);
+    var mesta = new ReportDataSource(tableColumns);
+    var urady = new ReportDataSource(tableColumns);
+
+    foreach (var m in StaticData.MinisterstvaCache.Get())
+    {
+        ministerstva.AddRow(m);
+    }
+    foreach (var m in StaticData.VysokeSkolyCache.Get())
+    {
+        vysokeskoly.AddRow(m);
+    }
+    foreach (var m in StaticData.KrajskeUradyCache.Get())
+    {
+        kraje.AddRow(m);
+    }
+    foreach (var m in StaticData.ManualChoosenCache.Get())
+    {
+        vybraneurady.AddRow(m);
+    }
+
+
+    var PrahaManual = StaticData.PrahaManualCache.Get();
+    var Praha = PrahaManual.ToList();
+    Praha.AddRange(StaticData.StatutarniMestaAllCache.Get().
+                        Where(m => m.Jmeno.ToLower().Contains("městská část praha"))
+                        );
+
+    foreach (var m in Praha.Where(n => n != null))
+    {
+        praha.AddRow(m);
+    }
+
+    foreach (var m in StaticData.StatutarniMestaAllCache.Get().Except(Praha))
+    {
+        mesta.AddRow(m);
+    }
+
+    foreach (var m in HlidacStatu.Lib.StaticData.OrganizacniSlozkyStatuCache.Get())
+    {
+        urady.AddRow(m);
+    }
+
+
+}
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+}
+<h3>Vzájemné porovnání těchto typů úřadů a organizací</h3>
+<p>
+    <a href="#ministerstva">Ministerstva</a> |
+    <a href="#krajskeurady">Krajské úřady</a> |
+    <a href="#vybrane">Vybrané úřady a organizace</a> |
+    <a href="#vysokeskoly">Vysoké školy</a> |
+    <a href="#praha">Praha</a> |
+    <a href="#mesta">Další města a obvody</a> |
+    <a href="#organizacnislozky">Další organizační složky státu</a> |
+</p>
+<div class="bs-callout bs-callout-primary small">
+    <h4>Porovnávání podobných úřadů</h4>
+    <p>
+        V tomto přehledu porovnáváme srovnatelné úřady a organizace. Lépe se tím pozná, jestli se některé výrazně nevymykají obvyklému chování.
+        Pokud utajují výrazně víc než ostatní porovnatelné organizace, pak to může svědčit o možném problému a zvýšeném riziku korupce či neefektivní nakládání s veřejnými prostředky.
+    </p>
+    <p>
+        Pokud vás zajímá porovnání úplně všech státních organizací mezi sebou, tyto reporty jsou právě přesně pro vás:
+        <ul>
+            <li><a href="/Report/12">Úřady nejvíce skrývající zaplacené ceny</a></li>
+            <li><a href="/Report/11">Úřady nejvíce skrývající své dodavatele</a></li>
+        </ul>
+    </p>
+</div>
+
+
+<h2 id="ministerstva">Ministerstva</h2>
+@UtilChart.RenderReport("",ReportModel.QueueItem.types.table, ministerstva, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'pageLength': 20,
+'info': false,
+}", "tblministerstva")
+
+
+<h2 id="krajskeurady">Krajské úřady</h2>
+@UtilChart.RenderReport("",ReportModel.QueueItem.types.table, kraje, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'pageLength': 20,
+'info': false,
+}", "tblkraje")
+
+<h2 id="vybrane">Vybrané úřady a organizace</h2>
+@UtilChart.RenderReport("",ReportModel.QueueItem.types.table, vybraneurady, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'info': false,
+}", "tblvybraneurady")
+
+<h2 id="#vysokeskoly">Vysoké školy</h2>
+@UtilChart.RenderReport("",ReportModel.QueueItem.types.table, vysokeskoly, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'info': false,
+}", "tblvysokeskoly")
+
+<h2 id="#praha">Praha</h2>
+@UtilChart.RenderReport("", ReportModel.QueueItem.types.table, praha, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'info': false,
+}", "tblpraha")
+
+<h2 id="#mesta">Další města a obvody</h2>
+@UtilChart.RenderReport("", ReportModel.QueueItem.types.table, mesta, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'info': false,
+}", "tblmesta")
+
+<h2 id="#organizacnislozky">Další organizační složky státu</h2>
+@UtilChart.RenderReport("", ReportModel.QueueItem.types.table, urady, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [[3,'desc']],
+'lengthChange': false,
+'info': false,
+}", "tblurady")
+
+
+
+

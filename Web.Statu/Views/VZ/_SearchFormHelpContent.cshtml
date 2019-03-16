@@ -1,0 +1,92 @@
+﻿<h3>Textové hledání</h3>
+<dl>
+    <dt>Hledat všechna slova v různých tvarech</dt>
+    <dd>
+        <kbd>trojbarevný velký deštník</kbd>
+        <br />Hledá smlouvy obsahující všechna uvedená slova v různých mluvnických tvarech
+    </dd>
+    <dt>Hledat přesně slovo nebo sousloví</dt>
+    <dd>
+        <kbd>"velký deštník"</kbd>
+        <br />Hledá smlouvy obsahující uvedená slova či sousloví v přesném tvaru jako je v uvozovkách
+    </dd>
+    <dt>Kterékoliv z těchto slov</dt>
+    <dd>
+        mezi všechna požadovaná slova vložte operátor OR:<br /> <kbd>miniaturní OR standardní</kbd>
+        <br />Hledá smlouvy obsahující alespoň jedno z uvedených slov
+    </dd>
+    <dt>Toto slovo tam být nesmí </dt>
+    <dd>
+        Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>-hlodavec</kbd>
+        nebo pro sousloví <kbd>-"Jack Russell"</kbd>
+    </dd>
+</dl>
+<h3>Specifické hledání</h3>
+<dl>
+    <dt>Prohledávat specifické položky ve veřejných zakázkách</dt>
+    <dd>
+        napište prefix s ":" bez mezery následovaný hledanou hodnotou<br /><kbd>ico:00007064</kbd>
+        hledá veřejné zakázky kde je jednou ze stran (zadavatel či dodavatel) Ministerstvo vnitra (ICO 00007064)
+    </dd>
+    <br />
+    <dt>Podporované prefixy / hledatelné položky ve VZ</dt>
+    <dd>
+        <kbd>ico:12345678</kbd> - jedna ze stran má uvedené IČO<br />
+        <kbd>icoDodavatel:12345678</kbd> - dodavatel uvedené IČO<br />
+        <kbd>icoZadavatel:12345678</kbd> - zadavatel/úřad uvedené IČO<br />
+        <kbd>jmenoDodavatel:abcd1234</kbd> - hledat podle jména (či části jména) dodavatele<br />
+        <kbd>jmenoZadavatel:abcd1234</kbd> - hledat podle jména (či části jména) zadavatele/úřadu<br />
+        <br />
+        <kbd>id:cislo</kbd> - hledat veřejnou zakázky s číslem zakázky. Číslo VZ je unikátní<br />
+        <kbd>osobaid:oznaceni-osoby</kbd> - smlouvy s vazbou na osobu. Oznacení osoby najdete u profilu osoby (např. <kbd>osobaid:andrej-babis</kbd>)<br />
+        <kbd>cpv:text</kbd> - VZ v kategorii CPV. Stačí uvést začátek CPV kódu a hledají se všechny podřízení kódy (např. 72)<br />
+        <kbd>form:cisloFormuláře</kbd> - VZ s uvedeným číslem formulářem <br />
+        <kbd>zahajený:1</kbd> - pokud je uvedeno, prohledávají se pouze zakázky, do kterých je možné se ještě přihlásit.<br />
+        <kbd>popis:text</kbd> - VZ s popisem text<br />
+        <br />
+        <kbd>oblast:zkratkaOblasti</kbd> - VZ spadající do některé z 19 oblastí. Např. <kbd>oblast:Fin</kbd><br />
+        <div style="padding-left:10px;">
+            <ul>
+                @{
+
+                var oblastiList = Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny))
+                    .Select(
+                        m => new { Value = ((HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)int.Parse(m.Value)).ToString(), Text = m.Key }
+                    )
+                    .ToList();
+                }
+                @foreach (var item in oblastiList)
+            {
+                <li><kbd>@item.Value</kbd> - @item.Text</li>
+
+        }
+            </ul>
+        </div>
+        <br />
+        <kbd>cena:castka</kbd> - VZ s cenou (odhadovanou či vysoutěženou) <br />
+        <kbd>cena:&gt;castka</kbd> - VZ s cenou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd> <kbd>&lt;</kbd><br />
+        <br />
+        <kbd>zverejneno:rok-mesic-den</kbd> - VZ s datem zvěřejnění, formát data YYYY-MM-DD<br />
+        <kbd>zverejneno:[2016-07-01 TO 2016-07-31]</kbd> - VZ zveřejněné v srpnu 2016.<br />
+        <kbd>podepsano:rok-mesic-den</kbd> - VZ uzavřené podepsané dne.<br />
+        <kbd>podepsano:[2016-01-01 TO 2016-12-31]</kbd> - VZ uzavřené v roce 2016.<br />
+        <br />
+        <kbd>schvalil:jmeno</kbd> - jméno osoby, které smlouvy schválila.<br />
+        <kbd>text:text</kbd> - prohledává se pouze popis a zadávací dokumentace VZ, pokud jsou k dispozici.<br />
+
+    </dd>
+</dl>
+<h3>Pro experty</h3>
+<dl>
+    <dt>Logické a rozšiřující operátory</dt>
+    <dd>
+        Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br />
+        Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující více znaků. Příklad:<kbd>Ministerstvo z*</kbd><br />
+        Příklad: <kbd>ico:27295567 AND cena:&gt;=1000000</kbd>
+    </dd>
+    <dt>Opravdu pro odvážné a pokročilé</dt>
+    <dd>
+        Protože vyhledávání běží nad Elastic Serverem, můžete použít většinu operátorů <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax" target="_blank">Query string syntaxe</a> Elastic serveru. Hezkou zábavu.
+
+    </dd>
+</dl>

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /Account/*
+Disallow: /Admin/*
+Disallow: /Api/*
+
+Sitemap: https://www.HlidacStatu.cz/sitemap.xml

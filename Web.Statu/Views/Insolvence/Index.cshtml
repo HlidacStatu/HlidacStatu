@@ -1,0 +1,92 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Models;
+@using HlidacStatu.Lib.Data.Insolvence;
+@model HlidacStatu.Web.Models.InsolvenceIndexViewModel
+
+@{
+	ViewBag.Title = "Hlídač insolvencí";
+	ViewBag.SubTitle = "";
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">Hlídač Insolvencí</li>
+    </ol>
+}
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
+
+
+<hr />
+
+<div class="row">
+	<div class="col-xs-6 col-sm-6" style="padding:5px">
+		<h2>Nové společnosti v insolvenci</h2>
+		@{
+			var spolecnosti = Model.NoveFirmyVInsolvenci
+				.SelectMany(r => r.Dluznici.Where(d => d.Typ == "P" && !string.IsNullOrEmpty(d.ICO)).Select(d => new { Dluznik = d, SpisovaZnacka = r.SpisovaZnacka, UrlId = r.UrlId() }))
+				.Select(s => new OsobaViewModel
+				{
+					Osoba = new Osoba { PlneJmeno = s.Dluznik.PlneJmeno, ICO = s.Dluznik.ICO, Typ = s.Dluznik.Typ },
+					SpisovaZnacka = s.SpisovaZnacka,
+					UrlId = s.UrlId,
+					DisplayLinkToRizeni = true
+				});
+		}
+
+		@Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spolecnosti });
+	</div>
+
+	<div class="col-xs-6 col-sm-6" style="padding:5px">
+		<h2>Nové osoby v insolvenci</h2>
+		@{
+			var osoby = Model.NoveOsobyVInsolvenci
+				.SelectMany(r => r.Dluznici.Where(d => d.Typ == "F" && !string.IsNullOrEmpty(d.Rc)).Select(d => new { Dluznik = d, SpisovaZnacka = r.SpisovaZnacka, UrlId = r.UrlId() }))
+				.Select(s => new OsobaViewModel
+				{
+					Osoba = new Osoba { PlneJmeno = s.Dluznik.PlneJmeno, Rc = s.Dluznik.Rc, Typ = s.Dluznik.Typ },
+					SpisovaZnacka = s.SpisovaZnacka,
+					UrlId = s.UrlId,
+					DisplayLinkToRizeni = true
+				});
+		}
+
+		@Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = osoby })
+	</div>
+</div>
+
+<h2>Ukázky možností <span style="color:red; font-weight:bold">TODO</span></h2>
+<ul>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=*&order=1">Poslední veřejné zakázky</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=*%20oblast:IT&order=1">Poslední veřejné zakázky v oboru IT</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222&order=1">Poslední veřejné zakázky od Ministerstva pro místní rozvoj</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20oblast:IT&order=1">Poslední veřejné zakázky týkající se IT od MMR</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20cpv:72,48&order=1">Poslední veřejné zakázky od MMR podle CPV kódu</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20AND%20%28NEN%20OR%20NIPEZ%29&order=1">Poslední veřejné zakázky týkající se NEN a NIPEZ</a>
+    </li>
+
+</ul>
+
+
+
+
+
+
+

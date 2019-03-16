@@ -1,0 +1,115 @@
+﻿@using HlidacStatu.Web;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Framework;
+@using System.Threading.Tasks;
+@using HlidacStatu.Web.Models;
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Analysis;
+
+@{
+    ViewBag.Title = "Známé kauzy a smlouvy s nimi související";
+    ViewBag.SubTitle = "Najděte si smlouvy související se známými kauzami";
+
+    TemplatedQuery[] PolitickeAferyData = new TemplatedQuery[] {
+new TemplatedQuery() { Text="Úklidové služby pro firmy členů ČSSD", Description="Zakázky pro firmy Premio Invest a Lasesmed, které vlastní členové ČSSD a roky dostávaly stovky milionů za úklid v Praze od městských organizací, kde mají vliv sociálnědemokratičtí politici.<a href='https://zpravy.aktualne.cz/domaci/uklid-prahy-jako-stranicky-byznys-clenove-cssd-vlastni-firmy/r~328647c27c2811e7954a002590604f2e/'>Více</a>",
+Query ="ico:26746590 OR ico:28363809", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="EET", Description="Smlouvy pokrývající vývoj a provoz EET. Pěkně shrnuto v <a href='http://www.dotyk.cz/publicistika/eet-babisuv-nepruhledny-system-na-vymahani-dani-20160915.html'>EET: Babišův neprůhledný systém na vymáhání daní</a>",
+Query ="(ico:03630919 OR ico:72054506 OR ico:72080043) AND (EET OR ADIS)", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="Inzerce na Parlamentních listech", Description=@"Smlouvy s inzercí na médiích Our Media a.s. (vydavatel Parlametních listů) anebo s mediaplánem přímo pro PL.
+<a href=""http://mediahub.cz/komunikace-35809/clanky-v-parlamentnich-listech-si-plati-ministri-i-hejtmani-celkove-castky-jdou-do-milionu-inzerce-vypada-jako-redakcni-clanky-1058528"">Žena šéfa Sněmovny získala na web pro seniory statisíce od hejtmanů ČSSD</a>",
+Query ="\"OUR MEDIA\" OR \"Parlamentní listy\" OR \"Parlamentnilisty.cz\" OR ico:28876890 OR \"KrajskeListy.cz\" OR \"Krajské listy\" OR \"Prvnizpravy.cz\" OR icoPrijemce:24214868", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="Dotace pro i60.cz", Description=@"Dotace pro server pro seniory i60.cz spoluvlastněný manželkou předsedy Sněmovny Jana Hamáčka (ČSSD).
+<a href=""http://zpravy.idnes.cz/hamackova-dotace-hejtmani-0yb-/domaci.aspx?c=A161118_201753_domaci_bur"">Žena šéfa Sněmovny získala na web pro seniory statisíce od hejtmanů ČSSD</a>",
+Query ="\"www.i60.cz\" OR icoPrijemce:24214868", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="Elektronické mýto", Description=@"Smlouvy související elektronickým mýtem.",
+Query ="\"elektronické mýto\"", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="Smlouvy ŘSD s omezenou soutěží", Description=@"Smlouvy ŘSD uzavřené v užším řízení či v jednacím řízení bez uveřejnění.",
+Query ="icoPlatce:65993390 AND ( \"stavební práce v užším řízení\" OR \"jednací řízení bez uveřejnění\") ", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+new TemplatedQuery() { Text="Jana Mrencová", Description="M.Hašek, KSČM, politické PR, neexistující tisková mluvčí",
+Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
+
+};
+
+    //
+
+
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    @Util.FeedbackModal("Chybí nám tu nějaká aféra? Nebo tu máme chybu?", "Afera")
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Politické aféry</h3>
+
+            @for (int i = 0; i < PolitickeAferyData.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    <div class="clearfix"></div>
+                }
+                <div class="col-xs-12 col-sm-6">
+                    @QueryStatistics(PolitickeAferyData[i])
+                </div>
+            }
+
+        </div>
+    </div>
+
+
+    @helper QueryStatistics(HlidacStatu.Lib.Analysis.TemplatedQuery item)
+    {
+        <div class="bs-callout @(Util.IfExists(item.Data.Summary.Pocet==0,"bs-callout-success","bs-callout-danger"))">
+            <h4>
+                <a href="@item.Url()">@Html.Raw(item.Text)</a>
+            </h4>
+            <p>
+                @if (item.Data.Summary.Pocet == 0)
+                {
+                    <strong>
+                        Zatím žádné smlouvy
+                    </strong>
+
+                }
+                else
+                {
+                    for (int y = item.Data.FirstYear; y <= item.Data.LastYear; y++)
+                    {
+                        var iy = item.Data[y];
+                        if (iy.Pocet > 0)
+                        {
+                            <div>
+                                V roce @y  
+                                <strong>
+                                    <a href="@item.Url()">@HlidacStatu.Util.PluralForm.Get((int)iy.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
+                                </strong>
+
+                                za celkem <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(iy.CelkemCena, html: true, shortFormat: true))</strong>.
+                            </div>
+                        }
+                    }
+                }
+            </p>
+            <p>
+                @Html.Raw(item.Description)
+            </p>
+            <p>
+                @Util.AddWatchDog(this.User, item.Query, typeof(HlidacStatu.Lib.Data.Smlouva), "Poslat upozornění na nové smlouvy k této aféře", "", "", item.Text, false)
+            </p>
+        </div>
+    }

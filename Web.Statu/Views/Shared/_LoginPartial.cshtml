@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+<li class="separator">
+    <a style="color:#c9302c;" title="Všechny uložené záložky" alt="Všechny uložené záložky" href="/manage/zalozky" class="bookmark bookmarkOn"></a>
+    <a style="" href="/manage/" title="Nastavení účtu" alt="Nastavení účtu" class="glyphicon glyphicon-user"></a>
+
+</li>
+    <li>
+        <a href="/Account/LogOff?rnd=@Guid.NewGuid().ToString("N")">Odhlásit</a>
+    </li>
+}
+else
+{
+    <li class="separator">@Html.ActionLink("Přihlásit se", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+}

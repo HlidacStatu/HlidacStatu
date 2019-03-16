@@ -1,0 +1,136 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+@{
+
+    Layout = null;
+
+
+
+    var uradSVazbami = StaticData.UradyObchodujiciSFirmami_s_vazbouNaPolitiky_nedavne_Cache.Get()
+.SoukromeFirmy.Where(m => m.Ico == Model.ICO && m.Detail != null && m.Detail.Count > 0)
+.FirstOrDefault();
+    ;
+
+}
+@if (uradSVazbami != null)
+{
+    var numPercent = "0";
+    var sumPercent = "0";
+    var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(uradSVazbami.Ico);
+    if (stat.Summary.Pocet > 0)
+    {
+        numPercent = ((double)uradSVazbami.Pocet / (double)stat.Summary.Pocet).ToString("P2");
+    }
+    if (stat.Summary.CelkemCena > 0)
+    {
+        sumPercent = (uradSVazbami.CelkemCena / stat.Summary.CelkemCena).ToString("P1");
+    }
+
+
+    <h3 id="vazbyNaPolitik">Obchody @Model.Jmeno s firmami navázanými na politiky</h3>
+    <table class="table table-hover table-new table-new--dotted">
+        <tbody>
+            <tr>
+                <td>Počet smluv</td>
+                <td>
+                    @Model.Jmeno uzavřel <b>@HlidacStatu.Util.PluralForm.Get((int)uradSVazbami.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv")</b> takových smluv, což je
+                    <b>@numPercent</b> všech uzavřených smluv.
+                </td>
+            </tr>
+            <tr>
+                <td>Hodnota smluv</td>
+                <td>
+                    @Model.Jmeno uzavřel takových smlouv za <b>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(uradSVazbami.CelkemCena, html: true, shortFormat: true))</b>, což je
+                    <b>@sumPercent</b> všech uzavřených smluv.
+                </td>
+            </tr>
+            <tr>
+                <td>Firmy navázané na politiky</td>
+                <td>
+                    @{
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        sb.Append("<ol>");
+                        int previewCount = 20;
+                        foreach (var f in uradSVazbami.Detail.OrderByDescending(m => m.CelkemCena).Take(previewCount))
+                        {
+                            sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - {3} - {4}"
+                                , uradSVazbami.Ico, f.Item, HlidacStatu.Lib.Data.Firmy.GetJmeno(f.Item)
+                                , f.ToNiceString(null, false)
+                                , Util.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
+                                );
+
+                            if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(f.Item))
+                            {
+                                sb.AppendLine("<br/>Osoby:");
+                                var p = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[f.Item]
+                                            .Select(pid => HlidacStatu.Lib.StaticData.Politici
+                                                .Get()
+                                                .Where(m => m.InternalId == pid)
+                                                .FirstOrDefault())
+                                                .Where(pol => pol != null)
+                                                .Select(pol => string.Format("<a href='{0}'>{1}</a>", pol.GetUrlOnWebsite(), pol.FullNameWithYear()))
+                                                .Aggregate((fi, se) => fi + ", " + se);
+
+                                sb.Append(p + "<br/>&nbsp;");
+                            }
+                            else
+                            {
+                                var firmaDesc = HlidacStatu.Lib.Data.Firmy.Get(f.Item).Description(true);
+                                if (!string.IsNullOrEmpty(firmaDesc))
+                                {
+                                    sb.AppendFormat("<br/>{0}<br/>&nbsp;", firmaDesc);
+                                }
+                            }
+                            sb.AppendLine("</li>");
+
+                        }
+
+                        //sb.AppendFormat("<li><a href='/Hledat?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{2}</a> {3}</li>"
+                        //    ,d.Ico, f.Ico, f.Name, f.StatForIco.ToNiceString("",false)
+                        //    );
+                        sb.Append("</ol>");
+
+
+                        if (uradSVazbami.Detail.Count > previewCount)
+                        {
+                            string rand = Guid.NewGuid().ToString("N");
+                            sb.Append("<a class='btn btn-link' role='button' data-toggle='collapse' href='#allData" + rand + "' aria-expanded='false' aria-controls='allData'>Ukázat všechny</a>");
+                            sb.Append("<ul class='collapse' id='allData" + rand + "'>");
+                            foreach (var f in uradSVazbami.Detail.OrderByDescending(m => m.CelkemCena).Skip(previewCount))
+                            {
+                                sb.AppendFormat("<li><a href='/Subjekt/'{1}>{2}</a> - {3} - {4}"
+                                    , uradSVazbami.Ico, f.Item, HlidacStatu.Lib.Data.Firmy.GetJmeno(f.Item)
+                                    , f.ToNiceString(null, false)
+                                    , Util.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
+
+                                    );
+
+                                //sb.AppendFormat("<li><a href='/Hledat?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{2}</a> {3}</li>"
+                                //    ,d.Ico, f.Ico, f.Name, f.StatForIco.ToNiceString("",false)
+                                //    );
+
+                            }
+                            sb.Append("</ul>");
+                        }
+
+                    }
+                    @Html.Raw(sb.ToString())
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+<hr class="morespace" />
+
+
+
+

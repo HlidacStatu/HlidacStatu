@@ -1,0 +1,184 @@
+﻿{
+  "title": "Person",
+  "type": "object",
+  "format": "grid",
+  "required": [
+    "jmeno",
+    "prijmeni",
+    "narozeni",
+    "status",
+    "autor"
+  ],
+  "properties": {
+    "jmeno": {
+      "type": "string",
+      "title": "Jméno",
+      "description": "Jmeno",
+      "default": ""
+    },
+    "prijmeni": {
+      "type": "string",
+      "title": "Prijmeni",
+      "required": true
+    },
+    "narozeni": {
+      "title": "Datum narozeni (yyyy-MM-dd)",
+      "type": "string",
+      "format": "date",
+      "default": ""
+    },
+    "umrti": {
+      "title": "Datum umrti (yyyy-MM-dd)",
+      "type": "string",
+      "format": "date",
+      "default": ""
+
+    },
+    "gender": {
+      "title": "Pohlaví",
+      "type": "string",
+      "enum": [
+        "Muž",
+        "Žena"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "title": "Typ osoby",
+      "enum": [
+        "NeniPolitik",
+        "ByvalyPolitik",
+        "VazbyNaPolitiky",
+        "Politik"
+      ]
+    },
+    "autor": {
+      "title": "autor tohoto zaznamu",
+      "type": "string",
+      "description": ""
+    },
+    "nameId": {
+      "title": "NameId",
+      "type": "string",
+      "description": ""
+    },
+    "event": {
+      "type": "array",
+      "title": "Popis a další informace o osobě",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "format": "grid",
+        "title": "Další informace o osobach",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "pk": {
+            "title": "pk",
+            "type": "number",
+            "readonly": true
+          },
+          "title": {
+            "title": "Nazev",
+            "type": "string",
+            "description": "Název informace, nepovinné"
+          },
+          "description": {
+            "title": "Popis",
+            "type": "string",
+            "description": "Podrobnější popis, nepovinné"
+          },
+          "addInfo": {
+            "title": "Další info",
+            "type": "string",
+            "description": "Pokud politik, tak za jakou stranu. Pokud sponzor, tak jakou stranu sponzoroval"
+          },
+          "addInfoNum": {
+            "title": "Další info číselné",
+            "type": "number",
+            "description": "Pokud je sponzor, tak spozorovana castka"
+          },
+          "zdroj": {
+            "title": "Zdroj",
+            "type": "string",
+            "description": "Zdroj (URL apod), které potvrzují tuto informaci"
+          },
+          "typ": {
+            "type": "string",
+            "description": "Typ, charakter informace",
+            "enum": [
+              "Popis",
+              "Poslanec",
+              "Senator",
+              "Sponzor",
+              "OsobniVztah",
+              "Pribuzny",
+              "StatniUrednik"
+            ]
+          },
+          "datumOd": {
+            "type": "string",
+            "format": "date",
+            "title": "Od data"
+
+          },
+          "datumDo": {
+            "type": "string",
+            "format": "date",
+            "title": "Do data"
+
+          }
+
+        }
+      }
+    },
+    "vazbyfirmy": {
+      "type": "array",
+      "title": "Vazby na firmy",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "format": "grid",
+        "title": "Neformální vazby na firmy",
+        "properties": {
+          "vazbaKIco": {
+            "title": "Vazba na firmu - ICO",
+            "type": "string"
+          },
+          "vazbaKOsoba": {
+            "title": "Vazba na jinou osobu (zkratka z url hlidacsmluv.cz/osoba/[zkratka])",
+            "type": "string"
+          },
+          "typVazby": {
+            "type": "string",
+            "title": "Neformalni vztah k firme/osobe",
+            "description": "Formalni vztahy automaticky nacteme z Obchodniho rejstriku",
+            "enum": [
+              "OsobniVztah",
+              "Vliv",
+              "Kontrola"
+            ]
+          },
+          "popis": {
+            "type": "string"
+          },
+          "datumOd": {
+            "type": "string",
+            "format": "date",
+            "title": "Od data"
+          },
+          "datumDo": {
+            "type": "string",
+            "format": "date",
+            "title": "Do data"
+          },
+          "zdroj": {
+            "type": "string",
+            "description": "Zdroj (URL], ktery tuto vazbu popisuje/dokazuje"
+          }
+        }
+      }
+    }
+  }
+}

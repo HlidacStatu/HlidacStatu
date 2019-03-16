@@ -1,0 +1,174 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSet
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    var reg = Model.Registration();
+
+    ViewBag.Title = "Datový zdroj " + Model.Registration().name;
+    ViewBag.SubTitle = "Podrobné informace";
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="/scripts/highlight/styles/default.css">
+    <script src="/scripts/highlight/highlight.pack.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.highlightme pre').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        });
+
+    </script>
+    <style>
+        #data-detail-content pre {
+            white-space: pre-wrap !important;
+            font-size: 80%
+        }
+    </style>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@reg.name</li>
+        <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+    }
+    <div id="data-detail-content">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <b>@reg.name</b>
+                        @if (!string.IsNullOrEmpty(reg.description))
+                        {
+                            <p>@reg.description</p>
+                        }
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DatasetId</td>
+                    <td>@reg.datasetId</td>
+                </tr>
+                <tr>
+                    <td>Vytvořen</td>
+                    <td>@HlidacStatu.Lib.RenderTools.DateDiffShort(reg.created, DateTime.Now, "Datový zdroj byl založen před {0}.", "")</td>
+                </tr>
+                <tr>
+                    <td>Záznamy datového zdroje</td>
+                    @{
+                        var first = Model.SearchData("*", 1, 1, "DbCreated");
+                        var last = Model.SearchData("*", 1, 1, "DbCreated desc");
+                    }
+                    <td>
+                        <p>
+                            Datový zdroj @Devmasters.Core.Lang.Plural.GetWithZero((int)Model.SearchData("", 1, 0).Total
+,"neobsahuje žádný záznam","obsahuje jeden záznam", "obsahuje {0} záznamy","obsahuje {0} záznamů")
+                        </p>
+                        @if (first.Total > 0)
+                        {
+                            <p>
+                                Nejstarší záznam byl vložen @(Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                                , nejnovější @(Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()).
+                            </p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Testovací (beta) provoz</td>
+                    <td>@Util.IfExists(reg.betaversion, "Ano", "Ne")</td>
+                </tr>
+                <tr>
+                    <td>Kontaktovat autora</td>
+                    <td>
+                        @Util.FeedbackModal("Poslat autorovi zprávu", null,null,null,
+                            new string[]{ "Chyba","Chci upozornit na chybu",
+                        "Stiznost","Chci si stěžovat",
+                        "Pochvala","Chci vás pochválit",
+                        "NabidkaPomoci","Nabízím vám pomoc",
+                        "Jiné","Jiné",
+                        }, true,"dataset|" + @Model.DatasetId)
+
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Technické podrobnosti</b></td>
+                </tr>
+                <tr>
+                    <td>Zdroj dat</td>
+                    <td><a href="@reg.origUrl">@reg.origUrl</a></td>
+                </tr>
+                <tr>
+                    <td>Zdrojový kód parseru dat</td>
+                    <td><a href="@reg.sourcecodeUrl">@reg.sourcecodeUrl</a></td>
+                </tr>
+                <tr>
+                    <td>JSON Schéma popisující strukturu a požadavky na data</td>
+                    <td>
+                        <div class="highlightme">
+                            <pre>
+@reg.jsonSchema
+                        </pre>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Template pro zobrazování vyhledaných výsledků</td>
+                    <td>
+                        <div class="highlightme">
+                            <pre>
+@(reg.searchResultTemplate?.body ?? "<i>není nastaven</i>")
+                        </pre>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Template pro zobrazování jednoho záznamu</td>
+                    <td>
+                        <div class="highlightme">
+                            <pre>
+@(reg.detailTemplate?.body ?? "<i>není nastaven</i>")
+                        </pre>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Otestovat strukturu dat</td>
+                    <td>
+                        Pokud chcete otestovat vaše data, zda mají správný formát a splňují požadavky <a href="https://json-schema.org">JSON Schematu</a> této datové sady, rádí pomůžeme.
+
+                        <form method="post">
+                            <div class="form-group">
+                                <label for="jsondata">Zkopírujte sem JEDEN záznam v JSON formátu (stejná data jako posílaná <a href="/api">přes API</a>)</label>
+                                <textarea id="jsondata" name="jsondata" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-default">Odeslat</button>
+
+                        </form>
+                    </td>
+                </tr>
+                @if (Model.DatasetId == "stav-mostu")
+                {
+                    <tr>
+                        <td colspan="2">
+                            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1q2tP7lpTxs1AxzG1NO6a6-HYxl0jmqQq" width="800" height="600"></iframe>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    @Html.Partial("_beta")

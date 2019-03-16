@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:vOKO="http://www.pds.eu/vOKO/v0200" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="RDM_SUS01A" targetNamespace="http://www.pds.eu/vOKO/v0200" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:tns="http://www.pds.eu/RdmServices/RDM_SUS01A" xmlns:mze="http://www.mze.cz/ESBServer/1.0" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://schemas.xmlsoap.org/soap/encoding/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.pds.eu/vOKO/v0200" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://www.pds.eu/RdmServices/RDM_SUS01A" />
+      <xs:element name="Request" type="vOKO:Request">
+        <xs:annotation>
+          <xs:appinfo>
+            <mze:Info>Obálka datové komunikace pro požadavek</mze:Info>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="Request">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="UIDkey" type="vOKO:UIDkey">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Element pro identifikační údaje pro autorizaci</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="TimeStamp" type="vOKO:TimeStamp">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Časové razítko</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="AppInfo" type="vOKO:AppInfo">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Informace o klientské aplikaci</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="RequestHeader" type="vOKO:RequestHeader">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Hlavička požadavku</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="RequestContent">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Data předávaná službě</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:element ref="tns:Request" />
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="vOKOid" type="vOKO:vOKOidtype" use="required">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Identifikátor služby</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="UIDkey">
+        <xs:attribute name="dn" use="required">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>CN uživatele v LDAPu</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="addressAD" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Adresa autorizační databáze (nebo řetězec 'default')</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="certificateSN" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Sériové číslo certifikátu</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="certificateOwner" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Jméno vlastníka certifikátu</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="certificateOrganization" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Organizace vlastníka certifikátu</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="certificateIssuer" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Vydavatel certifikátu</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="email" use="optional">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>E-mail uživatele</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="100" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="AppInfo">
+        <xs:sequence>
+          <xs:element name="AppModule">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Informace o klientské aplikaci</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:attribute name="id" use="required">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <mze:Info>Id(název) aplikace</mze:Info>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="35" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="version" use="required">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <mze:Info>Verze aplikace</mze:Info>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TimeStamp">
+        <xs:simpleContent>
+          <xs:extension base="xs:dateTime">
+            <xs:attribute name="type" use="required">
+              <xs:annotation>
+                <xs:appinfo>
+                  <mze:Info>Typ časové značky</mze:Info>
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="base" />
+                  <xs:enumeration value="qualified" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:extension>
+        </xs:simpleContent>
+      </xs:complexType>
+      <xs:complexType name="RequestHeader">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="RequestID" type="vOKO:RequestIDtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Identifikátor požadavku na straně konzumenta</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Subject">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Informace o subjektu</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="subjectID" use="required">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <mze:Info>Identifikátor subjektu</mze:Info>
+                      </xs:appinfo>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:length value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="RequestType">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Typ požadavku (v případě že má služba více typů)</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="code" use="required">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <mze:Info>Kód typu požadavku</mze:Info>
+                      </xs:appinfo>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="15" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="Response" type="vOKO:Response">
+        <xs:annotation>
+          <xs:appinfo>
+            <mze:Info>Obálka datové komunikace pro odpověď</mze:Info>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="Response">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="SRVid" type="vOKO:SRVid">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Identifikátor serveru, kterým bylo na straně EPO zpracováno</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="TimeStamp" type="vOKO:TimeStamp">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Časová značka odpovědi</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ResponseHeader" type="vOKO:ResponseHeader">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Hlavička odpovědi</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ResponseContent">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Data odpovědi</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:element ref="tns:Response" />
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="vOKOid" type="vOKO:vOKOidtype" use="required">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Identifikátor služby</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="SID" type="vOKO:SIDtype" use="required">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Jednoznačný identifikátor datové výměny na straně vOKO serveru</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="ResponseHeader">
+        <xs:sequence>
+          <xs:element name="RequestID" type="vOKO:RequestIDtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Identifikátor požadavku na straně konzumenta</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="SIDtype">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="vOKOidtype">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="15" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="RequestIDtype">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="Langtype">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="3" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="SRVid">
+        <xs:attribute name="serverID" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:appinfo>
+              <mze:Info>Id serveru</mze:Info>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:complexType>
+      <xs:element name="Error" type="vOKO:Error">
+        <xs:annotation>
+          <xs:appinfo>
+            <mze:Info>Obálka chybové odpovědi</mze:Info>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="Error">
+        <xs:sequence>
+          <xs:element name="ErrorCode" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Kód chyby</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ErrorDescription" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Popisné chybové hlášení</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DateTime" type="xs:dateTime">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Časová značka chyby</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="SID" type="vOKO:SIDtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Jednoznačný identifikátor datové výměny na straně vOKO serveru</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="RequestID" type="vOKO:RequestIDtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Identifikátor požadavku na straně konzumenta</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="SRVid" type="vOKO:SRVid">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Id Serveru, kterým bylo na straně EPO zpracováno</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="vOKOid" type="vOKO:vOKOidtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Identifikátor služby</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ResponseLang" type="vOKO:Langtype">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Kód jazyka odpovdi</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ShowXSLTpath" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Cesta k šabloně pro zobrazení</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ShowXSLTtype" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Typ šablony pro zobrazení (text/xsl)</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Display" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Text o službě pro zobrazení v klientské aplikaci</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Desc" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Text o službě pro zobrazení v klientské aplikaci</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="InnerException">
+            <xs:annotation>
+              <xs:appinfo>
+                <mze:Info>Strukturovaná chyba zdrojového systému</mze:Info>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any minOccurs="0" maxOccurs="1" processContents="lax" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <s:schema xmlns:s1="http://www.pds.eu/RdmServices/RDM_SUS01A" xmlns:mze="http://www.mze.cz/ESBServer/1.0" elementFormDefault="qualified" targetNamespace="http://www.pds.eu/RdmServices/RDM_SUS01A" xmlns:s="http://www.w3.org/2001/XMLSchema">
+      <s:annotation>
+        <s:appinfo>
+          <mze:Info>
+            <mze:Service Name="RDM_SUS01A">Služba pro vyhledání subjektu v RDM.</mze:Service>
+            <mze:Changes>
+              <mze:Change Version="1.0" Date="2010-02-09T10:00:00+01:00" Who="Jaroslav Košulič, mailto:jaroslav.kosulic@pds.eu">První verze služby</mze:Change>
+              <mze:Change Version="1.1" Date="2012-12-06T14:30:00+01:00" Who="Ondřej Šabatka, mailto:ondrej.sabatka@pds.eu">Změny podle SPECIFIKACE POŽADAVKU_No04_Integrace_RDM_na_ZR</mze:Change>
+            </mze:Changes>
+          </mze:Info>
+        </s:appinfo>
+      </s:annotation>
+      <s:element name="Response" type="s1:Response">
+        <s:annotation>
+          <s:appinfo>
+            <mze:Info>Odpověď (výstup bez ESB obálky)</mze:Info>
+          </s:appinfo>
+        </s:annotation>
+      </s:element>
+      <s:complexType name="Response">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="pocet" type="s:int">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Celkový skutečný počet subjektů odpovídajících podmínkám zadaným na vstupu. Může to být více, než počet výskytů elementu SUBJEKT v SEZNAM_SUBJEKTU</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+          <s:element minOccurs="1" maxOccurs="1" name="seznam_subjektu" type="s1:ArrayOfSubjekt_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Element seznamu nalezených subjektů</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSubjekt_type">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="subjekt" nillable="true" type="s1:subjekt_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Element podrobných informací o subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="subjekt_type">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="subjektid">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Identifikátor subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:positiveInteger">
+                <s:minInclusive value="1000000000" />
+                <s:maxInclusive value="9999999999" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="obchodni_jmeno">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Obchodní jméno subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="jmeno">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Jméno FO</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="24" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="prijmeni">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Příjmení FO</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="35" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="1" maxOccurs="1" name="seznam_identifikatoru" type="s1:ArrayOfIdentifikator_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Element pro seznam externích identifikátorů subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+          <s:element minOccurs="1" maxOccurs="1" name="adresa" type="s1:adresa_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Element adresy subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="datum_narozeni" type="s:date">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Datum narození</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfIdentifikator_type">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="identifikator" nillable="true" type="s1:identifikator_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Element identifikátoru</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="identifikator_type">
+        <s:simpleContent>
+          <s:extension base="s:string">
+            <s:attribute name="typ" use="required">
+              <s:annotation>
+                <s:appinfo>
+                  <mze:Info>Typ identifikátoru. Zatím pouze RCI (rodné číslo) nebo ICO (IČ)</mze:Info>
+                </s:appinfo>
+              </s:annotation>
+              <s:simpleType>
+                <s:restriction base="s:string">
+                  <s:minLength value="3" />
+                  <s:maxLength value="3" />
+                </s:restriction>
+              </s:simpleType>
+            </s:attribute>
+            <s:attribute name="platnostdo" type="s:date" use="optional">
+              <s:annotation>
+                <s:appinfo>
+                  <mze:Info>Datum ukončení platnosti identifikátoru</mze:Info>
+                </s:appinfo>
+              </s:annotation>
+            </s:attribute>
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="adresa_type">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ulicenaz">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Název ulice</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="48" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="cisdomhod">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Číslo domovní</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="5" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="cisorhod">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Číslo orientační</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="3" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="cisorpis">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Písmeno do čísla orientačního</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="1" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="cobcenaz">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Název části obce</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="48" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="mcastnaz">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Název městské části</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="48" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="obecnaz">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Název obce</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="48" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="psc">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>PSČ bez mezer</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:minLength value="5" />
+                <s:maxLength value="5" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="adrline1">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Adresa textem – řádek 1</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="adrline2">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Adresa textem – řádek 2</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="adrline3">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Adresa textem – řádek 3</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="adrline4">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Adresa textem – řádek 4</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="adrpostcode">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Zahraniční PSČ</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="10" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="kod" type="s:positiveInteger">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Kód adresy dle RUIAN</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Request" type="s1:RDM_SUS_Request">
+        <s:annotation>
+          <s:appinfo>
+            <mze:Info>Požadavek (vstup bez ESB obálky)</mze:Info>
+          </s:appinfo>
+        </s:annotation>
+      </s:element>
+      <s:complexType name="RDM_SUS_Request">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="dotaz" type="s1:dotaz_type">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Specifikace podmínek pro vyhledávání</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="dotaz_type">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ic">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>IČ subjektu. Hodnota musí splňovat požadavky na formát IČ</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:pattern value="\d{8}" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="subjektid">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Identifikátor subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:positiveInteger">
+                <s:minInclusive value="1000000000" />
+                <s:maxInclusive value="9999999999" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="obchodni_jmeno">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Obchodní jméno subjektu</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="255" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="jmeno">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Jméno FO</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="24" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="prijmeni">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Příjmení FO</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="35" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="datum_narozeni" type="s:date">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Datum narození</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="obecnaz">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>Název obce</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:maxLength value="48" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element minOccurs="0" maxOccurs="1" name="psc">
+            <s:annotation>
+              <s:appinfo>
+                <mze:Info>PSČ bez mezer</mze:Info>
+              </s:appinfo>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:minLength value="5" />
+                <s:maxLength value="5" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ServiceRequestMessage">
+    <wsdl:part name="payload" element="vOKO:Request" />
+  </wsdl:message>
+  <wsdl:message name="ServiceResponseMessage">
+    <wsdl:part name="payload" element="vOKO:Response" />
+  </wsdl:message>
+  <wsdl:message name="ServiceErrorMessage">
+    <wsdl:part name="exception" element="vOKO:Error" />
+  </wsdl:message>
+  <wsdl:portType name="RDM_SUS01A">
+    <wsdl:operation name="process">
+      <wsdl:input message="vOKO:ServiceRequestMessage" />
+      <wsdl:output message="vOKO:ServiceResponseMessage" />
+      <wsdl:fault name="Error" message="vOKO:ServiceErrorMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RDM_SUS01ABinding" type="vOKO:RDM_SUS01A">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="process">
+      <soap:operation soapAction="process" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="Error">
+        <soap:fault use="literal" name="Error" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RDM_SUS01A">
+    <wsdl:port name="RDM_SUS01APort" binding="vOKO:RDM_SUS01ABinding">
+      <soap:address location="https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

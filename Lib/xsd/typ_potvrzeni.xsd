@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:complexType name="tPotvrzeni">
+		<xs:sequence>
+			<xs:element name="hash" type="ns1:tHash">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Hash záznamu</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="elektronickaZnacka" type="xs:base64Binary">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Elektronická značka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="informace" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Volitelné doplňující informace k publikaci, které nemají přímý dopad na přijetí požadavku</xs:documentation>
+					<xs:documentation xml:lang="cs">Jedná se o drobná upozornění charakteru, že názvaný záznam v datech smlouvy neexistuje, apod.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text" type="ns1:tText" minOccurs="1" maxOccurs="unbounded"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

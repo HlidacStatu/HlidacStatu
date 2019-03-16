@@ -1,0 +1,41 @@
+﻿@model object
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Hlídač ";
+    ViewBag.SubTitle = "";
+
+}
+@section scripts
+{
+    <style>
+        #data-detail-content pre {
+            white-space: pre-wrap !important;
+            font-size: 80%
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-xs-10 col-lg-offset-1">
+        <div class="alert alert-orange text-center" role="alert">Tento hlídač ještě <strong>není hotový</strong>. Pracujeme na něm.</div>
+    </div>
+</div>
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+    <div id="data-detail-content">
+
+        <h2>Tento dataset nem8 definovaný template</h2>
+
+    </div>
+

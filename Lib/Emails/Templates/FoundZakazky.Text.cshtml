@@ -1,0 +1,46 @@
+﻿Content-Type: text/plain; charset=utf-8
+
+Dobrý den.
+Našli jsme nové záznamy pro hlídače nových veřejných zakázek "@Model.WDName".
+
+V době @Model.Interval @Model.TotalTxt pro tento dotaz
+@Model.Query
+
+@if (Model.AddResults > 0)
+{
+    <text>
+        Zobrazujeme prvních 30 zakázek
+    </text>
+}
+
+@foreach (HlidacStatu.Lib.Data.VZ.VerejnaZakazka item in @Model.Zakazky)
+{
+    <text>
+        ============================================
+        Zadavatel: @Raw(item.Zadavatel == null ? "neuveden" : item.Zadavatel.Jmeno)
+        Datum uveřejnění: @Raw(item.DatumUverejneni == null ? "" : item.DatumUverejneni.Value.ToShortDateString())
+        Zakázka: @Raw(item.NazevZakazky)
+        @if (item.KonecnaHodnotaBezDPH.HasValue)
+        {<text>        Cena: @Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value))</text>
+    }
+    else if (item.OdhadovanaHodnotaBezDPH.HasValue)
+    {<text>        Odhadovaná cena: @Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value))</text>
+}
+        Více: @Raw(item.GetUrl(false))?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
+        ============================================
+    </text>
+}
+
+@if (Model.AddResults > 0)
+{
+    <text>
+        Zobrazit všechny nalezené zakázky: https://www.hlidacstatu.cz/VerejneZakazky/Hledat?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more
+    </text>
+}
+
+
+@*Chcete změnit nastavení? Zde je to možné: https://www.hlidacstatu.cz/manage/Watchdogs?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=settings*@
+
+
+@Raw(Model.EmailFooterText)
+

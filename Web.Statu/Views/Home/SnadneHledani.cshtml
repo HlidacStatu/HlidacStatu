@@ -1,0 +1,174 @@
+﻿@using System.Linq;
+@using Devmasters.Core;
+@{
+    ViewBag.Title = "Snadné hledání smluv podle více parametrů";
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="/content/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" charset="utf8" src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<h2>Najít záznamy splňující tyto požadavky:</h2>
+<div class="row">
+    <div class="col-xs-12 col-sm-11 col-sm-push-1">
+        @using (Html.BeginForm("SnadneHledani", "Home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+        {
+            <h4>Textove hledání</h4>
+            <div class="form-group">
+                <label for="txt" class="col-sm-2 control-label">Všechna tato slova</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="alltxt" id="alltxt" placeholder="Slova">
+                </div>
+                <div class="clearfix"></div>
+                <label for="txt" class="col-sm-2 control-label">Přesně toto slovo nebo sousloví:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="exacttxt" id="exacttxt" placeholder="Slovo nebo sousloví">
+                </div>
+                <div class="clearfix"></div>
+                <label for="txt" class="col-sm-2 control-label">Libovolné z těchto slov:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="anytxt" id="anytxt" placeholder="Slova">
+                </div>
+                <div class="clearfix"></div>
+                <label for="txt" class="col-sm-2 control-label">Žádné z těchto slov:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="nonetxt" id="nonetxt" placeholder="Slova">
+                </div>
+                <div class="clearfix"></div>
+                <label for="txt" class="col-sm-2 control-label">Hledat slova pouze v textu smlouvy:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="textsmlouvy" id="textsmlouvy" placeholder="Slova">
+                </div>
+            </div>
+            <hr />
+            <h4>Vyhledávání podle smluvních stran</h4>
+            <div class="form-group">
+                <label for="subjektIco" class="col-sm-2 control-label">Úřad, plátce, objednatel</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="icoPlatce" id="icoPlatce" placeholder="ICO plátce">
+                    <input type="text" class="form-control" name="dsPlatce" id="dsPlatce" placeholder="nebo Datová schránka plátce">
+                    <input type="text" class="form-control" name="jmenoPlatce" id="jmenoPlatce" placeholder="Jméno nebo část jména plátce">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="subjektIco" class="col-sm-2 control-label">Dodavatel,<br />příjemce peněz</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="icoPrijemce" id="icoPrijemce" placeholder="ICO příjemce">
+                    <input type="text" class="form-control" name="dsPrijemce" id="dsPrijemce" placeholder="Datová schránka příjemce">
+                    <input type="text" class="form-control" name="jmenoPrijemce" id="jmenoPrijemce" placeholder="Jméno nebo část jména příjemce">
+                </div>
+            </div>
+            <hr />
+            <h4>Vyhledávání podle další kritérií</h4>
+            <div class="form-group">
+                <label for="cenaOd" class="col-sm-2 control-label">Hodnota smlouvy, veřejné zakázky</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="cenaOd" id="cenaOd" placeholder="od částky v Kč">
+                    <input type="text" class="form-control" name="cenaDo" id="cenaDo" placeholder="do částky v Kč">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="podepsanoOd" class="col-sm-2 control-label">Smlouva nebo zakázka <br />zveřejněna od-do data</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="zverejnenoOd" id="zverejnenoOd" placeholder="Zveřejneno od data">
+                    <input type="text" class="form-control" name="zverejnenoDo" id="zverejnenoDo" placeholder="Zveřejneno do data">
+                    <script type="text/javascript">
+                    $(function () {
+                        $('#zverejnenoOd,#zverejnenoDo').datetimepicker({
+                            format: 'YYYY-MM-DD'
+                        });
+                    });
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="podepsanoOd" class="col-sm-2 control-label">Smlouva nebo zakázka <br />podepsána od-do data</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="podepsanoOd" id="podepsanoOd" placeholder="podepsáno od data">
+                    <input type="text" class="form-control" name="podepsanoDo" id="podepsanoDo" placeholder="podepsáno do data">
+                    <script type="text/javascript">
+                    $(function () {
+                        $('#podepsanoOd,#podepsanoDo').datetimepicker({
+                            format: 'YYYY-MM-DD'
+                        });
+                    });
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="politik" class="col-sm-2 control-label">Smlouvy s vazbou na osobu</label>
+                <div class="col-sm-8">
+                    <input class="form-control typeahead" type="text" placeholder="Jméno osoby">
+                    <input type="hidden" name="osobaNamedId" id="osobaNamedId" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="politik" class="col-sm-2 control-label">Smlouvy s vazbou na holding</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="holding" id="holding" placeholder="IČO matky holdingu">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button type="submit" name="hledatvse" value="1" class="btn btn-primary">Hledat ve všech databázích</button>
+                    <br />
+                    <button type="submit" name="hledatsmlouvy" value="1" class="btn btn-default btn-sm">Hledat pouze ve smlouvách</button>
+                    <button type="submit" name="hledatvz" value="1" class="btn btn-default btn-sm">Hledat pouze ve veřejných zakázkách</button>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+
+<script>
+    $(function () {
+        persons = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/v1/persons?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('.typeahead').typeahead(null, {
+            display: 'name',
+            name: "person",
+            source: persons,
+            limit: 30,
+        });
+
+        $('.typeahead').bind('typeahead:select', function (ev, suggestion) {
+            $("#osobaNamedId").val(suggestion.nameId);
+
+        });
+
+    }); //jquery.start
+</script>

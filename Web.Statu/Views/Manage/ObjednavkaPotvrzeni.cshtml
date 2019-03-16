@@ -1,0 +1,13 @@
+﻿@using  Devmasters.Core
+
+@{
+    ViewBag.Title = "Objednávka nadstandardních služeb";
+    HlidacStatu.Lib.Data.InvoiceItems.ShopItem sluzba = (HlidacStatu.Lib.Data.InvoiceItems.ShopItem)Model;
+}
+
+
+<h2>Děkujeme za vaši objednávku</h2>
+<p>Veškeré objednané služby můžete začít používat ihned po </p>
+<p>
+    Na registrační email &nbsp;&nbsp;<b>@this.Context.User.Identity.Name</b>&nbsp;&nbsp; vám zašleme fakturu se splatností 30 dni. Pokračujte třeba na <a href="/">titulní straně</a>.
+</p>

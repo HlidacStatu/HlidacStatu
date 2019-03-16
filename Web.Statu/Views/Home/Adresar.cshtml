@@ -1,0 +1,59 @@
+﻿@using HlidacStatu.Web;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Framework;
+@using System.Threading.Tasks;
+@using HlidacStatu.Web.Models;
+
+@{
+
+    ViewBag.Title = "Důležité úřady";
+    ViewBag.SubTitle = "Adresář hlavních úřadů a společností spadajících pod registr smluv.";
+
+    int count = 0;
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+        <li><a href="@Url.Action("Reporty","Home")">Analytické a souhrnné reporty</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+
+@Html.Action("Adresar_Child")
+
+
+@section footerscripts
+{
+    <script>
+
+        function ShowAll() {
+            $("li:hidden").show();
+            $("#btnAll").hide();
+            $("#btnBad").show();
+        }
+
+        function ShowBad() {
+            $("li.ok").hide();
+            $("#btnBad").hide();
+            $("#btnAll").show();
+        }
+        @if (!string.IsNullOrEmpty(Request.QueryString["bad"]))
+        {
+            <text>
+        ShowBad();
+        </text>
+        }
+        else
+        {
+            <text>
+        ShowAll();
+        </text>
+        }
+    </script>
+}
+

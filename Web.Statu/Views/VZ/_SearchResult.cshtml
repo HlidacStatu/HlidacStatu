@@ -1,0 +1,213 @@
+﻿@model HlidacStatu.Lib.ES.VerejnaZakazkaSearchData
+@using HlidacStatu.Lib
+@using Devmasters.Core
+@using HlidacStatu.Web.Framework;
+
+@{
+
+
+}
+
+@if (Model?.Result?.IsValid == false || Model.Result == null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
+            <div>
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší straně, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-link", null).
+                Zkontrolujeme to.
+            </div>
+        </div>
+    </div>
+    return;
+}
+else
+{
+    if (Model.ShowWatchdog && Model.Q != null)
+    {
+        @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
+    }
+
+    if (Model.Result == null)
+    {
+        <span></span>
+    }
+    else if (Model.Result.Total == 0)
+    {
+        <h2>Žádné zakázky jsme nenalezli.</h2>
+    }
+    else if (Model.Result.Total > 0)
+    {
+        <hr />
+
+
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <h2>Nalezeno @(HlidacStatu.Util.PluralForm.Get((int)Model.Result.Total, "{0} zakázka;{0} zakázky;{0} zakázek")).</h2>
+                @*@if (Model.Result.Aggregations != null && Model.Result.Aggregations.ContainsKey("sumKc"))
+                    {
+                        double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;
+                        <h4>
+                            Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
+                        </h4>
+                    }*@
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Zakázka</th>
+                    <th>Poslední změna</th>
+                    <th>Lhůta pro nabídky</th>
+                    <th>Zadavatel</th>
+                    <th>Dodavatelé</th>
+                    <th>Název</th>
+                    <th>Cena</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Result.Hits.Select(m => m.Source))
+                {
+                <tr>
+                    <td>
+                        @{
+                            @Util.AddBookmark(this.User, item)
+                        }
+                    </td>
+
+                    <td style="white-space: nowrap;">
+                        @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
+                        {
+                            <a href="zakazka/@item.Id">@item.EvidencniCisloZakazky</a>
+                        }
+                        else
+                        {
+                            <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/zakazka/@item.Id">@item.EvidencniCisloZakazky</a>
+                        }
+                    </td>
+                    <td>
+                        @(item.PosledniZmena?.ToShortDateString())
+                    </td>
+                    <td>
+                        @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena" )
+                    </td>
+                    <td>
+                        @if (item.Zadavatel != null)
+                        {
+                            if (Validators.CheckCZICO(item.Zadavatel.ICO))
+                            {
+                                <a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
+                            }
+                            else
+                            {
+                                <span>@item.Zadavatel.Jmeno</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.Dodavatele != null && item.Dodavatele.Count() > 0)
+                        {
+                            foreach (var d in item.Dodavatele)
+                            {
+                                if (Validators.CheckCZICO(d.ICO))
+                                {
+                                    <a href="/subjekt/@d.ICO">@d.Jmeno</a><br />
+                                }
+                                else
+                                {
+                                    <span>@d.Jmeno</span><br />
+                                }
+
+                            }
+                        }
+                    </td>
+                    <td>
+                        @item.NazevZakazky
+                    </td>
+                    <td>
+                        <b>
+                            @if (item.KonecnaHodnotaBezDPH.HasValue)
+                            {
+                                @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value, html: true))
+                            }
+                            else if (item.OdhadovanaHodnotaBezDPH.HasValue)
+                            {
+                                <span>odhad.cena </span> @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value, html: true))
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        </b>
+                    </td>
+                    <td>
+                        <a href="https://www.vestnikverejnychzakazek.cz/SearchForm/SearchContract?contractNumber=@item.EvidencniCisloZakazky"><span class="glyphicon glyphicon-new-window"></span></a>
+                    </td>
+                </tr>
+                    <tr style="border-bottom:2px #777 solid">
+                        <td colspan="3" class="small text-info">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</td>
+                        <td colspan="4">
+                            <span class="small">
+                                @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+        <div class="text-center">
+            <ul class="pagination pagination-lg">
+                @{
+
+                    int page = Model.Page;
+                    string firstPageClass = "";
+                    string lastPageClass = "";
+
+                    if (page <= 1)
+                    {
+                        page = 1;
+                    }
+                    if (page == 1)
+                    {
+                        firstPageClass = "disabled";
+                    }
+                    if (Model.Result.Total < page * Model.DefaultPageSize())
+                    {
+                        lastPageClass = "disabled";
+                    }
+                    //Model.Page = page;
+
+                }
+                @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
+                {
+                    <li class="@firstPageClass">
+                        @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+                    </li>
+                }
+                @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
+                {
+                    <li class="@lastPageClass">
+                        @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+                    </li>
+                }
+                <li>
+                    @Util.ExportButton(this.User, "zakazky", Model.Q, Model.Order,
+                           moreParams: "zahajeny=" + ((Model.Zahajeny) ? "1" : "0")
+                           + ((Model.CPV?.Count() > 0) ? "&cpv=" + Model.CPV.Aggregate((f,s)=>f+","+s) : "")
+                   )
+                </li>
+            </ul>
+        </div>
+
+
+    }
+}
+
+
+<div style="margin-bottom:50px;"></div>

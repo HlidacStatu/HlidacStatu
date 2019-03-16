@@ -1,0 +1,60 @@
+﻿@model string
+@{
+    ViewBag.Title = "Potvrzení registrace z emailu";
+}
+
+@if (ViewData.ModelState.IsValid)
+{
+<div>
+    <p>
+        Děkujeme za potvrzení vaší registrace.
+    </p>
+
+    <p>
+        @if (System.Web.HttpContext.Current.User.Identity?.IsAuthenticated == true)
+        {
+
+            @Html.ActionLink("Můžete pokračovat na svém účtu", "Index", "Manage", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            <span>anebo třeba</span>
+            @Html.ActionLink("na titulní straně.", "Index", "Home", routeValues: null, htmlAttributes: new { id = "loginLink" })
+
+        }
+        else
+        {
+            @Html.ActionLink("Můžete se zalogovat", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            <span>anebo pokračovat třeba</span>
+            @Html.ActionLink("na titulní straně.", "Index", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+
+        }
+    </p>
+</div>
+}
+else
+{
+    <h2>Ověření kódu je neúspěšné</h2>
+    <p>Nastaly tyto chyby:
+    <ul>
+        @foreach (var er in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <li>@er.ErrorMessage</li>
+        }
+    </ul>
+    </p>
+    <p>@using (Html.BeginForm("ConfirmEmail", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <h4>Poslat znovu registrační mail</h4>
+        <hr />
+        <div class="form-group">
+            Email použitý při registraci:
+            <div class="col-md-10">
+                @Html.TextBox("email", "", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Odeslat znovu" class="btn btn-default" />
+            </div>
+        </div>
+    }</p>
+    <p>Pokud si myslíte, že děláte vše správně, napište na <a href="mailto:info@hlidacstatu.cz">info@hlidacstatu.cz</a> a pokusíme se vám pomoci.</p>
+}

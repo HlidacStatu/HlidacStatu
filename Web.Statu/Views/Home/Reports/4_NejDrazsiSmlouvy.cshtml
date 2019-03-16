@@ -1,0 +1,25 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+    var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString);
+
+    model = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("*", model.Page,
+100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: 1);
+
+    model.Chyby = true;
+}
+
+
+
+@Html.Partial("_SearchResult", model)
+
+

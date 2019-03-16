@@ -1,0 +1,112 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+@using Devmasters.Core
+@using HlidacStatu.Lib.Analysis
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+
+@{
+
+    var tableSloupce = new ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column[]
+            {
+new  ReportDataSource<HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>>.Column() { Name="Úřad",
+HtmlRender = (s) => {
+                    return string.Format("<a href='/subjekt/{0}'>{1}</a>", s, HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Ico));
+                },
+OrderValueRender = (s) => { return HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Ico); }
+},
+new  ReportDataSource<HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>>.Column() {
+Name ="Statistika smluv",
+HtmlRender = (s) => {
+return s.ToNiceString(null,false, "/subjekt" +  s.Ico);
+},
+OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>)s).CelkemCena.ToString(); }
+},
+new  ReportDataSource<HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>>.Column() {
+Name ="Největší dodavatelé",
+HtmlRender = (s) => {
+System.Text.StringBuilder sb = new System.Text.StringBuilder();
+sb.Append("<ul>");
+int previewCount = 3;
+foreach (var f in s.Detail.OrderByDescending(m=>m.CelkemCena).Take(previewCount))
+{
+    sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - {3}</li>"
+        ,s.Ico, f.Item, HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(f.Item, true)
+        , f.ToNiceString(null,true, string.Format("/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}", s.Ico, f.Item))
+        );
+
+}
+sb.Append("</ul>");
+if (s.Detail.Count > previewCount)
+{
+
+    string rand = Guid.NewGuid().ToString("N");
+    sb.Append("<a class='btn btn-link' role='button' data-toggle='collapse' href='#allData" + rand + "' aria-expanded='false' aria-controls='allData'>Ukázat všechny</a>");
+    sb.Append("<ul class='collapse' id='allData" + rand + "'>");
+
+    foreach (var f in s.Detail.OrderByDescending(m=>m.CelkemCena).Skip(previewCount))
+    {
+        sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - {3}</li>"
+            ,s.Ico, f.Item, HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(f.Item, true)
+            , f.ToNiceString(null,true, string.Format("/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}", s.Ico, f.Item))
+            );
+
+    }
+    sb.Append("</ul>");
+}
+return sb.ToString();
+},
+}
+
+            };
+
+
+
+
+    var dataStatsCache = HlidacStatu.Lib.StaticData.UradyObchodujiciSCasovePodezrelymiFirmami.Get();
+
+
+    var rds1 = new ReportDataSource<HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>>(tableSloupce);
+    foreach (var bf in dataStatsCache.OrderByDescending(o => o.Value.CelkemCena))
+    {
+        rds1.AddRow(bf.Value);
+    }
+
+
+}
+
+<div class="bs-callout bs-callout-info">
+    <p>
+        Založení firmy chvíli před podepsáním smlouvy není důkaz podvodu, nekalého úmyslu či chyby.
+        Bývá to běžná situace u změny obchodní formy z důvodu účasti ve výběrovém řízení (živnostníka -> s.r.o.), prvního obchodního úspěchu nové firmy,
+        prostě existuje spousta řádných obchodních a právních důvodů pro takový krok. A velké většina situací spadá do této "kolonky"
+    </p>
+    <p>
+        Bývá to však také jeden z indikátorů, že může jít o účelově založenou společnost při zmanipulovaném výběrovém řízení,
+        snahu o zakrytí skutečných vlastníků či špatné historie firmy, jeden z indikátorů potenciálně podezřelého chovaní.
+    </p>
+</div>
+
+
+@Html.Raw(
+    UtilChart.RenderReportTableT<HlidacStatu.Lib.Analysis.BasicDataForSubject<List<HlidacStatu.Lib.Analysis.BasicData<string>>>>(
+        "",rds1, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", "t1")
+        )
+
+
+

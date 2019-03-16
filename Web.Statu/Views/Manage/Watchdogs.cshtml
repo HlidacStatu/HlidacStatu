@@ -1,0 +1,97 @@
+﻿@model IEnumerable<HlidacStatu.Lib.Data.WatchDog>
+@using Devmasters.Core;
+@{
+    ViewBag.Title = "Hlídači nových údajů v databázích Hlídače";
+}
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@if (Model.Count() == 0)
+{
+    <div class="modal" style="position:relative;display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Jak přidat nového hlídače</h4>
+                </div>
+                <div class="modal-body">
+                    <p><code>Hlídač nových smluv</code> je jednoduše vyhledávací dotaz, který se spustí vždy po vložení nových smluv.</p>
+                    <p>
+                        Před vytvořením dalšího <code>hlídače nových smluv</code> je dobré si ověřit, že vyhledávací dotaz funguje jak si představujete.
+                        Proto jediným místem, kde můžete přidat dalšího <code>hlídače nových smluv</code> je vyhledávání.
+                    </p>
+                    <p>
+                        Nechte vyhledat údaje, které potřebujete
+                        a nad samotnými výsledky hledání najdete tlačítko pro přidání <code>hlídače nových smluv</code> pro hledané údaje.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/" role="button" class="btn btn-primary">Přejít na hledání a vytvořit prvního hlídače</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    return;
+}
+
+<p>
+    <a href="/" role="button" class="btn btn-warning">Přidat dalšího hlídače nových informací</a>
+</p>
+<table class="table table-hover">
+    <tr>
+        <th>Jméno</th><th>Dotaz</th><th>Vytvořen</th><th>Aktivní</th><th></th>
+    </tr>
+
+    @foreach (var wd in Model)
+    {
+        string stype = "";
+        string idType = "";
+        if (wd.dataType.ToLower() == "smlouva")
+        {
+            stype = "smluv";
+            idType = "smlouva";
+        }
+        else if (wd.dataType.ToLower() == "verejnazakazka")
+        {
+            stype = "veř.zakázek";
+            idType = "verejnazakazka";
+        }
+        else if (wd.dataType.ToLower().StartsWith("dataset"))
+        {
+            stype = wd.dataType.Replace(typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet).Name + ".", "");
+            idType = "dataset";
+        }
+        else if (wd.dataType == HlidacStatu.Lib.Data.WatchDog.AllDbDataType)
+        {
+            stype = "všech databází";
+            idType = HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
+        }
+    <tr>
+        <td>
+            <span class="text-info">@wd.Name</span><br />
+            <span class="text-muted small">Kontrola @stype @wd.Period.ToNiceDisplayName().ToLower()</span>
+        </td>
+        <td>
+            <a href="/Hledat?q=@(System.Net.WebUtility.UrlEncode(wd.SearchTerm))">@Devmasters.Core.TextUtil.ShortenText(wd.SearchTerm, 100, " ....")</a>
+            @if (!string.IsNullOrEmpty(wd.SpecificContact))
+            {
+                <br /> <span class="text-muted small">Kontakt: @wd.SpecificContact</span>
+            }
+        </td>
+        <td>@wd.Created.ToShortDateString()</td>
+        <td>@Util.IfExists(wd.StatusId > 0, "Ano", "Pozastaven")</td>
+        <td>
+            @if (wd.StatusId > 0)
+            {
+                <a href="@Url.Action("Watchdogs")?wid=@wd.Id&disable=1" class="btn btn-warning btn-xs">Pozastavit</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Watchdogs")?wid=@wd.Id&enable=1" class="btn btn-success btn-xs">Znovu spustit</a>
+            }
+            <a href="@Url.Action("Watchdogs")?wid=@wd.Id&delete=1" class="btn btn-danger btn-xs" onclick="return confirm('Opravdu to chcete smazat?');">Smazat</a>
+        </td>
+    </tr>
+
+    }
+
+</table>

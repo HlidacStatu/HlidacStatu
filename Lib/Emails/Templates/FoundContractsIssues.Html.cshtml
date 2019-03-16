@@ -1,0 +1,57 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+<p>
+    Našli jsme nové záznamy pro hlídače nových smluv <b>@Model.WDName</b>.
+</p>
+<p>
+    V době @Model.Interval @Model.TotalTxt: <br/>
+    <b>@Model.Query</b>
+</p>
+
+<p>
+    <table border="0" cellpadding="5">
+        @foreach (HlidacStatu.Lib.Emails.Templates.FoundContractItem smlouva in @Model.Smlouvy)
+        {
+            <text>
+                <tr>
+                    <td style="border-top-color:#ddd;border-top-style:solid;border-top-width:1px;"><a href="@Raw("https://www.hlidacstatu.cz/Detail/" + smlouva.Id + "?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail")">Detail smlouvy</a></td>
+                    <td style="border-top-color:#ddd;border-top-style:solid;border-top-width:1px;">@Raw(smlouva.PlatceHtml)</td>
+                    <td style="border-top-color:#ddd;border-top-style:solid;border-top-width:1px;">@Raw(smlouva.PrijemceHtml)</td>
+                    <td style="border-top-color:#ddd;border-top-style:solid;border-top-width:1px;">@Raw(smlouva.Cena)</td>
+                </tr>
+                <tr>
+                    <td colspan="4">@Raw(smlouva.Predmet)</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        @if (smlouva.Issues != null && smlouva.Issues.Count() > 0)
+                        {
+                            foreach (string s in smlouva.Issues)
+                            {
+                            <div>@Raw(s)</div>
+                            }
+                        }
+                        else
+                        {
+                            <span>Bez nedostatků</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+            </text>
+        }
+    </table>
+
+
+<p>Chcete <a href="https://www.hlidacstatu.cz/manage/Watchdogs?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=settings">změnit nastavení</a> tohoto hlídače nových smluv?</p>
+
+
+@Raw(Model.EmailFooterHtml)
+
+
+
+
+

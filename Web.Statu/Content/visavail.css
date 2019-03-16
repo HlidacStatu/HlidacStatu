@@ -1,0 +1,130 @@
+/* style for visavail.js */
+.rect_has_data {
+    /* blocks that have data */
+    fill: #5cb85c;
+}
+
+.rect_has_data:hover {
+    fill: #449d44
+}
+
+.rect_has_no_data {
+    /* blocks without data */
+    fill: #d9534d;
+}
+
+.rect_has_no_data:hover {
+    fill: #c9302c;
+}
+
+.tooltip_has_data {
+    /* color of symbol in tooltip if there is data */
+    color: #449d44;
+}
+
+.tooltip_has_no_data {
+    /* color of symbol in tooltip if there is no data */
+    color: #c9302c;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    padding-left: 0;
+    width: auto;
+    border: 0;
+    border-left: thin solid #000000;
+    pointer-events: none;
+    line-height: 12px;
+    padding-top: 0;
+    display: block;
+}
+
+    div.tooltip.inner {
+        color: #000;
+        opacity: inherit;
+        width: inherit;
+        text-wrap: avoid;
+        line-height: 12px;
+        padding: 5px 10px;
+        display: block;
+        width: 200px;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100&1+0,1+50,0+100 */
+        background: -moz-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(242,242,242,1) 50%, rgba(229,229,229,0) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(left, rgba(255,255,255,1) 0%,rgba(242,242,242,1) 50%,rgba(229,229,229,0) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right, rgba(255,255,255,1) 0%,rgba(242,242,242,1) 50%,rgba(229,229,229,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00e5e5e5',GradientType=1 ); /* IE6-9 */
+    }
+
+.x_tick_emph {
+    font-weight: bold;
+}
+
+.ytitle {
+    /* y axis labels */
+    dominant-baseline: middle;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+}
+
+.ytitle.link {
+    /* y axis label with link */
+    cursor: pointer;
+    fill: #07C;
+}
+
+.axis path,
+.axis line {
+    display: none;
+}
+
+.axis text {
+    font-size: 12px;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    fill: #777;
+}
+
+.vert_grid {
+    fill: none;
+    stroke: #dddddd;
+    stroke-width: 1px;
+}
+
+.vert_grid_emph {
+    fill: none;
+    stroke: #dddddd;
+    stroke-width: 2px;
+}
+
+.horz_grid {
+    fill: none;
+    stroke: #dddddd;
+    stroke-width: 1px;
+}
+
+.heading {
+    font-size: 16px;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: bold;
+}
+
+.subheading {
+    font-size: 12px;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    fill: #777;
+}
+
+.legend {
+    dominant-baseline: middle;
+    font-size: 12px;
+    font-family: 'Source Sans Pro', "Helvetica Neue", Arial, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    fill: #777;
+}

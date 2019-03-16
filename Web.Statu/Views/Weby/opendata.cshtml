@@ -1,0 +1,44 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.Zabbix;
+
+@{
+    ViewBag.Title = "Hlídač státních webů";
+    ViewBag.SubTitle = "Open data";
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index","Weby")">Hlídač Webů</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+    <div class="row">
+        <div class="col-xs-12 col-sm-10">
+            <h2>Seznam měřených státních služeb</h2>
+            <p>
+                Všechna monitorovaná data jsou dostupná prostřednictvím API.
+            </p>
+            <p>
+                Dokumentaci najdete na <a href="https://www.hlidacstatu.cz/api">https://www.hlidacstatu.cz/api</a>.
+            </p>
+            <div class="alert alert-warning">
+                Poskytovaná data mohou mít zpoždění až 15 minut a obnovují se každých přibližně 10 minut.
+                <strong>Nestahujte data častěji než každých 10 minut</strong>
+                a nezatěžujte tak zbytečně server ostatním uživatelům.
+            </div>
+
+            @UtilWebyChart.TableNextGroups("opendata")
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    @section footerscripts{
+    }
+

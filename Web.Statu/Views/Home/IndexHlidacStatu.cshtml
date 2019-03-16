@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Hlídač státu";
+    ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
+    ViewBag.HideAd = true;
+
+}
+@section scripts
+{
+    <script>
+        _showFAD = false;
+    </script>
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-sm-6 ">
+        <div class="col-block-shadow">
+            <h3>Novinky, analýzy, komentáře</h3>
+            <div>
+                @if (HlidacStatu.Lib.StaticData.LastBlogPosts.Get() != null)
+                {
+                    foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(8))
+                    {
+                        <dl>
+                            <dt><a href="@post.link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.title.rendered))</a></dt>
+                            <dd><em>@post.date.ToString("d. MMMM yyyy")</em></dd>
+                            <dd>
+                                @Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.excerpt.rendered))
+                            </dd>
+                        </dl>
+                    }
+                }
+
+                <div>
+                    <a href="/texty">Starší články</a>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.col-lg-4 -->
+    <div class="col-sm-6">
+        <div class="col-block-shadow">
+            @*<a href="https://twitter.com/HlidacSmluv" data-lang="cs" class="twitter-follow-button" data-show-count="true" data-size="large">Sledovat @@HlidacSmluv</a>
+            <br />
+            <a class="twitter-timeline" data-tweet-limit="3" data-lang="cs" href="https://twitter.com/HlidacSmluv">Tweety od @@HlidacSmluv</a>
+            <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>*@
+            <div class="fb-page" data-href="https://www.facebook.com/HlidacStatu" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/HlidacStatu" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/HlidacStatu">Hlídač státu</a></blockquote></div>
+
+        </div>
+    </div><!-- /.col-lg-4 -->
+</div>
+
+
+
+
+
+
+
+
+<div class="clearfix"></div>

@@ -1,0 +1,25 @@
+﻿Content-Type: text/html; charset=utf-8
+
+<p>Dobrý den.</p>
+
+<p>
+    Jsme rádi, že používáte server <a href="https://www.hlidacstatu.cz">Hlídač Státu</a>.
+    Nová legislativa však vyžaduje, abyste nám ještě jednou potvrdili,
+    že si od nás <b>přejete dostávat</b> emailová upozornění na <b>nové smlouvy podle vámi nastavených hlídačů nových smluv</b> 
+    a občasně informace o novinkách na serveru
+    stejně jako doposud.
+</p>
+<p>Stačí jeden váš klik a budete to mít za sebou.</p>
+
+<p>
+    <a href="@Model.CallbackUrl&res=yes" style="text-decoration:none;text-align:center; background-color:green;color:white;font-size:30px;padding:30px; margin:20px;display:block;width:550px">
+        SOUHLASÍM<br />se zasíláním emailů jako doposud
+    </a>
+
+    <a href="@Model.CallbackUrl&res=no" style="text-decoration:none;text-align:center; background-color:#555;color:white;font-size:15px;padding:20px; margin:20px;display:inline-block;width:550px">
+        NESOUHLASÍM, <br />zrušte mi účet
+    </a>
+</p>
+
+@Raw(Model.EmailFooterHtml)
+

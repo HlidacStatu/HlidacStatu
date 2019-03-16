@@ -1,0 +1,23 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+
+@{
+    /**/
+    HlidacStatu.Lib.Data.Osoba o = ViewBag.Osoba;
+
+
+    ViewBag.Title = "Změna fotky " + Model.FullNameWithYear();
+
+}
+
+<div class="row">
+
+    <div class="col-xs-12">
+        Děkujeme za nahrání nové fotky. Vaši fotku nyní musí zkontrolovat team editorů, což se staně během několika hodin.
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-xs-12">
+        <a href="@o.GetUrlOnWebsite()">Zpět na profil @o.FullNameWithYear()</a>
+    </div>
+</div>

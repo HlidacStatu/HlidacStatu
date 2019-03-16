@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSDL_tester.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WSDL_tester_cz_eagri_RDM_SUS01A" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx</Value>
+    </Setting>
+    <Setting Name="WSDL_tester_cz_eagri_pub01A_RDM_PUB01A" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

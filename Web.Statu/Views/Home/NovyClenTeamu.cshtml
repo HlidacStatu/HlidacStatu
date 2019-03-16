@@ -1,0 +1,87 @@
+﻿@model HlidacStatu.Web.Models.PridatSeModel
+@using System.ComponentModel.DataAnnotations
+
+@{
+    ViewBag.Title = "Vítej v teamu!";
+    Html.EnableClientValidation();
+}
+@section scripts
+{
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+}
+@section title {
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <h1>@ViewBag.Title</h1>
+            <p>Moc si vážíme tvojí pomoci.<br />Obvykle se všichni tykáme, ale pokud s tím máš problém, stačí říci.</p>
+        </div>
+    </div>
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+    }
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Co bude teď?</h1>
+            <p>
+                Během chvilky by ti měly přijít dva emaily. Jeden s potvrzením registrace na <a href="https://www.hlidacstatu.cz">Hlídači Smluv</a>, druhý s pozvánkou do <a href="https://platforma.hlidacstatu.cz">
+                    Platformy Hlídače Státu
+                </a>.
+                Postupuj podle pokynů ve všech mailech.
+            </p>
+            <p>Přečti si dále, jak obvykle pracujeme. </p>
+            <p>Těším se na naši spolupráci<br /><span style="padding-left:150px;">Michal Bláha</span></p>
+            <h1>Jak pracujeme</h1>
+            <p>Jsme virtuální team, nemáme kanceláře, ale používáme chytrá řešení a nástroje pro vzájemnou komunikaci.</p>
+            <p>Pokud si nejsi jist jak některý nástroj používat, <a href="mailto:michal@michalblaha.cz">napiš mi na michal@michalblaha.cz</a>, pomůžu.</p>
+            <h2>Platforma.HlidacStatu.cz</h2>
+            <p>
+                <a href="https://platforma.hlidacstatu.cz">Veřejná diskuzní platforma</a> s privátní částí pro naše teamové diskuze.
+                Interně je to vhodný systém pro diskuzi nad konkrétními projekty, nápady, kdy jsou jednotlivá témata diskuze od sebe oddělena (narozdíl od Slacku), umí a je nastavena i jako mailing list. Takže se dá přispívat snadno i přímo z emailu.
+            </p>
+            <p>V neveřejné části platformy se koordinujeme, diskutujeme  co dělat a nedělat, je to prostě virtuální teamová kuchyňka. Komunikace zde není veřejná, vidí ji jen členové teamu.</p>
+            <p>
+                V platformě je diskuze rozdělena na jednotlivé hlavní kategorie, ve kterých se diskutují příbuzná témata.
+                V případě potřeby můžete založit nové téma, či dokonce novou kategorii.
+            </p>
+            <p>
+                Současně je to platforma pro veřejnou diskuzi, která je otevřena všem. Veřejnost do teamové interní diskuze přístup nemá.
+            </p>
+            <h2>Slack</h2>
+            <p>
+                Používáme také Slack, <a href="https://join.slack.com/t/hlidacstatu/shared_invite/enQtNDEyNjgxNzM3NTQxLTZiMzVmZmE4ZGQ0NzdiZDY2MTk3ZjA0OWI2ZmI3NGNjMjRmZjlhZDg0ODc1YmUzMTM0ZDVjYTQ4MmIxOGFiYWM" target="_blank">registrace je snadná</a>.
+            </p>
+            <p>
+                Slack je moderní, "hipsterská náhrada" emailu. Dobrá platforma na rychlou diskuzi k nějakému problému či spojení s jiným členem. Používáme pouze na interní komunikaci, nikdo z veřejnosti tam nemá přístup. Slack umožňuje (primárně) pouze linearní, ne příliš přehledné diskuze.
+                Slack je snadno použitelný jak na počítačích (<a href="https://slack.com/downloads" target="_blank">stáhnout</a>), tak na mobilech (<a href="https://slack.com/downloads/android" target="_blank">Android</a> i <a href="https://slack.com/downloads/ios" target="_blank">iOS</a>).
+                Podrobněji si o Slacku můžeš přečíst <a href="http://www.swmag.cz/1521/slack-komunikace-tymu/" target="_blank">zde</a>. V případě, že nějaký team preferuje Slack, může použít náš Slack.
+                Náš Slack je na adrese <a href="https://hlidacstatu.slack.com" target="_blank">https://hlidacstatu.slack.com</a>.
+            </p>
+            <h2>GitHub</h2>
+            <p>
+                GitHub je pro služba podporující vývoj softwaru. Kromě versovacího nástroje, který používáme pro některé (ne všechny) části Hlídačů, obsahuje systém pro sledování problémů, evidenci požadavků na nové funkce a evidenci úkolů. Tyto části nyní využíváme i my.
+            </p>
+            <p>
+                Náš GitHub je na adrese <a href="http://github.com/hlidacstatu" target="_blank">http://github.com/hlidacstatu</a>.
+            </p>
+            <p>
+                <a href="https://github.com/join" target="_blank">Registrace na GitHub</a> a používání je zadarmo. Vše na GitHubu je veřejně dostupné komukoliv.
+            </p>
+            <h2>Soubory, sdílené dokumenty</h2>
+            <p>Slack umí sdílet dokumenty napříč teamem, ale nepodporuje teamovou práci nad nimi. Takže na sdílenou práci nad textovými dokumenty nebo tabulkami používáme <a href="https://docs.google.com/">Google Docs</a>.</p>
+            <p>Přístup k souborům na Google Docs zavisí na nastaveném sdílení jednotlivých dokumentů.</p>
+            <h2>Citlivé údaje, zabezpečená komunikace se zdroji</h2>
+            <p>Všechna komunikace s Google, Slack a GitHub je kryptovaná, ale některé situace vyžadují vyšší ochranu obou stran. V takovém případě používáme <a href="https://telegram.org">Telegram</a> a <a href="https://protonmail.com">ProtonMail</a>.</p>
+            <h2>Email a telefon</h2>
+            <p>
+                V případě potřeby samozřejmě používáme i email a telefon, ale preferujeme namísto emailu použití Slacku.
+            </p>
+
+        </div>
+    </div>
+    <div style="margin-bottom:50px;"></div>

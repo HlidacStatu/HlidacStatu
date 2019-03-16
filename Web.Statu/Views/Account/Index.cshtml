@@ -1,0 +1,22 @@
+﻿@using HlidacStatu.Web.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Účet " + this.User.Identity.Name;
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Účet</h3>
+        <ul>
+            <li><a href="@Url.Action("ChangePassword","Manage")">Změna hesla</a></li>
+        </ul>
+        <h3>Hlídači smluv</h3>
+        <ul>
+            <li><a href="@Url.Action("ResetPassword","Account")">Změna hesla</a></li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

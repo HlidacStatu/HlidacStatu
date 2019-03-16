@@ -1,0 +1,148 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+    Layout = null;
+
+    string ico = Model.ICO;
+    int size = 300;
+
+    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
+
+    aggs
+        .Terms("perIco", m => m
+            .Field("prijemce.ico")
+            .Size(size)
+        ).Terms("perPrice", m => m
+            .Order(o => o.Descending("sumincome"))
+            .Field("prijemce.ico")
+            .Size(size)
+            .Aggregations(agg => agg
+               .Sum("sumincome", s => s
+                   .Field(ff => ff.CalculatedPriceWithVATinCZK)
+               )
+            )
+        );
+
+    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPlatce:" + ico, 1, 0,
+        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
+        anyAggregation: aggs, platnyZaznam: 1);
+
+    ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
+   {
+        new  ReportDataSource.Column() { Name="IČO",
+            HtmlRender = (s) => {
+                                    System.Tuple<string,string> data = (System.Tuple<string,string>)s;
+                                    return string.Format(@"{1} <a href='/subjekt/{0}'>detail o subj</a>
+                                                           <br/>{3}", data.Item2, data.Item1, Model.ICO
+                                                           ,Util.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
+                                },
+            TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); },
+            ValueRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
+        },
+        new  ReportDataSource.Column() { Name="Počet smluv",CssClass ="number"},
+    }
+        );
+
+    ReportDataSource rdsPerPrice = new ReportDataSource(new ReportDataSource.Column[]
+   {
+        new  ReportDataSource.Column() { Name="IČO",
+            HtmlRender = (s) => {
+                                    System.Tuple<string,string> data = (System.Tuple<string,string>)s;
+                                    return string.Format(@"{1} <a href='/subjekt/{0}'>detail o subj</a>
+                                                           <br/>{3}", data.Item2, data.Item1, Model.ICO
+                                                           ,Util.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
+                                },
+            TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
+        },
+        new  ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },CssClass ="number" },
+       }
+   );
+
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+    {
+        rdsPerIco.AddRow(
+            new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+            val.DocCount.ToString()
+            );
+    }
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perPrice"]).Items)
+    {
+        rdsPerPrice.AddRow(
+                new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+                val.Sum("sumincome").Value
+            );
+    }
+
+    //chart
+
+
+    var model = new HlidacStatu.Lib.Render.ReportModel();
+    model.Add("perIcoChart", "Nejúspěšnější dodavatelé podle počtu smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perIco_o",
+             "Firmy", "Počet smluv",
+            rdsPerIco.Filter(10))
+        );
+    model.Add("perIcoTable_o", "",rdsPerIco);
+
+    model.Add("perPriceChart", "Nejúspěšnější dodavatelé podle celkové hodnoty smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perPrice_o",
+            "Firmy", "Kč",
+            rdsPerPrice.Filter(10), "Kč")
+        );
+    model.Add("perPriceTable_o","", rdsPerPrice);
+
+}
+
+
+
+@if (rdsPerIco.Data.Count > 0 || rdsPerPrice.Data.Count > 0)
+{
+
+    <h3 style="padding-bottom:20px;">@Model.Jmeno jako odběratel (plátce peněz)</h3>
+
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            @foreach (var q in model.GetQueue().Take(2))
+            {
+                @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+            }
+
+
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            @foreach (var q in model.GetQueue().Skip(2).Take(2))
+            {
+                @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+            }
+        </div>
+    </div>
+}

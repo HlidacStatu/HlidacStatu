@@ -1,0 +1,189 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib
+@using HlidacStatu.Web.Framework;
+
+
+@{
+    var registration = Model.DataSet.Registration();
+    ViewBag.Title = "Hlídač Smluv: " + registration.name;
+    ViewBag.SubTitle = Model?.Q;
+
+
+}
+
+@section scripts
+{
+    <script>
+    function changeOrder(sel) {
+    var value = sel.value;
+    window.location.href = '@Html.Raw(HlidacStatu.Lib.Data.External.DataSets.DataSearchResult.GetSearchUrl(
+       this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
+       ,Model.Q))&order=' + value;
+    }
+    </script>
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="@Model.DataSet.DatasetUrl()">@registration.name</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+        <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">Hledání v @Model.DataSet.Registration().name</h3>
+        <form method="get" action="/data/Hledat/@Model.DataSet.DatasetId" class="form-inline" role="form">
+            <div class="input-group col-xs-12">
+                <input class="form-control input" id="Q" name="Q" placeholder="Hledaný výraz" style="max-width: none;" type="text" value="@Model.Q">
+
+                <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
+                    <button class="btn btn-default btn" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </span>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr style="margin-top: 35px;padding-bottom:15px;" />
+
+@if (Model.Q != null && Model.DataSet.Registration().searchResultTemplate?.IsFullTemplate() == true)
+{
+    @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), datasetId: Model.DataSet.DatasetId)
+}
+
+
+@if (Model.IsValid == false)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
+            <div>
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší strane, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-warning", null).
+                Zkontrolujeme to.
+            </div>
+        </div>
+    </div>
+    return;
+}
+
+@if (Model.Result == null || Model.Result.Count() == 0)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-info">Na váš dotaz jsme nenalezli žádné výsledky.</div>
+        </div>
+    </div>
+
+    return;
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <h2>Nalezeno @Model.Total výsledků</h2>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        Třídit výsledky podle :
+        @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control", @id = "orderList", @onchange = "changeOrder(this);" })
+    </div>
+</div>
+
+@{
+    try
+    {
+
+        if (Model.DataSet.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
+        {
+                var model = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+                model.Total = Model.Total;
+                model.Page = Model.Page;
+                model.Q = Model.Q;
+                model.Result = Model.Result
+                    .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
+                    .ToArray();
+
+                var html =Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model);
+                @Html.Raw(html)
+        }
+        else
+        {
+            Html.RenderAction("HledatProperties_CustomdataTemplate", Model);
+        }
+    }
+    catch (Exception e)
+    {
+        var msg = e?.InnerException?.Message ?? "Interní chyba";
+        msg = HlidacStatu.Util.ParseTools.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
+
+        @Html.Raw($"<h2>Chyba v template - zpráva pro autora této datové sady</h2><pre>{msg}</pre>")
+        HlidacStatu.Util.Consts.Logger.Warning("HledatBody_CustomdataTemplate", e);
+
+        if (msg != "Interní chyba")
+        {
+            Model.DataSet.SendErrorMsgToAuthor(this.Request.Url.AbsoluteUri, msg);
+        }
+    }
+
+
+}
+
+
+<div class="text-center">
+    <ul class="pagination pagination-lg">
+        @{
+            string qid = Url.RequestContext.HttpContext.Request.QueryString["Page"] as string;
+            int page = 0;
+            string firstPageClass = "";
+            string lastPageClass = "";
+
+            if (!Devmasters.Core.TextUtil.IsNumeric(qid))
+            {
+                firstPageClass = "disabled";
+                page = 1;
+            }
+            else
+            {
+                page = Convert.ToInt32(qid);
+                if (page <= 1)
+                {
+                    page = 1;
+                }
+            }
+            if (page == 1)
+            {
+                firstPageClass = "disabled";
+            }
+            if (Model.Total < page * Model.PageSize
+                || page * Model.PageSize >= Model.MaxResultWindow()
+                )
+            {
+                lastPageClass = "disabled";
+            }
+            Model.Page = page;
+
+        }
+        @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
+        {
+            <li class="@firstPageClass">
+                @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+            </li>
+        }
+        @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
+        {
+            <li class="@lastPageClass">
+                @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+            </li>
+        }
+    </ul>
+</div>
+
+
+@Html.Partial("_beta")

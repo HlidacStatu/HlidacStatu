@@ -1,0 +1,50 @@
+﻿@model HlidacStatu.Web.Models.StavRizeniViewModel
+
+@switch (Model.Stav)
+{
+	case "NEVYRIZENA":
+		<span title="Před rozhodnutím o úpadku">Nevyřízená</span>
+		break;
+	case "MORATORIUM":
+		<span title="Povoleno moratorium">Moratorium</span>
+		break;
+	case "ÚPADEK":
+		<span title="V úpadku">Úpadek</span>
+		break;
+	case "KONKURS":
+		<span title="Prohlášený konkurs">Konkurs</span>
+		break;
+	case "ODDLUŽENÍ":
+		<span title="Povoleno oddlužení">Oddlužení</span>
+		break;
+	case "REORGANIZ":
+		<span title="Povolena reorganizace">Reorganizace</span>
+		break;
+	case "VYRIZENA":
+		<span title="Vyřízená věc">Vyřízená</span>
+		break;
+	case "PRAVOMOCNA":
+		<span title="Pravomocně skončená věc">Pravomocná</span>
+		break;
+	case "ODSKRTNUTA":
+		<span title="Odškrtnutá - skončená věc">Odškrtnutá</span>
+		break;
+	case "ZRUŠENO VS":
+		<span title="Zrušeno vrchním soudem">Zrušeno vrchním soudem</span>
+		break;
+	case "K-PO ZRUŠ.":
+		<span title="Prohlášený konkurs po zrušení VS">Konkurs po zrušení</span>
+		break;
+	case "OBZIVLA":
+		<span title="Obživlá věc">Obživlá</span>
+		break;
+	case "MYLNÝ ZÁP.":
+		<span title="Mylný zápis do rejstříku">Mylný zápis</span>
+		break;
+	case "NEVYR-POST":
+		<span title="Postoupená věc">Postoupená věc</span>
+		break;
+	default:
+		<span>@Model.Stav</span>
+		break;
+}

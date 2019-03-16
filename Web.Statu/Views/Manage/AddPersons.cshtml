@@ -1,0 +1,44 @@
+﻿@model System.Collections.Generic.IEnumerable<string>
+@{
+
+    this.Server.ScriptTimeout = 600;
+
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("AddPersons", "Manage", FormMethod.Post, new { @id = "jsonForm", @class = "form-inline", role = "form" }))
+        {
+            <h3>Import politiku (tab delimited)</h3>
+            <p>
+<pre>
+1 radek = 1 politik
+oddelovac = tabelator
+poradi sloupcu:
+
+    <b>jmeno \t prijmeni \t datum narozeni</b> \t titul_pred_jmenem \t titul_po_jmene \t popisek \t PersonStatus \t zdroj \t moreInfoUrl 
+
+format datumu: d.m.yyyy - 27.3.1955             
+prvni 3 sloupce jsou povinne.   
+
+popisek - je nepovinny, nemusi existovat
+</pre>
+                <div class="alert-danger">Nedávej sem více než 200 osob (řádků) najednou. Mohlo by to selhat. Nevadí, když sem vložíš někoho duplikátně.</div>
+            </p>
+            <textarea name="data" id="data"
+                      style="max-width:none;width:100%;max-height:380px;height:380px;box-sizing: border-box;min-height: 31px;overflow-x: hidden;"></textarea>
+
+                    <button type="submit" class="btn btn-info">Uložit</button>
+        }
+
+        <hr />
+
+        @if (Model != null && Model.Count()>0)
+        {
+            <h3>Id nove vlozenych politiku</h3>
+<pre>
+@(Model.Aggregate((f, s) => f + "\n" + s))
+</pre>
+        }
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model HlidacStatu.Web.Controllers.HomeController.ImageBannerCoreData
+
+@{
+    Layout = "";
+    string width = "1920px";
+    string height = "1080px";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/textFit.min.js"></script>
+    <link rel='stylesheet' href='~/Content/socialBanner.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
+</head>
+<body style="width:@width;height:@height;background:url(/Content/Img/bublina-banner-16x9.png) no-repeat;">
+
+
+    <div class="jtextfill" style="position: absolute;top: 165px;left:170px;width: 1570px;height: 530px;
+/*background-color:rgba(222,222,222,0.7);*/
+">
+
+        <span class="mytxt">
+            @Html.Raw((string.IsNullOrEmpty(Model.title) ? "" : Model.title + "<br/>") + Model.body)
+        </span>
+
+    </div>
+
+
+    @{
+        int footer_left = 290;
+        int footer_width = 1050;
+    }
+    @if (!string.IsNullOrEmpty(Model.img))
+    {
+        footer_left = 330;
+        footer_width = 1000;
+        <span class="picture" style="position:absolute;top:850px;left:360px;background-image: url('@Model.img');width:100px;height:100px;"></span>
+    }
+    <div class="jtextfill" style="position:absolute;top: 850px;left:490px;width:1000px;height:100px;
+/*background-color:rgba(222,222,222,0.7);*/
+         ">
+        <span class="mytxt">
+            @Html.Raw(Model.footer)
+        </span>
+    </div>
+
+    <div class="jtextfill" style="position:absolute;top: 960px;left:490px;width:1000px;height: 50px;
+/*background-color:rgba(222,222,222,0.7);*/
+         ">
+        <span class="mytxt">
+            @Html.Raw(Model.subtitle)
+        </span>
+    </div>
+
+
+
+
+    <script>
+        textFit(document.getElementsByClassName('jtextfill'), {
+            multiLine: true, detectMultiLine: true, minFontSize: 20, maxFontSize: 400, alignVert: false, alignHoriz: false
+        });
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,183 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@{
+
+
+    string[] vlada2017 = new string[] {
+"ilja-smid",
+"jiri-milek",
+"klara-dostalova",
+"dan-tok",
+"karla-slechtova",
+"robert-plaga",
+"robert-pelikan",
+"jaroslava-nemcova-4",
+"tomas-huner",
+"adam-vojtech-1",
+"alena-schillerova",
+"lubomir-metnar",
+"richard-brabec",
+"martin-stropnicky",
+"andrej-babis",
+};
+
+    string[] vlada2013 = new string[] {
+"bohuslav-sobotka",
+"pavel-belobradek",
+"ivan-pilny",
+"dan-tok",
+"karla-slechtova",
+"lubomir-zaoralek",
+"robert-pelikan",
+"lubomir-zaoralek",
+"richard-brabec",
+"martin-stropnicky",
+"andrej-babis",
+"milan-chovanec",
+"jan-mladek",
+"jiri-havlicek-1",
+"helena-valkova",
+"michaela-marksova-1",
+"antonin-prachar",
+"marian-jurecka",
+"svatopluk-nemecek",
+"miloslav-ludvik",
+"marcel-chladek",
+"katerina-valachova",
+"stanislav-stech",
+"vera-jourova",
+"Daniel-Herman",
+"jiri-dienstbier",
+"jan-chvojka",
+};
+
+    List<HlidacStatu.Lib.Data.Osoba> showList = null;
+    showList = HlidacStatu.Lib.StaticData.Politici.Get()
+        .Where(p => vlada2013.Contains(p.NameId))
+        .OrderBy(m => m.Prijmeni)
+        .ThenBy(m => m.Jmeno)
+        .ToList();
+    bool Search = true;
+
+    var columns = new ReportDataSource.Column[]
+   {
+new ReportDataSource.Column() { Name="Poradci předsedy vlády",
+HtmlRender = (s) => {
+Osoba o = (Osoba)s;
+return string.Format("<a href='{0}'>{1}</a>", o.GetUrlOnWebsite(), o.FullNameWithYear(true))
++ "<br />"
++ Devmasters.Core.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3), 250).Replace("\n", "<br />");
+},
+OrderValueRender = (s) => {
+Osoba o = (Osoba)s;
+return o.FullName(false);
+}
+},
+new ReportDataSource.Column() { Name="Angažovanost ve firmách",
+HtmlRender = (s) => {
+Osoba o = (Osoba)s;
+string sout = "";
+
+if (o.Vazby() != null)
+{
+foreach (var v in o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(2))
+{
+sout = sout + v.Value.ToNiceString(true) + "<br/>";
+}
+if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() == 3)
+{
+sout = sout + o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy
+            .Skip(2).First().Value.ToNiceString(true);
+}
+else if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
+{
+sout = sout + "<a href='" + o.GetUrlOnWebsite() + "'>" + HlidacStatu.Util.PluralForm.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
+}
+}
+return sout;
+},
+OrderValueRender = (s) => {
+Osoba o = (Osoba)s;
+var sum = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).BasicStatPerYear.Summary.CelkemCena;
+return (sum).ToString(HlidacStatu.Util.Consts.enCulture);
+}
+},
+new ReportDataSource.Column() { Name="Sponzor polit.stran",
+HtmlRender = (s) => {
+Osoba o = (Osoba)s;
+var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
+if (sum==0)
+return "Ne";
+else
+return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:true) + string.Format("<br /><a href='{0}'>podrobnosti</a>", o.GetUrlOnWebsite()) ;
+},
+OrderValueRender = (s) => {
+Osoba o = (Osoba)s;
+return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
+}
+},
+   };
+
+    ReportDataSource vlada2013tbl = new ReportDataSource(columns);
+    ReportDataSource vlada2017tbl = new ReportDataSource(columns);
+
+
+    foreach (var p in HlidacStatu.Lib.StaticData.Politici.Get()
+        .Where(p => vlada2013.Contains(p.NameId))
+        .OrderBy(m => m.Prijmeni)
+        .ThenBy(m => m.Jmeno))
+    {
+
+        vlada2013tbl.AddRow(p);
+    }
+
+    foreach (var p in HlidacStatu.Lib.StaticData.Politici.Get()
+        .Where(p => vlada2017.Contains(p.NameId))
+        .OrderBy(m => m.Prijmeni)
+        .ThenBy(m => m.Jmeno))
+    {
+        vlada2017tbl.AddRow(p);
+    }
+
+}
+
+
+<h2 id="tblHead">Vláda ČR 2017-</h2>
+@UtilChart.RenderReport("", ReportModel.QueueItem.types.table, vlada2017tbl, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [2,'desc'],
+'lengthChange': false,
+'info': false,
+'paging': true,
+'pageLength': 50,
+}", "vlada2017tbl")
+
+
+
+<h2 id="tblHead">Vláda ČR 2014-2017</h2>
+@UtilChart.RenderReport("", ReportModel.QueueItem.types.table, vlada2013tbl, @"{
+'language': {
+'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [2,'desc'],
+'lengthChange': false,
+'info': false,
+'paging': true,
+'pageLength': 50,
+}", "vlada2013tbl")
+

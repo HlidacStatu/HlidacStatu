@@ -1,0 +1,114 @@
+﻿@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+
+@{
+    int size = 100;
+    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+        .Terms("perIco", m => m
+            .Field("platce.ico")
+            .Size(size)
+            .Order(o => o.Descending("_count"))
+            );
+
+
+
+
+    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(issues.issueTypeId:18 OR issues.issueTypeId:12)", 1, 0,
+        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, platnyZaznam: 1);
+
+    ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
+        {
+        new ReportDataSource.Column() { Name="IČO",
+            HtmlRender = (s) => {
+                                    System.Tuple<string,string> data = (System.Tuple<string,string>)s;
+                                    return string.Format(@"<a href='/subjekt/{0}'>{1}</a>", data.Item2, data.Item1);
+                                },
+            TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
+        },
+        new ReportDataSource.Column() {
+            Name ="Počet smluv s utajeným dodavatelem",
+        },
+        new ReportDataSource.Column() {
+            Name ="Počet všech smluv",
+        },
+        new ReportDataSource.Column() {
+            Name ="% smluv s utajenými dodavateli",
+            HtmlRender = (s) => { return ((double)s).ToString("P1"); },
+            TextRender = (s) => { return ((double)s).ToString("P1"); }
+        },
+        }
+        );
+
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+    {
+        rdsPerIco.AddRow(
+            new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+            val.DocCount.ToString(),
+            HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet,
+            (double)val.DocCount / (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet
+            );
+    }
+
+
+    var model = new HlidacStatu.Lib.Render.ReportModel();
+    model.Add("perIcoChart_d", "Plátci utajující nejvíce smluv",
+        UtilChart.SimpleBarChart(
+            false, false,
+            400,
+            "perIco_d",
+             "Úřady", "Počet smluv",
+            rdsPerIco.Filter(10))
+        );
+    model.Add("perIcoTable","", rdsPerIco);
+
+}
+
+<div class="dontembed">
+    <p class="text-muted">Odběratelé skrývající smluvní strany s odkazem na obchodní tajemství</p>
+    <p><a href="/Report/10">Úplný seznam smluv skrývající smlouvní strany</a></p>
+</div>
+<div class="onlyembed">
+    <h3>Úřady nejvíce skrývající své dodavatele</h3>
+</div>
+<div class="row">
+    <div class="col-xs-12 dontembed">
+        @foreach (var q in model.GetQueue("perIcoChart_d"))
+        {
+            @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [[3,'desc']],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+        }
+
+
+    </div>
+    <div class="col-xs-12">
+        @foreach (var q in model.GetQueue("perIcoTable"))
+        {
+            @UtilChart.RenderReport(q, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [[3,'desc']],
+                'lengthChange': false,
+                'info': false,
+                }", q.Key)
+        }
+    </div>
+</div>
+
+
+
+

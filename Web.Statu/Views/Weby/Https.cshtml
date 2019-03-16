@@ -1,0 +1,151 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.Zabbix;
+
+@{
+    ViewBag.Title = "Hlídač státních webů";
+    ViewBag.SubTitle = "Žebříček HTTPS Labs hodnocení";
+
+    int hoursBack = 48;
+
+    ZabHostSslStatus[] data = null;
+    try
+    {
+        data = ZabTools.SslStatuses()
+            ?.OrderByDescending(m => m.Status())
+            ?.ToArray()
+            ;
+    }
+    catch (Exception)
+    {
+
+        data = null;
+    }
+
+    SSLLabsGrades? lastGrade = null;
+    int gridCount = 0;
+}
+@section scripts
+{
+
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index","Weby")">Hlídač Webů</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+    }
+    @if (data == null)
+    {
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Chyba!</h3>
+            </div>
+            <div class="panel-body">
+                Data nejsou v tuto chvíli k dispozici. Omlouváme se, zkuste to znovu za pár minut.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bs-callout bs-callout-primary">
+            <h4>Rating HTTPS webů</h4>
+            <p>
+                HTTPS (Hypertext Transfer Protocol Secure) je v protokol umožňující zabezpečenou komunikaci protokoly HTTP a SSL/TLS mezi prohlížečem uživatele a vzdáleným serverem státu.
+                Všeobecně se <a href="https://www.michalspacek.cz/prednasky/https-vsude-proc-f5forum" onclick="return trackOutLink(this,'statniweby/info');">doporučuje podporovat HTTPS</a> místo nezabezpečeného HTTP pro všechny webové stránky. Proč?
+            </p>
+            <p>
+                HTTPS zajišťuje <b>nejen utajení (šifrování) přenášeného obsahu</b>, ale zejména <b>prokazuje identitu serveru</b>, tj. dává uživateli jistotu, že komunikuje <b>skutečně se správným serverem, ne podvrženým</b>.
+                Proto je nezbytností nejenom na webech, kde se zadávají citlivé údaje, ale i na webech, které publikují jakékoliv veřejné informace, které mají být důvěryhodné.
+            </p>
+        </div>
+
+
+        <div class="row">
+
+            @for (int i = 0; i < data.Count(); i++)
+            {
+                gridCount++;
+                var w = data[i];
+                if (i == 0)
+                {
+                    //lastGrade = w.Status();
+                }
+                if (w.Status() != lastGrade)
+                {
+                    lastGrade = w.Status();
+                    gridCount = 1;
+                    <div class="clearfix"></div>
+                    <h3 style="margin-top:50px">Rating @lastGrade.ToNiceDisplayName() <small>@ZabTools.StatusDescription(lastGrade.Value)</small></h3>
+                }
+                <div class="col-xs-6 col-sm-4"
+                     style="border-top: 1px solid #ddd;padding-top:10px;margin-top:20px;">
+                    <a href="/statniweby/info/@(w.Host.hostid)?h=@(w.Host.hash)">
+                        <table>
+                            <tr>
+                                <td>@Html.Raw(ZabTools.StatusHtml(w.Status(), 30))</td>
+                                <td>
+                                    <div style="margin-left:0.5em;">
+                                        <div style="word-break:normal;">@(w.Host.publicname?.Replace(".", ". "))</div>
+                                        <div class="text-muted small">
+                                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+
+                                            @w.Time.ToString("dd.MM.yyyy")
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </a>
+                </div>
+                if (gridCount % 6 == 0)
+                {
+                    <div class="clearfix visible-sm-block"></div>
+                    <div class="clearfix visible-md-block"></div>
+                    <div class="clearfix visible-lg-block"></div>
+                }
+                else if (gridCount % 4 == 0)
+                {
+                    <div class="clearfix visible-xs-block"></div>
+
+                }
+            }
+        </div>
+
+        <div class="panel panel-primary" style="margin-top:50px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">Systém hodnocení HTTPS</h3>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.A)">Zelená známka A+, A nebo A-</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.A, true)</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.B)">Žlutá známka B,C,D,E</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.B, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.F)">Červené F</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.F, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.M)">Červené M</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.M, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.T)">Červené T</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.T, true).</dd>
+                    <dt style="color:@ZabTools.StatusOrigColor(SSLLabsGrades.X)">Červené X</dt>
+                    <dd>@ZabTools.StatusDescription(SSLLabsGrades.X, true).</dd>
+                </dl>
+            </div>
+        </div>
+
+
+
+        @UtilWebyChart.TableNextGroups("https")
+
+    }
+    @section footerscripts{
+    }
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2dccfd76e9ac42d4b870e512dcc6d511" Name="Diagram1" ZoomLevel="78">
+        <EntityTypeShape EntityType="FirmyModel.Order" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FirmyModel.DatoveSchranky" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="FirmyModel.WatchDog" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="FirmyModel.AspNetUserRole" Width="1.5" PointX="8" PointY="2" />
+        <EntityTypeShape EntityType="FirmyModel.AspNetUser" Width="1.5" PointX="5.75" PointY="1" />
+        <AssociationConnector Association="FirmyModel.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" />
+        <EntityTypeShape EntityType="FirmyModel.AspNetUserToken" Width="1.5" PointX="7.75" PointY="4.75" />
+        <EntityTypeShape EntityType="FirmyModel.SmlouvyId" Width="1.5" PointX="7.75" PointY="7.75" />
+        <EntityTypeShape EntityType="FirmyModel.FirmaVazby" Width="1.5" PointX="9.75" PointY="4.75" />
+        <EntityTypeShape EntityType="FirmyModel.Osoba" Width="3.25" PointX="9.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FirmyModel.OsobaEvent" Width="1.5" PointX="4.75" PointY="9.75" />
+        <EntityTypeShape EntityType="FirmyModel.OsobaExternalId" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FirmyModel.OsobaVazby" Width="1.5" PointX="6.75" PointY="10.75" />
+        <EntityTypeShape EntityType="FirmyModel.FirmaEvent" Width="1.5" PointX="11.75" PointY="3.75" />
+        <EntityTypeShape EntityType="FirmyModel.InvoiceItems" Width="1.5" PointX="3.125" PointY="1.5" />
+        <EntityTypeShape EntityType="FirmyModel.Invoices" Width="1.5" PointX="0.75" PointY="1.125" />
+        <AssociationConnector Association="FirmyModel.FK_InvoiceItems_Invoices" />
+        <EntityTypeShape EntityType="FirmyModel.Audit" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="FirmyModel.NespolehlivyPlatceDPH" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FirmyModel.Review" Width="1.5" PointX="3.375" PointY="13.75" />
+        <EntityTypeShape EntityType="FirmyModel.Bookmark" Width="1.5" PointX="14.375" PointY="3.75" />
+        <EntityTypeShape EntityType="FirmyModel.UserOptions" Width="1.5" PointX="14.75" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

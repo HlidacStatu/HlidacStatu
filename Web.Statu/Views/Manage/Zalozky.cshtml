@@ -1,0 +1,66 @@
+﻿@model IEnumerable<HlidacStatu.Lib.Data.Bookmark>
+@using System.Linq;
+@using System.Collections.Generic;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Uložené záložky";
+}
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@if (Model.Count() == 0)
+{
+    <div class="modal" style="position:relative;display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Uložené záložky</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <code>Uložené zálozky</code> je záložka na dokument, záznam, výsledek hledání či jakoukoliv stránku na Hlídači státu.
+                    </p>
+                    <p>
+                        Uložení záložky je snadné, stačí kliknout na ikonu  <a style="font-size:120%" href="#" class="bookmark bookmarkOff" onclick="javascript:return false;"></a>.
+                        Pokud už je konkrétní záložka vytvořená, pak je vybarvena červeně <a style="font-size:120%" href="#" class="bookmark bookmarkOn" onclick="javascript:return false;"></a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    return;
+}
+
+<table class="table table-hover">
+    <tr>
+        <th></th>
+        @*<th>Folder</th>*@
+        <th>Pojmenování</th>
+        <th>Vytvořena</th>
+        <th>Typ záložky</th>
+    </tr>
+
+    @foreach (var bm in Model)
+    {
+        var typ = bm.ItemId.Split('|')[0];
+
+        <tr>
+            <td>
+                @Util.AddBookmark(this.User, true, bm.Name, bm.Url, bm.ItemId, bm.ItemType)
+            </td>
+            <td>
+                <a href="@bm.Url">
+                    @Devmasters.Core.TextUtil.ShortenText(bm.Name, 250) <sup><span class="glyphicon glyphicon-link"></span></sup>
+                </a>
+            </td>
+            <td>
+                @(bm.Created?.ToString("d.M.yyyy HH:mm") ?? "")
+            </td>
+            <td>
+                @typ
+            </td>
+        </tr>
+
+    }
+
+</table>

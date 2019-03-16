@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="urn:cz:mfcr:monitor:schemas:MonitorUkazatele:v1"
+    xmlns:mon="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+    targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorUkazatele:v1" elementFormDefault="qualified"
+    attributeFormDefault="unqualified" version="1">
+    <xs:import namespace="urn:cz:mfcr:monitor:schemas:MonitorTypes:v1"
+        schemaLocation="monitorTypes.xsd"/>
+    <xs:element name="UkazateleUJ">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Identifikace">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="NazevUJ" type="NazevUJType"/>
+                            <xs:element minOccurs="0" name="Kapitola" type="KapitolaType"/>
+                            <xs:element name="Kraj" type="KrajType" minOccurs="0"/>
+                            <xs:element name="Okres" type="OkresType" minOccurs="0"/>
+                            <xs:element minOccurs="0" name="Zrizovatel" type="ZrizovatelType"/>
+                            <xs:element name="SidloAdresa" type="SidloAdresaType"/>
+                            <xs:element name="Sektor" type="SektorType"/>
+                            <xs:element minOccurs="0" name="PocetObyvatel" type="PocetObyvatelType"
+                            />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Ukazatele">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="Ukazatel">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="UkazatelNazev" type="mon:UkazatelType"/>
+                                        <xs:element name="UkazatelCastka"
+                                            type="mon:FinancniCastkaType"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="NazevUJType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace názvu účetní jednotky (název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="KapitolaType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace kapitoly (kód a název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="KrajType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace kraje (NUTS a název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="OkresType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace okresu (název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ZrizovatelType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace okresu (název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="SidloAdresaType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace adresy sídla.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="SektorType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Identifikace sektoru (kód a název).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:SimpleTextType">
+                <xs:maxLength value="255"/>
+                <xs:minLength value="1"/>
+            </xs:restriction>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="PocetObyvatelType">
+        <xs:annotation>
+            <xs:documentation xml:lang="cz">Počet obyvatel evidovaný Českým statistickým úřadem ve zvoleném roce.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:restriction base="mon:NumberType"/>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

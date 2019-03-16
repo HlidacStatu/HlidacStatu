@@ -1,0 +1,43 @@
+﻿@model string[]
+
+@{
+    /**/
+    HlidacStatu.Lib.Data.Osoba o = ViewBag.Osoba;
+
+    ViewBag.Title = "Změna fotky " + o.FullNameWithYear();
+}
+
+<div class="row">
+    @if (Model.Count() == 0)
+    {
+    <div class="col-xs-12" style="margin-bottom:20px;">
+        <span class="text-danger">Źádné portréty o velikosti alespon 150x150px jsme na fotce nenašli.</span>
+        <a href="/manage/changePhoto/@o.NameId" class="btn btn-default">&lt;&lt; Zpět</a>
+    </div>
+    }
+    else
+    {
+        <div class="col-xs-12">
+            <form method="post" action="@Url.Action("ChangePhoto","Manage")">
+                <input type="hidden" name="phase" value="choose" />
+                <input type="hidden" name="id" value="@o.NameId" />
+                <button type="submit" class="btn btn-warning">&lt;&lt; Žádná fotka není správná</button>
+            </form>
+        </div>
+        foreach (var f in Model)
+        {
+            <div class="col-xs-6 col-sm-4">
+                <img style="width:250px;height:auto; border:solid #d0d0d0 1px; margin:5px;" src="data:image/jpeg;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(f), Base64FormattingOptions.None)">
+                <br />
+                <form method="post" action="@Url.Action("ChangePhoto","Manage")">
+                    <input type="hidden" name="phase" value="choose" />
+                    <input type="hidden" name="id" value="@o.NameId" />
+                    <input type="hidden" name="fn" value="@f" />
+                    <input type="hidden" name="email" value="@ViewBag.Email" />
+                    <button type="submit" class="btn btn-success">Toto je správná/nejlepší fotka</button>
+                </form>
+            </div>
+        }
+    }
+
+</div>

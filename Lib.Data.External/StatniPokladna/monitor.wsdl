@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Monitor" targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorWSDL:v1"
+    xmlns="urn:cz:mfcr:monitor:schemas:MonitorWSDL:v1" 
+	xmlns:req="urn:cz:mfcr:monitor:schemas:MonitorRequest:v1"
+	xmlns:res="urn:cz:mfcr:monitor:schemas:MonitorResponse:v1"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <wsdl:documentation>Webová služba portálu Mon1tor k extrakci dat výkazů účetních jednotek</wsdl:documentation>
+    <wsdl:types>
+        <xsd:schema targetNamespace="urn:cz:mfcr:monitor:schemas:MonitorWSDL:v1">
+            <xsd:import namespace="urn:cz:mfcr:monitor:schemas:MonitorRequest:v1" schemaLocation="monitorRequest.xsd"/>
+            <xsd:import namespace="urn:cz:mfcr:monitor:schemas:MonitorResponse:v1" schemaLocation="monitorResponse.xsd"/>
+        </xsd:schema>            
+    </wsdl:types>
+    <wsdl:message name="MonitorRequest">
+        <wsdl:documentation></wsdl:documentation>
+        <wsdl:part name="MonitorRequest" element="req:MonitorRequest"/>
+    </wsdl:message>  
+    <wsdl:message name="MonitorResponse">
+        <wsdl:documentation></wsdl:documentation>
+        <wsdl:part name="MonitorResponse" element="res:MonitorResponse"/>
+    </wsdl:message>   
+    <wsdl:portType name="MonitorExtract">
+        <wsdl:documentation></wsdl:documentation>
+        <wsdl:operation name="ExtractData">
+            <wsdl:input message="MonitorRequest"/>
+            <wsdl:output message="MonitorResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MonitorExtractBinding" type="MonitorExtract">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="ExtractData">
+            <soap:operation soapAction="http://schemas.xmlsoap.org/wsdl/soap"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>          
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MonitorService">
+        <wsdl:port name="MonitorServicePort" binding="MonitorExtractBinding">
+            <soap:address location="http://monitor.statnipokladna.cz/monitorws"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,108 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Hlídač veřejných zakázek";
+    ViewBag.SubTitle = "";
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">Hlídač Veřejných zakázek</li>
+    </ol>
+}
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData())
+
+
+<hr />
+<h2>Veřejné zakázky v jednotlivých oblastech</h2>
+<div class="row">
+    @foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
+    {
+        var numAll = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            {
+        //Q = "zverejneno:=>" + DateTime.Now.Date.AddMonths(-3).ToString("yyyy-MM-dd")
+        Q = "*",
+                Oblast = obl.Value,
+                Page = 0,
+                PageSize = 0
+            }
+            ).Total;
+        var num1M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            {
+                Q = "zverejneno:[" + DateTime.Now.Date.AddMonths(-1).ToString("yyyy-MM-dd") + " TO *]",
+        //Q = "*",
+        Oblast = obl.Value,
+                Page = 0,
+                PageSize = 0
+            }
+            ).Total;
+        var num1W = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            {
+                Q = "zverejneno:[" + DateTime.Now.Date.AddDays(-8).ToString("yyyy-MM-dd") + " TO *]",
+        //Q = "*",
+        Oblast = obl.Value,
+                Page = 0,
+                PageSize = 0
+            }
+            ).Total;
+        <div class="col-xs-6 col-sm-4" style="padding:5px">
+
+            <a href="/verejnezakazky/hledat?q=*&oblast=@HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.NormalizeOblastValue(obl.Value)&order=1" class="list-group-item">
+                <h4 class="list-group-item-heading">@obl.Key</h4>
+                <p class="list-group-item-text">
+                    Celkem @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numAll, "<b>Žádná zakázka</b> za poslední roky", "<b>Jedna zakázka</b> za poslední roky", "<b>{0} zakázky</b> za poslední roky", "<b>{0} zakázek</b> za poslední roky"))
+                    @if (numAll == 0)
+                    {<text>.</text> }
+                else
+                {
+                    <text>
+                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)num1M, ", <b>žádná</b> za poslední měsíc.", ", <b>jedna</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc a"))
+                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)num1W, " <b>žádná</b> za poslední týden.", ", <b>jedna</b> za poslední týden.", ", <b>{0}</b> za poslední týden.", ", <b>{0}</b> za poslední týden."))
+                    </text>
+                }
+                </p>
+            </a>
+        </div>
+    }
+
+</div>
+
+<h2>Ukázky možností</h2>
+<ul>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=*&order=1">Poslední veřejné zakázky</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=*%20oblast:IT&order=1">Poslední veřejné zakázky v oboru IT</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222&order=1">Poslední veřejné zakázky od Ministerstva pro místní rozvoj</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20oblast:IT&order=1">Poslední veřejné zakázky týkající se IT od MMR</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20cpv:72,48&order=1">Poslední veřejné zakázky od MMR podle CPV kódu</a>
+    </li>
+    <li>
+        <a href="/verejnezakazky/hledat?Q=ico%3A66002222%20AND%20%28NEN%20OR%20NIPEZ%29&order=1">Poslední veřejné zakázky týkající se NEN a NIPEZ</a>
+    </li>
+
+</ul>
+
+
+
+
+
+
+
