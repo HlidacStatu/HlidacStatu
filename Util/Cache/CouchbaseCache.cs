@@ -3,6 +3,7 @@ using System.Linq;
 using Devmasters.Cache.V20;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace HlidacStatu.Util.Cache
 {
@@ -12,12 +13,9 @@ namespace HlidacStatu.Util.Cache
     {
         object syncObj = new object();
 
-        static Cluster cluster = new Cluster(new Couchbase.Configuration.Client.ClientConfiguration
-        {
-            Servers = new List<Uri> {
-                new Uri("http://10.10.100.56"),
-                new Uri("http://10.10.100.58")
-            }
+		static Cluster cluster = new Cluster(new Couchbase.Configuration.Client.ClientConfiguration
+		{
+			Servers = ConfigurationManager.AppSettings["CouchbaseServers"].Split(',').Select(s => new Uri(s)).ToList()
         });
 
         static Couchbase.Core.IBucket cache = null;

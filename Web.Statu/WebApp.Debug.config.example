@@ -23,6 +23,9 @@
     <!-- elastic server address -->
     <add xdt:Transform="Insert" key="ESConnection" value="http://localhost:9200" />
 
+    <!-- couchbase server address -->
+    <add xdt:Transform="Insert" key="CouchbaseServers" value="http://localhost" />
+
     <!-- connection for SQL server db-->
     <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->
     <add xdt:Transform="Insert" key="CnnString"
