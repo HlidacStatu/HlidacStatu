@@ -1,5 +1,6 @@
 ﻿@using System.Linq;
-@model HlidacStatu.Web.Models.DokumentyViewModel
+@using HlidacStatu.Web.Models;
+@model DokumentyViewModel
 
 @{
 	ViewBag.Title = "Insolvenční řízení " + Model.SpisovaZnacka;
@@ -8,13 +9,17 @@
 
 @section breadcrumb
 {
-<ol class="breadcrumb">
-	<li><a href="/">Hlídač Státu</a></li>
-	<li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
-	<li><a href="@Url.Action("Rizeni", "Insolvence", new { id = Model.UrlId })">Insolvence @Model.SpisovaZnacka</a></li>
-	<li class="active">Dokumenty</li>
-</ol>
+	<ol class="breadcrumb">
+		<li><a href="/">Hlídač Státu</a></li>
+		<li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
+		<li><a href="@Url.Action("Rizeni", "Insolvence", new { id = Model.UrlId })">Insolvence @Model.SpisovaZnacka</a></li>
+		<li class="active">Dokumenty</li>
+	</ol>
 }
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
 @Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
 
 
@@ -42,17 +47,17 @@
 else
 {
 	<h3>Oddíl A - Řízení do úpadku</h3>
-	@Html.Partial("_OddilDokumenty", Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("A")).ToArray())
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "A", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("A")).ToArray() })
 
 	<h3>Oddíl B - Řízení po úpadku	</h3>
-	@Html.Partial("_OddilDokumenty", Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("B")).ToArray())
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "B", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("B")).ToArray() })
 
 	<h3>Oddíl C - Incidenční spory</h3>
-	@Html.Partial("_OddilDokumenty", Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("C")).ToArray())
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "C", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("C")).ToArray() })
 
 	<h3>Oddíl D - Ostatní</h3>
-	@Html.Partial("_OddilDokumenty", Model.Dokumenty.Where(d => d.Oddil == null || d.Oddil != null && d.Oddil.StartsWith("D")).ToArray())
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "D", Dokumenty = Model.Dokumenty.Where(d => d.Oddil == null || d.Oddil != null && d.Oddil.StartsWith("D")).ToArray() })
 
 	<h3>Oddíl P - Přihlášky</h3>
-	@Html.Partial("_OddilDokumenty", Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("P")).ToArray())
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "P", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("P")).ToArray() })
 }

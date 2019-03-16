@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Devmasters.Core;
+using System;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
@@ -34,25 +35,30 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public string ToHtml()
         {
-            var ret = string.Empty;
-            if (!string.IsNullOrEmpty(this.ICO) && HlidacStatu.Lib.Validators.CheckCZICO(this.ICO))
+            if (!string.IsNullOrEmpty(ICO) && Validators.CheckCZICO(ICO))
             {
-                ret = $"<a href='/subjekt/{this.ICO}'>{Devmasters.Core.TextUtil.ShortenText(this.PlneJmeno,30,"...")}</a>";
-                ret += $" ({this.ICO})";
+                return $"<a href='/subjekt/{ICO}'>{TextUtil.ShortenText(PlneJmeno,30,"...")}</a> ({ICO})";
             }
-            else if (!string.IsNullOrEmpty(this.OsobaId))
+            else if (!string.IsNullOrEmpty(OsobaId))
             {
-                ret =  $"<a href='/osoba/{this.OsobaId}'>{Devmasters.Core.TextUtil.ShortenText(this.PlneJmeno, 30, "...")}</a>";
-                if (this.DatumNarozeni.HasValue)
-                    ret += $" (* {this.DatumNarozeni.Value.Year})";
+                return $"<a href='/osoba/{OsobaId}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a>{GetDatumNarozeni()}";
             }
-            else 
-            {
-                ret = this.PlneJmeno;
-                if (this.DatumNarozeni.HasValue)
-                    ret += $" (* {this.DatumNarozeni.Value.Year})";
-            }
-            return ret;
+            return PlneJmeno + GetDatumNarozeni();
         }
+
+		private string GetDatumNarozeni()
+		{
+			if (DatumNarozeni.HasValue)
+			{
+				return $" (* {DatumNarozeni.Value.Year})";
+			}
+			else if (!string.IsNullOrEmpty(Rc))
+			{
+				var suffix = Rc.Substring(0, 2);
+				var year = (Convert.ToInt32((DateTime.Now.Year - 18).ToString().Substring(2)) > Convert.ToInt32(suffix) ? "20" : "19") + suffix;
+				return $" (* {year})";
+			}
+			return string.Empty;
+		}
     }
 }

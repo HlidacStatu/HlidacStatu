@@ -198,13 +198,9 @@ MORATORIUM =
 
             try
             {
-                IGetResponse<Rizeni> rizeni = null;
-                if (includeDocumentsPlainText == false)
-                    rizeni = client
-                        .Get<Rizeni>(spisovaZnacka, s => s.SourceExclude("dokumenty.plainText"));
-                else
-                    rizeni = client
-                        .Get<Rizeni>(spisovaZnacka);
+				var rizeni = includeDocumentsPlainText
+					? client.Get<Rizeni>(spisovaZnacka)
+					: client.Get<Rizeni>(spisovaZnacka, s => s.SourceExclude("dokumenty.plainText"));
 
                 if (rizeni.Found)
                 {

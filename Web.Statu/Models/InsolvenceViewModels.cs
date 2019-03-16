@@ -34,6 +34,12 @@ namespace HlidacStatu.Web.Models
 		public string Typ { get; set; }
 	}
 
+	public class DokumentListViewModel
+	{
+		public string Oddil { get; set; }
+		public Dokument[] Dokumenty { get; set; }
+	}
+
 	public class SoudViewModel
 	{
 		public string Soud { get; set; }

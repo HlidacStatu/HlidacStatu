@@ -13,7 +13,6 @@
 	<thead>
 		<tr>
 			<th>Jméno</th>
-			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -23,14 +22,7 @@
 
 			<tr>
 				<td>
-					@if (Validators.CheckCZICO(item.Osoba.ICO))
-					{
-						<a href="/subjekt/@item.Osoba.ICO">@item.Osoba.PlneJmeno</a>
-					}
-					else
-					{
-						<span>@(item.Osoba.PlneJmeno)</span>
-					}
+					@Html.Raw(item.Osoba.ToHtml())
 					@if (!string.IsNullOrEmpty(item.Osoba.ICO))
 					{
 						<div class="small text-info">
@@ -39,21 +31,11 @@
 					}
 					@if (item.DisplayLinkToRizeni)
 					{
-						<div class="text-info" style="padding-top:10px; font-weight:bold">
-							Insolvenční řízení <a href="@Url.Action("Rizeni", "Insolvence", new { id = item.UrlId })">@item.SpisovaZnacka</a>
+						<div class="text-info" style="padding-top:10px; font-weight:bold; text-align:right">
+							<a href="@Url.Action("Rizeni", "Insolvence", new { id = item.UrlId })">
+								Insolvenční řízení @item.SpisovaZnacka <i class="glyphicon glyphicon-arrow-right"></i>
+							</a>
 						</div>
-					}
-				</td>
-				<td style="width:150px">
-					@if (hasIco)
-					{
-						<span>IČ: @item.Osoba.ICO</span>
-					}
-					else if (!string.IsNullOrEmpty(item.Osoba.Rc))
-					{
-						var suffix = item.Osoba.Rc.Substring(0, 2);
-						var year = (Convert.ToInt32((DateTime.Now.Year - 18).ToString().Substring(2)) > Convert.ToInt32(suffix) ? "20" : "19") + suffix;
-						<span>ročník @year</span>
 					}
 				</td>
 			</tr>

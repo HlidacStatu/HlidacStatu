@@ -13,8 +13,8 @@ namespace HlidacStatu.Web.Controllers
 		{
 			var model = new InsolvenceIndexViewModel
 			{
-				NoveFirmyVInsolvenci = Insolvence.NewFirmyVInsolvenci(25),
-				NoveOsobyVInsolvenci = Insolvence.NewOsobyVInsolvenci(25)
+				NoveFirmyVInsolvenci = Insolvence.NewFirmyVInsolvenci(100),
+				NoveOsobyVInsolvenci = Insolvence.NewOsobyVInsolvenci(100)
 			};
 
 			return View(model);

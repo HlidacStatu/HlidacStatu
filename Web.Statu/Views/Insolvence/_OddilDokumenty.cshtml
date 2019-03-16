@@ -1,21 +1,47 @@
 ﻿@using System.Linq;
-@model HlidacStatu.Lib.Data.Insolvence.Dokument[]
+@model HlidacStatu.Web.Models.DokumentListViewModel
 
-<table class="table table-condensed table-striped table-hover">
-	<tbody>
-		@foreach (var item in Model.OrderByDescending(d => d.DatumVlozeni))
-		{
+@{
+	var tableId = $"documents-{Model.Oddil}";
+}
+
+
+<table id="@tableId" class="table table-condensed table-striped table-hover">
+	<thead>
 		<tr>
-			<td>@item.Popis</td>
-			<td style="width:100px">@item.DatumVlozeni.ToShortDateString()</td>
-			<td style="width:80px"><a href="@item.Url">originál</a></td>
-			<td style="width:150px">
-				@if (item.Lenght > 0)
-				{
-					<a href="@Url.Action("TextDokumentu", "Insolvence", new { Id = item.Id })">zobrazit čistý text</a>
-				}
-			</td>
+			<th>Popis</th>
+			<th>Zveřejněno</th>
+			<th></th>
+			<th></th>
 		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Dokumenty.OrderByDescending(d => d.DatumVlozeni))
+		{
+			<tr>
+				<td>@item.Popis</td>
+				<td style="width:100px">@item.DatumVlozeni.ToShortDateString()</td>
+				<td style="width:80px"><a href="@item.Url">originál</a></td>
+				<td style="width:150px">
+					@if (item.Lenght > 0)
+					{
+						<a href="@Url.Action("TextDokumentu", "Insolvence", new { Id = item.Id })">zobrazit čistý text</a>
+					}
+				</td>
+			</tr>
 		}
 	</tbody>
 </table>
+
+<script>
+	$(document).ready(function () {
+		$('#@tableId').DataTable({
+			'language': {
+				'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+			},
+			'order': [],
+			'lengthChange': false,
+			'info': false,
+		});
+	});
+</script>
