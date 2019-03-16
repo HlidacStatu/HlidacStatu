@@ -357,11 +357,9 @@ WebApp.Release.config
 WebApp.config
 Web.Statu/Web.config
 ApplicationInsights.config
+
 Web.Statu/App_Data/*.filecache.data
-
 Web.Statu/App_Data/*.filecache.content
-
-
 Web.Statu/App_Data/dump/*
 
 
