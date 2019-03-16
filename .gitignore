@@ -354,9 +354,8 @@ App.Release.config
 WebApp.Debug.config
 WebApp.Stage.config
 WebApp.Release.config
-App.config
 WebApp.config
-Web.config
+Web.Statu/Web.config
 ApplicationInsights.config
 Web.Statu/App_Data/*.filecache.data
 
@@ -367,3 +366,7 @@ Web.Statu/App_Data/dump/*
 
 
 HlidacStatu.Private.sln
+
+
+
+## HLIDACSTATU REPOZITORY .gitignore #
