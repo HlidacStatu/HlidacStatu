@@ -51,6 +51,17 @@ namespace HlidacStatu.Lib.Data
                 return times;
             }
 
+            public string SearchTimesReport(string delimiter = "\n")
+            {
+                var times = SearchTimes();
+                if (times == null || times.Count() == 0)
+                    return string.Empty;
+
+                return times
+                    .Select(kv => $"{kv.Key}: {kv.Value.TotalMilliseconds.ToString()}")
+                    .Aggregate((f, s) => f + delimiter + s);
+            }
+
             public bool IsValid
             {
                 get
@@ -117,13 +128,13 @@ namespace HlidacStatu.Lib.Data
                         
                         if (res.Datasets.Exceptions.Count > 0)
                         {
-                            HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query,
+                            HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
                                 res.Datasets.GetExceptions());
                         }
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query, e);
                     }
                 },
                 () =>
@@ -138,7 +149,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for Smlouvy query" + query, e);
                     }
                 },
                 () =>
@@ -154,7 +165,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for Firmy query" + query, e);
                     }
 
                 },
@@ -166,7 +177,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for Verejne zakazky query" + query, e);
                     }
 
                 },
@@ -191,7 +202,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for Osoba query" + query, e);
                     }
 
 
@@ -216,7 +227,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     catch (System.Exception e)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for query" + query, e);
+                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for bankovni ucty query" + query, e);
                     }
 
                 }
