@@ -1124,7 +1124,7 @@ text zpravy: {txt}";
         public ActionResult Hledat(string q)
         {
             var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q);
-            HlidacStatu.Util.Consts.Logger.Info("Search times: {q}\n" + res.SearchTimesReport());
+            HlidacStatu.Util.Consts.Logger.Info($"Search times: {q}\n" + res.SearchTimesReport());
             return View(res);
         }
 
