@@ -118,7 +118,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         //HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Validators.FirmaInText(companyName);
                         var name = HlidacStatu.Lib.Data.Firma.JmenoBezKoncovky(companyName);
-                        var found = HlidacStatu.Lib.Data.Firmy.FindAll(name, 1).FirstOrDefault();
+                        var found = HlidacStatu.Lib.Data.Firma.Search.FindAll(name, 1).FirstOrDefault();
                         if (found == null)
                             return Json(new { }, JsonRequestBehavior.AllowGet);
                         else

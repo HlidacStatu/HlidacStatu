@@ -14,7 +14,38 @@
         get { return ((WebViewPage)CurrentPage).Url; }
     }
 }
+@helper FirmyHead(bool small = false)
+{
+    <tr>
+        <th></th>
+        <th>IČ</th>
+        <th>Název</th>
+        <th>Vznik</th>
+        @if (small == false)
+        {
+            <th>Počet smluv v RS</th>
+            <th>Hodnota smluv v RS</th>
+        }
+    </tr>
+}
 
+@helper FirmyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Firma rec, bool small = false)
+{
+    <tr>
+        <td>
+            @Util.AddBookmark(user, rec)
+        </td>
+        <td><a href="@rec.GetUrl(true)">@rec.ICO</a></td>
+        <td><a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno,40,"...")</a></td>
+        <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
+        @if (small == false)
+        {
+            <td>@HlidacStatu.Util.RenderData.NiceNumber(rec.Statistic().BasicStatPerYear.SummaryAfter2016().Pocet)</td>
+            <td>@HlidacStatu.Util.RenderData.NicePrice(rec.Statistic().BasicStatPerYear.SummaryAfter2016().CelkemCena)</td>
+        }
+
+    </tr>
+}
 @helper SmlouvyHead(bool small = false)
 {
     <tr>
@@ -285,10 +316,11 @@
         @if (showUcet)
         {
             HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet bu = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.Get(p.CisloUctu);
-            <td><a href="@bu.GetUrl()">@bu.CisloUctu</a> 
-                    (<a href="@bu.GetSubjektUrl(true)">@HlidacStatu.Util.RenderData.StranaZkratka(bu.Subjekt)</a> - 
-                        @Util.IfExists(string.IsNullOrEmpty(bu.Nazev), "",  Devmasters.Core.TextUtil.ShortenText(bu.Nazev,20, "…"))
-                    )
+            <td>
+                <a href="@bu.GetUrl()">@bu.CisloUctu</a>
+                (<a href="@bu.GetSubjektUrl(true)">@HlidacStatu.Util.RenderData.StranaZkratka(bu.Subjekt)</a> -
+                @Util.IfExists(string.IsNullOrEmpty(bu.Nazev), "", Devmasters.Core.TextUtil.ShortenText(bu.Nazev, 20, "…"))
+                )
             </td>
         }
         <td>
@@ -315,7 +347,7 @@
                 @Util.IfExists(string.IsNullOrEmpty(p.NazevProtiuctu), p.CisloProtiuctu, string.Format("<span title='{1}'>{0}</span>", p.NazevProtiuctu, p.CisloProtiuctu))
             }
         </td>
-        <td>@Util.XContent(HlidacStatu.Util.RenderData.NicePrice(p.Castka, showDecimal:HlidacStatu.Util.RenderData.ShowDecimalVal.Show, html: true), true)</td>
+        <td>@Util.XContent(HlidacStatu.Util.RenderData.NicePrice(p.Castka, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, html: true), true)</td>
         @if (@showZpravuProProjemce)
         {
             <td>@Util.XContent(p.ZpravaProPrijemce)</td>

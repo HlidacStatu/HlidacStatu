@@ -5,6 +5,7 @@ using HlidacStatu.Lib.Data.VZ;
 using HlidacStatu.Lib.Render;
 using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json.Linq;
@@ -112,7 +113,7 @@ namespace HlidacStatu.Web.Controllers
             return RedirectPermanent("/texty/provoznipodminky");
         }
 
-        [OutputCache(VaryByParam ="*", Duration =60*60*1)]
+        [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
         public ActionResult PorovnatSubjekty(string id, string ico, string ds, string title, int? width, string specialtype, string specialvalue, string part)
         {
             if (id == "special")
@@ -1124,7 +1125,25 @@ text zpravy: {txt}";
         public ActionResult Hledat(string q)
         {
             var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q);
-            HlidacStatu.Util.Consts.Logger.Info($"Search times: {q}\n" + res.SearchTimesReport());
+            if ( System.Diagnostics.Debugger.IsAttached ||
+                Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
+            {
+                HlidacStatu.Util.Consts.Logger.Info($"Search times: {q}\n" + res.SearchTimesReport());
+
+                var data = res.SearchTimes();
+                TelemetryClient tm = new TelemetryClient();
+    
+                // Set up some properties:
+
+                foreach (var kv in data)
+                {
+                    var metrics = new Dictionary<string, double> {{"elapsed", kv.Value.TotalMilliseconds}};
+                    var props = new Dictionary<string, string> { { "query", q },{"database", kv.Key } };
+
+                    Metric elaps = tm.GetMetric("Search_Elapsed", "Database");
+                    var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
+                }
+            }
             return View(res);
         }
 

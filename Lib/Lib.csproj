@@ -462,6 +462,7 @@
     <Compile Include="Data\External\RZP\Response.cs">
       <DependentUpon>Response.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Data\Firma.Search.cs" />
     <Compile Include="Data\Graph.cs" />
     <Compile Include="Data\Firma.Ciselniky.cs" />
     <Compile Include="Data\Insolvence\Dokument.cs" />

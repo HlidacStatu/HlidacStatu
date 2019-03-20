@@ -148,7 +148,7 @@
                     <td>
                         Pokud chcete otestovat vaše data, zda mají správný formát a splňují požadavky <a href="https://json-schema.org">JSON Schematu</a> této datové sady, rádí pomůžeme.
 
-                        <form method="post">
+                        <form method="post" action="/data/datasettextjson/@Model.DatasetId">
                             <div class="form-group">
                                 <label for="jsondata">Zkopírujte sem JEDEN záznam v JSON formátu (stejná data jako posílaná <a href="/api">přes API</a>)</label>
                                 <textarea id="jsondata" name="jsondata" class="form-control" rows="3"></textarea>

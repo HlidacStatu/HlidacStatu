@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyRaw = "verejnezakazkyraw";
         public static string defaultIndexName_VerejneZakazkyNaProfiluRaw = "verejnezakazkyprofilraw";
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
-        public static string defaultIndexName_Firmy = "ares";
+        public static string defaultIndexName_Firmy = "firmy";
         public static string defaultIndexName_Logs = "logs";
 		//public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
 		public static string defaultIndexName_Insolvence = "insolvencnirestrik";
@@ -455,6 +455,7 @@ namespace HlidacStatu.Lib.ES
                        .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Mappings(m => m
+                                .Map<Data.Firma.Search.FirmaInElastic>(map=>map.AutoMap(maxRecursion:1))
                                )
                        );
                     break;

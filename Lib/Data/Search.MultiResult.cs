@@ -125,7 +125,7 @@ namespace HlidacStatu.Lib.Data
                     try
                     {
                         res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query);
-                        
+
                         if (res.Datasets.Exceptions.Count > 0)
                         {
                             HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
@@ -159,7 +159,7 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
                         sw.Start();
 
-                        res.Firmy = new GeneralResult<string>(Firmy.FindAllIco(query, 1000));
+                        res.Firmy = new GeneralResult<string>(Firma.Search.FindAllIco(query, 1000));
                         sw.Stop();
                         res.Firmy.ElapsedTime = sw.Elapsed;
                     }
@@ -239,7 +239,7 @@ namespace HlidacStatu.Lib.Data
                     res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
 
                 res.Osoby = new GeneralResult<Osoba>(res.Osoby.Result
-                            .Concat(Osoba.GetPolitikByQueryFromFirmy(query,(int)(10 - (res.Osoby?.Total ?? 0 )), res.Firmy.Result)
+                            .Concat(Osoba.GetPolitikByQueryFromFirmy(query, (int)(10 - (res.Osoby?.Total ?? 0)), res.Firmy.Result)
                             )
                         );
                 res.OsobaFtx = true;

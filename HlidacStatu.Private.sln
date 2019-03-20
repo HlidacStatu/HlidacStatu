@@ -119,6 +119,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "..\PrivateInt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Data.VZ.Import", "..\PrivateInternals\Lib.Data.VZ.Import\Lib.Data.VZ.Import.csproj", "{68BD6A30-CB86-42E1-945D-F14DFC4F9439}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatasetConnector.Framework", "DatasetConnector\DatasetConnector\DatasetConnector.Framework.csproj", "{C01FD6FF-6F1D-4902-8593-EAE934991A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -871,6 +873,30 @@ Global
 		{68BD6A30-CB86-42E1-945D-F14DFC4F9439}.x86Only|x64.Build.0 = Release|Any CPU
 		{68BD6A30-CB86-42E1-945D-F14DFC4F9439}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{68BD6A30-CB86-42E1-945D-F14DFC4F9439}.x86Only|x86.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|x64.Build.0 = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Debug|x86.Build.0 = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x64.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x64.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x86.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x64.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x64.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x86.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x86.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|Any CPU.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|Any CPU.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|x64.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|x64.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|x86.ActiveCfg = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.x86Only|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -896,13 +922,10 @@ Global
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
-
-
-

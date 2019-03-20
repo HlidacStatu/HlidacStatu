@@ -286,9 +286,16 @@ namespace HlidacStatu.Lib.Data
             this.DatovaSchranka = External.DatoveSchranky.ISDS.GetDatoveSchrankyForIco(this.ICO);
         }
 
+
+        Analysis.SubjectStatistic _statistic = null;
         public Analysis.SubjectStatistic Statistic()
         {
-            return new Analysis.SubjectStatistic(this);
+                if (_statistic == null)
+                {
+                    _statistic = new Analysis.SubjectStatistic(this);
+
+                }
+            return _statistic;
         }
 
         public IEnumerable<string> IcosInHolding(Data.Relation.AktualnostType aktualnost)

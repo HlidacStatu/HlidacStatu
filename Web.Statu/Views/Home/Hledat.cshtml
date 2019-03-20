@@ -5,6 +5,7 @@
     int numOfSmluv = 10;
     int numOfOsob = 8;
     int numOfUctu = 5;
+    int numOfFirem = 12;
     int numOfVZ = 5;
     int countRendered = 0;
     ViewBag.ShowBookmarkUrl = true;
@@ -176,10 +177,10 @@ else if (Model.HasResults == false)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NiceNumber(Model.Transakce.Total)</span></a></div>
             }
-            @*@if (Model.HasFirmy)
-                {
-                    <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", Model.Smlouvy.ToRouteValues(1))">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NiceNumber((Model.Firmy.Total + (Model.Firmy.Total == HlidacStatu.Lib.Data.Search.FirmyLimit ? "+" : "")))</span></a></div>
-                }*@
+            @if (Model.HasFirmy)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@(Model.Firmy.Total + (Model.Firmy.Total == HlidacStatu.Lib.Data.Search.FirmyLimit ? "+" : ""))</span></a></div>
+            }
             @if (Model.Datasets.HasResult)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#datasets">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NiceNumber(Model.Datasets.Total)</span></a></div>
@@ -260,6 +261,52 @@ else if (Model.HasResults == false)
     }
 }
 
+@if (Model.HasFirmy)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="searching__watcher">
+                <div class="watcher__title">
+                    <img src="/Content/img/icon-person-watcher.svg">
+                    <h2 class="new-title">
+                        Nalezené firmy
+                    </h2>
+                    <span>@Util.PocetVysledku(Model.Firmy.Total)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Nejvíce relevantní nalezené firmy</h4>
+    <div class="row" style="">
+        <table class="table table-hover">
+            @SearchResults.FirmyHead(false)
+            <tbody>
+
+                @foreach (var item in Model.Firmy.Result.Take(numOfFirem))
+                {
+                    var f=HlidacStatu.Lib.Data.Firmy.Get(item);
+                    if (f.Valid) {
+                        @SearchResults.FirmyRow(this.User, f, false)
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    @*if (Model.Transakce.Total > numOfUctu)
+        {
+            <div style="height: 32px"></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-center">
+                        <a class="btn btn-default btn-default-new" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">zobrazit všechny nalezené transakce</a>
+                    </div>
+                </div>
+            </div>
+
+        }*@
+
+}
 
 @if (Model.HasOsoby)
 {
@@ -367,9 +414,9 @@ else if (Model.HasResults == false)
                     .GroupBy(f => f.To.Id, v => v, (ico, v) => new
                     {
                         ICO = ico,
-                    //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-                    //VazbyPerIco = osoba.VazbyProICO(ico),
-                    stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+            //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
+            //VazbyPerIco = osoba.VazbyProICO(ico),
+            stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
                     })
                     .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO)
                     .ToArray();
