@@ -13,7 +13,7 @@ namespace HlidacStatu.Util.WebShot
     {
         public static Devmasters.Core.Logging.Logger logger = new Devmasters.Core.Logging.Logger("HlidacStatu.Util.Webshots");
 
-        private static readonly Chrome theOnlyInstance = new Chrome();
+        private static readonly Chrome theOnlyInstance = new Chrome("theOnlyInstance");
 
         public static Chrome TheOnlyStaticInstance
         {
@@ -46,9 +46,15 @@ namespace HlidacStatu.Util.WebShot
         private void Init()
         {
             logger.Debug($"{this.Name}: Initiating WebDriver");
+            var chromeBinaryFileName = Devmasters.Core.Util.Config.GetConfigValue("ChromeBinaryFullPath");
+            if (!string.IsNullOrEmpty(chromeBinaryFileName))
+                Zu.Chrome.ChromeProfilesWorker.ChromeBinaryFileName = chromeBinaryFileName;
+
             var config = new ChromeDriverConfig()
                 .SetHeadless()
-                .SetWindowSize(width+30, height+30);
+                .SetWindowSize(width+30, height+30)
+                .SetCommandLineArgumets("--disable-gpu")
+                ;
 
             this.asyncChromeDriver = new AsyncChromeDriver(config);
             this.webDriver = new WebDriver(asyncChromeDriver);

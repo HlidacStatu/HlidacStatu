@@ -143,6 +143,7 @@ namespace HlidacStatu.Lib.OCR.Api
                 string fullUrl = ApiUrl + "donetask.ashx?" + param;
                 using (Devmasters.Net.Web.URLContent wc = new Devmasters.Net.Web.URLContent(fullUrl))
                 {
+                    wc.IgnoreHttpErrors = true;
                     wc.Method = Devmasters.Net.Web.MethodEnum.POST;
                     wc.RequestParams.Form.Add("data", Newtonsoft.Json.JsonConvert.SerializeObject(result));
                     wc.TimeInMsBetweenTries = 10000;

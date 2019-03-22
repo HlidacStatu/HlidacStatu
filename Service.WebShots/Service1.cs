@@ -1,6 +1,5 @@
 ﻿using Nancy.Hosting.Self;
 using System;
-using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading;
 
@@ -39,24 +38,46 @@ namespace HlidacStatu.Service.WebShots
 
             int numOfInstances = 3;
             int.TryParse(Devmasters.Core.Util.Config.GetConfigValue("NumOfInstances"), out numOfInstances);
-
-            HlidacStatu.Util.WebShot.Workers.CreateAndStartWorkers(numOfInstances, _cancelSource);
-
-            var url = "http://127.0.0.1:9090";
-            var hostConfiguration = new HostConfiguration
+            try
             {
-                UrlReservations = new UrlReservations() { CreateAutomatically = false },
-                RewriteLocalhost = false
-            };
-            host = new Nancy.Hosting.Self.NancyHost(new Uri(url));
-            host.Start();
-            Program.logger.Info($"Nancy Server listening on {url}");
-            if (isConsole)
-                do
-                {
-                    System.Threading.Thread.Sleep(1000);
-                } while (true);
 
+                HlidacStatu.Util.WebShot.Workers.CreateAndStartWorkers(numOfInstances, _cancelSource);
+
+                var url = Devmasters.Core.Util.Config.GetConfigValue("ListeningUrl");
+                if (string.IsNullOrEmpty(url))
+                    url = "http://127.0.0.1:9090";
+
+                var hostConfiguration = new HostConfiguration
+                {
+                    UrlReservations = new UrlReservations() { CreateAutomatically = false },
+                    RewriteLocalhost = false
+                };
+                host = new Nancy.Hosting.Self.NancyHost(new Uri(url));
+                host.Start();
+                Program.logger.Info($"Nancy Server listening on {url}");
+                if (isConsole)
+                {
+                    do
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                    } while (true);
+                }
+
+            }
+            finally
+            {
+                if (isConsole)
+                {
+                    Program.logger.Info($"Canceling threads");
+
+                    _cancelSource?.Cancel(false);
+                    System.Threading.Thread.Sleep(3000);
+                    HlidacStatu.Util.WebShot.Workers.CancelWorkers();
+
+                    _cancelSource?.Dispose();
+
+                }
+            }
         }
         protected override void OnStop()
         {

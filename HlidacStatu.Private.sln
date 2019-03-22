@@ -672,6 +672,7 @@ Global
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|x86.ActiveCfg = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|x86.Build.0 = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Stage|Any CPU.Build.0 = Debug|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Stage|x64.ActiveCfg = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Stage|x64.Build.0 = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Stage|x86.ActiveCfg = Release|Any CPU
@@ -695,6 +696,7 @@ Global
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Release|x86.Build.0 = Release|Any CPU
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Stage|Any CPU.Build.0 = Debug|Any CPU
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Stage|x64.ActiveCfg = Release|Any CPU
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Stage|x64.Build.0 = Release|Any CPU
 		{21B99C1E-4883-499D-9AF9-221F672B36DC}.Stage|x86.ActiveCfg = Release|Any CPU
@@ -885,8 +887,8 @@ Global
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x64.Build.0 = Release|Any CPU
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Release|x86.Build.0 = Release|Any CPU
-		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.ActiveCfg = Release|Any CPU
-		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|Any CPU.Build.0 = Debug|Any CPU
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x64.ActiveCfg = Release|Any CPU
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x64.Build.0 = Release|Any CPU
 		{C01FD6FF-6F1D-4902-8593-EAE934991A6F}.Stage|x86.ActiveCfg = Release|Any CPU
@@ -922,8 +924,8 @@ Global
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

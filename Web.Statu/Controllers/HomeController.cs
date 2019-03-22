@@ -1392,7 +1392,11 @@ text zpravy: {txt}";
 
                 if (!string.IsNullOrEmpty(url))
                 {
-                    string scr = "http://127.0.0.1:9090/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
+                    string webShotServiceUrl = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url");
+                    if (string.IsNullOrEmpty(webShotServiceUrl))
+                        webShotServiceUrl = "http://127.0.0.1:9090";                    
+
+                    string scr = webShotServiceUrl+  "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
                     data = Framework.FileFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
                     {
                         ValueForData = scr,
