@@ -66,7 +66,6 @@
     <Compile Include="Client.TempIO.cs" />
     <Compile Include="Client.MultipleFiles.cs" />
     <Compile Include="DocTools.cs" />
-    <Compile Include="OCRClient.cs" />
     <Compile Include="OCRTask.cs" />
     <Compile Include="ProgressWithName.cs" />
     <Compile Include="TaskStatus.cs" />
