@@ -7,7 +7,7 @@ namespace HlidacStatu.Lib.Data
     public partial class ItemToOcrQueue
     {
 
-        public static IEnumerable<ItemToOcrQueue> TakeFromQueue(Type itemType, string itemSubType = null, int maxItems = 30)
+        public static IEnumerable<ItemToOcrQueue> TakeFromQueue(Type itemType = null, string itemSubType = null, int maxItems = 30)
         {
             using (DbEntities db = new DbEntities())
             {
@@ -16,25 +16,20 @@ namespace HlidacStatu.Lib.Data
                     try
                     {
                         IQueryable<ItemToOcrQueue> sql = null;
-                        if (string.IsNullOrEmpty(itemSubType))
-                            sql = db.ItemToOcrQueue
-                                .Where(m => m.done == null
-                                        && m.started == null
-                                        && m.itemType == itemType.Name
-                                        )
-                                .OrderBy(m => m.created)
-                                .Take(maxItems)
-                                ;
-                        else
-                            sql = db.ItemToOcrQueue
+                        sql = db.ItemToOcrQueue
                             .Where(m => m.done == null
-                                    && m.started == null
-                                    && m.itemType == itemType.Name
-                                    && (m.itemSubType == itemSubType)
-                                    )
+                                    && m.started == null);
+
+                        if (itemType != null)
+                            sql = sql.Where(m => m.itemType == itemType.Name);
+
+                        if (!string.IsNullOrEmpty(itemSubType))
+                            sql = db.ItemToOcrQueue
+                            .Where(m => m.itemSubType == itemSubType);
+
+                        sql = sql
                             .OrderBy(m => m.created)
-                            .Take(maxItems)
-                            ;
+                            .Take(maxItems);
                         var res = sql.ToArray();
                         foreach (var i in res)
                         {
@@ -67,11 +62,11 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public void SetDone(int taskItemId, bool success, string result = null)
+        public static void SetDone(int taskItemId, bool success, string result = null)
         {
             using (DbEntities db = new DbEntities())
             {
-                
+
                 ItemToOcrQueue i = db.ItemToOcrQueue.Where(m => m.pk == taskItemId).FirstOrDefault();
                 if (i != null)
                 {
