@@ -1,47 +1,50 @@
-﻿@model HlidacStatu.Web.Models.StavRizeniViewModel
+﻿@using HlidacStatu.Web.Models;
+@using ISR = HlidacStatu.Lib.Data.Insolvence.Insolvence.StavRizeni;
+
+@model StavRizeniViewModel
 
 @switch (Model.Stav)
 {
-	case "NEVYRIZENA":
+	case ISR.Nevyrizena:
 		<span title="Před rozhodnutím o úpadku">Nevyřízená</span>
 		break;
-	case "MORATORIUM":
+	case ISR.Memoratorium:
 		<span title="Povoleno moratorium">Moratorium</span>
 		break;
-	case "ÚPADEK":
+	case ISR.Upadek:
 		<span title="V úpadku">Úpadek</span>
 		break;
-	case "KONKURS":
+	case ISR.Konkurs:
 		<span title="Prohlášený konkurs">Konkurs</span>
 		break;
-	case "ODDLUŽENÍ":
+	case ISR.Oddluzeni:
 		<span title="Povoleno oddlužení">Oddlužení</span>
 		break;
-	case "REORGANIZ":
+	case ISR.Reorganizace:
 		<span title="Povolena reorganizace">Reorganizace</span>
 		break;
-	case "VYRIZENA":
+	case ISR.Vyrizena:
 		<span title="Vyřízená věc">Vyřízená</span>
 		break;
-	case "PRAVOMOCNA":
+	case ISR.Pravomocna:
 		<span title="Pravomocně skončená věc">Pravomocná</span>
 		break;
-	case "ODSKRTNUTA":
+	case ISR.Odskrtnuta:
 		<span title="Odškrtnutá - skončená věc">Odškrtnutá</span>
 		break;
-	case "ZRUŠENO VS":
+	case ISR.Zruseno:
 		<span title="Zrušeno vrchním soudem">Zrušeno vrchním soudem</span>
 		break;
-	case "K-PO ZRUŠ.":
+	case ISR.KonkursPoZruseni:
 		<span title="Prohlášený konkurs po zrušení VS">Konkurs po zrušení</span>
 		break;
-	case "OBZIVLA":
+	case ISR.Obzivla:
 		<span title="Obživlá věc">Obživlá</span>
 		break;
-	case "MYLNÝ ZÁP.":
+	case ISR.MylnyZapis:
 		<span title="Mylný zápis do rejstříku">Mylný zápis</span>
 		break;
-	case "NEVYR-POST":
+	case ISR.PostoupenaVec:
 		<span title="Postoupená věc">Postoupená věc</span>
 		break;
 	default:

@@ -1,0 +1,56 @@
+﻿@using System.Linq;
+@using HlidacStatu.Web.Models;
+@using ISR = HlidacStatu.Lib.Data.Insolvence.Insolvence.StavRizeni;
+@model StavRizeniViewModel
+
+<div class="row">
+	<div class="col-sm-12 col-xs-12 text-center">
+		@if (Model.Stav == ISR.Nevyrizena || Model.Stav == ISR.Obzivla)
+		{
+			<img src="~/Content/Img/ins/new-active.svg" data-toggle="tooltip" data-placement="bottom" title="Dokazování" />
+		}
+		else
+		{
+			<img src="~/Content/Img/ins/new.svg" data-toggle="tooltip" data-placement="bottom" title="Dokazování" />
+		}
+		<i class="glyphicon glyphicon-arrow-right text-gray"></i>
+		@if (Model.Stav == ISR.MylnyZapis)
+		{
+			<img src="~/Content/Img/ins/canceled-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení zrušeno" />
+		}
+		else
+		{
+			if (Model.Stav == ISR.Memoratorium)
+			{
+				<img src="~/Content/Img/ins/waiting-active.svg" data-toggle="tooltip" data-placement="bottom" title="Odklad splatnosti" />
+				<i class="glyphicon glyphicon-arrow-right text-gray"></i>
+			}
+			if (new[] { ISR.Konkurs, ISR.Oddluzeni, ISR.Upadek, ISR.Reorganizace, ISR.Zruseno, ISR.PostoupenaVec, ISR.KonkursPoZruseni }.Contains(Model.Stav))
+			{
+				<img src="~/Content/Img/ins/in-progress-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řešení úpadku" />
+			}
+			else
+			{
+				<img src="~/Content/Img/ins/in-progress.svg" data-toggle="tooltip" data-placement="bottom" title="Řešení úpadku" />
+			}
+			<i class="glyphicon glyphicon-arrow-right text-gray"></i>
+			if (Model.Stav == ISR.Vyrizena || Model.Stav == ISR.Pravomocna)
+			{
+				<img src="~/Content/Img/ins/done-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení skončeno" />
+			}
+			else
+			{
+				<img src="~/Content/Img/ins/done.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení skončeno" />
+			}
+			<i class="glyphicon glyphicon-arrow-right text-gray"></i>
+			if (Model.Stav == ISR.Odskrtnuta)
+			{
+				<img src="~/Content/Img/ins/locked-active.svg" data-toggle="tooltip" data-placement="bottom" title="Odškrtnuto" />
+			}
+			else
+			{
+				<img src="~/Content/Img/ins/locked.svg" data-toggle="tooltip" data-placement="bottom" title="Odškrtnuto" />
+			}
+		}
+	</div>
+</div>
