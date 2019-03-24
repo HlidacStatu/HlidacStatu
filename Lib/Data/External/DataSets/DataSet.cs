@@ -260,12 +260,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return schema;
             }
         }
-        public virtual string AddData(object data, string id, string createdBy, bool validateSchema = true, bool rewrite = false)
+        public virtual string AddData(object data, string id, string createdBy, bool validateSchema = true)
         {
-            return AddData(Newtonsoft.Json.JsonConvert.SerializeObject(data), id, createdBy, validateSchema, rewrite);
+            return AddData(Newtonsoft.Json.JsonConvert.SerializeObject(data), id, createdBy, validateSchema);
         }
 
-        public virtual string AddData(string data, string id, string createdBy, bool validateSchema = true, bool rewrite = false)
+        public virtual string AddData(string data, string id, string createdBy, bool validateSchema = true)
         {
             Newtonsoft.Json.Linq.JObject obj = Newtonsoft.Json.Linq.JObject.Parse(data);
             dynamic objDyn = Newtonsoft.Json.Linq.JObject.Parse(data);
