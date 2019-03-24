@@ -62,6 +62,24 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static void ResetTask(int taskItemId)
+        {
+            using (DbEntities db = new DbEntities())
+            {
+
+                ItemToOcrQueue i = db.ItemToOcrQueue.Where(m => m.pk == taskItemId).FirstOrDefault();
+                if (i != null)
+                {
+                    i.done = null;
+                    i.started = null;
+                    i.success = null;
+                    i.result = null;
+                    db.SaveChanges();
+                }
+            }
+        }
+
+
         public static void SetDone(int taskItemId, bool success, string result = null)
         {
             using (DbEntities db = new DbEntities())
