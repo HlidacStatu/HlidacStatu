@@ -38,6 +38,28 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             reg.NormalizeShortName();
             var client = Lib.ES.Manager.GetESClient(reg.datasetId, idxType: ES.Manager.IndexType.DataSource);
 
+            if (reg.searchResultTemplate != null && !string.IsNullOrEmpty(reg.searchResultTemplate?.body ))
+            {
+                var errors = reg.searchResultTemplate.GetTemplateErrors();
+                if (errors.Count > 0)
+                {
+                    var err = ApiResponseStatus.DatasetJsonSchemaSearchTemplateError;
+                    err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
+                    throw new DataSetException(reg.datasetId, err);
+                }
+            }
+
+            if (reg.detailTemplate != null && !string.IsNullOrEmpty(reg.detailTemplate?.body))
+            {
+                var errors = reg.detailTemplate.GetTemplateErrors();
+                if (errors.Count > 0)
+                {
+                    var err = ApiResponseStatus.DatasetJsonSchemaDetailTemplateError;
+                    err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
+                    throw new DataSetException(reg.datasetId, err);
+                }
+            }
+
             var ret = client.IndexExists(client.ConnectionSettings.DefaultIndex);
             if (ret.Exists)
             {
@@ -165,7 +187,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public void SendErrorMsgToAuthor(string url, string errMsg)
         {
-            if (Devmasters.Core.TextUtil.IsValidEmail(this.Registration().createdBy))
+            if (Devmasters.Core.TextUtil.IsValidEmail(this.Registration().createdBy ?? ""))
             {
                 try
                 {

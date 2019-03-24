@@ -1,4 +1,7 @@
 ﻿using Scriban.Runtime;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
@@ -34,6 +37,26 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 dynamic model = Newtonsoft.Json.Linq.JObject.Parse(sModel);
                 return Render(ds, model);
             }
+
+            public List<string> GetTemplateErrors()
+            {
+                string template = "{{func fn_DatasetItemUrl" + "\n"
+                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/any/' + $0)"
+                    + "\n"
+                    + "end}}";
+
+                template = template + "\n\n" + this.body;
+                var xTemp = Scriban.Template.Parse(template);
+                if (xTemp.HasErrors)
+                {
+                    return xTemp
+                        .Messages
+                        .Select(m => m.ToString())
+                        .ToList();
+                }
+                return new List<string>();
+            }
+
             public string Render(DataSet ds, dynamic dmodel)
             {
                 string template = "{{func fn_DatasetItemUrl" + "\n"
@@ -42,6 +65,15 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     + "end}}";
 
                 template = template + "\n\n" + this.body;
+                var xTemp = Scriban.Template.Parse(template);
+                if (xTemp.HasErrors)
+                {
+                    throw new System.ApplicationException(xTemp
+                        .Messages
+                        .Select(m=>m.ToString())
+                        .Aggregate((f,s)=>f + "\n" + s)
+                        );
+                }
 
                 var xmodel = new Scriban.Runtime.ScriptObject();
                 xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
@@ -52,7 +84,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
                 context.PushGlobal(xmodel);
                 context.PushGlobal(xfn);
-                var xTemp = Scriban.Template.Parse(template);
                 var res = xTemp.Render(context);
                 return res;
             }

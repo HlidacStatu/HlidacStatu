@@ -275,9 +275,31 @@ namespace HlidacStatu.Web.Controllers
                     newReg.jsonSchema = oldReg.jsonSchema;
                     newReg.datasetId = oldReg.datasetId;
                     newReg.created = DateTime.Now;
+
                     if (apiAuth.ApiCall.User.ToLower() != oldReg?.createdBy?.ToLower()
                         && apiAuth.ApiCall.User.ToLower() != "michal@michalblaha.cz")
                         newReg.createdBy = apiAuth.ApiCall.User;
+                    if (newReg.searchResultTemplate != null && !string.IsNullOrEmpty(newReg.searchResultTemplate?.body))
+                    {
+                        var errors = newReg.searchResultTemplate.GetTemplateErrors();
+                        if (errors.Count > 0)
+                        {
+                            var err = ApiResponseStatus.DatasetJsonSchemaSearchTemplateError;
+                            err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
+                            throw new DataSetException(newReg.datasetId, err);
+                        }
+                    }
+
+                    if (newReg.detailTemplate != null && !string.IsNullOrEmpty(newReg.detailTemplate?.body))
+                    {
+                        var errors = newReg.detailTemplate.GetTemplateErrors();
+                        if (errors.Count > 0)
+                        {
+                            var err = ApiResponseStatus.DatasetJsonSchemaDetailTemplateError;
+                            err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
+                            throw new DataSetException(newReg.datasetId, err);
+                        }
+                    }
 
                     DataSetDB.Instance.AddData(newReg);
 

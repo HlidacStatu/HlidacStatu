@@ -10,6 +10,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static ApiResponseStatus DatasetNotFound = Error(-2, "dataset not found.");
         public static ApiResponseStatus DatasetNoPermision = Error(-3, "You don't have permissions for this operation.");
         public static ApiResponseStatus DatasetJsonSchemaMissing = Error(-4, "JSON Schema missing.");
+        public static ApiResponseStatus DatasetJsonSchemaSearchTemplateError = Error(-5, "Invalid search template. Errors: ");
+        public static ApiResponseStatus DatasetJsonSchemaDetailTemplateError = Error(-6, "Invalid detail template. Errors: ");
 
         public static ApiResponseStatus InvalidSearchQuery = Error(-10, "Invalid search query .");
         public static ApiResponseStatus DatasetItemInvalidFormat = Error(-11, "Json schema validation failed.");

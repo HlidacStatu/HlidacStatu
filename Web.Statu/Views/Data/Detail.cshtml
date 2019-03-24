@@ -54,7 +54,7 @@
         }
         catch (Exception e)
         {
-            var msg = e?.InnerException?.Message ?? "Interní chyba";
+            var msg = e?.InnerException?.Message ?? e.Message;
             msg = HlidacStatu.Util.ParseTools.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
 
             @Html.Raw($"<h2>Chyba v template - zpráva pro autora této datové sady</h2><pre>{msg}</pre>")

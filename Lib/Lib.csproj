@@ -443,6 +443,7 @@
     <Compile Include="Data\External\DataSets\DataSet.cs" />
     <Compile Include="Data\External\DataSets\DataSetDb.cs" />
     <Compile Include="Data\External\DataSets\DataSetException.cs" />
+    <Compile Include="Data\External\DataSets\MergeExtensions.cs" />
     <Compile Include="Data\External\DataSets\Registration.cs" />
     <Compile Include="Data\External\DataSets\Registration.Template.cs" />
     <Compile Include="Data\External\DataSets\Registration.Template.Functions.cs" />
