@@ -832,7 +832,6 @@ Global
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Debug|x86.Build.0 = Debug|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x64.ActiveCfg = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x64.Build.0 = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x86.ActiveCfg = Release|Any CPU
@@ -898,8 +897,8 @@ Global
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

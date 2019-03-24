@@ -700,17 +700,25 @@ namespace HlidacStatu.Web.Controllers
                         if (ds.ItemExists(dataid))
                         {
                             //merge
-                            var oldObj = Newtonsoft.Json.Linq.JObject.Parse(ds.GetData(dataid));
-                            var newObj = Newtonsoft.Json.Linq.JObject.Parse(data);
+                            var oldObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(ds.GetData(dataid));
+                            var newObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(data);
 
-                            oldObj.Merge(newObj,
+                            newObj["DbCreated"] = oldObj["DbCreated"];
+                            newObj["DbCreatedBy"] = oldObj["DbCreatedBy"];
+
+                            var diffs = Lib.Data.External.DataSets.Util.CompareObjects(oldObj, newObj);
+                            if (diffs.Count > 0)
+                            {
+                                oldObj.Merge(newObj,
                                 new Newtonsoft.Json.Linq.JsonMergeSettings()
                                 {
                                     MergeArrayHandling = Newtonsoft.Json.Linq.MergeArrayHandling.Union,
                                     MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
                                 }
                                 );
-                            newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
+
+                                newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
+                            }
                         }
                         else
                             newId = ds.AddData(data, dataid, apiAuth.ApiCall.User, true);
