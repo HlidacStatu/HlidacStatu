@@ -404,6 +404,16 @@
     <Content Include="Content\Img\backg.jpeg" />
     <Content Include="Content\Img\firmo-logo.png" />
     <Content Include="Content\Img\HlidacSmluv-Logo-50px.png" />
+    <Content Include="Content\Img\ins\canceled-active.svg" />
+    <Content Include="Content\Img\ins\done-active.svg" />
+    <Content Include="Content\Img\ins\done.svg" />
+    <Content Include="Content\Img\ins\in-progress-active.svg" />
+    <Content Include="Content\Img\ins\in-progress.svg" />
+    <Content Include="Content\Img\ins\locked-active.svg" />
+    <Content Include="Content\Img\ins\locked.svg" />
+    <Content Include="Content\Img\ins\new-active.svg" />
+    <Content Include="Content\Img\ins\new.svg" />
+    <Content Include="Content\Img\ins\waiting-active.svg" />
     <Content Include="Content\Img\neplatna.gif" />
     <Content Include="Content\Img\neplatna.png" />
     <Content Include="Content\Img\nove_yellow.png" />
@@ -1267,6 +1277,7 @@
     <Content Include="Views\Home\Report_Child.cshtml" />
     <Content Include="Views\Home\Adresar_Child.cshtml" />
     <Content Include="Views\Home\Porovnat_Child.cshtml" />
+    <Content Include="Views\Insolvence\_Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

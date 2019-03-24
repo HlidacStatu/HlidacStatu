@@ -8,7 +8,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 {
     public partial class Insolvence
     {
-        /*
+		/*
          * https://www.creditcheck.cz/SlovnicekPojmuDetail.aspx?id=23
          Stavy v insolvenčním řízení
 Insolvenční řízení (věc) prochází několika stavy:
@@ -43,8 +43,26 @@ K-PO ZRUŠ. =
 MORATORIUM = 
 
 */
+		public class StavRizeni
+		{
+			public const string Nevyrizena = "NEVYRIZENA";
+			public const string Memoratorium = "MORATORIUM";
+			public const string Upadek = "ÚPADEK";
+			public const string Konkurs = "KONKURS";
+			public const string Oddluzeni = "ODDLUŽENÍ";
+			public const string Reorganizace = "REORGANIZ";
+			public const string Vyrizena = "VYRIZENA";
+			public const string Pravomocna = "PRAVOMOCNA";
+			public const string Odskrtnuta = "ODSKRTNUTA";
+			public const string Zruseno = "ZRUŠENO VS";
+			public const string KonkursPoZruseni = "K-PO ZRUŠ.";
+			public const string Obzivla = "OBZIVLA";
+			public const string MylnyZapis = "MYLNÝ ZÁP.";
+			public const string PostoupenaVec = "NEVYR-POST";
+		}
 
-        [ShowNiceDisplayName()]
+
+		[ShowNiceDisplayName()]
         public enum StavInsolvence : int
         {
 
@@ -99,33 +117,33 @@ MORATORIUM =
             stav = stav.Trim().ToUpper();
             switch (stav)
             {
-                case "ODSKRTNUTA":
+                case StavRizeni.Odskrtnuta:
                     return StavInsolvence.Odskrtnuta;
-                case "ODDLUŽENÍ":
+                case StavRizeni.Oddluzeni:
                     return StavInsolvence.Oddluzeni;
-                case "PRAVOMOCNA":
+                case StavRizeni.Pravomocna:
                     return StavInsolvence.Pravomocna;
-                case "KONKURS":
+                case StavRizeni.Konkurs:
                     return StavInsolvence.Konkurs;
-                case "VYRIZENA":
+                case StavRizeni.Vyrizena:
                     return StavInsolvence.Vyrizena;
-                case "NEVYRIZENA":
+                case StavRizeni.Nevyrizena:
                     return StavInsolvence.Nevyrizena;
-                case "MYLNÝ ZÁP.":
+                case StavRizeni.MylnyZapis:
                     return StavInsolvence.MylnyZapis;
-                case "OBZIVLA":
+                case StavRizeni.Obzivla:
                     return StavInsolvence.Obzivla;
-                case "ÚPADEK":
+                case StavRizeni.Upadek:
                     return StavInsolvence.Upadek;
-                case "REORGANIZ":
+                case StavRizeni.Reorganizace:
                     return StavInsolvence.Reorganizace;
-                case "ZRUŠENO VS":
+                case StavRizeni.Zruseno:
                     return StavInsolvence.ZrusenoVS;
-                case "NEVYR-POST":
+                case StavRizeni.PostoupenaVec:
                     return StavInsolvence.Postoupena;
-                case "K-PO ZRUŠ.":
+                case StavRizeni.KonkursPoZruseni:
                     return StavInsolvence.KonkursPoZruseni;
-                case "MORATORIUM":
+                case StavRizeni.Memoratorium:
                     return StavInsolvence.Moratorium;
                 default:
                     return StavInsolvence.Neznamy;
