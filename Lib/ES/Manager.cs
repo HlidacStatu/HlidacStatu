@@ -384,7 +384,10 @@ namespace HlidacStatu.Lib.ES
         {
             IndexSettings set = new IndexSettings();
             set.NumberOfReplicas = 2;
-            set.NumberOfShards = 25;
+            if (idxTyp == IndexType.DataSource)
+                set.NumberOfShards = 5;
+            else
+                set.NumberOfShards = 10;
             // Create a Custom Analyzer ...
             var an = new CustomAnalyzer();
             an.Tokenizer = "standard";

@@ -429,6 +429,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 //do DocumentMining after successfull save
                 //record must exists before document mining
+                bool needsOCR = false;
                 foreach (var jo in jpathObjs)
                 {
                     if (jo["HsProcessType"].Value<string>() == "document")
@@ -436,20 +437,26 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
                         {
                             if (Uri.TryCreate(jo["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
-                            {                        //get text from document
-                                var url = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
-                                url = url + $"/{client.ConnectionSettings.DefaultIndex}/data/{finalId}/_update";
-                                string callback = HlidacStatu.Lib.OCR.Api.CallbackData.PrepareElasticCallbackDataForOCRReq($"{jo.Path}.DocumentPlainText", false);
-                                var ocrCallBack = new HlidacStatu.Lib.OCR.Api.CallbackData(new Uri(url), callback, HlidacStatu.Lib.OCR.Api.CallbackData.CallbackType.LocalElastic);
-                                HlidacStatu.Lib.OCR.Api.Client.TextFromUrl(
-                                    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
-                                    uri2Ocr, "Dataset+" + createdBy,
-                                    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.Standard, HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.Maximum,
-                                    callBackData: ocrCallBack);
+                            {                        
+                                //get text from document
+                                //var url = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
+                                //url = url + $"/{client.ConnectionSettings.DefaultIndex}/data/{finalId}/_update";
+                                //string callback = HlidacStatu.Lib.OCR.Api.CallbackData.PrepareElasticCallbackDataForOCRReq($"{jo.Path}.DocumentPlainText", false);
+                                //var ocrCallBack = new HlidacStatu.Lib.OCR.Api.CallbackData(new Uri(url), callback, HlidacStatu.Lib.OCR.Api.CallbackData.CallbackType.LocalElastic);
+                                //HlidacStatu.Lib.OCR.Api.Client.TextFromUrl(
+                                //    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
+                                //    uri2Ocr, "Dataset+" + createdBy,
+                                //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.Standard, HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.Maximum
+                                //    ); //TODOcallBackData: ocrCallBack);
+
+                                needsOCR = true;
+
                             }
                         }
                     }
                 }
+                if (needsOCR)
+                    Lib.Data.ItemToOcrQueue.AddNewTask(typeof(DataSet), finalId, this.datasetId);
 
                 return finalId;
             }

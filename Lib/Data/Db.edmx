@@ -148,6 +148,20 @@
           <Property Name="InvoiceNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="CompanyID" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="ItemToOcrQueue">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="itemType" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="itemSubType" Type="nvarchar" MaxLength="100" />
+          <Property Name="itemId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="done" Type="datetime" />
+          <Property Name="started" Type="datetime" />
+          <Property Name="result" Type="nvarchar(max)" />
+          <Property Name="success" Type="int" />
+        </EntityType>
         <EntityType Name="NespolehlivyPlatceDPH">
           <Key>
             <PropertyRef Name="Ico" />
@@ -369,6 +383,7 @@
           <EntitySet Name="FirmaVazby" EntityType="Self.FirmaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceItems" EntityType="Self.InvoiceItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invoices" EntityType="Self.Invoices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemToOcrQueue" EntityType="Self.ItemToOcrQueue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NespolehlivyPlatceDPH" EntityType="Self.NespolehlivyPlatceDPH" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Osoba" EntityType="Self.Osoba" Schema="dbo" store:Type="Tables" />
@@ -469,6 +484,7 @@
             <Parameter Name="UserId" Mode="In" Type="Int32" />
             <Parameter Name="languageId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="ItemToOcrQueue" EntityType="FirmyModel.ItemToOcrQueue" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -787,6 +803,20 @@
           <Property Type="String" Name="Value" Nullable="true" />
           <Property Type="Int32" Name="LanguageId" Nullable="true" />
         </ComplexType>
+        <EntityType Name="ItemToOcrQueue">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="itemType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="itemSubType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="itemId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="done" Type="DateTime" Precision="3" />
+          <Property Name="result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="started" Type="DateTime" Precision="3" />
+          <Property Name="success" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1118,6 +1148,21 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="UserOption_Remove" FunctionName="FirmyModel.Store.UserOption_Remove" />
+          <EntitySetMapping Name="ItemToOcrQueue">
+            <EntityTypeMapping TypeName="FirmyModel.ItemToOcrQueue">
+              <MappingFragment StoreEntitySet="ItemToOcrQueue">
+                <ScalarProperty Name="success" ColumnName="success" />
+                <ScalarProperty Name="started" ColumnName="started" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="done" ColumnName="done" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="itemSubType" ColumnName="itemSubType" />
+                <ScalarProperty Name="itemType" ColumnName="itemType" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

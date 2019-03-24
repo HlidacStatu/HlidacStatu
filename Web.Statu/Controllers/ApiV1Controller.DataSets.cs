@@ -619,6 +619,8 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+
+
         [HttpGet, ActionName("DatasetItem_Exists")]
         public ActionResult DatasetItem_Exists(string id, string dataid)
         {
@@ -642,7 +644,7 @@ namespace HlidacStatu.Web.Controllers
                     if (value == null)
                         return Content(Newtonsoft.Json.JsonConvert.SerializeObject(false), "application/json");
                     else
-                        return Content(Newtonsoft.Json.JsonConvert.SerializeObject(true) , "application/json");
+                        return Content(Newtonsoft.Json.JsonConvert.SerializeObject(true), "application/json");
                 }
                 catch (DataSetException)
                 {
@@ -655,6 +657,67 @@ namespace HlidacStatu.Web.Controllers
 
             }
         }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult DatasetItem_Merge(string id, string dataid)
+        {
+            var apiAuth = Framework.ApiAuth.IsApiAuth(this,
+                parameters: new Framework.ApiCall.CallParameter[] {
+                    new Framework.ApiCall.CallParameter("id", id),
+                    new Framework.ApiCall.CallParameter("dataid", dataid)
+                });
+            if (!apiAuth.Authentificated)
+            {
+                //Response.StatusCode = 401;
+                return Json(ApiResponseStatus.ApiUnauthorizedAccess);
+            }
+            else
+            {
+                var data = ReadRequestBody(this.Request);
+                id = id.ToLower();
+                try
+                {
+                    var ds = DataSet.CachedDatasets.Get(id);
+                    var newId = dataid;
+                    if (ds.ItemExists(dataid))
+                    {
+                        //merge
+                        var newObj = Newtonsoft.Json.Linq.JObject.Parse(dataid);
+                        var oldObj = Newtonsoft.Json.Linq.JObject.Parse(ds.GetData(dataid));
+
+                        oldObj.Merge(newObj,
+                            new Newtonsoft.Json.Linq.JsonMergeSettings()
+                            {
+                                MergeArrayHandling = Newtonsoft.Json.Linq.MergeArrayHandling.Union,
+                                MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
+                            }
+                            );
+                        newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
+
+                    }
+                    else
+                        newId = ds.AddData(data, dataid, apiAuth.ApiCall.User, true);
+
+                    return Json(new { id = newId }, JsonRequestBehavior.AllowGet);
+                }
+                catch (DataSetException dse)
+                {
+                    return Json(dse.APIResponse, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
+                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+
+                }
+
+
+            }
+        }
+
+
+
         [HttpPost, ActionName("DatasetItem")]
         [ValidateInput(false)]
         public ActionResult DatasetItem_Post(string id, string dataid, bool? rewrite = false)
@@ -676,7 +739,7 @@ namespace HlidacStatu.Web.Controllers
                 try
                 {
                     var ds = DataSet.CachedDatasets.Get(id);
-                    var newId = id;
+                    var newId = dataid;
                     if (rewrite == true || ds.ItemExists(dataid) == false)
                     {
                         newId = ds.AddData(data, dataid, apiAuth.ApiCall.User, true);

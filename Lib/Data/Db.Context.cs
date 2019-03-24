@@ -47,6 +47,7 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<Review> Review { get; set; }
         public virtual DbSet<Bookmark> Bookmark { get; set; }
         public virtual DbSet<UserOptions> UserOptions { get; set; }
+        public virtual DbSet<ItemToOcrQueue> ItemToOcrQueue { get; set; }
     
         public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string vazbyRaw)
         {

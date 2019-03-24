@@ -84,11 +84,12 @@ namespace HlidacStatu.Plugin.Enhancers
 
                             HlidacStatu.Lib.OCR.Api.Result res = null;
                             if (asyncOCR)
-                                res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
-                                    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
-                                    downloadedFile, "TextMiner",
-                                    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity, 
-                                    callBackData: item.CallbackDataForOCRReq(i) );
+                                //res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
+                                //    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
+                                //    downloadedFile, "TextMiner",
+                                //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity
+                                //    ); //TODOcallBackData: item.CallbackDataForOCRReq(i) );
+                                Lib.Data.ItemToOcrQueue.AddNewTask(item.GetType(), item.Id);
                             else
                                 res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
                                     Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),

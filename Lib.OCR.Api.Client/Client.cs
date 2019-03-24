@@ -40,29 +40,29 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public static async Task<Result> TextFromUrlAsync(string apikey, Uri url, string client, TaskPriority priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
-            return await TextFromUrlAsync(apikey, url, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime, callBackData);
+            return await TextFromUrlAsync(apikey, url, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime/*, callBackData */);
         }
         public static async Task<Result> TextFromFileAsync(string apikey, string fileOnDisk, string client, TaskPriority priority,
             MiningIntensity intensity, string origFilename = "", TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
-            return await TextFromFileAsync(apikey, fileOnDisk, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime, callBackData);
+            return await TextFromFileAsync(apikey, fileOnDisk, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime/*, callBackData */);
         }
 
         public static Result TextFromFile(string apikey, string fileOnDisk, string client, TaskPriority priority,
             MiningIntensity intensity, string origFilename = "", TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
-            return TextFromFile(apikey, fileOnDisk, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime, callBackData);
+            return TextFromFile(apikey, fileOnDisk, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime/*, callBackData */);
         }
 
         public static Result TextFromUrl(string apikey, Uri url, string client, TaskPriority priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
-            return TextFromUrl(apikey, url, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime, callBackData);
+            return TextFromUrl(apikey, url, client, (int)priority, intensity, origFilename, maxWaitingTime, restartTaskAfterTime/*, callBackData */);
         }
 
         #endregion
@@ -72,10 +72,13 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public static async Task<Result> TextFromUrlAsync(string apikey, Uri url, string client, int priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null /*, Api.CallbackData callBackData = null*/)
         {
             string fullUrl = null;
             string taskId = null;
+
+            Api.CallbackData callBackData = null; //temporaty disable callBack
+
             try
             {
                 if (string.IsNullOrEmpty(origFilename))
@@ -146,13 +149,15 @@ namespace HlidacStatu.Lib.OCR.Api
         }
         public static async Task<Result> TextFromFileAsync(string apikey, string fileOnDisk, string client, int priority,
             MiningIntensity intensity, string origFilename = "", TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
+            Api.CallbackData callBackData = null; //temporaty disable callBack
+
             if (string.IsNullOrEmpty(origFilename))
                 origFilename = System.IO.Path.GetFileName(fileOnDisk);
 
             var id = await uploadFileAsync(apikey, fileOnDisk, client, priority, intensity, origFilename,
-                maxWaitingTime ?? defaultWaitingTime, restartTaskAfterTime, callBackData);
+                maxWaitingTime ?? defaultWaitingTime, restartTaskAfterTime/*, callBackData */);
             ///await Task.Delay()
 
             if (callBackData == null)
@@ -164,8 +169,10 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public static Result TextFromFile(string apikey, string fileOnDisk, string client, int priority,
             MiningIntensity intensity, string origFilename = "", TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
+            Api.CallbackData callBackData = null; //temporaty disable callBack
+
             if (string.IsNullOrEmpty(origFilename))
                 origFilename = Lib.OCR.DocTools.GetFilename(fileOnDisk);
 
@@ -176,7 +183,7 @@ namespace HlidacStatu.Lib.OCR.Api
                 waitTime = defaultWaitingTime;
 
             var id = uploadFile(apikey, fileOnDisk, client, priority, intensity, origFilename,
-            maxWaitingTime ?? defaultWaitingTime, restartTaskAfterTime, callBackData);
+            maxWaitingTime ?? defaultWaitingTime, restartTaskAfterTime/*, callBackData */);
 
             if (callBackData == null)
                 return WaitingForResult(apikey, id, maxWaitingTime ?? defaultWaitingTime);
@@ -186,8 +193,10 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public static Result TextFromUrl(string apikey, Uri url, string client, int priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
-            TimeSpan? restartTaskAfterTime = null, Api.CallbackData callBackData = null)
+            TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
+            Api.CallbackData callBackData = null; //temporaty disable callBack
+
             string fullUrl = null;
             string taskId = null;
             try

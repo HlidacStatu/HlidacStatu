@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HlidacStatu.Lib.OCR.Api
 {
@@ -41,6 +42,37 @@ namespace HlidacStatu.Lib.OCR.Api
         }
 
         public List<Document> Documents { get; set; } = new List<Document>();
+
+        Document _mergedDocument = null;
+        public Document MergedDocuments()
+        {
+            if (_mergedDocument == null)
+            {
+                Document doc = new Document();
+
+                if (this.Documents.Count == 0)
+                {
+                    doc.Text = "";
+                }
+                else if (this.Documents.Count == 1)
+                {
+                    doc = this.Documents[0];
+                }
+                else if (this.Documents.Count > 1)
+                {
+                    doc.Text = this.Documents
+                        .Select(m => $"--------- soubor : {m.Filename} ---------" + m.Text)
+                        .Aggregate((f, s) => f + "\n\n\n\n\n\n" + s);
+                    doc.Pages = this.Documents.Sum(m => m.Pages);
+                    doc.RemainsInSec = this.Documents.Sum(m => m.RemainsInSec);
+                    doc.UsedOCR = this.Documents.Any(m => m.UsedOCR);
+                    doc.UsedTool = this.Documents.Select(m => m.UsedTool).Aggregate((f, s) => f + "|" + s);
+                    doc.Confidence = this.Documents.Average(m => m.Confidence);
+                }
+                _mergedDocument = doc;
+            }
+            return _mergedDocument;
+        }
 
         public string Server { get; set; }
         public DateTime Started { get; set; } = DateTime.Now;
