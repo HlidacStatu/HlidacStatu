@@ -108,6 +108,32 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+        public ActionResult DetailText(string id, string dataid)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction("index");
+
+            try
+            {
+                var ds = DataSet.CachedDatasets.Get(id);
+                if (ds == null)
+                    return RedirectToAction("index");
+                if (string.IsNullOrEmpty(dataid))
+                    return RedirectToAction("index", new { id = id });
+
+                var dataItem = ds.GetData(dataid);
+                if (dataItem == null)
+                    return RedirectToAction("index", new { id = id });
+
+                ViewBag.Id = id;
+                return View(new Models.DataDetailModel() { Dataset = ds, Data = dataid });
+            }
+            catch (DataSetException)
+            {
+                return RedirectToAction("index");
+            }
+
+        }
 
         static string search_PropertiesTemplateFileName = "_data_hledat_properties";//"~/Views/Data/_data_hledat_properties.cshtml";
         static string detail_PropertiesTemplateFileName = "_data_detail_properties";//"~/Views/Data/_data_detail_properties.cshtml";

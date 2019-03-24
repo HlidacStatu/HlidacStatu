@@ -1,0 +1,77 @@
+﻿@model HlidacStatu.Web.Models.DataDetailModel
+
+@using Nest;
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using Newtonsoft.Json.Linq;
+@{
+
+    ViewBag.Title = Model.Dataset.Registration().name + " - textová podoba dokumentu";
+    bool found = false;
+
+    JObject jobj = JObject.Parse(Model.Dataset.GetData(Model.Data));
+
+    string path = Request.QueryString["p"];
+    JObject docObj = null;
+    string plainText = string.Empty;
+    string url = string.Empty;
+
+    if (!string.IsNullOrEmpty(path))
+    {
+        docObj = (JObject)jobj.SelectToken(path);
+        found = docObj != null;
+    }
+    if (found)
+    {
+        plainText = docObj["DocumentPlainText"]?.Value<string>() ?? "";
+        url = docObj["DocumentUrl"]?.Value<string>() ?? "";
+    }
+
+    if (!string.IsNullOrEmpty(plainText))
+    {
+        //remove /n/r on the beginning
+        plainText = System.Text.RegularExpressions.Regex.Replace(plainText, "^(\\s)*", "");
+        found = true;
+    }
+}
+
+
+@section footerscripts
+{
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="@Model.Dataset.DatasetUrl()">@Model.Dataset.Registration().name</a></li>
+        <li><a href="https://www.hlidacstatu.cz/data/Detail/@Model.Dataset.Registration().datasetId/@ViewBag.Id">@ViewBag.Id</a></li>
+        <li class="active">Obsah dokumentu</li>
+    </ol>
+}
+
+@if (found)
+{
+    <p>
+        <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
+        <a href="@url" target="_blank">originál smlouvy stáhnete odsud</a>
+    </p>
+
+    <hr />
+    <div class="row">
+        <div class="col-xs-12">
+            <pre style="overflow-x: auto;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;sword-wrap: break-word;">
+                @Html.Raw(plainText)
+            </pre>
+        </div>
+
+    </div>
+}
+else
+{
+    <span class="text-danger">Odkazovaný dokument nebyl nalezena</span>
+}
+
+
+
+

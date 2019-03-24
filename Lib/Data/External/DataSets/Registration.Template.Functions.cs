@@ -13,6 +13,40 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             public class Functions : ScriptObject
             {
 
+                public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "")
+                {
+
+                    if (value == null)
+                        return string.Empty;
+                    else
+                    {
+                        if (string.IsNullOrEmpty(linkText))
+                            linkText = "Ukázat obsah dokumentu";
+                        var jobj = value as JObject;
+                        if (jobj != null)
+                        {
+                            if (
+                                jobj["HsProcessType"].Value<string>() == "document"
+                                && Uri.TryCreate(jobj["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri)
+                                && !string.IsNullOrEmpty(jobj["DocumentPlainText"].Value<string>())
+                                )
+                            {
+                                return $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\">{linkText}</a> (<a target=\"_blank\" href=\"{uri.AbsoluteUri}\">Originál</a>)";
+                            }
+                            else if (
+                                jobj["HsProcessType"].Value<string>() == "document"
+                                && Uri.TryCreate(jobj["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2)
+                                )
+                            {
+                                return $"<a href=\"{uri2.AbsoluteUri}\">{linkText}</a>";
+                            }
+                        }
+
+                        return "";
+                    }
+                }
+
+
                 public static string fn_RenderPersonWithLink(string osobaId, string jmeno, string prijmeni, string rokNarozeni = "")
                 {
                     if (!string.IsNullOrEmpty(osobaId))
