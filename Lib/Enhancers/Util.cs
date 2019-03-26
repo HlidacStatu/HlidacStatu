@@ -19,6 +19,8 @@ namespace HlidacStatu.Lib.Enhancers
 
             lock (objLock)
             {
+                if (enhancers != null)
+                    return enhancers;
 
                 ////load DLL's from disk
                 List<System.Reflection.Assembly> dlls = new List<System.Reflection.Assembly>();
