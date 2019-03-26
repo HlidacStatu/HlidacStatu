@@ -31,7 +31,7 @@ namespace HlidacStatu.Plugin.Enhancers
 
         public void Update(ref Lib.Data.Smlouva item)
         {
-
+            Base.Logger.Debug("Starting CalculatedPrice for " + item.Id);
 
             if (item.hodnotaVcetneDph.HasValue && item.hodnotaVcetneDph > 0)
             {

@@ -6,13 +6,22 @@ namespace HlidacStatu.Lib.OCR.Api
     public partial class Client
     {
 
-
-        static string ApiUrl = "https://ocr.hlidacstatu.cz/";
+        const string defaultApiUrl = "https://ocr.hlidacstatu.cz/";
+        static string ApiUrl = defaultApiUrl;
 
         static Client()
         {
             if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("OCR.ApiUrl")))
                 ApiUrl = Devmasters.Core.Util.Config.GetConfigValue("OCR.ApiUrl");
+        }
+
+        public static void SetCustomApiURL(string url)
+        {
+            ApiUrl = url;
+        }
+        public static void SetDefaultApiURL()
+        {
+            SetCustomApiURL(defaultApiUrl);
         }
 
 
