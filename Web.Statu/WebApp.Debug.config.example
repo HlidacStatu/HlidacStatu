@@ -23,8 +23,20 @@
     <!-- elastic server address -->
     <add xdt:Transform="Insert" key="ESConnection" value="http://localhost:9200" />
 
-    <!-- couchbase server address -->
+    <!-- couchbase server - address -->
     <add xdt:Transform="Insert" key="CouchbaseServers" value="http://localhost" />
+
+    <!-- couchbase server - username -->
+    <!-- replace #cbUsername# with your value -->
+    <add xdt:Transform="Insert" key="CouchbaseUsername" value="#cbUsername#" />
+
+    <!-- couchbase server - password -->
+    <!-- replace #cbPassword# with your value -->
+    <add xdt:Transform="Insert" key="CouchbasePassword" value="#cbPassword#" />
+
+    <!-- couchbase server - bucket name -->
+    <!-- replace #cbBucket# with your value -->
+    <add xdt:Transform="Insert" key="CouchbaseBucket" value="#cbBucket#" />
 
     <!-- connection for SQL server db-->
     <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->

@@ -38,9 +38,11 @@ namespace HlidacStatu.Util.Cache
             {
                 lock (syncObj)
                 {
-                    var authenticator = new Couchbase.Authentication.PasswordAuthenticator("hlidac", "hlidame0");
+                    var authenticator = new Couchbase.Authentication.PasswordAuthenticator(
+						ConfigurationManager.AppSettings["CouchbaseUsername"], 
+						ConfigurationManager.AppSettings["CouchbasePassword"]);
                     cluster.Authenticate(authenticator);
-                    cache = cluster.OpenBucket("hlidac");
+                    cache = cluster.OpenBucket(ConfigurationManager.AppSettings["CouchbaseBucket"]);
                 }
             }
         }
