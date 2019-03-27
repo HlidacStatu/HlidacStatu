@@ -162,7 +162,7 @@ namespace HlidacStatu.Lib.Analysis
             var o = Data.Osoby.GetByNameId.Get(osobaNameId);
             if (o == null)
             {
-                HlidacStatu.Util.Consts.Logger.Error("Unknown osobaId " + osobaNameId);
+                HlidacStatu.Util.Consts.Logger.Info("Unknown osobaId " + osobaNameId);
                 return new Tuple<Dictionary<string, SubjectStatistic>, Dictionary<string, SubjectStatistic>>(
                     new Dictionary<string, SubjectStatistic>(), new Dictionary<string, SubjectStatistic>()
                     );

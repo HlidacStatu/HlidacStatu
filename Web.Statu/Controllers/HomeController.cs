@@ -461,6 +461,7 @@ namespace HlidacStatu.Web.Controllers
                             if (to != "michal@michalblaha.cz")
                                 msg.Bcc.Add("michal@michalblaha.cz");
                             msg.Subject = subject;
+                            msg.ReplyTo = new System.Net.Mail.MailAddress(email);
                             msg.IsBodyHtml = false;
                             msg.BodyEncoding = System.Text.Encoding.UTF8;
                             msg.SubjectEncoding = System.Text.Encoding.UTF8;
