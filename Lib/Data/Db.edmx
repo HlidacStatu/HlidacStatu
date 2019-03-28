@@ -161,6 +161,7 @@
           <Property Name="started" Type="datetime" />
           <Property Name="result" Type="nvarchar(max)" />
           <Property Name="success" Type="int" />
+          <Property Name="priority" Type="int" />
         </EntityType>
         <EntityType Name="NespolehlivyPlatceDPH">
           <Key>
@@ -816,6 +817,7 @@
           <Property Name="result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="started" Type="DateTime" Precision="3" />
           <Property Name="success" Type="Int32" />
+          <Property Name="priority" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1151,6 +1153,7 @@
           <EntitySetMapping Name="ItemToOcrQueue">
             <EntityTypeMapping TypeName="FirmyModel.ItemToOcrQueue">
               <MappingFragment StoreEntitySet="ItemToOcrQueue">
+                <ScalarProperty Name="priority" ColumnName="priority" />
                 <ScalarProperty Name="success" ColumnName="success" />
                 <ScalarProperty Name="started" ColumnName="started" />
                 <ScalarProperty Name="result" ColumnName="result" />

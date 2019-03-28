@@ -23,5 +23,6 @@ namespace HlidacStatu.Lib.Data
         public string result { get; set; }
         public Nullable<System.DateTime> started { get; set; }
         public Nullable<int> success { get; set; }
+        public Nullable<int> priority { get; set; }
     }
 }

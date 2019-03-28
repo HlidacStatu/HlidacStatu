@@ -35,7 +35,8 @@ namespace HlidacStatu.Lib.Data
                             .Where(m => m.itemSubType == itemSubType);
 
                         sql = sql
-                            .OrderBy(m => m.created)
+                            .OrderByDescending(m => m.priority)
+                            .ThenBy(m=>m.created)
                             .Take(maxItems);
                         var res = sql.ToArray();
                         foreach (var i in res)
@@ -55,7 +56,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static HlidacStatu.Lib.OCR.Api.Result AddNewTask(ItemToOcrType itemType, string itemId, string itemSubType = null)
+        public static HlidacStatu.Lib.OCR.Api.Result AddNewTask(ItemToOcrType itemType, string itemId, string itemSubType = null, HlidacStatu.Lib.OCR.Api.Client.TaskPriority priority = OCR.Api.Client.TaskPriority.Standard)
         {
             using (DbEntities db = new DbEntities())
             {
@@ -64,6 +65,7 @@ namespace HlidacStatu.Lib.Data
                 i.itemId = itemId;
                 i.itemType = itemType.ToString();
                 i.itemSubType = itemSubType;
+                i.priority = (int)OCR.Api.Client.TaskPriority.Standard;
                 db.ItemToOcrQueue.Add(i);
                 db.SaveChanges();
                 return new OCR.Api.Result()
