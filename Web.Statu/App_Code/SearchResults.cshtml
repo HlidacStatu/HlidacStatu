@@ -250,7 +250,7 @@
         <td>
             @if (item.Dodavatele != null && item.Dodavatele.Count() > 0)
             {
-                foreach (var d in item.Dodavatele)
+                foreach (var d in item.Dodavatele.Take(2))
                 {
                     if (HlidacStatu.Lib.Validators.CheckCZICO(d.ICO))
                     {
@@ -262,6 +262,8 @@
                     }
 
                 }
+                @Util.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+
             }
         </td>
         <td>

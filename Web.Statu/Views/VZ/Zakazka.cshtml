@@ -175,7 +175,7 @@ else
                                 <li>
                                     <div>
                                         <b>@priloha.Name</b>
-                                        <a href="http://bpapi.datlab.eu/document/@(priloha.StorageId)" target="_blank">Originál</a>
+                                        <a href="@(priloha.GetDocumentUrlToDownload())" target="_blank">Originál</a>
                                         @if (priloha.WordCount > 2)
                                         {
                                             @Html.Raw(";&nbsp;")

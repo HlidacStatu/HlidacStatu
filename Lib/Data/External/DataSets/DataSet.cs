@@ -481,7 +481,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     }
                 }
                 if (needsOCR)
-                    Lib.Data.ItemToOcrQueue.AddNewTask(typeof(DataSet), finalId, this.datasetId);
+                    Lib.Data.ItemToOcrQueue.AddNewTask( ItemToOcrQueue.ItemToOcrType.Dataset, finalId, this.datasetId);
 
                 return finalId;
             }

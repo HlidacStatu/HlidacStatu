@@ -67,7 +67,7 @@
             </h3>
             <p>
                 <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
-                <a href="http://bpapi.datlab.eu/document/@doc.StorageId" target="_blank">originál dokumentu</a>
+                <a href="@doc.GetDocumentUrlToDownload()" target="_blank">originál dokumentu</a>
             </p>
 
             <hr />
@@ -84,7 +84,7 @@
         {
             <span class="text-danger">
                 V odkazovaném dokumentu jsme nenašli žádný text.
-                <a href="http://bpapi.datlab.eu/document/@doc.StorageId" target="_blank">Stáhněte si originál</a>.
+                <a href="@doc.GetDocumentUrlToDownload()" target="_blank">Stáhněte si originál</a>.
             </span>
         }
 

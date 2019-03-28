@@ -6,8 +6,15 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class ItemToOcrQueue
     {
+        public enum ItemToOcrType
+        {
+            Smlouva,
+            Insolvence,
+            Dataset,
+            VerejnaZakazka
+        }
 
-        public static IEnumerable<ItemToOcrQueue> TakeFromQueue(Type itemType = null, string itemSubType = null, int maxItems = 30)
+        public static IEnumerable<ItemToOcrQueue> TakeFromQueue(ItemToOcrType? itemType = null, string itemSubType = null, int maxItems = 30)
         {
             using (DbEntities db = new DbEntities())
             {
@@ -21,7 +28,7 @@ namespace HlidacStatu.Lib.Data
                                     && m.started == null);
 
                         if (itemType != null)
-                            sql = sql.Where(m => m.itemType == itemType.Name);
+                            sql = sql.Where(m => m.itemType == itemType.ToString());
 
                         if (!string.IsNullOrEmpty(itemSubType))
                             sql = db.ItemToOcrQueue
@@ -48,17 +55,22 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static void AddNewTask(Type itemType, string itemId, string itemSubType = null)
+        public static HlidacStatu.Lib.OCR.Api.Result AddNewTask(ItemToOcrType itemType, string itemId, string itemSubType = null)
         {
             using (DbEntities db = new DbEntities())
             {
                 ItemToOcrQueue i = new ItemToOcrQueue();
                 i.created = DateTime.Now;
                 i.itemId = itemId;
-                i.itemType = itemType.Name;
+                i.itemType = itemType.ToString();
                 i.itemSubType = itemSubType;
                 db.ItemToOcrQueue.Add(i);
                 db.SaveChanges();
+                return new OCR.Api.Result()
+                {
+                    IsValid = OCR.Api.Result.ResultStatus.InQueueWithCallback,
+                    Id = "uknown"
+                };
             }
         }
 

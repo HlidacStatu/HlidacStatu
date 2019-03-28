@@ -222,6 +222,7 @@ namespace HlidacStatu.Lib.Data.VZ
         [Description("Zadávací dokumentace a další dokumenty spojené se zakázkou")]
         public Document[] Dokumenty { get; set; } = new Document[] { };
 
+
         [Keyword()]
         [Description("CPV kódy určující oblast VZ")]
         public string[] CPV { get; set; } = new string[] { };
@@ -478,6 +479,12 @@ namespace HlidacStatu.Lib.Data.VZ
 
             [Keyword()]
             public string StorageId { get; set; }
+
+            public string GetDocumentUrlToDownload()
+            {
+                return $"http://bpapi.datlab.eu/document/{this.StorageId}";
+            }
+
             [Keyword()]
             public string Name { get; set; }
 
