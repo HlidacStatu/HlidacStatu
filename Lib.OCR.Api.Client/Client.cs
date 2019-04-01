@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.OCR.Api
@@ -128,7 +129,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     else
                     {
                         logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
-                        throw new ApiException(res);
+                        return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
                     }
 
                 }
@@ -145,9 +146,10 @@ namespace HlidacStatu.Lib.OCR.Api
                 logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                logger.Error($"exception API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                throw new ApiException("exception API TextFromFile  ", e);
             }
             finally
             {
@@ -248,7 +250,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     else
                     {
                         logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
-                        throw new ApiException(res);
+                        return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>()  };
                     }
 
                 }
@@ -265,9 +267,10 @@ namespace HlidacStatu.Lib.OCR.Api
                 logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                logger.Error($"exception API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                throw new ApiException("exception API TextFromFile  ", e);
             }
             finally
             {
