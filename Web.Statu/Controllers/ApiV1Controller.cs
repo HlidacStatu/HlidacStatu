@@ -94,6 +94,48 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+        public ActionResult OCRStats(string type="")
+        {
+
+                string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+                string sql = @"	
+	                        select 'Celkem' as 'type',
+		                        (select count(*) from ItemToOcrQueue where started is null) as waiting,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is null) as running,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is null and started< dateadd(hh,-24,getdate())) as errors
+                        union
+	                        select distinct t.itemtype as 'type',
+		                        (select count(*) from ItemToOcrQueue where started is null and itemtype = t.itemtype) as waiting,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is null and itemtype = t.itemtype) as running,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is not null 
+		                        and done > DATEADD(dy,-1,getdate()) and itemtype = t.itemtype) as doneIn24H,
+		                        (select count(*) from ItemToOcrQueue where started is not null and done is null 
+		                        and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
+		                        from ItemToOcrQueue t ";
+                using (var p = new Devmasters.Core.PersistLib())
+                {
+                    var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+                    sb.AppendLine("Typ\tVe frontě\tZpracovavane\tHotovo za 24hod\tChyby pri zpracovani");
+                    foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                    {
+                        sb.Append((string)dr[0]);
+                        sb.Append("\t");
+                        sb.Append((int)dr[1]);
+                        sb.Append("\t");
+                        sb.Append((int)dr[2]);
+                        sb.Append("\t");
+                        sb.Append((int)dr[3]);
+                        sb.Append("\t");
+                        sb.Append((int)dr[4]);
+                        sb.AppendLine();
+                    }
+                    return Content(sb.ToString());
+                }
+            
+        }
+
         private List<Models.ApiV1Models.DumpInfoModel> GetDumps()
         {
 
@@ -193,7 +235,7 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        
+
         public ActionResult AddPersonSponzoring(
             string titulpred, string jmeno, string prijmeni, string titulpo, string datumNarozeni,
             string strana, string rok, string castka
