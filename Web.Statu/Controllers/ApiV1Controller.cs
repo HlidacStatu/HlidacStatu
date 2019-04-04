@@ -98,8 +98,7 @@ namespace HlidacStatu.Web.Controllers
         {
 
                 string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
-                string sql = @"	
-	                        select 'Celkem' as 'type',
+                string sql = @"select 'Celkem' as 'type',
 		                        (select count(*) from ItemToOcrQueue where started is null) as waiting,
 		                        (select count(*) from ItemToOcrQueue where started is not null and done is null) as running,
 		                        (select count(*) from ItemToOcrQueue where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
@@ -112,7 +111,8 @@ namespace HlidacStatu.Web.Controllers
 		                        and done > DATEADD(dy,-1,getdate()) and itemtype = t.itemtype) as doneIn24H,
 		                        (select count(*) from ItemToOcrQueue where started is not null and done is null 
 		                        and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
-		                        from ItemToOcrQueue t ";
+		                        from ItemToOcrQueue t 
+		                        order by type";
                 using (var p = new Devmasters.Core.PersistLib())
                 {
                     var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
