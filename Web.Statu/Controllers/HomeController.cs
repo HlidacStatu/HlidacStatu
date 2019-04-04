@@ -387,7 +387,9 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "id;embed;nameofview", Duration = 60 * 60 * 1)]
+#endif
         [ChildActionOnly()]
         public ActionResult Subjekt_child(string id, string NameOfView, HlidacStatu.Lib.Data.Firma firma)
         {
