@@ -488,7 +488,7 @@ text zpravy: {txt}";
             }
             return Content("");
         }
-        public ActionResult TextSmlouvy(string Id, string hash)
+        public ActionResult TextSmlouvy(string Id, string hash, string secret)
         {
             if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(hash))
                 return NotFound();
@@ -498,10 +498,29 @@ text zpravy: {txt}";
             {
                 return NotFound();
             }
+            var priloha = model.Prilohy?.FirstOrDefault(m => m.hash.Value == hash);
+            if (priloha == null)
+            {
+                return NotFound();
+            }
+
+            if (model.znepristupnenaSmlouva())
+            {
+                if (string.IsNullOrEmpty(secret)) //pokus jak se dostat k znepristupnene priloze
+                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                else if (this.User?.Identity?.IsAuthenticated == false) //neni zalogovany
+                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                else
+                {
+                    if (priloha.LimitedAccessSecret(this.User.Identity.GetUserName()) != secret)
+                        return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                }
+            }
+
             ViewBag.hashValue = hash;
             return View(model);
         }
-        public ActionResult KopiePrilohy(string Id, string hash)
+        public ActionResult KopiePrilohy(string Id, string hash, string secret)
         {
             if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(hash))
                 return NotFound();
@@ -512,21 +531,28 @@ text zpravy: {txt}";
                 return NotFound();
             }
 
-            if (model.Prilohy != null && model.Prilohy.Count() > 0)
+            var priloha = model.Prilohy?.FirstOrDefault(m => m.hash.Value == hash);
+            if (priloha == null)
             {
+                return NotFound();
+            }
 
-                foreach (var priloha in model.Prilohy)
+            if (model.znepristupnenaSmlouva())
+            {
+                if (string.IsNullOrEmpty(secret)) //pokus jak se dostat k znepristupnene priloze
+                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                else if (this.User?.Identity?.IsAuthenticated == false) //neni zalogovany
+                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                else
                 {
-                    if (priloha.hash.Value == hash)
-                    {
-                        return File(HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha),
-                            string.IsNullOrWhiteSpace(priloha.ContentType) ? "application/octet-stream" : priloha.ContentType,
-                            string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? "priloha" : priloha.nazevSouboru);
-                    }
+                    if (priloha.LimitedAccessSecret(this.User.Identity.GetUserName()) != secret)
+                        return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
                 }
             }
-            return NotFound();
 
+            return File(HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha),
+                string.IsNullOrWhiteSpace(priloha.ContentType) ? "application/octet-stream" : priloha.ContentType,
+                string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? "priloha" : priloha.nazevSouboru);
 
         }
 
@@ -1126,20 +1152,20 @@ text zpravy: {txt}";
         public ActionResult Hledat(string q)
         {
             var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q);
-            if ( System.Diagnostics.Debugger.IsAttached ||
+            if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
             {
                 HlidacStatu.Util.Consts.Logger.Info($"Search times: {q}\n" + res.SearchTimesReport());
 
                 var data = res.SearchTimes();
                 TelemetryClient tm = new TelemetryClient();
-    
+
                 // Set up some properties:
 
                 foreach (var kv in data)
                 {
-                    var metrics = new Dictionary<string, double> {{"elapsed", kv.Value.TotalMilliseconds}};
-                    var props = new Dictionary<string, string> { { "query", q },{"database", kv.Key } };
+                    var metrics = new Dictionary<string, double> { { "elapsed", kv.Value.TotalMilliseconds } };
+                    var props = new Dictionary<string, string> { { "query", q }, { "database", kv.Key } };
 
                     Metric elaps = tm.GetMetric("Search_Elapsed", "Database");
                     var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
@@ -1395,9 +1421,9 @@ text zpravy: {txt}";
                 {
                     string webShotServiceUrl = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url");
                     if (string.IsNullOrEmpty(webShotServiceUrl))
-                        webShotServiceUrl = "http://127.0.0.1:9090";                    
+                        webShotServiceUrl = "http://127.0.0.1:9090";
 
-                    string scr = webShotServiceUrl+  "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
+                    string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
                     data = Framework.FileFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
                     {
                         ValueForData = scr,

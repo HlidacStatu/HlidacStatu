@@ -26,6 +26,15 @@
     <script src="/Scripts/typeahead.jquery.min.js"></script>
     <script src="/Scripts/bloodhound.min.js"></script>
     <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+    <script type="text/javascript">
+        window.smartlook || (function (d) {
+            var o = smartlook = function () { o.api.push(arguments) }, h = d.getElementsByTagName('head')[0];
+            var c = d.createElement('script'); o.api = new Array(); c.async = true; c.type = 'text/javascript';
+            c.charset = 'utf-8'; c.src = 'https://rec.smartlook.com/recorder.js'; h.appendChild(c);
+        })(document);
+        smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');
+    </script>
 }
 
 @section title
@@ -103,7 +112,7 @@
                     <a href="/porovnat" class="tag">
                         Porovnání libovolných úřadů <span class="badge badge-warning">Novinka</span>
                     </a>
-    
+
                     <a href="/Report/4" class="tag">Nejdražší smlouvy</a>
                     <a href="/Report/16" class="tag">Zvolení poslanci do parlamentu </a>
                     <a href="/Report/7" class="tag">Základní statistiky reg.smluv</a>
@@ -170,7 +179,7 @@
                     <ul class="block-list">
                         @{
                             string[] topPolitici = new string[] { "andrej-babis", "pavel-belobradek",
-                                                    "richard-brabec", "milan-feranec", "martin-pecina", "ivo-valenta", "jiri-mihola" };
+                                                                    "richard-brabec", "milan-feranec", "martin-pecina", "ivo-valenta", "jiri-mihola" };
                         }
                         @foreach (var oid in topPolitici)
                         {
@@ -226,10 +235,10 @@
                               new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0 }).Total
                         )
                     </strong> zakázek,
-                           <strong>
-                               @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                                                 new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0 }).Total)
-                               </strong> letos.
+                    <strong>
+                        @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
+                                          new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0 }).Total)
+                    </strong> letos.
                 </p>
             </div>
 
@@ -302,7 +311,7 @@
             <div class="block-col block-part">
                 @{
                     string[] topStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
-                                                                        "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
+                                                                                "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
                 }
                 <div class="block-subtitle">
                     Sponzori hlavních politických stran

@@ -549,6 +549,8 @@ namespace HlidacStatu.Lib.Data
             public int Pages { get; set; }
 
 
+
+
             [Object(Ignore = true)]
             public bool EnoughExtractedText
             {
@@ -573,6 +575,15 @@ namespace HlidacStatu.Lib.Data
 
                 //}
             }
+
+
+            public string LimitedAccessSecret(string forEmail)
+            {
+                if (string.IsNullOrEmpty(forEmail))
+                    throw new ArgumentNullException("forEmail");
+                return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(forEmail + this.hash + "__" + forEmail);
+            }
+
 
             public static string GetFileFromPrilohaRepository(HlidacStatu.Lib.Data.Smlouva.Priloha att, Lib.Data.Smlouva smlouva)
             {
