@@ -108,7 +108,7 @@ namespace HlidacStatu.Lib.Data
         }
 
         static object objGeneralSearchLock = new object();
-        public static MultiResult GeneralSearch(string query)
+        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10)
         {
             MultiResult res = new MultiResult() { Query = query };
 
@@ -124,8 +124,8 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query);
-
+                        res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query,null,1,5);
+    
                         if (res.Datasets.Exceptions.Count > 0)
                         {
                             HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,

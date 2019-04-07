@@ -314,7 +314,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error($"ExtApi.TextFromFile API Exception\nUrl:{origFilename}\n content: " + res);
+                        logger.Error($"ExtApi.TextFromFile API Exception\nFile:{origFilename}\n content: " + res);
                         throw new ApiException(res);
                     }
                 }
@@ -367,7 +367,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error($"ExtApi.TextFromFileAsync API Exception\nUrl:{origFilename}\n content: " + res);
+                        logger.Error($"ExtApi.TextFromFileAsync API Exception\nFile:{origFilename}\n content: " + res);
                         throw new ApiException(res);
                     }
                 }

@@ -39,7 +39,7 @@
     </ol>
 }
 
-@Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil" })
+@Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil" + (string.IsNullOrEmpty(Request.QueryString["beta"]) ? "" : "2") })
 
 <div style="margin-top:40px"></div>
 

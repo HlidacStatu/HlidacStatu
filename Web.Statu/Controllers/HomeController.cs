@@ -830,7 +830,9 @@ text zpravy: {txt}";
         }
 
         [ChildActionOnly]
+#if (!DEBUG)
         [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;NameOfView")]
+#endif
         public ActionResult Osoba_child(string Id, Osoba model, HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost, string NameOfView)
         {
             ViewBag.Aktualnost = aktualnost;
@@ -1153,7 +1155,7 @@ text zpravy: {txt}";
 
         public ActionResult Hledat(string q)
         {
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q);
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q,1,5);
             if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
             {

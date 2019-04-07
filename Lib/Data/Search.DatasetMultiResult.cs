@@ -10,18 +10,57 @@ namespace HlidacStatu.Lib.Data
         public class DatasetSumGeneralResult : GeneralResult<string>
         {
             public Lib.Data.External.DataSets.DataSet Dataset { get; set; }
-            public DatasetSumGeneralResult(long total, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
-                : base(total, new string[] { }, true)
+            public DatasetSumGeneralResult(long total, IEnumerable<string> results, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
+                : base(total, results, true)
             {
                 this.Dataset = dataset;
-                this.DataSource = "Dataset."+ this.Dataset.DatasetId;
+                this.DataSource = "Dataset." + this.Dataset.DatasetId;
                 this.ElapsedTime = searchElapsedTime;
+            }
+
+
+            public string RenderResultsInHtml(string query, int maxToRender = int.MaxValue)
+            {
+                var content = "";
+                try
+                {
+                    if (this.Dataset.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
+                    {
+                        var model = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+                        model.Total = this.Total;
+                        model.Page = 1;
+                        model.Q = query;
+                        model.Result = this.Result
+                            .Take(maxToRender)
+                            .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s); return d; })
+                            .ToArray();
+
+                        content = this.Dataset.Registration().searchResultTemplate.Render(this.Dataset, model);
+                    }
+                    else
+                    {
+                        //content = ControllerExtensions.RenderRazorViewToString(this.ViewContext.Controller, "HledatProperties_CustomdataTemplate", rds);
+                        //Html.RenderAction("HledatProperties_CustomdataTemplate", rds);
+                        content = "<h3>Nepodařilo se nám zobrazit vyhledané výsledky</h3>" +
+                                    $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.Dataset.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy zde</a></div>";
+
+                    }
+                    if (this.Total > 5)
+                    {
+                        content += $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.Dataset.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy</a></div>";
+                    }
+                    return content;
+                }
+                catch (Exception)
+                {
+                    return "<h3>Nepodařilo se nám zobrazit vyhledané výsledky</h3>" +
+                        $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.Dataset.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy zde</a></div>";
+                }
             }
         }
 
         public class DatasetMultiResult : ISearchResult
         {
-            
             public string Query { get; set; }
             public long Total { get { return Results.Sum(m => m.Total); } }
             public bool IsValid { get { return Results.All(m => m.IsValid || Exceptions.Any()); } }
@@ -51,9 +90,9 @@ namespace HlidacStatu.Lib.Data
             static object objGeneralSearchLock = new object();
 
 
-            public static DatasetMultiResult GeneralSearch(string query, IEnumerable<External.DataSets.DataSet> datasets = null)
+            public static DatasetMultiResult GeneralSearch(string query, IEnumerable<External.DataSets.DataSet> datasets = null, int page = 1, int pageSize = 20, string sort = null)
             {
-                DatasetMultiResult res = new DatasetMultiResult() { Query = query, DataSource= "DatasetMultiResult.GeneralSearch" };
+                DatasetMultiResult res = new DatasetMultiResult() { Query = query, DataSource = "DatasetMultiResult.GeneralSearch" };
 
                 if (string.IsNullOrEmpty(query))
                     return res;
@@ -71,9 +110,12 @@ namespace HlidacStatu.Lib.Data
                     {
                         try
                         {
-                            var rds = ds.SearchData(query, 1, 1);
+                            var rds = ds.SearchDataRaw(query, page, pageSize, sort);
                             if (rds.IsValid)
-                                res.Results.Add(new DatasetSumGeneralResult(rds.Total, ds, rds.ElapsedTime));
+                            {
+                                var dssr = new DatasetSumGeneralResult(rds.Total, rds.Result.Select(s => s.Item2), ds, rds.ElapsedTime);
+                                res.Results.Add(dssr);
+                            }
                         }
                         catch (External.DataSets.DataSetException e)
                         {
@@ -91,7 +133,7 @@ namespace HlidacStatu.Lib.Data
                 return res;
             }
 
-     
+
         }
     }
 }

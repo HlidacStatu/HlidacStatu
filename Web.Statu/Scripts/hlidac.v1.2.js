@@ -230,6 +230,45 @@ function ChangeBookmark(btn) {
 var campaignN = "bookmark";
 $(function () {
 
+    $(".low-box .line .more").click(function () {
+        var totalHeight = 0
+        $el = $(this); $p = $el.parent(); $up = $p.parent();
+        $ps = $up.find("p:not('.line')");
+        // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+        $ps.each(function () {
+            totalHeight += $(this).outerHeight();
+            // FAIL totalHeight += $(this).css("margin-bottom");
+        });
+
+        $up.css({
+            // Set height to prevent instant jumpdown when max height is removed
+            "height": $up.height(),
+            "max-height": 9999
+        })
+            .animate({
+                "height": totalHeight
+            });
+
+        // fade out read-more
+        $p.fadeOut();
+        // prevent jump-down
+        return false;
+    });
+
+    //Vertical tabs
+    $("div.verticaltab-menu>div.list-group>a").click(function (e) {
+        e.preventDefault();
+        var t = $(this);
+        var par = t.parents("div.verticaltab-container").first();
+        var index = $(this).index();
+        t.siblings('a.active').removeClass("active");
+        t.addClass("active");
+        par.find("div.verticaltab>div.verticaltab-content").removeClass("active");
+        par.find("div.verticaltab>div.verticaltab-content").eq(index).addClass("active");
+    });
+
+    // ADS
+
     var darLast = parseInt(readCookie("darLast" + campaignN));
     if (isNaN(darLast))
         darLast = 1;
@@ -238,6 +277,8 @@ $(function () {
         darNum = 0;
     var now = new Date();
     var darDatDiff = timeDayDifference(now, new Date(darLast));
+
+
 
     if (false && darDatDiff > 5 && darNum < 5) {
 

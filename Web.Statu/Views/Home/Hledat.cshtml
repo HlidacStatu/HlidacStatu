@@ -1,6 +1,8 @@
 ﻿@model HlidacStatu.Lib.Data.Search.MultiResult
 @using System.Linq;
 @using Devmasters.Core;
+@using HlidacStatu.Web.Framework;
+
 @{
     int numOfSmluv = 10;
     int numOfOsob = 8;
@@ -285,8 +287,9 @@ else if (Model.HasResults == false)
 
                 @foreach (var item in Model.Firmy.Result.Take(numOfFirem))
                 {
-                    var f=HlidacStatu.Lib.Data.Firmy.Get(item);
-                    if (f.Valid) {
+                    var f = HlidacStatu.Lib.Data.Firmy.Get(item);
+                    if (f.Valid)
+                    {
                         @SearchResults.FirmyRow(this.User, f, false)
                     }
                 }
@@ -387,18 +390,19 @@ else if (Model.HasResults == false)
     </div>
 
     <div class="row">
-        @foreach (var rds in Model.Datasets.Results
-            .Where(m => m.Total > 0)
-            .OrderByDescending(m => m.Total))
-        {
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                <img style="width:auto;height:20px;" src="/Content/img/icon-person-watcher.svg">
+            @{
+                var tabs = Model.Datasets.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
+                        .Select(m => $"{m.Dataset.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})");
+                List<string> results = new List<string>();
 
-                <a class="link--blue link--big" href="@Html.Raw(rds.Dataset.DatasetSearchUrl(Model.Query,true))">
-                    @rds.Dataset.Registration().name <span class="new-p new-p--big">@Util.PocetVysledku(rds.Total)</span>
-                </a>
-            </div>
-        }
+                foreach (var rds in Model.Datasets.Results
+                   .Where(m => m.Total > 0)
+                   .OrderByDescending(m => m.Total))
+                {
+                    results.Add(rds.RenderResultsInHtml(Model.Query));
+                }
+            }
+            @Util.VerticalTabs(tabs, results)
     </div>
 }
 
@@ -414,9 +418,9 @@ else if (Model.HasResults == false)
                     .GroupBy(f => f.To.Id, v => v, (ico, v) => new
                     {
                         ICO = ico,
-            //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-            //VazbyPerIco = osoba.VazbyProICO(ico),
-            stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+                    //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
+                    //VazbyPerIco = osoba.VazbyProICO(ico),
+                    stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
                     })
                     .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO)
                     .ToArray();

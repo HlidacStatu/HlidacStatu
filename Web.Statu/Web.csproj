@@ -345,6 +345,7 @@
     <Compile Include="Controllers\UctyController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Framework\ApiAuth.cs" />
+    <Compile Include="Framework\ControllerExtensions.cs" />
     <Compile Include="Framework\FileFromWebCacheManager.cs" />
     <Compile Include="Framework\Html2Png.cs" />
     <Compile Include="Framework\Shared\Data.cs" />
@@ -1279,6 +1280,7 @@
     <Content Include="Views\Home\Porovnat_Child.cshtml" />
     <Content Include="Views\Insolvence\_Status.cshtml" />
     <Content Include="Views\Data\DetailText.cshtml" />
+    <Content Include="Views\Home\OsobaProfil2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
