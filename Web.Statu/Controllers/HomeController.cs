@@ -1330,7 +1330,7 @@ text zpravy: {txt}";
         //        [OutputCache(VaryByParam = "id;v;t;st;b;f;img;rat;res;d;embed", Duration = 60 * 60 * 2)]
         //#endif
         [ValidateInput(false)]
-        public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1920x1080")
+        public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1200x628")
         {
             string mainUrl = this.Request.Url.Scheme + "://" + this.Request.Url.Host;
 

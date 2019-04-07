@@ -41,6 +41,25 @@
     <text><img src="/visitimg/@base64" width="1" height="1" /></text>
 }
 
+@helper RenderSmartLookTrackingCode(bool withScriptTag = true)
+{
+    string code = @"window.smartlook || (function(d) {
+var o = smartlook = function(){ o.api.push(arguments)},h = d.getElementsByTagName('head')[0];
+var c = d.createElement('script'); o.api = new Array(); c.async = true; c.type = 'text/javascript';
+c.charset = 'utf-8'; c.src = 'https://rec.smartlook.com/recorder.js'; h.appendChild(c);
+})(document);
+smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
+
+    if (withScriptTag)
+    {
+        @Html.Raw("<script type=\"text/javascript\">\n" + code + "</script>\n")
+    }
+    else
+    {
+        @Html.Raw("\n" + code + "\n")
+    }
+}
+
 @helper TitleAds()
 {
     string[] ads = new string[] {
@@ -401,17 +420,17 @@
 
 @helper AddSearchBtn(string url, string query = null, string btnText = "Hledat", string btnCss = null)
 {
-if (query != null)
-{
-    if (url.Contains("?"))
+    if (query != null)
     {
-        url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
+        if (url.Contains("?"))
+        {
+            url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
+        }
+        else
+        {
+            url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
+        }
     }
-    else
-    {
-        url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
-    }
-}
     <a class="@(btnCss ?? "btn btn-default btn-xs")" href="@Html.Raw(url)">
         <span class="glyphicon glyphicon-search dark" aria-hidden="true"></span>
         @btnText

@@ -106,6 +106,7 @@
 
 
     <meta name="twitter:site" content="HlidacStatu" />
+    <meta property="fb:app_id" content="803455203348459" />
     <meta property="og:title" content="@socialTitle" />
     <meta property="og:url" content="@url" />
     <meta property="og:site_name" content="Hlídač Státu" />
@@ -152,6 +153,8 @@
 
         ga('create', 'UA-154075-22', 'auto');
         ga('send', 'pageview');
+
+        @Util.RenderSmartLookTrackingCode(false)
 
     </script>
     @RenderSection("scripts", required: false)
