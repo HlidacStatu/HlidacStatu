@@ -128,7 +128,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
+                        logger.Error($"ExtApi.TextFromUrlAsync API Exception\nUrl:{url.AbsoluteUri}\n content: " + res);
                         return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
                     }
 
@@ -249,7 +249,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
+                        logger.Error($"ExtApi.TextFromUrlAsync API Exception\nUrl:{url.AbsoluteUri}\n content: " + res);
                         return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>()  };
                     }
 
@@ -314,7 +314,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
+                        logger.Error($"ExtApi.TextFromFile API Exception\nUrl:{origFilename}\n content: " + res);
                         throw new ApiException(res);
                     }
                 }
@@ -367,7 +367,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     }
                     else
                     {
-                        logger.Error("ExtApi.TextFromFile API Exception\n content: " + res);
+                        logger.Error($"ExtApi.TextFromFileAsync API Exception\nUrl:{origFilename}\n content: " + res);
                         throw new ApiException(res);
                     }
                 }
