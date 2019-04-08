@@ -162,6 +162,33 @@ function AddNewWD(query, datatype, name, period, focus, btn) {
         })
 }
 
+
+function ResendConfirmationMail(calledBy) {
+    var btn1 = $(calledBy);
+    btn1.attr("disabled", "disabled");
+    btn1.removeClass("btn-default");
+    btn1.addClass("btn-success disabled");
+    var url = "/api/v1/ResendConfirmationMail";
+    var jqxhr = $.ajax(url)
+        .done(function (data, textStatus, jqXHR) {
+            if (data == "ok") {
+                btn1.removeClass("btn-default");
+                btn1.addClass("btn-success");
+                btn1.text("Email odeslán. Zkontrolujte si poštu, i složku s nevyžádanou poštou.");
+            }
+            else  {
+                btn1.removeClass("btn-default");
+                btn1.addClass("btn-danger");
+                btn1.text("Nastala nějaká chyba, víme o ni a budeme ji řešit.");
+            };
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            btn1.removeClass("btn-default");
+            btn1.addClass("btn-danger");
+            btn1.text("Nastala nějaká chyba, víme o ni a budeme ji řešit.");
+
+        })
+}
 function ChangeBookmark(btn) {
     var btn1 = $(btn);
     if (btn1.hasClass("bookmarkOn")) {
@@ -203,6 +230,54 @@ function ChangeBookmark(btn) {
 var campaignN = "bookmark";
 $(function () {
 
+    $(".low-box").each(function () {
+        var t = $(this);
+        var more = t.find("p.line");
+        var actheight = t.outerHeight();
+        var cssheight = parseInt(t.css("max-height"),10);
+        if (actheight < cssheight) {
+            more.hide();
+        }
+    });
+    $(".low-box .line .more").click(function () {
+        var totalHeight = 0
+        $el = $(this); $p = $el.parent(); $up = $p.parent();
+        $ps = $up.find("p:not('.line')");
+        // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+        $ps.each(function () {
+            totalHeight += $(this).outerHeight();
+            // FAIL totalHeight += $(this).css("margin-bottom");
+        });
+
+        $up.css({
+            // Set height to prevent instant jumpdown when max height is removed
+            "height": $up.height(),
+            "max-height": 9999
+        })
+            .animate({
+                "height": totalHeight
+            });
+
+        // fade out read-more
+        $p.fadeOut();
+        // prevent jump-down
+        return false;
+    });
+
+    //Vertical tabs
+    $("div.verticaltab-menu>div.list-group>a").click(function (e) {
+        e.preventDefault();
+        var t = $(this);
+        var par = t.parents("div.verticaltab-container").first();
+        var index = $(this).index();
+        t.siblings('a.active').removeClass("active");
+        t.addClass("active");
+        par.find("div.verticaltab>div.verticaltab-content").removeClass("active");
+        par.find("div.verticaltab>div.verticaltab-content").eq(index).addClass("active");
+    });
+
+    // ADS
+
     var darLast = parseInt(readCookie("darLast" + campaignN));
     if (isNaN(darLast))
         darLast = 1;
@@ -211,6 +286,8 @@ $(function () {
         darNum = 0;
     var now = new Date();
     var darDatDiff = timeDayDifference(now, new Date(darLast));
+
+
 
     if (false && darDatDiff > 5 && darNum < 5) {
 

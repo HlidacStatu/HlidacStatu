@@ -14,16 +14,35 @@
     var statDescription =
         Model.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Text
         ?? Model.InfoFacts().First().Text;
+
 }
 
 <div class="container">
-    <div class="row">
+    <div class="row shadowbox">
+        <h1 class="new-title text-left" style="margin-top: 10px;">
+            @Util.AddBookmark(this.User, Model)
+            @Model.FullNameWithYear()
+        </h1>
+        <hr />
         <div class="col-sm-4 col-md-3">
             <div class="person-profile-thumb">
-                <a href="@Model.GetUrl(false)">
-                    <div class="profile-picture" style="background-image: url('@Model.GetPhotoUrl(true)')">
-                    </div>
-                </a>
+                <div class="photo">
+                    <a href="@Model.GetUrl(false)">
+                        <div class="profile-picture" style="background-image: url('@Model.GetPhotoUrl(true)')"></div>
+                    </a>
+                    <br />
+                    @if (Model.HasPhoto())
+                    {
+                        var zdroj = Model.GetPhotoSource() ?? "";
+                        <a class="btn btn-default btn-sm" href="/manage/changePhoto/@Model.NameId" role="button">Změnit fotku</a>
+                        <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-default btn-sm" href="/manage/changePhoto/@Model.NameId" role="button">Přidat fotku</a>
+                    }
+
+                </div>
                 <div>
                     <a class="section-title link--blue" href="/">
                         @Model.FullName()
@@ -45,27 +64,43 @@
                        20);
 
             }
-            @if (!string.IsNullOrWhiteSpace(funkceOsoba))
-            {
-                <div class="search-result-label">
-                    Funkce
-                </div>
-                <div class="new-p">
-                    @Html.Raw(funkceOsoba)
-                </div>
-            }
-            @if (Model.Sponzoring().Count() > 0)
-            {
-                <div class="search-result-label">
-                    Podpora politických stran
-                </div>
-                <div class="new-p">
-                    @Html.Raw(Model.Description(true,
-m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
-12))
-                </div>
-
-            }
+            <div class="row">
+                @if (!string.IsNullOrWhiteSpace(funkceOsoba))
+                {
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="search-result-label">
+                            Funkce
+                        </div>
+                        <div class="new-p">
+                            <div class="low-box" style="max-height:80px">
+                                <p>
+                                    @Html.Raw(funkceOsoba)
+                                </p>
+                                <p class="line"><a href="#" class="more"></a></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Sponzoring().Count() > 0)
+                {
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="search-result-label">
+                            Podpora politických stran
+                        </div>
+                        <div class="new-p">
+                            <div class="low-box" style="max-height:80px">
+                                <p>
+                                    @Html.Raw(Model.Description(true,
+        m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
+        12))
+                                </p>
+                                <p class="line"><a href="#" class="more"></a></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <hr />
             <div class="search-result-label">
                 Angažovanost
             </div>
@@ -75,181 +110,87 @@ m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-4 col-md-3">
-            @if (Model.HasPhoto())
-            {
-                var zdroj = Model.GetPhotoSource() ?? "";
-                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@Model.NameId" role="button">Změnit fotku</a>
-                <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
-            }
-            else
-            {
-                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@Model.NameId" role="button">Přidat fotku</a>
-            }
-
-        </div>
-    </div>
-
 </div>
 
 
 @Util.AddVisitImg("/osoba/" + Model.NameId)
 
 
-<table class="table table-hover table-striped">
-    <tbody>
-        @{
 
-            var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch("OsobaId:" + Model.NameId);
-            if (dsSearch.IsValid && dsSearch.Total > 0)
-            {
-                foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
-                {
-                    <tr>
-                        <td>@dss.DataSet.Registration().name</td>
-                        <td>
-                            Tato osoba se vyskytuje v databázi <b>@(dss.Total)-krát</b>.
-                            <a href="@dss.DataSet.DatasetSearchUrl("OsobaId:" + Model.NameId)">
-                                Vyhledat všechny záznamy s @Model.FullName()
-                            </a>
+@{
+    List<string> tabs = new List<string>();
+    List<string> results = new List<string>();
 
-                        </td>
-                    </tr>
+    tabs.Add("Zkratka osoby pro hledání");
+    results.Add($"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy s vazbou na {Model.FullName()}");
 
-                }
-            }
-        }
+    tabs.Add("Hlídat tuto osobu");
+    results.Add(""
+            + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové smluvy pro " + Model.FullName()).ToHtmlString()
+        + "<br />"
+        + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat nové veřejné zakázky spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové veřejné zakázky pro " + Model.FullName()).ToHtmlString()
+        + "<br />"
+        + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null, $"Hlídat všechny novinky o {Model.FullName()} a navázaných firmách ve všech databázích", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky pro " + Model.FullName()).ToHtmlString()
+        + ""
+        );
 
-        @{
-            var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForOsoba(Model.InternalId, null, 0);
-            var ftxQuery = Model.FullName();
-            var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-            if (numByName.Total == 0)
-            {
-                ftxQuery = Model.Jmeno + " " + Model.Prijmeni;
-                numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-            }
-            if (numAnalyzed.Total + numByName.Total > 0)
-            {
-                <tr>
-                    <td>Sponzoring</td>
-                    <td>
-                        @if (Model.IsSponzor())
-                        {
-                            <div>
-                                @Model.FullName() sponzoroval politické strany:
-                            </div>
-                        }
-
-                        @if (numAnalyzed.Total > 0)
-                        {
-                            <div>
-                                Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů") </b>
-                                (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))</b>)
-                                politickým stranám. <a href="https://www.hlidacstatu.cz/ucty/hledat?osobaid=@Model.NameId">Ukázat bankovní transakce s identifikovanými dary</a>
-                            </div>
-                        }
-                        @if (numByName.Total > 0)
-                        {
-                            <div>
-                                Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí") </b>
-                                (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))</b>)
-                                s politickými stranami s osobou se jménem <b>@Model.FullName()</b>.
-                                <a href="https://www.hlidacstatu.cz/ucty/hledat?q=@(System.Net.WebUtility.UrlEncode(ftxQuery))">Ukázat bankovní transakce</a>
-                                <br /><span class="text-info">Upozornění: Jedná se o transakce ve kterých se vyskytuje osoba stejného jména. Nemusí jít o stejnou osobu.</span>
-                            </div>
-                        }
-
-                    </td>
-                </tr>
-            }
-        }
-        <tr>
-            <td>Sdílení</td>
-            <td>
-                @Util.ShareFacebook(Model.GetUrl(false))
-                @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                @Util.ShareWidget(Model.GetUrl(false))
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Zkratka osoby pro hledání
-            </td>
-            <td>
-                Pokud text <code>osobaId:@(Model.NameId)</code> napíšete do hledání, zobrazí se smlouvy s vazbou na @Model.FullName()
-
-                <br /><a class="btn btn-primary-new btn-sm" href="/Hledat?q=osobaId:@Model.NameId">Vyzkoušet a najít vše s vazbou na @Model.FullName() a navázané firmy</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Hlídat novinky o této osobě<br />a zasílat je na email
-            </td>
-            <td>
-                <div>
-                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", prefillWDname: "Nové smluvy pro " + Model.FullName(), btnCss: "")
-                </div>
-                <div>
-                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat nové veřejné zakázky spojené s " + Model.FullName() + " a navázanými firmami", "", btnCss: "", prefillWDname: "Nové veřejné zakázky pro " + Model.FullName())
-                </div>
-                <div>
-                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null, $"Hlídat všechny novinky o {Model.FullName()} a navázaných firmách ve všech databázích", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky pro " + Model.FullName())
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    tabs.Add("Sdílení");
+    results.Add(
+        Util.ShareFacebook(Model.GetUrl(false)).ToHtmlString()
+        + Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}").ToHtmlString()
+        + Util.ShareWidget(Model.GetUrl(false))
+    );
 
 
+    var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
+    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
+    var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForOsoba(Model.InternalId, null, 0);
+    var ftxQuery = Model.FullName();
+    var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
+    if (numByName.Total == 0)
+    {
+        ftxQuery = Model.Jmeno + " " + Model.Prijmeni;
+        numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
+    }
+    tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
+        .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
+        );
+    foreach (var rds in dsSearch.Results
+       .Where(m => m.Total > 0)
+       .OrderByDescending(m => m.Total))
+    {
+        results.Add(rds.RenderResultsInHtml(dsQuery));
+    }
 
-
-
-
-@helper RenderSubject(HlidacStatu.Lib.XSD.tSmlouvaSubjekt subjekt)
-{
-    <p>
-        <b>@subjekt.nazev</b>
-        <br />
-        @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
-
-        @subjekt.adresa<br />
-        ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka
-
-        @Util.IfExists(subjekt.platce, "<br />Plátce peněz")
-
-    </p>
-}
-
-
-@helper RenderSmlStrana(HlidacStatu.Lib.XSD.tSmlouvaSmluvniStrana ss)
-{
-    <p>
-        <b>@ss.nazev</b>
-        <br />
-        @if (!string.IsNullOrEmpty(ss.utvar))
+    if (numAnalyzed.Total + numByName.Total > 0)
+    {
+        if (Model.IsSponzor())
         {
-            <text>
-                @ss.utvar
-                <br />
-            </text>
+            tabs.Add("Sponzor politických stran");
+            results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")}</b>"
+                + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))}</b>)"
+                + $"politickým stranám. <a href=\"/ucty/hledat?osobaid={Model.NameId}\">Ukázat bankovní transakce s identifikovanými dary</a>"
+                );
         }
+        if (numByName.Total > 0)
+        {
+            tabs.Add("Bankovní transakce na účtech polit.stran");
+            results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí")} </b>"
+        + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))}</b>)"
+        + $"s politickými stranami s osobou se jménem <b>{Model.FullName()}</b>."
+        + $"<a href=\"/ucty/hledat?q={System.Net.WebUtility.UrlEncode(ftxQuery)}\">Ukázat tyto bankovní transakce</a>"
+        + $"<br /><span class=\"text-info\">Upozornění: Jedná se o transakce ve kterých se vyskytuje osoba stejného jména. Nemusí jít o stejnou osobu.</span>");
+        }
+    }
 
-        @ss.adresa
-        <br />
-        <text>
-            ICO <a href="/Hledat?Q=ico:@ss.ico">@ss.ico</a>, dat.schránka <a href="/Hledat?Q=ds:@ss.datovaSchranka">@ss.datovaSchranka</a>
-        </text>
-        @Util.IfExists(ss.prijemce, "<br />Příjemce peněz")
 
-        <br />
-        @Util.FirmaMoreInfoLinks(ss.ico)
-
-    </p>
 
 }
-
+<div class="container">
+    <div class="row">
+        @Util.VerticalTabs(tabs, results)
+    </div>
+</div>
 
 
 

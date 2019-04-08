@@ -63,17 +63,21 @@ h1 {
 
 .new-p, .small-darkgray-text, .table-new table th, .table-new table td, .table-new th, .table-new td, .watcher__title span, .search-result-label, .funding .funding-box .funding-secured-by, .searching__intro, .searching__questions {
     color: #28313B;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 22px;
     letter-spacing: 0.5px;
 }
-
-.new-p--gray, .small-darkgray-text, .table-new table th, .table-new table td, .table-new th, .table-new td, .watcher__title span, .search-result-label, .detail-note {
+.table-new table th, .table-new th {
+    color: #28313B;
+    font-size: 16px;
+    font-weight: 600;
+}
+.new-p--gray, .small-darkgray-text, .table-new table td, .table-new td, .watcher__title span, .search-result-label, .detail-note {
     color: #818C99;
 }
 
-.new-p--small, .small-darkgray-text, .table-new table th, .table-new table td, .table-new th, .table-new td, .watcher__title span, .search-result-label, .detail-note {
+.new-p--small, .small-darkgray-text, .table-new table td, .table-new td, .watcher__title span, .search-result-label, .detail-note {
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
@@ -95,7 +99,7 @@ h1 {
 
 .small-black-text, .table-new table td, .table-new td {
     color: #28313B;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 22px;
     letter-spacing: 0.5px;
@@ -2035,12 +2039,16 @@ select {
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
     flex-direction: row;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
 }
 
-    .person-profile-thumb .profile-picture {
+.person-profile-thumb .photo {
+    display: inline-block;
+    flex: none;
+}
+.person-profile-thumb .profile-picture {
         width: 100px;
         height: 100px;
         background-size: cover;

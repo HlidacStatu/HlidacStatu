@@ -761,10 +761,6 @@ body.embed .onlyembed, .body.embed .onlyembed {
     display: inherit;
 }
 
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    font-weight: bolder;
-}
-
 
 .container {
 }
@@ -1434,3 +1430,34 @@ div.verticaltab-container {
         div.verticaltab-container div.verticaltab div.verticaltab-content:not(.active) {
             display: none;
         }
+
+
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    font-weight: 600;
+}
+
+/* horizontal tabs with border */
+.nav-tabs.border > li > a {
+    color: #555;
+    background-color: #fbfbfb;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    font-size: 16px;
+}
+
+.nav-tabs.border > li.active > a, .nav-tabs.border > li.active > a:hover, .nav-tabs.border > li.active > a:focus {
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+
+
+.shadowbox {
+    /*box-shadow: 0px 0px 15px 7px #ddd;*/
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    -moz-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    padding: 20px;
+}

@@ -19,96 +19,64 @@
 }
 
 
+<div class="container">
+    <div class="shadowbox">
+        <h3>Podrobný výpis angažovanosti osoby v soukromých firmách</h3>
+        <p style="padding-bottom:15px;">
+            <a class="btn btn-primary btn-sm" role="button" href="@Url.Action("PolitikVazby", new { id = Model.NameId })">Přehledný výpis vazeb osoby a firem navzájem</a>
+        </p>
 
-<h3>Podrobný výpis angažovanosti osoby v soukromých firmách</h3>
+        <ul class="nav nav-tabs border" role="tablist">
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })">Aktuální a nedávno skončené vazby</a></li>
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })">Všechny vazby podle OR</a></li>
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni })">Všechny i historické vazby</a></li>
+        </ul>
 
-<p>
-    <a class="btn btn-primary btn-sm" role="button" href="@Url.Action("PolitikVazby", new { id = Model.NameId })">Přehledný výpis vazeb osoby a firem navzájem</a>
-</p>
-<table class="table table-hover table-new table-new--dotted table-striped">
-    <thead>
-        <tr>
-            <th>Firma</th>
-            <th>Obchody firmy se státem od 2016</th>
-            <th>Vztah @Model.FullName() s firmou</th>
-        </tr>
-    </thead>
-    <tr class="info">
-        <td colspan="3">
-            @switch (aktualnost)
+
+        <table class="table table-hover table-new table-new--dotted table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Firma</th>
+                    <th>Obchody firmy se státem od 2016</th>
+                    <th>Vztah @Model.FullName() s firmou</th>
+                </tr>
+            </thead>
+
+            @foreach (var vPerIco in (ostat.SoukromeFirmy.Union(ostat.StatniFirmy))
+                .OrderByDescending(o => o.Value.BasicStatPerYear.Summary.CelkemCena)
+                .ThenByDescending(o => o.Value.BasicStatPerYear.Summary.Pocet)
+                )
             {
-                case HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni:
-                    <div>Právě zobrazujeme aktuální vazby osoby dle obchodního rejstříku</div>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })">
-                        <span class="glyphicon glyphicon-time"></span> Ukázat aktuální a nedávno skončené vazby
-                    </a>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })">
-                        <span class="glyphicon glyphicon-time"></span> Ukázat všechny vazby včetně historických
-                    </a>
+                string ico = vPerIco.Value.Subject().ICO;
+                <tr>
+                    <td>
+                        <a href="@(vPerIco.Value.Subject().GetUrl(true))">@vPerIco.Value.Subject().Jmeno</a>
+                        @Util.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(ico), " - soukromá firma")
+                        @Util.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().StatniFirmy.ContainsKey(ico), " - firma (spolu)vlastněná státem či samosprávou")
+                    </td>
+                    <td>
+                        @if (vPerIco.Value.BasicStatPerYear.Summary.Pocet > 0)
+                        {
+                            <span>
+                                <a href="@Url.Action("Hledat", new { Q = "ico:" + ico })">
+                                    @HlidacStatu.Util.PluralForm.Get((int)vPerIco.Value.BasicStatPerYear.SummaryAfter2016().Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
+                                </a>
+                                <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true))
+                            </span>
+                        }
+                        else
+                        {
+                            <span>Nenalezli jsme žádné smlouvy</span>
+                        }
 
-                    break;
-                case HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni:
-                case HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny:
-                    <div>Právě zobrazujeme všechny vazby osoby včetně historických</div>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })">
-                        <span class="glyphicon glyphicon-time"></span>
-                        Ukázat všechny vazby osoby dle obchodního rejstříku
-                    </a>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })">
-                        <span class="glyphicon glyphicon-time"></span> Ukázat aktuální a nedávno skončené vazby
-                    </a>
-                    break;
-                case HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny:
-                default:
-                    <div>Právě zobrazujeme aktuální a nedávno skončené vazby</div>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })">
-                        <span class="glyphicon glyphicon-time"></span> Ukázat všechny vazby osoby dle obchodního rejstříku
-                    </a>
-                    <a class="btn btn-default-new btn-sm" role="button" href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })">
-                        <span class="glyphicon glyphicon-time"></span> Ukázat všechny vazby včetně historických
-                    </a>
-                    break;
+
+                    </td>
+                    <td>
+                        @Util.RenderVazby(Model.VazbyProICO(ico))
+                    </td>
+                </tr>
             }
-        </td>
-    </tr>
+        </table>
 
-    @foreach (var vPerIco in (ostat.SoukromeFirmy.Union(ostat.StatniFirmy))
-        .OrderByDescending(o => o.Value.BasicStatPerYear.Summary.CelkemCena)
-        .ThenByDescending(o => o.Value.BasicStatPerYear.Summary.Pocet)
-        )
-    {
-        string ico = vPerIco.Value.Subject().ICO;
-        <tr>
-            <td>
-                <a href="@(vPerIco.Value.Subject().GetUrl(true))">@vPerIco.Value.Subject().Jmeno</a>
-                @Util.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(ico), " - soukromá firma")
-                @Util.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().StatniFirmy.ContainsKey(ico), " - firma (spolu)vlastněná státem či samosprávou")
-            </td>
-            <td>
-                @if (vPerIco.Value.BasicStatPerYear.Summary.Pocet > 0)
-                {
-                    <span>
-                        <a href="@Url.Action("Hledat", new { Q = "ico:" + ico })">
-                            @HlidacStatu.Util.PluralForm.Get((int)vPerIco.Value.BasicStatPerYear.SummaryAfter2016().Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
-                        </a>
-                        <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true))
-                    </span>
-                }
-                else
-                {
-                    <span>Nenalezli jsme žádné smlouvy</span>
-                }
-
-
-            </td>
-            <td>
-                @Util.RenderVazby(Model.VazbyProICO(ico))
-            </td>
-        </tr>
-    }
-</table>
-
-
-
-
-
+    </div>
+</div>

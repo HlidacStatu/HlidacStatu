@@ -491,7 +491,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 }
                 if (logError && search.Q != search.OrigQuery)
                 {
-                    HlidacStatu.Util.Consts.Logger.Info(new Devmasters.Core.Logging.LogMessage()
+                    HlidacStatu.Util.Consts.Logger.Debug(new Devmasters.Core.Logging.LogMessage()
                         .SetMessage("Fixed query")
                         .SetCustomKeyValue("runningQuery", search.Q)
                         .SetCustomKeyValue("origQuery", search.OrigQuery)

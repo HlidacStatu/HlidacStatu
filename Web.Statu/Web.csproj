@@ -383,7 +383,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\defs.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\GlobalSite.css" />
+    <Content Include="Content\GlobalSite.v1.2.css" />
     <Content Include="Content\icons\android-chrome-192x192.png" />
     <Content Include="Content\icons\apple-touch-icon-114x114.png" />
     <Content Include="Content\icons\apple-touch-icon-120x120.png" />
@@ -894,7 +894,7 @@
     <Content Include="Scripts\highlight\styles\xcode.css" />
     <Content Include="Scripts\highlight\styles\xt256.css" />
     <Content Include="Scripts\highlight\styles\zenburn.css" />
-    <Content Include="Scripts\hlidac.v1.2.js" />
+    <Content Include="Scripts\hlidac.v1.4.js" />
     <Content Include="App_Code\SearchResults.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1271,7 +1271,6 @@
     <Content Include="Views\Insolvence\_OddilDokumenty.cshtml" />
     <Content Include="Views\Insolvence\TextDokumentu.cshtml" />
     <Content Include="Views\Home\Analyza.cshtml" />
-    <Content Include="Views\Home\OsobaProfil.cshtml" />
     <Content Include="Views\Home\Detail_Child.cshtml" />
     <Content Include="Views\Home\Detail_Child_embed.cshtml" />
     <Content Include="Views\Home\OsobaProfil_Embed.cshtml" />
@@ -1280,7 +1279,7 @@
     <Content Include="Views\Home\Porovnat_Child.cshtml" />
     <Content Include="Views\Insolvence\_Status.cshtml" />
     <Content Include="Views\Data\DetailText.cshtml" />
-    <Content Include="Views\Home\OsobaProfil2.cshtml" />
+    <Content Include="Views\Home\OsobaProfil.cshtml" />
     <Content Include="Views\ApiV1\UX.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -530,7 +530,7 @@ namespace HlidacStatu.Lib.ES
             }
             if (logError && result.Q != result.OrigQuery)
             {
-                HlidacStatu.Util.Consts.Logger.Info(new Devmasters.Core.Logging.LogMessage()
+                HlidacStatu.Util.Consts.Logger.Debug(new Devmasters.Core.Logging.LogMessage()
                     .SetMessage("Fixed query")
                     .SetCustomKeyValue("runningQuery", result.Q)
                     .SetCustomKeyValue("origQuery", result.OrigQuery)
