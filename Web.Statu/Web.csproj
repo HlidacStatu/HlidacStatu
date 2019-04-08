@@ -1281,6 +1281,7 @@
     <Content Include="Views\Insolvence\_Status.cshtml" />
     <Content Include="Views\Data\DetailText.cshtml" />
     <Content Include="Views\Home\OsobaProfil2.cshtml" />
+    <Content Include="Views\ApiV1\UX.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

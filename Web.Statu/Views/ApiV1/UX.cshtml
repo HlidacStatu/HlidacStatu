@@ -1,0 +1,239 @@
+﻿
+@{
+    ViewBag.Title = "UX fragmenty";
+    ViewBag.SubTitle = "UX fragmenty pro pouziti na strankach Hlidace";
+    System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.App_Data_Path + "dump\\smlouvy.dump.zip");
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+
+<div style="padding: 10px">
+    <h1 class="new-title">Stylguide</h1>
+    <p class="new-p">
+        Struktura trid volne vychazi z BEMu, tedy
+        <pre>
+          .komponenta
+          .komponenta__subkomponenta
+          .komponenta--vlastnost-komponenty</pre>
+    </p>
+    <h2 class="section-title">
+        Prace s textem
+    </h2>
+    <ul>
+        <li>
+            <code>class="new-p"</code>
+            <p class="new-p">
+                Paragraph - Styl se da aplikovat na libovolny tag - nastavuje pouze vlastnosti pisma.
+                Pokud se pouzije tag p, tak bootstrap automaticky prida spodni margin 10px;
+            </p>
+        </li>
+        <li>
+            <p class="new-p new-p--gray">
+                Paragraph sedivy
+                <code>class="new-p new-p--gray"</code>
+            </p>
+        </li>
+        <li>
+            <p class="new-p new-p--small">
+                Paragraph maly - .new-p .new-p--small
+            </p>
+        </li>
+        <li>
+            <p class="new-p new-p--big">
+                Paragraph velky - .new-p .new-p--big , stejny jako section-title, ale ma line height (hodi se na vicero radku)
+            </p>
+        </li>
+        <li>
+            <p class="new-p new-p--big">
+                Neco muzu <span class="emphasized"> zvyraznit </span>
+            </p>
+        </li>
+        <li>
+            <h3 class="new-title">
+                .new-title
+            </h3>
+            <p class="new-p">
+                (lze na libovolny tag), vetsinou je pouzit na nazev stranky, nebo dulezitych casti stranky (nazvy hlidacu
+                apod)
+            </p>
+        </li>
+        <li>
+            <h3 class="new-title new-title--smaller">
+                .new-title .new-title--smaller
+            </h3>
+            <p class="new-p">
+                o 4px mensi nez normalni title
+            </p>
+        </li>
+        <li>
+            <h3 class="section-title">
+                .section-title
+            </h3>
+            <p class="new-p">
+                pouzit stridme, nazvy podsekci
+            </p>
+        </li>
+    </ul>
+
+    <h2>Buttons</h2>
+    <a class="btn btn-default btn-default-new" role="button">Button default</a>
+    <a class="btn btn-primary btn-primary-new" role="button">Button primary</a>
+    <br />
+    <h2>Links and tag</h2>
+    <a href="/" class="link">link</a>
+    <!-- tridy nize dedi z .link, tedy staci psat primo variantu -->
+    <a href="/" class="link--small">link--small</a>
+    <a href="/" class="link--blue">link--blue</a>
+    <a href="/" class="link--big">link--big</a>
+    <!-- tridy lze kombinovat, napr takto -->
+    <a href="/" class="link--blue link--big">link--blue link--big</a>
+    <a href="/" class="tag">Tag</a>
+    <h2>Inputs</h2>
+    <div>
+        inputy vychazi volne z bootstrapu. Nize dva priklady bez/s chybou. Sirka inputu odpovida sirce parent komponenty.
+    </div>
+    <div class="form-group-new">
+        <label class="label" for="test">Label</label>
+        <input id="test" type="text" class="form-control form-control-new" />
+    </div>
+    <!-- input se errorem -->
+    <div class="form-group-new has-error">
+        <label class="label" for="test2">Label</label>
+        <input id="test2" type="text" class="form-control form-control-new" />
+        <div class="input-error">Vyplňte prosím...</div>
+    </div>
+    <p>Select je pouzit bootstrapovy nativni</p>
+    <div class="form-group-new">
+        <label class="label" for="select">Label</label>
+        <div class="select-wrapper">
+            <select id="select" class="form-control form-control-new" style="width: 240px">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+    </div>
+
+    <h2>Slozene / slozitejsi komponenty</h2>
+    <h3>Hlavicka (nazev) hlidace</h3>
+    <div class="watcher__title">
+        <img src="/Content/img/icon-contracts.svg">
+        <h2 class="new-title">
+            Hlídač smluv
+        </h2>
+        <span>98 výsledků</span>
+    </div>
+
+    <h3>Tabulky</h3>
+    <p>sirka je automaticka</p>
+    <div class="table-new">
+        <table>
+            <tr>
+                <th>Zveřejněno</th>
+                <th>Popis</th>
+                <th class="text-right">Hodnota</th>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost organizace Domov bez zámku</td>
+                <td class="text-nowrap text-right cell-red">100 000 Kč</td>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost Domov</td>
+                <td class="text-nowrap text-right cell-green">100 000 Kč</td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-new table-new--dotted">
+        <table>
+            <tr>
+                <th>Zveřejněno</th>
+                <th>Popis</th>
+                <th class="text-right">Hodnota</th>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost organizace Domov bez zámku</td>
+                <td class="text-nowrap text-right cell-red">100 000 Kč</td>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost Domov</td>
+                <td class="text-nowrap text-right cell-green">100 000 Kč</td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-new table-new--dotted  table-new--wider">
+        <table>
+            <tr>
+                <th>Zveřejněno</th>
+                <th>tato tabulka ma vetsi mezery mezi sloupci</th>
+                <th class="text-right">Hodnota</th>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost organizace Domov bez zámku</td>
+                <td class="text-nowrap text-right cell-red">100 000 Kč</td>
+            </tr>
+            <tr>
+                <td class="text-nowrap">28. 4. 2018</td>
+                <td class="cell-gray">Finanční neúčelový dar na hlavní činnost Domov</td>
+                <td class="text-nowrap text-right cell-green">100 000 Kč</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>profil osob</h3>
+    <div class="person-profile-thumb">
+        <a href="/">
+            <div class="profile-picture" style="background-image: url(/Content/img/tmp/babis.jpg)">
+                <!-- diky pouziti background image nezalezi na pomeru stran obrazku a neni poteba tvorit thumbnaily na serveru -->
+            </div>
+        </a>
+        <div>
+            <a class="section-title link--blue" href="/">
+                Andrej Babiš
+            </a>
+            <div class="new-p new-p--gray new-p--small">
+                (*1954)
+            </div>
+        </div>
+    </div>
+    <!-- maly --- person-profile-thumb--small -->
+    <div class="person-profile-thumb person-profile-thumb--small">
+        <a href="/">
+            <div class="profile-picture" style="background-image: url(/Content/img/tmp/babis.jpg)">
+                <!-- diky pouziti background image nezalezi na pomeru stran obrazku a neni poteba tvorit thumbnaily na serveru -->
+            </div>
+        </a>
+        <div>
+            <a class="section-title link--blue" href="/">
+                Andrej Babiš
+            </a>
+            <div class="new-p new-p--gray new-p--small">
+                (*1954)
+            </div>
+        </div>
+    </div>
+
+    <!-- dalsi komponenty jsou pouzite na danych podstrankach ve specifickych konfiguracich -->
+
+
+
+</div>

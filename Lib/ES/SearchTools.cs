@@ -137,7 +137,7 @@ namespace HlidacStatu.Lib.ES
                     newquery = System.Net.WebUtility.UrlDecode(query);
             }
 
-            MatchEvaluator evalMatch = (m) =>
+            MatchEvaluator evalDelimiterMatch = (m) =>
             {
                 var s = m.Value;
                 if (string.IsNullOrEmpty(s))
@@ -158,7 +158,7 @@ namespace HlidacStatu.Lib.ES
                 //if (modifiedQ.ToLower().Contains(lookFor.ToLower()))
                 if (Regex.IsMatch(newquery, lookFor, regexQueryOption))
                 {
-                    newquery = Regex.Replace(newquery, lookFor, evalMatch, regexQueryOption);
+                    newquery = Regex.Replace(newquery, lookFor, evalDelimiterMatch, regexQueryOption);
                 }
             }
 
@@ -170,7 +170,7 @@ namespace HlidacStatu.Lib.ES
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
 
-            //make operator UpperCase
+            //make operator UpperCase and space around '(' and ')'
             //split newquery into part based on ", skip "xyz" parts
             //string , bool = true ...> part withint ""
             List<Tuple<string, bool>> textParts = new List<Tuple<string, bool>>();
@@ -207,7 +207,12 @@ namespace HlidacStatu.Lib.ES
                         fixPart = System.Net.WebUtility.UrlDecode(fixPart);
                         fixPart = System.Net.WebUtility.HtmlDecode(fixPart);
                         Regex opReg = new Regex(string.Format(@"(^|\s)({0})(\s|$)", operators.Aggregate((f, s) => f + "|" + s)), regexQueryOption);
+
+                        //UPPER Operator
                         fixPart = opReg.Replace(fixPart, (me) => { return me.Value.ToUpper(); });
+
+                        //Space around '(' and ')'
+                        fixPart = fixPart.Replace("(", "( ").Replace(")", " )");
                         fixedOperator = fixedOperator + fixPart;
                     }
                 }

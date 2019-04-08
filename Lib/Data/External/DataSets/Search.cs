@@ -313,7 +313,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     {
                         //list of ICO connected to this person
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string nameId = m.Groups[1].Value;
+                        string nameId = m.Groups["q"].Value;
 
 
                         var osobaidQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "OsobaId", "{0}");

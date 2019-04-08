@@ -23,6 +23,10 @@ namespace HlidacStatu.Web.Controllers
         {
         }
 
+        public ActionResult UX()
+        {
+            return View();
+        }
 
         // GET: ApiV1
         [Authorize]

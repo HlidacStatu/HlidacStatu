@@ -143,7 +143,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     {
                         //list of ICO connected to this person
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string nameId = m.Groups[1].Value;
+                        string nameId = m.Groups["q"].Value;
                         Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
                         string icosQuery = "";
                         if (p != null)
