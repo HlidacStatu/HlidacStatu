@@ -45,7 +45,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     foreach (var ds in Datasets.Results)
                     {
-                        times.Add("Dataset." + ds.Dataset.DatasetId, ds.ElapsedTime);
+                        times.Add("Dataset." + ds.DataSet.DatasetId, ds.ElapsedTime);
                     }
                 }
                 return times;

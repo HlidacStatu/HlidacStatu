@@ -392,7 +392,7 @@ else if (Model.HasResults == false)
     <div class="row">
             @{
                 var tabs = Model.Datasets.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
-                        .Select(m => $"{m.Dataset.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})");
+                        .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})");
                 List<string> results = new List<string>();
 
                 foreach (var rds in Model.Datasets.Results

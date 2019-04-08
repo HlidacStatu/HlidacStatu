@@ -490,7 +490,7 @@ else
                         <br />
                         (celkem
                         @(Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(),
-                                                                                                                                    "1 subjekt", "{0} subjekty", "{0} subjektů"))
+                                                                                                                                                                    "1 subjekt", "{0} subjekty", "{0} subjektů"))
                         - <a href="/subjektVazby/@Model.ICO">jejich seznam</a>)
                     </td>
                     <td>
@@ -548,68 +548,40 @@ else
 
             }
 
-
-
-            @{
-                //dalsi data
-                var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 0, 1);
-
-                //dalsi data
-                //var ruohs = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rozhodnuti-uohs");
-                //var resUOHS = ruohs.SearchData("Ucastnici.ICO:" + Model.ICO, 1, 0);
-            }
-            <tr>
-                <td colspan="2">
-                    <h3>Další informace</h3>
-                </td>
-            </tr>
-            @if (resVZ.IsValid && resVZ.Total > 0)
-            {
-                <tr>
-                    <td>Veřejné zakázky</td>
-                    <td>
-                        @Model.Jmeno se účastní nejméně @resVZ.Total veřejných zakázek.<br />
-                        @Util.AddSearchBtn(Url.Action("Hledat", "VZ"), "ico:" + Model.ICO, "Vypsat všechny tyto veřejné zakázky")
-                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat VZ", "", prefillWDname: "veřejné zakázky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
-                    </td>
-                </tr>
-            }
-            @{
-                try
-                {
-
-                    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
-
-                    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
-                    if (dsSearch.IsValid && dsSearch.Total > 0)
-                    {
-                        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
-                        {
-                            <tr>
-                                <td>@dss.DataSet.Registration().name</td>
-                                <td>
-                                    Tato firma se vyskytuje v databázi <b>@(dss.Total)-krát</b>.<br />
-                                    @Util.AddSearchBtn(Url.Action("Hledat", "Data", dss.ToRouteValues(1)), null, "Vyhledat všechny záznamy s " + Model.Jmeno)
-
-                                    @Util.AddWatchDog(this.User, "ico:" + Model.ICO + "", typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), "", "", prefillWDname: Model.Jmeno + " v databázi " + dss.DataSet.Registration().name, btnCss: "btn btn-warning btn-xs", showWDList: false, datasetId: dss.DataSet.DatasetId)
-
-                                </td>
-                            </tr>
-
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-
-                    HlidacStatu.Util.Consts.Logger.Error("GetSpecificQueriesForDatasets error", e);
-                }
-            }
         </tbody>
     </table>
 
 
+    List<string> tabs = new List<string>();
+    List<string> results = new List<string>();
+    var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
+
+    if (resVZ.IsValid && resVZ.Total > 0)
+    {
+        tabs.Add($"Účast ve veřejných zakázkách ({Util.PocetVysledku(resVZ.Total)})");
+        results.Add(
+            SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
+        );
+    }
+    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
+    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
+    if (dsSearch.IsValid && dsSearch.Total > 0)
+    {
+        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+        {
+            tabs.Add($"{dss.DataSet.Registration().name} ({Util.PocetVysledku(dss.Total)})");
+            results.Add(dss.RenderResultsInHtml(dss.Q));
+        }
+    }
+
+    if (tabs.Count > 0)
+    {
+        <h3>Informace z dalších databází</h3>
+
+        <div class="row">
+            @Util.VerticalTabs(tabs, results)
+        </div>
+    }
 
 }
 

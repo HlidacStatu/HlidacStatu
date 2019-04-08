@@ -124,7 +124,7 @@
         numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
     }
     List<string> tabs = dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
-        .Select(m => $"{m.Dataset.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
+        .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
         .ToList();
     List<string> results = new List<string>();
     foreach (var rds in dsSearch.Results

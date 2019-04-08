@@ -107,10 +107,10 @@ m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
                 foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
                 {
                     <tr>
-                        <td>@dss.Dataset.Registration().name</td>
+                        <td>@dss.DataSet.Registration().name</td>
                         <td>
                             Tato osoba se vyskytuje v databázi <b>@(dss.Total)-krát</b>.
-                            <a href="@dss.Dataset.DatasetSearchUrl("OsobaId:" + Model.NameId)">
+                            <a href="@dss.DataSet.DatasetSearchUrl("OsobaId:" + Model.NameId)">
                                 Vyhledat všechny záznamy s @Model.FullName()
                             </a>
 

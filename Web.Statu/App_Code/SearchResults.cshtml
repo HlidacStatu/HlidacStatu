@@ -36,7 +36,7 @@
             @Util.AddBookmark(user, rec)
         </td>
         <td><a href="@rec.GetUrl(true)">@rec.ICO</a></td>
-        <td><a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno,40,"...")</a></td>
+        <td><a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
         <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
         @if (small == false)
         {
@@ -193,11 +193,41 @@
     }
 }
 
+@helper VZTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
+            int maxItems, HlidacStatu.Lib.ES.VerejnaZakazkaSearchData result, bool skipBookmark = false)
+{
+    <div class="table-new searching__watcher__table">
 
-@helper VZHeader()
+        <table class="table table-hover">
+            <thead>
+                @SearchResults.VZHeader(skipBookmark)
+            </thead>
+            <tbody>
+
+                @foreach (var item in result.Result.Hits.Select(m => m.Source)
+                                //.Where(m => !string.IsNullOrEmpty(m.NazevZakazky?.Trim()) && !string.IsNullOrEmpty(m.PopisZakazky?.Trim()))
+                                .Take(maxItems))
+                {
+                    @SearchResults.VZRow(user, req, item, skipBookmark)
+                }
+            </tbody>
+        </table>
+        @if (result.Total > maxItems)
+        {
+            <div class="text-center">
+                <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "VZ", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
+            </div>
+        }
+
+    </div>
+}
+@helper VZHeader(bool skipBookmark = false)
 {
     <tr>
-        <th>&nbsp;</th>
+        @if (skipBookmark == false)
+        {
+            <th>&nbsp;</th>
+        }
         <th>Zakázka</th>
         <th>Poslední změna</th>
         <th>Lhůta pro nabídky</th>
@@ -209,15 +239,17 @@
 }
 
 
-@helper VZRow(System.Security.Principal.IPrincipal user, HttpRequestBase req, HlidacStatu.Lib.Data.VZ.VerejnaZakazka item)
+@helper VZRow(System.Security.Principal.IPrincipal user, HttpRequestBase req, HlidacStatu.Lib.Data.VZ.VerejnaZakazka item, bool skipBookmark = false)
 {
     <tr>
-        <td>
-            @{
-                @Util.AddBookmark(user, item)
-            }
-        </td>
-
+        @if (skipBookmark == false)
+        {
+            <td>
+                @{
+                    @Util.AddBookmark(user, item)
+                }
+            </td>
+        }
         <td style="white-space: nowrap;">
             @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req))
             {

@@ -17,6 +17,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             : base(queryString, defaultOrder)
         {
         }
+
+        public string RenderResultsInHtml(string query, int maxToRender = int.MaxValue)
+        {
+            return _renderResultsInHtml(query, (d) => d, maxToRender);
+        }
     }
     public class DataSearchRawResult
     : DataSearchResultBase<Tuple<string, string>>
@@ -30,6 +35,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             : base(queryString, defaultOrder)
         {
         }
+
+        public string RenderResultsInHtml(string query, int maxToRender = int.MaxValue)
+        {
+            return _renderResultsInHtml(query, (s) => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; }, maxToRender);
+        }
+
     }
 
     public class DataSearchResultBase<T> : SearchData<T>
@@ -160,5 +171,45 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 ret = ret + "&page=" + page.Value.ToString();
             return ret;
         }
+
+        protected string _renderResultsInHtml(string query, Func<T,dynamic> itemToDynamicFunc, int maxToRender = int.MaxValue)
+        {
+            var content = "";
+            try
+            {
+                if (this.DataSet.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
+                {
+                    var model = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+                    model.Total = this.Total;
+                    model.Page = 1;
+                    model.Q = query;
+                    model.Result = this.Result
+                        .Take(maxToRender)
+                        .Select(s => itemToDynamicFunc(s))
+                        .ToArray();
+
+                    content = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet, model);
+                }
+                else
+                {
+                    //content = ControllerExtensions.RenderRazorViewToString(this.ViewContext.Controller, "HledatProperties_CustomdataTemplate", rds);
+                    //Html.RenderAction("HledatProperties_CustomdataTemplate", rds);
+                    content = "<h3>Nepodařilo se nám zobrazit vyhledané výsledky</h3>" +
+                                $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy zde</a></div>";
+
+                }
+                if (this.Total > maxToRender)
+                {
+                    content += $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy</a></div>";
+                }
+                return content;
+            }
+            catch (Exception)
+            {
+                return "<h3>Nepodařilo se nám zobrazit vyhledané výsledky</h3>" +
+                    $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy zde</a></div>";
+            }
+        }
+
     }
 }

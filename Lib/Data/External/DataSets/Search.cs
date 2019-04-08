@@ -54,14 +54,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Aggregate((f, s) => f + " OR " + s);
             return $"( {q} )";
         }
-        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, string sort = null)
+        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
         {
             Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
 
             sw.Start();
             var query = Lib.ES.SearchTools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
 
-            var res = _searchData(ds, query, page, pageSize, sort);
+            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties);
 
             sw.Stop();
             if (!res.IsValid)
@@ -101,10 +101,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     DataSet = ds,
                 };
         }
-        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null)
+        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
         {
             var query = Lib.ES.SearchTools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
-            var res = _searchData(ds, queryString, page, pageSize, sort);
+            var res = _searchData(ds, queryString, page, pageSize, sort, excludeBigProperties);
             if (!res.IsValid)
             {
                 throw DataSetException.GetExc(ds.DatasetId,
@@ -140,7 +140,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 };
         }
 
-        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null)
+        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
         {
             SortDescriptor<object> sortD = new SortDescriptor<object>();
             if (sort == "0")
@@ -187,11 +187,15 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 page = (Lib.ES.SearchTools.MaxResultWindow / pageSize) - 1;
             }
 
+            //exclude big properties from result
+            var maps = excludeBigProperties ? ds.GetMappingList("DocumentPlainText").ToArray() : new string[] { };
+
 
             var res = client
                 .Search<object>(s => s
                     .Type("data")
                     .Size(pageSize)
+                    .Source(ss => ss.Excludes(ex => ex.Fields(maps)))
                     .From(page * pageSize)
                     .Query(q => qc)
                     .Sort(ss => sortD)

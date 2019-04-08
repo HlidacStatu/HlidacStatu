@@ -123,7 +123,7 @@
             );
     }
 
-    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query);
+    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query,1,5);
 
 
 }
@@ -250,6 +250,9 @@
     <div class="row">
         <div class="col-xs-12">
 
+
+
+
             <div class="searching__counters">
                 <span class="new-p new-p--big">Našli jsme také </span>
 
@@ -292,8 +295,8 @@
                                         .OrderByDescending(m => m.Total))
                     {
                         <div class="searching__counter">
-                            <a class="link--blue link--big" href="@Html.Raw(rds.Dataset.DatasetSearchUrl(Model.Query, true))">
-                                @rds.Dataset.Registration().name <span class="new-p">@Util.PocetVysledku(rds.Total)</span>
+                            <a class="link--blue link--big" href="@Html.Raw(rds.DataSet.DatasetSearchUrl(Model.Query, true))">
+                                @rds.DataSet.Registration().name <span class="new-p">@Util.PocetVysledku(rds.Total)</span>
                             </a>
                         </div>
                     }

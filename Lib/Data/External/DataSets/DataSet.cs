@@ -98,21 +98,25 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
         }
 
+        IEnumerable<Nest.CorePropertyBase> _mapping = null;
         protected IEnumerable<Nest.CorePropertyBase> GetElasticMapping()
         {
-            var getIndexResponse = this.client.GetIndex(this.client.ConnectionSettings.DefaultIndex);
-            IIndexState remote = getIndexResponse.Indices[this.client.ConnectionSettings.DefaultIndex];
-            var dataMapping = remote.Mappings
-                .Where(m => m.Key.Name == "data")
-                .FirstOrDefault(); //type data
-            if (dataMapping.Value.Properties == null)
-                return new Nest.CorePropertyBase[] { };
-            return dataMapping
-                .Value
-                .Properties
-                .Select(m => (Nest.CorePropertyBase)m.Value)
-                ;
-
+            if (_mapping == null)
+            {
+                var getIndexResponse = this.client.GetIndex(this.client.ConnectionSettings.DefaultIndex);
+                IIndexState remote = getIndexResponse.Indices[this.client.ConnectionSettings.DefaultIndex];
+                var dataMapping = remote.Mappings
+                    .Where(m => m.Key.Name == "data")
+                    .FirstOrDefault(); //type data
+                if (dataMapping.Value.Properties == null)
+                    return new Nest.CorePropertyBase[] { };
+                _mapping = dataMapping
+                    .Value
+                    .Properties
+                    .Select(m => (Nest.CorePropertyBase)m.Value)
+                    ;
+            }
+            return _mapping;
         }
 
         public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null)
