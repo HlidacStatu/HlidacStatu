@@ -48,11 +48,7 @@
 
 @if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
 {
-    <span>
-        @{
-            @Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby" })
-        }
-    </span>
+    @Html.Action("Osoba_child", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby" })
 }
 
 
