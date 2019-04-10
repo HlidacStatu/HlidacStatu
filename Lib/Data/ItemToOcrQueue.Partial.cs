@@ -14,6 +14,32 @@ namespace HlidacStatu.Lib.Data
             VerejnaZakazka
         }
 
+        private static IQueryable<ItemToOcrQueue> CreateQuery(DbEntities db, ItemToOcrType? itemType, string itemSubType)
+        {
+            IQueryable<ItemToOcrQueue> sql = null;
+            sql = db.ItemToOcrQueue
+                .Where(m => m.done == null
+                        && m.started == null);
+
+            if (itemType != null)
+                sql = sql.Where(m => m.itemType == itemType.ToString());
+
+            if (!string.IsNullOrEmpty(itemSubType))
+                sql = db.ItemToOcrQueue
+                .Where(m => m.itemSubType == itemSubType);
+
+            return sql;
+        }
+        public static bool AreThereItemsToProcess(ItemToOcrType? itemType = null, string itemSubType = null)
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                var sql = CreateQuery(db, itemType, itemSubType);
+                return sql.Any();
+            }
+        }
+
+
         public static IEnumerable<ItemToOcrQueue> TakeFromQueue(ItemToOcrType? itemType = null, string itemSubType = null, int maxItems = 30)
         {
             using (DbEntities db = new DbEntities())
@@ -22,7 +48,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        IQueryable<ItemToOcrQueue> sql = null;
+                        IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
                         sql = db.ItemToOcrQueue
                             .Where(m => m.done == null
                                     && m.started == null);
@@ -36,7 +62,7 @@ namespace HlidacStatu.Lib.Data
 
                         sql = sql
                             .OrderByDescending(m => m.priority)
-                            .ThenBy(m=>m.created)
+                            .ThenBy(m => m.created)
                             .Take(maxItems);
                         var res = sql.ToArray();
                         foreach (var i in res)
