@@ -27,9 +27,9 @@
         </p>
 
         <ul class="nav nav-tabs border" role="tablist">
-            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })">Aktuální a nedávno skončené vazby</a></li>
-            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })">Všechny vazby podle OR</a></li>
-            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni })">Všechny i historické vazby</a></li>
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"><i class="far fa-calendar-check"></i>&nbsp;Nedávno skončené vazby</a></li>
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"><i class="far fa-university"></i>&nbsp;Všechny vazby podle OR</a></li>
+            <li role="presentation" @Util.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni })"><i class="far fa-history"></i>&nbsp;Všechny i historické vazby</a></li>
         </ul>
 
 

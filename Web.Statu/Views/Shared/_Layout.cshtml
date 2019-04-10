@@ -59,7 +59,6 @@
     <meta name="description" content="@description" />
     <meta name="author" content="Michal Bláha" />
     <meta name="keywords" content="e-gov, e-government, efektivita státu, efektivní stát, Registr smluv, Hlídač státu, HlidacStatu, HlidacSmluv, Hlídač smluv, politici, smlouvy státu">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&amp;subset=latin-ext" rel="stylesheet">
 
     @{
         string urlfirst = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
@@ -130,7 +129,11 @@
     @RenderSection("metatags", required: false)
 
 
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&amp;subset=latin-ext" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.8.1/css/regular.css" integrity="sha384-ELBQxbOyxSZRtZPNO1mVgYkEzMOXFNmQY6CLV1nw+4IZoiHWeuwYTnABxPxxsuBE" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.8.1/css/fontawesome.css" integrity="sha384-4HqGlagEHMyfaDQVabl1wx7GCtGw6hDl3sKJEhqQjOCrXrvizhaA2j4hK8Piewtr" crossorigin="anonymous">
+
 
 
     @Styles.Render("~/Content/css")
