@@ -1264,8 +1264,8 @@
     <Content Include="Views\Insolvence\Hledat.cshtml" />
     <Content Include="Views\Insolvence\Rizeni.cshtml" />
     <Content Include="Views\Insolvence\_PeopleList.cshtml" />
-    <Content Include="Views\Insolvence\_Soud.cshtml" />
-    <Content Include="Views\Insolvence\_StavRizeni.cshtml" />
+    <Content Include="Views\Shared\_Soud.cshtml" />
+    <Content Include="Views\Shared\_StavRizeni.cshtml" />
     <Content Include="Views\Insolvence\_SearchFormHelp.cshtml" />
     <Content Include="Views\Insolvence\Dokumenty.cshtml" />
     <Content Include="Views\Insolvence\_OddilDokumenty.cshtml" />

@@ -437,7 +437,7 @@
                 <p>
                     Informace o dostupnosti a funkčnosti státních webů
                     <br>
-                    Hlídáme <strong>@ZabTools.Weby().Count()</strong> státních webů
+                    Hlídáme <strong>@ZabTools.Weby()?.Count()</strong> státních webů
                 </p>
             </div>
 
@@ -456,9 +456,9 @@
                                 = new List<ZabHostAvailability>();
 
                             stats = dataWeby
-                            .OrderBy(o => o.Statistics().PercentOfTime.OK)
-                            .Take(10)
-                            .ToList();
+                            ?.OrderBy(o => o.Statistics().PercentOfTime.OK)
+                            ?.Take(10)
+                            ?.ToList() ?? new List<ZabHostAvailability>();
 
                             decimal dynamicLength = 9m;
                         }
@@ -524,34 +524,34 @@
                     <ul class="block-status-list">
 
                         @{
-                            var webIds = ZabTools.Weby("0").Select(w => w.hostid).ToArray(); //ustredni
-                            var sslWebs = ZabTools.SslStatuses()
-                                ?.Where(m => webIds.Contains(m.Host.hostid))
-                                ?.Where(m => m.Status() >= SSLLabsGrades.B)
-                                ?.OrderByDescending(m => m.Status())
-                                ?.Take(15)
-                                ?.ToArray()
-                                ?.OrderBy(o => Guid.NewGuid())
-                                ?.Take(5)
-                                ?.ToArray();
+							var webIds = ZabTools.Weby("0").Select(w => w.hostid).ToArray(); //ustredni
+							var sslWebs = ZabTools.SslStatuses()
+								?.Where(m => webIds.Contains(m.Host.hostid))
+								?.Where(m => m.Status() >= SSLLabsGrades.B)
+								?.OrderByDescending(m => m.Status())
+								?.Take(15)
+								?.ToArray()
+								?.OrderBy(o => Guid.NewGuid())
+								?.Take(5)
+								?.ToArray() ?? new ZabHostSslStatus[0];
 
 
-                            if (sslWebs.Count() < 6)
-                            {
-                                webIds = ZabTools.Weby("ustredni").Select(w => w.hostid).ToArray(); //ustredni
-                                sslWebs = sslWebs.Concat(ZabTools.SslStatuses()
-                                            ?.Where(m => webIds.Contains(m.Host.hostid))
-                                            ?.Where(m => m.Status() >= SSLLabsGrades.B)
-                                            ?.OrderByDescending(m => m.Status())
-                                            ?.Take(10)
-                                            ?.ToArray()
-                                            ?.OrderBy(o => Guid.NewGuid())
-                                            ?.Take(5)
-                                            ?.ToArray()
-                                        )
-                                        .ToArray();
-                            }
-                            dynamicLength = 9m;
+							if (sslWebs.Count() < 6)
+							{
+								webIds = ZabTools.Weby("ustredni").Select(w => w.hostid).ToArray(); //ustredni
+								sslWebs = sslWebs.Concat(ZabTools.SslStatuses()
+											?.Where(m => webIds.Contains(m.Host.hostid))
+											?.Where(m => m.Status() >= SSLLabsGrades.B)
+											?.OrderByDescending(m => m.Status())
+											?.Take(10)
+											?.ToArray()
+											?.OrderBy(o => Guid.NewGuid())
+											?.Take(5)
+											?.ToArray() ?? new ZabHostSslStatus[0]
+										)
+										.ToArray();
+							}
+							dynamicLength = 9m;
                         }
                         @foreach (var item in sslWebs.OrderByDescending(o => o.Status()).Take(5))
                         {
