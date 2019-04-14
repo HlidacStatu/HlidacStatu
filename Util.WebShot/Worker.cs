@@ -84,9 +84,9 @@ namespace HlidacStatu.Util.WebShot
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
+			// TODO: uncomment the following line if the finalizer is overridden above.
+			GC.SuppressFinalize(this);
+		}
         #endregion
     }
 
