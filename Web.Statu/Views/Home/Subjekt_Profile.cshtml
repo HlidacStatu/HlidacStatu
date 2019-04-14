@@ -1,13 +1,8 @@
 ﻿@model HlidacStatu.Lib.Data.Firma
 
-@using Nest
 @using System
 @using System.Collections.Generic
 @using System.Linq
-@using System.Web
-@using System.Web.Mvc
-@using HlidacStatu.Web.Framework
-@using HlidacStatu.Lib;
 @using HlidacStatu.Lib.Render;
 
 @{
@@ -551,31 +546,45 @@ else
         </tbody>
     </table>
 
+				List<string> tabs = new List<string>();
+				List<string> results = new List<string>();
+				var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
 
-    List<string> tabs = new List<string>();
-    List<string> results = new List<string>();
-    var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
+				if (resVZ.IsValid && resVZ.Total > 0)
+				{
+					tabs.Add($"Účast ve veřejných zakázkách ({Util.PocetVysledku(resVZ.Total)})");
+					results.Add(
+						SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
+					);
+				}
+				var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
+				var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
+				if (dsSearch.IsValid && dsSearch.Total > 0)
+				{
+					foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+					{
+						tabs.Add($"{dss.DataSet.Registration().name} ({Util.PocetVysledku(dss.Total)})");
+						results.Add(dss.RenderResultsInHtml(dss.Q));
+					}
+				}
 
-    if (resVZ.IsValid && resVZ.Total > 0)
-    {
-        tabs.Add($"Účast ve veřejných zakázkách ({Util.PocetVysledku(resVZ.Total)})");
-        results.Add(
-            SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
-        );
-    }
-    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
-    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
-    if (dsSearch.IsValid && dsSearch.Total > 0)
-    {
-        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
-        {
-            tabs.Add($"{dss.DataSet.Registration().name} ({Util.PocetVysledku(dss.Total)})");
-            results.Add(dss.RenderResultsInHtml(dss.Q));
-        }
-    }
+				var insolvenceVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(new HlidacStatu.Lib.ES.InsolvenceSearchResult { Q = "icoveritel:" + Model.ICO });
+				if (insolvenceVeritel.IsValid && insolvenceVeritel.Total > 0)
+				{
+					tabs.Add($"Věřitel v insolvencích ({Util.PocetVysledku(insolvenceVeritel.Total)})");
+					results.Add(SearchResults.InsolvenceTableResult(User, Request, 5, insolvenceVeritel).ToHtmlString());
+				}
 
-    if (tabs.Count > 0)
-    {
+				var insolvenceDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(new HlidacStatu.Lib.ES.InsolvenceSearchResult { Q = "icodluznik:" + Model.ICO });
+				if (insolvenceDluznik.IsValid && insolvenceDluznik.Total > 0)
+				{
+					tabs.Add($"Dlužník v insolvencích ({Util.PocetVysledku(insolvenceDluznik.Total)})");
+					results.Add(SearchResults.InsolvenceTableResult(User, Request, 5, insolvenceDluznik).ToHtmlString());
+				}
+
+
+				if (tabs.Count > 0)
+				{
         <h3>Informace z dalších databází</h3>
 
         <div class="row">
