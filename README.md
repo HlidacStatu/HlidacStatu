@@ -25,6 +25,6 @@ Naše analýza smluv a dat jim pomáhá lépe naplnit zákon a omezit možné ch
 - analyzovat a umožnit veřejnosti data z veřejných databází analyzovat a zkoumat;
 - zvýšit kontrolu veřejných prostředků ze strany občanů;
 - propojit více datových zdrojů logicky dohromady. Aktuálně jsou propojeni Hlídač smluv, Hlídač politiků, Hlídač politických financí, Hlídač veřejných zakázek a Hlídač insolvencí.
-- V březnu 2019 nás navštěvovalo průměrně 10.000 lidí denně, z toho 25-30% úředníků veřejné správy, kterým pomáháme lépe dodržovat zákon (používají naše analýzi pro kontrolu řádného uveřejnění smluv do registru smluv).
+- V březnu 2019 nás navštěvovalo průměrně 10.000 lidí denně, z toho 25-30% úředníků veřejné správy, kterým pomáháme lépe dodržovat zákon (používají naše analýzy pro kontrolu řádného uveřejnění smluv do registru smluv).
 
 Naši vizi najdete na https://www.hlidacstatu.cz/texty/vize/
