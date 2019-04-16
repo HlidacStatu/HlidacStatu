@@ -61,10 +61,18 @@ namespace HlidacStatu.Lib.Data
             bool dispose = fc == null;
             if (dispose)
                 fc = new Lib.Data.DbEntities();
-            this.items = fc.InvoiceItems.Where(m => m.ID_Invoice == this.ID).ToList();
 
-            if (dispose)
-                fc.Dispose();
+			try
+			{
+				this.items = fc.InvoiceItems.Where(m => m.ID_Invoice == this.ID).ToList();
+			}
+			finally
+			{
+				if (dispose)
+				{
+					fc?.Dispose();
+				}
+			}
 
             return this.items;
         }
