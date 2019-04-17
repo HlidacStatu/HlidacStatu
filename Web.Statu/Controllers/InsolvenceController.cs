@@ -31,6 +31,8 @@ namespace HlidacStatu.Web.Controllers
 			return View(res);
 		}
 
+
+
 		public ActionResult Rizeni(string id)
 		{
 			if (string.IsNullOrEmpty(id))
@@ -38,13 +40,24 @@ namespace HlidacStatu.Web.Controllers
 				return View("Error404");
 			}
 
-			var model = Insolvence.LoadFromES(id,false);
+            //show highlighting
+            bool showHighliting = !string.IsNullOrEmpty(this.Request.QueryString["qs"]);
+
+			var model = Insolvence.LoadFromES(id,showHighliting ? true : false );
 			if (model == null)
 			{
 				return View("Error404");
 			}
-
-			return View(model);
+            if (showHighliting)
+            {
+                var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1, true);
+                if (findRizeni.Total > 0)
+                {
+                    ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlights;
+                }
+            }
+            ViewBag.showHighliting = showHighliting;
+            return View(model);
 		}
 
 		public ActionResult Dokumenty(string id)
@@ -54,17 +67,30 @@ namespace HlidacStatu.Web.Controllers
 				return View("Error404");
 			}
 
-			var data = Insolvence.LoadFromES(id,false);
+            bool showHighliting = !string.IsNullOrEmpty(this.Request.QueryString["qs"]);
+
+            var data = Insolvence.LoadFromES(id, showHighliting ? true : false);
+            //var data = Insolvence.LoadFromES(id,false);
 			if (data == null)
 			{
 				return View("Error404");
 			}
+            Nest.HighlightFieldDictionary highlighting = null;
+            if (showHighliting)
+            {
+                var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, true);
+                if (findRizeni.Total > 0)
+                {
+                    highlighting = findRizeni.Result.Hits.First().Highlights;
+                }
+            }
 
-			return View(new DokumentyViewModel
+            return View(new DokumentyViewModel
 			{
 				SpisovaZnacka = data.Rizeni.SpisovaZnacka,
 				UrlId = data.Rizeni.UrlId(),
-				Dokumenty = data.Rizeni.Dokumenty.ToArray()
+				Dokumenty = data.Rizeni.Dokumenty.ToArray(),
+                HighlightingData = highlighting
 			});
 		}
 

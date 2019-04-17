@@ -199,7 +199,15 @@ namespace HlidacStatu.Lib.Data.Insolvence
         }
 
 
-        public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search)
+        public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, bool withHighlighting = false)
+        {
+            return SimpleSearch(new InsolvenceSearchResult() {
+                Q=query,
+                Page = page,
+                PageSize = pagesize               
+            }, withHighlighting);
+        }
+            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, bool withHighlighting = false)
         {
             var client = Manager.GetESClient_Insolvence();
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
@@ -209,6 +217,25 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             search.Q = SearchTools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
+            HighlightDescriptor<Rizeni> hh = new HighlightDescriptor<Rizeni>();
+            if (withHighlighting)
+            {
+                hh = hh
+                    .Order(HighlighterOrder.Score)
+                    .PreTags("<highl>")
+                    .PostTags("</highl>")
+                    .Fields(ff=>ff
+                                .Field("*")
+                                .RequireFieldMatch(false)
+                                .Type(HighlighterType.Unified)
+                                .FragmentSize(150)
+                                .NumberOfFragments(3)
+                                .Fragmenter(HighlighterFragmenter.Span)
+                                .BoundaryScanner(BoundaryScanner.Sentence)
+                                .BoundaryScannerLocale("cs_CZ")
+                    )                   
+                    ;
+            }
             ISearchResponse<Rizeni> res = null;
             try
             {
@@ -217,9 +244,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Size(search.PageSize)
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
-                        .Source(sr => sr.Excludes(r => r.Fields("dokumenty.*")))
-                        .Query(q => GetSimpleQuery(search))
+                        .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
+                        .Query(q => GetSimpleQuery(search))                        
                         .Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
+                        .Highlight(h=>hh)
                 );
             }
             catch (Exception e)

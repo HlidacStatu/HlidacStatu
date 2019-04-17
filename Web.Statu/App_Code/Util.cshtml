@@ -35,6 +35,22 @@
 
 }
 
+@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string content, string noHLContent, string highlightPartDelimiter = " ..... ")
+{
+    highlights = highlights ?? new Nest.HighlightFieldDictionary();
+    string result = HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlights, path, content, highlightPartDelimiter);
+    if (string.IsNullOrEmpty(result))
+    {
+        @(noHLContent)
+    }
+    else
+    {
+        <span class="highlighting">
+            @Html.Raw(result)
+        </span>
+    }
+}
+
 @helper AddVisitImg(string path)
 {
     string base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(path));
@@ -992,9 +1008,9 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 
 @helper ExportButton(System.Security.Principal.IPrincipal user, string typ, string q,
-    string order = "0", string title = "Export výsledků hledání",
-    string style = "", string moreParams = ""
-    )
+        string order = "0", string title = "Export výsledků hledání",
+        string style = "", string moreParams = ""
+        )
 {
     var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
     <!-- Button trigger modal -->
@@ -1058,37 +1074,37 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 @helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null, string tabColCss = null, string contentColCss = null)
 {
-containerCss = containerCss ?? "col-xs-12";
-tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
-contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
-bool first = true;
+    containerCss = containerCss ?? "col-xs-12";
+    tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
+    contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
+    bool first = true;
     <div class="@containerCss verticaltab-container">
-            <div class="@tabColCss verticaltab-menu">
-                <div class="list-group">
-                    @foreach (var s in tabnames)
-                    {
-                        <a href="#" class="list-group-item @(first ? "active" : "")">
-                            @Html.Raw(s)
-                        </a>
-
-                        first = false;
-                    }
-                </div>
-            </div>
-            <div class="@contentColCss verticaltab">
-                @{
-                    first = true;
-                }
-                @foreach (var s in contents)
+        <div class="@tabColCss verticaltab-menu">
+            <div class="list-group">
+                @foreach (var s in tabnames)
                 {
-                    <div class="verticaltab-content @(first ? "active" : "")">
+                    <a href="#" class="list-group-item @(first ? "active" : "")">
                         @Html.Raw(s)
-                    </div>
+                    </a>
+
                     first = false;
                 }
             </div>
-            
         </div>
+        <div class="@contentColCss verticaltab">
+            @{
+                first = true;
+            }
+            @foreach (var s in contents)
+            {
+                <div class="verticaltab-content @(first ? "active" : "")">
+                    @Html.Raw(s)
+                </div>
+                first = false;
+            }
+        </div>
+
+    </div>
 }
 
 
