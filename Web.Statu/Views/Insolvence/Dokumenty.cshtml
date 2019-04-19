@@ -3,8 +3,9 @@
 @model DokumentyViewModel
 
 @{
-	ViewBag.Title = "Insolvenční řízení " + Model.SpisovaZnacka;
-	ViewBag.SubTitle = "Dokumenty";
+    ViewBag.Title = "Insolvenční řízení " + Model.SpisovaZnacka;
+    ViewBag.SubTitle = "Dokumenty";
+
 }
 
 @section breadcrumb
@@ -47,17 +48,17 @@
 else
 {
 	<h3>Oddíl A - Řízení do úpadku</h3>
-	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "A", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("A")).ToArray() })
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "A", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("A")).ToArray(), HighlightingData= Model.HighlightingData })
 
 	<h3>Oddíl B - Řízení po úpadku	</h3>
-	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "B", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("B")).ToArray() })
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "B", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("B")).ToArray(), HighlightingData = Model.HighlightingData })
 
 	<h3>Oddíl C - Incidenční spory</h3>
-	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "C", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("C")).ToArray() })
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "C", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("C")).ToArray(), HighlightingData = Model.HighlightingData })
 
 	<h3>Oddíl D - Ostatní</h3>
-	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "D", Dokumenty = Model.Dokumenty.Where(d => d.Oddil == null || d.Oddil != null && d.Oddil.StartsWith("D")).ToArray() })
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "D", Dokumenty = Model.Dokumenty.Where(d => d.Oddil == null || d.Oddil != null && d.Oddil.StartsWith("D")).ToArray(), HighlightingData = Model.HighlightingData })
 
 	<h3>Oddíl P - Přihlášky</h3>
-	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "P", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("P")).ToArray() })
+	@Html.Partial("_OddilDokumenty", new DokumentListViewModel { Oddil = "P", Dokumenty = Model.Dokumenty.Where(d => d.Oddil != null && d.Oddil.StartsWith("P")).ToArray(), HighlightingData = Model.HighlightingData })
 }

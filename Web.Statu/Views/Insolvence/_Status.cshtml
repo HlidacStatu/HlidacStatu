@@ -1,6 +1,7 @@
 ﻿@using System.Linq;
 @using HlidacStatu.Web.Models;
 @using ISR = HlidacStatu.Lib.Data.Insolvence.Insolvence.StavRizeni;
+
 @model StavRizeniViewModel
 
 <div class="row">
@@ -17,11 +18,11 @@
 		@if (Model.Stav == ISR.MylnyZapis)
 		{
 			<img src="~/Content/Img/ins/canceled-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení zrušeno" />
-		}
-		else
-		{
-			if (Model.Stav == ISR.Memoratorium)
-			{
+        }
+        else
+        {
+            if (Model.Stav == ISR.Moratorium)
+            {
 				<img src="~/Content/Img/ins/waiting-active.svg" data-toggle="tooltip" data-placement="bottom" title="Odklad splatnosti" />
 				<i class="glyphicon glyphicon-arrow-right text-gray"></i>
 			}

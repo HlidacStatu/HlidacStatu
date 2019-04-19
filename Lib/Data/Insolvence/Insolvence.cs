@@ -46,7 +46,7 @@ MORATORIUM =
 		public class StavRizeni
 		{
 			public const string Nevyrizena = "NEVYRIZENA";
-			public const string Memoratorium = "MORATORIUM";
+			public const string Moratorium = "MORATORIUM";
 			public const string Upadek = "ÚPADEK";
 			public const string Konkurs = "KONKURS";
 			public const string Oddluzeni = "ODDLUŽENÍ";
@@ -143,7 +143,7 @@ MORATORIUM =
                     return StavInsolvence.Postoupena;
                 case StavRizeni.KonkursPoZruseni:
                     return StavInsolvence.KonkursPoZruseni;
-                case StavRizeni.Memoratorium:
+                case StavRizeni.Moratorium:
                     return StavInsolvence.Moratorium;
                 default:
                     return StavInsolvence.Neznamy;

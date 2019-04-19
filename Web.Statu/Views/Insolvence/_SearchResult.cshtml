@@ -72,7 +72,7 @@ else
                     <td style="white-space: nowrap;">
                         @if (LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
                         {
-                            <a href="Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
+                            <a href="Rizeni/@item.UrlId()?qs=@System.Net.WebUtility.UrlEncode(Model.Q)">@item.SpisovaZnacka</a>
                         }
                         else
                         {

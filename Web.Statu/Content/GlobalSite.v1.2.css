@@ -1461,3 +1461,12 @@ div.verticaltab-container {
     -moz-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     padding: 20px;
 }
+
+.highlighting {
+    color: #666;
+    font-style: italic;
+
+}
+    .highlighting highl {
+        font-weight:bold;
+    }
