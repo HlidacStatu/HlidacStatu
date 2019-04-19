@@ -1,0 +1,34 @@
+version: '2'
+services:
+    couchdb:
+        image: couchbase/server
+        ports:
+          - "8091-8094:8091-8094"
+          - "11210:11210"
+        volumes:
+          - "couchbase_data:/opt/couchbase/var"
+    mssql:
+        image: microsoft/mssql-server-linux:latest
+        ports:
+          - "1433:1433"
+        environment:
+          - ACCEPT_EULA=Y
+          - SA_PASSWORD=hlidaciPES123
+        volumes:
+          - "mssql_data:/var/opt/mssql"
+    elastic:
+        image: elasticsearch:5.6
+        ports:
+          - "9200:9200"
+          - "9300:9300"
+        environment:
+          - discovery.type=single-node
+        volumes:
+          - "elastic_data:/usr/share/elasticsearch/data"
+volumes:
+    couchbase_data:
+        external: true
+    mssql_data:
+        external: true
+    elastic_data:
+        external: true
