@@ -5,7 +5,6 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace HlidacStatu.Lib.ES
     public static class SearchTools
     {
         public const int DefaultPageSize = 40;
-        public const int MaxResultWindow = 10000; 
+        public const int MaxResultWindow = 10000;
 
 
         [Devmasters.Core.ShowNiceDisplayName()]
@@ -116,6 +115,28 @@ namespace HlidacStatu.Lib.ES
         static string[] queryOperators = new string[] {
             "AND","OR"
         };
+
+
+        public static HighlightDescriptor<T> GetHighlight<T>(bool enable)
+            where T : class
+        {
+            HighlightDescriptor<T> hh = new HighlightDescriptor<T>();
+            if (enable)
+                hh = hh.Order(HighlighterOrder.Score)
+                        .PreTags("<highl>")
+                        .PostTags("</highl>")
+                        .Fields(ff => ff
+                                    .Field("*")
+                                    .RequireFieldMatch(false)
+                                    .Type(HighlighterType.Unified)
+                                    .FragmentSize(150)
+                                    .NumberOfFragments(3)
+                                    .Fragmenter(HighlighterFragmenter.Span)
+                                    .BoundaryScanner(BoundaryScanner.Sentence)
+                                    .BoundaryScannerLocale("cs_CZ")
+                        );
+            return hh;
+        }
 
         static string regexInvalidQueryTemplate = @"(^|\s|[(])(?<q>$operator$\s{1} (?<v>(\w{1,})) )($|\s|[)])";
         public static string FixInvalidQuery(string query)
@@ -470,7 +491,8 @@ namespace HlidacStatu.Lib.ES
 
         public static SmlouvaSearchResult Search(QueryContainer query, int page, int pageSize, OrderResult order,
     AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true)
+    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
+    bool withHighlighting = false)
         {
 
             var result = new SmlouvaSearchResult()
@@ -483,8 +505,9 @@ namespace HlidacStatu.Lib.ES
             };
 
             ISearchResponse<Lib.Data.Smlouva> res =
+                
                 _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam,
-                includeNeplatne, logError);
+                includeNeplatne, logError, withHighlighting);
 
             if (res.IsValid == false && logError)
                 Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res, query.ToString());
@@ -500,7 +523,8 @@ namespace HlidacStatu.Lib.ES
 
         public static SmlouvaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order,
     AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true)
+    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
+    bool withHighlighting = false)
         {
 
             var result = new SmlouvaSearchResult()
@@ -543,7 +567,7 @@ namespace HlidacStatu.Lib.ES
 
             ISearchResponse<Lib.Data.Smlouva> res =
                 _coreSearch(GetSimpleQuery(query), page, pageSize, order, anyAggregation, platnyZaznam,
-                includeNeplatne, logError);
+                includeNeplatne, logError, withHighlighting);
 
             if (res.IsValid == false && logError)
                 Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res, query);
@@ -559,10 +583,11 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        private static ISearchResponse<Lib.Data.Smlouva> _coreSearch(QueryContainer query, int page, int pageSize, 
+        private static ISearchResponse<Lib.Data.Smlouva> _coreSearch(QueryContainer query, int page, int pageSize,
             OrderResult order,
             AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-            int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true)
+            int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true,
+            bool withHighlighting = false)
         {
             page = page - 1;
             if (page < 0)
@@ -574,7 +599,7 @@ namespace HlidacStatu.Lib.ES
             }
 
             AggregationContainerDescriptor<Lib.Data.Smlouva> baseAggrDesc = null;
-            baseAggrDesc = anyAggregation == null ? 
+            baseAggrDesc = anyAggregation == null ?
                     null //new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
                     : anyAggregation;
 
@@ -592,6 +617,7 @@ namespace HlidacStatu.Lib.ES
                 {
                     indexes = ES.Manager.defaultIndexName_SAll;
                 }
+
                 res = client
                     .Search<Lib.Data.Smlouva>(s => s
                         .Index(indexes)
@@ -601,6 +627,7 @@ namespace HlidacStatu.Lib.ES
                         .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
                         .Sort(ss => GetSort(order))
                         .Aggregations(aggrFunc)
+                        .Highlight(h => GetHighlight<Data.Smlouva>(withHighlighting))
 
                 );
 
@@ -635,10 +662,11 @@ namespace HlidacStatu.Lib.ES
             return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne);
         }
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(Nest.QueryContainer query, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, int? platnyZaznam = null, bool includeNeplatne = false
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, int? platnyZaznam = null, bool includeNeplatne = false,
+            bool withHighlighting = false
             )
         {
-            var res = _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam:platnyZaznam, includeNeplatne: includeNeplatne, logError:true);
+            var res = _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam: platnyZaznam, includeNeplatne: includeNeplatne, logError: true, withHighlighting: withHighlighting);
             return res;
 
         }
@@ -894,7 +922,7 @@ namespace HlidacStatu.Lib.ES
                         }
                         if (progressOutputFunc != null)
                         {
-                            ActionProgressData apd = new ActionProgressData(total, processedCount, started,prefix);
+                            ActionProgressData apd = new ActionProgressData(total, processedCount, started, prefix);
                             progressOutputFunc(apd);
                         }
                     }
@@ -921,9 +949,9 @@ namespace HlidacStatu.Lib.ES
         }
 
         public static MemoryCacheManager<SmlouvaSearchResult, string>
-            cachedSearches = new MemoryCacheManager<SmlouvaSearchResult, string>("SMLOUVYsearch",funcSimpleSearch, TimeSpan.FromHours(24));
+            cachedSearches = new MemoryCacheManager<SmlouvaSearchResult, string>("SMLOUVYsearch", funcSimpleSearch, TimeSpan.FromHours(24));
 
-        
+
         public static SmlouvaSearchResult CachedSimpleSearch(TimeSpan expiration,
             string query, int page, int pageSize, OrderResult order,
             int? platnyZaznam = null, bool includeNeplatne = false,

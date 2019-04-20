@@ -175,11 +175,11 @@ else
                         }
                         else
                         {
-                            docs.Add(doc, HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlightingData,"dokumenty.plainText",doc.PlainText));
+                            docs.Add(doc, HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlightingData, "dokumenty.plainText", doc.PlainText));
                         }
                     }
 
-                }
+}
                 @foreach (var item in docs.OrderByDescending(o => o.Value == null ? 0 : 1).ThenByDescending(d => d.Key.DatumVlozeni).Take(10))
                 {
                 <tr>

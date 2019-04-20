@@ -217,25 +217,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             search.Q = SearchTools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
-            HighlightDescriptor<Rizeni> hh = new HighlightDescriptor<Rizeni>();
-            if (withHighlighting)
-            {
-                hh = hh
-                    .Order(HighlighterOrder.Score)
-                    .PreTags("<highl>")
-                    .PostTags("</highl>")
-                    .Fields(ff=>ff
-                                .Field("*")
-                                .RequireFieldMatch(false)
-                                .Type(HighlighterType.Unified)
-                                .FragmentSize(150)
-                                .NumberOfFragments(3)
-                                .Fragmenter(HighlighterFragmenter.Span)
-                                .BoundaryScanner(BoundaryScanner.Sentence)
-                                .BoundaryScannerLocale("cs_CZ")
-                    )                   
-                    ;
-            }
+
             ISearchResponse<Rizeni> res = null;
             try
             {
@@ -247,7 +229,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
                         .Query(q => GetSimpleQuery(search))                        
                         .Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
-                        .Highlight(h=>hh)
+                        .Highlight(h=> Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
                 );
             }
             catch (Exception e)

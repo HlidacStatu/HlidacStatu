@@ -23,6 +23,7 @@
 
     bool znepristupnena = Model.znepristupnenaSmlouva();
 
+    Nest.HighlightFieldDictionary highlightingData = this.ViewContext.ParentActionViewContext.ViewBag.Highlighting as Nest.HighlightFieldDictionary;
 
 
 }
@@ -206,6 +207,9 @@
                                                 <span>(@priloha.WordCount slov)</span>
                                             }
 
+                                            @Util.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
+                                                foundContentFormat: "<div><i class='far fa-search fa-pull-left fa-border'> Hledaný text jsme<br/>našli v tomto dokumentu</i>{0}</div>")
+                                            &nbsp;
                                         </div>
 
                                         if (priloha.HasClassification())

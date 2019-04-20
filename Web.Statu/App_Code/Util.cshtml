@@ -35,19 +35,33 @@
 
 }
 
-@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string content, string noHLContent, string highlightPartDelimiter = " ..... ")
+
+@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare, 
+        string foundContentFormat =null, string noHLContent = "", string prefix = "", string postfix = "", string highlightPartDelimiter = " ..... ")
 {
-    highlights = highlights ?? new Nest.HighlightFieldDictionary();
-    string result = HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlights, path, content, highlightPartDelimiter);
-    if (string.IsNullOrEmpty(result))
-    {
+highlights = highlights ?? new Nest.HighlightFieldDictionary();
+foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
+
+string result = HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
+if (string.IsNullOrEmpty(result))
+{
         @(noHLContent)
+}
+else
+{
+        @Html.Raw(prefix)
+<span class="highlighting">
+    @if (foundContentFormat.Contains("{0}"))
+    {
+        @Html.Raw(string.Format(foundContentFormat, result))
     }
     else
     {
-        <span class="highlighting">
-            @Html.Raw(result)
-        </span>
+        @Html.Raw(foundContentFormat)
+    }
+
+</span>
+        @Html.Raw(postfix)
     }
 }
 

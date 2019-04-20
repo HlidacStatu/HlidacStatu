@@ -99,11 +99,11 @@
         }
         @if (small == false)
         {
-            <td><a href="@Url.Action("Detail", new { id = rec.Id, Q = Model.Q })">Detail smlouvy</a></td>
+            <td><a href="@Url.Action("Detail", new { id = rec.Id, QS = Model.Q })">Detail smlouvy</a></td>
         }
         else
         {
-            <td><a href="@Url.Action("Detail", new { id = rec.Id, Q = Model.Q })">Detail</a></td>
+            <td><a href="@Url.Action("Detail", new { id = rec.Id, QS = Model.Q })">Detail</a></td>
         }
         <td>
             @if (!string.IsNullOrEmpty(rec.Platce?.ico))

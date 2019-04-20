@@ -176,7 +176,7 @@ namespace HlidacStatu.Lib.Data
             if (_result == null)
                 _result = new Smlouva[] { }; //not found anything
 
-            return _result;
+            return _result.Take(numOfResults).ToArray();
         }
 
         public enum PravniRamce

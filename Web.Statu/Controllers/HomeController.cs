@@ -1104,7 +1104,9 @@ text zpravy: {txt}";
 
         }
 
+#if (!DEBUG)
         [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;embed;nameOfView")]
+#endif
         [ChildActionOnly()]
         public ActionResult Detail_Child(string Id, Smlouva model, string nameOfView)
         {
@@ -1120,6 +1122,14 @@ text zpravy: {txt}";
             if (model == null)
             {
                 return NotFound();
+            }
+            if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
+            {
+                var findSm = Lib.ES.SearchTools.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 
+                    Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
+                if (findSm.Total > 0)
+                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlights;
+
             }
             return View(model);
         }

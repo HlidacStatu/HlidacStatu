@@ -52,9 +52,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1, true);
                 if (findRizeni.Total > 0)
-                {
                     ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlights;
-                }
             }
             ViewBag.showHighliting = showHighliting;
             return View(model);

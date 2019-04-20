@@ -218,7 +218,10 @@ MORATORIUM =
             {
 				var rizeni = includeDocumentsPlainText
 					? client.Get<Rizeni>(spisovaZnacka)
-					: client.Get<Rizeni>(spisovaZnacka, s => s.SourceExclude("dokumenty.plainText").SourceExclude(""));
+					: client.Get<Rizeni>(spisovaZnacka, s => s
+                            .SourceExclude("dokumenty.plainText")
+                            //.SourceExclude("")
+                            );
 
                 if (rizeni.Found)
                 {
