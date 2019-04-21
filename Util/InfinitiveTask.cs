@@ -82,7 +82,7 @@ namespace HlidacStatu.Util
                 if (ttag.Contains("{0}"))
                     ttag = string.Format(ttag, i);
                 Thread t = new Thread(
-                    () => Run(action, tag, period, cancelSource.Token)
+                    () => Run(action, ttag, period, cancelSource.Token)
                 );
                 t.Priority = threadPriority;
                 t.Start();
