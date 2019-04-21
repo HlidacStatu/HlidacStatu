@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.OCRService;
+using System;
 using System.Threading;
 
 namespace HlidacStatu.Util.WebShot
@@ -16,7 +17,7 @@ namespace HlidacStatu.Util.WebShot
             t = new Thread(() =>
             {
                 chrome.WarmUp();
-                InfinitiveTask.RunSync((tag) =>
+                HlidacStatu.Util.InfinitiveTask.Run((tag) =>
                 {
                     string swr = null;
                     if (Workers.UrlToProcess.TryDequeue(out swr))
@@ -35,6 +36,7 @@ namespace HlidacStatu.Util.WebShot
                         else
                             Chrome.logger.Error(workerName + ": Wrong decryption of " + swr);
                     }
+                    return InfinitiveTask.TaskNextRunStatus.Continue;
                 }, workerName, TimeSpan.FromMilliseconds(200), cancelToken); // fire every 200ms
             }
             );

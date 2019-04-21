@@ -147,7 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chrome.cs" />
-    <Compile Include="InfinitiveTask.cs" />
     <Compile Include="Url2PngMulti.cs" />
     <Compile Include="Url2PngSingle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,6 +156,16 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PrivateInternals\OCRService\OCRService.csproj">
+      <Project>{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}</Project>
+      <Name>OCRService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{1e06f060-4ba2-45b7-8340-c166c9b2b830}</Project>
+      <Name>Util</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
