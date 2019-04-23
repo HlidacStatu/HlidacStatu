@@ -68,7 +68,7 @@
       <remove statusCode="500"/>
       <error statusCode="500" path="500.html" />
       <remove statusCode="503"/>
-      <error statusCode="503" path="_app_fffline.htm" responseMode="File" />
+      <error statusCode="503" path="_app_offline.htm" responseMode="File" />
 
     </httpErrors>
   </system.webServer>
