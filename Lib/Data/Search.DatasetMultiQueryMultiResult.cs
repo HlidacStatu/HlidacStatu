@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Data
             static object objGeneralSearchLock = new object();
 
            
-            public static DatasetMultiQueryMultiResult GeneralSearch(Dictionary<External.DataSets.DataSet, string> datasetsWithQuery)
+            public static DatasetMultiQueryMultiResult GeneralSearch(Dictionary<External.DataSets.DataSet, string> datasetsWithQuery, int page, int pageSize)
             {
                 DatasetMultiQueryMultiResult res = new DatasetMultiQueryMultiResult() {
                     DataSource = "DatasetMultiQueryMultiResult.GeneralSearch"
@@ -55,7 +55,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         try
                         {
-                            External.DataSets.DataSearchResult rds = ds.Key.SearchData(ds.Value, 1, 1);
+                            External.DataSets.DataSearchResult rds = ds.Key.SearchData(ds.Value, page, pageSize);
 
                             if (rds.IsValid)
                                 res.Results.Add(rds);

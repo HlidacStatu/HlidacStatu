@@ -197,7 +197,10 @@
             int maxItems, HlidacStatu.Lib.ES.VerejnaZakazkaSearchData result, bool skipBookmark = false)
 {
     <div class="table-new searching__watcher__table">
-
+        @if (result.Total > maxItems)
+        {
+            <h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)maxItems, "první výsledek", "první {0} výsledky", "prvních {0} výsledků"))</h4>
+        }
         <table class="table table-hover">
             <thead>
                 @SearchResults.VZHeader(skipBookmark)

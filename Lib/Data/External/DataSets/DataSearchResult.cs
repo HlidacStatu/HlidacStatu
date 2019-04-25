@@ -174,6 +174,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         protected string _renderResultsInHtml(string query, Func<T,dynamic> itemToDynamicFunc, int maxToRender = int.MaxValue)
         {
+            var actualNumToRender = Math.Min(maxToRender, this.Result?.Count() ?? 0);
             var content = "";
             try
             {
@@ -198,9 +199,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                 $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy zde</a></div>";
 
                 }
-                if (this.Total > maxToRender)
+                if (this.Total > actualNumToRender)
                 {
-                    content += $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy</a></div>";
+                    content = $"<h4>Zobrazujeme {Devmasters.Core.Lang.Plural.Get(actualNumToRender, "první výsledek","první {0} výsledky","prvních {0} výsledků")}</h4>" 
+                        + content
+                        + $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy</a></div>";
                 }
                 return content;
             }
