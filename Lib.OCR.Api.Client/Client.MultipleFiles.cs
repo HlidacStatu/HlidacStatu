@@ -21,7 +21,7 @@ namespace HlidacStatu.Lib.OCR.Api
             public TimeSpan MaxWaitingTimeOfOneFile { get; set; } = TimeSpan.FromHours(1);
             public TimeSpan? RestartTaskIn { get; set; } = null;
 
-            string apikey=null;
+            string Apikey=null;
             decimal currProgress = 0;
             object objLock = new object();
 
@@ -39,7 +39,7 @@ namespace HlidacStatu.Lib.OCR.Api
                 if (string.IsNullOrEmpty( apikey ))
                     throw new ArgumentNullException("apikey");
 
-                this.apikey = apikey;
+                this.Apikey = apikey;
                 this.Client = client;
                 this.Priority = priority;
                 this.Intensity = intensity;
@@ -56,7 +56,7 @@ namespace HlidacStatu.Lib.OCR.Api
 
                 foreach (var fn in this.files)
                 {
-                    tas.Add(OneCall(apikey, fn));
+                    tas.Add(OneCall(Apikey, fn));
                 }
 
                 var res = await Task.WhenAll(tas);
