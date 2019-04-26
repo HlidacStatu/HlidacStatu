@@ -182,9 +182,9 @@ namespace HlidacStatu.Lib.Data
         public enum PravniRamce
         {
             Undefined = 0,
-            Do072017 =1,
+            Do072017 = 1,
             Od072017 = 2,
-            MimoRS =3
+            MimoRS = 3
         }
 
         static DateTime pravniRamce01072017 = new DateTime(2017, 7, 1);
@@ -357,10 +357,10 @@ namespace HlidacStatu.Lib.Data
         {
 
             if (this.Issues.Any(m => m.Importance == HlidacStatu.Lib.Issues.ImportanceLevel.Fatal))
-                    return "Smlouva je formálně platná, ale <b>obsahuje závažné nedostatky v rozporu se zákonem!</b>";
-                else
-                    return (this.znepristupnenaSmlouva() ?  "Zneplatněná smlouva." : "Platná smlouva.");
-            
+                return "Smlouva je formálně platná, ale <b>obsahuje závažné nedostatky v rozporu se zákonem!</b>";
+            else
+                return (this.znepristupnenaSmlouva() ? "Zneplatněná smlouva." : "Platná smlouva.");
+
         }
 
         public string SocialInfoBody()
@@ -402,7 +402,7 @@ namespace HlidacStatu.Lib.Data
                         ? " Hodnota smlouvy je utajena."
                         : " Hodnota smlouvy je " + HlidacStatu.Util.RenderData.ShortNicePrice(this.CalculatedPriceWithVATinCZK, html: true));
 
-                    f.Add(new InfoFact( hlavni, InfoFact.ImportanceLevel.Summary));
+                    f.Add(new InfoFact(hlavni, InfoFact.ImportanceLevel.Summary));
 
                     //sponzori
                     foreach (var subj in this.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { this.Platce }))
@@ -549,19 +549,25 @@ namespace HlidacStatu.Lib.Data
                 icos = ico_s_VazbouPolitikNedavne;
             if (aktualnost == Relation.AktualnostType.Aktualni)
                 icos = ico_s_VazbouPolitikAktualni;
-
+            Firma f = null;
             if (this.platnyZaznam)
             {
-                if (!string.IsNullOrEmpty(this.Platce.ico) && icos.Contains(this.Platce.ico))
-                    return true;
-                else
-                    foreach (var ss in this.Prijemce)
-                    {
+                f = Firmy.Get(this.Platce.ico);
+                if (f.Valid && !f.PatrimStatu())
+                {
+                    if (!string.IsNullOrEmpty(this.Platce.ico) && icos.Contains(this.Platce.ico))
+                        return true;
+                }
 
+                foreach (var ss in this.Prijemce)
+                {
+                    f = Firmy.Get(ss.ico);
+                    if (f.Valid && !f.PatrimStatu())
+                    {
                         if (!string.IsNullOrEmpty(ss.ico) && icos.Contains(ss.ico))
                             return true;
-
                     }
+                }
             }
             return false;
         }
@@ -893,6 +899,8 @@ namespace HlidacStatu.Lib.Data
                 }
             }
             s.SVazbouNaPolitiky = null;
+            s.SVazbouNaPolitikyAktualni = null;
+            s.SVazbouNaPolitikyNedavne = null;
 
             return s;
         }

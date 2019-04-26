@@ -480,6 +480,9 @@ namespace HlidacStatu.Lib.Data.VZ
             [Keyword()]
             public string StorageId { get; set; }
 
+            [Keyword()]
+            public string PlainDocumentId { get; set; }
+
             public string GetDocumentUrlToDownload()
             {
                 return $"http://bpapi.datlab.eu/document/{this.StorageId}";

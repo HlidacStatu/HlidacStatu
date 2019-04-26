@@ -258,6 +258,7 @@ namespace HlidacStatu.Lib
                                 firmy = db.FirmaEvent
                                     .AsNoTracking()
                                     .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
+                                    //.Where(m=>m.)
                                     //.Select(m=>m.ICO)
                                     .ToList();
 
