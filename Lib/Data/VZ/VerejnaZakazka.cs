@@ -959,6 +959,25 @@ namespace HlidacStatu.Lib.Data.VZ
             //2016 https://www.vestnikverejnychzakazek.cz/SearchForm/SearchContract?contractNumber=
             string outUrl = "";
             bool urlOk = false;
+
+
+            string searchUrl = null;
+            if (!string.IsNullOrEmpty(this.EvidencniCisloZakazky))
+            {
+                string profilUrl = "";
+                if (this.Dataset == HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Post2016Dataset)
+                    profilUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim();
+                else if (this.Dataset == HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Pre2016Dataset)
+                    profilUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim();
+                else if (!this.Dataset.StartsWith("DatLab-"))
+                    profilUrl = this.Dataset ?? ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim();
+                if (System.Uri.TryCreate(profilUrl, UriKind.Absolute, out var profilUri))
+                {
+                    string googlQ = this.EvidencniCisloZakazky + " site:" + profilUri.Host;
+                    searchUrl = $"https://www.google.cz/search?client=safari&rls=en&q={(System.Net.WebUtility.UrlEncode(googlQ))}&ie=UTF-8&oe=UTF-8";
+                }
+            }
+
             if (!string.IsNullOrEmpty(this.EvidencniCisloZakazky))
             {
                 if (this.Dataset == HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Post2016Dataset)
@@ -966,22 +985,19 @@ namespace HlidacStatu.Lib.Data.VZ
                         new ZakazkaSource()
                         {
                             ZakazkaURL = $"https://www.vestnikverejnychzakazek.cz/SearchForm/SearchContract?contractNumber={this.EvidencniCisloZakazky}",
-                            ProfilZadavatelUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim()
+                            ProfilZadavatelUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim(),
+                            SearchZakazkaUrl = searchUrl
+
                         };
                 else if (this.Dataset == HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Pre2016Dataset)
                     return new ZakazkaSource()
                     {
                         ZakazkaURL = $"https://old.vestnikverejnychzakazek.cz/cs/Searching/SearchContractNumber?cococode={this.EvidencniCisloZakazky}",
-                        ProfilZadavatelUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim()
+                        ProfilZadavatelUrl = ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim(),
+                        SearchZakazkaUrl = searchUrl
                     };
                 else if (!this.Dataset.StartsWith("DatLab-"))
                 {
-                    Uri profilUrl;
-                    if (System.Uri.TryCreate(this.Dataset, UriKind.Absolute, out profilUrl))
-                    {
-                        string googlQ = this.EvidencniCisloZakazky + " site:" + profilUrl.Host;
-                        string pUrl = this.Dataset;
-                        string searchUrl = $"https://www.google.cz/search?client=safari&rls=en&q={(System.Net.WebUtility.UrlEncode(googlQ))}&ie=UTF-8&oe=UTF-8";
 
                         return new ZakazkaSource()
                         {
@@ -989,18 +1005,19 @@ namespace HlidacStatu.Lib.Data.VZ
                             ProfilZadavatelUrl = this.Dataset ?? ProfilZadavatele.GetById(this.ZakazkaNaProfiluId)?.Url?.Trim()
                         };
 
-
-                    }
                 }
             }
             return null;
         }
+
+
 
         public class ZakazkaSource
         {
             public string ZakazkaURL { get; set; }
             public string ProfilZadavatelUrl { get; set; }
             public string SearchZakazkaUrl { get; set; }
+
         }
         public class ExportedVZ
         {
