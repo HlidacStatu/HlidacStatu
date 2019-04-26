@@ -328,6 +328,11 @@ namespace HlidacStatu.Lib.Data
             return JsemOVM() == false && JsemStatniFirma() == false;
         }
 
+
+        public bool PatrimStatu()
+        {
+            return JsemOVM() || JsemStatniFirma();
+        }
         public bool JsemOVM()
         {
             return StaticData.Urady_OVM.Contains(this.ICO);
@@ -777,7 +782,7 @@ namespace HlidacStatu.Lib.Data
                         }
 
                         DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
-                        if (JsemStatniFirma() == false
+                        if (PatrimStatu() == false
                             && IsSponzor()
                             && Events(m => m.Type == (int)FirmaEvent.Types.Sponzor && m.DatumOd >= datumOd).Count() > 0
                             )
@@ -798,7 +803,7 @@ namespace HlidacStatu.Lib.Data
                                 );
                         }
 
-                        if (JsemStatniFirma() == false
+                        if (PatrimStatu() == false
                             && StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(this.ICO)
                            )
                         {
@@ -841,7 +846,7 @@ namespace HlidacStatu.Lib.Data
                             }
                         }
 
-                        if (JsemStatniFirma() && stat.RatingPerYear[rok].NumSPolitiky > 0)
+                        if (PatrimStatu() && stat.RatingPerYear[rok].NumSPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
                                 Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
@@ -850,7 +855,7 @@ namespace HlidacStatu.Lib.Data
                                 ,InfoFact.ImportanceLevel.Medium)
                                 );
                         }
-                        else if (JsemStatniFirma() && stat.RatingPerYear[rok - 1].NumSPolitiky > 0)
+                        else if (PatrimStatu() && stat.RatingPerYear[rok - 1].NumSPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok - 1}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
                                 Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
@@ -870,7 +875,7 @@ namespace HlidacStatu.Lib.Data
 
                     }
 
-                    if (this.JsemStatniFirma() == false && this.IcosInHolding(Relation.AktualnostType.Aktualni).Count() > 2)
+                    if (this.PatrimStatu() == false && this.IcosInHolding(Relation.AktualnostType.Aktualni).Count() > 2)
                     {
                         var statHolding = this.StatisticForHolding(Relation.AktualnostType.Aktualni);
                         if (statHolding.Summary.Pocet > 3)

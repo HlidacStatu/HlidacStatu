@@ -179,7 +179,7 @@ namespace HlidacStatu.Web.Framework.Report
             foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Aggregations["perIco"]).Items)
             {
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get((string)val.Key);
-                if (f != null &&  (!f.JsemStatniFirma() || platce))
+                if (f != null &&  (!f.PatrimStatu() || platce))
                 {
                     rdsPerIco.AddRow(
                         new Tuple<string, string>(HlidacStatu.Lib.Data.Firmy.GetJmeno((string)val.Key), (string)val.Key),
@@ -228,7 +228,7 @@ namespace HlidacStatu.Web.Framework.Report
             foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Aggregations["perPrice"]).Items)
             {
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get((string)val.Key);
-                if (f != null && (!f.JsemStatniFirma() || platce))
+                if (f != null && (!f.PatrimStatu() || platce))
                 {
                     rdsPerPrice.AddRow(
                             new Tuple<string, string>(HlidacStatu.Lib.Data.Firmy.GetJmeno((string)val.Key), (string)val.Key),

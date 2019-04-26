@@ -125,7 +125,7 @@ namespace HlidacStatu.Lib.Data
                                 s.Prijemce.Select(m => m.ico).Where(p => !string.IsNullOrEmpty(p))
                                 );
                         allIco.Add(s.Platce.ico);
-                        var urady = allIco.Select(i => Firmy.Get(i)).Where(f => f.JsemStatniFirma());
+                        var urady = allIco.Select(i => Firmy.Get(i)).Where(f => f.PatrimStatu());
 
                         foreach (var urad in urady)
                         {
@@ -251,7 +251,7 @@ namespace HlidacStatu.Lib.Data
                           if (!string.IsNullOrEmpty(objednatelIco))
                           {
                               Firma ff = Firmy.Get(objednatelIco);
-                              if (!ff.Valid || !ff.JsemStatniFirma())
+                              if (!ff.Valid || !ff.PatrimStatu())
                                   goto end;
 
                               //vsichni prijemci smlouvy statniho subjektu
@@ -358,7 +358,7 @@ namespace HlidacStatu.Lib.Data
                             //}
                             if (!Firma.IsValid(f))
                                 continue; //unknown company, skip
-                            if (f.JsemStatniFirma())
+                            if (f.PatrimStatu())
                             {
                                 //Gov Company
                                 if (pol_SVazbami_StatniFirmy.ContainsKey(v.To.Id))
@@ -634,7 +634,7 @@ namespace HlidacStatu.Lib.Data
                 Firma ff = Firmy.Get(ico);
                 if (Firma.IsValid(ff))
                 {
-                    if (ff.JsemStatniFirma()) //statni firmy tam nechci
+                    if (ff.PatrimStatu()) //statni firmy tam nechci
                     {
                         return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                     }

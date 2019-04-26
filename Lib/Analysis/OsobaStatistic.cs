@@ -185,7 +185,7 @@ namespace HlidacStatu.Lib.Analysis
             foreach (var it in perIcoStat)
             {
                 Lib.Data.Firma f = Lib.Data.Firmy.Get(it.ico);
-                if (f.JsemStatniFirma())
+                if (f.PatrimStatu())
                     statni.Add(it.ico, it.ss);
                 else
                     soukr.Add(it.ico, it.ss);

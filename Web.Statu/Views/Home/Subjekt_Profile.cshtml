@@ -284,7 +284,7 @@ else
                             }
 
                         </div>
-                        @if (Model.JsemStatniFirma() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
+                        @if (Model.PatrimStatu() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
                         {
                             <div class="col-xs-12 col-sm-6 col-md-4">
                                 @{
@@ -324,7 +324,7 @@ else
 
                 </td>
             </tr>
-            @if (Model.JsemStatniFirma() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
+            @if (Model.PatrimStatu() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
             {
                 double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
                 numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
