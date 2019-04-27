@@ -1,0 +1,146 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.Registration
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+
+@{
+
+    ViewBag.Title = "Datový zdroj " + Model.name;
+    ViewBag.SubTitle = "Podrobné informace";
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="/scripts/highlight/styles/default.css">
+    <script src="/scripts/highlight/highlight.pack.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.highlightme pre').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        });
+
+    </script>
+    <style>
+        #data-detail-content pre {
+            white-space: pre-wrap !important;
+            font-size: 80%
+        }
+    </style>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@Model.name</li>
+        <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Editace parametrů datasetu</h2>
+
+        <form method="post" class="form-horizontal form-control-new--small">
+            @Html.HiddenFor(m=>m.datasetId)
+            <div class="form-group">
+                <label class="col-sm-2 control-label">DatasetId</label>
+                <div class="col-sm-10">@Model.datasetId</div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.name, "Veřejné jméno", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.description, "Popis", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.betaversion, "Je v betaverzi?", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.CheckBoxFor(m => m.betaversion, new { @class = "" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.allowWriteAccess, "Povolit úpravu dat komukoliv?", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.CheckBoxFor(m => m.allowWriteAccess, new { @class = "" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.origUrl, "Zdroj dat (URL)", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.origUrl, new { @type = "url", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.sourcecodeUrl, "Zdrojový kód parseru dat (URL)", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.sourcecodeUrl, new { @type = "url", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows="30", @class = "form-control code"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("sorderList", "Atributy, podle kterých je možné data třídit", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <div class="small-darkgray-text">
+                        Text.popis | jméno atributu
+
+                    </div>
+                    @{
+                        string sorder = "";
+                        for (int i = 0; i < Model.orderList.GetLength(0); i++)
+                        {
+                            sorder = sorder + Model.orderList[i, 0] + "|" + Model.orderList[i, 1] + "\n";
+                        }
+                    }
+                    @Html.TextArea("sorderList", sorder, 5, 80, new { @class = "form-control  code" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("searchResultTemplate_body", "Template pro zobrazování vyhledaných výsledků", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextArea("searchResultTemplate_body", Model.searchResultTemplate?.body ?? "", 30, 80, new { @class = "form-control code" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("detailTemplate_body", "Template pro zobrazování jednoho záznamu", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextArea("detailTemplate_body", Model.detailTemplate?.body ?? "", 30, 80, new { @class = "form-control code" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-10" style="border-bottom: 1px solid gray;">
+                    <button type="submit" class="btn btn-default btn">Uložit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

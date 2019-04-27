@@ -1282,6 +1282,7 @@
     <Content Include="Views\Data\DetailText.cshtml" />
     <Content Include="Views\Home\OsobaProfil.cshtml" />
     <Content Include="Views\ApiV1\UX.cshtml" />
+    <Content Include="Views\Data\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

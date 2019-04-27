@@ -60,7 +60,20 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     if (!string.IsNullOrEmpty(rokNarozeni))
                         narozeni = $"(* {rokNarozeni})";
                     return $"<span>{jmeno} {prijmeni} {narozeni}</span>";
+                }
 
+                public static string fn_RenderPersonWithLinkAndStat(string osobaId, bool twoLines = false)
+                {
+                    if (!string.IsNullOrEmpty(osobaId))
+                    {
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(osobaId);
+                        if (o != null)
+                        {
+                            var stat = o.Statistic(Relation.AktualnostType.Nedavny);
+                            return $"<span>{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, twoLines: twoLines)}</span>";
+                        }
+                    }
+                    return string.Empty;
                 }
 
                 public static string fn_RenderPersonWithLink2(string osobaId)
@@ -81,6 +94,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
                         if (o.Valid)
                             return $"<span><a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
+                        else
+                            return $"<span>{ico}</span>";
+                    }
+                    return string.Empty;
+                }
+
+                public static string fn_RenderCompanyWithLinkAndStat(string ico, bool twoLines = false)
+                {
+                    if (!string.IsNullOrEmpty(ico))
+                    {
+                        HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
+                        if (o.Valid)
+                        {
+                            var stat = o.Statistic();
+                            return $"<span>{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o,true,twoLines: twoLines)}</span>";
+                        }
                         else
                             return $"<span>{ico}</span>";
                     }
@@ -148,12 +177,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         return value.ToString();
                 }
 
-                public static string fn_FormatPrice(dynamic value)
+                public static string fn_FormatPrice(dynamic value, string mena = null)
                 {
+                    mena = mena ?? "Kč";
                     decimal? val = HlidacStatu.Util.ParseTools.ToDecimal(value.ToString());
                     if (val.HasValue)
                     {
-                        return HlidacStatu.Util.RenderData.NicePrice(val.Value);
+                        return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena);
                     }
                     return "";
                 }

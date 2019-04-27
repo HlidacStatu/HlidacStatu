@@ -349,6 +349,13 @@ h1 {
     background: #e9eef3;
 }
 
+textarea.code {
+    font-weight: normal;
+    font-size: 0.9em;
+    line-height: 1em;
+    font-family: monospace
+}
+
 .form-control-new, .header__content .header__search__input, .form-control-new, .header__content .header__search__input, .form-control {
     color: #28313B;
     font-size: 18px;

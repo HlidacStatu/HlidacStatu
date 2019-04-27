@@ -25,7 +25,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public Template searchResultTemplate { get; set; }
         public Template detailTemplate { get; set; }
 
-        public string[,] orderList { get; set; } = new string[,] { { "Data importu do db", "DbCreated" } };
+        public const string DbCreatedLabel = "Datumu importu do db";
+        public string[,] orderList { get; set; } = new string[,] { { DbCreatedLabel , "DbCreated" } };
 
         public void NormalizeShortName()
         {
