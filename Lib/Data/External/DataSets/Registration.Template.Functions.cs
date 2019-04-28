@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return $"<span>{jmeno} {prijmeni} {narozeni}</span>";
                 }
 
-                public static string fn_RenderPersonStatistic(string osobaId, bool twoLines = false)
+                public static string fn_RenderPersonStatistic(string osobaId, bool twoLines = false, string prefix = "", string postfix = "")
                 {
                     if (!string.IsNullOrEmpty(osobaId))
                     {
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         if (o != null)
                         {
                             var stat = o.Statistic(Relation.AktualnostType.Nedavny);
-                            return $"<span>{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, twoLines: twoLines)}</span>";
+                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:"+o.NameId, twoLines: twoLines)}{postfix}</span>";
                         }
                     }
                     return string.Empty;
@@ -100,7 +100,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return string.Empty;
                 }
 
-                public static string fn_RenderCompanyStatistic(string ico, bool twoLines = false)
+                public static string fn_RenderCompanyStatistic(string ico, bool twoLines = false, string prefix = "", string postfix = "")
                 {
                     if (!string.IsNullOrEmpty(ico))
                     {
@@ -108,10 +108,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         if (o.Valid)
                         {
                             var stat = o.Statistic();
-                            return $"<span>{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o,true,twoLines: twoLines)}</span>";
+                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o,true, customUrl: "/hledatSmlouvy?q=ico:" + o.ICO, twoLines: twoLines)}{postfix}</span>";
                         }
                         else
-                            return $"<span>{ico}</span>";
+                            return $"";
                     }
                     return string.Empty;
                 }
