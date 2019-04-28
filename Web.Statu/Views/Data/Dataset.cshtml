@@ -11,6 +11,12 @@
     ViewBag.Title = "Datový zdroj " + Model.Registration().name;
     ViewBag.SubTitle = "Podrobné informace";
 
+    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+    bool showEditBtn = (email == "michal@michalblaha.cz"
+            || email == Model.Registration().createdBy
+            );
+
+
 }
 @section scripts
 {
@@ -108,6 +114,10 @@
  <tr>
      <td colspan="2">
          <a href="/data/TechnickeInfo/@Model.DatasetId" class="btn btn-default">Technické detaily</a>
+         @if (showEditBtn)
+         {
+             <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning" style="margin-left:10px">Upravit technické parametry</a>
+         }
      </td>
  </tr>
             </tbody>

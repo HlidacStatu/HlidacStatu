@@ -11,6 +11,11 @@
     ViewBag.Title = "Datový zdroj " + Model.Registration().name;
     ViewBag.SubTitle = "Podrobné informace";
 
+    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+    bool showEditBtn = (email == "michal@michalblaha.cz"
+            || email == Model.Registration().createdBy
+            );
+
 }
 @section scripts
 {
@@ -38,7 +43,8 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
-        <li class="active">@reg.name</li>
+        <li><a href="@Model.DatasetUrl()">@reg.name</a></li>
+        <li class="active">Technické informace</li>
         <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
     }
@@ -103,7 +109,26 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><b>Technické podrobnosti</b></td>
+                    <td>Hledání v datovém zdroji</td>
+                    <td>
+                        <form method="get" action="/data/Hledat/@Model.DatasetId" class="form-inline ">
+                            <div class="form-group form-group">
+                                <input type="text" class="form-control form-control--small" id="q" name="q" placeholder="hledaný text">
+                            </div>
+                            <button type="submit" class="btn btn-default btn-sm">Prohledat</button>
+                            <a href="/data/Hledat/@Model.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default btn-sm" style="margin-left:10px">Vypsat poslední záznamy</a>
+                        </form>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><h3>Technické podrobnosti</h3></td>
+                    <td style="vertical-align:bottom;">
+                        @if (showEditBtn)
+                        {
+                            <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning btn-sm">Upravit technické parametry</a>
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <td>Zdroj dat</td>
@@ -166,9 +191,18 @@
                         </td>
                     </tr>
                 }
+                <tr>
+                    <td><b>Technické podrobnosti</b></td>
+                    <td>
+                        @if (showEditBtn)
+                        {
+                            <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning btn-sm">Upravit technické parametry</a>
+                        }
+                    </td>
+                </tr>
+
             </tbody>
         </table>
 
     </div>
 
-    @Html.Partial("_beta")

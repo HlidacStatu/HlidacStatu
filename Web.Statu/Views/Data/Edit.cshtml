@@ -5,11 +5,13 @@
 @using System.Linq;
 @using Devmasters.Core;
 @using HlidacStatu.Lib.Data.External.DataSets;
-
+@using System.Text.RegularExpressions;
 @{
 
     ViewBag.Title = "Datový zdroj " + Model.name;
     ViewBag.SubTitle = "Podrobné informace";
+
+    DataSet dataset = DataSet.CachedDatasets.Get(Model.datasetId);
 
 }
 @section scripts
@@ -38,7 +40,8 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
-        <li class="active">@Model.name</li>
+        <li><a href="@dataset.DatasetUrl()">@Model.name</a></li>
+        <li class="active">Editace parametrů</li>
         <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
 }
@@ -47,7 +50,7 @@
         <h2>Editace parametrů datasetu</h2>
 
         <form method="post" class="form-horizontal form-control-new--small">
-            @Html.HiddenFor(m=>m.datasetId)
+            @Html.HiddenFor(m => m.datasetId)
             <div class="form-group">
                 <label class="col-sm-2 control-label">DatasetId</label>
                 <div class="col-sm-10">@Model.datasetId</div>
@@ -98,7 +101,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows="30", @class = "form-control code"})
+                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code" })
                 </div>
             </div>
 
@@ -123,24 +126,104 @@
             <div class="form-group">
                 @Html.Label("searchResultTemplate_body", "Template pro zobrazování vyhledaných výsledků", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextArea("searchResultTemplate_body", Model.searchResultTemplate?.body ?? "", 30, 80, new { @class = "form-control code" })
+                    @Html.TextArea("searchResultTemplate_body", FormatHtml(Model.searchResultTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.Label("detailTemplate_body", "Template pro zobrazování jednoho záznamu", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextArea("detailTemplate_body", Model.detailTemplate?.body ?? "", 30, 80, new { @class = "form-control code" })
+                    @Html.TextArea("detailTemplate_body", FormatHtml(Model.detailTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
                 </div>
             </div>
 
 
             <div class="form-group">
-                <div class="col-sm-10" style="border-bottom: 1px solid gray;">
-                    <button type="submit" class="btn btn-default btn">Uložit</button>
+                <div class="col-sm-offset-2 col-sm-10" >
+                    <button type="submit" class="btn btn-warning btn">Uložit změny</button>
+
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">Otestování výsledků</label>
+                <div class="col-sm-10">
+                        <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
+@functions
+{
+    static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
+    static string regexval = "(<[^>]*>)|(\\s{1,}{{[^}]*}})";
+    public string FormatHtml(string html)
+    {
+        //stupid Html Formatter
+        //return html;
+
+        int indentLev = 0;
+
+        MatchEvaluator evalMatch = (m) =>
+        {
+            string pre = "";
+            string post = "";
+            var s = m.Value;
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            if (s.StartsWith("<span") || s.StartsWith("</span"))
+            {
+                return s;
+            }
+            if (
+                (s.StartsWith("<") && !s.StartsWith("</"))
+            )
+            {
+                indentLev++;
+                pre = "\n" + new string(' ', (indentLev - 1) * 2);
+            }
+            else if (
+                (s.StartsWith("<") && s.EndsWith("/>"))
+            )
+            {
+                pre = "\n" + new string(' ', (indentLev) * 2);
+            }
+            else if (s.StartsWith("</"))
+            {
+                if (indentLev > 1)
+                    pre = "\n" + new string(' ', (indentLev - 1) * 2);
+                post = "\n";
+                indentLev--;
+                if (indentLev < 0)
+                {
+                    indentLev = 0;
+                }
+            } else if (Regex.IsMatch(s, "\\s{1,}{{"))
+            {
+                s = Regex.Replace(s, "^\\s*", "");
+                if (indentLev > 0)
+                    pre = "\n" + new string(' ', (indentLev) * 2);
+                else
+                    pre = "\n";
+            }
+
+            return pre + s + post;
+        };
+
+        var ret = html.Replace("\t", " ");
+        ret = ret.Replace("\r", "\n");
+        ret = Devmasters.Core.TextUtil.ReplaceDuplicates(ret, "\n");
+        ret = Regex.Replace(ret, @"\n\s*(?<t>.*)\n", "\n" + @"${t}");
+
+        ret = Regex.Replace(ret, regexval, evalMatch, regexQueryOption);
+
+        //remove empty lines
+        ret = Regex.Replace(ret, @"^(?:[\t ]*(?:\r?\n|\r))+", "", regexQueryOption);
+
+        return ret;
+    }
+}

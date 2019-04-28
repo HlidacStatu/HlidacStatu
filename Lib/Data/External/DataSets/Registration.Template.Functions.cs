@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return $"<span>{jmeno} {prijmeni} {narozeni}</span>";
                 }
 
-                public static string fn_RenderPersonWithLinkAndStat(string osobaId, bool twoLines = false)
+                public static string fn_RenderPersonStatistic(string osobaId, bool twoLines = false)
                 {
                     if (!string.IsNullOrEmpty(osobaId))
                     {
@@ -100,7 +100,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return string.Empty;
                 }
 
-                public static string fn_RenderCompanyWithLinkAndStat(string ico, bool twoLines = false)
+                public static string fn_RenderCompanyStatistic(string ico, bool twoLines = false)
                 {
                     if (!string.IsNullOrEmpty(ico))
                     {

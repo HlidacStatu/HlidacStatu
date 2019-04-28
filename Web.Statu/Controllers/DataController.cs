@@ -122,7 +122,7 @@ namespace HlidacStatu.Web.Controllers
             DataSetDB.Instance.AddData(newReg);
 
 
-            return RedirectToAction("TechnickeInfo", "Data", new { id = ds.DatasetId });
+            return RedirectToAction("Edit", "Data", new { id = ds.DatasetId });
         }
 
         [HttpPost]
