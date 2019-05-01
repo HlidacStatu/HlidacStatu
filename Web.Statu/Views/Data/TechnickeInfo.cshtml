@@ -6,13 +6,13 @@
 @using Devmasters.Core;
 
 @{
-    var reg = Model.Registration();
+        var reg = Model.Registration();
 
-    ViewBag.Title = "Datový zdroj " + Model.Registration().name;
-    ViewBag.SubTitle = "Podrobné informace";
+        ViewBag.Title = "Datový zdroj " + Model.Registration().name;
+        ViewBag.SubTitle = "Podrobné informace";
 
-    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-    bool showEditBtn = (email == "michal@michalblaha.cz"
+        var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains( email)
             || email == Model.Registration().createdBy
             );
 
@@ -126,7 +126,7 @@
                     <td style="vertical-align:bottom;">
                         @if (showEditBtn)
                         {
-                            <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning btn-sm">Upravit technické parametry</a>
+                        <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
                         }
                     </td>
                 </tr>
@@ -196,7 +196,7 @@
                     <td>
                         @if (showEditBtn)
                         {
-                            <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning btn-sm">Upravit technické parametry</a>
+                            <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
                         }
                     </td>
                 </tr>

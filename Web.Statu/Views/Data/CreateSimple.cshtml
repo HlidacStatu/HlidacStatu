@@ -11,8 +11,6 @@
     ViewBag.Title = "Datový zdroj " + Model.name;
     ViewBag.SubTitle = "Podrobné informace";
 
-    ApiResponseStatus err = ViewBag.ApiResponseError;
-
     DataSet dataset = DataSet.CachedDatasets.Get(Model.datasetId);
 
 }
@@ -50,17 +48,7 @@
 <div class="row">
     <div class="col-xs-12">
         <h2>Editace parametrů datasetu</h2>
-        @if (err != null)
-        {
-            <h3 class="text-danger">Chyba při ukládání datasetu</h3>
-            <p class="bg-danger">
-                <b>Chyba</b>: @(err.error?.description)<br />
-                Hodnota: @(err.value?.ToString())<br />
-                ErrorNumber: @(err.error?.number)<br />
-                ErrorDetail: @(err.error?.errorDetail)<br />
-            </p>
 
-        }
         <form method="post" class="form-horizontal form-control-new--small">
             @Html.HiddenFor(m => m.datasetId)
             <div class="form-group">
@@ -78,7 +66,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.description, "Popis", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.description, new { @rows = "6", @class = "form-control" })
+                    @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
                 </div>
             </div>
 
@@ -113,7 +101,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code", disabled = "disabled" })
+                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code" })
                 </div>
             </div>
 
@@ -151,7 +139,7 @@
 
 
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-2 col-sm-10" >
                     <button type="submit" class="btn btn-warning btn">Uložit změny</button>
 
                 </div>
@@ -160,7 +148,7 @@
 
                 <label class="col-sm-2 control-label">Otestování výsledků</label>
                 <div class="col-sm-10">
-                    <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
+                        <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
                 </div>
             </div>
         </form>
@@ -214,8 +202,7 @@
                 {
                     indentLev = 0;
                 }
-            }
-            else if (Regex.IsMatch(s, "\\s{1,}{{"))
+            } else if (Regex.IsMatch(s, "\\s{1,}{{"))
             {
                 s = Regex.Replace(s, "^\\s*", "");
                 if (indentLev > 0)

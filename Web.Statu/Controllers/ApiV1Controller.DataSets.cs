@@ -134,7 +134,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -158,39 +158,13 @@ namespace HlidacStatu.Web.Controllers
             {
                 try
                 {
-
-                    using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
-                    {
-                        var m = new System.Net.Mail.MailMessage()
-                        {
-                            From = new System.Net.Mail.MailAddress("info@hlidacstatu.cz"),
-                            Subject = "Nova DATASET registrace od " + apiAuth.ApiCall.User,
-                            IsBodyHtml = false,
-                            Body = data
-                        };
-                        m.BodyEncoding = System.Text.Encoding.UTF8;
-                        m.SubjectEncoding = System.Text.Encoding.UTF8;
-
-                        m.To.Add("michal@michalblaha.cz");
-                        try
-                        {
-                            smtp.Send(m);
-                        }
-                        catch (Exception)
-                        { }
-                    }
-
                     var reg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
-                    reg.created = DateTime.Now;
-                    reg.createdBy = apiAuth.ApiCall.User;
-                    reg.NormalizeShortName();
+                    var res = DataSet.Api.Create(reg, apiAuth.ApiCall.User);
 
-                    HlidacStatu.Lib.Data.External.DataSets.DataSet.RegisterNew(reg);
-
-                    //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(reg.datasetId);
-
-                    return Json(new { datasetId = reg.datasetId });
-
+                    if (res.valid)
+                        return Json(new { datasetId = res.value });
+                    else
+                        return Json(res);
                 }
                 catch (Newtonsoft.Json.JsonSerializationException jex)
                 {
@@ -205,7 +179,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -230,94 +204,18 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
+
                 try
                 {
-                    if (string.IsNullOrEmpty(id))
-                        return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
-
-                    var oldReg = DataSetDB.Instance.GetRegistration(id);
-                    if (oldReg == null)
-                        return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
-
-                    if (string.IsNullOrEmpty(oldReg.createdBy))
-                        oldReg.createdBy = apiAuth.ApiCall?.User?.ToLower();
-
-                    if (apiAuth.ApiCall?.User?.ToLower() != oldReg?.createdBy?.ToLower() && apiAuth.ApiCall.User.ToLower() != "michal@michalblaha.cz")
-                    {
-                        return Json(ApiResponseStatus.DatasetNoPermision, JsonRequestBehavior.AllowGet);
-                    }
-
-                    using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
-                    {
-                        var m = new System.Net.Mail.MailMessage()
-                        {
-                            From = new System.Net.Mail.MailAddress("info@hlidacstatu.cz"),
-                            Subject = "update DATASET registrace od " + apiAuth.ApiCall?.User?.ToLower(),
-                            IsBodyHtml = false,
-                            Body = data
-                        };
-                        m.BodyEncoding = System.Text.Encoding.UTF8;
-                        m.SubjectEncoding = System.Text.Encoding.UTF8;
-                        m.To.Add("michal@michalblaha.cz");
-                        try
-                        {
-                            smtp.Send(m);
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-
-
                     var newReg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
-                    //use everything from newReg, instead of jsonSchema, datasetId
-                    //update object
-                    newReg.jsonSchema = oldReg.jsonSchema;
-                    newReg.datasetId = oldReg.datasetId;
-                    newReg.created = DateTime.Now;
+                    return Json(DataSet.Api.Update(newReg, apiAuth.ApiCall?.User), JsonRequestBehavior.AllowGet);
 
-                    if (apiAuth.ApiCall.User.ToLower() != oldReg?.createdBy?.ToLower()
-                        && apiAuth.ApiCall.User.ToLower() != "michal@michalblaha.cz")
-                        newReg.createdBy = apiAuth.ApiCall.User;
-                    if (newReg.searchResultTemplate != null && !string.IsNullOrEmpty(newReg.searchResultTemplate?.body))
-                    {
-                        var errors = newReg.searchResultTemplate.GetTemplateErrors();
-                        if (errors.Count > 0)
-                        {
-                            var err = ApiResponseStatus.DatasetJsonSchemaSearchTemplateError;
-                            err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
-                            throw new DataSetException(newReg.datasetId, err);
-                        }
-                    }
-
-                    if (newReg.detailTemplate != null && !string.IsNullOrEmpty(newReg.detailTemplate?.body))
-                    {
-                        var errors = newReg.detailTemplate.GetTemplateErrors();
-                        if (errors.Count > 0)
-                        {
-                            var err = ApiResponseStatus.DatasetJsonSchemaDetailTemplateError;
-                            err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
-                            throw new DataSetException(newReg.datasetId, err);
-                        }
-                    }
-
-                    DataSetDB.Instance.AddData(newReg);
-
-                    //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(oldReg.datasetId);
-
-                    return Json(ApiResponseStatus.Valid(), JsonRequestBehavior.AllowGet);
-
-                }
-                catch (DataSetException dse)
-                {
-                    return Json(dse.APIResponse, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
-
 
             }
         }
@@ -344,78 +242,9 @@ namespace HlidacStatu.Web.Controllers
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(id))
-                        return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
+                    var newReg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
 
-                    var oldReg = DataSetDB.Instance.GetRegistration(id);
-                    if (oldReg == null)
-                        return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
-
-                    if (string.IsNullOrEmpty(oldReg.createdBy))
-                        oldReg.createdBy = apiAuth.ApiCall?.User?.ToLower();
-
-                    if (apiAuth.ApiCall?.User?.ToLower() != oldReg?.createdBy?.ToLower() && apiAuth.ApiCall.User.ToLower() != "michal@michalblaha.cz")
-                    {
-                        return Json(ApiResponseStatus.DatasetNoPermision, JsonRequestBehavior.AllowGet);
-                    }
-
-                    using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
-                    {
-                        var m = new System.Net.Mail.MailMessage()
-                        {
-                            From = new System.Net.Mail.MailAddress("info@hlidacstatu.cz"),
-                            Subject = "update DATASET registrace od " + apiAuth.ApiCall?.User?.ToLower(),
-                            IsBodyHtml = false,
-                            Body = data
-                        };
-                        m.BodyEncoding = System.Text.Encoding.UTF8;
-                        m.SubjectEncoding = System.Text.Encoding.UTF8;
-                        m.To.Add("michal@michalblaha.cz");
-                        try
-                        {
-                            smtp.Send(m);
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-
-                    switch (atribut.ToLower())
-                    {
-                        case "name":
-                            oldReg.name = data;
-                            break;
-                        case "origurl":
-                            oldReg.origUrl = data;
-                            break;
-                        case "sourcecodeurl":
-                            oldReg.sourcecodeUrl = data;
-                            break;
-                        case "description":
-                            oldReg.description = data;
-                            break;
-                        case "betaversion":
-                            oldReg.betaversion = data == "true";
-                            break;
-                        case "allowwriteaccess":
-                            oldReg.allowWriteAccess = data == "true";
-                            break;
-                        case "searchresulttemplate":
-                            oldReg.searchResultTemplate = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration.Template>(data);
-                            break;
-                        case "detailtemplate":
-                            oldReg.detailTemplate = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration.Template>(data);
-                            break;
-                        default:
-                            return Json(ApiResponseStatus.InvalidFormat, JsonRequestBehavior.AllowGet);
-                    }
-
-
-                    DataSetDB.Instance.AddData(oldReg);
-
-
-                    return Json(ApiResponseStatus.Valid(), JsonRequestBehavior.AllowGet);
-
+                    return Json(DataSet.Api.Update(newReg, apiAuth.ApiCall?.User?.ToLower()), JsonRequestBehavior.AllowGet);
                 }
                 catch (DataSetException dse)
                 {
@@ -424,7 +253,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
 
 
@@ -474,7 +303,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -521,7 +350,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -591,9 +420,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -633,9 +462,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -672,9 +501,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -761,7 +590,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -797,7 +626,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception ex)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
 
                 }
 

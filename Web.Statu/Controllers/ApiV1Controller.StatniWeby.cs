@@ -87,7 +87,7 @@ namespace HlidacStatu.Web.Controllers
                 catch (Exception e)
                 {
                     HlidacStatu.Util.Consts.Logger.Error($"_DataHost id ${id}", e);
-                    return Json(ApiResponseStatus.GeneralExceptionError, JsonRequestBehavior.AllowGet);
+                    return Json(ApiResponseStatus.GeneralExceptionError(e), JsonRequestBehavior.AllowGet);
                 }
 
             }

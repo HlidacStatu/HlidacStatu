@@ -1,0 +1,34 @@
+﻿@model HlidacStatu.Lib.Data.Externa.DataSets.Registration
+
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Přístup zamítnut";
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@ViewBag.Title</li>
+        <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+}
+
+<div class="row">
+
+    <div class="col-xs-12">
+        <h3>Problém</h3>
+        <p>
+            K tomuto datasetu nemáte přístup. <a href="/data/Index/@ViewBag.DatasetId">Kontaktujte autora</a> a požádejte ho o spolupráci. V případě jeho nedostupnosti <a href="/texty/kontakt"></a>napište nám</a>.
+        </p>
+        <a href="/data" class="btn btn-primary">Vytvořit s JSON Schema</a>
+    </div>
+
+</div>

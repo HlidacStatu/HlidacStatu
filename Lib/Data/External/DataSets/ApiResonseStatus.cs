@@ -10,8 +10,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static ApiResponseStatus DatasetNotFound = Error(-2, "dataset not found.");
         public static ApiResponseStatus DatasetNoPermision = Error(-3, "You don't have permissions for this operation.");
         public static ApiResponseStatus DatasetJsonSchemaMissing = Error(-4, "JSON Schema missing.");
-        public static ApiResponseStatus DatasetJsonSchemaSearchTemplateError = Error(-5, "Invalid search template. Errors: ");
-        public static ApiResponseStatus DatasetJsonSchemaDetailTemplateError = Error(-6, "Invalid detail template. Errors: ");
+        public static ApiResponseStatus DatasetJsonSchemaError = Error(-7, "Invalid JSON Schema.");
+        public static ApiResponseStatus DatasetSearchTemplateError = Error(-5, "Invalid search template. Errors: ");
+        public static ApiResponseStatus DatasetDetailTemplateError = Error(-6, "Invalid detail template. Errors: ");
 
         public static ApiResponseStatus InvalidSearchQuery = Error(-10, "Invalid search query .");
         public static ApiResponseStatus DatasetItemInvalidFormat = Error(-11, "Json schema validation failed.");
@@ -21,7 +22,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public static ApiResponseStatus InvalidFormat = Error(-97, "Invalid format .");
         public static ApiResponseStatus ApiUnauthorizedAccess = Error(-98, "Unauthorized access.");
-        public static ApiResponseStatus GeneralExceptionError = Error(-99, "General exception. Something wrong deep inside.");
+        public static ApiResponseStatus GeneralExceptionError(Exception ex)
+        {
+            return Error(-99, "General exception. Something wrong deep inside.", ex?.ToString());
+        }
 
         public static ApiResponseStatus StatniWebNotFound = Error(-91, "Web not found.");
 
@@ -47,7 +51,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public bool valid { get; set; }
         public object value { get; set; }
-        public ErrorInfo error { get; set; } 
+        public ErrorInfo error { get; set; }
         public class ErrorInfo
         {
             public int number { get; set; }

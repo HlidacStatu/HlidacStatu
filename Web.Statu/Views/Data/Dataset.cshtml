@@ -12,9 +12,10 @@
     ViewBag.SubTitle = "Podrobné informace";
 
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-    bool showEditBtn = (email == "michal@michalblaha.cz"
-            || email == Model.Registration().createdBy
-            );
+
+    bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+        || email == Model.Registration().createdBy
+        );
 
 
 }
@@ -116,7 +117,7 @@
          <a href="/data/TechnickeInfo/@Model.DatasetId" class="btn btn-default">Technické detaily</a>
          @if (showEditBtn)
          {
-             <a href="/data/Edit/@Model.DatasetId" class="btn btn-warning" style="margin-left:10px">Upravit technické parametry</a>
+         <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning" style="margin-left:10px"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
          }
      </td>
  </tr>

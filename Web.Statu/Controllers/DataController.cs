@@ -1,7 +1,7 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
 using System;
-using System.Web.Mvc;
 using System.Linq;
+using System.Web.Mvc;
 
 
 namespace HlidacStatu.Web.Controllers
@@ -31,7 +31,69 @@ namespace HlidacStatu.Web.Controllers
             return View(ds);
         }
 
+        public ActionResult Manage(string id)
+        {
+            var ds = DataSet.CachedDatasets.Get(id);
+            return View(ds?.Registration());
+        }
+        public ActionResult CreateAdv()
+        {
+            return View(new Registration());
+        }
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult CreateAdv(Registration data, FormCollection form)
+        {
+
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
+            var newReg = WebFormToRegistration(data, form);
+            newReg.datasetId = form["datasetId"];
+            newReg.created = DateTime.Now;
+
+            var res = DataSet.Api.Create(newReg, email, form["jsonSchema"]);
+            if (res.valid)
+                return RedirectToAction("Manage", "Data", new { id = res.value });
+            else
+            {
+                ViewBag.ApiResponseError = res;
+                return View(newReg);
+            }
+        }
+
+        public ActionResult CreateSimple()
+        {
+            return View();
+        }
+
+        public ActionResult Backup(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction("Index");
+
+            var ds = DataSet.CachedDatasets.Get(id);
+            if (ds == null)
+                return RedirectToAction("index");
+
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
+            if (!
+                    (email == "michal@michalblaha.cz"
+                    || email == ds.Registration().createdBy
+                    )
+                )
+            {
+                ViewBag.DatasetId = id;
+                return View("NoAccess");
+            }
+            return File(
+                System.Text.UTF8Encoding.UTF8.GetBytes(
+                    Newtonsoft.Json.JsonConvert.SerializeObject(ds.Registration(), Newtonsoft.Json.Formatting.Indented, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = Serialization.PublicDatasetContractResolver.Instance })
+                    ),
+                "application/octet-streamSection", id + ".json");
+
+        }
 
         public ActionResult Edit(string id)
         {
@@ -49,10 +111,14 @@ namespace HlidacStatu.Web.Controllers
                     || email == ds.Registration().createdBy
                     )
                 )
-                return View("EditNoAccess");
+            {
+                ViewBag.DatasetId = id;
+                return View("NoAccess");
+            }
 
             return View(ds.Registration());
         }
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(string id, Registration update, FormCollection form)
@@ -71,30 +137,47 @@ namespace HlidacStatu.Web.Controllers
                     || email == ds.Registration().createdBy
                     )
                 )
-                return View("EditNoAccess");
+            {
+                ViewBag.DatasetId = id;
+                return View("NoAccess");
+            }
 
-            var newReg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(Newtonsoft.Json.JsonConvert.SerializeObject(update, DataSet.DefaultDeserializationSettings), DataSet.DefaultDeserializationSettings);
-            //use everything from newReg, instead of jsonSchema, datasetId
-            //update object
-            newReg.jsonSchema = ds.Registration().jsonSchema;
-            newReg.datasetId = ds.Registration().datasetId;
-            newReg.created = DateTime.Now;
-            newReg.createdBy = ds.Registration().createdBy;
+            //
+            var newReg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(
+                Newtonsoft.Json.JsonConvert.SerializeObject(update, DataSet.DefaultDeserializationSettings)
+                , DataSet.DefaultDeserializationSettings);
+            if (newReg.datasetId != id)
+            {
+                ViewBag.DatasetId = id;
+                return View("NoAccess");
+            }
 
-            newReg.searchResultTemplate = ds.Registration().searchResultTemplate;
-            newReg.detailTemplate = ds.Registration().detailTemplate;
+            newReg = WebFormToRegistration(newReg, form);
+
+            var res = DataSet.Api.Update(newReg, email);
+            if (res.valid)
+                return RedirectToAction("Manage", "Data", new { id = ds.DatasetId });
+            else
+            {
+                ViewBag.ApiResponseError = res;
+                return View(newReg);
+            }
+        }
+
+        private Registration WebFormToRegistration(Registration newReg, FormCollection form)
+        {
 
             if (!string.IsNullOrEmpty(form["searchResultTemplate_body"]?.Trim()))
             {
                 if (newReg.searchResultTemplate == null)
                     newReg.searchResultTemplate = new Registration.Template();
-                newReg.searchResultTemplate.body = form["searchResultTemplate_body"] ;
+                newReg.searchResultTemplate.body = form["searchResultTemplate_body"];
             }
             if (!string.IsNullOrEmpty(form["detailTemplate_body"]?.Trim()))
             {
                 if (newReg.detailTemplate == null)
                     newReg.detailTemplate = new Registration.Template();
-                newReg.detailTemplate.body = form["detailTemplate_body"] ;
+                newReg.detailTemplate.body = form["detailTemplate_body"];
             }
             string[] orderlines = form["sorderList"]
                 ?.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
@@ -119,10 +202,8 @@ namespace HlidacStatu.Web.Controllers
                 orderList = new string[,] { { Registration.DbCreatedLabel, "DbCreated" } };
 
             newReg.orderList = orderList;
-            DataSetDB.Instance.AddData(newReg);
 
-
-            return RedirectToAction("Edit", "Data", new { id = ds.DatasetId });
+            return newReg;
         }
 
         [HttpPost]

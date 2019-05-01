@@ -1289,6 +1289,10 @@
     <Content Include="Views\Home\OsobaProfil.cshtml" />
     <Content Include="Views\ApiV1\UX.cshtml" />
     <Content Include="Views\Data\Edit.cshtml" />
+    <Content Include="Views\Data\CreateAdv.cshtml" />
+    <Content Include="Views\Data\CreateSimple.cshtml" />
+    <Content Include="Views\Data\Manage.cshtml" />
+    <Content Include="Views\Data\NoAccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

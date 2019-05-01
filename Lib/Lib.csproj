@@ -440,6 +440,7 @@
     <Compile Include="Data\Bookmark.Partial.cs" />
     <Compile Include="Data\External\DataSets\ApiResonseStatus.cs" />
     <Compile Include="Data\External\DataSets\DataSearchResult.cs" />
+    <Compile Include="Data\External\DataSets\DataSet.Api.cs" />
     <Compile Include="Data\External\DataSets\DataSet.cs" />
     <Compile Include="Data\External\DataSets\DataSetDb.cs" />
     <Compile Include="Data\External\DataSets\DataSetException.cs" />

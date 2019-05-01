@@ -1,0 +1,82 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.Registration
+
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    ViewBag.Title = "Správa datových sad";
+    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@ViewBag.Title</li>
+        <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+    </ol>
+}
+
+
+
+@if (Model != null 
+    && (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email) || email == Model.createdBy)
+)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Správa datasetu <b>@Model.datasetId</b></h3>
+            <p>@Model.description </p>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <a href="/data/edit/@Model.id" class="btn btn-primary">Editovat parametry datasetu</a>
+            <p>
+                Změna parametrů datasetu (templaty, popisy, viditelnost a další). Nemá žádný vliv na data.
+                Pozor: Není možné změnit ID datasetu a JSON schéma. Pokud je chcete změnit, musíte dataset smazat a založit znovu.
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <a href="/data/backup/@Model.id" class="btn btn-warning">Zálohovat param. datasetu</a>
+            <p class="text-danger">
+                Stáhnutí zálohu parametrů datasetu. <span class="text-danger">POZOR! záloha obsahuje pouze parametry datasetu, nikoliv data. Data můžete stáhnout přes API</span>
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <a href="#/data/delete/@Model.id" class="btn btn-danger" disabled="disabled">Smazat dataset</a>
+            <p class="text-danger">
+                Nevratná operace, kdy se smažou všechna data datasetu a jeho nastavení.
+                Doporučujeme si <b>stáhnout zálohu parametrů datasetu</b>.
+            </p>
+        </div>
+    </div>
+}
+<hr />
+<div class="row">
+
+    <div class="col-xs-12">
+        <h3>Vytvoření nového datasetu</h3>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <h4>Pro pokročilé</h4>
+        <p>
+            Postup pro vývojáře a pokročilé uživatele, kteří znají strukturu dat
+            a dokážou ji popsat jako JSON Schema dle <a href="https://hlidacstatu.docs.apiary.io/">dokumentace</a>.
+        </p>
+        <a href="/data/createAdv" class="btn btn-primary">Vytvořit s JSON Schema</a>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <h4>Pro "normální" lidi <i class="far fa-smile-wink"></i></h4>
+        <p>
+            Využijte tento postup, pokud máte jednoduchou strukturu dat (typicky Excel, CSV soubor) a neumíte sestavit JSON Schema
+        </p>
+        <a href="#/data/createSimple" class="btn btn-primary" disabled="disabled">Vytvořit pomocí Excelu/CSV...</a>
+
+    </div>
+
+</div>

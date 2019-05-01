@@ -8,12 +8,9 @@
 @using System.Text.RegularExpressions;
 @{
 
-    ViewBag.Title = "Datový zdroj " + Model.name;
-    ViewBag.SubTitle = "Podrobné informace";
-
+    ViewBag.Title = "Vytvoření nové datové sady";
+    ViewBag.SubTitle = "Pro pokročilé";
     ApiResponseStatus err = ViewBag.ApiResponseError;
-
-    DataSet dataset = DataSet.CachedDatasets.Get(Model.datasetId);
 
 }
 @section scripts
@@ -42,14 +39,13 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
-        <li><a href="@dataset.DatasetUrl()">@Model.name</a></li>
-        <li class="active">Editace parametrů</li>
+        <li class="active">@ViewBag.Title</li>
         <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
 }
 <div class="row">
     <div class="col-xs-12">
-        <h2>Editace parametrů datasetu</h2>
+        <h2>Vytvoření datasetu</h2>
         @if (err != null)
         {
             <h3 class="text-danger">Chyba při ukládání datasetu</h3>
@@ -61,11 +57,15 @@
             </p>
 
         }
+
         <form method="post" class="form-horizontal form-control-new--small">
-            @Html.HiddenFor(m => m.datasetId)
             <div class="form-group">
-                <label class="col-sm-2 control-label">DatasetId</label>
-                <div class="col-sm-10">@Model.datasetId</div>
+                @Html.LabelFor(m => m.datasetId, "Identifikátor datasetu", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.datasetId, new { @class = "form-control" })
+                    <span class="help-block"><span class="text-danger">Povinné.</span></span>
+                    <span class="help-block">Omezení: musí být alespoň 5 znaků a max. 125 znaků dlouhé. Nesmí obsahovat znaky #, \, /, *, ?, ", <,>, |, [, ]. Pokud některé z těchto pravidel nedodrží, je jméno upraveno při uloženís.</span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -113,7 +113,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code", disabled = "disabled" })
+                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code" })
                 </div>
             </div>
 
@@ -154,13 +154,6 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-warning btn">Uložit změny</button>
 
-                </div>
-            </div>
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">Otestování výsledků</label>
-                <div class="col-sm-10">
-                    <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
                 </div>
             </div>
         </form>

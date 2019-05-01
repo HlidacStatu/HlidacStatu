@@ -35,6 +35,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (reg.jsonSchema == null)
                 throw new DataSetException(reg.datasetId, ApiResponseStatus.DatasetJsonSchemaMissing);
 
+
+
             reg.NormalizeShortName();
             var client = Lib.ES.Manager.GetESClient(reg.datasetId, idxType: ES.Manager.IndexType.DataSource);
 
@@ -43,7 +45,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 var errors = reg.searchResultTemplate.GetTemplateErrors();
                 if (errors.Count > 0)
                 {
-                    var err = ApiResponseStatus.DatasetJsonSchemaSearchTemplateError;
+                    var err = ApiResponseStatus.DatasetSearchTemplateError;
                     err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
                     throw new DataSetException(reg.datasetId, err);
                 }
@@ -54,7 +56,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 var errors = reg.detailTemplate.GetTemplateErrors();
                 if (errors.Count > 0)
                 {
-                    var err = ApiResponseStatus.DatasetJsonSchemaDetailTemplateError;
+                    var err = ApiResponseStatus.DatasetDetailTemplateError;
                     err.error.errorDetail = errors.Aggregate((f, s) => f + "\n" + s);
                     throw new DataSetException(reg.datasetId, err);
                 }
@@ -80,7 +82,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         protected Newtonsoft.Json.Schema.JSchema schema = null;
 
         protected string datasetId = null;
-
 
         protected DataSet(string datasourceName, bool fireException)
         {
