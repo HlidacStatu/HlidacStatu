@@ -619,6 +619,7 @@
     <Compile Include="Flags.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="IO\DistributedFilePath.cs" />
+    <Compile Include="IO\UploadedTmpFile.cs" />
     <Compile Include="IO\OsobaFotkyFile.cs" />
     <Compile Include="IO\PrilohaFile.cs" />
     <Compile Include="Issues\IIssueAnalyzer.cs" />

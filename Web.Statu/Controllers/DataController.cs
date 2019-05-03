@@ -1,6 +1,7 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
 using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 
@@ -62,10 +63,44 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult CreateSimple()
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult CreateSimple(FormCollection form, HttpPostedFileBase file)
+        {
+            Guid fileId = Guid.NewGuid();
+            var uTmp = new Lib.IO.UploadedTmpFile();
+
+            if (file == null)
+            {
+                ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Źádné CSV jste nenahráli");
+
+                return View();
+            }
+            else
+            {
+                var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
+                file.SaveAs(path);
+                return RedirectToAction("CreateSimple2", new { fileId = fileId });
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult CreateSimple2(Guid fileId)
+        {
+            var uTmp = new Lib.IO.UploadedTmpFile();
+            var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
+            if (!System.IO.File.Exists(path))
+                return RedirectToAction("CreateSimple");
+
+            return View();
+        }
+
 
         public ActionResult Backup(string id)
         {

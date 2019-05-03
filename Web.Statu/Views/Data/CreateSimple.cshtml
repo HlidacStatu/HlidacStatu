@@ -1,5 +1,4 @@
-﻿@model HlidacStatu.Lib.Data.External.DataSets.Registration
-
+﻿
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
@@ -8,10 +7,8 @@
 @using System.Text.RegularExpressions;
 @{
 
-    ViewBag.Title = "Datový zdroj " + Model.name;
-    ViewBag.SubTitle = "Podrobné informace";
-
-    DataSet dataset = DataSet.CachedDatasets.Get(Model.datasetId);
+    ViewBag.Title = "Přidání datasetu pro normální lidi ;-)";
+    ViewBag.SubTitle = "Postup pro netechnické uživatele";
 
 }
 @section scripts
@@ -40,190 +37,57 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
-        <li><a href="@dataset.DatasetUrl()">@Model.name</a></li>
-        <li class="active">Editace parametrů</li>
-        <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+        <li class="active">@ViewBag.Title</li>
     </ol>
 }
+
 <div class="row">
-    <div class="col-xs-12">
-        <h2>Editace parametrů datasetu</h2>
-
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <h2>Jak na to?</h2>
+        <p>
+            Tento postup je vhodný pro situace, kdy máte jednoúrovnovou strukturu dat, nebo-li - data se dají zobrazit v Excelu ve formě jedné tabulky
+            a tabulka má pro všechny řádky sloupce se stále stejným významem.
+        </p>
+    </div>
+    <h3>1. krok</h3>
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <p>
+            Hlídač v tomto průvodci umí zpracovat data pouze <code>ve formátu CSV</code>, v prvním řádku s názvy sloupců a v UTF-8 kódování.
+            Takový export je možný <a onclick="return trackOutLink(this,'Dataset_CreateSimple');" href="https://www.extendoffice.com/cs/documents/excel/613-excel-export-to-csv-file.html#active_sheet_to_csv_utf8" target="_blank">přímo z Excelu</a>.
+            Pokud Vám Excel nevyhovuje nebo máte data v jiném formátu, můžete zkusit konverzi provést zdarma na některé z těchto anglických online služeb:
+            <a href="https://www.zamzar.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Zamzar</a>,
+            <a href="https://convertio.co" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Convertio</a>,
+            <a href="https://www.aconvert.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">AConvert</a>,
+            <a href="https://onlineconvertfree.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">OnlineConvertFree</a>
+            a <a href="https://www.google.com/search?client=safari&rls=en&q=excel+to+csv&ie=UTF-8&oe=UTF-8" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">další</a>.
+        </p>
+        <p>
+            <b>Souhrn požadavků</b><ul>
+                <li>Musí být v <a href="https://cs.wikipedia.org/wiki/CSV" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">CSV formátu</a>.</li>
+                <li>Musí mít v prvním řádku názvy sloupců</li>
+                <li>Musí být v <a href="https://cs.wikipedia.org/wiki/Unicode" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Unicode UTF-8 kódování</a> </li>
+                <li>
+                    Nemusí, ale může obsahovat žádná další data.
+                    Pokud bude obsahovat data, rovnou je do Hlídače naimportujeme.
+                </li>
+            </ul>
+        </p>
         <form method="post" class="form-horizontal form-control-new--small">
-            @Html.HiddenFor(m => m.datasetId)
             <div class="form-group">
-                <label class="col-sm-2 control-label">DatasetId</label>
-                <div class="col-sm-10">@Model.datasetId</div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.name, "Veřejné jméno", new { @class = "col-sm-2 control-label" })
+                @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                    <input type="file" name="file" />
+                    <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.description, "Popis", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.description, new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.betaversion, "Je v betaverzi?", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.CheckBoxFor(m => m.betaversion, new { @class = "" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.allowWriteAccess, "Povolit úpravu dat komukoliv?", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.CheckBoxFor(m => m.allowWriteAccess, new { @class = "" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.origUrl, "Zdroj dat (URL)", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.origUrl, new { @type = "url", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.sourcecodeUrl, "Zdrojový kód parseru dat (URL)", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.sourcecodeUrl, new { @type = "url", @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.Label("sorderList", "Atributy, podle kterých je možné data třídit", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    <div class="small-darkgray-text">
-                        Text.popis | jméno atributu
-
-                    </div>
-                    @{
-                        string sorder = "";
-                        for (int i = 0; i < Model.orderList.GetLength(0); i++)
-                        {
-                            sorder = sorder + Model.orderList[i, 0] + "|" + Model.orderList[i, 1] + "\n";
-                        }
-                    }
-                    @Html.TextArea("sorderList", sorder, 5, 80, new { @class = "form-control  code" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.Label("searchResultTemplate_body", "Template pro zobrazování vyhledaných výsledků", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextArea("searchResultTemplate_body", FormatHtml(Model.searchResultTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.Label("detailTemplate_body", "Template pro zobrazování jednoho záznamu", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextArea("detailTemplate_body", FormatHtml(Model.detailTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10" >
-                    <button type="submit" class="btn btn-warning btn">Uložit změny</button>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-warning btn">Nahrát soubor a pokračovat na další krok</button>
 
                 </div>
             </div>
-            <div class="form-group">
 
-                <label class="col-sm-2 control-label">Otestování výsledků</label>
-                <div class="col-sm-10">
-                        <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
-                </div>
-            </div>
         </form>
     </div>
 </div>
-
-@functions
-{
-    static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
-    static string regexval = "(<[^>]*>)|(\\s{1,}{{[^}]*}})";
-    public string FormatHtml(string html)
-    {
-        //stupid Html Formatter
-        //return html;
-
-        int indentLev = 0;
-
-        MatchEvaluator evalMatch = (m) =>
-        {
-            string pre = "";
-            string post = "";
-            var s = m.Value;
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            if (s.StartsWith("<span") || s.StartsWith("</span"))
-            {
-                return s;
-            }
-            if (
-                (s.StartsWith("<") && !s.StartsWith("</"))
-            )
-            {
-                indentLev++;
-                pre = "\n" + new string(' ', (indentLev - 1) * 2);
-            }
-            else if (
-                (s.StartsWith("<") && s.EndsWith("/>"))
-            )
-            {
-                pre = "\n" + new string(' ', (indentLev) * 2);
-            }
-            else if (s.StartsWith("</"))
-            {
-                if (indentLev > 1)
-                    pre = "\n" + new string(' ', (indentLev - 1) * 2);
-                post = "\n";
-                indentLev--;
-                if (indentLev < 0)
-                {
-                    indentLev = 0;
-                }
-            } else if (Regex.IsMatch(s, "\\s{1,}{{"))
-            {
-                s = Regex.Replace(s, "^\\s*", "");
-                if (indentLev > 0)
-                    pre = "\n" + new string(' ', (indentLev) * 2);
-                else
-                    pre = "\n";
-            }
-
-            return pre + s + post;
-        };
-
-        var ret = html.Replace("\t", " ");
-        ret = ret.Replace("\r", "\n");
-        ret = Devmasters.Core.TextUtil.ReplaceDuplicates(ret, "\n");
-        ret = Regex.Replace(ret, @"\n\s*(?<t>.*)\n", "\n" + @"${t}");
-
-        ret = Regex.Replace(ret, regexval, evalMatch, regexQueryOption);
-
-        //remove empty lines
-        ret = Regex.Replace(ret, @"^(?:[\t ]*(?:\r?\n|\r))+", "", regexQueryOption);
-
-        return ret;
-    }
-}
