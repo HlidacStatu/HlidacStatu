@@ -54,7 +54,7 @@
             count++;
             var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
             bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-                || email == Model.Registration().createdBy
+                || email == ds.createdBy
                 );
             if (ds.betaversion && shownFirstBeta == false)
             {
