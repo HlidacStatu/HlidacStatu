@@ -37,11 +37,11 @@ namespace HlidacStatu.Util.WebShot
         internal static System.Collections.Concurrent.ConcurrentDictionary<string, byte[]> Results = new System.Collections.Concurrent.ConcurrentDictionary<string, byte[]>();
 
         static CancellationTokenSource cancel = null;
-        static List<Worker> workers = new List<Worker>();
+        static List<Worker_Chrome> workers = new List<Worker_Chrome>();
         public static void CreateAndStartWorkers(int num, CancellationTokenSource cancel)
         {
             for (int i = 0; i < num; i++)
-                workers.Add(new Worker("Worker" + i.ToString(),cancel.Token));
+                workers.Add(new Worker_Chrome("Worker" + i.ToString(),cancel.Token));
         }
 
         static bool canceling = false;

@@ -53,7 +53,7 @@ namespace HlidacStatu.Util.WebShot
             var config = new ChromeDriverConfig()
                 .SetHeadless()
                 .SetWindowSize(width+30, height+30)
-                .SetCommandLineArgumets("--disable-gpu")
+                .SetCommandLineArgumets("--disable-gpu --whitelisted-ips=\"77.93.208.135,127.0.0.1,77.93.208.131,192.168.1.50,10.10.100.103\"")
                 ;
 
             this.asyncChromeDriver = new AsyncChromeDriver(config);

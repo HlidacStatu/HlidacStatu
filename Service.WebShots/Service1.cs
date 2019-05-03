@@ -34,6 +34,7 @@ namespace HlidacStatu.Service.WebShots
             base.OnStart(args);
             Program.logger.Info("SERVICE Starting");
 
+
             _cancelSource = new CancellationTokenSource();
 
             int numOfInstances = 3;

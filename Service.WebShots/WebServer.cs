@@ -37,7 +37,7 @@ namespace HlidacStatu.Service.WebShots
 
                 var data = HlidacStatu.Util.WebShot.Url2PngMulti.Screenshot(url, TimeSpan.FromSeconds(5), width, height);
                 if (data == null)
-                    HlidacStatu.Util.WebShot.Url2PngSingle.Screenshot(parameters.url);
+                    HlidacStatu.Util.WebShot.Url2PngSingle_Chrome.Screenshot(url);
 
                 Program.logger.Debug($"return {data.Length} bytes |  png?url={url}");
 

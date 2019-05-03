@@ -16,6 +16,7 @@ namespace HlidacStatu.Lib
 
         public static IO.PrilohaFile PrilohaLocalCopy = new IO.PrilohaFile();
         public static IO.OsobaFotkyFile OsobaFotky = new IO.OsobaFotkyFile();
+        public static IO.UploadedTmpFile UploadedTmp = new IO.UploadedTmpFile   ();
 
         public static string WebAppDataPath = null;
         public static string WebAppRoot = null;
