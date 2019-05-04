@@ -5,6 +5,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Devmasters.Core.Collections;
+using Devmasters.Core;
+
+
 namespace HlidacStatu.Util
 {
     public static class ParseTools
@@ -129,7 +133,41 @@ namespace HlidacStatu.Util
 
         }
 
+        static object lockComb = new object();
+        static string[] combinations = null;
         public static DateTime? ToDateTimeFromCZ(string value)
+        {
+            string[] dateFormats = new string[] { "d.M.yyyy", "d. M. yyyy",
+                "dd.MM.yyyy", "dd. MM. yyyy",
+                "dd.MM.yy", "dd. MM. yy",
+                "d.M.yy", "d. M. yy"};
+            string[] timeFormats = new string[] {"",
+                "H:m:s","HH:mm:ss",
+                "H:m","HH:mm",
+                "H:m:s.fff","HH:mm:ss.fff"
+            };
+
+            if (combinations == null)
+                lock(lockComb)
+                {
+                    if (combinations == null)
+                    {
+                        List<string> cc = new List<string>();
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.fff");
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.fff");
+                        foreach (var d in dateFormats)
+                            foreach (var t in timeFormats)
+                                cc.Add((d + " " + t).Trim());
+
+                        combinations = cc.ToArray();
+                    }
+                };
+
+
+            return ToDateTime(value,combinations);
+                
+        }
+        public static DateTime? ToDateFromCZ(string value)
         {
             return ToDateTime(value,
                 "d.M.yyyy", "d. M. yyyy",
