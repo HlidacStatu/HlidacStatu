@@ -102,7 +102,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static void ResetTask(int taskItemId)
+        public static void ResetTask(int taskItemId, bool decreasePriority = true)
         {
             using (DbEntities db = new DbEntities())
             {
@@ -114,6 +114,12 @@ namespace HlidacStatu.Lib.Data
                     i.started = null;
                     i.success = null;
                     i.result = null;
+                    if (decreasePriority)
+                    {
+                        i.priority--;
+                        if (i.priority < 1)
+                            i.priority = 1;
+                    }
                     db.SaveChanges();
                 }
             }
