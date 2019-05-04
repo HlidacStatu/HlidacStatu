@@ -39,44 +39,47 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-
+        static object lockTakeFromQueue = new object();
         public static IEnumerable<ItemToOcrQueue> TakeFromQueue(ItemToOcrType? itemType = null, string itemSubType = null, int maxItems = 30)
         {
             using (DbEntities db = new DbEntities())
             {
-                using (var dbTran = db.Database.BeginTransaction())
+                lock (lockTakeFromQueue)
                 {
-                    try
+                    using (var dbTran = db.Database.BeginTransaction())
                     {
-                        IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
-                        sql = db.ItemToOcrQueue
-                            .Where(m => m.done == null
-                                    && m.started == null);
-
-                        if (itemType != null)
-                            sql = sql.Where(m => m.itemType == itemType.ToString());
-
-                        if (!string.IsNullOrEmpty(itemSubType))
-                            sql = db.ItemToOcrQueue
-                            .Where(m => m.itemSubType == itemSubType);
-
-                        sql = sql
-                            .OrderByDescending(m => m.priority)
-                            .ThenBy(m => m.created)
-                            .Take(maxItems);
-                        var res = sql.ToArray();
-                        foreach (var i in res)
+                        try
                         {
-                            i.started = DateTime.Now;
+                            IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
+                            sql = db.ItemToOcrQueue
+                                .Where(m => m.done == null
+                                        && m.started == null);
+
+                            if (itemType != null)
+                                sql = sql.Where(m => m.itemType == itemType.ToString());
+
+                            if (!string.IsNullOrEmpty(itemSubType))
+                                sql = db.ItemToOcrQueue
+                                .Where(m => m.itemSubType == itemSubType);
+
+                            sql = sql
+                                .OrderByDescending(m => m.priority)
+                                .ThenBy(m => m.created)
+                                .Take(maxItems);
+                            var res = sql.ToArray();
+                            foreach (var i in res)
+                            {
+                                i.started = DateTime.Now;
+                            }
+                            db.SaveChanges();
+                            dbTran.Commit();
+                            return res;
                         }
-                        db.SaveChanges();
-                        dbTran.Commit();
-                        return res;
-                    }
-                    catch (Exception e)
-                    {
-                        dbTran.Rollback();
-                        throw e;
+                        catch (Exception e)
+                        {
+                            dbTran.Rollback();
+                            throw e;
+                        }
                     }
                 }
             }
