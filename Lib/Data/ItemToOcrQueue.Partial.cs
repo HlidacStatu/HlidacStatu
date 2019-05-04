@@ -51,16 +51,6 @@ namespace HlidacStatu.Lib.Data
                         try
                         {
                             IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
-                            sql = db.ItemToOcrQueue
-                                .Where(m => m.done == null
-                                        && m.started == null);
-
-                            if (itemType != null)
-                                sql = sql.Where(m => m.itemType == itemType.ToString());
-
-                            if (!string.IsNullOrEmpty(itemSubType))
-                                sql = db.ItemToOcrQueue
-                                .Where(m => m.itemSubType == itemSubType);
 
                             sql = sql
                                 .OrderByDescending(m => m.priority)
@@ -89,6 +79,15 @@ namespace HlidacStatu.Lib.Data
         {
             using (DbEntities db = new DbEntities())
             {
+                IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
+                sql = sql.Where(m => m.itemId == itemId);
+                if (sql.Any()) //already in the queue
+                    return new OCR.Api.Result()
+                    {
+                        IsValid = OCR.Api.Result.ResultStatus.InQueueWithCallback,
+                        Id = "uknown"
+                    };
+
                 ItemToOcrQueue i = new ItemToOcrQueue();
                 i.created = DateTime.Now;
                 i.itemId = itemId;
