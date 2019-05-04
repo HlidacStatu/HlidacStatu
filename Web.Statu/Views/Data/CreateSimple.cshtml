@@ -10,25 +10,12 @@
     ViewBag.Title = "Přidání datasetu pro normální lidi ;-)";
     ViewBag.SubTitle = "Postup pro netechnické uživatele";
 
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
 }
 @section scripts
 {
-    <link rel="stylesheet" href="/scripts/highlight/styles/default.css">
-    <script src="/scripts/highlight/highlight.pack.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.highlightme pre').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
-        });
 
-    </script>
-    <style>
-        #data-detail-content pre {
-            white-space: pre-wrap !important;
-            font-size: 80%
-        }
-    </style>
 }
 
 
@@ -39,6 +26,18 @@
         <li><a href="/data">Datové zdroje</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
 }
 
 <div class="row">
@@ -72,7 +71,24 @@
                 </li>
             </ul>
         </p>
-        <form method="post" class="form-horizontal form-control-new--small">
+        <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
+            <div class="form-group">
+                @Html.Label("name", "Jméno ", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBox("name","", new { @class = "form-control", placeholder = "Jméno datasetu" })
+                    <span class="help-block"><span class="text-danger">Vystižné jméno datasetu, pod kterým bude uložen v Hlídač.</span></span>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <select name="delimiter">
+                        <option value="," selected="selected">, (čárka)</option>
+                        <option value=";">; (středník)</option>
+                        <option value="\t">tab (tabulátor)</option>
+                    </select>
+                </div>
+            </div>
             <div class="form-group">
                 @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">

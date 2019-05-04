@@ -1,0 +1,41 @@
+﻿@model CreateSimpleModel
+
+
+@using HlidacStatu.Web.Models;
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Přidání datasetu pro normální lidi : Typy hodnot";
+    ViewBag.SubTitle = "Postup pro netechnické uživatele";
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-xs-12 ">
+        <h2>Krok 3</h2>
+        <p>
+            Nahráli jste nám CSV soubor. Na první, rychlý pohled vypadá, že je v pořádku. Abychom mohli data nahrát do Hlídače,
+            potřebujeme se od vás dozvědět, který sloupec obsahuje čísla, který texty, datumy apod.
+        </p>
+    </div>
+</div>

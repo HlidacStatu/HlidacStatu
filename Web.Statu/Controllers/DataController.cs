@@ -1,5 +1,7 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
+using HlidacStatu.Web.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -7,7 +9,7 @@ using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public class DataController : Controller
+    public partial class DataController : Controller
     {
         public ActionResult Index(string id)
         {
@@ -37,70 +39,7 @@ namespace HlidacStatu.Web.Controllers
             var ds = DataSet.CachedDatasets.Get(id);
             return View(ds?.Registration());
         }
-        public ActionResult CreateAdv()
-        {
-            return View(new Registration());
-        }
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult CreateAdv(Registration data, FormCollection form)
-        {
-
-            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-
-            var newReg = WebFormToRegistration(data, form);
-            newReg.datasetId = form["datasetId"];
-            newReg.created = DateTime.Now;
-
-            var res = DataSet.Api.Create(newReg, email, form["jsonSchema"]);
-            if (res.valid)
-                return RedirectToAction("Manage", "Data", new { id = res.value });
-            else
-            {
-                ViewBag.ApiResponseError = res;
-                return View(newReg);
-            }
-        }
-
-        [HttpGet]
-        public ActionResult CreateSimple()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult CreateSimple(FormCollection form, HttpPostedFileBase file)
-        {
-            Guid fileId = Guid.NewGuid();
-            var uTmp = new Lib.IO.UploadedTmpFile();
-
-            if (file == null)
-            {
-                ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Źádné CSV jste nenahráli");
-
-                return View();
-            }
-            else
-            {
-                var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
-                file.SaveAs(path);
-                return RedirectToAction("CreateSimple2", new { fileId = fileId });
-            }
-        }
-
-
-        [HttpGet]
-        public ActionResult CreateSimple2(Guid fileId)
-        {
-            var uTmp = new Lib.IO.UploadedTmpFile();
-            var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
-            if (!System.IO.File.Exists(path))
-                return RedirectToAction("CreateSimple");
-
-            return View();
-        }
-
+ 
 
         public ActionResult Backup(string id)
         {

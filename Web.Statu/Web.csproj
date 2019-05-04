@@ -53,6 +53,9 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Devmasters.Cache, Version=1.472.4.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
@@ -271,6 +274,9 @@
       <HintPath>..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -334,6 +340,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DataController.CreateWizards.cs" />
     <Compile Include="Controllers\GenericAuthController.cs" />
     <Compile Include="Controllers\ApiV1Controller.StatniWeby.cs" />
     <Compile Include="Controllers\ApiV1Controller.DataSets.cs" />
@@ -1293,6 +1300,8 @@
     <Content Include="Views\Data\CreateSimple.cshtml" />
     <Content Include="Views\Data\Manage.cshtml" />
     <Content Include="Views\Data\NoAccess.cshtml" />
+    <Content Include="Views\Data\CreateSimple2.cshtml" />
+    <Content Include="Views\Data\CreateSimple3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
