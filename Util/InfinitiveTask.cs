@@ -52,8 +52,10 @@ namespace HlidacStatu.Util
                         status = TaskNextRunStatus.Stop;
 
                     if (status == TaskNextRunStatus.Stop)
+                    {
+                        Consts.Logger.Debug($"InfinitiveTask.Run: ending {tag} because of status STOP");
                         break;
-
+                    }
                     System.Threading.Thread.Sleep(period);
                 }
 
@@ -65,7 +67,10 @@ namespace HlidacStatu.Util
 
                 //throw;
             }
-
+            finally
+            {
+                Consts.Logger.Debug($"InfinitiveTask.Run: ended {tag} ");
+            }
         }
 
 
