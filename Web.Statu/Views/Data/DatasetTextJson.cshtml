@@ -25,7 +25,7 @@
     IList<string> errors = new List<string>();
     if (Model.Registration().jsonSchema != null && !string.IsNullOrEmpty(jsonData))
     {
-        Newtonsoft.Json.Schema.JSchema schema = Model.Registration().jsonSchema;
+        Newtonsoft.Json.Schema.JSchema schema = Model.Registration().GetSchema();
         Newtonsoft.Json.Linq.JObject obj = null;
         try
         {

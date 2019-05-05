@@ -27,9 +27,15 @@ namespace HlidacStatu.Web.Models
             {
                 if (string.IsNullOrEmpty(s))
                     throw new System.ArgumentException("Cannot by null or empty", "s");
-                s = Devmasters.Core.TextUtil.RemoveDiacritics(s);
-                s = System.Text.RegularExpressions.Regex.Replace(s, "\\s", "_");
-                s = s.ToLower();
+                s = Devmasters.Core.TextUtil.RemoveDiacritics(s).ToLower();
+                s = System.Text.RegularExpressions.Regex.Replace(s, "[^a-z0-9]", " ");
+                s = System.Text.RegularExpressions.Regex.Replace(s, "\\s", " ");
+                s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ');
+                s = s.Replace(" ", "_");
+                if (!Char.IsLetter(s.FirstOrDefault()))
+                    s = "p" + s;
+                if (s.EndsWith("_") && s.Length > 2)
+                    s = s.Substring(0, s.Length - 1);
                 return s;
             }
 

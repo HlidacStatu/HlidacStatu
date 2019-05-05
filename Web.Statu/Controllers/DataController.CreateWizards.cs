@@ -1,8 +1,8 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
 using HlidacStatu.Web.Models;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -115,7 +115,7 @@ namespace HlidacStatu.Web.Controllers
                                 var nextT = GuestBestCSVValueType(lines[line][cx]);
                                 if (nextT != t)
                                     t = "string"; //kdyz jsou ruzne typy ve stejnem sloupci v ruznych radcich, 
-                                                    //fallback na string
+                                                  //fallback na string
                             }
                             colTypes.Add(t);
                         }
@@ -173,28 +173,58 @@ namespace HlidacStatu.Web.Controllers
         {
             var uTmp = new Lib.IO.UploadedTmpFile();
             var path = uTmp.GetFullPath(model.FileId.ToString(), model.FileId.ToString() + ".csv");
+            var pathJson = uTmp.GetFullPath(model.FileId.ToString(), model.FileId.ToString() + ".json");
             if (!System.IO.File.Exists(path))
                 return RedirectToAction("CreateSimple");
-            try
+            if (!System.IO.File.Exists(pathJson))
+                return RedirectToAction("CreateSimple");
+
+            model = Newtonsoft.Json.JsonConvert.DeserializeObject<CreateSimpleModel>(System.IO.File.ReadAllText(pathJson));
+
+
+            Dictionary<string, Type> properties = new Dictionary<string, Type>();
+            properties.Add("id", typeof(string));
+            foreach (var c in model.Columns)
             {
-
-                using (System.IO.StreamReader r = new System.IO.StreamReader(path))
+                switch (c.ValType)
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.Delimiter });
-                    csv.Read(); csv.ReadHeader();
-
-                    model.Headers = csv.Context.HeaderRecord;
-
-                    return View(model);
+                    case "number":
+                        properties.Add(c.Normalized(c.Name), typeof(decimal));
+                        break;
+                    case "datetime":
+                        properties.Add(c.Normalized(c.Name), typeof(DateTime));
+                        break;
+                    case "url":
+                    case "ico":
+                    default:
+                        properties.Add(c.Normalized(c.Name), typeof(string));
+                        break;
                 }
             }
-            catch (Exception e)
-            {
-                ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Soubor není ve formátu CSV.", e.ToString());
+            RuntimeClassBuilder rcb = new RuntimeClassBuilder("customClass");
+            var rcbObj = rcb.CreateObject(properties);
+            Newtonsoft.Json.Schema.Generation.JSchemaGenerator jsonGen = new Newtonsoft.Json.Schema.Generation.JSchemaGenerator();
+            jsonGen.DefaultRequired = Newtonsoft.Json.Required.Default;
+            var schema = jsonGen.Generate(rcbObj.GetType()); //JSON schema 
 
-                return View(model);
 
-            }
+            //create registration
+            Registration reg = new Registration();
+            reg.allowWriteAccess = false;
+            reg.betaversion = true;
+            reg.jsonSchema = schema.ToString();
+            reg.name = model.Name;                        
+            reg.NormalizeShortName();
+
+            if (DataSet.ExistsDataset(reg.datasetId))
+                reg.datasetId = reg.datasetId + "-" + Devmasters.Core.TextUtil.GenRandomString(5);
+
+            var status = DataSet.Api.Create(reg, Request?.RequestContext?.HttpContext?.User?.Identity?.Name);
+            if (status.valid == false)
+                ViewBag.ApiResponseError = status;
+
+            return View();
+
         }
 
 
@@ -210,5 +240,7 @@ namespace HlidacStatu.Web.Controllers
                 return "string";
 
         }
+
+
     }
 }

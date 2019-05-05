@@ -14,6 +14,8 @@
     ViewBag.Title = "Přidání datasetu pro normální lidi : Typy hodnot";
     ViewBag.SubTitle = "Postup pro netechnické uživatele";
 
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
 }
 @section scripts
 {
@@ -28,6 +30,18 @@
         <li><a href="/data">Datové zdroje</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
 }
 
 <div class="row">

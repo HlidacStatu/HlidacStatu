@@ -281,7 +281,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 if (this.schema == null)
                 {
                     schema = DataSetDB.Instance.GetRegistration(this.DatasetId)
-                        ?.jsonSchema;
+                        ?.GetSchema();
                 }
 
                 return schema;
@@ -298,7 +298,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             dynamic objDyn = Newtonsoft.Json.Linq.JObject.Parse(data);
             if (validateSchema)
             {
-                Newtonsoft.Json.Schema.JSchema schema = DataSetDB.Instance.GetRegistration(this.datasetId).jsonSchema;
+                Newtonsoft.Json.Schema.JSchema schema = DataSetDB.Instance.GetRegistration(this.datasetId).GetSchema();
 
                 if (schema != null)
                 {

@@ -16,6 +16,7 @@
 
     string[] colTypes = ViewBag.ColTypes ?? new string[Model.Headers.Count()];
 
+    ApiResponseStatus err = ViewBag.ApiResponseError;
 
 }
 @section scripts
@@ -33,6 +34,18 @@
     </ol>
 }
 
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
+}
+
 <div class="row">
     <div class="col-xs-12 ">
         <h2>Krok 2</h2>
@@ -48,7 +61,7 @@
             @Html.HiddenFor(m => m.Delimiter)
             @Html.HiddenFor(m => m.Name)
             @Html.HiddenFor(m => m.FileId)
-            @Html.Hidden("sheaders",Model.Headers.Aggregate((f,s)=>f+"|" + s))
+            @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
 
             <script type="text/javascript">
                 function selectOnCh(t) {
@@ -67,7 +80,7 @@
                 });
             </script>
             <div class="form-group">
-                @Html.LabelFor(m=>m.KeyColumn, "Sloupec s klíčem", new { @class = "col-sm-2 control-label" })
+                @Html.LabelFor(m => m.KeyColumn, "Sloupec s klíčem", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
                     @Html.DropDownListFor(m=>m.KeyColumn ,Model.Headers
                                             .Select(s=>new SelectListItem() { Text=s, Value=s })
@@ -107,29 +120,27 @@
                                 <select style="width:140px;font-size:1em" name="typ_@i" class="input-select-type" cindex="@i" onchange="selectOnCh(this,@i);" onload="selectOnCh(this);">
                                     @*<option value="--"  disabled="disabled">-- vyberte --</option>*@
                                     <optgroup label="Obvyklé">
-                                        <option value="string" @Util.IfExists(colTypes[i] == "string","selected=\"selected\"")>Text</option>
-                                        <option value="number" @Util.IfExists(colTypes[i] == "number","selected=\"selected\"")>Číslo</option>
-                                        <option value="datetime" @Util.IfExists(colTypes[i] == "datetime","selected=\"selected\"")>Datum a čas</option>
-                                        <option value="date" @Util.IfExists(colTypes[i] == "date","selected=\"selected\"")>Pouze datum</option>
+                                        <option value="string" @Util.IfExists(colTypes[i] == "string", "selected=\"selected\"")>Text</option>
+                                        <option value="number" @Util.IfExists(colTypes[i] == "number", "selected=\"selected\"")>Číslo</option>
+                                        <option value="datetime" @Util.IfExists(colTypes[i] == "datetime", "selected=\"selected\"")>Datum a čas</option>
                                     </optgroup>
                                     <optgroup label="Speciální">
                                         <option value="ico">IČ firmy</option>
-                                        <option value="findIco">IČ firmy v textu</option>
                                         <option value="url">Odkaz (URL) na dokument</option>
                                     </optgroup>
                                 </select>
                             </td>
                             <td>
                                 <div class="radio">
-                                    <input @Util.IfExists(i<6," checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
-                                    <input  @Util.IfExists(i>=6," checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
+                                    <input @Util.IfExists(i < 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
+                                    <input @Util.IfExists(i >= 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
                                     <span style="display:none"><input type="radio" class="show_search_@i" name="show_search_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
                                 </div>
                             </td>
                             <td>
                                 <div class="radio">
                                     <input checked="checked" type="radio" class="show_search_@i" name="show_detail_@i" value="show" g="*_@i">Zobrazit<br>
-                                    <input  type="radio" class="show_search_@i" name="show_detail_@i" value="hide" g="*_@i">Skrýt<br>
+                                    <input type="radio" class="show_search_@i" name="show_detail_@i" value="hide" g="*_@i">Skrýt<br>
                                     <span style="display:none"><input type="radio" class="show_search_@i" name="show_detail_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
                                 </div>
                             </td>

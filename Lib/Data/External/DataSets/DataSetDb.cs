@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Registration reg = new Registration()
                     {
                         datasetId = DataSourcesDbName,
-                        jsonSchema = jsonG.Generate(typeof(Registration))
+                        jsonSchema = jsonG.Generate(typeof(Registration)).ToString()
                     };
                     Lib.ES.Manager.CreateIndex(client);
 

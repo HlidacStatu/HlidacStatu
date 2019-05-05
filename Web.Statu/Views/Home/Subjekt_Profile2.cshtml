@@ -554,7 +554,7 @@ $"{Model.Jmeno}: {Devmasters.Core.TextUtil.RemoveHTML((string)ViewBag.statDescri
             @{
                 var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
 
-                var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries);
+                var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries,1,5);
                 if (dsSearch.IsValid && dsSearch.Total > 0)
                 {
                     foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))

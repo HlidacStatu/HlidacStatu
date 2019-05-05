@@ -12,7 +12,20 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public string origUrl { get; set; }
         public string sourcecodeUrl { get; set; }
         public string description { get; set; }
-        public Newtonsoft.Json.Schema.JSchema jsonSchema { get; set; }
+        public string jsonSchema { get; set; }
+
+        Newtonsoft.Json.Schema.JSchema _schema = null;
+        public Newtonsoft.Json.Schema.JSchema GetSchema()
+        {
+            if (_schema == null)
+            {
+                _schema = Newtonsoft.Json.Schema.JSchema.Parse(jsonSchema);
+            }
+
+            return _schema;
+        }
+
+
         //public string registration_elasticmapping { get; set; } = null;
         public string createdBy { get; set; }
         public System.DateTime created { get; set; } = DateTime.Now;

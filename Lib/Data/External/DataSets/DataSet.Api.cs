@@ -118,7 +118,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                     if (reg.jsonSchema == null)
                     {
-                        reg.jsonSchema = StringToJSchema(jsonSchemaInString);
+                        reg.jsonSchema = StringToJSchema(jsonSchemaInString).ToString();
                     }
 
 
