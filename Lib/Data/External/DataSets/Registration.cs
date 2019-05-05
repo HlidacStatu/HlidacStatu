@@ -5,7 +5,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     
     public partial class Registration
     {
-
         public string id { get { return datasetId; } }
         public string name { get; set; }
         public string datasetId { get; set; }

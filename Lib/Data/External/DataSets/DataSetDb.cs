@@ -184,6 +184,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public override DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null)
         {
             var resData = base.SearchDataRaw($"NOT(id:{DataSourcesDbName}) AND ({queryString})", page, pageSize, sort);
+            //var resData = base.SearchDataRaw($"({queryString})", page, pageSize, sort);
             if (resData == null || resData?.Result == null)
                 return resData;
 
