@@ -102,16 +102,16 @@
 
         if (Model.DataSet.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
         {
-                var model = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
-                model.Total = Model.Total;
-                model.Page = Model.Page;
-                model.Q = Model.Q;
-                model.Result = Model.Result
-                    .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
-                    .ToArray();
+            var model = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+            model.Total = Model.Total;
+            model.Page = Model.Page;
+            model.Q = Model.Q;
+            model.Result = Model.Result
+                .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
+                .ToArray();
 
-                var html =Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model);
-                @Html.Raw(html)
+            var html = Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model);
+            @Html.Raw(html)
         }
         else
         {
@@ -186,4 +186,4 @@
 </div>
 
 
-@Html.Partial("_beta")
+@Html.Partial("_new")

@@ -441,6 +441,16 @@ namespace HlidacStatu.Lib
             return null;
         }
 
+
+        public static string[] IcosInText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new string[] { };
+
+            return Util.ParseTools.GetRegexGroupValues(text, @"(\s|\D|^)(?<ico>\d{8})(\s|\D|$)", "ico");
+        }
+
+
         public static DateTime? DateInText(string value)
         {
             var ret = DatesInText(value);
@@ -492,6 +502,12 @@ namespace HlidacStatu.Lib
 					)
 				)", defaultRegexOptions);
 
+        /// <summary>
+        /// difference between two sequences. the Levenshtein distance between two words is the minimum number of single-character edits (i.e. insertions, deletions, or substitutions) required to change one word into the other.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static int LevenshteinDistanceCompute(string s, string t)
         {
             if (string.IsNullOrEmpty(s))

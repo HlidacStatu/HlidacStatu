@@ -1,9 +1,6 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
-using HlidacStatu.Web.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 
@@ -37,9 +34,35 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult Manage(string id)
         {
             var ds = DataSet.CachedDatasets.Get(id);
-            return View(ds?.Registration());
+            if (ds == null)
+                return Redirect("/data");
+
+            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == true)
+                return View(ds?.Registration());
+
+            return View();
         }
- 
+
+        public ActionResult Delete(string id, string confirmation)
+        {
+            var ds = DataSet.CachedDatasets.Get(id);
+            if (ds == null)
+                return Redirect("/data");
+
+            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
+               return View("NoAccess");
+
+            string[] neverDelete = new string[] { "veklep", "rozhodnuti-uohs", "centralniregistroznameni", "datasourcesdb" };
+            if (neverDelete.Contains(ds.DatasetId.ToLower()))
+                return View("NoAccess");
+
+            if (confirmation == "YES")
+            {
+                DataSetDB.Instance.DeleteRegistration(ds.DatasetId);
+                return RedirectToAction("Index");
+            }
+            return View(ds);
+        }
 
         public ActionResult Backup(string id)
         {
@@ -50,13 +73,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return RedirectToAction("index");
 
-            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-
-            if (!
-                    (email == "michal@michalblaha.cz"
-                    || email == ds.Registration().createdBy
-                    )
-                )
+            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
             {
                 ViewBag.DatasetId = id;
                 return View("NoAccess");
@@ -78,13 +95,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return RedirectToAction("index");
 
-            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-
-            if (!
-                    (email == "michal@michalblaha.cz"
-                    || email == ds.Registration().createdBy
-                    )
-                )
+            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
             {
                 ViewBag.DatasetId = id;
                 return View("NoAccess");
@@ -106,11 +117,7 @@ namespace HlidacStatu.Web.Controllers
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
-            if (!
-                    (email == "michal@michalblaha.cz"
-                    || email == ds.Registration().createdBy
-                    )
-                )
+            if (ds.HasAdminAccess(email) == false)
             {
                 ViewBag.DatasetId = id;
                 return View("NoAccess");

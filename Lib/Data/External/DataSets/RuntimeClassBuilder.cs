@@ -13,28 +13,74 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     public class RuntimeClassBuilder
     {
         AssemblyName asemblyName;
-        public RuntimeClassBuilder(string ClassName)
+        Dictionary<string, Type> properties = null;
+        public RuntimeClassBuilder(Dictionary<string, Type> properties)
+            : this("class_" + Guid.NewGuid().ToString("N"), properties)
         {
-            this.asemblyName = new AssemblyName(ClassName);
         }
-        public object CreateObject(Dictionary<string, Type> properties) // string[] PropertyNames,Type[]Types)
+
+        public object GetPropertyValue(object instance, string propName)
         {
+            if (instance == null)
+                throw new ArgumentNullException("instance");
+            if (string.IsNullOrEmpty(propName))
+                throw new ArgumentNullException("propName");
+
+            if (instance.GetType() != this.CreateType())
+                throw new InvalidCastException($"Instance type {instance.GetType().FullName} different from {this.CreateType().FullName}");
+            return this.CreateType().GetProperty(propName)?.GetValue(instance);
+
+        }
+
+        public void SetPropertyValue(object instance, string propName, object value)
+        {
+            if (instance == null)
+                throw new ArgumentNullException("instance");
+            if (string.IsNullOrEmpty(propName))
+                throw new ArgumentNullException("propName");
+
+            if (instance.GetType() != this.CreateType())
+                throw new InvalidCastException($"Instance type {instance.GetType().FullName} different from {this.CreateType().FullName}");
+            var propType = this.CreateType().GetProperty(propName).PropertyType;
+
+            this.CreateType().GetProperty(propName)?.SetValue(instance, HlidacStatu.Util.ParseTools.ChangeType(value, propType));
+
+        }
+
+        public RuntimeClassBuilder(string className, Dictionary<string, Type> properties)
+        {
+            if (string.IsNullOrEmpty(className))
+                throw new ArgumentNullException("classNames");
             if (properties == null)
                 throw new ArgumentNullException("properties");
             if (properties.Count == 0)
                 throw new ArgumentException("No properties", "properties");
 
-            TypeBuilder DynamicClass = this.CreateClass();
-            this.CreateConstructor(DynamicClass);
+            this.asemblyName = new AssemblyName(className);
+            this.properties = properties;
+        }
+        public object CreateObject() // string[] PropertyNames,Type[]Types)
+        {
+            return Activator.CreateInstance(CreateType());
+        }
 
-            foreach (var kv in properties)
+        Type _createdType = null;
+        public Type CreateType() // string[] PropertyNames,Type[]Types)
+        {
+            if (_createdType == null)
             {
-                CreateProperty(DynamicClass, kv.Key, kv.Value);
+
+                TypeBuilder DynamicClass = this.CreateClass();
+                this.CreateConstructor(DynamicClass);
+
+                foreach (var kv in properties)
+                {
+                    CreateProperty(DynamicClass, kv.Key, kv.Value);
+                }
+
+                _createdType = DynamicClass.CreateType();
             }
-
-            Type type = DynamicClass.CreateType();
-
-            return Activator.CreateInstance(type);
+            return _createdType;
         }
         private TypeBuilder CreateClass()
         {

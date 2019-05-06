@@ -22,8 +22,9 @@ namespace HlidacStatu.Web.Models
         public class Column
         {
             public string Name { get; set; }
-            
-            public string Normalized(string s)
+
+            public string NormalizedName() { return Normalize(this.Name); }
+            public static string Normalize(string s)
             {
                 if (string.IsNullOrEmpty(s))
                     throw new System.ArgumentException("Cannot by null or empty", "s");
@@ -44,11 +45,27 @@ namespace HlidacStatu.Web.Models
             public string ShowSearchFormat { get; set; }
             public string ShowDetailFormat { get; set; }
         }
-        public Guid FileId { get; set; }
+        public Guid? FileId { get; set; }
         public string Name { get; set; }
         public string Delimiter { get; set; } = ",";
 
+        public string GetValidDelimiter() { return GetValidDelimiter(this.Delimiter); }
+
+        static string[] validDelimiters = new string[] { ",", ";", "\t" };
+        public static string GetValidDelimiter(string del)
+        {
+            string delimiter = del?.Trim() ?? ",";
+            if (!validDelimiters.Contains(delimiter))
+            {
+                if (delimiter == "\\t")
+                    delimiter = "\t";
+                else
+                    delimiter = ",";
+            }
+            return delimiter;
+        }
         public string[] Headers { get; set; }
+
 
         public string KeyColumn { get; set; }
 
@@ -62,5 +79,18 @@ namespace HlidacStatu.Web.Models
 
         public Column[] Columns = new Column[] { };
 
+        public int NumOfRows { get; set; } = 0;
+        public string DatasetId { get; set; } = null;
+
+        public void Save(string destinationFile)
+        {
+            System.IO.File.WriteAllText(destinationFile, Newtonsoft.Json.JsonConvert.SerializeObject(this));
+        }
+        public static CreateSimpleModel Load(string sourceFile)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreateSimpleModel>(
+                System.IO.File.ReadAllText(sourceFile)
+                );
+        }
     }
 }

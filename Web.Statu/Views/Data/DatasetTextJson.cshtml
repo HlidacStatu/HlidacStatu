@@ -83,69 +83,69 @@
         <li class="active">@reg.name</li>
         <li class="active pull-right"><a href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
-    }
-    <div id="data-detail-content">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <td colspan="2">
-                        <b>@reg.name</b>
-                        @if (!string.IsNullOrEmpty(reg.description))
-                        {
-                            <p>@reg.description</p>
-                        }
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>DatasetId</td>
-                    <td>@reg.datasetId</td>
-                </tr>
-                <tr>
-                    <td>Výsledek testu</td>
-                    <td>
-                        @if (valid)
-                        {
-                            <span class="text-success">Formát dat je v pořádku.</span>
-                        }
-                        else
-                        {
-                            <h3 class="text-danger">Chyba</h3>
-                            <div class="text-danger">@result</div>
-                            <ol>
-                                @foreach (var verr in errors)
-                                {
-                                    <li>@verr;</li>
-                                }
-                            </ol>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td>Testovaná data</td>
-                    <td>
-                        <div class="highlightme">
-                            <pre>
+}
+<div id="data-detail-content">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <b>@reg.name</b>
+                    @if (!string.IsNullOrEmpty(reg.description))
+                    {
+                        <p>@reg.description</p>
+                    }
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DatasetId</td>
+                <td>@reg.datasetId</td>
+            </tr>
+            <tr>
+                <td>Výsledek testu</td>
+                <td>
+                    @if (valid)
+                    {
+                        <span class="text-success">Formát dat je v pořádku.</span>
+                    }
+                    else
+                    {
+                        <h3 class="text-danger">Chyba</h3>
+                        <div class="text-danger">@result</div>
+                        <ol>
+                            @foreach (var verr in errors)
+                            {
+                                <li>@verr;</li>
+                            }
+                        </ol>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Testovaná data</td>
+                <td>
+                    <div class="highlightme">
+                        <pre>
 @jsonData
                         </pre>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>JSON Schéma popisující strukturu<br />a požadavky na data</td>
-                    <td>
-                        <div class="highlightme">
-                            <pre>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>JSON Schéma popisující strukturu<br />a požadavky na data</td>
+                <td>
+                    <div class="highlightme">
+                        <pre>
 @reg.jsonSchema
                         </pre>
-                        </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
-    </div>
+</div>
 
-    @Html.Partial("_beta")
+@Html.Partial("_new")

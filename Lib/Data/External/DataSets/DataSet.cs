@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             reg.NormalizeShortName();
             var client = Lib.ES.Manager.GetESClient(reg.datasetId, idxType: ES.Manager.IndexType.DataSource);
 
-            if (reg.searchResultTemplate != null && !string.IsNullOrEmpty(reg.searchResultTemplate?.body ))
+            if (reg.searchResultTemplate != null && !string.IsNullOrEmpty(reg.searchResultTemplate?.body))
             {
                 var errors = reg.searchResultTemplate.GetTemplateErrors();
                 if (errors.Count > 0)
@@ -120,6 +120,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return _mapping;
         }
 
+        public bool HasAdminAccess(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            email = email.ToLower();
+
+            if (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email))
+                return true;
+
+            if (string.IsNullOrEmpty(this.Registration().createdBy))
+                return false; //only superadmins have access
+
+            return this.Registration().createdBy.ToLower() == email;
+        }
+
         public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null)
         {
             return Search.SearchData(this, queryString, page, pageSize, sort);
@@ -167,28 +183,110 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return _props;
         }
 
+        public bool IsFlatStructure()
+        {
+            //important from import data from CSV
+            var props = GetPropertyNamesFromSchema();
+            return props.Any(p => p.Contains(".")) == false; //. is delimiter for inner objects
+        }
         public string[] GetPropertyNameFromSchema(string name)
         {
-            List<string> names = new List<string>();
+            Dictionary<string, Type> names = new Dictionary<string, Type>();
             var sch = this.Schema;
-            getPropertyNameFromSchemaInternal(new JSchema[] { sch }, "", name, ref names);
-            return names.ToArray();
+            getPropertyNameTypeFromSchemaInternal(new JSchema[] { sch }, "", name, ref names);
+            return names.Keys.ToArray();
         }
-        private void getPropertyNameFromSchemaInternal(IEnumerable<JSchema> subschema, string prefix, string name, ref List<string> names)
+        public string[] GetPropertyNamesFromSchema()
+        {
+            return GetPropertyNameFromSchema("");
+        }
+        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema()
+        {
+            return GetPropertyNameTypeFromSchema("");
+        }
+        public Dictionary<string, Type> GetPropertyNameTypeFromSchema(string name)
+        {
+            Dictionary<string, Type> names = new Dictionary<string, Type>();
+            var sch = this.Schema;
+            getPropertyNameTypeFromSchemaInternal(new JSchema[] { sch }, "", name, ref names);
+            return names;
+        }
+        private void getPropertyNameTypeFromSchemaInternal(IEnumerable<JSchema> subschema, string prefix, string name, ref Dictionary<string, Type> names)
         {
             foreach (var ss in subschema)
             {
                 foreach (var prop in ss.Properties)
                 {
-                    if (prop.Key == name)
-                        names.Add(prefix + name);
-
-                    getPropertyNameFromSchemaInternal(prop.Value.Items, prefix + prop.Key + ".", name, ref names);
+                    if (string.IsNullOrEmpty(name)
+                        || (!string.IsNullOrEmpty(name) && prop.Key == name)
+                        )
+                    {
+                        names.Add(prefix + prop.Key, JSchemaType2Type(prop.Value));
+                    }
+                    getPropertyNameTypeFromSchemaInternal(prop.Value.Items, prefix + prop.Key + ".", name, ref names);
                 }
             }
 
         }
 
+        private Type JSchemaType2Type(JSchema schema)
+        {
+            if (schema?.Type.Value == null)
+                return null;
+
+            JSchemaType s = schema.Type.Value;
+
+            if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Null))
+            {
+                //nullable types
+                if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.String))
+                {
+                    if (schema.Format == "date" || schema.Format == "date-time")
+                        return typeof(Nullable<DateTime>);
+                    else
+                        return typeof(string);
+                }
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Number))
+                    return typeof(Nullable<decimal>);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Integer))
+                    return typeof(Nullable<long>);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Boolean))
+                    return typeof(Nullable<bool>);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Object))
+                    return typeof(object);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Array))
+                    return typeof(object[]);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.None))
+                    return null;
+                else
+                    return null;
+            }
+            else
+            {
+                if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.String))
+                {
+                    if (schema.Format == "date" || schema.Format == "date-time")
+                        return typeof(DateTime);
+                    else
+                        return typeof(string);
+                }
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Number))
+                    return typeof(decimal);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Integer))
+                    return typeof(long);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Boolean))
+                    return typeof(bool);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Object))
+                    return typeof(object);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Array))
+                    return typeof(object[]);
+                else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.None))
+                    return null;
+                else
+                    return null;
+            }
+
+        }
 
         public void SendErrorMsgToAuthor(string url, string errMsg)
         {
@@ -486,7 +584,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     }
                 }
                 if (needsOCR)
-                    Lib.Data.ItemToOcrQueue.AddNewTask( ItemToOcrQueue.ItemToOcrType.Dataset, finalId, this.datasetId, OCR.Api.Client.TaskPriority.Standard);
+                    Lib.Data.ItemToOcrQueue.AddNewTask(ItemToOcrQueue.ItemToOcrType.Dataset, finalId, this.datasetId, OCR.Api.Client.TaskPriority.Standard);
 
                 return finalId;
             }

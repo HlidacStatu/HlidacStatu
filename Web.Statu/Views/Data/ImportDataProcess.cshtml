@@ -1,0 +1,82 @@
+﻿@model CreateSimpleModel
+
+
+@using HlidacStatu.Web.Models;
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Přidání datasetu pro normální lidi : Typy hodnot";
+    ViewBag.SubTitle = "Postup pro netechnické uživatele";
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    List<Exception> errors = ViewBag.Errors;
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (errors != null && errors?.Count() > 1)
+{
+    <h3 class="text-danger">Chyba při importu dat do datasetu</h3>
+    <p class="bg-danger">
+        <ol>
+            @foreach (var ex in errors)
+            {
+                <li>@ex.Message</li>
+            }
+        </ol>
+    </p>
+
+}
+<div class="row">
+    <div class="col-xs-12 ">
+        <h2>Data úspěšně naimportována!</h2>
+        <p>
+            Gratulujeme, data byla. V tuto chvíli neobsahuje žádná data.
+        </p>
+        @if (ViewBag.NumOfRows == 0)
+        {
+            <p>
+                CSV soubor, který jste nahráli, neobsahuje žádná data.
+                Můžete je kdykoliv (najednou i po částech) nahrát ve <a href="@Url.Action("manage", new { id = Model.Name })">správě datasetu</a>.
+            </p>
+            <p>
+                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.Name })">Nahrát jiná data do datasetu</a>
+                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-default" href="/">Zpět na titulku</a>
+            </p>
+
+        }
+        else
+        {
+            <p>
+                CSV soubor obsahuje <b>@Devmasters.Core.Lang.Plural.Get(ViewBag.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>
+                a ty byly nahrány do Hlídače státu.
+            </p>
+            <p>
+                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.Name })">Nahrát další data do datasetu</a>
+                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-default" href="/">Zpět na titulku</a>
+            </p>
+        }
+    </div>
+</div>

@@ -197,7 +197,7 @@ namespace HlidacStatu.Lib
                     csv.Read();//skip second line
                     while (csv.Read())
                     {
-                        string kod = csv.GetField<string>("Kód")?.Trim();
+                        string kod = csv.GetField<string>("Kód")?.Trim();   
                         string text = csv.GetField<string>("Název")?.Trim();
                         if (!string.IsNullOrEmpty(kod) && !string.IsNullOrEmpty("text"))
                             CPVKody.Add(kod, text);

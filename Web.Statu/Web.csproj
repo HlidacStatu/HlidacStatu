@@ -80,6 +80,9 @@
     <Reference Include="Enyim.Caching, Version=2.9.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Enyim.Caching.dll</HintPath>
     </Reference>
+    <Reference Include="HlidacStatu.Api.Dataset.Connector, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HlidacStatu.Api.Dataset.Connector.1.2.1\lib\net462\HlidacStatu.Api.Dataset.Connector.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.8.11.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.8.11\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -1252,7 +1255,7 @@
     <Content Include="Views\Data\_data_detail_properties.cshtml" />
     <Content Include="Views\Data\_data_hledat_properties.cshtml" />
     <Content Include="Views\Data\Dataset.cshtml" />
-    <Content Include="Views\Data\_beta.cshtml" />
+    <Content Include="Views\Data\_new.cshtml" />
     <Content Include="Views\Manage\Zalozky.cshtml" />
     <Content Include="Views\VZ\TextDokumentu.cshtml" />
     <Content Include="Views\Data\DatasetTextJson.cshtml" />
@@ -1302,6 +1305,9 @@
     <Content Include="Views\Data\NoAccess.cshtml" />
     <Content Include="Views\Data\CreateSimple2.cshtml" />
     <Content Include="Views\Data\CreateSimple3.cshtml" />
+    <Content Include="Views\Data\Delete.cshtml" />
+    <Content Include="Views\Data\ImportData.cshtml" />
+    <Content Include="Views\Data\ImportDataProcess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

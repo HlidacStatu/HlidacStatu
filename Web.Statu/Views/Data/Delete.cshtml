@@ -1,0 +1,45 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSet
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Smazání datového zdroje " + Model.Registration().name;
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    long numOfRec = Model.SearchData("*", 1, 0).Total;
+
+}
+@section scripts
+{
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="@Model.DatasetUrl()">@Model.Registration().name</a></li>
+        <li class="active">Smazání datasetu</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Opravdu chcete smazat dataset <b>@Model.Registration().name</b>?</h2>
+        <p>
+            Dataset  @Devmasters.Core.Lang.Plural.GetWithZero((int)numOfRec, "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů").
+            <div class="text-danger">Tato operace je nevratná, smažeme všechna data BEZ NÁHRADY A BEZ MOŽNOSTI OBNOVY !</div>
+        </p>
+        <p>
+            <a class="btn btn-danger btn-lg" href="@Url.Action("delete", new { id=Model.DatasetId, confirmation = "YES"})" role="button">ANO, smazat!</a>
+            <a class="btn btn-primary btn-lg" href="@Url.Action("manage", new { id=Model.DatasetId})" role="button">Nemazat, prosim.</a>
+        </p>
+    </div>
+    </div>

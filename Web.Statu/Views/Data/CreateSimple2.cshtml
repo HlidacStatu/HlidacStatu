@@ -12,7 +12,7 @@
 @{
 
     ViewBag.Title = "Přidání datasetu pro normální lidi : Typy hodnot";
-    ViewBag.SubTitle = "Postup pro netechnické uživatele";
+    ViewBag.SubTitle = "Popis dat";
 
     string[] colTypes = ViewBag.ColTypes ?? new string[Model.Headers.Count()];
 
@@ -59,7 +59,6 @@
     <div class="col-xs-12">
         <form method="post" class="form-horizontal form-control-new--small">
             @Html.HiddenFor(m => m.Delimiter)
-            @Html.HiddenFor(m => m.Name)
             @Html.HiddenFor(m => m.FileId)
             @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
 
@@ -79,6 +78,14 @@
                     $(".input-select-type").each(function () { selectOnCh(this); });
                 });
             </script>
+            <div class="form-group">
+                @Html.LabelFor(m=>m.Name, "Jméno datasetu", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Jméno datasetu" })
+                    <span class="help-block"><span class="text-danger">Vystižné jméno datasetu, pod kterým bude uložen v Hlídači.</span></span>
+                </div>
+            </div>
+
             <div class="form-group">
                 @Html.LabelFor(m => m.KeyColumn, "Sloupec s klíčem", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-10">
@@ -126,7 +133,8 @@
                                     </optgroup>
                                     <optgroup label="Speciální">
                                         <option value="ico">IČ firmy</option>
-                                        <option value="url">Odkaz (URL) na dokument</option>
+                                        <option value="url">Odkaz na web stránku</option>
+                                        @*<option value="doc">Odkaz (URL) na dokument co máme zpracovat</option>*@
                                     </optgroup>
                                 </select>
                             </td>
