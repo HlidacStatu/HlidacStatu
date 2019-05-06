@@ -231,7 +231,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         private Type JSchemaType2Type(JSchema schema)
         {
-            if (schema?.Type.Value == null)
+            if (schema?.Type == null)
                 return null;
 
             JSchemaType s = schema.Type.Value;

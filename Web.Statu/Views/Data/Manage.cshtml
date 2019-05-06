@@ -10,6 +10,7 @@
     ViewBag.Title = "Správa datových sad";
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
+    bool isNoFlatDS = !Model.GetDataset().IsFlatStructure();
 }
 
 
@@ -40,29 +41,44 @@
         </div>
         <div class="col-xs-12 col-sm-4">
             <a href="/data/edit/@Model.id" class="btn btn-primary"><i class="far fa-cog"></i> Editovat parametry datasetu</a>
-            <p>
+            <p class="text-info">
                 Změna parametrů datasetu (templaty, popisy, viditelnost a další). Nemá žádný vliv na data.
                 Pozor: Není možné změnit ID datasetu a JSON schéma. Pokud je chcete změnit, musíte dataset smazat a založit znovu.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
             <a href="/data/TechnickeInfo/@Model.datasetId" class="btn btn-default"><i class="far fa-info-square"></i> Technické detaily</a>
-            <p class="text-danger">
+            <p class="text-info">
                 Veřejné technické parametry datasetu, JSON schema, templaty, atd.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
             <a href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-default"><i class="far fa-search"></i> Vypsat poslední záznamy</a>
-            <p class="text-danger">
+            <p class="text-info">
                 Vypsání naposledy vložených záznamů
             </p>
         </div>
     </div>
     <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <a @Util.IfExists(isNoFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ") 
+               class="btn btn-success"
+               href="/data/importdata/@Model.id" ><i class="far fa-file-import"></i> Importovat data </a>
+            <p class="text-info">
+                Importovat data z CSV souboru do datasetu.
+            </p>
+            @if (isNoFlatDS)
+            {
+            <p class="text-warning">
+                Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+                neboli když se data dají zobrazit v Excelu ve formě jedné tabulky. Tento dataset tuto podmínku nesplňuje
+             </p>
+            }
+        </div>
 
         <div class="col-xs-12 col-sm-4">
             <a href="/data/backup/@Model.id" class="btn btn-warning"><i class="far fa-file-download"></i> Zálohovat param. datasetu</a>
-            <p class="text-danger">
+            <p class="text-info">
                 Stáhnutí zálohu parametrů datasetu. <span class="text-danger">POZOR! záloha obsahuje pouze parametry datasetu, nikoliv data. Data můžete stáhnout přes API</span>
             </p>
         </div>

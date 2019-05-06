@@ -52,7 +52,7 @@
         <div class="col-xs-12 col-sm-offset-1 col-sm-11">
             <h2>Problém!</h2>
             <p class="text-warning">
-                Nahrání dat do datasetu je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+                Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
                 neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
                 a tabulka má pro všechny řádky stejný počet sloupců.
             </p>
@@ -147,7 +147,7 @@ else
 
         <h3>Propojení sloupců</h3>
         <div class="col-xs-12">
-            <form action="@Url.Action("importDataProcess",new {id = Model.DatasetId })" method="post" class="form-horizontal form-control-new--small">
+            <form id="mapForm" action="@Url.Action("importDataProcess",new {id = Model.DatasetId })" method="post" class="form-horizontal form-control-new--small">
                 @Html.HiddenFor(m => m.Delimiter)
                 @Html.HiddenFor(m => m.FileId)
                 @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
@@ -156,6 +156,7 @@ else
                 <script type="text/javascript">
 
                     function isMappingOK() {
+                        var btn = $("#btnSubmit");
                         var hasError = false;
                         $("select.form-control").each(
                             function () {
@@ -176,11 +177,16 @@ else
                             $("#mappingAlert").hide()
 
                         if (!hasError) {
-                            //alert('Import dat může trvat i několiv minut. Nenačítejte stránku znovu, buďte trpělivý/á');
-                            $(this).attr("disabled", "disabled");
-                            $(this).text("Importuji data, trpělivě čekejte!");
+                            btn.attr("disabled", "disabled");
+                            btn.text("Importuji data, trpělivě čekejte!");
+                            alert('Import dat může trvat i několiv minut. Nenačítejte stránku znovu, buďte trpělivý/á');
+                            //code before the pause
+                            setTimeout(function () {
+                                $("#overlay").show();
+                                $("#mapForm").submit();
+                            }, 200);
                         }
-                        return !(hasError);
+                        return false;
                     }
 
                 </script>
@@ -266,7 +272,7 @@ else
                         </div>
 
                         <a href="createSimple" class="btn btn-default btn">Zpět</a>
-                        <button type="submit" class="btn btn-warning btn" onclick="return isMappingOK();">Pokračovat na další krok</button>
+                        <button type="submit" id="btnSubmit" class="btn btn-warning btn" onclick="return isMappingOK();">Pokračovat na další krok</button>
 
                     </div>
                 </div>
@@ -276,3 +282,9 @@ else
     </div>
 
 }
+
+    <div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 102; cursor: no-drop;">
+        <div onclick="return false;" style="position: absolute; top: 50%; left: 50%; font-size: 50px; color: white; transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%);">
+        Importujeme data, čekejte
+        </div>
+    </div>

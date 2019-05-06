@@ -56,7 +56,7 @@
         <p>
             Gratulujeme, data byla. V tuto chvíli neobsahuje žádná data.
         </p>
-        @if (ViewBag.NumOfRows == 0)
+        @if (Model.NumOfRows == 0)
         {
             <p>
                 CSV soubor, který jste nahráli, neobsahuje žádná data.
@@ -72,7 +72,7 @@
         else
         {
             <p>
-                CSV soubor obsahuje <b>@Devmasters.Core.Lang.Plural.Get(ViewBag.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>
+                CSV soubor obsahuje <b>@Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>
                 a ty byly nahrány do Hlídače státu.
             </p>
             <p>

@@ -242,15 +242,15 @@ namespace HlidacStatu.Web.Controllers
                 else if (col.ShowDetailFormat == "show")
                 {
                     if (col.ValType == "number")
-                        search.AddColumn(col.NormalizedName(), "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NormalizedName(), "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "datetime")
-                        search.AddColumn(col.NormalizedName(), "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NormalizedName(), "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "ico")
-                        search.AddColumn(col.NormalizedName(), "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NormalizedName(), "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "url")
-                        search.AddColumn(col.NormalizedName(), "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
+                        detail.AddColumn(col.NormalizedName(), "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
                     else
-                        search.AddColumn(col.NormalizedName(), "{{ item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NormalizedName(), "{{ item." + col.NormalizedName() + " }}");
                 }
             }
 
@@ -520,7 +520,7 @@ namespace HlidacStatu.Web.Controllers
                         idVal = DataSet.NormalizeValueForId(idVal);
                         rcb.SetPropertyValue(newObj, idPropName, idVal);
 
-                        //ds.AddData(newObj, idVal, email, true);
+                        ds.AddData(newObj, idVal, email, true);
 
                         model.NumOfRows++;
                     }
