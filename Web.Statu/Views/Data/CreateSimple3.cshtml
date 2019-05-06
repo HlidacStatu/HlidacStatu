@@ -57,8 +57,8 @@
                 Můžete je kdykoliv (najednou i po částech) nahrát ve <a href="@Url.Action("manage",new { id = Model.Name })">správě datasetu</a>.
             </p>
             <p>
-                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.Name })">Nahrát nová data do datasetu</a>
-                <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.DatasetId })">Nahrát nová data do datasetu</a>
+                <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.DatasetId })">Spravovat dataset</a>
                 <a class="btn btn-default" href="/">Zpět na titulku</a>
             </p>
 
@@ -71,8 +71,8 @@
                 Tyto záznamy můžeme nyní uložit do datasetu. Stejně tak data můžete později (najednou i po částech) nahrát do Hlídače ve <a href="@Url.Action("manage",new { id = Model.Name })">správě datasetu</a>.
             </p>
             <p>
-                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.Name, fileid= Model.FileId })">Nahrát @Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů") nyní</a>
-                <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.DatasetId, fileid= Model.FileId, delimiter=Model.Delimiter })">Nahrát @Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů") nyní</a>
+                <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.DatasetId })">Spravovat dataset</a>
                 <a class="btn btn-default" href="/">Zpět na titulku</a>
             </p>
         }

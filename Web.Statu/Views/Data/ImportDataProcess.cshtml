@@ -18,6 +18,8 @@
 
     List<Exception> errors = ViewBag.Errors;
 
+    DataSet ds = DataSet.CachedDatasets.Get(Model.DatasetId);
+
 }
 @section scripts
 {
@@ -27,11 +29,12 @@
 
 @section breadcrumb
 {
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Datové zdroje</a></li>
-        <li class="active">@ViewBag.Title</li>
-    </ol>
+<ol class="breadcrumb">
+    <li><a href="/">Hlídač Státu</a></li>
+    <li><a href="/data">Datové zdroje</a></li>
+    <li><a href="@ds.DatasetUrl()">@ds.Registration().name</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
 }
 
 @if (errors != null && errors?.Count() > 1)
@@ -57,11 +60,11 @@
         {
             <p>
                 CSV soubor, který jste nahráli, neobsahuje žádná data.
-                Můžete je kdykoliv (najednou i po částech) nahrát ve <a href="@Url.Action("manage", new { id = Model.Name })">správě datasetu</a>.
+                Můžete je kdykoliv (najednou i po částech) nahrát ve <a href="@Url.Action("manage", new { id = Model.DatasetId })">správě datasetu</a>.
             </p>
             <p>
-                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.Name })">Nahrát jiná data do datasetu</a>
-                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.DatasetId })">Nahrát jiná data do datasetu</a>
+                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.DatasetId })">Spravovat dataset</a>
                 <a class="btn btn-default" href="/">Zpět na titulku</a>
             </p>
 
@@ -73,8 +76,8 @@
                 a ty byly nahrány do Hlídače státu.
             </p>
             <p>
-                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.Name })">Nahrát další data do datasetu</a>
-                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.Name })">Spravovat dataset</a>
+                <a class="btn btn-success" href="@Url.Action("importdata", new { id = Model.DatasetId })">Nahrát další data do datasetu</a>
+                <a class="btn btn-primary" href="@Url.Action("manage", new { id = Model.DatasetId })">Spravovat dataset</a>
                 <a class="btn btn-default" href="/">Zpět na titulku</a>
             </p>
         }

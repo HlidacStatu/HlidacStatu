@@ -18,6 +18,10 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
+        @if (Model != null)
+        {
+            <li><a href="@Model.GetDataset().DatasetUrl()">@Model.name</a></li>
+        }
         <li class="active">@ViewBag.Title</li>
         <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
@@ -35,20 +39,35 @@
             <p>@Model.description </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/edit/@Model.id" class="btn btn-primary">Editovat parametry datasetu</a>
+            <a href="/data/edit/@Model.id" class="btn btn-primary"><i class="far fa-cog"></i> Editovat parametry datasetu</a>
             <p>
                 Změna parametrů datasetu (templaty, popisy, viditelnost a další). Nemá žádný vliv na data.
                 Pozor: Není možné změnit ID datasetu a JSON schéma. Pokud je chcete změnit, musíte dataset smazat a založit znovu.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/backup/@Model.id" class="btn btn-warning">Zálohovat param. datasetu</a>
+            <a href="/data/TechnickeInfo/@Model.datasetId" class="btn btn-default"><i class="far fa-info-square"></i> Technické detaily</a>
+            <p class="text-danger">
+                Veřejné technické parametry datasetu, JSON schema, templaty, atd.
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <a href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-default"><i class="far fa-search"></i> Vypsat poslední záznamy</a>
+            <p class="text-danger">
+                Vypsání naposledy vložených záznamů
+            </p>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-4">
+            <a href="/data/backup/@Model.id" class="btn btn-warning"><i class="far fa-file-download"></i> Zálohovat param. datasetu</a>
             <p class="text-danger">
                 Stáhnutí zálohu parametrů datasetu. <span class="text-danger">POZOR! záloha obsahuje pouze parametry datasetu, nikoliv data. Data můžete stáhnout přes API</span>
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/delete/@Model.id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');">Smazat dataset</a>
+            <a href="/data/delete/@Model.id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="far fa-trash-alt"></i> Smazat dataset</a>
             <p class="text-danger">
                 Nevratná operace, kdy se smažou všechna data datasetu a jeho nastavení.
                 Doporučujeme si <b>stáhnout zálohu parametrů datasetu</b>.
@@ -62,21 +81,30 @@
     <div class="col-xs-12">
         <h3>Vytvoření nového datasetu</h3>
     </div>
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-xs-12 col-sm-4">
+        <h4>Pro "normální" lidi <i class="far fa-smile-wink"></i></h4>
+        <a href="/data/createSimple" class="btn btn-primary"><i class="far fa-file-csv"></i> Vytvořit pomocí Excelu/CSV...</a>
+        <p>
+            Postup pro netechnické uživatele. Využijte tento postup, pokud máte jednoduchou strukturu dat (typicky Excel, CSV soubor) a neumíte sestavit JSON Schema
+        </p>
+
+    </div>
+    <div class="col-xs-12 col-sm-4">
         <h4>Pro pokročilé</h4>
+        <a href="/data/createAdv" class="btn btn-primary"><i class="far fa-layer-plus"></i> Vytvořit s JSON Schema</a>
         <p>
             Postup pro vývojáře a pokročilé uživatele, kteří znají strukturu dat
             a dokážou ji popsat jako JSON Schema dle <a href="https://hlidacstatu.docs.apiary.io/">dokumentace</a>.
         </p>
-        <a href="/data/createAdv" class="btn btn-primary">Vytvořit s JSON Schema</a>
     </div>
-    <div class="col-xs-12 col-sm-6">
-        <h4>Pro "normální" lidi <i class="far fa-smile-wink"></i></h4>
+    <div class="col-xs-12 col-sm-4">
+        <h4>Pro vývojáře</h4>
+        <a href="/api" class="btn btn-primary"><i class="far fa-file-code"></i> Vytvořit přes API</a>
         <p>
-            Postup pro netechnické uživatele. Využijte tento postup, pokud máte jednoduchou strukturu dat (typicky Excel, CSV soubor) a neumíte sestavit JSON Schema
+            Postup pro vývojáře, kteří znají JSON schema, umí pracovat s REST API. Způsob,
+            který dává největší volnost a možnosti
+            a umožňuje pracovat i s nejsložitějšími datovými strukturami.
         </p>
-        <a href="#/data/createSimple" class="btn btn-primary" disabled="disabled">Vytvořit pomocí Excelu/CSV...</a>
-
     </div>
 
 </div>

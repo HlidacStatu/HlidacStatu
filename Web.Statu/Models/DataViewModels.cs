@@ -93,4 +93,12 @@ namespace HlidacStatu.Web.Models
                 );
         }
     }
+
+    public class MappingCSV
+    {
+            public string sourceCSV { get; set; }
+            public string TargetJSON { get; set; }
+            public string Transform { get; set; }
+        
+    }
 }

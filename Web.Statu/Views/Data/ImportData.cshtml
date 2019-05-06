@@ -11,11 +11,12 @@
 @using System.Text.RegularExpressions;
 @{
 
-    ViewBag.Title = "Přidání datasetu pro normální lidi ;-)";
+    ViewBag.Title = "Import dat z CSV souboru";
     ViewBag.SubTitle = "Postup pro netechnické uživatele";
 
     ApiResponseStatus err = ViewBag.ApiResponseError;
 
+    DataSet ds = DataSet.CachedDatasets.Get(Model.DatasetId);
 
 
 }
@@ -30,6 +31,7 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="@ds.DatasetUrl()">@ds.Registration().name</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -71,7 +73,7 @@ else if (ViewBag.Mode == "upload")
         <div class="col-xs-12 col-sm-offset-1 col-sm-11">
             <h2>Jak na to?</h2>
             <p>
-                Nahrání dat do datasetu je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+                Import dat do datasetu z CSV souboru je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
                 neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
                 a tabulka má pro všechny řádky stejný počet sloupců.
             </p>
@@ -130,11 +132,10 @@ else if (ViewBag.Mode == "upload")
 else
 {
     string delimiter = ViewBag.Delimiter;
-    DataSet ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(Model.DatasetId);
 
     string[] properties = ds.GetPropertyNamesFromSchema();
 
-    
+
     <div class="row">
         <div class="col-xs-12 ">
             <h2>Krok 2</h2>
@@ -151,30 +152,38 @@ else
                 @Html.HiddenFor(m => m.FileId)
                 @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
                 @Html.Hidden("sproperties", properties.Aggregate((f, s) => f + "|" + s))
-                    <script type="text/javascript">
-                        function isMappingOK() {
-                            var hasError = false;
-                            $("select.form-control").each(
-                                function () {
-                                    var selectedIdx = this.selectedIndex;
-                                    if (selectedIdx == 0) {
-                                        $(this).parent().removeClass("has-success").addClass("has-error");
-                                        hasError = true;
-                                    }
-                                    else {
-                                        $(this).parent().addClass("has-success").removeClass("has-error");
-                                    }
 
+                <script type="text/javascript">
+
+                    function isMappingOK() {
+                        var hasError = false;
+                        $("select.form-control").each(
+                            function () {
+                                var selectedIdx = this.selectedIndex;
+                                if (selectedIdx == 0) {
+                                    $(this).parent().removeClass("has-success").addClass("has-error");
+                                    hasError = true;
                                 }
-                            );
-                            if (hasError)
-                                $("#mappingAlert").show()
-                            else
-                                $("#mappingAlert").hide()
+                                else {
+                                    $(this).parent().addClass("has-success").removeClass("has-error");
+                                }
 
-                            return !(hasError);
+                            }
+                        );
+                        if (hasError)
+                            $("#mappingAlert").show()
+                        else
+                            $("#mappingAlert").hide()
+
+                        if (!hasError) {
+                            //alert('Import dat může trvat i několiv minut. Nenačítejte stránku znovu, buďte trpělivý/á');
+                            $(this).attr("disabled", "disabled");
+                            $(this).text("Importuji data, trpělivě čekejte!");
                         }
-                    </script>
+                        return !(hasError);
+                    }
+
+                </script>
 
                 <table class="table table-condensed table-striped">
                     <thead>
@@ -190,33 +199,38 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.Headers.Length; i++)
+                        @for (int ip = 0; ip < properties.Length; ip++)
                         {
                             bool rowselected = false;
+                            var normName = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(properties[ip]);
+
                             <tr>
-                                <td style="font-size:1.3em;font-weight:bold">@(i + 1)</td>
+                                <td style="font-size:1.3em;font-weight:bold">@(ip + 1)</td>
                                 <td style="vertical-align: middle;">
-                                    @Model.Headers[i]
-                                    @Html.Hidden("source_"+i,Model.Headers[i])
+                                    @properties[ip]
+                                    @Html.Hidden("target_" + ip, properties[ip])
                                 </td>
                                 <td>
                                     <div class="form-group-sm">
-                                        <select style="width:200px;font-size:1em;line-height:normal" class="form-control" name="target_@i">
+                                        <select style="width:200px;font-size:1em;line-height:normal" class="form-control" name="source_@ip">
                                             <option value="--">(vyberte)</option>
-                                            @for (int p = 0; p < properties.Length; p++)
+                                            @if (properties[ip].ToLower() == "id")
+                                            {
+                                                <option style="height:18px;font-style:italic" value="-gen-">Generovat unikátní klíč</option>
+                                            }
+                                            @for (int ih = 0; ih < Model.Headers.Length; ih++)
                                             {
                                                 bool selected = false;
-                                                var normName = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(Model.Headers[i]);
-
-                                                if (normName == properties[p])
+                                                var normHead = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(Model.Headers[ih]);
+                                                if (normName == normHead)
                                                 {
                                                     selected = true;
                                                 }
-                                                else if (!rowselected && HlidacStatu.Lib.Validators.LevenshteinDistanceCompute(normName, properties[p]) < 3)
+                                                else if (!rowselected && HlidacStatu.Lib.Validators.LevenshteinDistanceCompute(normName, normHead) < 3)
                                                 {
                                                     selected = true;
                                                 }
-                                                <option @Util.IfExists(selected, " selected=\"selected\" ") value="@properties[p]">@properties[p]</option>
+                                                <option @Util.IfExists(selected, " selected=\"selected\" ") value="@Model.Headers[ih]">@Model.Headers[ih]</option>
 
                                             }
                                             <option value="-skip-">Ignorovat</option>
@@ -226,7 +240,18 @@ else
                                 </td>
                                 <td>
                                     <div class="radio">
-                                        <input checked="checked" type="radio" name="transform_@i" value="copy">Zkopírovat bez úprav<br>
+                                        @if (properties[ip].ToLower() == "id")
+                                        {
+                                            <text>
+                                                <input checked="checked" type="radio" name="transform_@ip" value="normalize">Upravit na platné ID <br />
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <text>
+                                                <input checked="checked" type="radio" name="transform_@ip" value="copy">Zkopírovat bez úprav<br>
+                                            </text>
+                                        }
                                     </div>
                                 </td>
                             </tr>

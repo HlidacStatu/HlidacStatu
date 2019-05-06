@@ -63,10 +63,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 shortName = shortName.Substring(0, 120);
             if (shortName.Length < 5)
                 shortName = shortName + "-" + Devmasters.Core.TextUtil.GenRandomString(10);
-            datasetId = shortName;
+            this.datasetId = shortName;
         }
 
 
+        public DataSet GetDataset()
+        {
+            if (string.IsNullOrEmpty(this.datasetId))
+                return null;
+            else
+                return DataSet.CachedDatasets.Get(this.datasetId);
+        }
 
     }
 

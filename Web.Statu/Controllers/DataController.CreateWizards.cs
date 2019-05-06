@@ -143,8 +143,6 @@ namespace HlidacStatu.Web.Controllers
             {
 
                 string name = model.Headers[i];
-                if (model.Headers[i] == model.KeyColumn)
-                    name = "id";
 
                 cols.Add(
                     new CreateSimpleModel.Column()
@@ -215,7 +213,9 @@ namespace HlidacStatu.Web.Controllers
 
             HlidacStatu.Api.Dataset.Connector.ClassicTemplate.ClassicSearchResultTemplate search = new Api.Dataset.Connector.ClassicTemplate.ClassicSearchResultTemplate();
             HlidacStatu.Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate detail = new Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate();
-            search.AddColumn("id", "<a href=\"{{fn_DatasetItemUrl item.Id}}\">Detail</a>");
+
+
+            search.AddColumn("id", "<a href=\"{{ fn_DatasetItemUrl item.id }}\">Detail</a>");
             foreach (var col in model.Columns)
             {
                 if (col.NormalizedName().ToLower() != "id")
@@ -271,7 +271,8 @@ namespace HlidacStatu.Web.Controllers
                 return View(model);
             }
             model.DatasetId = status.valid.ToString();
-            return RedirectToAction("createSimple3", new { fileId = model.FileId });
+            model.Save(pathModels);
+            return RedirectToAction("createSimple3", model);
         }
 
 
@@ -313,7 +314,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportData(string id, CreateSimpleModel model)
         {
             model = model ?? new CreateSimpleModel();
-
+            model.DatasetId = id;
             if (string.IsNullOrEmpty(id))
                 return Redirect("/data");
 
@@ -388,6 +389,8 @@ namespace HlidacStatu.Web.Controllers
         {
             ViewBag.NumOfRows = 0;
 
+            model.DatasetId = id;
+
             string[] csvHeaders = null;
 
             if (string.IsNullOrEmpty(id))
@@ -414,10 +417,22 @@ namespace HlidacStatu.Web.Controllers
             RuntimeClassBuilder rcb = new RuntimeClassBuilder(ds.GetPropertyNamesTypesFromSchema());
 
             string[] formsHeaders = form["sheaders"].Split('|');
-            List<Tuple<string, string>> mappingProps = new List<Tuple<string, string>>();
-            for (int i = 0; i < formsHeaders.Length; i++)
+            List<MappingCSV> mappingProps = new List<MappingCSV>();
+            for (int i = 0; i < formsHeaders.Length+3; i++) //+3 a little bit more, at least +1 for id column
             {
-                mappingProps.Add(new Tuple<string, string>(formsHeaders[i], form["target_" + i]));
+                if (!string.IsNullOrEmpty(form["source_" + i])
+                    && !string.IsNullOrEmpty(form["target_" + i])
+                    && !string.IsNullOrEmpty(form["transform_" + i])
+                    )
+                {
+                    mappingProps.Add(new MappingCSV()
+                            {
+                                sourceCSV = form["source_" + i],
+                                TargetJSON = form["target_" + i],
+                                Transform = form["transform_" + i]
+                            }
+                    );
+                }
             }
 
             List<Exception> errors = new List<Exception>();
@@ -433,45 +448,80 @@ namespace HlidacStatu.Web.Controllers
                     var newObj = rcb.CreateObject();
                     for (int m = 0; m < mappingProps.Count; m++)
                     {
+                        Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].TargetJSON).FirstOrDefault().Value;
                         object value = null;
-                        string svalue = csv.GetField(mappingProps[m].Item1);
-                        Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].Item2).FirstOrDefault().Value;
 
-                        if (destType == typeof(string))
-                            value = svalue;
-                        else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                            value = Util.ParseTools.ToDateFromCZ(svalue);
-                        else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                        string[] specialValues = new string[] { "-skip-", "-gen-", "--" };
+                        if (specialValues.Contains(mappingProps[m].sourceCSV))
                         {
-                            value = Util.ParseTools.ToDecimal(svalue);
-                            if (value == null)
-                                value = Util.ParseTools.FromTextToDecimal(svalue);
-                        }
-                        else if (destType == typeof(long) || destType == typeof(long?)
-                            || destType == typeof(int) || destType == typeof(int?))
-                            value = Util.ParseTools.ToDateFromCZ(svalue);
-                        else if (destType == typeof(bool) || destType == typeof(bool?))
-                        {
-                            if (bool.TryParse(svalue, out bool tryp))
-                                value = tryp;
+                            if (mappingProps[m].sourceCSV == "-gen-")
+                                value = Guid.NewGuid().ToString("N");
+                            else
+                                continue; // -skip- skip 
                         }
                         else
-                            value = svalue;
+                        {
+                            string svalue = csv.GetField(mappingProps[m].sourceCSV);
 
-                        rcb.SetPropertyValue(newObj, mappingProps[m].Item2, value);
+                            if (destType == typeof(string))
+                                value = svalue;
+                            else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
+                                value = Util.ParseTools.ToDateFromCZ(svalue);
+                            else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                            {
+                                value = Util.ParseTools.ToDecimal(svalue);
+                                if (value == null)
+                                    value = Util.ParseTools.FromTextToDecimal(svalue);
+                            }
+                            else if (destType == typeof(long) || destType == typeof(long?)
+                                || destType == typeof(int) || destType == typeof(int?))
+                                value = Util.ParseTools.ToDateFromCZ(svalue);
+                            else if (destType == typeof(bool) || destType == typeof(bool?))
+                            {
+                                if (bool.TryParse(svalue, out bool tryp))
+                                    value = tryp;
+                            }
+                            else
+                                value = svalue;
+                        }
+                        if (mappingProps[m].Transform == "normalize"
+                            && destType == typeof(string)
+                            )
+                        {
+                            value = DataSet.NormalizeValueForId((string)value);
+                        }
+                        else //copy
+                        {}
+                        rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
 
-                    }
+                    } //for
+
+                    string idPropName = "id";
                     string idVal = rcb.GetPropertyValue(newObj, "id")?.ToString();
-                    if (string.IsNullOrEmpty( idVal))
+                    if (string.IsNullOrEmpty(idVal))
+                    {
                         idVal = rcb.GetPropertyValue(newObj, "Id")?.ToString();
+                        idPropName = "Id";
+                    }
                     if (string.IsNullOrEmpty(idVal))
+                    {
                         idVal = rcb.GetPropertyValue(newObj, "iD")?.ToString();
+                        idPropName = "iD";
+                    }
                     if (string.IsNullOrEmpty(idVal))
+                    {
                         idVal = rcb.GetPropertyValue(newObj, "ID")?.ToString();
+                        idPropName = "ID";
+                    }
                     try
                     {
                         //var debugJson = Newtonsoft.Json.JsonConvert.SerializeObject(newObj);
-                        ds.AddData(newObj, idVal, email, true);
+                        //normalize ID
+                        idVal = DataSet.NormalizeValueForId(idVal);
+                        rcb.SetPropertyValue(newObj, idPropName, idVal);
+
+                        //ds.AddData(newObj, idVal, email, true);
+
                         model.NumOfRows++;
                     }
                     catch (DataSetException dex)
@@ -490,6 +540,7 @@ namespace HlidacStatu.Web.Controllers
 
             return View(model);
         }
+
 
         private string GuestBestCSVValueType(string value)
         {

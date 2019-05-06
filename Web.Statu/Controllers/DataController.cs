@@ -33,13 +33,15 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Manage(string id)
         {
-            var ds = DataSet.CachedDatasets.Get(id);
-            if (ds == null)
-                return Redirect("/data");
+            if (!string.IsNullOrEmpty(id))
+            {
+                var ds = DataSet.CachedDatasets.Get(id);
+                if (ds == null)
+                    return Redirect("/data");
 
-            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == true)
-                return View(ds?.Registration());
-
+                if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == true)
+                    return View(ds?.Registration());
+            }
             return View();
         }
 

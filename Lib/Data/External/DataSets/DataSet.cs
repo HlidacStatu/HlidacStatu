@@ -641,5 +641,16 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             DataSet ds = new DataSet(datasetId, false);
             return ds.client != null;
         }
+
+        public static string NormalizeValueForId(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return string.Empty;
+
+            id = System.Text.RegularExpressions.Regex.Replace(id, "\\s", "_");
+            id = id.Replace("/", "-");
+            return id;
+        }
+
     }
 }
