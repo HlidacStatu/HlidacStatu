@@ -270,7 +270,7 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.ApiResponseError = status;
                 return View(model);
             }
-            model.DatasetId = status.valid.ToString();
+            model.DatasetId = status.value.ToString();
             model.Save(pathModels);
             return RedirectToAction("createSimple3", model);
         }
