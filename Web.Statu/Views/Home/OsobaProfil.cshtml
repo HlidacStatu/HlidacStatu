@@ -73,10 +73,10 @@
                         </div>
                         <div class="new-p">
                             <div class="low-box" style="max-height:80px">
-                                <p>
+                                <div class="low-box-content">
                                     @Html.Raw(funkceOsoba)
-                                </p>
-                                <p class="line"><a href="#" class="more"></a></p>
+                                </div>
+                                <div class="low-box-line"><a href="#" class="more"></a></div>
                             </div>
                         </div>
                     </div>
@@ -89,12 +89,12 @@
                         </div>
                         <div class="new-p">
                             <div class="low-box" style="max-height:80px">
-                                <p>
+                                <div class="low-box-content">
                                     @Html.Raw(Model.Description(true,
         m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
         12))
-                                </p>
-                                <p class="line"><a href="#" class="more"></a></p>
+                                </div>
+                                <div class="low-box-line"><a href="#" class="more"></a></div>
                             </div>
                         </div>
                     </div>

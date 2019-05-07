@@ -1321,7 +1321,7 @@ textarea {
     overflow: hidden;
 }
 
-    .low-box .line {
+    .low-box .low-box-line {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -1336,18 +1336,44 @@ textarea {
     }
 
 
-        .low-box .line .more {
+        .low-box .low-box-line .more {
             padding: 5px 10px;
             color: #3e6deb;
             text-decoration: none;
             vertical-align: middle;
         }
 
-            .low-box .line .more:before {
+            .low-box .low-box-line .more.big {
+                font-size: 1.3em;
+            }
+
+            .low-box .low-box-line .more:before, .low-box .line .more.big {
                 content: "\A0\A0\25BD\A0\A0více"; /*▽*/
             }
 
 
+
+    .line-text-divider {
+        color: #ccc;
+        width: 70%;
+        margin: 20px auto;
+        overflow: hidden;
+        text-align: center;
+        line-height: 1.2em;
+    }
+
+        .line-text-divider:before, .line-text-divider:after {
+            content: "";
+            vertical-align: middle;
+            display: inline-block;
+            width: 50%;
+            border-bottom: 2px dotted #ccc;
+            margin: 0 2% 0 -55%;
+        }
+
+        .line-text-divider:after {
+            margin: 0 -55% 0 2%;
+        }
 
 /*  vertical tab */
 div.verticaltab-container {
@@ -1465,14 +1491,14 @@ div.verticaltab-container {
 .highlighting {
     color: #666;
     font-style: italic;
-
 }
+
     .highlighting highl {
-        font-weight:bold;
+        font-weight: bold;
     }
 
 
-.form-group  .input-sm {
+.form-group .input-sm {
     height: 30px;
     padding: 5px 10px;
     font-size: 12px;

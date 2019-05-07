@@ -232,17 +232,17 @@ $(function () {
 
     $(".low-box").each(function () {
         var t = $(this);
-        var more = t.find("p.line");
+        var more = t.find(".low-box-line:first");
         var actheight = t.outerHeight();
         var cssheight = parseInt(t.css("max-height"),10);
         if (actheight < cssheight) {
             more.hide();
         }
     });
-    $(".low-box .line .more").click(function () {
-        var totalHeight = 0
+    $(".low-box .low-box-line .more").click(function () {
+        var totalHeight = 0;
         $el = $(this); $p = $el.parent(); $up = $p.parent();
-        $ps = $up.find("p:not('.line')");
+        $ps = $up.find(".low-box-content:first");
         // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
         $ps.each(function () {
             totalHeight += $(this).outerHeight();
