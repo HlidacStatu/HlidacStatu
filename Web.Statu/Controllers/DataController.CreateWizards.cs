@@ -215,42 +215,42 @@ namespace HlidacStatu.Web.Controllers
             HlidacStatu.Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate detail = new Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate();
 
 
-            search.AddColumn("id", "<a href=\"{{ fn_DatasetItemUrl item.id }}\">Detail</a>");
+            search.AddColumn("Detail", "<a href=\"{{ fn_DatasetItemUrl item.id }}\">Detail</a>");
             foreach (var col in model.Columns)
             {
                 if (col.NormalizedName().ToLower() != "id")
                 {
                     if (col.ShowSearchFormat == "price")
-                        search.AddColumn(col.NormalizedName(), "{{ fn_FormatPrice item." + col.NormalizedName() + " }}");
+                        search.AddColumn(col.NiceName, "{{ fn_FormatPrice item." + col.NormalizedName() + " }}");
                     else if (col.ShowSearchFormat == "show")
                     {
                         if (col.ValType == "number")
-                            search.AddColumn(col.NormalizedName(), "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
+                            search.AddColumn(col.NiceName, "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
                         else if (col.ValType == "datetime")
-                            search.AddColumn(col.NormalizedName(), "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
+                            search.AddColumn(col.NiceName, "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
                         else if (col.ValType == "ico")
-                            search.AddColumn(col.NormalizedName(), "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
+                            search.AddColumn(col.NiceName, "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
                         else if (col.ValType == "url")
-                            search.AddColumn(col.NormalizedName(), "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
+                            search.AddColumn(col.NiceName, "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
                         else
-                            search.AddColumn(col.NormalizedName(), "{{ item." + col.NormalizedName() + " }}");
+                            search.AddColumn(col.NiceName, "{{ item." + col.NormalizedName() + " }}");
                     }
                 }
 
                 if (col.ShowDetailFormat == "price")
-                    detail.AddColumn(col.NormalizedName(), "{{ fn_FormatPrice item." + col.NormalizedName() + " }}");
+                    detail.AddColumn(col.NiceName, "{{ fn_FormatPrice item." + col.NormalizedName() + " }}");
                 else if (col.ShowDetailFormat == "show")
                 {
                     if (col.ValType == "number")
-                        detail.AddColumn(col.NormalizedName(), "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NiceName, "{{ fn_FormatNumber item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "datetime")
-                        detail.AddColumn(col.NormalizedName(), "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NiceName, "{{ fn_FormatDate item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "ico")
-                        detail.AddColumn(col.NormalizedName(), "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NiceName, "{{ fn_RenderCompanyWithLink item." + col.NormalizedName() + " }}");
                     else if (col.ValType == "url")
-                        detail.AddColumn(col.NormalizedName(), "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
+                        detail.AddColumn(col.NiceName, "<a href='{{ item." + col.NormalizedName() + " }}' target='_blank'>Odkaz</a>");
                     else
-                        detail.AddColumn(col.NormalizedName(), "{{ item." + col.NormalizedName() + " }}");
+                        detail.AddColumn(col.NiceName, "{{ item." + col.NormalizedName() + " }}");
                 }
             }
 
@@ -435,7 +435,9 @@ namespace HlidacStatu.Web.Controllers
                 }
             }
 
-            List<Exception> errors = new List<Exception>();
+            System.Collections.Concurrent.ConcurrentBag<Exception> errors = new System.Collections.Concurrent.ConcurrentBag<Exception>();
+
+            List<Tuple<object,string>> items = new List<Tuple<object, string>>();
 
             using (System.IO.StreamReader r = new System.IO.StreamReader(path))
             {
@@ -466,7 +468,7 @@ namespace HlidacStatu.Web.Controllers
                             if (destType == typeof(string))
                                 value = svalue;
                             else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                                value = Util.ParseTools.ToDateFromCZ(svalue);
+                                value = Util.ParseTools.ToDate(svalue);
                             else if (destType == typeof(decimal) || destType == typeof(decimal?))
                             {
                                 value = Util.ParseTools.ToDecimal(svalue);
@@ -475,7 +477,7 @@ namespace HlidacStatu.Web.Controllers
                             }
                             else if (destType == typeof(long) || destType == typeof(long?)
                                 || destType == typeof(int) || destType == typeof(int?))
-                                value = Util.ParseTools.ToDateFromCZ(svalue);
+                                value = Util.ParseTools.ToDate(svalue);
                             else if (destType == typeof(bool) || destType == typeof(bool?))
                             {
                                 if (bool.TryParse(svalue, out bool tryp))
@@ -526,7 +528,7 @@ namespace HlidacStatu.Web.Controllers
                         idVal = DataSet.NormalizeValueForId(idVal);
                         rcb.SetPropertyValue(newObj, idPropName, idVal);
 
-                        ds.AddData(newObj, idVal, email, true);
+                        items.Add(new Tuple<object, string>(newObj, idVal));
 
                         model.NumOfRows++;
                     }
@@ -541,8 +543,40 @@ namespace HlidacStatu.Web.Controllers
                 }
             }
 
+            try
+            {
+
+                Devmasters.Core.Batch.Manager.DoActionForAll<Tuple<object, string>>(items,
+                    (item) => {
+
+                        try
+                        {
+                            ds.AddData(item.Item1, item.Item2, email, true);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            errors.Add(ex);
+                        }
+
+                        return new Devmasters.Core.Batch.ActionOutputData();
+                    }, true
+                    );
+
+            }
+            catch (Exception ex)
+            {
+                errors.Add(ex);
+            }
+
+            if (errors?.Count > 0)
+            {
+                HlidacStatu.Util.Consts.Logger.Error("ImportDataProcess exceptions \n"
+                    + errors.Select(m => m.Message).Aggregate((f, s) => f + "\n" + s));
+            }
+
             ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Chyba při importu dat");
-            ViewBag.Errors = errors;
+            ViewBag.Errors = errors.ToList();
 
             return View(model);
         }
@@ -550,9 +584,9 @@ namespace HlidacStatu.Web.Controllers
 
         private string GuestBestCSVValueType(string value)
         {
-            if (Util.ParseTools.ToDateFromCZ(value).HasValue)
+            if (Util.ParseTools.ToDate(value).HasValue)
                 return "date";
-            else if (Util.ParseTools.ToDateTimeFromCZ(value).HasValue)
+            else if (Util.ParseTools.ToDateTime(value).HasValue)
                 return "datetime";
             else if (Util.ParseTools.ToDecimal(value).HasValue)
                 return "number";

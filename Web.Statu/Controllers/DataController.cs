@@ -58,7 +58,7 @@ namespace HlidacStatu.Web.Controllers
             if (neverDelete.Contains(ds.DatasetId.ToLower()))
                 return View("NoAccess");
 
-            if (confirmation == "YES")
+            if (confirmation == ds.DatasetId)
             {
                 DataSetDB.Instance.DeleteRegistration(ds.DatasetId);
                 return RedirectToAction("Index");

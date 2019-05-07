@@ -8,10 +8,11 @@
 @{
     var registration = Model.Dataset.Registration();
 
-    ViewBag.Title = "Hlídač " + Model.Dataset.Registration().name;
     dynamic model = Model.Dataset.GetDataObj(Model.Data);
 
     string itemId = (model.Id ?? model.id) ?? "";
+    ViewBag.Title = itemId;
+    ViewBag.SubTitle = Model.Dataset.Registration().name; ;
 
 
 }

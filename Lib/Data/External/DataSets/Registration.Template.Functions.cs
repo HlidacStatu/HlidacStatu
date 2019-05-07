@@ -155,6 +155,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     return fn_FormatDate2(value, format,
                             "yyyy-MM-ddTHH:mm:ss.fffK", "yyyy-MM-ddTHH:mm:ss.ffffK", "yyyy-MM-ddTHH:mm:ss.fffffK",
+                            "yyyy-MM-dd HH:mm:ss",
+                            "yyyy-MM-dd HH:mm:ss.fK", "yyyy-MM-dd HH:mm:ss.ffK", "yyyy-MM-dd HH:mm:ss.fffK", "yyyy-MM-dd HH:mm:ss.ffffK",
+                            "yyyy-MM-dd HH:mm:ss.f", "yyyy-MM-dd HH:mm:ss.ff", "yyyy-MM-dd HH:mm:ss.fff", "yyyy-MM-dd HH:mm:ss.ffff",
                             "dd.MM.yyyy HH: mm:ss", "d.M.yyyy H:m:s", "dd.MM.yyyy", "d.M.yyyy",
                             "yyyy.MM.dd HH: mm:ss", "yyyy.M.d H:m:s", "yyyy.MM.dd", "yyyy.M.d",
                             "yy.MM.dd HH: mm:ss", "yy.M.d H:m:s", "yy.MM.dd", "yy.M.d",

@@ -164,7 +164,7 @@ namespace HlidacStatu.Lib.Data
             string narozeni, StatusOsobyEnum status, string user
         )
         {
-            return GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, ParseTools.ToDateFromCZ(narozeni), status, user);
+            return GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, ParseTools.ToDate(narozeni), status, user);
         }
         public static Osoba GetOrCreateNew(string titulPred, string jmeno, string prijmeni, string titulPo,
             DateTime? narozeni, StatusOsobyEnum status, string user)

@@ -133,19 +133,34 @@ namespace HlidacStatu.Util
 
         }
 
-        static object lockComb = new object();
-        static string[] combinations = null;
-        public static DateTime? ToDateTimeFromCZ(string value)
-        {
-            string[] dateFormats = new string[] { "d.M.yyyy", "d. M. yyyy",
+        static string[] dateFormats = new string[] {
+                "d.M.yyyy", "d. M. yyyy",
                 "dd.MM.yyyy", "dd. MM. yyyy",
                 "dd.MM.yy", "dd. MM. yy",
-                "d.M.yy", "d. M. yy"};
-            string[] timeFormats = new string[] {"",
+                "d.M.yy", "d. M. yy",
+                "yyyy-MM-dd", "yyyy-M-d",
+                "yy-MM-dd", "yy-M-d",
+        };
+        static string[] timeFormats = new string[] {"",
                 "H:m:s","HH:mm:ss",
                 "H:m","HH:mm",
-                "H:m:s.fff","HH:mm:ss.fff"
+                "H: m: s","HH: mm: ss",
+                "H:m:s.f","HH:mm:ss.f",
+                "H:m:s.ff","HH:mm:ss.ff",
+                "H:m:s.fff","HH:mm:ss.fff",
+                "H:m:s.ffff","HH:mm:ss.ffff",
+                "H:m:s.fffff","HH:mm:ss.fffff",
+                "H:m:s.fK","HH:mm:ss.fK",
+                "H:m:s.ffK","HH:mm:ss.ffK",
+                "H:m:s.fffK","HH:mm:ss.fffK",
+                "H:m:s.ffffK","HH:mm:ss.ffffK",
+                "H:m:s.fffffK","HH:mm:ss.fffffK",
             };
+
+        static object lockComb = new object();
+        static string[] combinations = null;
+        public static DateTime? ToDateTime(string value)
+        {
 
             if (combinations == null)
                 lock(lockComb)
@@ -167,13 +182,10 @@ namespace HlidacStatu.Util
             return ToDateTime(value,combinations);
                 
         }
-        public static DateTime? ToDateFromCZ(string value)
+        public static DateTime? ToDate(string value)
         {
             return ToDateTime(value,
-                "d.M.yyyy", "d. M. yyyy",
-                "dd.MM.yyyy", "dd. MM. yyyy",
-                "dd.MM.yy", "dd. MM. yy",
-                "d.M.yy", "d. M. yy"
+                dateFormats
                 );
         }
         public static DateTime? ToDateTimeFromCode(string value)
