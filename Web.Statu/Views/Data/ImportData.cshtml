@@ -100,20 +100,20 @@ else if (ViewBag.Mode == "upload")
             </p>
             <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
                 <div class="form-group">
-                    @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
+                    @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
                     <div class="col-sm-10">
-                        <select name="delimiter">
-                            <option value="," selected="selected">, (čárka)</option>
-                            <option value=";">; (středník)</option>
-                            <option value="\t">tab (tabulátor)</option>
-                        </select>
+                        <input type="file" name="file" class="form-control" />
+                        <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
+                    @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
                     <div class="col-sm-10">
-                        <input type="file" name="file" />
-                        <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
+                        <div class="radio" style="margin-left:20px;">
+                            <input checked="checked" type="radio" name="delimiter" value="," /><code>,</code> (čárka) <br />
+                            <input type="radio" name="delimiter" value=";" /><code>;</code> (středník) <br />
+                            <input type="radio" name="delimiter" value="\t" /><code>tab</code> (tabulátor) <br />
+                        </div>
                     </div>
                 </div>
 
@@ -256,6 +256,7 @@ else
                                         {
                                             <text>
                                                 <input checked="checked" type="radio" name="transform_@ip" value="copy">Zkopírovat bez úprav<br>
+                                                <input type="radio" name="transform_@ip" value="findico">Najít a použít IČO z textu<br>
                                             </text>
                                         }
                                     </div>
@@ -283,7 +284,7 @@ else
 
 }
 
-    <div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 102; cursor: no-drop;">
+    <div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); z-index: 102; cursor: no-drop;">
         <div onclick="return false;" style="position: absolute; top: 50%; left: 50%; font-size: 50px; color: white; transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%);">
         Importujeme data, čekejte
         </div>

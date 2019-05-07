@@ -490,8 +490,14 @@ namespace HlidacStatu.Web.Controllers
                         {
                             value = DataSet.NormalizeValueForId((string)value);
                         }
+                        else if (mappingProps[m].Transform == "findico"
+                            && destType == typeof(string)
+                            )
+                        {
+                            value = Lib.Validators.IcosInText((string)value).FirstOrDefault();
+                        }
                         else //copy
-                        {}
+                        { }
                         rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
 
                     } //for

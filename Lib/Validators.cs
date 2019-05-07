@@ -447,7 +447,14 @@ namespace HlidacStatu.Lib
             if (string.IsNullOrEmpty(text))
                 return new string[] { };
 
-            return Util.ParseTools.GetRegexGroupValues(text, @"(\s|\D|^)(?<ico>\d{8})(\s|\D|$)", "ico");
+            var numbers =  Util.ParseTools.GetRegexGroupValues(text, @"(\s|\D|^)(?<ico>\d{8})(\s|\D|$)", "ico");
+            List<string> icos = new List<string>();
+            foreach (var num in numbers)
+            {
+                if (Validators.CheckCZICO(num))
+                    icos.Add(num);
+            }
+            return icos.ToArray();
         }
 
 

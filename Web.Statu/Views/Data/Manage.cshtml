@@ -10,7 +10,7 @@
     ViewBag.Title = "Správa datových sad";
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
-    bool isNoFlatDS = !Model.GetDataset().IsFlatStructure();
+    bool isNoFlatDS = !Model?.GetDataset()?.IsFlatStructure() == true;
 }
 
 
@@ -61,18 +61,18 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-4">
-            <a @Util.IfExists(isNoFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ") 
+            <a @Util.IfExists(isNoFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ")
                class="btn btn-success"
-               href="/data/importdata/@Model.id" ><i class="far fa-file-import"></i> Importovat data </a>
+               href="/data/importdata/@Model.id"><i class="far fa-file-import"></i>Importovat data</a>
             <p class="text-info">
                 Importovat data z CSV souboru do datasetu.
             </p>
             @if (isNoFlatDS)
             {
-            <p class="text-warning">
-                Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
-                neboli když se data dají zobrazit v Excelu ve formě jedné tabulky. Tento dataset tuto podmínku nesplňuje
-             </p>
+                <p class="text-warning">
+                    Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+                    neboli když se data dají zobrazit v Excelu ve formě jedné tabulky. Tento dataset tuto podmínku nesplňuje
+                </p>
             }
         </div>
 
@@ -90,8 +90,8 @@
             </p>
         </div>
     </div>
+    <hr />
 }
-<hr />
 <div class="row">
 
     <div class="col-xs-12">
