@@ -13,6 +13,13 @@ namespace HlidacStatu.Web.Controllers
     {
         public ActionResult CreateAdv()
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             return View(new Registration());
         }
 
@@ -22,6 +29,11 @@ namespace HlidacStatu.Web.Controllers
         {
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
 
             var newReg = WebFormToRegistration(data, form);
             newReg.datasetId = form["datasetId"];
@@ -40,12 +52,26 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet]
         public ActionResult CreateSimple()
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
             return View();
         }
 
         [HttpPost]
         public ActionResult CreateSimple(string name, string delimiter, FormCollection form, HttpPostedFileBase file)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
+
             Guid fileId = Guid.NewGuid();
             var uTmp = new Lib.IO.UploadedTmpFile();
             if (string.IsNullOrEmpty(name))
@@ -72,6 +98,12 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple2(CreateSimpleModel model)
         {
 
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
 
 
             var uTmp = new Lib.IO.UploadedTmpFile();
@@ -85,11 +117,11 @@ namespace HlidacStatu.Web.Controllers
                 {
                     var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
-                    model.Headers = csv.Context.HeaderRecord;
+                    model.Headers = csv.Context.HeaderRecord.Where(m=> !string.IsNullOrEmpty(m?.Trim())).ToArray();
 
                     //read first lines with data and guest type
                     List<string[]> lines = new List<string[]>();
-                    for (int row = 0; row < 2; row++)
+                    for (int row = 0; row < 10; row++)
                     {
                         if (csv.Read())
                         {
@@ -130,6 +162,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost]
         public ActionResult CreateSimple2(CreateSimpleModel model, FormCollection form)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             var uTmp = new Lib.IO.UploadedTmpFile();
             var path = uTmp.GetFullPath(model.FileId.ToString(), model.FileId.ToString() + ".csv");
             var pathModels = uTmp.GetFullPath(model.FileId.ToString(), model.FileId.ToString() + ".json");
@@ -143,17 +182,19 @@ namespace HlidacStatu.Web.Controllers
             {
 
                 string name = model.Headers[i];
-
-                cols.Add(
-                    new CreateSimpleModel.Column()
-                    {
-                        Name = name,
-                        NiceName = form[$"nicename_{i}"],
-                        ValType = form[$"typ_{i}"],
-                        ShowSearchFormat = form[$"show_search_{i}"] == "--" ? "string" : form[$"show_search_{i}"],
-                        ShowDetailFormat = form[$"show_detail_{i}"] == "--" ? "string" : form[$"show_detail_{i}"],
-                    }
-                    );
+                if (form[$"include_{i}"] == "1")
+                {
+                    cols.Add(
+                        new CreateSimpleModel.Column()
+                        {
+                            Name = name,
+                            NiceName = form[$"nicename_{i}"],
+                            ValType = form[$"typ_{i}"],
+                            ShowSearchFormat = form[$"show_search_{i}"] == "--" ? "string" : form[$"show_search_{i}"],
+                            ShowDetailFormat = form[$"show_detail_{i}"] == "--" ? "string" : form[$"show_detail_{i}"],
+                        }
+                        );
+                }
             }
             if (string.IsNullOrEmpty(model.KeyColumn) && !cols.Any(m => m.Name.ToLower() == "id"))
                 cols.Add(new CreateSimpleModel.Column()
@@ -210,6 +251,7 @@ namespace HlidacStatu.Web.Controllers
             reg.jsonSchema = schema.ToString();
             reg.name = model.Name;
             reg.NormalizeShortName();
+            reg.createdBy = email;
 
             HlidacStatu.Api.Dataset.Connector.ClassicTemplate.ClassicSearchResultTemplate search = new Api.Dataset.Connector.ClassicTemplate.ClassicSearchResultTemplate();
             HlidacStatu.Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate detail = new Api.Dataset.Connector.ClassicTemplate.ClassicDetailTemplate();
@@ -261,7 +303,7 @@ namespace HlidacStatu.Web.Controllers
             if (DataSet.ExistsDataset(reg.datasetId))
                 reg.datasetId = reg.datasetId + "-" + Devmasters.Core.TextUtil.GenRandomString(5);
 
-            var status = DataSet.Api.Create(reg, Request?.RequestContext?.HttpContext?.User?.Identity?.Name);
+            var status = DataSet.Api.Create(reg, email);
             if (status.valid == false)
             {
                 if (DataSet.ExistsDataset((status.value?.ToString() ?? "")))
@@ -279,6 +321,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet]
         public ActionResult CreateSimple3(Guid? fileId)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             if (!fileId.HasValue)
                 return RedirectToAction("CreateSimple");
 
@@ -313,6 +362,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet]
         public ActionResult ImportData(string id, CreateSimpleModel model)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             model = model ?? new CreateSimpleModel();
             model.DatasetId = id;
             if (string.IsNullOrEmpty(id))
@@ -322,7 +378,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return Redirect("/data");
 
-            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
+            if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
             model.DatasetId = ds.DatasetId;
@@ -345,7 +401,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
-                    model.Headers = csv.Context.HeaderRecord;
+                    model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
                 }
 
             }
@@ -357,6 +413,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost]
         public ActionResult ImportData(string id, string delimiter, FormCollection form, HttpPostedFileBase file)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             if (string.IsNullOrEmpty(id))
                 return Redirect("/data");
 
@@ -364,7 +427,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return Redirect("/data");
 
-            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
+            if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
 
@@ -387,6 +450,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost]
         public ActionResult ImportDataProcess(string id, CreateSimpleModel model, FormCollection form)
         {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (email == null)
+            {
+                //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
             ViewBag.NumOfRows = 0;
 
             model.DatasetId = id;
@@ -399,7 +469,7 @@ namespace HlidacStatu.Web.Controllers
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
                 return Redirect("/data");
-            string email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
             if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
@@ -443,7 +513,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                 csv.Read(); csv.ReadHeader();
-                csvHeaders = csv.Context.HeaderRecord; //for future control
+                csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
 
                 while (csv.Read())
                 {

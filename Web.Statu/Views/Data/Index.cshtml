@@ -73,15 +73,12 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="row">
                             <p>
                                 @if (!string.IsNullOrEmpty(ds.description))
                                 {
                                     @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(),240,"..."))
                                 }
                             </p>
-                        </div>
-
                         <div>
                             <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
                                 <div class="form-group form-group">
@@ -161,12 +158,12 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div>
+                                    <p>
                                         @if (!string.IsNullOrEmpty(ds.description))
                                         {
                                             @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
                                         }
-                                    </div>
+                                    </p>
 
                                     <div>
                                         <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">

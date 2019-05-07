@@ -109,6 +109,7 @@
                             Srozumitelný název
                             <div class="text-gray">Veřejný název položky,<br />změňte dle potřeby</div>
                         </td>
+                        <td>Zpracovat</td>
                         <td>Typ dat</td>
                         <td>Zobrazování dat ve<br />výsledcích hledání</td>
                         <td>Zobrazování dat v<br />detailu</td>
@@ -117,42 +118,48 @@
                 <tbody>
                     @for (int i = 0; i < Model.Headers.Length; i++)
                     {
-                        <tr>
-                            <td style="font-size:1.3em;font-weight:bold">@(i + 1)</td>
-                            <td><input type="text" name="name_@i" value="@Model.Headers[i]" disabled="disabled"></td>
-                            <td>
-                                <input type="text" name="nicename_@i" value="@Model.Headers[i]">
-                            </td>
-                            <td>
-                                <select style="width:140px;font-size:1em" name="typ_@i" class="input-select-type" cindex="@i" onchange="selectOnCh(this,@i);" onload="selectOnCh(this);">
-                                    @*<option value="--"  disabled="disabled">-- vyberte --</option>*@
-                                    <optgroup label="Obvyklé">
-                                        <option value="string" @Util.IfExists(colTypes[i] == "string", "selected=\"selected\"")>Text</option>
-                                        <option value="number" @Util.IfExists(colTypes[i] == "number", "selected=\"selected\"")>Číslo</option>
-                                        <option value="datetime" @Util.IfExists(colTypes[i] == "datetime", "selected=\"selected\"")>Datum a čas</option>
-                                    </optgroup>
-                                    <optgroup label="Speciální">
-                                        <option value="ico">IČ firmy</option>
-                                        <option value="url">Odkaz na web stránku</option>
-                                        @*<option value="doc">Odkaz (URL) na dokument co máme zpracovat</option>*@
-                                    </optgroup>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="radio">
-                                    <input @Util.IfExists(i < 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
-                                    <input @Util.IfExists(i >= 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
-                                    <span style="display:none"><input type="radio" class="show_search_@i" name="show_search_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="radio">
-                                    <input checked="checked" type="radio" class="show_search_@i" name="show_detail_@i" value="show" g="*_@i">Zobrazit<br>
-                                    <input type="radio" class="show_search_@i" name="show_detail_@i" value="hide" g="*_@i">Skrýt<br>
-                                    <span style="display:none"><input type="radio" class="show_search_@i" name="show_detail_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td style="font-size:1.3em;font-weight:bold">@(i + 1)</td>
+                        <td><input type="text" name="name_@i" value="@Model.Headers[i]" disabled="disabled"></td>
+                        <td>
+                            <input type="text" name="nicename_@i" value="@Model.Headers[i]">
+                        </td>
+                        <td>
+                            <div class="radio">
+                                <input checked="checked" type="radio" name="include_@i" value="1" g="*_@i">Zpracovat<br>
+                                <input type="radio" name="include_@i" value="0" g="*_@i">Ignorovat<br>
+                            </div>
+                        </td>
+                        <td>
+                            <select style="width:90px;font-size:1em" name="typ_@i" class="input-select-type" cindex="@i" onchange="selectOnCh(this,@i);" onload="selectOnCh(this);">
+                                @*<option value="--"  disabled="disabled">-- vyberte --</option>*@
+                                <optgroup label="Obvyklé">
+                                    <option value="string" @Util.IfExists(colTypes[i] == "string", "selected=\"selected\"")>Text</option>
+                                    <option value="number" @Util.IfExists(colTypes[i] == "number", "selected=\"selected\"")>Číslo</option>
+                                    <option value="datetime" @Util.IfExists(colTypes[i] == "datetime", "selected=\"selected\"")>Datum a čas</option>
+                                </optgroup>
+                                <optgroup label="Speciální">
+                                    <option value="ico">IČ firmy</option>
+                                    <option value="url">Odkaz na web stránku</option>
+                                    @*<option value="doc">Odkaz (URL) na dokument co máme zpracovat</option>*@
+                                </optgroup>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="radio">
+                                <input @Util.IfExists(i < 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
+                                <input @Util.IfExists(i >= 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
+                                <span style="display:none"><input type="radio" class="show_search_@i" name="show_search_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="radio">
+                                <input checked="checked" type="radio" class="show_search_@i" name="show_detail_@i" value="show" g="*_@i">Zobrazit<br>
+                                <input type="radio" class="show_search_@i" name="show_detail_@i" value="hide" g="*_@i">Skrýt<br>
+                                <span style="display:none"><input type="radio" class="show_search_@i" name="show_detail_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
+                            </div>
+                        </td>
+                    </tr>
 
                     }
                 </tbody>
