@@ -398,7 +398,7 @@ else if (Model.HasResults == false)
 							{
 								countRendered++;
 								var rec = item.Source;
-								@SearchResults.InsolvenceRow(User, Request, rec)
+								@SearchResults.InsolvenceRow(User, Request, rec, Model.Query)
 							}
 						</tbody>
 					</table>

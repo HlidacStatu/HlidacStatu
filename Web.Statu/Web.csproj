@@ -196,7 +196,7 @@
     <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
     </Reference>
-    <Reference Include="System.Core" />    
+    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Linq" />
@@ -1285,8 +1285,6 @@
     <Content Include="Views\Insolvence\Hledat.cshtml" />
     <Content Include="Views\Insolvence\Rizeni.cshtml" />
     <Content Include="Views\Insolvence\_PeopleList.cshtml" />
-    <Content Include="Views\Shared\_Soud.cshtml" />
-    <Content Include="Views\Shared\_StavRizeni.cshtml" />
     <Content Include="Views\Insolvence\_SearchFormHelp.cshtml" />
     <Content Include="Views\Insolvence\Dokumenty.cshtml" />
     <Content Include="Views\Insolvence\_OddilDokumenty.cshtml" />

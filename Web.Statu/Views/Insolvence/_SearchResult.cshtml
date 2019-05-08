@@ -5,7 +5,6 @@
 @using System.Linq;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Util;
-
 @if (Model?.Result?.IsValid == false || Model.Result == null)
 {
     <div class="row">
@@ -20,6 +19,11 @@
 }
 else
 {
+    @*if (Model.ShowWatchdog && Model.Q != null)
+        {
+            @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+        }*@
+
     if (Model.Result == null)
     {
         <span></span>
@@ -41,13 +45,13 @@ else
         </div>
 
         <table class="table table-hover">
-			<thead>
-				@SearchResults.InsolvenceHead()
-			</thead>
+            <thead>
+                @SearchResults.InsolvenceHead()
+            </thead>
             <tbody>
                 @foreach (var hit in Model.Result.Hits)
-				{
-					@SearchResults.InsolvenceRow(User, Request, hit.Source)
+                {
+                    @SearchResults.InsolvenceRow(User, Request, hit.Source, Model.Q)
                 }
             </tbody>
         </table>
@@ -94,6 +98,5 @@ else
 
     }
 }
-
 
 <div style="margin-bottom:50px;"></div>

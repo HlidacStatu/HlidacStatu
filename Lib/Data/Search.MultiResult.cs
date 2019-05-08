@@ -76,7 +76,8 @@ namespace HlidacStatu.Lib.Data
                         && this.Transakce.IsValid
                         && this.Firmy.IsValid
                         && this.Datasets.IsValid
-						&& this.Insolvence.IsValid;
+						//&& this.Insolvence.IsValid
+                        ;
                 }
             }
 
@@ -242,6 +243,8 @@ namespace HlidacStatu.Lib.Data
 				{
 					try
 					{
+                        
+                        return;
 						res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 20 });
 					}
 					catch (System.Exception e)
