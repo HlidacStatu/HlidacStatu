@@ -14,6 +14,8 @@
     ApiResponseStatus err = ViewBag.ApiResponseError;
 
     DataSet dataset = DataSet.CachedDatasets.Get(Model.datasetId);
+    var logged = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
 
 }
 @section scripts
@@ -61,109 +63,121 @@
             </p>
 
         }
-        <form method="post" class="form-horizontal form-control-new--small">
-            @Html.HiddenFor(m => m.datasetId)
-            <div class="form-group">
-                <label class="col-sm-2 control-label">DatasetId</label>
-                <div class="col-sm-10">@Model.datasetId</div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.name, "Veřejné jméno", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+            <form method="post" class="form-horizontal form-control-new--small">
+                @Html.HiddenFor(m => m.datasetId)
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">DatasetId</label>
+                    <div class="col-sm-10">@Model.datasetId</div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.description, "Popis", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.description, new { @rows = "6", @class = "form-control" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.name, "Veřejné jméno", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.betaversion, "Je v betaverzi?", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.CheckBoxFor(m => m.betaversion, new { @class = "" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.description, "Popis", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(m => m.description, new { @rows = "6", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.allowWriteAccess, "Povolit úpravu dat komukoliv?", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.CheckBoxFor(m => m.allowWriteAccess, new { @class = "" })
+                @if (DataSet.Api.SuperUsers.Contains(logged))
+                {
+                <div class="form-group">
+                    @Html.LabelFor(m => m.createdBy, "Vytvořil", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.createdBy, new { @class = "" })
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.origUrl, "Zdroj dat (URL)", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.origUrl, new { @type = "url", @class = "form-control" })
+                }
+                else
+                {
+                    @Html.HiddenFor(m=>m.createdBy)
+                }
+                <div class="form-group">
+                    @Html.LabelFor(m => m.betaversion, "Je v betaverzi?", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.CheckBoxFor(m => m.betaversion, new { @class = "" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.sourcecodeUrl, "Zdrojový kód parseru dat (URL)", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.sourcecodeUrl, new { @type = "url", @class = "form-control" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.allowWriteAccess, "Povolit úpravu dat komukoliv?", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.CheckBoxFor(m => m.allowWriteAccess, new { @class = "" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code", disabled = "disabled" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.origUrl, "Zdroj dat (URL)", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.origUrl, new { @type = "url", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.Label("sorderList", "Atributy, podle kterých je možné data třídit", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    <div class="small-darkgray-text">
-                        Text.popis | jméno atributu
+                <div class="form-group">
+                    @Html.LabelFor(m => m.sourcecodeUrl, "Zdrojový kód parseru dat (URL)", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.sourcecodeUrl, new { @type = "url", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.jsonSchema, "JSON Schéma popisující strukturu dat", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(m => m.jsonSchema, new { @rows = "30", @class = "form-control code", disabled = "disabled" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("sorderList", "Atributy, podle kterých je možné data třídit", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        <div class="small-darkgray-text">
+                            Text.popis | jméno atributu
+
+                        </div>
+                        @{
+                            string sorder = "";
+                            for (int i = 0; i < Model.orderList.GetLength(0); i++)
+                            {
+                                sorder = sorder + Model.orderList[i, 0] + "|" + Model.orderList[i, 1] + "\n";
+                            }
+                        }
+                        @Html.TextArea("sorderList", sorder, 5, 80, new { @class = "form-control  code" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("searchResultTemplate_body", "Template pro zobrazování vyhledaných výsledků", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextArea("searchResultTemplate_body", FormatHtml(Model.searchResultTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("detailTemplate_body", "Template pro zobrazování jednoho záznamu", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextArea("detailTemplate_body", FormatHtml(Model.detailTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-warning btn">Uložit změny</button>
 
                     </div>
-                    @{
-                        string sorder = "";
-                        for (int i = 0; i < Model.orderList.GetLength(0); i++)
-                        {
-                            sorder = sorder + Model.orderList[i, 0] + "|" + Model.orderList[i, 1] + "\n";
-                        }
-                    }
-                    @Html.TextArea("sorderList", sorder, 5, 80, new { @class = "form-control  code" })
                 </div>
-            </div>
+                <div class="form-group">
 
-            <div class="form-group">
-                @Html.Label("searchResultTemplate_body", "Template pro zobrazování vyhledaných výsledků", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextArea("searchResultTemplate_body", FormatHtml(Model.searchResultTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
+                    <label class="col-sm-2 control-label">Otestování výsledků</label>
+                    <div class="col-sm-10">
+                        <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.Label("detailTemplate_body", "Template pro zobrazování jednoho záznamu", new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
-                    @Html.TextArea("detailTemplate_body", FormatHtml(Model.detailTemplate?.body ?? ""), 30, 80, new { @class = "form-control code" })
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-warning btn">Uložit změny</button>
-
-                </div>
-            </div>
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">Otestování výsledků</label>
-                <div class="col-sm-10">
-                    <a target="_blank" href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-primary btn-sm">Vypsat poslední záznamy</a>
-                </div>
-            </div>
-        </form>
+            </form>
     </div>
 </div>
 

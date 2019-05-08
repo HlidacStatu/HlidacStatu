@@ -30,11 +30,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         return ApiResponseStatus.DatasetNotFound;
 
                     if (string.IsNullOrEmpty(oldReg.createdBy))
-                        oldReg.createdBy = updatedBy;
-
-                    if (updatedBy != oldReg?.createdBy?.ToLower() && SuperUsers.Contains(updatedBy))
                     {
-                        return ApiResponseStatus.DatasetNoPermision;
+                        oldReg.createdBy = updatedBy; //fix for old datasets without createdBy
                     }
 
                     using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
@@ -65,10 +62,19 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     dataset.datasetId = oldReg.datasetId;
                     dataset.created = DateTime.Now;
 
-                    if (updatedBy != oldReg?.createdBy?.ToLower()
-                        && updatedBy != "michal@michalblaha.cz")
-                        dataset.createdBy = updatedBy;
-
+                    //pokud se lisi autor (byl pri updatu zmodifikovan), muze to udelat pouze superUser nebo orig autor
+                    if (dataset.createdBy != oldReg.createdBy)
+                    {
+                        if (!SuperUsers.Contains(updatedBy) && updatedBy != oldReg.createdBy)
+                        {
+                            return ApiResponseStatus.DatasetNoPermision;
+                        }
+                    }
+                    if (updatedBy != oldReg?.createdBy?.ToLower())
+                    {
+                        if (!SuperUsers.Contains(updatedBy))
+                            dataset.createdBy = updatedBy; //pokud updatovano nekym jinym nez autorem (a je mozne to modifikovat), pak createdBy se zmeni na autora. Pokud 
+                    }
                     if (dataset.searchResultTemplate != null && !string.IsNullOrEmpty(dataset.searchResultTemplate?.body))
                     {
                         var errors = dataset.searchResultTemplate.GetTemplateErrors();

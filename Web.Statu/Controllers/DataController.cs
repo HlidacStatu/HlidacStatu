@@ -117,9 +117,9 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return RedirectToAction("index");
 
-            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            var logged = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
-            if (ds.HasAdminAccess(email) == false)
+            if (ds.HasAdminAccess(logged) == false)
             {
                 ViewBag.DatasetId = id;
                 return View("NoAccess");
@@ -136,8 +136,11 @@ namespace HlidacStatu.Web.Controllers
             }
 
             newReg = WebFormToRegistration(newReg, form);
+            if (string.IsNullOrEmpty(newReg.createdBy))
+                newReg.createdBy = logged;
 
-            var res = DataSet.Api.Update(newReg, email);
+
+            var res = DataSet.Api.Update(newReg, logged);
             if (res.valid)
                 return RedirectToAction("Manage", "Data", new { id = ds.DatasetId });
             else
