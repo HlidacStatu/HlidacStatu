@@ -16,20 +16,7 @@
     //ViewBag.SocialShareTitle = Model.NazevZakazky;
     //ViewBag.SocialShareText = Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 200));
 
-    //ViewBag.SocialShareType = "article";
-    //ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/zakazka?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.Id;
-    //ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
-    //			+ "<meta property=\"og:image:height\" content=\"1080\" />"
-    //			+ "<meta property=\"og:image:type\" content=\"image/png\" />"
-    //			;
 
-
-    var dluznici = Model.Rizeni.Dluznici.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
-    var veritele = Model.Rizeni.Veritele.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
-    var spravci = Model.Rizeni.Spravci.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
-
-    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
-    bool highlighting = highlightingData?.Keys?.Contains("dokumenty.plainText") == true;
 }
 
 
@@ -74,22 +61,22 @@ else
 {
     @Html.Partial("_Status", new StavRizeniViewModel { Stav = Model.Rizeni.Stav })
 
-    <h3>Účastníci řízení</h3>
-    <div class="row">
-        <div class="col-sm-6 col-xs-12">
-            <h4>Dlužníci (@dluznici.Count())</h4>
-            @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true })
+	<h3>Účastníci řízení</h3>
+	<div class="row">
+		<div class="col-sm-6 col-xs-12">
+			<h4>Dlužníci (@dluznici.Count())</h4>
+			@Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true })
 
-            <br />
+			<br />
 
-            <h4>Správci (@spravci.Count())</h4>
-            @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true })
-        </div>
-        <div class="col-sm-6 col-xs-12">
-            <h4>Věřitelé (@veritele.Count())</h4>
-            @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true })
-        </div>
-    </div>
+			<h4>Správci (@spravci.Count())</h4>
+			@Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true })
+		</div>
+		<div class="col-sm-6 col-xs-12">
+			<h4>Věřitelé (@veritele.Count())</h4>
+			@Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true })
+		</div>
+	</div>
 
     <h3 style="margin-top:50px">Informace o řízení</h3>
     <table class="table table-hover">
@@ -159,26 +146,37 @@ else
         </tbody>
     </table>
 
-    <h3 style="margin-top:50px">Dokumenty k řízení</h3>
-    <div>
-        @{var dokumentu = Model.Rizeni.Dokumenty.Count();}
-        <table class="table table-condensed table-striped">
-            <tbody>
-                @{
-                    Dictionary<Dokument, string> docs = new Dictionary<Dokument, string>();
-                    for (int i = 0; i < dokumentu; i++)
-                    {
-                        var doc = Model.Rizeni.Dokumenty[i];
-                        if (highlighting == false)
-                        {
-                            docs.Add(doc, null);
-                        }
-                        else
-                        {
-                            docs.Add(doc, HlidacStatu.Web.Framework.Highlighter.HasHighlightedContent(highlightingData, "dokumenty.plainText", doc.PlainText) ? "1" : "0");
-                        }
-                    }
+	<h3 style="margin-top:50px">Poslední dokumenty k řízení</h3>
+	<div>
+		@{var dokumentu = Model.Rizeni.Dokumenty.Count();}
+		<table class="table table-condensed table-striped">
+			<tbody>
+				@foreach (var item in Model.Rizeni.Dokumenty.OrderByDescending(d => d.DatumVlozeni).Take(10))
+				{
+					<tr>
+						<td>
+							@item.Popis
+						</td>
+						<td style="width:100px">
+							@item.DatumVlozeni.ToShortDateString()
+						</td>
+						<td style="width:50px">
+							<a href="@item.Url"><span class="glyphicon glyphicon-new-window"></span></a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<div class="text-right">
+			<a href="@Url.Action("Dokumenty", "Insolvence", new { id = Model.Rizeni.UrlId() })">Všechny dokumenty (@Model.Rizeni.Dokumenty.Count())</a>
+		</div>
+	</div>
 
+	<script>
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		})
+	</script>
 }
                 @foreach (var item in docs.OrderByDescending(o => o.Value ).ThenByDescending(d => d.Key.DatumVlozeni).Take(10))
                 {

@@ -29,8 +29,9 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     catch (Exception e)
                     {
                         HlidacStatu.Util.Consts.Logger.Fatal("ZabTools webyList cache", e);
-                        return null;
-                    }
+						return new List<ZabHost>(); //null;
+
+					}
                 });
 
         static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyData =

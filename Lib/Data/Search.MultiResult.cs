@@ -18,6 +18,7 @@ namespace HlidacStatu.Lib.Data
             public GeneralResult<TransparentniUcty.BankovniPolozka> Transakce { get; set; } = null;
             public GeneralResult<string> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
+			public ES.InsolvenceSearchResult Insolvence { get; set; } = null;
 
             public bool HasSmlouvy { get { return (Smlouvy != null && Smlouvy.HasResult); } }
             public bool HasVZ { get { return (VZ != null && VZ.HasResult); } }
@@ -25,6 +26,7 @@ namespace HlidacStatu.Lib.Data
             public bool HasTransakce { get { return (Transakce != null && Transakce.HasResult); } }
             public bool HasFirmy { get { return (Firmy != null && Firmy.HasResult); } }
             public bool HasDatasets { get { return (Datasets != null && Datasets.HasResult); } }
+			public bool HasInsolvence { get { return Insolvence != null && Insolvence.HasResult; } }
 
             public Dictionary<string, System.TimeSpan> SearchTimes()
             {
@@ -41,14 +43,16 @@ namespace HlidacStatu.Lib.Data
                     times.Add("Firmy", Firmy.ElapsedTime);
                 if (Firmy != null)
                     times.Add("Dataset.Total", Datasets.ElapsedTime);
-                if (Datasets != null)
+				if (Datasets != null)
                 {
                     foreach (var ds in Datasets.Results)
                     {
                         times.Add("Dataset." + ds.DataSet.DatasetId, ds.ElapsedTime);
                     }
                 }
-                return times;
+				if (Insolvence != null)
+					times.Add("Insolvence", Insolvence.ElapsedTime);
+				return times;
             }
 
             public string SearchTimesReport(string delimiter = "\n")
@@ -71,7 +75,8 @@ namespace HlidacStatu.Lib.Data
                         && this.Osoby.IsValid
                         && this.Transakce.IsValid
                         && this.Firmy.IsValid
-                        && this.Datasets.IsValid;
+                        && this.Datasets.IsValid
+						&& this.Insolvence.IsValid;
                 }
             }
 
@@ -79,7 +84,7 @@ namespace HlidacStatu.Lib.Data
             {
                 get
                 {
-                    return HasSmlouvy || HasVZ || HasOsoby || HasTransakce || HasFirmy || HasDatasets;
+                    return HasSmlouvy || HasVZ || HasOsoby || HasTransakce || HasFirmy || HasDatasets || HasInsolvence;
                 }
             }
 
@@ -100,6 +105,8 @@ namespace HlidacStatu.Lib.Data
                         t += Firmy.Total;
                     if (HasDatasets)
                         t += Datasets.Total;
+					if (HasInsolvence)
+						t += Insolvence.Total;
 
                     return t;
                 }
@@ -230,8 +237,20 @@ namespace HlidacStatu.Lib.Data
                         HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for bankovni ucty query" + query, e);
                     }
 
-                }
-            );
+                },
+				() =>
+				{
+					try
+					{
+						res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 20 });
+					}
+					catch (System.Exception e)
+					{
+						Util.Consts.Logger.Error("MultiResult GeneralSearch for insolvence query" + query, e);
+					}
+
+				}
+			);
 
             if (res.HasFirmy && (res.Osoby == null || res.Osoby.Total < 5))
             {

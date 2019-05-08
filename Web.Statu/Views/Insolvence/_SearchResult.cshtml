@@ -20,11 +20,6 @@
 }
 else
 {
-    @*if (Model.ShowWatchdog && Model.Q != null)
-        {
-            @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
-        }*@
-
     if (Model.Result == null)
     {
         <span></span>
@@ -46,87 +41,13 @@ else
         </div>
 
         <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Spisová značka</th>
-                    <th>Datum vzniku</th>
-                    <th>Poslední změna</th>
-                    <th>Stav řízení</th>
-                    <th>Dlužník/ci</th>
-                    <th>Věřitelé</th>
-                    <th>Soud</th>
-                    <th></th>
-                </tr>
-            </thead>
+			<thead>
+				@SearchResults.InsolvenceHead()
+			</thead>
             <tbody>
                 @foreach (var hit in Model.Result.Hits)
-                {
-                    var item = hit.Source;
-                <tr>
-                    <td>
-                        @{
-                            @Util.AddBookmark(this.User, item)
-                        }
-                    </td>
-                    <td style="white-space: nowrap;">
-                        @if (LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
-                        {
-                            <a href="@item.GetUrl(true,Model.Q)">@item.SpisovaZnacka</a>
-                        }
-                        else
-                        {
-                            <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
-                        }
-                    </td>
-                    <td>
-                        @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
-                    </td>
-                    <td>
-                        @item.PosledniZmena.Date.ToString("d.MM.yyyy")
-                    </td>
-
-                    <td>
-                        @Html.Partial("_StavRizeni", new StavRizeniViewModel { Stav = item.Stav })
-                    </td>
-                    <td>
-                        @if (item.Dluznici?.Count > 0)
-                        {
-                            foreach (var o in item.Dluznici.Take(2))
-                            {
-                                <div>@Html.Raw(o.ToHtml())</div>
-                            }
-                            if (item.Dluznici.Count == 3)
-                            {
-                                <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
-                            }
-                            else if (item.Dluznici.Count > 3)
-                            {
-                                <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count-2,"a jeden další dlužník","a další {0} dlužníci", "a dalších {0} dlužníků")</div>
-                            }
-                        }
-                    </td>
-                    <td>
-                        @if (item.Veritele?.Count > 0)
-                        {
-                            foreach (var o in item.Veritele.Take(2))
-                            {
-                                <div>@Html.Raw(o.ToHtml())</div>
-                            }
-                            if (item.Veritele.Count == 3)
-                            {
-                                <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
-                            }
-                            else if (item.Veritele.Count > 3)
-                            {
-                                <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
-                            }
-                        }
-                    </td>
-                    <td>
-                        @Html.Partial("_Soud", new SoudViewModel { Soud = item.Soud })
-                    </td>
-                </tr>
+				{
+					@SearchResults.InsolvenceRow(User, Request, hit.Source)
                 }
             </tbody>
         </table>
