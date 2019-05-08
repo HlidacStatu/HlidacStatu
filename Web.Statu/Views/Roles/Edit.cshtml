@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "ManageUserRoles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row col-sm-12 col-lg-12 col-md-12">
+    <h1>Role Manager</h1>
+    <br />
+</div>
+
+<div class="row col-sm-12 col-lg-12 col-md-12">
+
+
+    <div class="col-sm-6 col-lg-6 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Role List</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-hover col-sm-6 col-lg-6 col-md-6 ">
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <tr>
+                            <td class="col-sm-1 col-lg-5 col-md-5">
+                                <strong>@role.Text </strong>
+                            </td>
+                            <td class="col-sm-1 col-lg-1 col-md-1">
+                                <span onclick="return confirm('Are you sure to delete?')"><a href="/Roles/Delete?RoleName=@role.Text" class="delLink" style="color:red;">Delete</a></span> |
+                                @Html.ActionLink("Edit", "Edit", new { roleName = @role.Text })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div> <!-- End Panel Body-->
+        </div> <!-- End Panel -->
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Create A New Role</h4>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Create", "Roles", new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div>
+                        Role name: @Html.TextBox("RoleName")
+                        <input type="submit" value="Save" class="btn-primary" />
+                    </div>
+                }
+
+            </div> <!--End Panel Body-->
+        </div> <!--End Panel-->
+    </div> <!--End First Column-->
+
+    <div class="col-sm-6 col-lg-6 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Add a Role to a User</h4>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("RoleAddToUser", "Roles"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <p>User Name: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")</p>
+                    <p>Role Name: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select ...")</p>
+                    <p><input type="submit" value="Save" class="btn-primary" /></p>
+
+                }
+            </div> <!-- End Panel Body-->
+        </div> <!-- End Panel -->
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>List Roles for a User</h4>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("GetRoles", "Roles"))
+                {
+                    @Html.AntiForgeryToken()
+                    <p>
+                        User Name: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")
+                        <input type="submit" value="Get Roles for this User" class="btn-primary" />
+                    </p>
+                }
+
+                @if (ViewBag.RolesForThisUser != null)
+                {
+                    <div class="alert-info">
+                        <strong>Roles for this user </strong>
+                        <ol>
+                            @foreach (string s in ViewBag.RolesForThisUser)
+                            {
+                                <li>@s</li>
+                            }
+                        </ol>
+                    </div>
+                }
+            </div> <!-- End Panel Body-->
+        </div> <!-- End Panel -->
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Remove Role from User</h4>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("DeleteRoleForUser", "Roles"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <p>User Name: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "Select ...")</p>
+                    <p>Role Name: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select ...")</p>
+                    <p><input type="submit" value="Delete this user from Role" class="btn-primary" /></p>
+
+                }
+            </div> <!-- End Panel Body-->
+        </div> <!-- End Panel -->
+
+    </div> <!--End Second Column-->
+
+</div>  <!--Overall Page Wrapper-->
+
+<div class="alert-info col-sm-12 col-lg-12 col-md-12">
+    @ViewBag.Message
+</div>

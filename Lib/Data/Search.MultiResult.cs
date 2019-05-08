@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib.Data
         }
 
         static object objGeneralSearchLock = new object();
-        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10)
+        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false)
         {
             MultiResult res = new MultiResult() { Query = query };
 
@@ -181,7 +181,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 20, (int)ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
+                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, (int)ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
                     }
                     catch (System.Exception e)
                     {
@@ -243,11 +243,13 @@ namespace HlidacStatu.Lib.Data
 				{
 					try
 					{
-                        
-                        return;
-						res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 20 });
-					}
-					catch (System.Exception e)
+                        var iqu = new ES.InsolvenceSearchResult { Q = query, PageSize = 5 };
+                        res.Insolvence = iqu;
+                        if (showBeta)
+                            res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 5 });
+
+                    }
+                    catch (System.Exception e)
 					{
 						Util.Consts.Logger.Error("MultiResult GeneralSearch for insolvence query" + query, e);
 					}

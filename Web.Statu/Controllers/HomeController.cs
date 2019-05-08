@@ -1165,7 +1165,11 @@ text zpravy: {txt}";
 
         public ActionResult Hledat(string q)
         {
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q,1,5);
+            bool showBeta = false;
+            if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(),"BetaTester") == true)
+                showBeta = true;
+
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q,1,5, showBeta);
             if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
             {

@@ -355,6 +355,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ManageController.Api.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\DataController.cs" />
@@ -1310,6 +1311,8 @@
     <Content Include="Views\Data\Delete.cshtml" />
     <Content Include="Views\Data\ImportData.cshtml" />
     <Content Include="Views\Data\ImportDataProcess.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

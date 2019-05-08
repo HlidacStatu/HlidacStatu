@@ -20,6 +20,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 "icodluznik:",
                 "icoveritel:",
                 "icospravce:",
+                "jmeno:",
                 "jmenodluznik:",
                 "jmenoveritel:",
                 "jmenospravce:",
@@ -53,6 +54,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     {regexPrefix + "icodluznik:","dluznici.iCO:" },
                     {regexPrefix + "icoveritel:","veritele.iCO:" },
                     {regexPrefix + "icospravce:","spravci.iCO:" },
+                    {regexPrefix + "jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" },
                     {regexPrefix + "jmenodluznik:","dluznici.plneJmeno:" },
                     {regexPrefix + "jmenoveritel:","veritele.plneJmeno:" },
                     {regexPrefix + "jmenospravce:","spravci.plneJmeno:" },
@@ -68,6 +70,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     {regexPrefix + "text:","dokumenty.plainText:" },
                     {regexPrefix + "typdokumentu:","dokumenty.popis:" },
                     {regexPrefix + "dokumenttyp:","dokumenty.popis:" },
+                    {regexPrefix + "oddil:","dokumenty.oddil:" },
             };
 
             string modifiedQ = query; // ES.SearchTools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";

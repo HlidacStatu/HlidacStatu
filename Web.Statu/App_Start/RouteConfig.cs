@@ -29,6 +29,11 @@ namespace HlidacStatu.Web
                 url: "manage/{action}/{id}",
                 defaults: new { controller = "Manage", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "RolesController",
+                url: "Roles/{action}/{id}",
+                defaults: new { controller = "Roles", action = "Index", id = UrlParameter.Optional }
+            );
 
 
             routes.MapRoute(
