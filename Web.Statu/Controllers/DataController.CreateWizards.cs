@@ -14,7 +14,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateAdv()
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -29,7 +29,7 @@ namespace HlidacStatu.Web.Controllers
         {
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -53,7 +53,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple()
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -65,7 +65,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple(string name, string delimiter, FormCollection form, HttpPostedFileBase file)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -99,7 +99,7 @@ namespace HlidacStatu.Web.Controllers
         {
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -163,7 +163,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple2(CreateSimpleModel model, FormCollection form)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -322,7 +322,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple3(Guid? fileId)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -363,7 +363,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportData(string id, CreateSimpleModel model)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -414,7 +414,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportData(string id, string delimiter, FormCollection form, HttpPostedFileBase file)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -451,7 +451,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportDataProcess(string id, CreateSimpleModel model, FormCollection form)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (email == null)
+            if (Request.IsAuthenticated== false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
