@@ -575,7 +575,16 @@ namespace HlidacStatu.Lib.Data.VZ
 
         public string GetUrl(bool local = true)
         {
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
             string url = "/verejnezakazky/zakazka/" + this.Id;// E49DE92B876B0C66C2F29457EB61C7B7
+
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
             if (local == false)
                 return "https://www.hlidacstatu.cz" + url;
             else

@@ -99,11 +99,11 @@
         }
         @if (small == false)
         {
-            <td><a href="@Url.Action("Detail", new { id = rec.Id, QS = Model.Q })">Detail smlouvy</a></td>
+            <td><a href="@rec.GetUrl(true,Model.Q)">Detail smlouvy</a></td>
         }
         else
         {
-            <td><a href="@Url.Action("Detail", new { id = rec.Id, QS = Model.Q })">Detail</a></td>
+            <td><a href="@rec.GetUrl(true,Model.Q)">Detail</a></td>
         }
         <td>
             @if (!string.IsNullOrEmpty(rec.Platce?.ico))
@@ -367,7 +367,7 @@
                 if (f.Valid)
                 {
                     protiucetShown = true;
-                    <a title="Identifikovaný sponzor" href="@f.GetUrlOnWebsite(false)">@f.Jmeno (ICO: @f.ICO)</a>
+                    <a title="Identifikovaný sponzor" href="@f.GetUrl(false)">@f.Jmeno (ICO: @f.ICO)</a>
                 }
             }
             else if (showSponzor && p.Comments.Any(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaOsobu))
@@ -376,7 +376,7 @@
                 if (o != null)
                 {
                     protiucetShown = true;
-                    <a title="Identifikovaný sponzor" href="@o.GetUrlOnWebsite()">@o.FullNameWithYear()</a>
+                    <a title="Identifikovaný sponzor" href="@o.GetUrl()">@o.FullNameWithYear()</a>
                 }
             }
             else

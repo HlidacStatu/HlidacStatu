@@ -77,7 +77,7 @@
 new ReportDataSource.Column() { Name="Poradci předsedy vlády",
 HtmlRender = (s) => {
 Osoba o = (Osoba)s;
-return string.Format("<a href='{0}'>{1}</a>", o.GetUrlOnWebsite(), o.FullNameWithYear(true))
+return string.Format("<a href='{0}'>{1}</a>", o.GetUrl(), o.FullNameWithYear(true))
 + "<br />"
 + Devmasters.Core.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3), 250).Replace("\n", "<br />");
 },
@@ -104,7 +104,7 @@ sout = sout + o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).
 }
 else if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
 {
-sout = sout + "<a href='" + o.GetUrlOnWebsite() + "'>" + HlidacStatu.Util.PluralForm.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
+sout = sout + "<a href='" + o.GetUrl() + "'>" + HlidacStatu.Util.PluralForm.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
 }
 }
 return sout;
@@ -122,7 +122,7 @@ var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
 if (sum==0)
 return "Ne";
 else
-return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:true) + string.Format("<br /><a href='{0}'>podrobnosti</a>", o.GetUrlOnWebsite()) ;
+return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:true) + string.Format("<br /><a href='{0}'>podrobnosti</a>", o.GetUrl()) ;
 },
 OrderValueRender = (s) => {
 Osoba o = (Osoba)s;

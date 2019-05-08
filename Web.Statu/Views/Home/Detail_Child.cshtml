@@ -208,7 +208,7 @@
                                             }
 
                                             @Util.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
-                                                foundContentFormat: "<div><i class='far fa-search fa-pull-left fa-border'> Hledaný text jsme<br/>našli v tomto dokumentu</i>{0}</div>")
+                                                prefix: "<blockquote class='small'>", postfix: "</blockquote>")
                                             &nbsp;
                                         </div>
 
@@ -548,7 +548,7 @@
         }
         @if (firma != null && firma.IsNespolehlivyPlatceDPH())
         {
-            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrlOnWebsite(false)">více</a>)</div>
+            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
         }
 
 

@@ -117,14 +117,14 @@
                 {
                     <tr>
                         <th>Identifikovaný sponzor</th>
-                        <td><a href="@identifSponzor.GetUrlOnWebsite()" target="_blank">@identifSponzor.FullNameWithYear(false)</a></td>
+                        <td><a href="@identifSponzor.GetUrl()" target="_blank">@identifSponzor.FullNameWithYear(false)</a></td>
                     </tr>
                 }
                 @if (identifSponzorF != null)
                 {
                     <tr>
                         <th>Identifikovaný firemní sponzor</th>
-                        <td><a href="@identifSponzorF.GetUrlOnWebsite()" target="_blank">@identifSponzorF.Jmeno</a></td>
+                        <td><a href="@identifSponzorF.GetUrl()" target="_blank">@identifSponzorF.Jmeno</a></td>
                     </tr>
                 }
                 <tr>

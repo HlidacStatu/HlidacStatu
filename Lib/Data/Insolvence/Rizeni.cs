@@ -56,9 +56,16 @@ namespace HlidacStatu.Lib.Data.Insolvence
             return new HlidacStatu.Lib.OCR.Api.CallbackData(new Uri(url), callback, HlidacStatu.Lib.OCR.Api.CallbackData.CallbackType.LocalElastic);
         }
 
-        public string GetUrl(bool local)
+        public string GetUrl(bool local = true)
+        {
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
         {
             string url= $"/Rizeni/{this.UrlId()}";
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
             if (local == false)
                 url = "https://www.hlidacstatu.cz" + url;
 

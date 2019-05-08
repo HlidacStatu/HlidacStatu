@@ -42,7 +42,18 @@ namespace HlidacStatu.Web.Controllers
             var vz = VerejnaZakazka.LoadFromES(id);
             if (vz == null)
                 return View("Error404");
-    
+
+            if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
+            {
+                var findSm = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(
+                    $"_id:\"{vz.Id}\" AND ({this.Request.QueryString["qs"]})", 
+                    new string[] { }, 1, 1,
+                    (int)Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
+                if (findSm.Total > 0)
+                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlights;
+
+            }
+
             return View(vz);
         }
 

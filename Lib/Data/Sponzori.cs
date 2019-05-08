@@ -146,7 +146,7 @@ namespace HlidacStatu.Lib.Data
             {
                 this.Name = Firmy.GetJmeno(fe.ICO);
                 this.Amount = fe.AddInfoNum ?? 0;
-                this.SubjectUrl = Firmy.Get(fe.ICO).GetUrlOnWebsite(false);
+                this.SubjectUrl = Firmy.Get(fe.ICO).GetUrl(false);
                 this.Strana = fe.AddInfo;
 
                 //transaction
@@ -172,7 +172,7 @@ namespace HlidacStatu.Lib.Data
             {
                 this.Name = Osoba.GetByInternalId(oe.OsobaId).FullNameWithYear();
                 this.Amount = oe.AddInfoNum ?? 0;
-                this.SubjectUrl = Osoba.GetByInternalId(oe.OsobaId).GetUrlOnWebsite();
+                this.SubjectUrl = Osoba.GetByInternalId(oe.OsobaId).GetUrl();
                 this.Strana = oe.AddInfo;
                 //transaction
                 if (!string.IsNullOrEmpty(oe.Zdroj) && oe.Zdroj.ToLower().StartsWith("https://www.hlidacstatu.cz/ucty/transakce/"))

@@ -75,7 +75,7 @@
                                                 .Where(m => m.InternalId == pid)
                                                 .FirstOrDefault())
                                                 .Where(pol => pol != null)
-                                                .Select(pol => string.Format("<a href='{0}'>{1}</a>", pol.GetUrlOnWebsite(),pol.FullNameWithYear()))
+                                                .Select(pol => string.Format("<a href='{0}'>{1}</a>", pol.GetUrl(),pol.FullNameWithYear()))
                                                 .Aggregate((fi, se) => fi + "," + se);
 
                                 sb.Append(p + "<br/>&nbsp;");

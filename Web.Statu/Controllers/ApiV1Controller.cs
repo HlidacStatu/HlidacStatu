@@ -876,7 +876,7 @@ namespace HlidacStatu.Web.Controllers
                 this.TitulPo = o.TitulPo;
                 this.Narozeni = o.Narozeni;
                 this.NameId = o.NameId;
-                this.Profile = o.GetUrlOnWebsite();
+                this.Profile = o.GetUrl();
             }
             public string TitulPred { get; set; }
             public string Jmeno { get; set; }

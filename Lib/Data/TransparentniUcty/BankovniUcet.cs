@@ -76,10 +76,21 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public string GetUrl(bool local = true)
         {
-            string pref = "";
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
+            string url = "/ucty/ucet?id=" + System.Net.WebUtility.UrlEncode(this.Id);
+
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
             if (!local)
-                pref = "https://www.hlidacstatu.cz";
-            return pref + "/ucty/ucet?id=" + System.Net.WebUtility.UrlEncode(this.Id);
+                return "https://www.hlidacstatu.cz" + url;
+
+
+            return url;
         }
         public string GetSubjektUrl(bool local = true)
         {

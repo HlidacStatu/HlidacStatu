@@ -304,16 +304,6 @@ namespace HlidacStatu.Lib.Data
             return this;
         }
 
-        public string GetUrlOnWebsite(bool local = false)
-        {
-            if (string.IsNullOrEmpty(this.NameId))
-                this.NameId = GetUniqueNamedId();
-            if (local)
-                return "/osoba/" + this.NameId;
-            else
-
-                return "https://www.hlidacstatu.cz/osoba/" + this.NameId;
-        }
 
         Graph.Shortest.EdgePath shortestGraph = null;
         public Graph.Edge[] VazbyProICO(string ico)
@@ -1022,16 +1012,16 @@ namespace HlidacStatu.Lib.Data
 
                     var statDesc = "";
                     if (stat.StatniFirmy.Count > 0)
-                        statDesc += $"Angažoval se v {Devmasters.Core.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě","{0} státních firmách","{0} státních firmách")}. ";
+                        statDesc += $"Angažoval se v {Devmasters.Core.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě", "{0} státních firmách", "{0} státních firmách")}. ";
                     if (stat.SoukromeFirmy.Count > 0)
-                        statDesc += $"Angažoval se {(statDesc.Length>0 ? "také" : "")} v {Devmasters.Core.Lang.Plural.Get(stat.SoukromeFirmy.Count, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}, "
+                        statDesc += $"Angažoval se {(statDesc.Length > 0 ? "také" : "")} v {Devmasters.Core.Lang.Plural.Get(stat.SoukromeFirmy.Count, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}, "
                             + $"tyto firmy získaly od státu od 2016 celkem "
                             + Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                             + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true)
                             + ".";
-;
+                    ;
 
-                    if (statDesc.Length>0)
+                    if (statDesc.Length > 0)
                         f.Add(new InfoFact(statDesc, InfoFact.ImportanceLevel.Stat));
 
                     DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
@@ -1051,7 +1041,7 @@ namespace HlidacStatu.Lib.Data
                             + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}."
                             , InfoFact.ImportanceLevel.Medium)
                             );
-                            
+
                     }
 
                     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(this.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
@@ -1077,7 +1067,7 @@ namespace HlidacStatu.Lib.Data
                                 );
                         }
                     }
-                    _infofacts = f.OrderByDescending(o=>o.Level).ToArray();
+                    _infofacts = f.OrderByDescending(o => o.Level).ToArray();
 
                 }
             }
@@ -1137,9 +1127,25 @@ namespace HlidacStatu.Lib.Data
             return this.InternalId.ToString();
         }
 
-        public string GetUrl(bool local)
+        public string GetUrl(bool local = true)
         {
-            return GetUrlOnWebsite(local);
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
+
+            if (string.IsNullOrEmpty(this.NameId))
+                this.NameId = GetUniqueNamedId();
+
+            string url = "/osoba/" + this.NameId;
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
+            if (local == false)
+                url = "https://www.hlidacstatu.cz" + url;
+
+            return url;
         }
 
         public string BookmarkName()

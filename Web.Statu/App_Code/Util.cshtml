@@ -37,10 +37,11 @@
 
 
 @helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare, 
-        string foundContentFormat =null, string noHLContent = "", string prefix = "", string postfix = "", string highlightPartDelimiter = " ..... ")
+        string foundContentFormat =null, string noHLContent = "", string prefix = "", 
+        string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
 highlights = highlights ?? new Nest.HighlightFieldDictionary();
-foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
+//foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
 
 string result = HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
 if (string.IsNullOrEmpty(result))
@@ -49,18 +50,30 @@ if (string.IsNullOrEmpty(result))
 }
 else
 {
-        @Html.Raw(prefix)
-<span class="highlighting">
-    @if (foundContentFormat.Contains("{0}"))
+    @Html.Raw(prefix)
+    if (foundContentFormat?.Contains("{0}") == true)
     {
         @Html.Raw(string.Format(foundContentFormat, result))
     }
     else
     {
-        @Html.Raw(foundContentFormat)
+    <span class='highlighting'>
+        @if (!string.IsNullOrEmpty(icon))
+        {
+            <div class="row">
+                <div class="col-xs-1">
+                    <i class="@icon fa-2x" ></i>
+                </div>
+                <div class="col-xs-10">
+                    @Html.Raw(result)
+                </div>
+            </div>
+        }
+        else
+        {
+        }
+    </span>
     }
-
-</span>
         @Html.Raw(postfix)
     }
 }

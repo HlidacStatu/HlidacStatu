@@ -129,7 +129,7 @@ namespace HlidacStatu.Lib.ES
                                     .Field("*")
                                     .RequireFieldMatch(false)
                                     .Type(HighlighterType.Unified)
-                                    .FragmentSize(150)
+                                    .FragmentSize(100)
                                     .NumberOfFragments(3)
                                     .Fragmenter(HighlighterFragmenter.Span)
                                     .BoundaryScanner(BoundaryScanner.Sentence)

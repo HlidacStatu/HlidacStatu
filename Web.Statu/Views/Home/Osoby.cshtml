@@ -167,7 +167,7 @@ else //noSearch
                     {
                         <li>
                             @Util.AddBookmark(this.User, politik)
-                            <a href="@politik.GetUrlOnWebsite()">@politik.FullName()</a> @(politik.Narozeni.HasValue ? string.Format("(*{0})", politik.Narozeni.Value.Year) : "")
+                            <a href="@politik.GetUrl()">@politik.FullName()</a> @(politik.Narozeni.HasValue ? string.Format("(*{0})", politik.Narozeni.Value.Year) : "")
                             <br />@if (politik.Vazby() != null)
                             {
                                 <span>@HlidacStatu.Util.PluralForm.Get(politik.Vazby().Length, "{0} vazba na firmy;{0} vazby na firmy;{0} vazeb na firmy")</span>
@@ -190,7 +190,7 @@ else //noSearch
                     {
                         <li>
                             @Util.AddBookmark(this.User, kv.Key)
-                            <a href="@kv.Key.GetUrlOnWebsite()">@kv.Key.FullName()</a> @(kv.Key.Narozeni.HasValue ? string.Format("(*{0})", kv.Key.Narozeni.Value.Year) : "")
+                            <a href="@kv.Key.GetUrl()">@kv.Key.FullName()</a> @(kv.Key.Narozeni.HasValue ? string.Format("(*{0})", kv.Key.Narozeni.Value.Year) : "")
                             <br />@Html.Raw(kv.Key.Description(true, itemDelimeter: "; ", predicate: m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, numOfRecords: 5))
                             @*<br />@kv.Value.ToNiceString("", false);*@
                         </li>

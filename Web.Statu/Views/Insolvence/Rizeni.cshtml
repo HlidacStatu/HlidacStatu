@@ -159,7 +159,7 @@ else
         </tbody>
     </table>
 
-    <h3 style="margin-top:50px">Poslední dokumenty k řízení</h3>
+    <h3 style="margin-top:50px">Dokumenty k řízení</h3>
     <div>
         @{var dokumentu = Model.Rizeni.Dokumenty.Count();}
         <table class="table table-condensed table-striped">
@@ -175,12 +175,12 @@ else
                         }
                         else
                         {
-                            docs.Add(doc, HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlightingData, "dokumenty.plainText", doc.PlainText));
+                            docs.Add(doc, HlidacStatu.Web.Framework.Highlighter.HasHighlightedContent(highlightingData, "dokumenty.plainText", doc.PlainText) ? "1" : "0");
                         }
                     }
 
 }
-                @foreach (var item in docs.OrderByDescending(o => o.Value == null ? 0 : 1).ThenByDescending(d => d.Key.DatumVlozeni).Take(10))
+                @foreach (var item in docs.OrderByDescending(o => o.Value ).ThenByDescending(d => d.Key.DatumVlozeni).Take(10))
                 {
                 <tr>
                     <td>
@@ -199,11 +199,12 @@ else
                         <a href="@item.Key.Url" target="_blank"><i class="far fa-lg fa-file-pdf" alt="Originál"></i></a>
                     </td>
                 </tr>
-                    if (highlighting && item.Value != null)
+                    if (highlighting && item.Value == "1")
                     {
                         <tr>
                             <td colspan="2" style="border-top:none">
-                                <div class="highlighting" style="padding-left:20px"><i class="far fa-search fa-lg fa-pull-left fa-border" ></i>@Html.Raw(item.Value)</div>
+                                @Util.HighlightContent(highlightingData, "dokumenty.plainText", item.Key.PlainText,
+                                    prefix: "<blockquote class='small'>", postfix: "</blockquote>")
                             </td>
                         </tr>
                     }

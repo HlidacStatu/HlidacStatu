@@ -378,15 +378,8 @@ namespace HlidacStatu.Lib.Data
             return Firma.JmenoBezKoncovky(this.Jmeno);
         }
 
-        public string GetUrlOnWebsite(bool local = true)
-        {
-            string url = "/subjekt/" + this.ICO;
-            if (!local)
-                url = "https://www.hlidacstatu.cz" + url;
+        
 
-            return url;
-
-        }
         public string KoncovkaFirmy()
         {
 
@@ -603,7 +596,7 @@ namespace HlidacStatu.Lib.Data
         {
             using (DbEntities db = new Data.DbEntities())
             {
-                string url = transaction.GetUrl(local: false);
+                string url = transaction.GetUrl(false);
                 var found = db.FirmaEvent
                             .Where(m => m.Zdroj == url)
                             .FirstOrDefault();
@@ -916,9 +909,19 @@ namespace HlidacStatu.Lib.Data
             return this.ICO;
         }
 
-        public string GetUrl(bool local)
+        public string GetUrl(bool local = true)
         {
-            return GetUrlOnWebsite(local);
+            return GetUrl(local, string.Empty);
+        }
+            public string GetUrl(bool local, string foundWithQuery)
+        {
+            string url = "/subjekt/" + this.ICO;
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+            if (!local)
+                url = "https://www.hlidacstatu.cz" + url;
+
+            return url;
         }
 
         public string BookmarkName()

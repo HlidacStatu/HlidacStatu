@@ -10,6 +10,7 @@ namespace HlidacStatu.Lib.Data
             : Audit.IAuditable
         {
             string GetUrl(bool local);
+            string GetUrl(bool local, string foundWithQuery);
             string BookmarkName();
         }
 

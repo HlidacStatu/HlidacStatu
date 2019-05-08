@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Data.TransparentniUcty
 {
@@ -161,22 +159,31 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 return _bu;
             }
         }
+
         public string GetUrl(bool local = true)
         {
-            return GetUrl(local, false);
+            return GetUrl(local, false, string.Empty);
         }
-            public string GetUrl(bool local = true, bool onList = false)
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
+            return GetUrl(local, false,"");
+        }
+        public string GetUrl(bool local = true, bool onList = false, string foundWithQuery = "")
         {
             if (this.BU == null)
                 return "";
             if (onList)
-                return this.BU.GetUrl(local) + "#" + this.Id;
+                return this.BU.GetUrl(local, foundWithQuery) + "#" + this.Id;
             else
             {
-                string pref = "";
+                string url = "/ucty/transakce/" + System.Net.WebUtility.UrlEncode(this.Id);
+                if (!string.IsNullOrEmpty(foundWithQuery))
+                    url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
                 if (!local)
-                    pref = "https://www.hlidacstatu.cz";
-                return pref + "/ucty/transakce/" + System.Net.WebUtility.UrlEncode(this.Id);
+                    return "https://www.hlidacstatu.cz" + url;
+                return url;
             }
         }
 
@@ -200,7 +207,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         {
             return (
                 x.Castka == y.Castka
-                && x.CisloUctu== y.CisloUctu
+                && x.CisloUctu == y.CisloUctu
                 && x.CisloProtiuctu == y.CisloProtiuctu
                 && x.Datum == y.Datum
                 && x.KS == y.KS
@@ -320,7 +327,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public string BookmarkName()
         {
-            return $"Transakce na účtu {this.BU.CisloUctu} ({this.BU.Subjekt}) z {this.Datum.ToShortDateString()} ve výši {HlidacStatu.Util.RenderData.NicePrice(this.Castka)}" ;
+            return $"Transakce na účtu {this.BU.CisloUctu} ({this.BU.Subjekt}) z {this.Datum.ToShortDateString()} ve výši {HlidacStatu.Util.RenderData.NicePrice(this.Castka)}";
         }
     }
 }

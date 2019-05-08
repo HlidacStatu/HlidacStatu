@@ -160,7 +160,7 @@ namespace HlidacStatu.Lib.Data
                             var o1 = Osoby.GetByNameId.Get(data1.Value<string>("id"));
                             if (o1 != null)
                             {
-                                return $"<a href='{o1.GetUrlOnWebsite()}'>{o1.FullNameWithNarozeni()}</a>";
+                                return $"<a href='{o1.GetUrl()}'>{o1.FullNameWithNarozeni()}</a>";
                             }
                         }
                         return  "(neznama osoba)";

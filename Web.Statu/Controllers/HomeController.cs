@@ -920,7 +920,7 @@ text zpravy: {txt}";
                 new ReportDataSource.Column() { Name="Sponzor",
                     HtmlRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]>)s;
-                            return string.Format(@"<a href='{0}'>{1}</a> IC: {2}", data.Key.GetUrlOnWebsite(), data.Key.Jmeno, data.Key.ICO);
+                            return string.Format(@"<a href='{0}'>{1}</a> IC: {2}", data.Key.GetUrl(), data.Key.Jmeno, data.Key.ICO);
                                         },
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]>)s;
@@ -984,7 +984,7 @@ text zpravy: {txt}";
                 new ReportDataSource.Column() { Name="Sponzor",
                     HtmlRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]>)s;
-                            return string.Format(@"<a href='{0}'>{1}</a> (*{2})", data.Key.GetUrlOnWebsite(), data.Key.FullName(), data.Key.Narozeni?.Year.ToString() ?? "?");
+                            return string.Format(@"<a href='{0}'>{1}</a> (*{2})", data.Key.GetUrl(), data.Key.FullName(), data.Key.Narozeni?.Year.ToString() ?? "?");
                                         },
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]>)s;

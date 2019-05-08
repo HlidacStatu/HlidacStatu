@@ -25,6 +25,8 @@
     string bookmarkId = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(Model);
     bool bookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(Model, User?.Identity?.Name);
 
+    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
+
 }
 
 
@@ -182,6 +184,9 @@ else
                                             <a href="@Url.Action("TextDokumentu", new { id = @Model.Id, hash = priloha.StorageId })">zobrazit čistý text dokumentu</a>
                                             <span>(@priloha.WordCount slov)</span>
                                         }
+                                        @Util.HighlightContent(highlightingData, "dokumenty.plainText", priloha.PlainText,
+                                            prefix: "<br /><blockquote class='small'>", postfix: "</blockquote>")
+
                                     </div>
                                 </li>
                             }

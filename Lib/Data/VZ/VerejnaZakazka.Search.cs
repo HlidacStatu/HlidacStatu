@@ -436,7 +436,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
             public static ES.VerejnaZakazkaSearchData SimpleSearch(string query, string[] cpv,
-                int page, int pageSize, int order, bool Zahajeny = false)
+                int page, int pageSize, int order, bool Zahajeny = false, bool withHighlighting = false)
             {
                 return SimpleSearch(
                     new ES.VerejnaZakazkaSearchData()
@@ -448,7 +448,7 @@ namespace HlidacStatu.Lib.Data.VZ
                         PageSize = pageSize,
                         Order = order.ToString(),
                         Zahajeny = Zahajeny
-                    }
+                    }, withHighlighting: withHighlighting
                     );
             }
 
@@ -458,7 +458,7 @@ namespace HlidacStatu.Lib.Data.VZ
             public static ES.VerejnaZakazkaSearchData SimpleSearch(
                 ES.VerejnaZakazkaSearchData search,
                 AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null,
-                bool logError = true, bool fixQuery = true, ElasticClient client = null)
+                bool logError = true, bool fixQuery = true, ElasticClient client = null, bool withHighlighting = false)
             {
 
                 if (client == null)
@@ -511,6 +511,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Query(q => GetSimpleQuery(search))
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                             .Aggregations(aggrFunc)
+                            .Highlight(h =>ES.SearchTools.GetHighlight<VerejnaZakazka>(withHighlighting))
                     );
 
                 }

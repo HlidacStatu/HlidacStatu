@@ -82,7 +82,7 @@ else
                     <td style="white-space: nowrap;">
                         @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
                         {
-                            <a href="zakazka/@item.Id">@item.EvidencniCisloZakazky</a>
+                            <a href="@Url.Action("Zakazka", new { id = item.Id, QS = Model.Q })">@item.EvidencniCisloZakazky</a>
                         }
                         else
                         {

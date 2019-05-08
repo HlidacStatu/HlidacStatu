@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)
-                            return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrlOnWebsite(), o.FullName()) + zdroj;
+                            return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrl(), o.FullName()) + zdroj;
                         else
                             return this.Title + " " + Description + zdroj;
                     }
