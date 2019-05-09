@@ -195,6 +195,19 @@
         </div>
 
     }
+    @if (DateTime.Now < new DateTime(2019, 5, 17, 15, 0, 0))
+    {
+        <div class="alert alert-warning" role="alert">
+            <div class="text-center center-block" style="font-size:110%">
+                   Pomůžeme vás s žádostí o voličský průkaz k volbách do EU parlamentu. Na poslání žádosti
+                @Html.Raw(
+                     Devmasters.Core.Lang.Plural.GetWithZero((int)((new DateTime(2019, 5, 17, 15, 0, 0) - DateTime.Now).TotalDays)
+                         , " nečekejte, zbývá pouze <b>pár hodin</b>", "zbývá <b>pouze 1 den</b>", "zbývájí <b>{0} dny</b>", "zbývá už <b>jen {0} dní</b>")
+                ).
+                <a class="btn btn-default btn-sm" href="https://volby.hlidacstatu.cz" role="button">Začít hned</a>
+            </div>
+        </div>
+    }
     @RenderSection("toplinemsg", required: false)
 
     <div class="header__navbar">
@@ -465,7 +478,7 @@
         </div><!-- /.modal -->
 
     }
-    @{ 
+    @{
         IgnoreSection("onlyembed");
     }
 
