@@ -195,20 +195,27 @@
         </div>
 
     }
-    @if (DateTime.Now < new DateTime(2019, 5, 17, 15, 0, 0))
+
+    @if (IsSectionDefined("toplinemsg"))
     {
-        <div class="alert alert-warning" role="alert">
-            <div class="text-center center-block" style="font-size:110%">
-                   Pomůžeme vás s žádostí o voličský průkaz k volbách do EU parlamentu. Na poslání žádosti
-                @Html.Raw(
-                     Devmasters.Core.Lang.Plural.GetWithZero((int)((new DateTime(2019, 5, 17, 15, 0, 0) - DateTime.Now).TotalDays)
-                         , " nečekejte, zbývá pouze <b>pár hodin</b>", "zbývá <b>pouze 1 den</b>", "zbývájí <b>{0} dny</b>", "zbývá už <b>jen {0} dní</b>")
-                ).
-                <a class="btn btn-default btn-sm" href="https://volby.hlidacstatu.cz" role="button">Začít hned</a>
-            </div>
-        </div>
+        @RenderSection("toplinemsg", required: false)
     }
-    @RenderSection("toplinemsg", required: false)
+    else
+    {
+        if (DateTime.Now < new DateTime(2019, 5, 17, 15, 0, 0))
+        {
+            <div class="alert alert-warning" role="alert" style="padding:1px">
+                <div class="text-center center-block" style="font-size:110%;color:red;">
+                    Pomůžeme vám s žádostí o voličský průkaz k volbách do EU parlamentu. Na poslání žádosti
+                    @Html.Raw(
+                         Devmasters.Core.Lang.Plural.GetWithZero((int)((new DateTime(2019, 5, 17, 15, 0, 0) - DateTime.Now).TotalDays)
+                             , " nečekejte, zbývá pouze <b>pár hodin</b>", "zbývá <b>pouze 1 den</b>", "zbývájí <b>{0} dny</b>", "zbývá už <b>jen {0} dní</b>")
+                    ).
+                    <a class="btn btn-default btn-sm" href="https://volby.hlidacstatu.cz/?utm_source=hlidacstatu&utm_medium=header&utm_campaign=eu2019" role="button">Začít hned</a>
+                </div>
+            </div>
+        }
+    }
 
     <div class="header__navbar">
         <a href="/" class="logo">
