@@ -821,7 +821,7 @@ text zpravy: {txt}";
 
         [ChildActionOnly]
 #if (!DEBUG)
-        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed")]
+        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;auth")]
 #endif
         public ActionResult Osoba_Part_Vazby(string id, Osoba osoba, HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost)
         {
@@ -831,7 +831,7 @@ text zpravy: {txt}";
 
         [ChildActionOnly]
 #if (!DEBUG)
-        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;NameOfView")]
+        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;NameOfView;auth")]
 #endif
         public ActionResult Osoba_child(string Id, Osoba model, HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost, string NameOfView)
         {

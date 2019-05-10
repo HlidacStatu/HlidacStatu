@@ -122,26 +122,18 @@
     List<string> results = new List<string>();
 
     tabs.Add("Základní info");
-    string zaklInfo =$"<h4>Hledání informací s vazbou na {Model.FullName()}</h4>"
+    string zaklInfo = $"<h4>Hledání informací s vazbou na {Model.FullName()}</h4>"
         + "<p>"
         + $"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na " +
         $" s vazbou na {Model.FullName()} nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou."
         + "</p>"
 
-        + "<h4>Hlídání emailem</h4>"
-        + "<p>"
-        + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové smluvy pro " + Model.FullName()).ToHtmlString()
-        + "<br />"
-        + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat nové veřejné zakázky spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové veřejné zakázky pro " + Model.FullName()).ToHtmlString()
-        + "<br />"
-        + Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null, $"Hlídat všechny novinky o {Model.FullName()} a navázaných firmách ve všech databázích", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky pro " + Model.FullName()).ToHtmlString()
-        + "</p>"
         + "<h4>Sdílení</h4>"
-        + "<p>"
+        + "<div>"
         + Util.ShareFacebook(Model.GetUrl(false)).ToHtmlString()
         + Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}").ToHtmlString()
         + Util.ShareWidget(Model.GetUrl(false))
-        + "</p>";
+        + "</div>";
 
     results.Add(zaklInfo);
 
@@ -190,11 +182,33 @@
 
 
 }
-<div class="container">
-    <div class="row">
-        @Util.VerticalTabs(tabs, results)
-    </div>
-</div>
+
+<table class="table table-new table-new--dotted">
+    <tbody>
+        <tr>
+            <td>Hlídání osoby</td>
+            <td>
+
+                <h4>Hlídání emailem</h4>
+                <div>
+                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové smluvy pro " + Model.FullName())
+                    <br />
+                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat nové veřejné zakázky spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové veřejné zakázky pro " + Model.FullName())
+                    <br />
+                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null, $"Hlídat všechny novinky o {Model.FullName()} a navázaných firmách ve všech databázích", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky pro " + Model.FullName())
+                </div>
+
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Util.VerticalTabs(tabs, results)
+
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 
 
