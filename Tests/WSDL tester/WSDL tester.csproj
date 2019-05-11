@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Core, Version=1.472.3.35, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Devmasters.Core.1.472.3.35\lib\net40\Devmasters.Core.dll</HintPath>
@@ -55,14 +55,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Frontenac.Blueprints, Version=2.4.0.0, Culture=neutral, PublicKeyToken=f8f0b8cb1a55f367, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Frontenac.Blueprints.2.4\lib\net40\Frontenac.Blueprints.dll</HintPath>
+    <Reference Include="Frontenac.Blueprints, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f8f0b8cb1a55f367, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Frontenac.Blueprints.2.5.0\lib\net40\Frontenac.Blueprints.dll</HintPath>
     </Reference>
-    <Reference Include="Frontenac.Gremlinq, Version=2.4.0.0, Culture=neutral, PublicKeyToken=fe2d4176a64ca6d1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Frontenac.Blueprints.2.4\lib\net40\Frontenac.Gremlinq.dll</HintPath>
+    <Reference Include="Frontenac.Gremlinq, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe2d4176a64ca6d1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Frontenac.Blueprints.2.5.0\lib\net40\Frontenac.Gremlinq.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.9.1.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\HtmlAgilityPack.1.9.1\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.11.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
@@ -71,7 +71,7 @@
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -88,11 +88,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VelocityDb, Version=7.7.0.0, Culture=neutral, PublicKeyToken=f050dff7995aa24a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VelocityDB.7.7.0\lib\net45\VelocityDb.dll</HintPath>
+    <Reference Include="VelocityDb, Version=8.2.1.0, Culture=neutral, PublicKeyToken=f050dff7995aa24a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VelocityDB.8.2.1\lib\net45\VelocityDb.dll</HintPath>
     </Reference>
-    <Reference Include="VelocityGraph, Version=7.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VelocityGraph.7.7\lib\Net45\VelocityGraph.dll</HintPath>
+    <Reference Include="VelocityGraph, Version=8.2.1.0, Culture=neutral, PublicKeyToken=033a993463f9cfa3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VelocityGraph.8.2.1\lib\Net45\VelocityGraph.dll</HintPath>
     </Reference>
     <Reference Include="vOKOsCom, Version=5.2.0.23890, Culture=neutral, PublicKeyToken=31204d55c91e542b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
