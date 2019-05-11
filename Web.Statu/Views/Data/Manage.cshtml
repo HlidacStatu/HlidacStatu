@@ -24,7 +24,6 @@
             <li><a href="@Model.GetDataset().DatasetUrl()">@Model.name</a></li>
         }
         <li class="active">@ViewBag.Title</li>
-        <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
     </ol>
 }
 
@@ -40,20 +39,21 @@
             <p>@Model.description </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/edit/@Model.id" class="btn btn-primary"><i class="far fa-cog"></i> Editovat parametry datasetu</a>
+            <a href="/data/edit/@Model.id" class="btn btn-default"><i class="far fa-cog"></i> Editovat parametry datasetu</a>
             <p class="text-info">
                 Změna parametrů datasetu (templaty, popisy, viditelnost a další). Nemá žádný vliv na data.
                 Pozor: Není možné změnit ID datasetu a JSON schéma. Pokud je chcete změnit, musíte dataset smazat a založit znovu.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/TechnickeInfo/@Model.datasetId" class="btn btn-default"><i class="far fa-info-square"></i> Technické detaily</a>
+            <a href="/data/TechnickeInfo/@Model.datasetId" class="btn btn-default"><i class="far fa-info-circle"></i> Technické detaily</a>
             <p class="text-info">
                 Veřejné technické parametry datasetu, JSON schema, templaty, atd.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-default"><i class="far fa-search"></i> Vypsat poslední záznamy</a>
+            <a href="/data/Hledat/@Model.datasetId?q=*&order=DbCreated+desc" class="btn btn-default">
+            <i class="far fa-list"></i> Vypsat poslední záznamy</a>
             <p class="text-info">
                 Vypsání naposledy vložených záznamů
             </p>

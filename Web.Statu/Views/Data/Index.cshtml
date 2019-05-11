@@ -27,7 +27,7 @@
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/data">Datové zdroje</a></li>
         <li class="active">@ViewBag.SubTitle</li>
-        <li class="active pull-right"><a onclick="return trackOutLink(this,'data');" href="https://hlidacstatu.docs.apiary.io/#reference/datasety-rozsirene-datove-sady-hlidace-statu">Přidat další datový zdroj (pro programátory)</a></li>
+        <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
 
@@ -45,65 +45,8 @@
 <div class="row">
     @foreach (var ds in datasets.Where(m => m.betaversion == false))
     {
-        try
-        {
-            count++;
-            var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-            bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-                || email == ds.createdBy
-                );
-
-            <div class="col-xs-12 col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-8 col-sm-9">
-                                <b>@ds.name</b>
-                                @if (showEditBtn)
-                                {
-                                    <text>
-                                        <a href="/data/Manage/@dsContent.DatasetId" alt="Editovat nastavení datasetu" title="Editovat nastavení datasetu"><i class="far fa-edit"></i></a>
-                                    </text>
-                                }
-
-                            </div>
-                            <div class="col-xs-4 col-sm-3">
-                                (<b>@dsContent.SearchData("", 1, 0).Total</b> záznamů)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                            <p>
-                                @if (!string.IsNullOrEmpty(ds.description))
-                                {
-                                    @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(),240,"..."))
-                                }
-                            </p>
-                        <div>
-                            <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
-                                <div class="form-group form-group">
-                                    <input type="text" class="form-control" id="q" name="q" placeholder="hledaný text">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Prohledat</button>
-                            </form>
-                        </div>
-                        <div>
-                            <a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default">Vypsat poslední data</a>
-                            <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px">Více info o datasetu</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            if (count % 2 == 0)
-            {
-                <div class="clearfix"></div>
-            }
-        }
-        catch (Exception)
-        {
-
-        }
+        count++;
+        @RenderDataset(ds, email, count, "success")
 
     }  @*foreach*@
 
@@ -123,79 +66,81 @@
         </div>
 
     </div>
-    <div class="col-xs-12">
-
-        <div class="low-box" style="max-height:180px">
-            <div class="low-box-content">
-                @{count = 0; }
-                @foreach (var ds in datasets.Where(m => m.betaversion == true))
-                {
-                    try
-                    {
-                        count++;
-                        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-                        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-                            || email == ds.createdBy
-                            );
-
-                        <div class="col-xs-12 col-sm-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-8 col-sm-9">
-                                            <b>@ds.name</b>
-                                            @if (showEditBtn)
-                                            {
-                                                <text>
-                                                    <a href="/data/Manage/@dsContent.DatasetId" alt="Editovat nastavení datasetu" title="Editovat nastavení datasetu"><i class="far fa-edit"></i></a>
-                                                </text>
-                                            }
-
-                                        </div>
-                                        <div class="col-xs-4 col-sm-3">
-                                            (<b>@dsContent.SearchData("", 1, 0).Total</b> záznamů)
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <p>
-                                        @if (!string.IsNullOrEmpty(ds.description))
-                                        {
-                                            @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
-                                        }
-                                    </p>
-
-                                    <div>
-                                        <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
-                                            <div class="form-group form-group">
-                                                <input type="text" class="form-control" id="q" name="q" placeholder="hledaný text">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Prohledat</button>
-                                        </form>
-                                    </div>
-                                    <div>
-                                        <a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default">Vypsat poslední data</a>
-                                        <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px">Více info o datasetu</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        if (count % 2 == 0)
-                        {
-                            <div class="clearfix"></div>
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-
-                }
-            </div>
-            <div class="low-box-line line-text-divider"><a href="#" class="more big"></a></div>
-        </div>
-    </div>
+    @{count = 0; }
+    @foreach (var ds in datasets.Where(m => m.betaversion == true))
+    {
+        count++;
+        @RenderDataset(ds, email, count, "default")
+    }
 </div>
 
 @Html.Partial("_new")
+
+
+@helper RenderDataset(HlidacStatu.Lib.Data.External.DataSets.Registration ds, string email, int count, string style)
+{
+try
+{
+    var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
+    bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+        || email == ds.createdBy
+        );
+    long  recordNum = dsContent.SearchData("", 1, 0).Total;
+    if (showEditBtn == false && recordNum < 5)
+    {
+            return; //don't show empty or near to empty datasets, which are not "my".
+    }
+
+        <div class="col-xs-12 col-sm-6">
+            <div class="panel panel-@style">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-7 col-sm-8">
+                            <b>@ds.name</b>
+                        </div>
+                        <div class="col-xs-5 col-sm-4 right">
+                            (<b>@recordNum</b> záznamů)
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <p style="min-height:40px">
+                        @if (!string.IsNullOrEmpty(ds.description))
+                        {
+                            @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
+                        }
+                    </p>
+                    <div>
+                        <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
+                            <div class="form-group form-group">
+                                <input type="text" class="form-control" id="q" name="q" placeholder="hledaný text">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Prohledat</button>
+                        </form>
+                    </div>
+                    <div>
+                        <a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default" title="Vypsat nejnovější data"><i class="far fa-list"></i> Poslední</a>
+                        @if (showEditBtn)
+                        {
+                            <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-default" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
+                        }
+                        else
+                        {
+                            <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px"><i class="far fa-info-circle"></i>Více info</a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        if (count % 2 == 0)
+        {
+            <div class="clearfix"></div>
+        }
+    }
+    catch (Exception)
+    {
+
+    }
+
+}
