@@ -1155,7 +1155,7 @@ text zpravy: {txt}";
 
             if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
             {
-                HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledej", this.HttpContext);
+                HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledat", this.HttpContext);
             }
 
 
