@@ -41,10 +41,31 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             if (instance.GetType() != this.CreateType())
                 throw new InvalidCastException($"Instance type {instance.GetType().FullName} different from {this.CreateType().FullName}");
-            var propType = this.CreateType().GetProperty(propName).PropertyType;
 
-            this.CreateType().GetProperty(propName)?.SetValue(instance, HlidacStatu.Util.ParseTools.ChangeType(value, propType));
+            if (propName.Contains("."))
+            {
+                int found = propName.IndexOf('.');
+                var rootPropName = propName.Substring(0, found);
+                var subPropName = propName.Substring(found + 1);
 
+                var subInstance = this.GetPropertyValue(instance, rootPropName);
+                var rootProp = this.CreateType().GetProperty(rootPropName);
+                if (rootProp != null && subInstance != null)
+                {
+                    var existingCustSubType = customSubTypes.FirstOrDefault(s => s.CreateType() == rootProp.PropertyType);
+                    if (existingCustSubType != null)
+                    {
+                        existingCustSubType.SetPropertyValue(subInstance, subPropName, value);
+                    }
+                }
+
+            }
+            else
+            {
+                var propType = this.CreateType().GetProperty(propName).PropertyType;
+
+                this.CreateType().GetProperty(propName)?.SetValue(instance, HlidacStatu.Util.ParseTools.ChangeType(value, propType));
+            }
         }
 
         public RuntimeClassBuilder(string className, Dictionary<string, Type> properties)
