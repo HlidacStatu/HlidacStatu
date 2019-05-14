@@ -1,0 +1,107 @@
+﻿@model HlidacStatu.Lib.Render.ReportDataSource<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>[]
+
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq;
+@using HlidacStatu.Web.Framework
+
+@{
+    ViewBag.ShowBookmarkUrl = true;
+    string strana = ViewBag.Strana;
+    int? rok = ViewBag.Rok;
+
+}
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/sponzori">Sponzoři</a></li>
+        @Util.IfExists(!string.IsNullOrEmpty(strana), $"<li><a href='{HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)}'>{strana}</a></li>")
+        @Util.IfExists(rok.HasValue, $"<li>{rok}</li>")
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+    <div class="row">
+        @if (Model.Count() == 1)
+        {
+            <h3>Sponzorující firmy</h3>
+            <div class="col-xs-12">
+                @Html.Raw(
+               UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>(
+                   ViewBag.Firmy ? "Sponzorující firmy" : "Sponzorující osoby", ViewBag.Firmy ? Model[0] : Model[1], @"{
+                             'language': {
+                                'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
+                            },
+                            'paging': true,
+                            'pageLength': 15,
+                            'order': [1,'desc'],
+                            'lengthChange': false,
+                            'info': false
+                            }"))
+            </div>
+        }
+        else
+        {
+            <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#osoby" aria-controls="firmy" role="tab" data-toggle="tab">Sponzorující osoby (@HlidacStatu.Util.RenderData.NiceNumber(Model[0]?.Data?.Count ?? 0))</a></li>
+                    <li role="presentation"><a href="#firmy" aria-controls="firmy" role="tab" data-toggle="tab">Sponzorující firmy (@HlidacStatu.Util.RenderData.NiceNumber(Model[1]?.Data?.Count ?? 0))</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="osoby">
+                        <div class="col-xs-12">
+                            <h3>Sponzorující osoby</h3>
+                            @Html.Raw(
+                                      UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>("Sponzorující osoby", Model[0], @"{
+                                         'language': {
+                                            'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
+                                        },
+                                        'paging': true,
+                                        'pageLength': 15,
+                                        'order': [1,'desc'],
+                                        'lengthChange': false,
+                                        'info': false
+                                        }"))
+                        </div>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="firmy">
+
+                        <div class="col-xs-12">
+                            <h3>Sponzorující firmy</h3>
+                            @Html.Raw(
+                                      UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>("Sponzorující firmy", Model[1], @"{
+                                         'language': {
+                                            'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
+                                        },
+                                        'paging': true,
+                                        'pageLength': 15,
+                                        'order': [1,'desc'],
+                                        'lengthChange': false,
+                                        'info': false
+                                        }"))
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+
+
+
+    </div>
+
+@Util.FeedbackModal("Poslat opravu či připomínku")

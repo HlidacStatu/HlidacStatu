@@ -34,12 +34,15 @@ namespace HlidacStatu.Web
                 url: "Roles/{action}/{id}",
                 defaults: new { controller = "Roles", action = "Index", id = UrlParameter.Optional }
             );
-
-
             routes.MapRoute(
                 name: "UctyController",
                 url: "ucty/{action}/{id}",
                 defaults: new { controller = "Ucty", action = "Index", id = UrlParameter.Optional }
+            );
+            routes.MapRoute(
+                name: "SponzoriController",
+                url: "Sponzori/{action}/{id}",
+                defaults: new { controller = "Sponzori", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(

@@ -88,6 +88,7 @@ namespace HlidacStatu.Util
                 return ShortNicePrice(number, valueIfZero, mena, html, showDecimal, MaxScale.Jeden);
         }
         static string tableOrderValueFormat = "00000000000000#";
+        public static string OrderValueFormat(string n) { return n; }
         public static string OrderValueFormat(double n) { return (n * 1000000).ToString(tableOrderValueFormat); }
         public static string OrderValueFormat(decimal n) { return OrderValueFormat((double)n); }
         public static string OrderValueFormat(byte n) { return OrderValueFormat((double)n); }

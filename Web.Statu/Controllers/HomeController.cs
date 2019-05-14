@@ -894,7 +894,7 @@ text zpravy: {txt}";
             ViewBag.Rok = rok;
             if (rok.HasValue == false)
             {
-                var result = Sponsors.Strany.PerYears(strana);
+                var result = Sponsors.Strany.StranaPerYears(strana);
 
                 return View(Sponsors.Strany.RenderPerYearsTable(result));
 

@@ -363,6 +363,7 @@
     <Compile Include="Controllers\ManageController.Api.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\SponzoriController.cs" />
     <Compile Include="Controllers\VZController.cs" />
     <Compile Include="Controllers\WebyController.cs" />
     <Compile Include="Controllers\UctyController.cs" />
@@ -1317,6 +1318,16 @@
     <Content Include="Views\Data\ImportDataProcess.cshtml" />
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Sponzori\_SearchForm.cshtml" />
+    <Content Include="Views\Sponzori\Hledat.cshtml" />
+    <Content Include="Views\Sponzori\Index.cshtml" />
+    <Content Include="Views\Sponzori\Prezidenti.cshtml" />
+    <Content Include="Views\Sponzori\SubjektyTypu.cshtml" />
+    <Content Include="Views\Sponzori\Transakce.cshtml" />
+    <Content Include="Views\Sponzori\Ucet.cshtml" />
+    <Content Include="Views\Sponzori\Ucty.cshtml" />
+    <Content Include="Views\Sponzori\Seznam.cshtml" />
+    <Content Include="Views\Sponzori\Strana.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
