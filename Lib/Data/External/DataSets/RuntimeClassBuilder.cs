@@ -61,8 +61,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
         public object CreateObject() // string[] PropertyNames,Type[]Types)
         {
-            return Activator.CreateInstance(CreateType());
+            var inst = Activator.CreateInstance(CreateType());
+            foreach (var prop in inst.GetType().GetProperties())
+            {
+                Type t = prop.PropertyType;
+                var existingCustSubType = customSubTypes.FirstOrDefault(s => s.CreateType() == t);
+                if (existingCustSubType != null)
+                {
+                    SetPropertyValue(inst, prop.Name, existingCustSubType.CreateObject());
+                }
+
+            }
+            return inst;
         }
+
+
+        List<RuntimeClassBuilder> customSubTypes = new List<RuntimeClassBuilder>();
 
         Type _createdType = null;
         public Type CreateType() // string[] PropertyNames,Type[]Types)
@@ -75,7 +89,24 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 foreach (var kv in properties)
                 {
-                    CreateProperty(DynamicClass, kv.Key, kv.Value);
+                    if (kv.Value == typeof(object))
+                    {
+                        string prefix = kv.Key + ".";
+                        Dictionary<string, Type> subProps = new Dictionary<string, Type>();
+                        foreach (var sProp in this.properties)
+                        {
+                            if (sProp.Key.StartsWith(prefix)
+                                && sProp.Key.IndexOf('.', prefix.Length) == -1 //no subObjects properties
+                                )
+                                subProps.Add(sProp.Key.Replace(prefix,""), sProp.Value);
+                        }
+
+                        var subRcb = new RuntimeClassBuilder(subProps);
+                        customSubTypes.Add(subRcb);
+                        CreateProperty(DynamicClass, kv.Key, subRcb.CreateType());
+                    }
+                    else if (!kv.Key.Contains("."))
+                        CreateProperty(DynamicClass, kv.Key, kv.Value);
                 }
 
                 _createdType = DynamicClass.CreateType();

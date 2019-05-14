@@ -223,7 +223,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     {
                         names.Add(prefix + prop.Key, JSchemaType2Type(prop.Value));
                     }
-                    getPropertyNameTypeFromSchemaInternal(prop.Value.Items, prefix + prop.Key + ".", name, ref names);
+                    if (prop.Value.Items.Count > 0)
+                        getPropertyNameTypeFromSchemaInternal(prop.Value.Items, prefix + prop.Key + ".", name, ref names);
+                    else if (prop.Value.Properties?.Count > 0)
+                    {
+                        getPropertyNameTypeFromSchemaInternal(
+                            new JSchema[] { prop.Value }
+                            , prefix + prop.Key + ".", name, ref names);
+                    }
                 }
             }
 
