@@ -398,9 +398,24 @@ namespace HlidacStatu.Util
                     return null;
                 }
 
+                if (Nullable.GetUnderlyingType(t) == typeof(Util.Date))
+                {
+                    if (Util.Date.TryParseExact((string)value, "yyyy-MM-dd",
+                        Consts.enCulture, System.Globalization.DateTimeStyles.AssumeLocal, out Util.Date date))
+                    {
+                        return date;
+                    }
+                    else
+                        return null;
+                }
+
                 t = Nullable.GetUnderlyingType(t);
             }
 
+            if (t == typeof(Util.Date))
+            {
+                return new Util.Date((string)value);
+            }
             return Convert.ChangeType(value, t);
         }
     }

@@ -19,6 +19,25 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
         }
 
+        public Type GetPropertyType(string path)
+        {
+            if (properties.ContainsKey(path))
+                return properties[path];
+            else
+                return null;
+        }
+
+        public string GetObjectId(object instance)
+        {
+            var id = GetPropertyValue(instance, "id");
+            if (id == null)
+                id = GetPropertyValue(instance, "Id");
+            if (id == null)
+                id = GetPropertyValue(instance, "ID");
+            if (id == null)
+                id = GetPropertyValue(instance, "iD");
+            return (string)id;
+        }
         public object GetPropertyValue(object instance, string propName)
         {
             if (instance == null)
@@ -62,9 +81,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
             else
             {
-                var propType = this.CreateType().GetProperty(propName).PropertyType;
-
-                this.CreateType().GetProperty(propName)?.SetValue(instance, HlidacStatu.Util.ParseTools.ChangeType(value, propType));
+                var propType = this.CreateType().GetProperty(propName)?.PropertyType;
+                if (propType != null)
+                   this.CreateType().GetProperty(propName)?.SetValue(instance, HlidacStatu.Util.ParseTools.ChangeType(value, propType));
             }
         }
 

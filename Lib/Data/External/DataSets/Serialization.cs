@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
+
 
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
-    public class Serialization
+    public partial class Serialization
     {
+
         public class PublicDatasetContractResolver : DefaultContractResolver
         {
-            public new static readonly PublicDatasetContractResolver Instance = new PublicDatasetContractResolver();
+            public static new readonly PublicDatasetContractResolver Instance = new PublicDatasetContractResolver();
 
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {

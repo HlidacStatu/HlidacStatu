@@ -200,9 +200,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             return GetPropertyNameFromSchema("");
         }
-        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema()
+
+        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
         {
-            return GetPropertyNameTypeFromSchema("");
+            var properties = GetPropertyNameTypeFromSchema("");
+            if (addDefaultDatasetProperties)
+            {
+                properties.Add("hidden", typeof(bool));
+                properties.Add("DbCreated", typeof(DateTime));
+                properties.Add("DbCreatedBy", typeof(string));
+            }
+            return properties;
         }
         public Dictionary<string, Type> GetPropertyNameTypeFromSchema(string name)
         {
@@ -248,8 +256,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 //nullable types
                 if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.String))
                 {
-                    if (schema.Format == "date" || schema.Format == "date-time")
+                    if (schema.Format == "date-time")
                         return typeof(Nullable<DateTime>);
+                    else if (schema.Format == "date")
+                        return typeof(Nullable<HlidacStatu.Util.Date>);
                     else
                         return typeof(string);
                 }
@@ -274,6 +284,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     if (schema.Format == "date" || schema.Format == "date-time")
                         return typeof(DateTime);
+                    else if (schema.Format == "date")
+                        return typeof(HlidacStatu.Util.Date);
                     else
                         return typeof(string);
                 }
