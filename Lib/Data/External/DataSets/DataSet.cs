@@ -201,14 +201,21 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return GetPropertyNameFromSchema("");
         }
 
-        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
+        public static Dictionary<string, Type> DefaultDatasetProperties = new Dictionary<string, Type>()
+        {
+            { "hidden", typeof(bool) },
+            { "DbCreated", typeof(DateTime) },
+            { "DbCreatedBy", typeof(string) }
+        };
+
+    public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
         {
             var properties = GetPropertyNameTypeFromSchema("");
             if (addDefaultDatasetProperties)
             {
-                properties.Add("hidden", typeof(bool));
-                properties.Add("DbCreated", typeof(DateTime));
-                properties.Add("DbCreatedBy", typeof(string));
+                foreach (var pp in DefaultDatasetProperties)
+                    if (!properties.ContainsKey(pp.Key))
+                        properties.Add(pp.Key,pp.Value);
             }
             return properties;
         }

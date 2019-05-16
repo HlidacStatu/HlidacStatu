@@ -14,9 +14,6 @@
 }
 @section scripts
 {
-    <script src="/Scripts/typeahead.jquery.min.js"></script>
-    <script src="/Scripts/bloodhound.min.js"></script>
-    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
 }
 @section breadcrumb
 {
@@ -62,7 +59,7 @@
                                 {
                                     <div class="table-row">
                                         <div class="table-col">
-                                            <a href="subjekt?id=@dat.Strana">
+                                            <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(dat.Strana)">
                                                 @HlidacStatu.Util.RenderData.StranaZkratka(dat.Strana)
                                             </a>
                                         </div>
@@ -108,7 +105,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
                             </div>
                         }
                         foreach (var sponzor in
@@ -120,7 +117,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
                             </div>
                         }
 
@@ -153,7 +150,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
                             </div>
                         }
 
@@ -185,7 +182,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
                             </div>
                         }
 

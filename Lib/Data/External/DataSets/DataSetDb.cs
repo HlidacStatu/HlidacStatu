@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 var ds = CachedDatasets.Get(addDataResult);
                 var txtProps = ds.GetTextMappingList();
                 var allProps = ds.GetMappingList();
-                if (allProps.Count() > 0) //0=mapping not available , (no record in db)
+                if (allProps.Where(m=>!DataSet.DefaultDatasetProperties.Keys.Contains(m)).Count() > 0) //0=mapping not available , (no record in db)
                 {
 
                     bool changedOrderList = false;
@@ -117,6 +117,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             .Replace(DataSearchResult.OrderAscUrl, "")
                             .Replace(DataSearchResult.OrderDescUrl, "")
                             .Trim();
+                        if (oProp.EndsWith(".keyword"))
+                            oProp = System.Text.RegularExpressions.Regex.Replace(oProp, "\\.keyword$", "");
                         if (allProps.Contains(oProp) == false)
                         {
                             //neni na seznamu properties, pridej do seznamu k smazani
