@@ -335,7 +335,7 @@
                             HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby
                             .Get()
                             .GroupBy(g => g.Strana, sp => sp, (g, sp) => sp.OrderByDescending(o => o.CastkaCelkem).First())
-                            .Where(w => HlidacStatu.Web.Framework.Shared.Data.TopStrany.Contains(w.Strana))
+                            .Where(w => HlidacStatu.Lib.Data.Sponsors.TopStrany.Contains(w.Strana))
                             )
                         {
                             <div class="table-row">

@@ -1,6 +1,6 @@
 ﻿
 @using Nest;
-@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Data;
 @using System.Linq;
 @using Devmasters.Core;
 @using Devmasters.Core.Collections;
@@ -10,6 +10,29 @@
     ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
 
     int lastYear = DateTime.Now.AddMonths(-6).AddYears(-1).Year;
+
+    var topSponzoriOsoby = HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
+                            .GroupBy(g => g.Sponzor, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Osoba>()
+                            {
+                                Sponzor = g,
+                                Rok = null,
+                                CastkaCelkem = sp.Sum(m => m.CastkaCelkem),
+                                Strana = sp.GroupBy(g2 => g2.Strana, sp2 => sp2, (g2, sp2) =>
+                                            new Sponsors.Sponzorstvi<Osoba>()
+                                            {
+                                                Sponzor = null,
+                                                Rok = null,
+                                                Strana = g2,
+                                                CastkaCelkem = sp2.Sum(m => m.CastkaCelkem)
+                                            }
+                                            )
+                                            .Select(s2 => $"{s2.Strana}")
+                                            .Aggregate((f2, s2) => f2 + ", " + s2)
+                                            //strana
+                            }
+                            )
+                            .OrderByDescending(m => m.CastkaCelkem)
+                            .Take(7);
 
 }
 @section scripts
@@ -103,35 +126,18 @@
             <div class="block-col block-part">
                 <div class="block-table">
                     @{
-                        foreach (var sponzor in
-                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby
-                            .Get()
-                            .OrderByDescending(m => m.CastkaCelkem)
-                            .Take(4)
-                            )
+                        foreach (var sponzor in topSponzoriOsoby)
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
-                            </div>
-                        }
-                        foreach (var sponzor in
-                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriFirmy
-                            .Get()
-                            .OrderByDescending(m => m.CastkaCelkem)
-                            .Take(4)
-                            )
-                        {
-                            <div class="table-row">
-                                <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> (@Devmasters.Core.TextUtil.ShortenText(sponzor.Strana,20)) </div>
                             </div>
                         }
 
                     }
 
                 </div>
-                <a href="/sponzori/top" class="link">Největší sponzoři politických stran</a>
+                <a href="/sponzori/top" class="link">Přehled více než 2000 největších sponzorů (osob i firem) politických stran</a>
             </div>
         </div>
 
@@ -147,9 +153,7 @@
             <div class="block-col block-part">
                 <div class="block-table">
                     @{
-                        foreach (var sponzor in
-                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby
-                            .Get()
+                        foreach (var sponzor in HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
                             .Where(m => m.Rok == lastYear)
                             .OrderByDescending(m => m.CastkaCelkem)
                             .Take(7)
@@ -179,8 +183,7 @@
             <div class="block-col block-part">
                 <div class="block-table">
                     @{
-                        foreach (var sponzor in
-                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriFirmy
+                        foreach (var sponzor in HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaFirmy
                             .Get()
                             .Where(m => m.Rok == lastYear)
                             .OrderByDescending(m => m.CastkaCelkem)
@@ -189,7 +192,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.Jmeno</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.BookmarkName()</a> pro <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(sponzor.Strana)">@sponzor.Strana</a></div>
                             </div>
                         }
 

@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Data
                         };
         public static string[] TopStrany = VelkeStrany.Take(9).ToArray();
 
-        public static int DefaultLastSponzoringYear = DateTime.Now.AddMonths(-7).Year;
+        public static int DefaultLastSponzoringYear = DateTime.Now.AddMonths(-7).AddYears(-1).Year;
 
         public class Strany
         {

@@ -87,7 +87,7 @@ namespace HlidacStatu.Web.Controllers
                 );
         }
 
-        public ActionResult Top()
+        public ActionResult Top(int? rok)
         {
             bool linkStrana = true;
             bool showYear = true;
@@ -96,6 +96,7 @@ namespace HlidacStatu.Web.Controllers
             IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> dataO = null;
 
             dataO = Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
+                .Where(m => (m.CastkaCelkem >= 100000 ) && (m.Rok == rok || rok == null)) 
                 .GroupBy(g => g.Sponzor, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Osoba>()
                 {
                     Sponzor = g,
@@ -107,7 +108,6 @@ namespace HlidacStatu.Web.Controllers
                 }
                 )
                 .OrderByDescending(m => m.CastkaCelkem)
-                .Where(m => m.CastkaCelkem >= 100000)
                 .Select(s => new Sponsors.Sponzorstvi<Bookmark.IBookmarkable>()
                 {
                     CastkaCelkem = s.CastkaCelkem,
@@ -116,6 +116,7 @@ namespace HlidacStatu.Web.Controllers
                     Sponzor = s.Sponzor
                 });
             dataF = Sponsors.AllSponzorsPerYearPerStranaFirmy.Get()
+                .Where(m => m.CastkaCelkem >= 100000 && (m.Rok == rok || rok == null))
                 .GroupBy(g => g.Sponzor.Ico, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Firma.Lazy>()
                 {
                     Sponzor = new Firma.Lazy(g),
@@ -127,7 +128,6 @@ namespace HlidacStatu.Web.Controllers
                 }
                 )
                 .OrderByDescending(m => m.CastkaCelkem)
-                .Where(m => m.CastkaCelkem >= 100000)
 #if (DEBUG)
                         .Take(30)
 #endif
@@ -141,8 +141,9 @@ namespace HlidacStatu.Web.Controllers
             showYear = false;
             linkStrana = false;
 
-            ViewBag.TopOsoba = Osoby.GetById.Get(Convert.ToInt32(dataO.First().Sponzor.ToAuditObjectId()));
-            ViewBag.TopOsobaAmount = dataO.First().CastkaCelkem;
+            ViewBag.Rok = rok ?? 0;
+            ViewBag.TopOsoba = Osoby.GetById.Get(Convert.ToInt32(dataO.FirstOrDefault()?.Sponzor?.ToAuditObjectId()));
+            ViewBag.TopOsobaAmount = dataO.FirstOrDefault()?.CastkaCelkem ?? 0;
 
             return View(
         new[] {
