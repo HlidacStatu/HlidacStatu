@@ -111,8 +111,6 @@
                         Sponzor = s.Sponzor
                     });
 
-        ViewBag.TopOsoba = Osoby.GetById.Get(Convert.ToInt32(dataO.First().Sponzor.ToAuditObjectId()));
-        ViewBag.TopOsobaAmount = dataO.First().CastkaCelkem;
 
         var model = new[] {
         Sponsors.RenderSponzorství(dataO, false, false),
