@@ -8,7 +8,7 @@
 
 @{
     ViewBag.Title = string.Format("Transparentní účet {0}", Model.First().Subjekt);
-    var sponzori = HlidacStatu.Lib.Data.Sponsors.Strany.PerYears(Model.First().Subjekt);
+    var sponzori = HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(Model.First().Subjekt);
 
 
 }

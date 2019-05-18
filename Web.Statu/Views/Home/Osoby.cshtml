@@ -11,7 +11,7 @@
 
     List<HlidacStatu.Lib.Data.Osoba> showList = null;
     List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, BasicData<string>>> topSponzori = null;
-    IEnumerable<HlidacStatu.Lib.Data.Sponsors.Strany.PerStrana> vsichniSponzori = WebCache.Get("VsichniSponzoriPerStrana");
+    
 
     string prefix = "";
 
@@ -56,7 +56,7 @@
         showList = WebCache.Get("TopPolitici");
         if (showList == null)
         {
-            var topOsoby = HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby.Get()
+            var topOsoby = HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
                 .Where(m => m.Sponzor.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.Politik);
 
             showList = topOsoby
@@ -79,11 +79,6 @@
 
     }
 
-    if (vsichniSponzori == null)
-    {
-        vsichniSponzori = HlidacStatu.Lib.Data.Sponsors.Strany.AllSponsored();
-        WebCache.Set("VsichniSponzoriPerStrana", vsichniSponzori, 120);
-    }
 
 }
 
@@ -199,23 +194,6 @@ else //noSearch
             </div>
         </div>
         <div class="col-xs-6 col-sm-4">
-            <h3>Sponzoři</h3>
-            <div>
-                <ul>
-                    @{
-
-                        foreach (var item in vsichniSponzori.OrderByDescending(m => m.Sum))
-                        {
-                            <li>
-                                <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(item.Strana)">
-                                    @item.Strana
-                                </a><br />
-                                @HlidacStatu.Util.PluralForm.Get(item.Num, "{0} dar;{0} dary;{0} darů"); @HlidacStatu.Util.RenderData.ShortNicePrice(item.Sum, "výši neznáme"),
-                            </li>
-                        }
-                    }
-                </ul>
-            </div>
         </div>
     </div>
 }
