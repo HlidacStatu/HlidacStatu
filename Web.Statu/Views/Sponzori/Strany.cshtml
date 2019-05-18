@@ -1,0 +1,135 @@
+﻿@model HlidacStatu.Lib.Render.ReportDataSource<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>
+
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq;
+@using HlidacStatu.Web.Framework
+
+@{
+
+    ViewBag.Title = "Sponzoři " + ViewBag.Strana;
+    int count = 0;
+    int maxSponzori = 4;
+    string[] vsechnyStrany =
+        HlidacStatu.Lib.Data.Sponsors.VelkeStrany
+        .Union(
+            HlidacStatu.Lib.Data.Sponsors.Strany.GetStranyPerYear
+            .Get()
+            .Select(m => m.Strana)
+            .Distinct()
+            .Union(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
+                .GetAll()
+                .Where(m => m.TypSubjektu == "Politická strana")
+                .Select(m=>m.Subjekt)
+                .Distinct()
+                )
+            .Where(m=> !HlidacStatu.Lib.Data.Sponsors.VelkeStrany.Contains(m))
+            .OrderBy(m=>m)
+        )
+        .ToArray()
+        ;
+
+    var ucty = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
+            .GetAll()
+            .Where(m => m.TypSubjektu == "Politická strana")
+            .GroupBy(g => g.Subjekt, (s, bu) => new { subjekt = s, numUctu = bu.Count(), numTransakci = bu.Sum(b => b.NumOfTransactions()) })
+            .OrderBy(m => m.subjekt);
+
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/sponzori">Sponzoři</a></li>
+        <li class="active">Politické strany</li>
+    </ol>
+}
+
+<div class="row">
+    @foreach (var strana in vsechnyStrany)
+    {
+        count++;
+        int year = DateTime.Now.AddMonths(-7).Year - 4;
+        var topSponzori = HlidacStatu.Lib.Data.Sponsors.AllTimeTopSponzorsPerStrana(strana, maxSponzori);
+
+        <div class="col-xs-12 col-sm-6">
+            <h3><a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">@strana</a></h3>
+            @if (ucty.Any(m => m.subjekt == strana))
+            {
+                var ucet = ucty.First(m => m.subjekt == strana);
+            <p>
+                Tato strana/hnutí <a href="/ucty/ucty?id=@(System.Net.WebUtility.UrlEncode(strana))">
+                <b>@Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numUctu, "nemá žádný transparetní účet", "má jeden transparetní účet", "má {0} transparetní účty", "má {0} transparetních účtů")</b>
+                </a>
+                @Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numTransakci, "","s jednou transakcí","s {0} transakcemi","s {0} transakcemi").
+            </p>
+            }
+            
+            <table class="table table-hover table-new table-new--dotted table-striped">
+                <thead>
+                    <tr>
+                        <th>Dary v @year</th>
+                        <th>@(year + 1)</th>
+                        <th>@(year + 2)</th>
+                        <th>@(year + 3)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year).TotalKc)</td>
+                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 1).TotalKc)</td>
+                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 2).TotalKc)</td>
+                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 3).TotalKc)</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            @if (topSponzori.Count() > 0)
+                            {
+                                <text>
+                                    Top sponzoři:
+                                    @foreach (var sponzor in topSponzori)
+                                    {
+                                        <span>
+                                            <a href="@(sponzor.Sponzor.GetUrl(true))">@(sponzor.Sponzor.BookmarkName())</a>
+                                            (@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))) ,
+                                        </span>
+                                    }
+                                </text>
+                                if (topSponzori.Count() == maxSponzori)
+                                {
+                                    <text>
+                                    a <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">všichni ostatní sponzoři</a>.
+                                    </text>
+                                }
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        if (count % 2 == 0)
+        {
+            <div class="clearfix"></div>
+        }
+        if (strana == HlidacStatu.Lib.Data.Sponsors.VelkeStrany.Last())
+        {
+            count = 0;
+            @Html.Raw("</div><hr /><div class=\"row\">");
+        }
+    }
+</div>
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+
+

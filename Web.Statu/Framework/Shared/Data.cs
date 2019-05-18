@@ -7,11 +7,6 @@ namespace HlidacStatu.Web.Framework.Shared
 {
     public static class Data
     {
-        public static string[] VelkeStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
-                            "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09",
-                            "Svobodní","Strana zelených"
-                        };
-        public static string[] TopStrany = VelkeStrany.Take(9).ToArray();
 
         [Obsolete("use Lib.Data.Sponzors.AllSponzorsPerYearPerStranaOsoby")]
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>
@@ -22,7 +17,7 @@ namespace HlidacStatu.Web.Framework.Shared
                         using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                         {
                             int rok = DateTime.Now.Date.AddMonths(-5).AddYears(-1).Year;
-                            foreach (var strana in VelkeStrany)
+                            foreach (var strana in HlidacStatu.Lib.Data.Sponsors.VelkeStrany)
                             {
                                 var res = db.OsobaEvent
                                     .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.AddInfo == strana)
@@ -30,7 +25,7 @@ namespace HlidacStatu.Web.Framework.Shared
                                     .OrderByDescending(o => o.oe.AddInfoNum)
                                     .Take(1000)
                                     .ToArray()
-                                    .GroupBy(g =>new { osoba = g.osoba, rok = g.oe.DatumDo.Value.Year }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
+                                    .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumDo.Value.Year }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
                                     {
                                         Sponzor = o.osoba,
                                         CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
@@ -58,7 +53,7 @@ namespace HlidacStatu.Web.Framework.Shared
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
                     int rok = DateTime.Now.Date.AddMonths(-5).AddYears(-1).Year;
-                    foreach (var strana in VelkeStrany)
+                    foreach (var strana in HlidacStatu.Lib.Data.Sponsors.VelkeStrany)
                     {
                         var res = db.FirmaEvent
                             .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.AddInfo == strana && m.DatumOd.HasValue && m.DatumOd.Value.Year == rok)

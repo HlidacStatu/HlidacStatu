@@ -1442,7 +1442,7 @@ text zpravy: {txt}";
                         webShotServiceUrl = "http://127.0.0.1:9090";
 
                     string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
-                    data = Framework.FileFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
+                    data = Framework.RemoteUrlFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
                     {
                         ValueForData = scr,
                         CacheNameOnDisk = (id?.ToLower() ?? "null") + "-" + rat + "-" + v

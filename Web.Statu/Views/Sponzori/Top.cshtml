@@ -1,0 +1,62 @@
+﻿@model HlidacStatu.Lib.Render.ReportDataSource<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>[]
+
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using System.Linq;
+@using HlidacStatu.Web.Framework
+
+@{
+    ViewBag.Title = "Největší sponzoři politických stran";
+    ViewBag.SubTitle = "za posledních 10 let";
+
+    HlidacStatu.Lib.Data.Osoba topOsoba = ViewBag.TopOsoba;
+
+    ViewBag.SocialShareTitle = "Největší sponzoři politických stran";
+    ViewBag.SocialShareText = "Více než 2000 osoby a firem, které politickým stranám, hnutím a kandidátům darovali za posledních 10 let v souhrnu alespoň 100.000 Kč.";
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/quote?d={DateTime.Now.ToString("d.M.yy")}"
+            + "&t=" + System.Net.WebUtility.UrlEncode(ViewBag.SocialShareTitle)
+            + "&b=" + System.Net.WebUtility.UrlEncode(ViewBag.SocialShareText)
+            + "&f=" + System.Net.WebUtility.UrlEncode(topOsoba.FullNameWithYear() + " " + HlidacStatu.Util.RenderData.ShortNicePrice(ViewBag.TopOsobaAmount))
+            + "&st=" + System.Net.WebUtility.UrlEncode("k " + DateTime.Now.Date.ToString("dd.MM.yyyy"))
+            + "&img=" + System.Net.WebUtility.UrlEncode(topOsoba.GetPhotoUrl())
+            + "&rat=16x9"
+            ;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
++ "<meta property=\"og:image:height\" content=\"1080\" />"
++ "<meta property=\"og:image:type\" content=\"image/png\" />"
+;
+
+    ViewBag.ShowBookmarkUrl = true;
+
+
+    Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<string> content =
+        new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<string>(
+            TimeSpan.FromDays(2),
+            "/sponzori/top",
+        (p) => Html.Action("Action_Child", new { model = Model, NameOfView = "Top_Child" }).ToHtmlString()
+        );
+
+}
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/sponzori">Sponzoři</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+
+<h3>Osoby a firmy sponzorující politické strany celkovou částkou vyšší než 100.000 Kč.</h3>
+
+@Html.Raw(content.Get())
+
+
+@Util.FeedbackModal("Poslat opravu či připomínku")

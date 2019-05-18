@@ -44,6 +44,10 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction("Index");
 
+            if (id.ToLower() == "polická strana")
+                return RedirectToActionPermanent("Strany", "Sponzori");
+
+
             var es = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty();
             List<string> typy = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
                             .GetAll()
@@ -62,6 +66,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction("Index", "Ucty");
+
 
             List<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet> ucty = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.GetAll()
                 .Where(m=>m.Subjekt == id)

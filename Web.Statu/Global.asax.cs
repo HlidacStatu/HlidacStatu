@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
+﻿using HlidacStatu.Util.Cache;
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +10,9 @@ namespace HlidacStatu.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+
+        public static volatile MemoryCacheManager<string, string> CachedDatasets = null;
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -27,6 +29,7 @@ namespace HlidacStatu.Web
 
             //System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new Framework.DataSetsVirtualPathProvider());
 
+
             HlidacStatu.Lib.Init.Initialise();
         }
 
@@ -40,7 +43,7 @@ namespace HlidacStatu.Web
             {
                 if (httpException.GetHttpCode() == 404)
                 {
-                    
+
                     HlidacStatu.Util.Consts.Logger.Error(new Devmasters.Core.Logging.LogMessage()
                         .SetMessage("HTTP Error 400")
                         .SetException(exception)
@@ -107,7 +110,7 @@ namespace HlidacStatu.Web
 
             finishResponse:
 
-                return;
+            return;
         }
 
     }

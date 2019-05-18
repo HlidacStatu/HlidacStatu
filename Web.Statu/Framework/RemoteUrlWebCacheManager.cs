@@ -4,16 +4,16 @@ using System;
 namespace HlidacStatu.Web.Framework
 {
 
-    public static class FileFromWebCache
+    public static class RemoteUrlFromWebCache
     {
-        static FileFromWebCache()
+        static RemoteUrlFromWebCache()
         {
         }
 
         public static volatile FileCacheManager Manager
-                = FileCacheManager.GetSafeInstance("FileFromWebCache",
+                = FileCacheManager.GetSafeInstance("RemoteUrlFromWebCache",
                     urlfn => GetBinaryDataFromUrl(urlfn),
-                    TimeSpan.FromHours(6));
+                    TimeSpan.FromHours(24));
 
 
         private static byte[] GetBinaryDataFromUrl(KeyAndId ki)

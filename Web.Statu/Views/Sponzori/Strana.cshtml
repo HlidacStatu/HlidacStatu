@@ -2,12 +2,20 @@
 
 @using Devmasters.Core
 @using HlidacStatu.Lib
+@using HlidacStatu.Lib.Data
 @using System.Linq;
 @using HlidacStatu.Web.Framework
 
 @{
 
-        ViewBag.Title = "Sponzoři " + ViewBag.Strana;
+    ViewBag.Title = "Sponzoři " + ViewBag.Strana;
+
+    var ucty = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
+        .GetAll()
+        .Where(m => m.TypSubjektu == "Politická strana")
+        .GroupBy(g => g.Subjekt, (s, bu) => new { subjekt = s, numUctu = bu.Count(), numTransakci = bu.Sum(b => b.NumOfTransactions()) })
+        .OrderBy(m => m.subjekt);
+
 }
 @section scripts
 {
@@ -21,25 +29,100 @@
 @section breadcrumb
 {
     <ol class="breadcrumb">
-        <li><a href="/osoby">Hlídač Osob</a></li>
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/sponzori">Sponzoři</a></li>
         <li class="active">Sponzoři @ViewBag.Strana</li>
     </ol>
 }
-@Html.Raw( UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>("", Model, @"{
-             'language': {
-                'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
-            },
-            'ordering': false,
-            'order': [0,'asc'],
-            'lengthChange': false,
-            'info': false,
-            'paging': false
-            }")
-)
 
 
+    @if (ucty.Any(m => m.subjekt == ViewBag.Strana))
+    {
+        var ucet = ucty.First(m => m.subjekt == ViewBag.Strana);
+    <p>
+        Tato strana/hnutí <a href="/ucty/ucty?id=@(System.Net.WebUtility.UrlEncode(ViewBag.Strana))">
+            <b>@Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numUctu, "nemá žádný transparetní účet", "má jeden transparetní účet", "má {0} transparetní účty", "má {0} transparetních účtů")</b>
+        </a>
+        @Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numTransakci, "", "s jednou transakcí", "s {0} transakcemi", "s {0} transakcemi").
+    </p>
+}
+ 
+    <h2>Přehled darů po letech</h2>
+    @Html.Raw( UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>("", Model, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.12/i18n/Czech.json'
+                },
+                'ordering': false,
+                'order': [0,'asc'],
+                'lengthChange': false,
+                'info': false,
+                'paging': false
+                }")
+    )
 
-@Util.FeedbackModal("Poslat opravu či připomínku")
+    <hr style="margin-top:60px" />
+    <h2>Největší sponzoři @ViewBag.Strana celkově</h2>
+
+    @{
+        IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> dataF = null;
+        IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> dataO = null;
+
+        dataO = Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
+            .Where(m => m.Strana == ViewBag.Strana)
+            .GroupBy(g => g.Sponzor, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Osoba>()
+            {
+                Sponzor = g,
+                Rok = null,
+                Strana = sp.OrderBy(s => s.Rok)
+                    .Select(s => $"{HlidacStatu.Util.RenderData.ShortNicePrice(s.CastkaCelkem)} pro {Sponsors.GetStranaHtmlLink(s.Strana)}" + (s.Rok.HasValue ? $" ({s.Rok.Value})" : ""))
+                    .Aggregate((f, s) => f + ", " + s),
+                CastkaCelkem = sp.Sum(m => m.CastkaCelkem)
+            }
+            )
+            .OrderByDescending(m => m.CastkaCelkem)
+            .Take(200)
+            .Select(s => new Sponsors.Sponzorstvi<Bookmark.IBookmarkable>()
+            {
+                CastkaCelkem = s.CastkaCelkem,
+                Rok = s.Rok,
+                Strana = s.Strana,
+                Sponzor = s.Sponzor
+            });
+        dataF = Sponsors.AllSponzorsPerYearPerStranaFirmy.Get()
+            .Where(m => m.Strana == ViewBag.Strana)
+            .GroupBy(g => g.Sponzor.Ico, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Firma.Lazy>()
+            {
+                Sponzor = new Firma.Lazy(g),
+                Rok = null,
+                Strana = sp.OrderBy(s => s.Rok)
+                    .Select(s => $"{HlidacStatu.Util.RenderData.ShortNicePrice(s.CastkaCelkem)} pro {Sponsors.GetStranaHtmlLink(s.Strana)}" + (s.Rok.HasValue ? $" ({s.Rok.Value})" : ""))
+                    .Aggregate((f, s) => f + ", " + s),
+                CastkaCelkem = sp.Sum(m => m.CastkaCelkem)
+            }
+            )
+            .OrderByDescending(m => m.CastkaCelkem)
+            .Where(m => m.CastkaCelkem >= 100000)
+                    .Take(200)
+                    .Select(s => new Sponsors.Sponzorstvi<Bookmark.IBookmarkable>()
+                    {
+                        CastkaCelkem = s.CastkaCelkem,
+                        Rok = s.Rok,
+                        Strana = s.Strana,
+                        Sponzor = s.Sponzor
+                    });
+
+        ViewBag.TopOsoba = Osoby.GetById.Get(Convert.ToInt32(dataO.First().Sponzor.ToAuditObjectId()));
+        ViewBag.TopOsobaAmount = dataO.First().CastkaCelkem;
+
+        var model = new[] {
+        Sponsors.RenderSponzorství(dataO, false, false),
+        Sponsors.RenderSponzorství(dataF, false,false)
+    };
+
+}
+    @Html.Action("CachedAction_Child_48H", new { model = model, NameOfView = "Top_Child" })
+
+    @Util.FeedbackModal("Poslat opravu či připomínku")
 
 
 

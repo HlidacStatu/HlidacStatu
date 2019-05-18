@@ -23,7 +23,14 @@
     </ol>
 }
 
-
+<p>
+    Na tomto místě hlídame sponzory politických stran tak, jak jsou uvedeni ve výročních zprávách politických stran.
+    Denně kontrolované transparetní účty a jednotlivé bankovní transakce najdete na odkazech níže:
+    <ul>
+        <li><a href="/ucty/subjektyTypu?id=Politická+strana">Transparetní účty politických stran a jednotlivé bankovní transakce</a>.</li>
+        <li><a href="/ucty/subjektyTypu?id=Prezidentský+kandidát">Transparetní účty kandidátů na prezidenty a prezidenta Zemana</a>.</li>
+    </ul>
+</p>
 <div class="watcher-blocks">
 
     <div class="watcher-blocks__wrapper">
@@ -44,7 +51,7 @@
             <div class="block-row block-part">
                 @{
                     string[] topStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
-                                                                                                                "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
+                                                                                                                        "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
                     var data = topStrany
                             .Select(s => HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(s))
                             .Select(s => s.Where(m => m.Rok == lastYear).FirstOrDefault() ?? new HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear() { Strana = s.First().Strana })
@@ -124,7 +131,7 @@
                     }
 
                 </div>
-                <a href="/sponzori" class="link">Další sponzoři</a>
+                <a href="/sponzori/top" class="link">Největší sponzoři politických stran</a>
             </div>
         </div>
 
@@ -157,7 +164,7 @@
                     }
 
                 </div>
-                <a href="/sponzori" class="link">Další sponzoři</a>
+                <a href="/sponzori/top" class="link">Další sponzoři</a>
             </div>
         </div>
 
@@ -189,7 +196,7 @@
                     }
 
                 </div>
-                <a href="/sponzori" class="link">Další sponzoři</a>
+                <a href="/sponzori/top" class="link">Další sponzoři</a>
             </div>
         </div>
     </div>

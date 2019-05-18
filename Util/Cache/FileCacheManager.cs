@@ -20,8 +20,9 @@ namespace HlidacStatu.Util.Cache
         
         protected override Devmasters.Cache.V20.File.BinaryFileCache getTCacheInstance(KeyAndId key, TimeSpan expiration, Func<KeyAndId, byte[]> contentFunc)
         {
-            return new Devmasters.Cache.V20.File.BinaryFileCache(Devmasters.Core.Util.Config.GetConfigValue("FileCachePath"),
-                TimeSpan.FromHours(6), key.CacheNameOnDisk,
+            return new Devmasters.Cache.V20.File.BinaryFileCache(
+                Devmasters.Core.Util.Config.GetConfigValue("FileCachePath"),
+                expiration, key.CacheNameOnDisk,
                 (o) => contentFunc.Invoke(key)
                 );
 

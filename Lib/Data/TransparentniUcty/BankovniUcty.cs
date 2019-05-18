@@ -39,8 +39,20 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             }
         }
 
+        static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<BankovniUcet>> content = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<BankovniUcet>>(
+                    TimeSpan.FromHours(2),
+                    "bankovniucty_all",
+                    (p) => getAllFromDb()
+                    );
+
         public static IEnumerable<BankovniUcet> GetAll()
         {
+            return content.Get();
+        }
+        private static IEnumerable<BankovniUcet> getAllFromDb()
+        {
+
+
             List<BankovniUcet> bu = new List<BankovniUcet>();
             Func<int, int, ISearchResponse<BankovniUcet>> searchFunc = 
                 (size, page) =>

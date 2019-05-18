@@ -207,7 +207,7 @@ else //noSearch
                         foreach (var item in vsichniSponzori.OrderByDescending(m => m.Sum))
                         {
                             <li>
-                                <a href="/sponzori?strana=@item.Strana">
+                                <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(item.Strana)">
                                     @item.Strana
                                 </a><br />
                                 @HlidacStatu.Util.PluralForm.Get(item.Num, "{0} dar;{0} dary;{0} darů"); @HlidacStatu.Util.RenderData.ShortNicePrice(item.Sum, "výši neznáme"),

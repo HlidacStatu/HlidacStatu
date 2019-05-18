@@ -11,6 +11,7 @@ namespace HlidacStatu.Util
         public static string[,] NazvyStranŹkratky = {
             {"strana zelených","SZ"},
             {"česká pirátská strana","Piráti" },
+            {"pirátská strana","Piráti" },
             {"strana práv občanů","SPO" },
             {"svoboda a přímá demokracie","SPD" },
             {"rozumní - stop migraci a diktátu eu","Rozumní" },

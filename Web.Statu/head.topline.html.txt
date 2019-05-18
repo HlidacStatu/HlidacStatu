@@ -1,10 +1,9 @@
 ﻿    <li class="navbar__watchers">
-        <span class="watcher">Hlídače:</span>
-        <a href="https://www.hlidacstatu.cz/smlouvy">Smluv</a>
-        <a href="https://www.hlidacstatu.cz/osoby">Osob</a>
-        <a href="https://www.hlidacstatu.cz/ucty">Financí</a>
-        <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejných zakázek</a>
-        <a href="https://www.hlidacstatu.cz/StatniWeby">Webů</a>
+        <a href="https://www.hlidacstatu.cz/smlouvy">Smluvy</a>
+        <a href="https://www.hlidacstatu.cz/osoby">Osoby</a>
+        <a href="https://www.hlidacstatu.cz/sponzori">Sponzoři</a>
+        <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejné zakázky</a>
+        <a href="https://www.hlidacstatu.cz/StatniWeby">Weby</a>
     </li>
 
 

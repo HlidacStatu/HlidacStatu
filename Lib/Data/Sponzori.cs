@@ -8,6 +8,14 @@ namespace HlidacStatu.Lib.Data
 {
     public class Sponsors
     {
+        public static string[] VelkeStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Česká pirátská strana","KSČM",
+                            "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09",
+                            "Svobodní","Strana zelených"
+                        };
+        public static string[] TopStrany = VelkeStrany.Take(9).ToArray();
+
+        public static int DefaultLastSponzoringYear = DateTime.Now.AddMonths(-7).Year;
+
         public class Strany
         {
             public class AggSum
@@ -30,42 +38,86 @@ namespace HlidacStatu.Lib.Data
                 public AggSum Firmy { get; set; } = new AggSum();
 
                 public decimal TotalKc { get { return Osoby.Sum + Firmy.Sum; } }
+
+
+                public class PerYearStranaEquality : IEqualityComparer<StranaPerYear>
+                {
+                    public bool Equals(StranaPerYear x, StranaPerYear y)
+                    {
+                        if (x == null || y == null)
+                            return false;
+
+                        return x.Rok == y.Rok && x.Strana == y.Strana;
+                    }
+
+                    public int GetHashCode(StranaPerYear obj)
+                    {
+                        //http://stackoverflow.com/a/4630550
+                        return
+                            new
+                            {
+                                obj.Rok,
+                                obj.Strana
+                            }.GetHashCode();
+                    }
+                }
             }
+
+
+
+            public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>> GetStranyPerYear
+                = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>>(
+                TimeSpan.FromDays(4), "sponzori_stranyPerYear", (obj) =>
+                {
+                    using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
+                    {
+                        var resultO = db.OsobaEvent
+                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                                .ToArray()
+                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.AddInfo }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                {
+                                    Rok = r.rok,
+                                    Strana = r.strana,
+                                    Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                });
+
+                        var resultF = db.FirmaEvent
+                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                                .ToArray()
+                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.AddInfo }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                {
+                                    Rok = r.rok,
+                                    Strana = r.strana,
+                                    Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                });
+
+                        var roky = resultO.FullOuterJoin(resultF, o => o, f => f,
+                                    (o, f, k) => new StranaPerYear()
+                                    {
+                                        Strana = k.Strana,
+                                        Rok = k.Rok,
+                                        Osoby = o?.Osoby ?? new AggSum(),
+                                        Firmy = f?.Firmy ?? new AggSum()
+                                    }, cmp: new StranaPerYear.PerYearStranaEquality()
+                         );
+
+                        return roky;
+                    }
+
+                });
+
             public static IEnumerable<StranaPerYear> StranaPerYears(string strana)
             {
-                using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
-                {
-                    var resultO = db.OsobaEvent
-                        .Where(m => m.AddInfo == strana && m.Type == 3 && m.DatumOd.HasValue)
-                        .ToArray()
-                        .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                        .GroupBy(g => g.rok, oe => oe.oe, (r, oe) => new StranaPerYear()
-                        {
-                            Rok = r,
-                            Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
-                        });
-
-                    var resultF = db.FirmaEvent
-                        .Where(m => m.AddInfo == strana && m.Type == 3 && m.DatumOd.HasValue)
-                        .ToArray()
-                        .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                        .GroupBy(g => g.rok, oe => oe.oe, (r, oe) => new StranaPerYear()
-                        {
-                            Rok = r,
-                            Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
-                        });
-
-                    var roky = resultO.FullOuterJoin(resultF, o => o.Rok, f => f.Rok,
-                        (o, f, k) => new StranaPerYear()
-                        {
-                            Strana = strana,
-                            Rok = k,
-                            Osoby = o?.Osoby ?? new AggSum(),
-                            Firmy = f?.Firmy ?? new AggSum()
-                        });
-
-                    return roky;
-                }
+                return GetStranyPerYear.Get().Where(m => m.Strana == strana);
+            }
+            public static StranaPerYear StranaPerYears(string strana, int year)
+            {
+                var ret = GetStranyPerYear.Get().Where(m => m.Strana == strana && m.Rok == year).FirstOrDefault();
+                if (ret == null)
+                    ret = new StranaPerYear() { Strana = strana, Rok = year };
+                return ret;
             }
 
             public static Lib.Render.ReportDataSource<StranaPerYear> RenderPerYearsTable(IEnumerable<StranaPerYear> dataPerYear)
@@ -110,11 +162,50 @@ namespace HlidacStatu.Lib.Data
 
         }
 
+        public static IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> AllTimeTopSponzorsPerStrana(string strana, int top = int.MaxValue)
+        {
+            var o = AllTimeTopSponzorsPerStranaOsoby(strana, top * 50);
+            var f = AllTimeTopSponzorsPerStranaFirmy(strana, top * 50);
 
+            return o.Select(m=> (Sponzorstvi<Bookmark.IBookmarkable>)m)
+                    .Union(f.Select(m=> (Sponzorstvi<Bookmark.IBookmarkable>)m))
+                    .OrderByDescending(m => m.CastkaCelkem)
+                    .Take(top);
+        }
+        public static IEnumerable<Sponsors.Sponzorstvi<Osoba>> AllTimeTopSponzorsPerStranaOsoby(string strana, int top = int.MaxValue)
+        {
+            return AllSponzorsPerYearPerStranaOsoby.Get()
+                .Where(m => m.Strana == strana)
+                .GroupBy(k => k.Sponzor, sp => sp, (k, sp) => new Sponzorstvi<Osoba>()
+                {
+                    Sponzor = k,
+                    CastkaCelkem = sp.Sum(m => m.CastkaCelkem),
+                    Rok = 0,
+                    Strana = strana
+                })
+                .OrderByDescending(o => o.CastkaCelkem)
+                .Take(top)
+                ;
 
+        }
+        public static IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>> AllTimeTopSponzorsPerStranaFirmy(string strana, int top = int.MaxValue)
+        {
+            return AllSponzorsPerYearPerStranaFirmy.Get()
+                .Where(m => m.Strana == strana)
+                .GroupBy(k => k.Sponzor, sp => sp, (k, sp) => new Sponzorstvi<Firma.Lazy>()
+                {
+                    Sponzor = k,
+                    CastkaCelkem = sp.Sum(m => m.CastkaCelkem),
+                    Rok = 0,
+                    Strana = strana
+                })
+                .OrderByDescending(o => o.CastkaCelkem)
+                .Take(top)
+                ;
+        }
 
         public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>> AllSponzorsPerYearPerStranaOsoby
-            = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
+            = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
                 TimeSpan.FromDays(4), "ucty_index_allSponzoriOsoby", (obj) =>
                 {
                     List<Sponsors.Sponzorstvi<Osoba>> result = new List<Sponsors.Sponzorstvi<Osoba>>();
@@ -143,7 +234,7 @@ namespace HlidacStatu.Lib.Data
                 });
 
         public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>> AllSponzorsPerYearPerStranaFirmy
-        = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>>(
+        = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>>(
             TimeSpan.FromDays(4), "sponzori_index_allSponzoriFirmy", (obj) =>
             {
                 List<Sponsors.Sponzorstvi<Firma.Lazy>> result = new List<Sponsors.Sponzorstvi<Firma.Lazy>>();
@@ -258,6 +349,17 @@ namespace HlidacStatu.Lib.Data
             public String Strana { get; set; }
             public decimal CastkaCelkem { get; set; }
             public int? Rok { get; set; }
+
+            public static explicit operator Sponzorstvi<Bookmark.IBookmarkable>(Sponzorstvi<T> d)  // implicit digit to byte conversion operator
+            {
+                return new Sponzorstvi<Bookmark.IBookmarkable>()
+                {
+                    Strana = d.Strana,
+                    CastkaCelkem = d.CastkaCelkem,
+                    Rok = d.Rok,
+                    Sponzor = (Bookmark.IBookmarkable)d.Sponzor
+                };
+            }
         }
 
         public static Lib.Render.ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>> RenderSponzorství(IEnumerable<Sponzorstvi<Bookmark.IBookmarkable>> data, bool showYear = true, bool linkStrana = true)
@@ -270,10 +372,10 @@ namespace HlidacStatu.Lib.Data
                     return s.Rok?.ToString();
                 },
                 OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Rok ?? 0); },
-                CssClass="number"
+                CssClass = "number"
 
             };
-            ReportDataSource < Sponzorstvi<Bookmark.IBookmarkable>> rokyTable = new ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>>(
+            ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>> rokyTable = new ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>>(
                 new ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>>.Column[] {
                 new ReportDataSource<Sponzorstvi<Bookmark.IBookmarkable>>.Column() { Name="Sponzor",
                     HtmlRender = (s) => {
@@ -300,7 +402,7 @@ namespace HlidacStatu.Lib.Data
                 ,
           });
             if (showYear)
-                rokyTable.Columns.Add( yearCol);
+                rokyTable.Columns.Add(yearCol);
 
 
             foreach (var r in data.OrderBy(m => m.Rok))
@@ -313,7 +415,7 @@ namespace HlidacStatu.Lib.Data
 
         public static string GetStranaUrl(string strana, bool local = true)
         {
-            string url = $"/Sponzori/strana/{System.Net.WebUtility.UrlEncode(strana)}";
+            string url = $"/Sponzori/strana?id={System.Net.WebUtility.UrlEncode(strana)}";
             if (local == false)
                 return "http://www.hlidacstatu.cz" + url;
             else
@@ -333,7 +435,7 @@ namespace HlidacStatu.Lib.Data
 
         public static string GetStranaSponzoringUrl(string strana, int rok, SponzoringDataType typ, bool local = true)
         {
-            string url = $"/Sponzori/seznam/{System.Net.WebUtility.UrlEncode(strana)}?rok={rok}&typ={(int)typ}";
+            string url = $"/Sponzori/seznam?id={System.Net.WebUtility.UrlEncode(strana)}&rok={rok}&typ={(int)typ}";
             if (local == false)
                 return "http://www.hlidacstatu.cz" + url;
             else

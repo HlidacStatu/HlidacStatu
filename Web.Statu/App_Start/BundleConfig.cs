@@ -52,8 +52,8 @@ namespace HlidacStatu.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/globalsite.v1.5.css",
-                      "~/Content/site.css",
-                       "~/content/social-share-kit.css"
+                       "~/content/social-share-kit.css",
+                      "~/Content/new.css"
                       ));
 
 
