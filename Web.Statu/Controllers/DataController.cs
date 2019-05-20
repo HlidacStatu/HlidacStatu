@@ -258,6 +258,15 @@ namespace HlidacStatu.Web.Controllers
                 if (dataItem == null)
                     return RedirectToAction("index", new { id = id });
 
+                if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
+                {
+                    //var findSm = ds.SearchDataRaw($"_id:\"{id}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
+                    //    null, withHighlighting: true);
+                    //if (findSm.Total > 0)
+                    //    ViewBag.Highlighting = findSm.ElasticResults.Hits.First().Highlights;
+
+                }
+
                 ViewBag.Id = id;
                 return View(new Models.DataDetailModel() { Dataset = ds, Data = dataid });
             }

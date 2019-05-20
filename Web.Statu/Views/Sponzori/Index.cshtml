@@ -9,7 +9,7 @@
     ViewBag.Title = "Sponzoři politických stran a politiků";
     ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
 
-    int lastYear = DateTime.Now.AddMonths(-6).AddYears(-1).Year;
+    int lastYear = HlidacStatu.Lib.Data.Sponsors.DefaultLastSponzoringYear;
 
     var topSponzoriOsoby = HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby.Get()
                             .GroupBy(g => g.Sponzor, sp => sp, (g, sp) => new Sponsors.Sponzorstvi<Osoba>()
@@ -168,7 +168,7 @@
                     }
 
                 </div>
-                <a href="/sponzori/top" class="link">Další sponzoři</a>
+                <a href="/sponzori/top?r=@lastYear" class="link">Další sponzoři</a>
             </div>
         </div>
 
@@ -199,7 +199,7 @@
                     }
 
                 </div>
-                <a href="/sponzori/top" class="link">Další sponzoři</a>
+                <a href="/sponzori/top?r=@lastYear" class="link">Další sponzoři</a>
             </div>
         </div>
     </div>

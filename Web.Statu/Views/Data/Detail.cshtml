@@ -14,6 +14,7 @@
     ViewBag.Title = itemId;
     ViewBag.SubTitle = Model.Dataset.Registration().name; ;
 
+    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
 
 }
 @section scripts
@@ -44,7 +45,7 @@
         {
             if (Model.Dataset.Registration()?.detailTemplate?.IsNewTemplate() == true)
             {
-                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model);
+                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model, highlightingData: highlightingData);
                 @Html.Raw(html)
             }
             else

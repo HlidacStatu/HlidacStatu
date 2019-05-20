@@ -110,7 +110,7 @@
                 .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
                 .ToArray();
 
-            var html = Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model);
+            var html = Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model, model.Q);
             @Html.Raw(html)
         }
         else

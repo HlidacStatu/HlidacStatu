@@ -136,13 +136,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return this.Registration().createdBy.ToLower() == email;
         }
 
-        public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null)
+        public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null, bool withHighlighting = false)
         {
-            return Search.SearchData(this, queryString, page, pageSize, sort);
+            return Search.SearchData(this, queryString, page, pageSize, sort, withHighlighting);
         }
-        public virtual DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null)
+        public virtual DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null, bool withHighlighting = false)
         {
-            return Search.SearchDataRaw(this, queryString, page, pageSize, sort);
+            return Search.SearchDataRaw(this, queryString, page, pageSize, sort, withHighlighting);
         }
         public IEnumerable<string> GetMappingList(string specificMapName = null)
         {

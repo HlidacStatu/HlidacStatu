@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             public class Functions : ScriptObject
             {
 
-                public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "")
+                public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "", Nest.HighlightFieldDictionary highlightingData = null)
                 {
 
                     if (value == null)
@@ -21,7 +21,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     else
                     {
                         if (string.IsNullOrEmpty(linkText))
-                            linkText = "Ukázat obsah dokumentu";
+                            linkText = "Textový obsah dokumentu";
                         var jobj = value as JObject;
                         if (jobj != null)
                         {
@@ -31,7 +31,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                 && !string.IsNullOrEmpty(jobj["DocumentPlainText"].Value<string>())
                                 )
                             {
-                                return $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\">{linkText}</a> (<a target=\"_blank\" href=\"{uri.AbsoluteUri}\">Originál</a>)";
+                                return $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
                             }
                             else if (
                                 jobj["HsProcessType"].Value<string>() == "document"

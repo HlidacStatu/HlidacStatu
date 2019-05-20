@@ -1,5 +1,4 @@
 ﻿using Scriban.Runtime;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,16 +31,16 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return (this.body ?? "").Contains("{{");
             }
 
-            public string Render(DataSet ds, string sModel)
+            public string Render(DataSet ds, string sModel, string qs = "", Nest.HighlightFieldDictionary highlightingData = null)
             {
                 dynamic model = Newtonsoft.Json.Linq.JObject.Parse(sModel);
-                return Render(ds, model);
+                return Render(ds, model, qs, highlightingData);
             }
 
             public List<string> GetTemplateErrors()
             {
                 string template = "{{func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/any/' + $0)"
+                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/any/' + $0 + '?qs=' + $1 )"
                     + "\n"
                     + "end}}";
 
@@ -57,10 +56,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return new List<string>();
             }
 
-            public string Render(DataSet ds, dynamic dmodel)
+            public string Render(DataSet ds, dynamic dmodel, string qs = "", Nest.HighlightFieldDictionary highlightingData = null)
             {
-                string template = "{{func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{ds.DatasetId}/' + $0)" 
+                string template = "{{ \n" +
+                    " qs = \"" + System.Net.WebUtility.UrlEncode(qs) + "\""
+                    + "\n"
+                    + "func fn_DatasetItemUrl" + "\n"
+                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{ds.DatasetId}/' + $0 + '?qs=' + qs )"
                     + "\n"
                     + "end}}";
 
@@ -70,13 +72,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     throw new System.ApplicationException(xTemp
                         .Messages
-                        .Select(m=>m.ToString())
-                        .Aggregate((f,s)=>f + "\n" + s)
+                        .Select(m => m.ToString())
+                        .Aggregate((f, s) => f + "\n" + s)
                         );
                 }
 
                 var xmodel = new Scriban.Runtime.ScriptObject();
-                xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
+                xmodel.Import(new { model = dmodel, highlightingData = highlightingData }, renamer: member => member.Name);
                 var xfn = new Scriban.Runtime.ScriptObject(); ;
                 xfn.Import(typeof(HlidacStatu.Lib.Data.External.DataSets.Registration.Template.Functions)
                     , renamer: member => member.Name);
@@ -84,6 +86,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
                 context.PushGlobal(xmodel);
                 context.PushGlobal(xfn);
+                
                 var res = xTemp.Render(context);
                 return res;
             }

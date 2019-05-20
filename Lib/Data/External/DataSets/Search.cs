@@ -54,14 +54,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Aggregate((f, s) => f + " OR " + s);
             return $"( {q} )";
         }
-        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
+        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
         {
             Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
 
             sw.Start();
             var query = Lib.ES.SearchTools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
 
-            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties);
+            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting);
 
             sw.Stop();
             if (!res.IsValid)
@@ -83,7 +83,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Total = res.Total,
                     Result = res.Hits
                             .Select(m => m.Source.ToString())
-                            .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),
+                            .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),                    
+
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
@@ -101,10 +102,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     DataSet = ds,
                 };
         }
-        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
+        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
         {
             var query = Lib.ES.SearchTools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
-            var res = _searchData(ds, queryString, page, pageSize, sort, excludeBigProperties);
+            var res = _searchData(ds, queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
             if (!res.IsValid)
             {
                 throw DataSetException.GetExc(ds.DatasetId,
@@ -140,7 +141,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 };
         }
 
-        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true)
+        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
         {
             SortDescriptor<object> sortD = new SortDescriptor<object>();
             if (sort == "0")
@@ -191,6 +192,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var maps = excludeBigProperties ? ds.GetMappingList("DocumentPlainText").ToArray() : new string[] { };
 
 
+
             var res = client
                 .Search<object>(s => s
                     .Type("data")
@@ -199,6 +201,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .From(page * pageSize)
                     .Query(q => qc)
                     .Sort(ss => sortD)
+                    .Highlight(h => ES.SearchTools.GetHighlight<Data.Smlouva>(withHighlighting))
             );
 
             return res;
