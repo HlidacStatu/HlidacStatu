@@ -88,6 +88,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
+                    ElasticResultsRaw = res,
                 };
             else
                 return new DataSearchResult()
@@ -100,6 +101,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
+                    ElasticResultsRaw = res,
+
                 };
         }
         public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
@@ -125,6 +128,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
+                    ElasticResultsRaw = res,
                     Order = sort ?? "0"
                 };
             else
@@ -134,6 +138,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     IsValid = true,
                     Total = 0,
                     Result = new List<Tuple<string, string>>(),
+                    ElasticResultsRaw = res,
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,

@@ -47,6 +47,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     where T : class
     {
 
+        public Nest.ISearchResponse<object> ElasticResultsRaw { get; set; }
+
+
         public bool ShowWatchdog { get; set; } = true;
 
         public IEnumerable<T> Result { get; set; }

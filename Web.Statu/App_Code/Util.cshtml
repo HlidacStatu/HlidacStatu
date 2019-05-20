@@ -40,42 +40,12 @@
         string foundContentFormat =null, string noHLContent = "", string prefix = "", 
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
-highlights = highlights ?? new Nest.HighlightFieldDictionary();
-//foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
+    @Html.Raw(HlidacStatu.Lib.ES.Highlighter.HighlightContentIntoHtmlBlock(
+            highlights,  path, contentToCompare,
+            foundContentFormat , noHLContent , prefix ,
+            postfix ,  icon)
+            )
 
-string result = HlidacStatu.Web.Framework.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
-if (string.IsNullOrEmpty(result))
-{
-        @(noHLContent)
-}
-else
-{
-    @Html.Raw(prefix)
-    if (foundContentFormat?.Contains("{0}") == true)
-    {
-        @Html.Raw(string.Format(foundContentFormat, result))
-    }
-    else
-    {
-    <span class='highlighting'>
-        @if (!string.IsNullOrEmpty(icon))
-        {
-            <div class="row">
-                <div class="col-xs-1">
-                    <i class="@icon fa-2x" ></i>
-                </div>
-                <div class="col-xs-10">
-                    @Html.Raw(result)
-                </div>
-            </div>
-        }
-        else
-        {
-        }
-    </span>
-    }
-        @Html.Raw(postfix)
-    }
 }
 
 @helper AddVisitImg(string path)

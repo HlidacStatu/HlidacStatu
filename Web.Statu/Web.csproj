@@ -374,7 +374,6 @@
     <Compile Include="Framework\Html2Png.cs" />
     <Compile Include="Framework\Shared\Data.cs" />
     <Compile Include="Framework\LimitedAccess.cs" />
-    <Compile Include="Framework\Highlighter.cs" />
     <Compile Include="Framework\Visit.cs" />
     <Compile Include="Framework\DisableController.cs" />
     <Compile Include="Framework\Extensions.Html.cs" />

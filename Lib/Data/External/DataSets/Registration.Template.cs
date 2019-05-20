@@ -31,20 +31,32 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return (this.body ?? "").Contains("{{");
             }
 
-            public string Render(DataSet ds, string sModel, string qs = "", Nest.HighlightFieldDictionary highlightingData = null)
+            public string Render(DataSet ds, string sModel, string qs = "",
+                Nest.HighlightFieldDictionary highlightingData = null)
             {
                 dynamic model = Newtonsoft.Json.Linq.JObject.Parse(sModel);
                 return Render(ds, model, qs, highlightingData);
             }
 
+            private string GetTemplateHeader(string datasetId,  string qs)
+            {
+                string template = "{{ \n" +
+                    " qs = \"" + System.Net.WebUtility.UrlEncode(qs) + "\""
+                    + "\n"
+                    + "func fn_DatasetItemUrl" + "\n"
+                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{datasetId}/' + $0 + '?qs=' + qs )"
+                    + "\n"
+                    + "end}}"
+                    + "\n"
+                    + "<!-- This is var1: `{{highlightingData}}` -->"
+                    + "\n\n";
+
+                return template;
+            }
+
             public List<string> GetTemplateErrors()
             {
-                string template = "{{func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/any/' + $0 + '?qs=' + $1 )"
-                    + "\n"
-                    + "end}}";
-
-                template = template + "\n\n" + this.body;
+                string template = GetTemplateHeader("any","") + this.body;
                 var xTemp = Scriban.Template.Parse(template);
                 if (xTemp.HasErrors)
                 {
@@ -56,17 +68,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return new List<string>();
             }
 
-            public string Render(DataSet ds, dynamic dmodel, string qs = "", Nest.HighlightFieldDictionary highlightingData = null)
+            public string Render(DataSet ds, dynamic dmodel, string qs = "", 
+                Nest.HighlightFieldDictionary highlightingData = null)
             {
-                string template = "{{ \n" +
-                    " qs = \"" + System.Net.WebUtility.UrlEncode(qs) + "\""
-                    + "\n"
-                    + "func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{ds.DatasetId}/' + $0 + '?qs=' + qs )"
-                    + "\n"
-                    + "end}}";
 
-                template = template + "\n\n" + this.body;
+                string template = GetTemplateHeader(ds.DatasetId,qs) + this.body;
                 var xTemp = Scriban.Template.Parse(template);
                 if (xTemp.HasErrors)
                 {
@@ -78,7 +84,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
 
                 var xmodel = new Scriban.Runtime.ScriptObject();
-                xmodel.Import(new { model = dmodel, highlightingData = highlightingData }, renamer: member => member.Name);
+                xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
                 var xfn = new Scriban.Runtime.ScriptObject(); ;
                 xfn.Import(typeof(HlidacStatu.Lib.Data.External.DataSets.Registration.Template.Functions)
                     , renamer: member => member.Name);
@@ -86,7 +92,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
                 context.PushGlobal(xmodel);
                 context.PushGlobal(xfn);
-                
+                var scriptObjGlobalVariables = new ScriptObject();
+                // Notice: MyObject is not imported but accessible through
+                // the variable myobject
+                scriptObjGlobalVariables["highlightingData"] = highlightingData;
+                context.PushGlobal(scriptObjGlobalVariables);
+
                 var res = xTemp.Render(context);
                 return res;
             }

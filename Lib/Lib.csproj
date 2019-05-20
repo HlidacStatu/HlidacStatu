@@ -618,6 +618,7 @@
     <Compile Include="Enhancers\IEnhancer.cs" />
     <Compile Include="Enhancers\Util.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="ES\Highlighter.cs" />
     <Compile Include="ES\InsolvenceSearchResult.cs" />
     <Compile Include="ES\Manager.cs" />
     <Compile Include="ES\SearchData.cs" />

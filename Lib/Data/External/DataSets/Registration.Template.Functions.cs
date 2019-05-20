@@ -12,8 +12,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             public class Functions : ScriptObject
             {
-
-                public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "", Nest.HighlightFieldDictionary highlightingData = null)
+                public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "")
+                {
+                    return fn_LinkTextDocumentWithHighlighting(value, datasetId, dataId, linkText);
+                }
+                public static string fn_LinkTextDocumentWithHighlighting(dynamic value, string datasetId, string dataId, string linkText = "",
+                    Nest.HighlightFieldDictionary highlightingData = null, string highlPrefix= "", string highlPostfix = "")
                 {
 
                     if (value == null)
@@ -31,7 +35,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                 && !string.IsNullOrEmpty(jobj["DocumentPlainText"].Value<string>())
                                 )
                             {
-                                return $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
+                                string HLresult = null;
+                                if (highlightingData != null)
+                                {
+                                    string path = System.Text.RegularExpressions.
+                                        Regex.Replace(jobj.Path, @"\[\d{1,}\]", "")
+                                        + ".DocumentPlainText";
+                                    HLresult = ES.Highlighter.HighlightContentIntoHtmlBlock(highlightingData, 
+                                        path,
+                                        jobj["DocumentPlainText"].Value<string>(), " ..... ",
+                                        prefix: highlPrefix, postfix: highlPostfix);
+                                }
+
+                                string result= $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
+                                if (HLresult != null)
+                                    result = result + "<br/>" + HLresult;
+                                return result;
                             }
                             else if (
                                 jobj["HsProcessType"].Value<string>() == "document"
@@ -70,7 +89,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         if (o != null)
                         {
                             var stat = o.Statistic(Relation.AktualnostType.Nedavny);
-                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:"+o.NameId, twoLines: twoLines)}{postfix}</span>";
+                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
                         }
                     }
                     return string.Empty;
@@ -108,7 +127,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         if (o.Valid)
                         {
                             var stat = o.Statistic();
-                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o,true, customUrl: "/hledatSmlouvy?q=ico:" + o.ICO, twoLines: twoLines)}{postfix}</span>";
+                            return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=ico:" + o.ICO, twoLines: twoLines)}{postfix}</span>";
                         }
                         else
                             return $"";
