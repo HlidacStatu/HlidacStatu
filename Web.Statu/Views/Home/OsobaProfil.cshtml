@@ -191,7 +191,7 @@
 
                 <h4>Hlídání emailem</h4>
                 <div>
-                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové smluvy pro " + Model.FullName())
+                    @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat nové smlouvy v registru smluv spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové smlouvy pro " + Model.FullName())
                     <br />
                     @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat nové veřejné zakázky spojené s " + Model.FullName() + " a navázanými firmami", "", "", btnCss: "btn btn-warning btn-sm", prefillWDname: "Nové veřejné zakázky pro " + Model.FullName())
                     <br />

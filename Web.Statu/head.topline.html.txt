@@ -1,5 +1,5 @@
 ﻿    <li class="navbar__watchers">
-        <a href="https://www.hlidacstatu.cz/smlouvy">Smluvy</a>
+        <a href="https://www.hlidacstatu.cz/smlouvy">Smlouvy</a>
         <a href="https://www.hlidacstatu.cz/sponzori">Sponzoři</a>
         <a href="https://www.hlidacstatu.cz/ucty">Účty stran</a>
         <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejné zakázky</a>
