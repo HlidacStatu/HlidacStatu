@@ -1105,7 +1105,7 @@ text zpravy: {txt}";
         }
 
 #if (!DEBUG)
-        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;embed;nameOfView")]
+        [OutputCache(Duration = 60 * 60 * 1, VaryByParam = "id;embed;nameOfView")]
 #endif
         [ChildActionOnly()]
         public ActionResult Detail_Child(string Id, Smlouva model, string nameOfView)
