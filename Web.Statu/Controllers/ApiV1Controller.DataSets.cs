@@ -339,7 +339,7 @@ namespace HlidacStatu.Web.Controllers
                         return Json(ApiResponseStatus.DatasetNoPermision, JsonRequestBehavior.AllowGet);
                     }
 
-                    var res = DataSetDB.Instance.DeleteRegistration(id);
+                    var res = DataSetDB.Instance.DeleteRegistration(id, apiAuth.ApiCall.User);
                     return Json(new ApiResponseStatus() { valid = res }, JsonRequestBehavior.AllowGet);
 
                 }

@@ -47,11 +47,12 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Delete(string id, string confirmation)
         {
+            string email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
                 return Redirect("/data");
 
-            if (ds.HasAdminAccess(Request?.RequestContext?.HttpContext?.User?.Identity?.Name) == false)
+            if (ds.HasAdminAccess(email) == false)
                return View("NoAccess");
 
             string[] neverDelete = new string[] { "veklep", "rozhodnuti-uohs", "centralniregistroznameni", "datasourcesdb" };
@@ -60,7 +61,7 @@ namespace HlidacStatu.Web.Controllers
 
             if (confirmation == ds.DatasetId)
             {
-                DataSetDB.Instance.DeleteRegistration(ds.DatasetId);
+                DataSetDB.Instance.DeleteRegistration(ds.DatasetId, email);
                 return RedirectToAction("Index");
             }
             return View(ds);

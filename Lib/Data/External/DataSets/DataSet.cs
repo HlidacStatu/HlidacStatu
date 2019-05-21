@@ -27,7 +27,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
         };
 
-        public static DataSet RegisterNew(Registration reg)
+        public static DataSet RegisterNew(Registration reg, string user)
         {
             if (reg == null)
                 throw new DataSetException(reg.datasetId, ApiResponseStatus.DatasetNotFound);
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else
             {
                 Lib.ES.Manager.CreateIndex(client);
-                DataSetDB.Instance.AddData(reg);
+                DataSetDB.Instance.AddData(reg,user);
             }
 
 

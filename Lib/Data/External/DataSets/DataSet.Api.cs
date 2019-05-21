@@ -29,6 +29,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     if (oldReg == null)
                         return ApiResponseStatus.DatasetNotFound;
 
+                    var oldRegAuditable = oldReg.ToAuditJson();
+
                     if (string.IsNullOrEmpty(oldReg.createdBy))
                     {
                         oldReg.createdBy = updatedBy; //fix for old datasets without createdBy
@@ -97,7 +99,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         }
                     }
 
-                    DataSetDB.Instance.AddData(dataset);
+                    DataSetDB.Instance.AddData(dataset, updatedBy);
 
                     //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(oldReg.datasetId);
 
@@ -153,7 +155,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     reg.createdBy = updatedBy;
                     reg.NormalizeShortName();
 
-                    var newreg = HlidacStatu.Lib.Data.External.DataSets.DataSet.RegisterNew(reg);
+                    var newreg = HlidacStatu.Lib.Data.External.DataSets.DataSet.RegisterNew(reg, updatedBy);
 
                     //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(reg.datasetId);
 

@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 100)
                             .Result
                             .Select(s => DataSet.CachedDatasets.Get(s.Item1))
-                            .Where(d=>d!=null)
+                            .Where(d => d != null)
                             .ToArray();
 
                             return datasets;
@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             .Result
                             .Select(s => DataSet.CachedDatasets.Get(s.Item1))
                             .Where(d => d != null)
-                            .Where(d=>d.Registration().betaversion == false)
+                            .Where(d => d.Registration().betaversion == false)
                             .ToArray();
 
                             return datasets;
@@ -81,14 +81,21 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var s = this.GetData(datasetId);
             if (string.IsNullOrEmpty(s))
                 return null;
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s,DefaultDeserializationSettings);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s, DefaultDeserializationSettings);
         }
 
 
-        public virtual string AddData(Registration reg)
+        public virtual string AddData(Registration reg, string user)
         {
             if (reg.jsonSchema == null)
                 throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetJsonSchemaMissing);
+
+            Registration oldReg = null;
+            oldReg = DataSet.CachedDatasets.Get(reg.datasetId)?.Registration();
+            if (oldReg == null)
+                Audit.Add<Registration>(Audit.Operations.Create, user, reg, null);
+            else
+                Audit.Add<Registration>(Audit.Operations.Update, user, reg, oldReg);
 
             var addDataResult = base.AddData(reg, reg.datasetId, reg.createdBy);
             DataSet.CachedDatasets.Delete(reg.datasetId);
@@ -101,7 +108,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 var ds = CachedDatasets.Get(addDataResult);
                 var txtProps = ds.GetTextMappingList();
                 var allProps = ds.GetMappingList();
-                if (allProps.Where(m=>!DataSet.DefaultDatasetProperties.Keys.Contains(m)).Count() > 0) //0=mapping not available , (no record in db)
+                if (allProps.Where(m => !DataSet.DefaultDatasetProperties.Keys.Contains(m)).Count() > 0) //0=mapping not available , (no record in db)
                 {
 
                     bool changedOrderList = false;
@@ -161,8 +168,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        public bool DeleteRegistration(string datasetId)
+        public bool DeleteRegistration(string datasetId, string user)
         {
+            Audit.Add<Registration>(Audit.Operations.Delete, user, this.Registration(), null);
+
             datasetId = datasetId.ToLower();
             var res = this.DeleteData(datasetId);
             var idxClient = Lib.ES.Manager.GetESClient(datasetId, idxType: ES.Manager.IndexType.DataSource);
@@ -173,7 +182,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        public override DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null, 
+        public override DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false)
         {
             var resData = base.SearchData(queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
@@ -185,10 +194,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return resData;
 
         }
-        public override DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null, 
+        public override DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false)
         {
-            var resData = base.SearchDataRaw($"NOT(id:{DataSourcesDbName}) AND ({queryString})", page, pageSize, 
+            var resData = base.SearchDataRaw($"NOT(id:{DataSourcesDbName}) AND ({queryString})", page, pageSize,
                 sort, excludeBigProperties, withHighlighting);
             //var resData = base.SearchDataRaw($"({queryString})", page, pageSize, sort);
             if (resData == null || resData?.Result == null)
@@ -197,5 +206,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return resData;
 
         }
+
+
     }
 }

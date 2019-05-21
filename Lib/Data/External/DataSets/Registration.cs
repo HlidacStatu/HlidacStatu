@@ -3,7 +3,7 @@
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
     
-    public partial class Registration
+    public partial class Registration : Audit.IAuditable
     {
         public string id { get { return datasetId; } }
         public string name { get; set; }
@@ -74,6 +74,21 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else
                 return DataSet.CachedDatasets.Get(this.datasetId);
         }
+
+        public string ToAuditJson()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+
+        public string ToAuditObjectTypeName()
+        {
+            return "DatasetRegistration";
+        }
+
+        public string ToAuditObjectId()
+        {
+            return this.datasetId;
+        }   
 
     }
 

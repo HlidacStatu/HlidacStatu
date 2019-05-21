@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
-    public partial class Registration
+    public partial class Registration 
     {
         public partial class Template
         {
