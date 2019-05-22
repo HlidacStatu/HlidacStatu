@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
-    public partial class Registration 
+    public partial class Registration
     {
         public partial class Template
         {
@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return fn_LinkTextDocumentWithHighlighting(value, datasetId, dataId, linkText);
                 }
                 public static string fn_LinkTextDocumentWithHighlighting(dynamic value, string datasetId, string dataId, string linkText = "",
-                    Nest.HighlightFieldDictionary highlightingData = null, string highlPrefix= "", string highlPostfix = "")
+                    Nest.HighlightFieldDictionary highlightingData = null, string highlPrefix = "", string highlPostfix = "")
                 {
 
                     if (value == null)
@@ -41,13 +41,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                     string path = System.Text.RegularExpressions.
                                         Regex.Replace(jobj.Path, @"\[\d{1,}\]", "")
                                         + ".DocumentPlainText";
-                                    HLresult = ES.Highlighter.HighlightContentIntoHtmlBlock(highlightingData, 
+                                    HLresult = ES.Highlighter.HighlightContentIntoHtmlBlock(highlightingData,
                                         path,
                                         jobj["DocumentPlainText"].Value<string>(), " ..... ",
                                         prefix: highlPrefix, postfix: highlPostfix);
                                 }
 
-                                string result= $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
+                                string result = $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
                                 if (!string.IsNullOrEmpty(HLresult))
                                     result = result + "<br/>" + HLresult;
                                 return result;
@@ -150,6 +150,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 public static string fn_FormatNumber(dynamic value, string format = null)
                 {
+                    if (value == null)
+                        return string.Empty;
+
                     format = format ?? "cs";
                     decimal? dat = HlidacStatu.Util.ParseTools.ToDecimal(value.ToString());
                     if (dat.HasValue)
@@ -186,6 +189,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
                 public static string fn_FormatDate2(dynamic value, string format = null, params string[] inputformats)
                 {
+                    if (value == null)
+                        return "";
 
                     if (inputformats == null)
                     {
@@ -213,6 +218,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 public static string fn_FixPlainText(dynamic text)
                 {
+                    if (text == null)
+                        return string.Empty;
                     var s = text.ToString();
 
                     //remove /n/r on the beginning
