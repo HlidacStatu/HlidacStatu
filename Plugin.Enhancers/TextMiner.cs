@@ -13,6 +13,7 @@ namespace HlidacStatu.Plugin.Enhancers
         bool asyncOCR = false;
         bool skipOCR = false;
         bool forceAlreadyMined = false;
+        int priority = 5;
 
         public enum OCREngines
         {
@@ -28,12 +29,13 @@ namespace HlidacStatu.Plugin.Enhancers
                 pathToOcr += "\\";
         }
 
-        public TextMiner(bool skipOCR, bool forceAlreadyMined,  bool asyncOCR = false)
+        public TextMiner(bool skipOCR, bool forceAlreadyMined,  bool asyncOCR = false, int priority = 5)
             : this()
         {
             this.skipOCR = skipOCR;
             this.forceAlreadyMined = forceAlreadyMined;
             this.asyncOCR = asyncOCR;
+            this.priority = priority;
         }
 
         public string Description
@@ -89,7 +91,7 @@ namespace HlidacStatu.Plugin.Enhancers
                                 //    downloadedFile, "TextMiner",
                                 //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity
                                 //    ); //TODOcallBackData: item.CallbackDataForOCRReq(i) );
-                                res = Lib.Data.ItemToOcrQueue.AddNewTask( Lib.Data.ItemToOcrQueue.ItemToOcrType.Smlouva, item.Id, priority: Lib.OCR.Api.Client.TaskPriority.Standard);
+                                res = Lib.Data.ItemToOcrQueue.AddNewTask( Lib.Data.ItemToOcrQueue.ItemToOcrType.Smlouva, item.Id, priority: this.priority);
                             else
                                 res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
                                     Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),

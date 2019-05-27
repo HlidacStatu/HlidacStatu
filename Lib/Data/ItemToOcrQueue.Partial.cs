@@ -77,6 +77,10 @@ namespace HlidacStatu.Lib.Data
 
         public static HlidacStatu.Lib.OCR.Api.Result AddNewTask(ItemToOcrType itemType, string itemId, string itemSubType = null, HlidacStatu.Lib.OCR.Api.Client.TaskPriority priority = OCR.Api.Client.TaskPriority.Standard)
         {
+            return AddNewTask(itemType, itemId, itemSubType, (int)priority);
+        }
+        public static HlidacStatu.Lib.OCR.Api.Result AddNewTask(ItemToOcrType itemType, string itemId, string itemSubType = null, int priority = 5)
+        {
             using (DbEntities db = new DbEntities())
             {
                 IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);

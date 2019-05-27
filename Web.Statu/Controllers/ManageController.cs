@@ -346,7 +346,7 @@ namespace HlidacStatu.Web.Controllers
             string tabdelimited = form["data"];
             foreach (var line in tabdelimited.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
             {
-                string[] cols = line.Split(new string[] { "\t" }, StringSplitOptions.None);
+                string[] cols = line.Split(new string[] { "\t","|" }, StringSplitOptions.None);
                 if (cols.Count() < 3)
                     continue;
                 string jmeno = cols[0];
