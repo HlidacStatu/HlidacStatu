@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-using Devmasters.Core.Collections;
-using Devmasters.Core;
 
 
 namespace HlidacStatu.Util
@@ -82,12 +77,47 @@ namespace HlidacStatu.Util
             List<string> words = new List<string>();
             for (int i = 0; i < collection.Count; i++)
             {
-                if (collection[i].Value.Length>0)
+                if (collection[i].Value.Length > 0)
                     words.Add(collection[i].Value);
             }
 
             return words.ToArray();
         }
+
+        static Dictionary<string, string> StranyZkratky = new Dictionary<string, string>()
+        {
+            {"kdu","KDU-ČSL" },
+            {"*ceskoslovenska strana lidova*","KDU-ČSL" },
+
+            { "sz","Strana zelených" },
+            { "zeleni","Strana zelených" },
+            { "strana zelenych","Strana zelených" },
+            {"starostove a nezávisli","STAN" },
+            {"top09","TOP 09" },
+            {"pirati","Česká pirátská strana" },
+            {"ceska strana socialne demokraticka","ČSSD" },
+
+            {"ano2011","ANO 2011" },
+            {"ano","ANO 2011" },
+            {"hnuti ano","ANO 2011" },
+
+            {"obcanska demokraticka strana","ODS" },
+
+            {"spo","Strana Práv Občanů" },
+
+            { "spd","Svoboda a přímá demokracie T.Okamura" },
+            {"svoboda a prima demokracie*","Svoboda a přímá demokracie T.Okamura" },
+
+            {"strana svobodnych obcanu","Svobodní" },
+            {"usvit - narodni koalice","Úsvit" },
+            {"usvit-narodni koalice","Úsvit" },
+
+            {"komunisticka strana cech a moravy","KSČM" },
+            {"lev 21","LEV21" },
+            {"*rozumni*","ROZUMNÍ" },
+            {"vv","Věci veřejné" },
+            {"veci verejne","Věci veřejné" },
+};
 
         public static string NormalizaceStranaShortName(string strana)
         {
@@ -96,40 +126,37 @@ namespace HlidacStatu.Util
 
             var s = strana.ToLower();
             s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ');
+            s = Devmasters.Core.TextUtil.RemoveDiacritics(s);
 
-            if (s == "kdu" || s.Contains("československá strana lidová"))
-                return "KDU-ČSL";
-            else if (s == "sz")
-                return "Strana zelených";
-            else if (s == "top09")
-                return "TOP 09";
-            else if (s == "piráti")
-                return "Česká pirátská strana";
-            else if (s == "česká strana sociálně demokratická")
-                return "ČSSD";
-            else if (s == "ano2011" || s == "ano" || s == "hnutí ano")
-                return "ANO 2011";
-            else if (s == "občanská demokratická strana" || s.StartsWith("ODS "))
-                return "ODS";
-            else if (s == "spo")
-                return "Strana Práv Občanů";
-            else if (s.Contains("svoboda a přímá demokracie") || s == "spd")
-                return "Svoboda a přímá demokracie";
-            else if (s == "strana svobodných občanů")
-                return "Svobodní";
-            else if (s == "úsvit - národní koalice" || s == "úsvit-národní koalice")
-                return "Úsvit";
-            else if (s == "komunistická strana čech a moravy")
-                return "KSČM";
-            else if (s.Contains("lev21") || s.Contains("lev 21"))
-                return "LEV21";
-            else if (s.Contains("rozumní") && s.Contains("stop migraci a diktátu eu - peníze našim"))
-                return "ROZUMNÍ - stop migraci a diktátu EU";
-            else if (s == "vv" || s=="veci verejne")
-                return "Věci veřejné";
-            else
-                return strana;
+            string[] vals = StranyZkratky.Keys
+                    //.Union(StranyZkratky
+                    //            .Values
+                    //            .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower())
+                    //            .Distinct()
+                    //            )
+                    .ToArray();
 
+            foreach (var val in vals)
+            {
+                if (val.StartsWith("*") && val.EndsWith("*"))
+                {
+                    if (s.Contains(val.Replace("*", "")))
+                        return StranyZkratky[val];
+                }
+                if (val.StartsWith("*"))
+                {
+                    if (s.EndsWith(val.Replace("*", "")))
+                        return StranyZkratky[val];
+                }
+                if (val.EndsWith("*"))
+                {
+                    if (s.StartsWith(val.Replace("*", "")))
+                        return StranyZkratky[val];
+                }
+                else if (s == val)
+                    return StranyZkratky[val];
+            }
+            return strana;
 
         }
 
@@ -163,7 +190,7 @@ namespace HlidacStatu.Util
         {
 
             if (combinations == null)
-                lock(lockComb)
+                lock (lockComb)
                 {
                     if (combinations == null)
                     {
@@ -179,8 +206,8 @@ namespace HlidacStatu.Util
                 };
 
 
-            return ToDateTime(value,combinations);
-                
+            return ToDateTime(value, combinations);
+
         }
         public static DateTime? ToDate(string value)
         {
@@ -212,7 +239,7 @@ namespace HlidacStatu.Util
                 return null;
 
             DateTime tmp;
-            if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces , out tmp))
+            if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out tmp))
                 return new DateTime?(tmp);
             else
                 return null;
