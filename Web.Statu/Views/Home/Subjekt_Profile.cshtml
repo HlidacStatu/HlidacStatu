@@ -92,11 +92,9 @@ else
                         @if (firstInRS.HasValue)
                         {
                             <div>
-
                                 @HlidacStatu.Lib.RenderTools.DateDiffShort(Model.Datum_Zapisu_OR.Value, firstInRS.Value,
  "První známá smlouva podepsána {0} po založení firmy.",
  "První známá smlouva podepsána {0} před založením firmy.")
-
                             </div>
                         }
                     </td>
@@ -151,13 +149,11 @@ else
             <tr>
                 <td>Sdílení</td>
                 <td>
-
                     @Util.ShareFacebook(Model.GetUrl(false))
                     @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
                     @Util.ShareWidget(Model.GetUrl(false))
                 </td>
             </tr>
-
             @{
                 long numFatalIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
                 long numVazneIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
@@ -181,7 +177,6 @@ else
                                     @Util.AddSearchBtn("/hledatsmlouvy", "ico:" + Model.ICO + " chyby:zasadni", "Ukázat tyto smlouvy")
                                     @Util.AddWatchDog(this.User, "ico:" + Model.ICO + " chyby:zasadni", typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat tyto smlouvy", "", prefillWDname: "Smlouvy s zásadními chybami pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
 
-
                                 </li>
                             }
                             @if (numVazneIssue > 0)
@@ -204,7 +199,6 @@ else
 
                                     @Util.AddSearchBtn("/hledatsmlouvy", "ico:" + Model.ICO + " chyby:vazne", "Ukázat tyto smlouvy")
                                     @Util.AddWatchDog(this.User, "ico:" + Model.ICO + " chyby:vazne", typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat tyto smlouvy", "", prefillWDname: "Smlouvy s vážnými chybami pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
                                 </li>
                             }
                         </ul>
@@ -212,7 +206,6 @@ else
                 </tr>
 
             }
-
             <tr>
                 <td colspan="2">
                     <h3>Statistiky z registru smluv</h3>
@@ -223,14 +216,26 @@ else
                 </td>
             </tr>
             <tr>
-                <td>Souhrnné statistiky<br />pro @Model.Jmeno<br />od července 2016</td>
+                <td>Souhrnné statistiky<br />pro @Model.Jmeno<br />od 2016</td>
                 <td>
-                    @Html.Raw(Model.Statistic().BasicStatPerYear.SummaryAfter2016().ToNiceString(Model, true, twoLines: false))<br />
+                    @Html.Raw(Model.Statistic().BasicStatPerYear.SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=ico:" + Model.ICO))<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
                 </td>
             </tr>
+            @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+            {
+                <tr>
+                    <td>Souhrnné statistiky<br />pro celý holding<br />od 2016</td>
+                    <td>
+                        @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
+                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
+                    </td>
+                </tr>
+            }
             <tr>
                 <td colspan="2">
                     <div class="row">
@@ -265,7 +270,6 @@ else
                                 )
 
                             }
-
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             @{
@@ -282,7 +286,6 @@ else
                                     )
 
                             }
-
                         </div>
                         @if (Model.PatrimStatu() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
                         {
@@ -320,7 +323,6 @@ else
                             </div>
                         }
                     </div>
-
 
                 </td>
             </tr>
@@ -453,7 +455,6 @@ else
                                     </li>
                                 }
                             </ul>
-
                         </td>
                     </tr>
                 }
@@ -464,22 +465,18 @@ else
                 <td>
                     <p>
                         <a href="/Hledat?Q=ico:@Model.ICO">
-
                         </a>
                         @Util.AddSearchBtn("/hledat", "ico:" + Model.ICO, "Prohledat všechny databáze, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
                         @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
                     </p>
                     <p>
                         @Util.AddSearchBtn("/hledatSmlouvy", "ico:" + Model.ICO, "Ukázat všechny smlouvy, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
                         @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
                     </p>
                     <p>
                         @Util.AddSearchBtn("/VerejneZakazky/hledat", "ico:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
                         @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                     </p>
-
                 </td>
             </tr>
             @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
@@ -490,19 +487,17 @@ else
                         <br />
                         (celkem
                         @(Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(),
-                                                                                                                                                                    "1 subjekt", "{0} subjekty", "{0} subjektů"))
+                                                                                                                                                                                    "1 subjekt", "{0} subjekty", "{0} subjektů"))
                         - <a href="/subjektVazby/@Model.ICO">jejich seznam</a>)
                     </td>
                     <td>
                         <p>
                             @Util.AddSearchBtn("/hledat", "holding:" + Model.ICO, "Prohledat všechny databáze, kde se vyskytuje vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
                             @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
                         </p>
                         <p>
                             @Util.AddSearchBtn("/hledatSmlouvy", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
                             @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
-
                         </p>
                         <p>
                             @Util.AddSearchBtn("/VerejneZakazky/hledat", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
@@ -516,7 +511,6 @@ else
                                onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'authenticated');" role="button">
                                 <span class="glyphicon glyphicon-eye-open dark"></span>Hlídat pouze vybrané provázané společnosti k @Model.Jmeno
                             </a>
-
                         </p>
                     </td>
                 </tr>

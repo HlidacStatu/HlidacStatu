@@ -323,6 +323,37 @@ namespace HlidacStatu.Lib.Data
             return myStat;
         }
 
+
+        public Analysis.RatingDataPerYear RatingPerYearForHolding(Data.Relation.AktualnostType aktualnost)
+        {
+            Analysis.RatingDataPerYear myStat = Analysis.ACore.GetRatingForICO(this.ICO);
+
+            Dictionary<string, Analysis.RatingDataPerYear> PerIcoStat =
+                IcosInHolding(aktualnost)
+                .Select(ico => new { ico = ico, ss = Analysis.ACore.GetRatingForICO(ico) })
+                .ToDictionary(k => k.ico, v => v.ss);
+
+            foreach (var icodata in PerIcoStat)
+            {
+                foreach (var kv in icodata.Value.Data)
+                {
+                    if (myStat.Data.Keys.Contains(kv.Key))
+                    {
+                        myStat.Data[kv.Key].NumBezCeny += kv.Value.NumBezCeny;
+                        myStat.Data[kv.Key].NumBezSmluvniStrany += kv.Value.NumBezSmluvniStrany;
+                        myStat.Data[kv.Key].NumSPolitiky += kv.Value.NumSPolitiky;
+                        myStat.Data[kv.Key].SumKcBezSmluvniStrany += kv.Value.SumKcBezSmluvniStrany;
+                        myStat.Data[kv.Key].SumKcSPolitiky += kv.Value.SumKcSPolitiky;
+
+                    }
+                    else
+                        myStat.Data.Add(kv.Key, kv.Value);
+                }
+            }
+
+            return new Analysis.RatingDataPerYear(new Analysis.RatingDataPerYear[] { myStat }, StatisticForHolding(aktualnost));
+        }
+
         public bool JsemSoukromaFirma()
         {
             return JsemOVM() == false && JsemStatniFirma() == false;

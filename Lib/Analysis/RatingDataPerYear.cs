@@ -60,6 +60,8 @@ namespace HlidacStatu.Lib.Analysis
             Init(dataFromDb, basicData);
         }
 
+
+
         protected virtual void Init(Dictionary<int, RatingData> dataFromDb, BasicDataPerYear basicData)
         {
             if (dataFromDb == null)
