@@ -25,6 +25,9 @@ namespace HlidacStatu.Lib.Data
             public class Classification
             {
 
+                [Nest.Number]
+                public int Version { get; set; } = 0;
+
                 [ShowNiceDisplayName()]
                 public enum ContractDocTypes
                 {

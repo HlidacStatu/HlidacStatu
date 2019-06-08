@@ -1,6 +1,7 @@
 ﻿using HlidacStatu.Lib.XSD;
 using HlidacStatu.Util;
 using Nest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;

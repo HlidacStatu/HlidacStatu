@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data
                 i.itemId = itemId;
                 i.itemType = itemType.ToString();
                 i.itemSubType = itemSubType;
-                i.priority = (int)OCR.Api.Client.TaskPriority.Standard;
+                i.priority = priority;
                 db.ItemToOcrQueue.Add(i);
                 db.SaveChanges();
                 return new OCR.Api.Result()
