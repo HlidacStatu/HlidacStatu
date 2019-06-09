@@ -35,7 +35,7 @@
     @if (Model.AddResults > 0)
     {
         <p>Zobrazujeme prvních 30 smluv s nejvyšší hodnotou, ale nalezli jsme celkem @Model.TotalTxt.<br /> 
-        Zde můžete <a href="https://www.hlidacstatu.cz/HledatSmlouvy?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">zobrazit všechny nalezené smlouvy</a>
+        Zde můžete <a href="https://www.hlidacstatu.cz/HledatSmlouvy?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">zobrazit všechny nalezené smlouvy</a>
         </p>
     }
 

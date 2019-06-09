@@ -24,7 +24,10 @@ V době @Model.Interval @Model.TotalTxt pro tento dotaz
         {<text>        Cena: @Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value))</text>
     }
     else if (item.OdhadovanaHodnotaBezDPH.HasValue)
-    {<text>        Odhadovaná cena: @Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value))</text>
+    {
+            <text>        
+        Odhadovaná cena: @Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value))
+            </text>
 }
         Více: @Raw(item.GetUrl(false))?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
         ============================================
@@ -34,7 +37,7 @@ V době @Model.Interval @Model.TotalTxt pro tento dotaz
 @if (Model.AddResults > 0)
 {
     <text>
-        Zobrazit všechny nalezené zakázky: https://www.hlidacstatu.cz/VerejneZakazky/Hledat?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more
+        Zobrazit všechny nalezené zakázky: https://www.hlidacstatu.cz/VerejneZakazky/Hledat?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more
     </text>
 }
 

@@ -31,7 +31,7 @@ Více: @Raw("https://www.hlidacstatu.cz/Detail/" + smlouva.Id + "?utm_source=hli
 @if (Model.AddResults > 0)
 {
     <text>
-        <a href="https://www.hlidacstatu.cz/HledatSmlouvy?Q=@Raw(Model.SpecificQuery)&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">Zobrazit všechny nalezené smlouvy</a>
+        <a href="https://www.hlidacstatu.cz/HledatSmlouvy?Q=@Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more">Zobrazit všechny nalezené smlouvy</a>
     </text>
 }
 

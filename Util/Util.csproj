@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FirstCaseLowercaseContractResolver.cs" />
     <Compile Include="ArrayTools.cs" />
     <Compile Include="Cache\Core.cs" />
     <Compile Include="Cache\CouchbaseCache.cs" />
