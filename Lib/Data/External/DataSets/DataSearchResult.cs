@@ -192,7 +192,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         .Select(s => itemToDynamicFunc(s))
                         .ToArray();
 
-                    content = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet, model);
+                    content = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet, model, qs: query);
                 }
                 else
                 {
