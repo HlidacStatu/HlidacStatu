@@ -224,10 +224,13 @@ else
                     @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
                 </td>
             </tr>
-            @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+            @if (
+                Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
+                && Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().Pocet > 0
+                )
             {
                 <tr>
-                    <td>Souhrnné statistiky<br />pro celý holding<br />od 2016</td>
+                    <td>Souhrnné statistiky<br />pro subjekt a všechny<br/>provázané společnosti<br/>od 2016</td>
                     <td>
                         @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
