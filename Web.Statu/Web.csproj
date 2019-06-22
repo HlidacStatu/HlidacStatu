@@ -1322,6 +1322,7 @@
     <Content Include="Views\Sponzori\Strany.cshtml" />
     <Content Include="Views\Sponzori\Top_child.cshtml" />
     <Content Include="Views\Sponzori\Top.cshtml" />
+    <Content Include="Views\Weby\_Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

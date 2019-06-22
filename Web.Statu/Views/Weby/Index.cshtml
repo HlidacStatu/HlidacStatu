@@ -37,39 +37,40 @@
         <li><a href="@Url.Action("Index","Weby")">Hlídač Webů</a></li>
         <li class="active">Dostupnost nejdůležitějších webů</li>
     </ol>
-    }
+}
+@Html.Partial("~/Views/Weby/_Info.cshtml", this.ViewData)
 
-    <h2>Dostupnost nejdůležitějších služeb <small>za posledních 24 hodin</small></h2>
-    <div class="row">
-        <div class="col-sm-12">
-            @UtilWebyChart.Chart("index", 48, 700, false)
-        </div>
+<h2>Dostupnost nejdůležitějších služeb <small>za posledních 24 hodin</small></h2>
+<div class="row">
+    <div class="col-sm-12">
+        @UtilWebyChart.Chart("index", 48, 700, false)
     </div>
-    <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
 
-    @UtilWebyChart.TableNextGroups("index")
-
-
-    <div class="bs-callout bs-callout-primary">
-        <h4>Hlídání dostupnosti státní webů. Co to vlastně děláme?</h4>
-        <p>
-            Měříme každou minutu, zda důležité weby státu vůbec běží, a pokud ano, tak jak rychle odpovídají. A tomu odpovídají i zobrazené barvy.
-            Pokud služba odpovídá rychle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">zelenou - v pořádku</b>.
-            Pokud odpovídá déle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">oranžovou - pomalá odpověď.</b>.
-            Pokud neodpoví nebo odpoví za dlouhou dobu, použijeme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">červenou za nedostupnost</b>.
-        </p>
-        <p>
-            <a href="@Url.Action("JakMerime", "Weby")">Podrobný popis měření a hodnocení</a>.
-        </p>
-    </div>
+@UtilWebyChart.TableNextGroups("index")
 
 
-
-    <div class="clearfix"></div>
-    <p class="text-muted">Údaje na této stránce mohou být až 5 minut staré.</p>
+<div class="bs-callout bs-callout-primary">
+    <h4>Hlídání dostupnosti státní webů. Co to vlastně děláme?</h4>
+    <p>
+        Měříme každou minutu, zda důležité weby státu vůbec běží, a pokud ano, tak jak rychle odpovídají. A tomu odpovídají i zobrazené barvy.
+        Pokud služba odpovídá rychle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">zelenou - v pořádku</b>.
+        Pokud odpovídá déle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">oranžovou - pomalá odpověď.</b>.
+        Pokud neodpoví nebo odpoví za dlouhou dobu, použijeme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">červenou za nedostupnost</b>.
+    </p>
+    <p>
+        <a href="@Url.Action("JakMerime", "Weby")">Podrobný popis měření a hodnocení</a>.
+    </p>
+</div>
 
 
 
-    @section footerscripts{
-    }
+<div class="clearfix"></div>
+<p class="text-muted">Údaje na této stránce mohou být až 5 minut staré.</p>
+
+
+
+@section footerscripts{
+}
 

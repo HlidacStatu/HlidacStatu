@@ -72,19 +72,20 @@ else
             <li><a href="@Url.Action("Index", "Weby")">Hlídač Webů</a></li>
             <li class="active">@ViewBag.SubTitle</li>
         </ol>
-        }
+    }
+    @Html.Partial("~/Views/Weby/_Info.cshtml", this.ViewData)
 
 
-        <h2>
-            @(web.Host.publicname)
-            <br /><small><a href="@web.Host.url" target="_blank" onclick="return trackOutLink(this,'statniweby/info');">@web.Host.url</a></small>
-        </h2>
-        <p class="lead">
-            @web.Host.urad. @Html.Raw(web.Host.popis)
-        </p>
-        <hr />
-        if (webssl != null && webssl.Status().HasValue)
-        {
+    <h2>
+        @(web.Host.publicname)
+        <br /><small><a href="@web.Host.url" target="_blank" onclick="return trackOutLink(this,'statniweby/info');">@web.Host.url</a></small>
+    </h2>
+    <p class="lead">
+        @web.Host.urad. @Html.Raw(web.Host.popis)
+    </p>
+    <hr />
+    if (webssl != null && webssl.Status().HasValue)
+    {
 
         <h3>Zabezpečení komunikace</h3>
         <div class="row">
@@ -119,106 +120,106 @@ else
             </div>
         </div>
         <hr />
+    }
+
+    <h3>Dostupnost za poslední týden</h3>
+    <p>
+        V období od @web.Statistics().MinDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+        do @web.Statistics().MaxDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+
+        běžela služba <span class="avail_OK">v pořádku po @web.Statistics().PercentOfTime.OK.ToString("P2")</span> doby.
+        @if (web.Statistics().PercentOfTime.Pomale > 0)
+        {
+            <text>
+                <span class="avail_Pomale">
+                    Pomalu běžela
+                    @web.Statistics().PercentOfTime.Pomale.ToString("P2")
+                </span>
+                (tj. celkem @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().DurationTotal.Pomale, RenderTools.DateTimePart.Hour)).
+            </text>
         }
-
-        <h3>Dostupnost za poslední týden</h3>
-        <p>
-            V období od @web.Statistics().MinDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
-            do @web.Statistics().MaxDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
-
-            běžela služba <span class="avail_OK">v pořádku po @web.Statistics().PercentOfTime.OK.ToString("P2")</span> doby.
-            @if (web.Statistics().PercentOfTime.Pomale > 0)
-            {
-                <text>
-                    <span class="avail_Pomale">
-                        Pomalu běžela
-                        @web.Statistics().PercentOfTime.Pomale.ToString("P2")
-                    </span>
-                    (tj. celkem @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().DurationTotal.Pomale, RenderTools.DateTimePart.Hour)).
-                </text>
-            }
-            @if (web.Statistics().PercentOfTime.Nedostupne > 0)
-            {
-                <text>
-                <p>
-                    <span class="avail_Nedostupne">
-                        Nedostupná byla
-                        @web.Statistics().PercentOfTime.Nedostupne.ToString("P2")
-                    </span>
-                    (tj. celkem @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().DurationTotal.Nedostupne, RenderTools.DateTimePart.Hour)).
-                    Nejdelší výpadek trval @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().LongestDuration.Nedostupne, RenderTools.DateTimePart.Hour).
-                </p>
-                </text>
-            }
-            else
-            {
-                <text>
-                    Služba v tomto období neměla žádný výpadek.
-                </text>
-
-            }
-            @if (web.Statistics().PercentOfTime.Unknown > 0.1m)
-            {
-                <p>
-                    V @web.Statistics().PercentOfTime.Unknown.ToString("P2") času se nám nepodařilo odezvu serveru změřit z důvodu neschopnosti připojit se k serveru či z důvodů chybového návratového kódu serveru.
-
-                </p>
-            }
+        @if (web.Statistics().PercentOfTime.Nedostupne > 0)
+        {
+            <text>
+            <p>
+                <span class="avail_Nedostupne">
+                    Nedostupná byla
+                    @web.Statistics().PercentOfTime.Nedostupne.ToString("P2")
+                </span>
+                (tj. celkem @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().DurationTotal.Nedostupne, RenderTools.DateTimePart.Hour)).
+                Nejdelší výpadek trval @HlidacStatu.Lib.RenderTools.FormatAvailability(web.Statistics().LongestDuration.Nedostupne, RenderTools.DateTimePart.Hour).
             </p>
-            <hr />
+            </text>
+        }
+        else
+        {
+            <text>
+                Služba v tomto období neměla žádný výpadek.
+            </text>
 
-            <h2>
-                Graf dostupnosti <small>
-                    Dostupnost
-                    Období od @web.Statistics().MinDate.ToString("dd.MM.yyyy HH:mm")
-                    do @web.Statistics().MaxDate.ToString("dd.MM.yyyy HH:mm")
-                </small>
-            </h2>
-            <div class="row">
-                <div class="col-xs-12">
-                    @UtilWebyChart.Chart("w" + web.Host.hostid, 7 * 24, 190, true, web.Host.hash)
+        }
+        @if (web.Statistics().PercentOfTime.Unknown > 0.1m)
+        {
+            <p>
+                V @web.Statistics().PercentOfTime.Unknown.ToString("P2") času se nám nepodařilo odezvu serveru změřit z důvodu neschopnosti připojit se k serveru či z důvodů chybového návratového kódu serveru.
+
+            </p>
+        }
+        </p>
+        <hr />
+
+        <h2>
+            Graf dostupnosti <small>
+                Dostupnost
+                Období od @web.Statistics().MinDate.ToString("dd.MM.yyyy HH:mm")
+                do @web.Statistics().MaxDate.ToString("dd.MM.yyyy HH:mm")
+            </small>
+        </h2>
+        <div class="row">
+            <div class="col-xs-12">
+                @UtilWebyChart.Chart("w" + web.Host.hostid, 7 * 24, 190, true, web.Host.hash)
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="text-right">
+                    <a href="@Url.Action("data", "weby",new { Id=Model.hostid, h = Model.hash })">Stahnout dostupnost v JSON (Open Data)</a>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="text-right">
-                        <a href="@Url.Action("data", "weby",new { Id=Model.hostid, h = Model.hash })">Stahnout dostupnost v JSON (Open Data)</a>
-                    </div>
-                </div>
+        </div>
 
-            </div>
+        <div class="clearfix"></div>
 
-            <div class="clearfix"></div>
-
-            @UtilWebyChart.TableNextGroups("")
+        @UtilWebyChart.TableNextGroups("")
 
 
 
-            <div class="bs-callout bs-callout-primary">
-                <h4>Hlídání dostupnosti státní webů. Co to vlastně děláme?</h4>
-                <p>
-                    Měříme každou minutu, zda důležité weby státu vůbec běží, a pokud ano, tak jak rychle odpovídají. A tomu odpovídají i zobrazené barvy.
-                    Pokud služba odpovídá rychle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">zelenou - v pořádku</b>.
-                    Pokud odpovídá déle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">oranžovou - pomalá odpověď.</b>.
-                    Pokud neodpoví nebo odpoví za dlouhou dobu, použijeme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">červenou za nedostupnost</b>.
-                </p>
-                <p>
-                    Systém hodnocení HTTPS je jednoduchý: A+ je nejlepší známka, F nejhorší, M znamená špatné jméno serveru v certifikátu, T znamená špatný certifikát, X že zabezpečený přenos není vůbec podporován.
-                </p>
-                <p>
-                    <a href="@Url.Action("JakMerime", "Weby")">Podrobný popis měření a hodnocení</a>.
-                </p>
-            </div>
+        <div class="bs-callout bs-callout-primary">
+            <h4>Hlídání dostupnosti státní webů. Co to vlastně děláme?</h4>
+            <p>
+                Měříme každou minutu, zda důležité weby státu vůbec běží, a pokud ano, tak jak rychle odpovídají. A tomu odpovídají i zobrazené barvy.
+                Pokud služba odpovídá rychle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.OK))">zelenou - v pořádku</b>.
+                Pokud odpovídá déle, dáváme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Pomalé))">oranžovou - pomalá odpověď.</b>.
+                Pokud neodpoví nebo odpoví za dlouhou dobu, použijeme <b style="color:@(ZabAvailability.GetStatusChartColor(Statuses.Nedostupné))">červenou za nedostupnost</b>.
+            </p>
+            <p>
+                Systém hodnocení HTTPS je jednoduchý: A+ je nejlepší známka, F nejhorší, M znamená špatné jméno serveru v certifikátu, T znamená špatný certifikát, X že zabezpečený přenos není vůbec podporován.
+            </p>
+            <p>
+                <a href="@Url.Action("JakMerime", "Weby")">Podrobný popis měření a hodnocení</a>.
+            </p>
+        </div>
 
 
 
-            <p class="text-muted">Údaje na této stránce mohou být až 20 minut staré.</p>
+        <p class="text-muted">Údaje na této stránce mohou být až 20 minut staré.</p>
 
 
 
 
     }
-    @section footerscripts{
-    }
+@section footerscripts{
+}
 

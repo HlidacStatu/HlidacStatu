@@ -84,7 +84,7 @@ namespace HlidacStatu.Lib.Data
             using (DbEntities db = new DbEntities())
             {
                 IQueryable<ItemToOcrQueue> sql = CreateQuery(db, itemType, itemSubType);
-                sql = sql.Where(m => m.itemId == itemId);
+                sql = sql.Where(m => m.itemId == itemId );
                 if (sql.Any()) //already in the queue
                     return new OCR.Api.Result()
                     {
