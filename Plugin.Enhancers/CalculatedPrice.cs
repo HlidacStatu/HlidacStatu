@@ -75,7 +75,9 @@ namespace HlidacStatu.Plugin.Enhancers
             //https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date=12.08.2008
             currency = currency.ToUpper();
             string sdate = date.Date.ToString("dd.MM.yyyy");
-            string url = "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date=" + sdate;
+            string url = "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt?date=" + sdate;
+
+// old URL "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date=" + sdate; 
 
             try
             {
