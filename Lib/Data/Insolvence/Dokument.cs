@@ -6,6 +6,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
 	{
 		[Nest.Keyword]
 		public string Id { get; set; }
+		[Nest.Number]
+		public int TypUdalosti { get; set; }
 		[Nest.Date]
 		public DateTime DatumVlozeni { get; set; }
 		[Nest.Text]
