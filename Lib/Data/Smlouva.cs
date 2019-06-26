@@ -219,19 +219,32 @@ namespace HlidacStatu.Lib.Data
         public DataQualityEnum CalcutatedPriceQuality { get; set; }
 
         public SClassification Classification { get; set; } = new SClassification();
+
+        public bool SetClassification(SClassification classif) //true if changed
+        {
+            this.Classification = classif;
+            return true;
+        }
+
         public bool SetClassification(bool rewrite = false) //true if changed
         {
-            if (this.Classification?.LastUpdate != null)
-                return false;
-            var types = GetClassification();
-            this.Classification = new SClassification(types
-                                    .Select(m=>new SClassification.Classification() {
-                                        TypeValue = (int)m.Key,
-                                        ClassifProbability =m.Value }
+            if (rewrite || this.Classification?.LastUpdate == null)
+            {
+                var types = GetClassification();
+                SetClassification( new SClassification(types
+                                        .Select(m => new SClassification.Classification()
+                                        {
+                                            TypeValue = (int)m.Key,
+                                            ClassifProbability = m.Value
+                                        }
+                                        )
+                                        .ToArray()
                                     )
-                                    .ToArray()
-                    );
-            return true;
+                                );
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Save()

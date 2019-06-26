@@ -243,8 +243,21 @@ namespace HlidacStatu.Lib.Data
 
             public int Version { get; set; } = 0;
 
-            public Classification[] Types { get; set; } = null; 
+            public Classification[] Types { get; set; } = null;
 
+            public override string ToString()
+            {
+                if (this.Types != null)
+                {
+                    return $"Types:{Types.Select(m=>m.ClassifType().ToString() + " ("+ m.ClassifProbability.ToString("P2") + ")").Aggregate((f,s)=>f+"; "+s)}"
+                        + $" updated:{LastUpdate.ToString()}";
+                }
+                else
+                {
+                    return  $"Types:snull updated:{LastUpdate.ToString()}";
+                }
+                //return base.ToString();
+            }
 
         }
     }
