@@ -231,7 +231,7 @@ namespace HlidacStatu.Lib.Data
             if (rewrite || this.Classification?.LastUpdate == null)
             {
                 var types = GetClassification();
-                SetClassification( new SClassification(types
+                SetClassification(new SClassification(types
                                         .Select(m => new SClassification.Classification()
                                         {
                                             TypeValue = (int)m.Key,
@@ -268,7 +268,17 @@ namespace HlidacStatu.Lib.Data
                 stem.Timeout = 45000;
                 stem.ContentType = "application/json; charset=utf-8";
                 stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(this, settings);
-                var stems = stem.GetContent();
+                Devmasters.Net.Web.TextContentResult stems = null;
+                try
+                {
+                    stems = stem.GetContent();
+
+                }
+                catch (Exception e)
+                {
+                    Util.Consts.Logger.Error("Classification Stemmer API ", e);
+                    throw;
+                }
                 using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(baseUrl + "/classifier"))
                 {
                     classif.Method = Devmasters.Net.Web.MethodEnum.POST;
@@ -277,7 +287,16 @@ namespace HlidacStatu.Lib.Data
                     classif.Timeout = 30000;
                     classif.ContentType = "application/json; charset=utf-8";
                     classif.RequestParams.RawContent = stems.Text;
-                    var classifier = classif.GetContent();
+                    Devmasters.Net.Web.TextContentResult classifier = null;
+                    try
+                    {
+                        classifier = classif.GetContent();
+                    }
+                    catch (Exception e)
+                    {
+                        Util.Consts.Logger.Error("Classification Classifier API ", e);
+                        throw;
+                    }
 
                     using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(baseUrl + "/finalizer"))
                     {
@@ -287,7 +306,16 @@ namespace HlidacStatu.Lib.Data
                         fin.Timeout = 30000;
                         fin.ContentType = "application/json; charset=utf-8";
                         fin.RequestParams.RawContent = classifier.Text;
-                        var res = fin.GetContent();
+                        Devmasters.Net.Web.TextContentResult res = null;
+                        try
+                        {
+                            res = fin.GetContent();
+                        }
+                        catch (Exception e)
+                        {
+                            Util.Consts.Logger.Error("Classification finalizer API ", e);
+                            throw;
+                        }
 
 
                         var jsonData = Newtonsoft.Json.Linq.JArray.Parse(res.Text);
