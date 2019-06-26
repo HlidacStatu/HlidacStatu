@@ -177,6 +177,8 @@ namespace HlidacStatu.Lib.Data
                 [ShowNiceDisplayName()]
                 public enum ContractSubjectTypes
                 {
+                    #region DatLowe_types
+
                     [NiceDisplayName("Produkty zemědělství, hospodářské produkty, produkty akvakultury, lesnictví a související produkty")]
                     X03000000_1,
 
@@ -311,9 +313,11 @@ namespace HlidacStatu.Lib.Data
 
                     [NiceDisplayName("Jiné služby pro veřejnost, sociální služby a služby jednotlivcům")]
                     X98000000_3,
+                    #endregion
 
                     [NiceDisplayName("Ostatní")]
                     XOSTATNI,
+    
                 }
 
                 public static ContractDocTypes? GetDocType(string value)

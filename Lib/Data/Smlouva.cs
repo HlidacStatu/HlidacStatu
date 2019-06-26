@@ -2,6 +2,7 @@
 using HlidacStatu.Util;
 using Nest;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -216,6 +217,91 @@ namespace HlidacStatu.Lib.Data
         public DateTime LastUpdate { get; set; } = DateTime.MinValue;
         public decimal CalculatedPriceWithVATinCZK { get; set; }
         public DataQualityEnum CalcutatedPriceQuality { get; set; }
+
+        public SClassification Classification { get; set; } = new SClassification();
+        public bool SetClassification(bool rewrite = false) //true if changed
+        {
+            if (this.Classification?.LastUpdate != null)
+                return false;
+            var types = GetClassification();
+            this.Classification = new SClassification(types
+                                    .Select(m=>new SClassification.Classification() {
+                                        TypeValue = (int)m.Key,
+                                        ClassifProbability =m.Value }
+                                    )
+                                    .ToArray()
+                    );
+            return true;
+        }
+
+        public void Save()
+        {
+            Lib.ES.Manager.Save(this);
+        }
+
+        public Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassification()
+        {
+            Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
+
+            string baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url");
+
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
+
+
+            using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(baseUrl + "/stemmer"))
+            {
+                stem.Method = Devmasters.Net.Web.MethodEnum.POST;
+                stem.Timeout = 45000;
+                stem.ContentType = "application/json; charset=utf-8";
+                stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(this, settings);
+                var stems = stem.GetContent();
+                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(baseUrl + "/classifier"))
+                {
+                    classif.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    //classif.Tries = 5;
+                    //classif.TimeInMsBetweenTries = 2000;
+                    classif.Timeout = 30000;
+                    classif.ContentType = "application/json; charset=utf-8";
+                    classif.RequestParams.RawContent = stems.Text;
+                    var classifier = classif.GetContent();
+
+                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(baseUrl + "/finalizer"))
+                    {
+                        fin.Method = Devmasters.Net.Web.MethodEnum.POST;
+                        //fin.Tries = 5;
+                        //fin.TimeInMsBetweenTries = 2000;
+                        fin.Timeout = 30000;
+                        fin.ContentType = "application/json; charset=utf-8";
+                        fin.RequestParams.RawContent = classifier.Text;
+                        var res = fin.GetContent();
+
+
+                        var jsonData = Newtonsoft.Json.Linq.JArray.Parse(res.Text);
+
+                        for (int i = 0; i < jsonData.Count; i++)
+                        {
+                            string key = jsonData[i][0].Value<string>().Replace("-", "_");
+                            decimal prob = jsonData[i][1].Value<decimal>();
+                            if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
+                            {
+                                data.Add(typ, prob);
+                            }
+                            else
+                            {
+                                Util.Consts.Logger.Error("Invalid key " + key);
+                                data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return data;
+        }
+
+
+
 
 
         private Issues.Issue[] issues = new Lib.Issues.Issue[] { };

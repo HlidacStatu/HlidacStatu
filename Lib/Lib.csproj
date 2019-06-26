@@ -512,6 +512,7 @@
     <Compile Include="Data\Search.DatasetMultiResult.cs" />
     <Compile Include="Data\Search.ISearchResult.cs" />
     <Compile Include="Data\Search.MultiResult.cs" />
+    <Compile Include="Data\Smlouva.SClassification.cs" />
     <Compile Include="Data\Sponzori.cs" />
     <Compile Include="Data\UserOptions.Date.cs" />
     <Compile Include="Data\UserOptions.Typed.cs" />

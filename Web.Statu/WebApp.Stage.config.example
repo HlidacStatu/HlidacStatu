@@ -13,6 +13,7 @@
     <!-- connection for SQL server db-->
     <!-- replace #sqlIP# #dbName#, #sqlLogin#, #sqlPassword# with your values -->
     <add name="DbEntities" connectionString="metadata=res://*/Data.Db.csdl|res://*/Data.Db.ssdl|res://*/Data.Db.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=#sqlIP#;initial catalog=#dbName#;persist security info=True;user id=#sqllogin#;password=#sqlpassword#;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" xdt:Transform="Insert" />
+
   </connectionStrings>
 
   <appSettings>
