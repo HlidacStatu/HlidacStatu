@@ -265,8 +265,8 @@ namespace HlidacStatu.Lib.Data
             using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(baseUrl + "/stemmer"))
             {
                 stem.Method = Devmasters.Net.Web.MethodEnum.POST;
-                classif.Tries = 3;
-                classif.TimeInMsBetweenTries = 5000;
+                stem.Tries = 3;
+                stem.TimeInMsBetweenTries = 5000;
                 stem.Timeout = 45000;
                 stem.ContentType = "application/json; charset=utf-8";
                 stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(this, settings);
@@ -303,8 +303,8 @@ namespace HlidacStatu.Lib.Data
                     using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(baseUrl + "/finalizer"))
                     {
                         fin.Method = Devmasters.Net.Web.MethodEnum.POST;
-                        classif.Tries = 3;
-                        classif.TimeInMsBetweenTries = 5000;
+                        fin.Tries = 3;
+                        fin.TimeInMsBetweenTries = 5000;
                         fin.Timeout = 30000;
                         fin.ContentType = "application/json; charset=utf-8";
                         fin.RequestParams.RawContent = classifier.Text;
