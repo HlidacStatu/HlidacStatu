@@ -92,6 +92,65 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+
+        public class AllowCrossSiteJsonAttribute : ActionFilterAttribute
+        {
+            public override void OnActionExecuting(ActionExecutingContext filterContext)
+            {
+                filterContext.RequestContext.HttpContext.Response.Headers.Remove("Access-Control-Allow-Origin");
+                filterContext.RequestContext.HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                base.OnActionExecuting(filterContext);
+            }
+        }
+
+        [AllowCrossSiteJson()]
+        public ActionResult DatasetTemplatePreview(string id, string type, string template)
+        {
+
+            if (string.IsNullOrEmpty(id))
+                return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
+
+            var reg = DataSetDB.Instance.GetRegistration(id);
+            if (reg == null)
+                return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
+
+            try
+            {
+
+                var ds = DataSet.CachedDatasets.Get(id);
+                if (type == "search")
+                {
+                    var res = ds.SearchData("*", 1, 5, "DbCreated desc");
+                    var temp = new Registration.Template() { body = template } ;
+                    
+                    var html = temp.Render(ds, res, "*");
+
+                    return Content(html);
+                }
+                else if (type == "detail")
+                {
+                    var res = ds.SearchData("*", 1, 1, "DbCreated desc")?.Result?.FirstOrDefault();
+                    var temp = new Registration.Template() { body = template };
+
+                    var html = temp.Render(ds, res);
+                }
+                else
+                {
+                    return Content("");
+                }
+            }
+            catch (Exception e)
+            {
+                var msg = e?.InnerException?.Message ?? e.Message;
+                msg = HlidacStatu.Util.ParseTools.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
+
+                return Content($"<h2>Chyba v template - zpráva pro autora této datové sady</h2><pre>{msg}</pre>");
+            }
+            return Content("");
+
+        }
+
+
         [HttpGet]
         public ActionResult FindCompanyID(string companyName)
         {
