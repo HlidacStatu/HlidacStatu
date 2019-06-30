@@ -254,4 +254,9 @@ namespace HlidacStatu.Lib.Render
 
     }
 
+
+    public class ReportDataTimeValue {
+        public DateTime Date { get; set; }
+        public decimal Value { get; set; }
+    }
 }

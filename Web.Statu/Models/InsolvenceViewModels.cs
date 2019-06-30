@@ -1,21 +1,23 @@
 ﻿using HlidacStatu.Lib.Data.Insolvence;
+using HlidacStatu.Lib.ES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
 
 namespace HlidacStatu.Web.Models
 {
 
 	public class InsolvenceIndexViewModel
 	{
-		public Rizeni[] NoveFirmyVInsolvenci { get; set; }
-		public Rizeni[] NoveOsobyVInsolvenci { get; set; }
+		public InsolvenceSearchResult NoveFirmyVInsolvenci { get; set; }
+		public InsolvenceSearchResult NoveOsobyVInsolvenci { get; set; }
 
 		public InsolvenceIndexViewModel()
 		{
-			NoveFirmyVInsolvenci = new Rizeni[0];
-			NoveOsobyVInsolvenci = new Rizeni[0];
+			NoveFirmyVInsolvenci = new InsolvenceSearchResult();
+			NoveOsobyVInsolvenci = new InsolvenceSearchResult();
 		}
 	}
 

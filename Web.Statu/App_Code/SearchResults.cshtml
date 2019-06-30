@@ -44,84 +44,85 @@
 
 @helper InsolvenceHead()
 {
-    <tr>
-        <th>&nbsp;</th>
-        <th>Spisová značka</th>
-        <th>Datum vzniku</th>
-        <th>Poslední změna</th>
-        <th>Stav řízení</th>
-        <th>Dlužník/ci</th>
-        <th>Věřitelé</th>
-        <th>Soud</th>
-    </tr>
-}
+        <tr>
+            <th></th>
+            <th>Dlužníci</th>
+            <th>Věritelé</th>
+            <th>Datum vzniku</th>
+            <th>Poslední změna</th>
+            <th>Stav řízení</th>
+            <th>Soud</th>
+            <th>Spisová značka</th>
+        </tr>
+    }
 
 @helper InsolvenceRow(System.Security.Principal.IPrincipal user, HttpRequestBase request, HlidacStatu.Lib.Data.Insolvence.Rizeni item, string query = "")
 {
-    <tr>
-        <td>
-            @{
-                @Util.AddBookmark(user, item)
-            }
-        </td>
-        <td style="white-space: nowrap;">
-            @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request))
+<tr>
+    <td>
+        @{
+            @Util.AddBookmark(user, item)
+        }
+    </td>
+    <td>
+        @if (item.Dluznici?.Count > 0)
+        {
+            foreach (var o in item.Dluznici.Take(2))
             {
-                <a href="@item.GetUrl(true,query)">@item.SpisovaZnacka</a>
+                <div>@Html.Raw(o.ToHtml())</div>
             }
-            else
+            if (item.Dluznici.Count == 3)
             {
-                <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Insolvence/Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
+                <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
             }
-        </td>
-        <td>
-            @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
-        </td>
-        <td>
-            @item.PosledniZmena.Date.ToString("d.MM.yyyy")
-        </td>
+            else if (item.Dluznici.Count > 3)
+            {
+                <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>
+            }
+        }
+    </td>
+    <td>
+        @if (item.Veritele?.Count > 0)
+        {
+            foreach (var o in item.Veritele.Take(2))
+            {
+                <div>@Html.Raw(o.ToHtml())</div>
+            }
+            if (item.Veritele.Count == 3)
+            {
+                <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
+            }
+            else if (item.Veritele.Count > 3)
+            {
+                <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
+            }
+        }
+    </td>
+    <td>
+        @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
+    </td>
+    <td>
+        @item.PosledniZmena.Date.ToString("d.MM.yyyy")
+    </td>
 
-        <td>
-            <span title="@item.StavRizeniDetail()">@item.StavRizeni()</span>
-        </td>
-        <td>
-            @if (item.Dluznici?.Count > 0)
-            {
-                foreach (var o in item.Dluznici.Take(2))
-                {
-                    <div>@Html.Raw(o.ToHtml())</div>
-                }
-                if (item.Dluznici.Count == 3)
-                {
-                    <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
-                }
-                else if (item.Dluznici.Count > 3)
-                {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>
-                }
-            }
-        </td>
-        <td>
-            @if (item.Veritele?.Count > 0)
-            {
-                foreach (var o in item.Veritele.Take(2))
-                {
-                    <div>@Html.Raw(o.ToHtml())</div>
-                }
-                if (item.Veritele.Count == 3)
-                {
-                    <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
-                }
-                else if (item.Veritele.Count > 3)
-                {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
-                }
-            }
-        </td>
-        <td>
-            <span>@item.SoudFullName()</span>
-        </td>
-    </tr>
+    <td>
+        <span title="@item.StavRizeniDetail()">@item.StavRizeni()</span>
+    </td>
+    <td>
+        <span>@item.SoudFullName()</span>
+    </td>
+    <td style="white-space: nowrap;">
+        @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request))
+        {
+        <a href="@item.GetUrl(true,query)">@item.SpisovaZnacka  <i class="far fa-long-arrow-right"></i></a>
+        }
+        else
+        {
+    <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Insolvence/Rizeni/@item.UrlId()">@item.SpisovaZnacka  <i class="far fa-long-arrow-right"></i></a>
+        }
+    </td>
+
+</tr>
 }
 
 @helper FirmyHead(bool small = false)
@@ -377,7 +378,7 @@
             @(item.PosledniZmena?.ToShortDateString())
         </td>
         <td>
-            @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena" )
+            @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena")
         </td>
         <td>
             @if (item.Zadavatel != null)

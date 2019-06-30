@@ -27,11 +27,11 @@
 {
     if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
     {
-        @RenderReportChart(item.Title,item.Data as DotNet.Highcharts.Highcharts)
+        @RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts)
     }
     else
     {
-        @Html.Raw(RenderReportTableObj(item.Title,item, JsDataTableOptions, JsDataTableId))
+        @Html.Raw(RenderReportTableObj(item.Title, item, JsDataTableOptions, JsDataTableId))
     }
 }
 
@@ -65,7 +65,7 @@
     }
     else
     {
-        @Html.Raw(RenderReport(new HlidacStatu.Lib.Render.ReportModel.QueueItem() { Title= title, Type = type, Data = data }, JsDataTableOptions, JsDataTableId))
+        @Html.Raw(RenderReport(new HlidacStatu.Lib.Render.ReportModel.QueueItem() { Title = title, Type = type, Data = data }, JsDataTableOptions, JsDataTableId))
     }
 }
 @helper RenderReportChart(string title, DotNet.Highcharts.Highcharts chart)
@@ -84,6 +84,96 @@
         (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
             , JsDataTableId, JsDataTableOptions)
             )
+}
+
+
+@helper RenderSimpleTimeChart(IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> data,
+    int width, int height, string valueName,
+    bool showMaxLine = false)
+{
+if (data == null)
+{
+    return;
+}
+if (data.Count() == 0)
+{
+    return;
+}
+string containerId = "chart_"+Guid.NewGuid().ToString("N");
+string sMaxVal = data.Max(m=>m.Value).ToString(HlidacStatu.Util.Consts.enCulture);
+string sdata = data
+    .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month},{m.Date.Day}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+    .Aggregate((f, s) => f + "," + s);
+
+    <div id="@containerId" style="height:@(height)px;width:@(width)px"></div>
+    <script>
+
+        Highcharts.chart('@containerId', {
+chart: {
+    zoomType: 'x'
+            },
+            title: null,
+            subtitle: null,
+            xAxis: {
+    type: 'datetime',
+                labels : { enabled : false},
+                visible: false
+            },
+            yAxis: {
+    tickInterval : 0,
+                labels : { enabled : false},
+                title : { enabled: false },
+                tickInterval: 0, gridLineWidth: 0,
+    @if (showMaxLine)
+    {
+        <text>
+                    plotLines: [{
+                        label: {text:"@sMaxVal", y: 15},
+                            color: '#3977d5', value: @sMaxVal, width:1, dashStyle: "Dot"
+                        }],
+                        },
+        </text>
+    }
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                        color: '#3977d5',
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker:  {
+                        radius: 2
+                    },
+                    lineColor: '#3977d5',
+                    lineWidth: 5,
+                    states: {
+                        hover: {
+                            lineWidth: 5
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+            series: [{
+                type: 'area',
+                name: '@valueName',
+                data: [@(sdata)]
+            }]
+        });
+    </script>
+
 }
 
 
@@ -243,29 +333,29 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
 })
 .SetNavigation(new DotNet.Highcharts.Options.Navigation() { ButtonOptions = new DotNet.Highcharts.Options.NavigationButtonOptions() { Enabled = false } })
 //.SetTitle(new DotNet.Highcharts.Options.Title() { Text = "" })
-.SetTitle(new DotNet.Highcharts.Options.Title() { Text = null})
+.SetTitle(new DotNet.Highcharts.Options.Title() { Text = null })
 .SetTooltip(new DotNet.Highcharts.Options.Tooltip()
 {
     HeaderFormat = "",
-            //PointFormat = "{point.category}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix) ? " " + tooltipValueSuffix : ""),
-            PointFormat = tooltipFormat,
+//PointFormat = "{point.category}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix) ? " " + tooltipValueSuffix : ""),
+PointFormat = tooltipFormat,
     UseHTML = true
 })
 .SetLegend(new DotNet.Highcharts.Options.Legend.Legend()
 {
     Enabled = (rds.Count() > 1) ? true : false,
     Reversed = true
-            //Layout = DotNet.Highcharts.Enums.Layouts.Vertical,
-            //Align = DotNet.Highcharts.Enums.HorizontalAligns.Right,
+//Layout = DotNet.Highcharts.Enums.Layouts.Vertical,
+//Align = DotNet.Highcharts.Enums.HorizontalAligns.Right,
 
-        }
+}
 )
 .SetPlotOptions(new DotNet.Highcharts.Options.PlotOptions.PlotOptions()
 {
     Column = new DotNet.Highcharts.Options.PlotOptions.PlotOptionsColumn()
     {
         Animation = new DotNet.Highcharts.Helpers.Animation(true),
-        BorderWidth=0,
+        BorderWidth = 0,
         GroupPadding = 0,
         Shadow = true
     },
@@ -280,21 +370,21 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
 })
 .SetXAxis(new DotNet.Highcharts.Options.XAxis.XAxis()
 {
-Type = timeData ? DotNet.Highcharts.Enums.AxisTypes.Datetime : DotNet.Highcharts.Enums.AxisTypes.Category,
-Title = new DotNet.Highcharts.Options.XAxis.XAxisTitle() { Text = xAxisName },
-Categories = timeData ? null : rds[0].Data.Select(v => v[0].Column.TextRender(v[0].Value)).ToArray(),
-Labels = new DotNet.Highcharts.Options.XAxis.XAxisLabels()
-{
-StaggerLines = 1,
-Format = xValueFormat,
-        //Rotation = (rds.Data.Count>25) ? 30 : 0,
-    }
+    Type = timeData ? DotNet.Highcharts.Enums.AxisTypes.Datetime : DotNet.Highcharts.Enums.AxisTypes.Category,
+    Title = new DotNet.Highcharts.Options.XAxis.XAxisTitle() { Text = xAxisName },
+    Categories = timeData ? null : rds[0].Data.Select(v => v[0].Column.TextRender(v[0].Value)).ToArray(),
+    Labels = new DotNet.Highcharts.Options.XAxis.XAxisLabels()
+    {
+        StaggerLines = 1,
+        Format = xValueFormat,
+    //Rotation = (rds.Data.Count>25) ? 30 : 0,
+}
 })
 .SetYAxis(new DotNet.Highcharts.Options.YAxis.YAxis()
 {
-Min = min,
-Type = ytype,
-Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName },
+    Min = min,
+    Type = ytype,
+    Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName },
 }
 )
 .SetSeries(
@@ -302,14 +392,14 @@ rds
 .Select(d =>
 new DotNet.Highcharts.Options.Series.Series()
 {
-Name = d.Title,
-Data = new DotNet.Highcharts.Helpers.Data(
+    Name = d.Title,
+    Data = new DotNet.Highcharts.Helpers.Data(
 d.Data
     .Select(v => new object[] {
                         v[0].Column.ValueRender(v[0].Value)
                         ,
                         v[1].Column.ValueRender(v[1].Value)
-        }
+            }
     )
     .ToArray() //v[1] contains value, v[0] contains x-axis value
 )
@@ -319,6 +409,12 @@ d.Data
 );
         return chart;
     }
+
+
+
+
+
+
 
 
     public static DotNet.Highcharts.Highcharts SimpleBarChartTimeData_OLD(bool columnType, int height,
@@ -336,8 +432,8 @@ d.Data
         .SetTooltip(new DotNet.Highcharts.Options.Tooltip()
         {
             HeaderFormat = "",
-            //PointFormat = "{point.x:" + xValueFormat + "}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix)? " " + tooltipValueSuffix : "") ,
-        })
+        //PointFormat = "{point.x:" + xValueFormat + "}: {point.y:,.0f}" + (!string.IsNullOrEmpty(tooltipValueSuffix)? " " + tooltipValueSuffix : "") ,
+    })
         .SetLegend(new DotNet.Highcharts.Options.Legend.Legend()
         {
             Enabled = false
@@ -357,10 +453,10 @@ d.Data
             Labels = new DotNet.Highcharts.Options.XAxis.XAxisLabels()
             {
                 StaggerLines = 1,
-                //Format = "{value:" + xValueFormat + "}",
-                //Rotation = (rds.Data.Count>25) ? 30 : 0,
+            //Format = "{value:" + xValueFormat + "}",
+            //Rotation = (rds.Data.Count>25) ? 30 : 0,
 
-            }
+        }
         })
         .SetYAxis(new DotNet.Highcharts.Options.YAxis.YAxis()
         {
@@ -377,7 +473,7 @@ d.Data
 v[0].Column.ValueRender(v[0].Value)
 ,
 v[1].Column.ValueRender(v[1].Value)
-                        }
+                            }
                     )
                     .ToArray() //v[1] contains value, v[0] contains x-axis value
                 )

@@ -278,17 +278,17 @@ MORATORIUM =
             }
         }
 
-        public static Rizeni[] NewFirmyVInsolvenci(int count)
+        public static InsolvenceSearchResult NewFirmyVInsolvenci(int count)
         {
             return NewSubjektVInsolvenci(count, "P");
         }
 
-        public static Rizeni[] NewOsobyVInsolvenci(int count)
+        public static InsolvenceSearchResult NewOsobyVInsolvenci(int count)
         {
             return NewSubjektVInsolvenci(count, "F");
         }
 
-        private static Rizeni[] NewSubjektVInsolvenci(int count, string typ)
+        private static InsolvenceSearchResult NewSubjektVInsolvenci(int count, string typ)
         {
             var client = Manager.GetESClient_Insolvence();
 
@@ -299,7 +299,14 @@ MORATORIUM =
                     .Sort(o => o.Field(f => f.Field(a => a.DatumZalozeni).Descending()))
                     .Query(q => q.Match(m => m.Field("dluznici.typ").Query(typ))));
 
-                return rizeni.IsValid ? rizeni.Hits.Select(h => h.Source).ToArray() : new Rizeni[0];
+                return new InsolvenceSearchResult()
+                {
+                    ElasticResults = rizeni,
+                    IsValid = rizeni.IsValid,
+                    Total = rizeni.Total,
+                    Q="",
+                };
+
             }
             catch (Exception e)
             {

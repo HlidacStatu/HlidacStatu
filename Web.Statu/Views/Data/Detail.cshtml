@@ -45,7 +45,7 @@
         {
             if (Model.Dataset.Registration()?.detailTemplate?.IsNewTemplate() == true)
             {
-                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model, highlightingData: highlightingData);
+                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model, highlightingData: highlightingData);    
                 @Html.Raw(html)
             }
             else

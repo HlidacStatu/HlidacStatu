@@ -202,15 +202,17 @@ namespace HlidacStatu.Lib.Data.Insolvence
         }
 
 
-        public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, bool withHighlighting = false)
+        public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, bool withHighlighting = false,
+            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
         {
             return SimpleSearch(new InsolvenceSearchResult() {
                 Q=query,
                 Page = page,
                 PageSize = pagesize               
-            }, withHighlighting);
+            }, withHighlighting, anyAggregation);
         }
-            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, bool withHighlighting = false)
+            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, bool withHighlighting = false,
+                AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
         {
             var client = Manager.GetESClient_Insolvence();
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
@@ -219,7 +221,6 @@ namespace HlidacStatu.Lib.Data.Insolvence
             sw.Start();
 
             search.Q = SearchTools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
-
 
             ISearchResponse<Rizeni> res = null;
             try
@@ -233,6 +234,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Query(q => GetSimpleQuery(search))                        
                         .Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Highlight(h=> Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
+                        .Aggregations(aggr=> anyAggregation)
                 );
             }
             catch (Exception e)
@@ -248,7 +250,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 else
                 {
                     HlidacStatu.Util.Consts.Logger.Error("", e);
-                }
+                }   
                 throw;
             }
             sw.Stop();

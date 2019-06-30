@@ -1,0 +1,508 @@
+/* Document
+========================================================================== */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sections
+========================================================================== */
+body {
+  margin: 0;
+}
+
+main {
+  display: block;
+}
+
+/* Text-level semantics
+========================================================================== */
+a {
+  background-color: transparent;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+
+/**
+* http://code.iamkate.com/html-and-css/fixing-browsers-broken-monospace-font-handling/
+*/
+pre,
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -.25em;
+}
+
+sup {
+  top: -.5em;
+}
+
+/* Embedded content
+========================================================================== */
+img {
+  border-style: none;
+}
+
+/* Forms
+========================================================================== */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  margin: 0;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+legend {
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal;
+}
+
+progress {
+  vertical-align: baseline;
+}
+
+textarea {
+  overflow: auto;
+}
+
+[type='checkbox'],
+[type='radio'] {
+  padding: 0;
+}
+
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+[type='search'] {
+  -webkit-appearance: textfield;
+}
+
+[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+/* Interactive
+========================================================================== */
+details {
+  display: block;
+}
+
+summary {
+  display: list-item;
+}
+
+/* Misc
+========================================================================== */
+template {
+  display: none;
+}
+
+[hidden] {
+  display: none;
+}
+
+/* Custom SK
+========================================================================== */
+a:focus {
+  outline: 0;
+}
+
+pre {
+  white-space: pre;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+img,
+iframe,
+object,
+embed,
+svg {
+  vertical-align: middle;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+figure {
+  margin: 0;
+}
+
+[disabled] {
+  cursor: default;
+}
+
+.u-align-top {
+  vertical-align: top;
+}
+
+.u-align-middle {
+  vertical-align: middle;
+}
+
+.u-align-bottom {
+  vertical-align: bottom;
+}
+
+.u-clearfix::before, .u-clearfix::after {
+  content: '';
+  display: table;
+}
+
+.u-clearfix::after {
+  clear: both;
+}
+
+.u-ctx {
+  display: table-cell;
+}
+
+.u-ctx::after {
+  clear: both;
+  display: block;
+  visibility: hidden;
+  overflow: hidden;
+  height: 0;
+  line-height: 0;
+  font-size: xx-large;
+  content: ' x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x ';
+}
+
+.u-pull-left {
+  float: left;
+}
+
+.u-pull-right {
+  float: right;
+}
+
+.u-vhide {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+.u-out,
+.js .u-js-out {
+  position: absolute;
+  left: -5000px;
+}
+
+.u-text-left {
+  text-align: left;
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+.u-text-center {
+  text-align: center;
+}
+
+.u-text-justify {
+  text-align: justify;
+}
+
+.u-text-nowrap {
+  white-space: nowrap;
+}
+
+.u-text-lowercase {
+  text-transform: lowercase;
+}
+
+.u-text-uppercase {
+  text-transform: uppercase;
+}
+
+.u-text-capitalize {
+  text-transform: capitalize;
+}
+
+.u-text-truncate {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-text-hide {
+  font: 0/0 a;
+  color: transparent;
+  text-decoration: none;
+}
+
+.u-font-light {
+  font-weight: 300;
+}
+
+.u-font-regular {
+  font-weight: normal;
+}
+
+.u-font-bold {
+  font-weight: bold;
+}
+
+.u-font-italic {
+  font-style: italic;
+}
+
+.u-hide {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .u-hide\@sm {
+    display: none;
+  }
+}
+
+@media (min-width: 750px) {
+  .u-hide\@md {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .u-hide\@lg {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .u-hide\@xl {
+    display: none;
+  }
+}
+
+.u-show {
+  display: block;
+}
+
+@media (min-width: 480px) {
+  .u-show\@sm {
+    display: block;
+  }
+}
+
+@media (min-width: 750px) {
+  .u-show\@md {
+    display: block;
+  }
+}
+
+@media (min-width: 1000px) {
+  .u-show\@lg {
+    display: block;
+  }
+}
+
+@media (min-width: 1200px) {
+  .u-show\@xl {
+    display: block;
+  }
+}
+
+.js .u-js-hide {
+  display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 22pt;
+  margin: 0 0 .5cm;
+}
+
+h2 {
+  font-size: 18pt;
+  margin: .75cm 0 .2cm;
+}
+
+h3 {
+  font-size: 14pt;
+  margin: .5cm 0 .15cm;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 12pt;
+  margin: 1cm 0 .5cm;
+}
+
+blockquote {
+  padding-left: 0;
+  padding-right: 0;
+  margin: .5cm 0;
+}
+
+table {
+  margin: 15px 1pt 35px;
+  text-align: left;
+  border-collapse: collapse;
+  width: 98% !important;
+  font-size: 8pt;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+th,
+td {
+  border: 1pt solid #000;
+  padding: 4px 10px;
+}
+
+th {
+  font-weight: bold;
+}
+
+.m-main,
+.m-accessibility,
+form,
+.btn {
+  display: none;
+}
+
+.header {
+  border-bottom: 2pt solid #000;
+  padding: 0 0 20pt;
+  margin: 0 auto 20pt;
+}
+
+.header__logo {
+  font-size: 100%;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.header__logo img {
+  border: 0;
+}
+
+.footer {
+  border-top: 2pt solid #000;
+  padding: 20pt 0 0;
+  margin: 20pt 0 0;
+}
+
+body {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #000;
+  background: none;
+  font-size: 8pt;
+  line-height: 12pt;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+p,
+ul,
+table {
+  margin: 0 0 .4cm;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+img {
+  border: 0;
+  max-width: 100%;
+  height: auto;
+}
+/*# sourceMappingURL=print.css.map */
