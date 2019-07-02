@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace HlidacStatu.Lib.Data.Insolvence
@@ -71,6 +72,68 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             return url;
         }
+
+        public class ProgressItem
+        {
+            public enum ProgressStatus
+            {
+                Done,
+                GoOn,
+                InQueue
+            }
+            public string Text { get; set; }
+            public DateTime Date { get; set; }
+            public ProgressStatus Status { get; set; }
+        }
+
+        public ProgressItem[] StavRizeniProgress()
+        {
+            List<ProgressItem> l = new List<ProgressItem>();
+            if (this.Stav == Insolvence.StavRizeni.Nevyrizena || this.Stav == Insolvence.StavRizeni.Obzivla)
+                l.Add(new ProgressItem() { Text = "Dokazování", Status = ProgressItem.ProgressStatus.GoOn });
+            else
+                l.Add(new ProgressItem() { Text = "Dokazování", Status = ProgressItem.ProgressStatus.Done });
+
+            if (this.Stav == Insolvence.StavRizeni.MylnyZapis)
+                l.Add(new ProgressItem() { Text = "Řízení zrušeno", Status = ProgressItem.ProgressStatus.Done });
+            else
+            {
+                if (this.Stav == Insolvence.StavRizeni.Moratorium)
+                    l.Add(new ProgressItem() { Text = "Odklad splatnosti", Status = ProgressItem.ProgressStatus.GoOn });
+
+                //add all other missing steps
+                var s1 = new ProgressItem() { Text = "Řešení úpadku", Status = ProgressItem.ProgressStatus.InQueue };
+                var s2 = new ProgressItem() { Text = "Řízení skončeno", Status = ProgressItem.ProgressStatus.InQueue };
+                var s3 = new ProgressItem() { Text = "Odškrtnuto", Status = ProgressItem.ProgressStatus.InQueue };
+                l.Add(s1);l.Add(s2);l.Add(s3);
+
+                if (new[] { Insolvence.StavRizeni.Konkurs, Insolvence.StavRizeni.Oddluzeni, Insolvence.StavRizeni.Upadek, Insolvence.StavRizeni.Reorganizace, Insolvence.StavRizeni.Zruseno, Insolvence.StavRizeni.PostoupenaVec, Insolvence.StavRizeni.KonkursPoZruseni }
+                    .Contains(this.Stav))
+                {
+                    s1.Status = ProgressItem.ProgressStatus.GoOn;
+                }
+
+                if (this.Stav == Insolvence.StavRizeni.Vyrizena || this.Stav == Insolvence.StavRizeni.Pravomocna)
+                {
+                    s1.Status = ProgressItem.ProgressStatus.Done;
+                    s2.Status = ProgressItem.ProgressStatus.GoOn;
+                }
+
+                if (this.Stav == Insolvence.StavRizeni.Odskrtnuta)
+                {
+                    s1.Status = ProgressItem.ProgressStatus.Done;
+                    s2.Status = ProgressItem.ProgressStatus.Done;
+                    s3.Status = ProgressItem.ProgressStatus.GoOn;
+                }
+
+
+            }
+
+
+            return l.ToArray();
+        }
+
+
 
         public string SoudFullName()
         {
@@ -410,49 +473,49 @@ namespace HlidacStatu.Lib.Data.Insolvence
             {
                 case Insolvence.StavRizeni.Nevyrizena:
                     return "Nevyřízená";
-                    
+
                 case Insolvence.StavRizeni.Moratorium:
                     return "Moratorium";
-                    
+
                 case Insolvence.StavRizeni.Upadek:
                     return "Úpadek";
-                    
+
                 case Insolvence.StavRizeni.Konkurs:
                     return "Konkurs";
-                    
+
                 case Insolvence.StavRizeni.Oddluzeni:
                     return "Oddlužení";
-                    
+
                 case Insolvence.StavRizeni.Reorganizace:
                     return "Reorganizace";
-                    
+
                 case Insolvence.StavRizeni.Vyrizena:
                     return "Vyřízená";
-                    
+
                 case Insolvence.StavRizeni.Pravomocna:
                     return "Pravomocná";
-                    
+
                 case Insolvence.StavRizeni.Odskrtnuta:
                     return "Odškrtnutá";
-                    
+
                 case Insolvence.StavRizeni.Zruseno:
                     return "Zrušeno vrchním soudem";
-                    
+
                 case Insolvence.StavRizeni.KonkursPoZruseni:
                     return "Konkurs po zrušení";
-                    
+
                 case Insolvence.StavRizeni.Obzivla:
                     return "Obživlá";
-                    
+
                 case Insolvence.StavRizeni.MylnyZapis:
                     return "Mylný zápis";
-                    
+
                 case Insolvence.StavRizeni.PostoupenaVec:
                     return "Postoupená věc";
-                    
+
                 default:
                     return this.Stav;
-                    
+
             }
 
         }
@@ -462,55 +525,55 @@ namespace HlidacStatu.Lib.Data.Insolvence
             {
                 case Insolvence.StavRizeni.Nevyrizena:
                     return "Před rozhodnutím o úpadku";
-                    
+
                 case Insolvence.StavRizeni.Moratorium:
                     return "Povoleno moratorium";
-                    
+
                 case Insolvence.StavRizeni.Upadek:
                     return "V úpadku";
-                    
+
                 case Insolvence.StavRizeni.Konkurs:
                     return "Prohlášený konkurs";
-                    
+
                 case Insolvence.StavRizeni.Oddluzeni:
                     return "Povoleno oddlužení";
-                    
+
                 case Insolvence.StavRizeni.Reorganizace:
                     return "Povolena reorganizace";
-                    
+
                 case Insolvence.StavRizeni.Vyrizena:
                     return "Vyřízená věc";
-                    
+
                 case Insolvence.StavRizeni.Pravomocna:
                     return "Pravomocně skončená věc";
-                    
+
                 case Insolvence.StavRizeni.Odskrtnuta:
                     return "Odškrtnutá - skončená věc";
-                    
+
                 case Insolvence.StavRizeni.Zruseno:
                     return "Zrušeno vrchním soudem";
-                    
+
                 case Insolvence.StavRizeni.KonkursPoZruseni:
                     return "Prohlášený konkurs po zrušení VS";
-                    
+
                 case Insolvence.StavRizeni.Obzivla:
                     return "Obživlá věc";
-                    
+
                 case Insolvence.StavRizeni.MylnyZapis:
                     return "Mylný zápis do rejstříku";
-                    
+
                 case Insolvence.StavRizeni.PostoupenaVec:
                     return "Postoupená věc";
-                    
+
                 default:
                     return this.Stav;
 
-        
+
             }
         }
 
 
-            public string BookmarkName()
+        public string BookmarkName()
         {
             return "Insolvence " + this.SpisovaZnacka;
         }

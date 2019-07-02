@@ -1,57 +1,73 @@
 ﻿@using System.Linq;
 @using HlidacStatu.Web.Models;
-@using ISR = HlidacStatu.Lib.Data.Insolvence.Insolvence.StavRizeni;
+@using HlidacStatu.Lib.Data.Insolvence;
 
-@model StavRizeniViewModel
+
+@model HlidacStatu.Lib.Data.Insolvence.InsolvenceDetail
+
+
+<style>
+    .horizontalline, .horizontalline.black, .horizontalline.blue {
+        background: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 8px;
+    }
+
+        .horizontalline:after {
+            content: '';
+            flex: 1;
+        }
+</style>
 
 <div class="row">
-	<div class="col-sm-12 col-xs-12 text-center">
-		@if (Model.Stav == ISR.Nevyrizena || Model.Stav == ISR.Obzivla)
-		{
-			<img src="~/Content/Img/ins/new-active.svg" data-toggle="tooltip" data-placement="bottom" title="Dokazování" />
-		}
-		else
-		{
-			<img src="~/Content/Img/ins/new.svg" data-toggle="tooltip" data-placement="bottom" title="Dokazování" />
-		}
-		<i class="glyphicon glyphicon-arrow-right text-gray"></i>
-		@if (Model.Stav == ISR.MylnyZapis)
-		{
-			<img src="~/Content/Img/ins/canceled-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení zrušeno" />
-        }
-        else
-        {
-            if (Model.Stav == ISR.Moratorium)
+    <div class="col-xs-12">
+        @{
+            var prgs = Model.Rizeni.StavRizeniProgress();
+            var sbHtml = new System.Text.StringBuilder(1024);
+            var sbHtml2 = new System.Text.StringBuilder(1024);
+            int perct = (100 / prgs.Length) - 2;
+            string blue = "#3977d5";
+            string grey = "#d0d0d0";
+            for (int i = 0; i < prgs.Length; i++)
             {
-				<img src="~/Content/Img/ins/waiting-active.svg" data-toggle="tooltip" data-placement="bottom" title="Odklad splatnosti" />
-				<i class="glyphicon glyphicon-arrow-right text-gray"></i>
-			}
-			if (new[] { ISR.Konkurs, ISR.Oddluzeni, ISR.Upadek, ISR.Reorganizace, ISR.Zruseno, ISR.PostoupenaVec, ISR.KonkursPoZruseni }.Contains(Model.Stav))
-			{
-				<img src="~/Content/Img/ins/in-progress-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řešení úpadku" />
-			}
-			else
-			{
-				<img src="~/Content/Img/ins/in-progress.svg" data-toggle="tooltip" data-placement="bottom" title="Řešení úpadku" />
-			}
-			<i class="glyphicon glyphicon-arrow-right text-gray"></i>
-			if (Model.Stav == ISR.Vyrizena || Model.Stav == ISR.Pravomocna)
-			{
-				<img src="~/Content/Img/ins/done-active.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení skončeno" />
-			}
-			else
-			{
-				<img src="~/Content/Img/ins/done.svg" data-toggle="tooltip" data-placement="bottom" title="Řízení skončeno" />
-			}
-			<i class="glyphicon glyphicon-arrow-right text-gray"></i>
-			if (Model.Stav == ISR.Odskrtnuta)
-			{
-				<img src="~/Content/Img/ins/locked-active.svg" data-toggle="tooltip" data-placement="bottom" title="Odškrtnuto" />
-			}
-			else
-			{
-				<img src="~/Content/Img/ins/locked.svg" data-toggle="tooltip" data-placement="bottom" title="Odškrtnuto" />
-			}
-		}
-	</div>
+                string iconcolor = blue;
+                if (prgs[i].Status == Rizeni.ProgressItem.ProgressStatus.InQueue)
+                {
+                    iconcolor = grey;
+                }
+                string icon = "fas fa-circle fa-2x";
+                if (prgs[i].Status == Rizeni.ProgressItem.ProgressStatus.Done)
+                {
+                    icon = "fas fa-check-circle fa-2x";
+                }
+                string linecolor = grey;
+                if (i < prgs.Length - 1)
+                {
+                    if (prgs[i + 1].Status != Rizeni.ProgressItem.ProgressStatus.InQueue)
+                    {
+                        linecolor = blue;
+                    }
+                }
+
+                if (i == prgs.Length - 1)
+                {
+                    sbHtml.Append($"<td style=''><div class='horizontalline' style='background-color:none'><i class='{icon}' style='color:{iconcolor};background-color: white;padding: 2px;'></i></div></td>");
+                }
+                else
+                {
+                    sbHtml.Append($"<td style='width:{perct}%'><div class='horizontalline' style='background-color:{linecolor}'><i class='{icon}' style='color:{iconcolor};background-color: white;padding: 2px;'></i></div></td>");
+                }
+
+                sbHtml2.Append($"<td><span style=''>{prgs[i].Text}</span></td>");
+            }
+        }
+        <table style="margin:0;padding:0;border:none;width:100%">
+            <tr>@Html.Raw(sbHtml.ToString())</tr>
+            <tr>@Html.Raw(sbHtml2.ToString())</tr>
+        </table>
+
+    </div>
 </div>

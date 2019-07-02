@@ -1,99 +1,122 @@
 ﻿@*@Html.Raw(System.IO.File.ReadAllText(HlidacStatu.Lib.Init.WebAppRoot + "footer.html.txt"))*@
 
+@*
+    <div class="funding">
+        <!-- <div class="funding__inner-container container"> -->
+        <div class="container hidden-xs">
+            <div class="row">
 
-<div class="funding">
-    <!-- <div class="funding__inner-container container"> -->
-    <div class="container hidden-xs">
-        <div class="row">
-         
-            @if (false)
-            {
-            <div class="col-sm-6 col-md-5" style="display:none">
-                <div>
-                    <h2 class="new-title">
-                        Přidejte se k nám
-                    </h2>
-                </div>
-                <div>
-                    <p class="new-p">
-                        Vítáme pomoc detektivní, programátorskou, právní,
-                        analytickou, redakční i všechnu ostatní, nebo finanční
-                        příspěvek
-                    </p>
-                </div>
-                <form>
-                    <div class="form-group-new">
-                        <label class="label" for="input-name">Jméno a příjmení</label>
-                        <input id="input-name" type="text" class="form-control-new">
+                @if (false)
+                {
+                <div class="col-sm-6 col-md-5" style="display:none">
+                    <div>
+                        <h2 class="new-title">
+                            Přidejte se k nám
+                        </h2>
                     </div>
-                    <div class="form-group-new">
-                        <label class="label" for="input-email">E-mail</label>
-                        <input id="input-email" type="text" class="form-control-new">
+                    <div>
+                        <p class="new-p">
+                            Vítáme pomoc detektivní, programátorskou, právní,
+                            analytickou, redakční i všechnu ostatní, nebo finanční
+                            příspěvek
+                        </p>
                     </div>
-                    <div class="form-group-new">
-                        <label class="label" for="input-phone">Telefonní číslo</label>
-                        <input id="input-phone" type="text" class="form-control-new form-control-new--240">
-                    </div>
-                    <div class="form-group-new">
-                        <label class="label" for="input-work">Oblast, ve které nám můžete pomoci</label>
-                        <div class="select-wrapper">
-                            <select id="input-work" class="form-control-new form-control-new--240">
-                                <option disabled="" selected="" value=""></option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+                    <form>
+                        <div class="form-group-new">
+                            <label class="label" for="input-name">Jméno a příjmení</label>
+                            <input id="input-name" type="text" class="form-control-new">
                         </div>
-                    </div>
-                    <div class="form-group-new">
-                        <label class="label" for="input-message">Zpráva pro nás</label>
-                        <textarea id="input-message" type="text" class="form-control"></textarea>
-                    </div>
-                    <div style="margin-top: 4px;">
-                        <button class="btn-primary-new">
-                            přidat se
-                        </button>
-                    </div>
-                </form>
+                        <div class="form-group-new">
+                            <label class="label" for="input-email">E-mail</label>
+                            <input id="input-email" type="text" class="form-control-new">
+                        </div>
+                        <div class="form-group-new">
+                            <label class="label" for="input-phone">Telefonní číslo</label>
+                            <input id="input-phone" type="text" class="form-control-new form-control-new--240">
+                        </div>
+                        <div class="form-group-new">
+                            <label class="label" for="input-work">Oblast, ve které nám můžete pomoci</label>
+                            <div class="select-wrapper">
+                                <select id="input-work" class="form-control-new form-control-new--240">
+                                    <option disabled="" selected="" value=""></option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group-new">
+                            <label class="label" for="input-message">Zpráva pro nás</label>
+                            <textarea id="input-message" type="text" class="form-control"></textarea>
+                        </div>
+                        <div style="margin-top: 4px;">
+                            <button class="btn-primary-new">
+                                přidat se
+                            </button>
+                        </div>
+                    </form>
 
-                <div style="height: 56px"></div>
-            </div>
-            }
-
-
-            <!-- right column -->
-            <div class="col-sm-6 col-sm-push-3" >
-                <div>
-                    <h2 class="new-title">
-                        Podpořte nás
-                        <small><a target="_blank" href="https://www.darujme.cz/projekt/1200384">více info dárcovské kampani</a></small>
-                    </h2>
+                    <div style="height: 56px"></div>
                 </div>
-                <div>
+                }
 
-                    <div data-darujme-widget-token="bysxno1j5icb8vi6">&nbsp;</div>
-                    <script type="text/javascript">
-                        +function (w, d, s, u, a, b) {
-                            w['DarujmeObject'] = u;
-                            w[u] = w[u] || function () { (w[u].q = w[u].q || []).push(arguments) };
-                            a = d.createElement(s); b = d.getElementsByTagName(s)[0];
-                            a.async = 1; a.src = "https:\/\/www.darujme.cz\/assets\/scripts\/widget.js";
-                            b.parentNode.insertBefore(a, b);
-                        }(window, document, 'script', 'Darujme');
-                        Darujme(1, "bysxno1j5icb8vi6", 'render', "https:\/\/www.darujme.cz\/widget?token=bysxno1j5icb8vi6", "550px");
-                    </script>
 
+                <!-- right column -->
+                <div class="col-sm-6 col-sm-push-3" >
+                    <div>
+                        <h2 class="new-title">
+                            Podpořte nás
+                            <small><a target="_blank" href="https://www.darujme.cz/projekt/1200384">více info dárcovské kampani</a></small>
+                        </h2>
+                    </div>
+                    <div>
+
+                        <div data-darujme-widget-token="bysxno1j5icb8vi6">&nbsp;</div>
+                        <script type="text/javascript">
+                            +function (w, d, s, u, a, b) {
+                                w['DarujmeObject'] = u;
+                                w[u] = w[u] || function () { (w[u].q = w[u].q || []).push(arguments) };
+                                a = d.createElement(s); b = d.getElementsByTagName(s)[0];
+                                a.async = 1; a.src = "https:\/\/www.darujme.cz\/assets\/scripts\/widget.js";
+                                b.parentNode.insertBefore(a, b);
+                            }(window, document, 'script', 'Darujme');
+                            Darujme(1, "bysxno1j5icb8vi6", 'render', "https:\/\/www.darujme.cz\/widget?token=bysxno1j5icb8vi6", "550px");
+                        </script>
+
+
+                    </div>
+                    <div style="height: 56px"></div>
 
                 </div>
-                <div style="height: 56px"></div>
-
             </div>
         </div>
+
+
     </div>
+*@
 
 
+<div class="box-cta">
+    <div class="container">
+        <div class="box-cta__content">
+            <h2 class="box-cta__title">Pomozte n&#xE1;m udr&#x17E;ovat &#x10D;esk&#xFD; st&#xE1;t transparentn&#xED;</h2>
+            <p class="box-cta__text">Za dva roky n&#xE1;m <span class="box-cta__text-highlighted">278</span> lid&#xED; darovalo <span class="box-cta__text-highlighted">644 417 K&#x10D;</span>.</p>
+            <ul class="box-cta__list">
+                <li class="box-cta__item"><i class="fas fa-check" style="color:#2975DC;padding-right:10px;"></i> Kontrolujeme politiky a &#xFA;&#x159;edn&#xED;ky, zda s na&#x10D;imi pen&#x11B;zi zach&#xE1;zej&#xED; spr&#xE1;vn&#x11B;.</li>
+                <li class="box-cta__item"><i class="fas fa-check" style="color:#2975DC;padding-right:10px;"></i> Stali jsme se d&#x16F;le&#x17E;it&#xFD;m zdrojem informac&#xED; pro novin&#xE1;&#x159;e.</li>
+                <li class="box-cta__item"><i class="fas fa-check" style="color:#2975DC;padding-right:10px;"></i> Pom&#xE1;h&#xE1;me st&#xE1;tu zav&#xE1;d&#x11B;t modern&#xED; e-government.</li>
+                <li class="box-cta__item"><i class="fas fa-check" style="color:#2975DC;padding-right:10px;"></i> Zvy&#x161;ujeme transparentnost &#x10D;esk&#xE9;ho st&#xE1;tu.</li>
+            </ul>
+
+            <p>
+                <a href="https://www.darujme.cz/projekt/1200384" class="btn btn-primary" target="_blank">
+                    Chci tak&#xE9; pomoci
+                </a>
+            </p>
+        </div>
+    </div>
 </div>
 
 
@@ -126,11 +149,11 @@
 </div>
 
 @*<span id="headtopline"></span>
-<script>
-    $(function () {
-        $.get("/head.topline.html.txt", function (data, status) {
-            $("#headtopline").html(data);
-            $('[data-toggle="popover"]').popover();
+    <script>
+        $(function () {
+            $.get("/head.topline.html.txt", function (data, status) {
+                $("#headtopline").html(data);
+                $('[data-toggle="popover"]').popover();
+            });
         });
-    });
-</script>*@
+    </script>*@

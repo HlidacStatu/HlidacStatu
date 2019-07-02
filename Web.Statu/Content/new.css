@@ -2778,7 +2778,7 @@ a.form-search__hint:active:focus {
         z-index: 1;
         top: 0;
         bottom: 0;
-        left: calc(50% + 190px);
+        left: calc(40% + 190px);
         pointer-events: none;
         width: 500px;
         background-image: url("/Content/img/box-cta-bg.svg");
@@ -2826,22 +2826,12 @@ a.form-search__hint:active:focus {
 
 .box-cta__item {
     position: relative;
-    padding-left: 30px;
+    padding-left: 0px;
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
     margin-bottom: 10px;
 }
-
-    .box-cta__item:before {
-        font: normal normal normal 14px/1 FontAwesome;
-        font-size: inherit;
-        content: '\f00c';
-        position: absolute;
-        top: 1px;
-        color: #2975DC;
-        left: 0;
-    }
 
 @media (max-width: 991px) {
     .box-cta::after {
