@@ -103,7 +103,6 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        [AllowCrossSiteJson()]
         public ActionResult DatasetTemplatePreview(string id, string type, string template)
         {
 
@@ -118,7 +117,11 @@ namespace HlidacStatu.Web.Controllers
             {
 
                 var ds = DataSet.CachedDatasets.Get(id);
-                if (type == "search")
+                if (type == "jsonschema")
+                {
+                    return Content(ds.Registration().jsonSchema);
+                }
+                else if (type == "search")
                 {
                     var res = ds.SearchData("*", 1, 5, "DbCreated desc");
                     var temp = new Registration.Template() { body = template } ;
