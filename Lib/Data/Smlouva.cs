@@ -715,6 +715,7 @@ namespace HlidacStatu.Lib.Data
             this.LastUpdate = DateTime.Now;
 
             this.ConfidenceValue = GetConfidenceValue();
+
         }
         private decimal GetConfidenceValue()
         {
@@ -1042,6 +1043,70 @@ namespace HlidacStatu.Lib.Data
 
             return s;
         }
+
+        public static IEnumerable<string> AllIdsFromDB()
+        {
+            return AllIdsFromDB(null);
+        }
+        public static IEnumerable<string> AllIdsFromDB(bool? deleted)
+        {
+            List<string> ids = null;
+            using (Lib.Data.DbEntities db = new DbEntities())
+            {
+                IQueryable<SmlouvyId> q = db.SmlouvyIds;
+                if (deleted.HasValue)
+                    q = q.Where(m => m.active == (deleted.Value ? 0 : 1));
+
+                ids = q.Select(m => m.Id)
+                    .ToList();
+            }
+
+            return ids;
+        }
+
+        public static IEnumerable<string> AllIdsFromES()
+        {
+            return AllIdsFromES(null);
+        }
+        public static IEnumerable<string> AllIdsFromES(bool? deleted, Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        {
+            if (deleted.HasValue)
+                return _allIdsFromES(deleted.Value, outputWriter, progressWriter);
+            else
+                return
+                    _allIdsFromES(false, outputWriter, progressWriter)
+                    .Union(_allIdsFromES(true, outputWriter, progressWriter))
+                    ;
+        }
+        public static IEnumerable<string> _allIdsFromES(bool deleted, Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        {
+            List<string> ids = new List<string>();
+            var client = deleted ? ES.Manager.GetESClient_Sneplatne() : ES.Manager.GetESClient();
+
+            Func<int, int, Nest.ISearchResponse<Smlouva>> searchFunc =
+                searchFunc = (size, page) =>
+                {
+                    return client.Search<Smlouva>(a => a
+                                .Size(size)
+                                .From(page * size)
+                                .Source(ss => ss.ExcludeAll())
+                                .Query(q => q.Term(t => t.Field(f => f.platnyZaznam).Value(deleted ? false : true)))
+                                .Scroll("10m")
+                                );
+                };
+
+
+            Lib.ES.SearchTools.DoActionForQuery<Smlouva>(client,
+            searchFunc, (hit, param) =>
+            {
+                ids.Add(hit.Id);
+                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+            }, null, outputWriter, progressWriter, false, blockSize: 100);
+
+            return ids;
+
+        }
+
 
         public string ToAuditJson()
         {
