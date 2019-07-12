@@ -396,6 +396,26 @@ namespace HlidacStatu.Util
             return myRegex.Replace(txt, replacement);
         }
 
+        public static DateTime? RodneCisloToDate(string rc)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(rc))
+                    return null;
+                var suffix = rc.Substring(0, 2);
+                string syear = (Convert.ToInt32((DateTime.Now.Year - 18).ToString().Substring(2)) > Convert.ToInt32(suffix) ? "20" : "19") + suffix;
+                int year = Convert.ToInt32(syear);
+                int month = Convert.ToInt32(rc.Substring(2, 2));
+                month = month > 50 ? month - 50 : month;
+                int day = Convert.ToInt32(rc.Substring(4, 2));
+                return new DateTime(year, month, day);
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
 
         public static T ChangeType<T>(object value)
         {

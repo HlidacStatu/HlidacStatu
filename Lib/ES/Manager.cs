@@ -512,6 +512,8 @@ namespace HlidacStatu.Lib.ES
         //    return res;
         //}
 
+        
+
         public static Nest.IIndexResponse Save(Lib.Data.Smlouva item, ElasticClient client = null)
         {
             if (item == null)

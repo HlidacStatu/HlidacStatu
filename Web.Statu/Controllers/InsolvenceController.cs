@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HlidacStatu.Web.Controllers
 {
-	public class InsolvenceController : Controller
+	public class InsolvenceController : GenericAuthController
 	{
 		// GET: Insolvence
 		public ActionResult Index()

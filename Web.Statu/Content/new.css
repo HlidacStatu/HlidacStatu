@@ -2560,8 +2560,12 @@ a.form-search__hint:active:focus {
         color: #4570E3;
     }
 
-    .table > tbody > tr:nth-child(odd) > td {
+    .table.solid {
+        border-top: 1px solid #ddd;
+    }
+    .table.solid > tbody > tr > td {
         background: #F9F9F9;
+        border-bottom: none;
     }
 
 .small-link {

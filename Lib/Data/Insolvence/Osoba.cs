@@ -1,5 +1,6 @@
 ﻿using Devmasters.Core;
 using System;
+using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
@@ -11,11 +12,50 @@ namespace HlidacStatu.Lib.Data.Insolvence
 		public string IdOsoby { get; set; }
 		[Nest.Text]
 		public string PlneJmeno { get; set; }
-		[Nest.Keyword]
+
+        [Nest.Keyword]
 		public string Role { get; set; }
 		[Nest.Keyword]
 		public string Typ { get; set; }
-		[Nest.Keyword]
+        /*
+         "F","doc_count": 188652
+         "PODNIKATEL","doc_count": 62398
+        "P","doc_count": 35596
+        "ADVOKÁT","doc_count": 19
+        "OST_OVM","doc_count": 9
+         "EXEKUTOR","doc_count": 4
+        "PAT_ZAST","doc_count": 3
+        "DAN_PORAD", "doc_count": 1
+        "SPRÁV_INS","doc_count": 1
+        "U","doc_count": 1
+             */
+
+
+        string _jmeno = null;
+        public string Jmeno()
+        {
+            if (_jmeno == null)
+            {
+                var foundO = Validators.OsobaInText(this.PlneJmeno);
+                _jmeno = foundO?.Jmeno ?? this.PlneJmeno;
+                _prijmeni = foundO?.Prijmeni ?? this.PlneJmeno;
+            }
+            return _jmeno;
+        }
+        string _prijmeni = null;
+        public string Prijmeni()
+        {
+            if (_prijmeni == null)
+            {
+                var foundO = Validators.OsobaInText(this.PlneJmeno);
+                _jmeno = foundO?.Jmeno ?? this.PlneJmeno;
+                _prijmeni = foundO?.Prijmeni ?? this.PlneJmeno;
+            }
+            return _prijmeni;
+        }
+
+
+        [Nest.Keyword]
 		public string ICO { get; set; }
 		[Nest.Keyword]
 		public string Rc { get; set; }
@@ -43,22 +83,27 @@ namespace HlidacStatu.Lib.Data.Insolvence
             {
                 return $"<a href='/osoba/{OsobaId}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a>{GetDatumNarozeni()}";
             }
-            return PlneJmeno + GetDatumNarozeni();
+            return PlneJmeno + GetDatumNarozeni()?.Year ?? "";
         }
 
-		private string GetDatumNarozeni()
+        
+
+		public DateTime? GetDatumNarozeni()
 		{
 			if (DatumNarozeni.HasValue)
 			{
-				return $" (* {DatumNarozeni.Value.Year})";
+				return DatumNarozeni;
 			}
 			else if (!string.IsNullOrEmpty(Rc))
 			{
-				var suffix = Rc.Substring(0, 2);
-				var year = (Convert.ToInt32((DateTime.Now.Year - 18).ToString().Substring(2)) > Convert.ToInt32(suffix) ? "20" : "19") + suffix;
-				return $" (* {year})";
-			}
-			return string.Empty;
+                return Util.ParseTools.RodneCisloToDate(Rc);
+            }
+            return null;
 		}
+
+        public string FullNameWithYear()
+        {
+            return PlneJmeno + GetDatumNarozeni()?.Year ?? "";
+        }
     }
 }

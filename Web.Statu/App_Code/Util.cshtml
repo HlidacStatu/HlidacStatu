@@ -36,14 +36,14 @@
 }
 
 
-@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare, 
-        string foundContentFormat =null, string noHLContent = "", string prefix = "", 
+@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare,
+        string foundContentFormat = null, string noHLContent = "", string prefix = "",
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
     @Html.Raw(HlidacStatu.Lib.ES.Highlighter.HighlightContentIntoHtmlBlock(
-            highlights,  path, contentToCompare,
-            foundContentFormat , noHLContent , prefix ,
-            postfix ,  icon)
+            highlights, path, contentToCompare,
+            foundContentFormat, noHLContent, prefix,
+            postfix, icon)
             )
 
 }
@@ -112,7 +112,8 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
             {
                 <script>
                     ga('send', 'event', 'darujAd', 'shown', { nonInteraction: true });
-                </script>
+
+/**/</script>
                 <div class="alert alert-orange text-center">
                     <div class="row">
                         <div class="col-sm-10 col-xs-12">
@@ -224,7 +225,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" >Oprava údajů</h4>
+                    <h4 class="modal-title">Oprava údajů</h4>
                 </div>
                 <div class="modal-body">
                     <div class="loader2">Nahrávám formulář</div>
@@ -307,7 +308,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" >@title</h4>
+                    <h4 class="modal-title">@title</h4>
                 </div>
                 <div class="modal-body">
                     <p style="font-size:14px;">
@@ -561,7 +562,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseBtnIcon', 'authenticated');" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" >Přidání nového hlídače</h4>
+                            <h4 class="modal-title">Přidání nového hlídače</h4>
                         </div>
                         <div class="modal-body text-left">
                             <div>
@@ -644,7 +645,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseBtnIcon', 'authenticated');" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" >Musíte být přihlášeni</h4>
+                            <h4 class="modal-title">Musíte být přihlášeni</h4>
                         </div>
                         <div class="modal-body">
                             <p>
@@ -1017,7 +1018,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" >@title</h4>
+                    <h4 class="modal-title">@title</h4>
                 </div>
                 <div class="modal-body">
                     <p>
@@ -1066,6 +1067,48 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 }
 
 
+
+@helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null)
+{
+containerCss = containerCss ?? "col-xs-12";
+//tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
+//contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
+bool first = true;
+var id = Guid.NewGuid().ToString("N") + "_";
+int count = 0;
+
+<div class="@containerCss">
+    <ul class="nav nav-tabs" role="tablist">
+        @foreach (var tabn in tabnames)
+        {
+            count++;
+
+            <li role="presentation" @Util.IfExists(first, " class='active' ")>
+                <a href="#@(id+count.ToString())" aria-controls="@(id+count.ToString())" role="tab" data-toggle="tab">@Html.Raw(tabn)</a>
+            </li>
+            first = false;
+        }
+    </ul>
+
+    <div class="tab-content">
+        @{
+            first = true;
+            count = 0;
+        }
+        @foreach (var s in contents)
+        {
+            count++;
+        <div role="tabpanel" class="tab-pane active" id="@(id+count.ToString())">
+            @Html.Raw(s)
+
+        </div>
+
+            first = false;
+        }
+    </div>
+
+</div>
+}
 
 
 @helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null, string tabColCss = null, string contentColCss = null)

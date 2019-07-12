@@ -225,9 +225,11 @@ MORATORIUM =
 
                 if (rizeni.Found)
                 {
+                    var r = rizeni.Source;
+                    r.IsFullRecord = includeDocumentsPlainText;
                     return new InsolvenceDetail
                     {
-                        Rizeni = rizeni.Source,
+                        Rizeni = r,
                     };
                 }
                 else
@@ -245,11 +247,7 @@ MORATORIUM =
 
         public static void SaveRizeni(Rizeni r)
         {
-            var res = Manager.GetESClient_Insolvence().Index<Rizeni>(r, o => o.Id(r.SpisovaZnacka.ToString())); //druhy parametr musi byt pole, ktere je unikatni
-            if (!res.IsValid)
-            {
-                throw new ApplicationException(res.ServerError?.ToString());
-            }
+            r.Save();
         }
 
         public static DokumentSeSpisovouZnackou LoadDokument(string id)

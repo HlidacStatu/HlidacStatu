@@ -289,6 +289,23 @@ namespace HlidacStatu.Util
             return txt.Replace("\n", "<br/>");
         }
 
+        public static string ToDate(DateTime? date, string format = null)
+        {
+            if (date.HasValue == false)
+                return string.Empty;
+
+            format = format ?? "d. M. yyyy";
+            switch (date.Value.Kind)
+            {
+                case DateTimeKind.Unspecified:
+                case DateTimeKind.Local:
+                    return date.Value.ToUniversalTime().ToString(format);
+                case DateTimeKind.Utc:
+                    return date.Value.ToString(format);
+                default:
+                    return date.Value.ToUniversalTime().ToString(format);
+            }
+        }
 
         public static string ToElasticDate(DateTime date)
         {

@@ -34,6 +34,8 @@
 }
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
 @Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
 
 
@@ -60,94 +62,161 @@
 }
 else
 {
-    @Html.Partial("_Status", Model )    
+    @Html.Partial("_Status", Model)
 }
 
 
-<h3>Účastníci řízení</h3>
-<div class="row">
-    <div class="col-sm-6 col-xs-12">
-        <h4>Dlužníci (@dluznici.Count())</h4>
-        @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true })
-        <br />
-        <h4>Správci (@spravci.Count())</h4>
-        @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true })
-    </div>
-    <div class="col-sm-6 col-xs-12">
-        <h4>Věřitelé (@veritele.Count())</h4>
-        @Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true })
-    </div>
-</div>
 
 <h3 style="margin-top:50px">Informace o řízení</h3>
-<table class="table table-hover">
-    <tbody>
-        <tr>
-            <td>Soud</td>
-            <td>
-                <span>@Model.Rizeni.SoudFullName()</span>
-            </td>
-        </tr>
-        <tr>
-            <td>Spisová značka</td>
-            <td>@Model.Rizeni.SpisovaZnacka</td>
-        </tr>
-        <tr>
-            <td>Aktuální stav</td>
-            <td>
-                <span title="@Model.Rizeni.StavRizeniDetail()">@Model.Rizeni.StavRizeni()</span>
-            </td>
-        </tr>
-        <tr>
-            <td>Zahájení insolvenčního řízení</td>
-            <td>
-                @(Model.Rizeni.DatumZalozeni?.Date.ToShortDateString() ?? "Neznámé")
-            </td>
-        </tr>
-        <tr>
-            <td>Naposledy změněno</td>
-            <td>
-                @Model.Rizeni.PosledniZmena.Date.ToShortDateString()
-            </td>
-        </tr>
-        <tr>
-            <td>Stálé URL řízení na Hlídači Státu</td>
-            <td>
-                <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
-                    <code>@(this.Request.Url.AbsoluteUri)</code>
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <td>Sdílení</td>
-            <td>
-                TODO
-                @*@Util.ShareFacebook(Model.GetUrl(false))
-                    @Util.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.GetUrl(false))*@
-            </td>
-        </tr>
-        <tr>
-            <td>Zdroj dat</td>
-            <td>
-                @{
-                    if (!string.IsNullOrEmpty(Model.Rizeni.Url) && !Model.Rizeni.Vyskrtnuto.HasValue)
-                    {
-                        var url = Model.Rizeni.Url.Contains("evidence_upadcu_detail")
-                            ? Model.Rizeni.Url
-                            : Model.Rizeni.Url.Replace("https://isir.justice.cz/isir/ueu/", "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=");
-                        <a href="@url" target="_blank"><code>@url</code></a>
+<div class="hidden-xs">
+    <table class="table solid">
+        <tbody>
+            <tr>
+                <td>
+                    <span class="text-muted small">Soud</span>
+                    <br />
+                    @Model.Rizeni.SoudFullName()
+                </td>
+                <td>
+                    <span class="text-muted small">Spisová značka</span><br />
+                    @Model.Rizeni.SpisovaZnacka
+                </td>
+                <td>
+                    <span class="text-muted small">Zahájení insolvenčního řízení</span><br />
+                    @(Model.Rizeni.DatumZalozeni?.Date.ToShortDateString() ?? "Neznámé")
+                </td>
+                <td>
+                    <span class="text-muted small">Naposledy změněno</span><br />
+                    @Model.Rizeni.PosledniZmena.Date.ToShortDateString()
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="text-muted small">Aktuální stav</span>
+                    <br /><span title="@Model.Rizeni.StavRizeniDetail()">@Model.Rizeni.StavRizeni()</span>
+                </td>
+                <td colspan="2">
+                    <span class="text-muted small">Stálé URL řízení na Hlídači Státu</span><br />
+                    <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
+                        @(this.Request.Url.AbsoluteUri)
+                    </a>
+                </td>
+                <td>
+                    <span class="text-muted small">Zdroj dat</span><br />
+                    @{
+                        if (!string.IsNullOrEmpty(Model.Rizeni.Url) && !Model.Rizeni.Vyskrtnuto.HasValue)
+                        {
+                            var url = Model.Rizeni.Url.Contains("evidence_upadcu_detail")
+                                ? Model.Rizeni.Url
+                                : Model.Rizeni.Url.Replace("https://isir.justice.cz/isir/ueu/", "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=");
+                            <a href="@url" target="_blank"><code>@url</code></a>
+                        }
+                        else
+                        {
+                            var parts = Model.Rizeni.SpisovaZnacka.Split(new[] { " ", "/" }, StringSplitOptions.None);
+                            <a href="https://isir.justice.cz/isir/ueu/vysledek_lustrace.do?bc_vec=@(parts[1])&rocnik=@(parts[2])&aktualnost=AKTUALNI_I_UKONCENA" target="_blank">Vyhledat v insolvenčním rejstříku</a>
+                        }
                     }
-                    else
-                    {
-                        var parts = Model.Rizeni.SpisovaZnacka.Split(new[] { " ", "/" }, StringSplitOptions.None);
-                        <a href="https://isir.justice.cz/isir/ueu/vysledek_lustrace.do?bc_vec=@(parts[1])&rocnik=@(parts[2])&aktualnost=AKTUALNI_I_UKONCENA" target="_blank">Vyhledat v insolvenčním rejstříku</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <span class="text-muted small">
+                        Sdílení
+                    </span><br />
+                    @Util.ShareFacebook(Model.Rizeni.GetUrl(false))
+                    @Util.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
+                    @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+<div class="visible-xs-block">
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td>Soud</td>
+                <td>
+                    <span>@Model.Rizeni.SoudFullName()</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Spisová značka</td>
+                <td>@Model.Rizeni.SpisovaZnacka</td>
+            </tr>
+            <tr>
+                <td>Aktuální stav</td>
+                <td>
+                    <span title="@Model.Rizeni.StavRizeniDetail()">@Model.Rizeni.StavRizeni()</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Zahájení insolvenčního řízení</td>
+                <td>
+                    @(Model.Rizeni.DatumZalozeni?.Date.ToShortDateString() ?? "Neznámé")
+                </td>
+            </tr>
+            <tr>
+                <td>Naposledy změněno</td>
+                <td>
+                    @Model.Rizeni.PosledniZmena.Date.ToShortDateString()
+                </td>
+            </tr>
+            <tr>
+                <td>Stálé URL řízení na Hlídači Státu</td>
+                <td>
+                    <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
+                        <code>@(this.Request.Url.AbsoluteUri)</code>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>Sdílení</td>
+                <td>
+                    @Util.ShareFacebook(Model.Rizeni.GetUrl(false))
+                    @Util.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
+                    @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                </td>
+            </tr>
+            <tr>
+                <td>Zdroj dat</td>
+                <td>
+                    @{
+                        if (!string.IsNullOrEmpty(Model.Rizeni.Url) && !Model.Rizeni.Vyskrtnuto.HasValue)
+                        {
+                            var url = Model.Rizeni.Url.Contains("evidence_upadcu_detail")
+                                ? Model.Rizeni.Url
+                                : Model.Rizeni.Url.Replace("https://isir.justice.cz/isir/ueu/", "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=");
+                            <a href="@url" target="_blank"><code>@url</code></a>
+                        }
+                        else
+                        {
+                            var parts = Model.Rizeni.SpisovaZnacka.Split(new[] { " ", "/" }, StringSplitOptions.None);
+                            <a href="https://isir.justice.cz/isir/ueu/vysledek_lustrace.do?bc_vec=@(parts[1])&rocnik=@(parts[2])&aktualnost=AKTUALNI_I_UKONCENA" target="_blank">Vyhledat v insolvenčním rejstříku</a>
+                        }
                     }
-                }
-            </td>
-        </tr>
-    </tbody>
-</table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Účastníci řízení</h3>
+
+@Util.HorizontalTabs(
+    new[] { $"Dlužníci ({Model.Rizeni?.Dluznici?.Count ?? 0})", $"Věřitelé ({Model.Rizeni?.Veritele?.Count ?? 0})", $"Insolveční správci ({Model.Rizeni?.Spravci?.Count ?? 0})" },
+    new[] {
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true }).ToHtmlString(),
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true }).ToHtmlString(),
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true }).ToHtmlString()
+
+    }
+    )
+
 
 <h3 style="margin-top:50px">Poslední dokumenty k řízení</h3>
 <div>
@@ -174,10 +243,10 @@ else
             {
                 <tr>
                     <td>
+                        <span class="text-muted small">
+                            @item.Key.DatumVlozeni.ToShortDateString()
+                        </span><br />
                         @item.Key.Popis
-                    </td>
-                    <td style="width:100px">
-                        @item.Key.DatumVlozeni.ToShortDateString()
                     </td>
                     <td style="width:50px">
                         @if (item.Key.Lenght > 0)
@@ -192,7 +261,7 @@ else
                 if (highlighting && item.Value == "1")
                 {
                     <tr>
-                        <td colspan="2" style="border-top:none">
+                        <td colspan="3" style="border-top:none">
                             @Util.HighlightContent(highlightingData, "dokumenty.plainText", item.Key.PlainText,
                                 prefix: "<blockquote class='small'>", postfix: "</blockquote>")
                         </td>
@@ -202,7 +271,7 @@ else
         </tbody>
     </table>
     <div class="text-right">
-        <a href="@Url.Action("Dokumenty", "Insolvence", new { id = Model.Rizeni.UrlId() })">Všechny dokumenty (@Model.Rizeni.Dokumenty.Count())</a>
+        <a href="@Url.Action("Dokumenty", "Insolvence", new { id = Model.Rizeni.UrlId(), qs = Request.QueryString["qs"] })">Všechny dokumenty (@Model.Rizeni.Dokumenty.Count())</a>
     </div>
 </div>
 
@@ -211,7 +280,7 @@ else
         $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
-    }
+    
 
 @section onlyembed
 {

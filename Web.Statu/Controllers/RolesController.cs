@@ -81,6 +81,15 @@ namespace HlidacStatu.Web.Controllers
         {
             var context = new Models.ApplicationDbContext();
             var thisRole = context.Roles.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            var rolelist = context.Roles.OrderBy(r => r.Name).ToList().Select(rr =>
+new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
+            ViewBag.Roles = rolelist;
+
+            var userlist = context.Users.OrderBy(u => u.UserName).ToList().Select(uu =>
+new SelectListItem { Value = uu.UserName.ToString(), Text = uu.UserName }).ToList();
+            ViewBag.Users = userlist;
+
+            ViewBag.Message = "";
 
             return View(thisRole);
         }

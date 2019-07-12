@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using HlidacStatu.Util;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
     public class Rizeni
-        : Bookmark.IBookmarkable
+        : Bookmark.IBookmarkable, Util.ISocialInfo
     {
         public Rizeni()
         {
@@ -14,6 +15,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
             Veritele = new List<Osoba>();
             Spravci = new List<Osoba>();
         }
+
+        [Nest.Object(Ignore = true)]
+        public bool IsFullRecord { get; set; } = false;
 
         [Nest.Keyword]
         public string SpisovaZnacka { get; set; }
@@ -38,10 +42,32 @@ namespace HlidacStatu.Lib.Data.Insolvence
         [Nest.Object]
         public List<Osoba> Spravci { get; set; }
 
+        [Nest.Boolean]
+        public bool OnRadar { get; set; } = false;
+
         public string UrlId() => SpisovaZnacka.Replace(" ", "_").Replace("/", "-");
 
 
+        public void PrepareForSave()
+        {
+            if (Dluznici.Any(m => m.Typ != "F"))
+                this.OnRadar = true;
+            else
+            {
+                foreach (var d in Dluznici)
+                {
 
+                    if (StaticData.Politici.Get().Any(m => 
+                        m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
+                        && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
+                        && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue
+                        )
+                    )
+                        this.OnRadar = true;
+                    break;
+                }
+            }
+        }
 
         public HlidacStatu.Lib.OCR.Api.CallbackData CallbackDataForOCRReq(int prilohaindex)
         {
@@ -105,7 +131,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 var s1 = new ProgressItem() { Text = "Řešení úpadku", Status = ProgressItem.ProgressStatus.InQueue };
                 var s2 = new ProgressItem() { Text = "Řízení skončeno", Status = ProgressItem.ProgressStatus.InQueue };
                 var s3 = new ProgressItem() { Text = "Odškrtnuto", Status = ProgressItem.ProgressStatus.InQueue };
-                l.Add(s1);l.Add(s2);l.Add(s3);
+                l.Add(s1); l.Add(s2); l.Add(s3);
 
                 if (new[] { Insolvence.StavRizeni.Konkurs, Insolvence.StavRizeni.Oddluzeni, Insolvence.StavRizeni.Upadek, Insolvence.StavRizeni.Reorganizace, Insolvence.StavRizeni.Zruseno, Insolvence.StavRizeni.PostoupenaVec, Insolvence.StavRizeni.KonkursPoZruseni }
                     .Contains(this.Stav))
@@ -466,6 +492,19 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         }
 
+        public void Save()
+        {
+            if (this.IsFullRecord == false)
+                throw new ApplicationException("Cannot save partial Insolvence document");
+
+            this.PrepareForSave();
+            var res = ES.Manager.GetESClient_Insolvence().Index<Rizeni>(this, o => o.Id(this.SpisovaZnacka.ToString())); //druhy parametr musi byt pole, ktere je unikatni
+            if (!res.IsValid)
+            {
+                throw new ApplicationException(res.ServerError?.ToString());
+            }
+        }
+
         public string StavRizeni()
         {
 
@@ -591,6 +630,63 @@ namespace HlidacStatu.Lib.Data.Insolvence
         public string ToAuditObjectId()
         {
             return this.SpisovaZnacka;
+        }
+
+        public string SocialInfoTitle()
+        {
+            return BookmarkName();
+        }
+
+        public string SocialInfoSubTitle()
+        {
+            return "Soud: " + this.SoudFullName();
+        }
+
+        public string SocialInfoBody()
+        {
+            return "<ul>" +
+HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "<li>{0}</li>", true)
++ "</ul>";
+
+        }
+
+        public string SocialInfoFooter()
+        {
+            return "Údaje k " + Util.RenderData.ToDate(this.PosledniZmena);
+        }
+
+        public string SocialInfoImageUrl()
+        {
+            return string.Empty;
+        }
+
+        public InfoFact[] InfoFacts()
+        {
+            List<InfoFact> data = new List<InfoFact>();
+            string sumTxt = $"Zahájena {Util.RenderData.ToDate(this.DatumZalozeni)}.  Řeší ji " + this.SoudFullName();
+            sumTxt += Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
+                "",
+                "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
+                "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
+                "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
+                    + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
+                    + ". "
+                );
+            sumTxt += Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
+                "",
+                "Evidujeme jednoho věřitele.",
+                "Evidujeme {0} věřitele.",
+                "Evidujeme {0} věřitelů."
+                );
+
+            data.Add(new InfoFact()
+            {
+                Level = InfoFact.ImportanceLevel.Summary,
+                Text = sumTxt
+            });
+
+
+            return data.OrderByDescending(o => o.Level).ToArray();
         }
     }
 }
