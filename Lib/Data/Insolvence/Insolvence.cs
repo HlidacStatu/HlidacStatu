@@ -209,7 +209,7 @@ MORATORIUM =
             }
         }
 
-        public static InsolvenceDetail LoadFromES(string id, bool includeDocumentsPlainText)
+        public static InsolvenceDetail LoadFromES(string id, bool includeDocumentsPlainText, bool limitedView)
         {
             var client = Manager.GetESClient_Insolvence();
             var spisovaZnacka = ParseId(id);
@@ -226,6 +226,9 @@ MORATORIUM =
                 if (rizeni.Found)
                 {
                     var r = rizeni.Source;
+                    if (limitedView && r.OnRadar == false)
+                        return null;
+
                     r.IsFullRecord = includeDocumentsPlainText;
                     return new InsolvenceDetail
                     {
@@ -250,7 +253,7 @@ MORATORIUM =
             r.Save();
         }
 
-        public static DokumentSeSpisovouZnackou LoadDokument(string id)
+        public static DokumentSeSpisovouZnackou LoadDokument(string id, bool limitedView )
         {
             var client = Manager.GetESClient_Insolvence();
 
@@ -265,7 +268,8 @@ MORATORIUM =
                     {
                         SpisovaZnacka = h.Source.SpisovaZnacka,
                         UrlId = h.Source.UrlId(),
-                        Dokument = h.Source.Dokumenty.Single(d => d.Id == id)
+                        Dokument = h.Source.Dokumenty.Single(d => d.Id == id),
+                        Rizeni = h.Source
                     }).First()
                     : null;
             }
@@ -276,34 +280,30 @@ MORATORIUM =
             }
         }
 
-        public static InsolvenceSearchResult NewFirmyVInsolvenci(int count)
+        public static InsolvenceSearchResult NewFirmyVInsolvenci(int count, bool limitedView)
         {
-            return NewSubjektVInsolvenci(count, "P");
+            return NewSubjektVInsolvenci(count, "P", limitedView);
         }
 
-        public static InsolvenceSearchResult NewOsobyVInsolvenci(int count)
+        public static InsolvenceSearchResult NewOsobyVInsolvenci(int count, bool limitedView)
         {
-            return NewSubjektVInsolvenci(count, "F");
+            return NewSubjektVInsolvenci(count, "F", limitedView);
         }
 
-        private static InsolvenceSearchResult NewSubjektVInsolvenci(int count, string typ)
+        private static InsolvenceSearchResult NewSubjektVInsolvenci(int count, string typ, bool limitedView)
         {
             var client = Manager.GetESClient_Insolvence();
 
             try
             {
-                var rizeni = client.Search<Rizeni>(s =>
-                    s.Size(count)
-                    .Sort(o => o.Field(f => f.Field(a => a.DatumZalozeni).Descending()))
-                    .Query(q => q.Match(m => m.Field("dluznici.typ").Query(typ))));
+                var rs = Insolvence.SimpleSearch("dluznici.typ:" + typ, 1, count, 
+                    (int)InsolvenceSearchResult.InsolvenceOrderResult.DateAddedDesc, false, limitedView, null);
+                //client.Search<Rizeni>(s =>
+                //s.Size(count)
+                //.Sort(o => o.Field(f => f.Field(a => a.DatumZalozeni).Descending()))
+                //.Query(q => q.Match(m => m.Field("dluznici.typ").Query(typ))));
 
-                return new InsolvenceSearchResult()
-                {
-                    ElasticResults = rizeni,
-                    IsValid = rizeni.IsValid,
-                    Total = rizeni.Total,
-                    Q="",
-                };
+                return rs;
 
             }
             catch (Exception e)

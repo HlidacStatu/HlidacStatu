@@ -370,6 +370,7 @@
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Framework\ApiAuth.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
+    <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />
     <Compile Include="Framework\Html2Png.cs" />
     <Compile Include="Framework\Shared\Data.cs" />
@@ -1323,6 +1324,7 @@
     <Content Include="Views\Sponzori\Top_child.cshtml" />
     <Content Include="Views\Sponzori\Top.cshtml" />
     <Content Include="Views\Weby\_Info.cshtml" />
+    <Content Include="Views\Insolvence\PristupOmezen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

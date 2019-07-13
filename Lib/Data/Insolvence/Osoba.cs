@@ -75,15 +75,16 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public string ToHtml()
         {
+            string dn = GetDatumNarozeni() != null ? $" (*{GetDatumNarozeni()?.Year})" : "";
             if (!string.IsNullOrEmpty(ICO) && Validators.CheckCZICO(ICO))
             {
-                return $"<a href='/subjekt/{ICO}'>{TextUtil.ShortenText(PlneJmeno,30,"...")}</a> ({ICO})";
+                return $"<a href='/subjekt/{ICO}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a> IČ:{ICO}";
             }
             else if (!string.IsNullOrEmpty(OsobaId))
             {
-                return $"<a href='/osoba/{OsobaId}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a>{GetDatumNarozeni()}";
+                return $"<a href='/osoba/{OsobaId}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a>{dn}";
             }
-            return PlneJmeno + GetDatumNarozeni()?.Year ?? "";
+            return $"{PlneJmeno}{dn}";
         }
 
         

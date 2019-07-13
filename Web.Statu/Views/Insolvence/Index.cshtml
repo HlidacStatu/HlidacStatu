@@ -56,7 +56,7 @@
                                     string query = "-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\"";
                                     var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
-                                        1, 0, anyAggregation: aggs);
+                                        1, 0, 0, limitedView: false, anyAggregation: aggs);
 
                                     IEnumerable<ReportDataTimeValue> data = ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
                                         .Cast<Nest.DateHistogramBucket>()
@@ -108,7 +108,7 @@
                                     query = "(dokumenty.typUdalosti:174 OR dokumenty.typUdalosti:175)";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
-                                        1, 0, anyAggregation: aggs);
+                                        1, 0, 0, limitedView: false, anyAggregation: aggs);
                                     var typ = ((SingleBucketAggregate)res.Result.Aggregations["typ"])
                                         .First().Value;
                                     data = ((BucketAggregate)typ).Items
@@ -149,15 +149,15 @@
                                     query = "dluznici.typ:\"F\" AND (-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\")";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
-                                        1, 0);
+                                        1, 0, 0, limitedView: false);
                                     decimal lastM = res.Total;
 
-                                    var maxDate =minDate;
+                                    var maxDate = minDate;
                                     minDate = maxDate.AddDays(-28);
                                     query = "dluznici.typ:\"F\" AND (-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\")";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}",
-                                        1, 0);
+                                        1, 0, 0, limitedView: false);
 
                                     decimal prevM = res.Total;
                                     decimal rozdil = prevM == 0 ? 1 : (lastM - prevM) / prevM;
@@ -193,18 +193,18 @@
                                     query = "dluznici.typ:\"P\" AND (-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\")";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
-                                        1, 0);
-                                     lastM = res.Total;
+                                        1, 0, 0, limitedView: false);
+                                    lastM = res.Total;
 
-                                     maxDate = minDate;
+                                    maxDate = minDate;
                                     minDate = maxDate.AddDays(-28);
                                     query = "dluznici.typ:\"PF\" AND (-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\")";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}",
-                                        1, 0);
+                                        1, 0, 0, limitedView: false);
 
-                                     prevM = res.Total;
-                                     rozdil = prevM == 0 ? 1 : (lastM - prevM) / prevM;
+                                    prevM = res.Total;
+                                    rozdil = prevM == 0 ? 1 : (lastM - prevM) / prevM;
                                 }
                                 <p class="box-stats__title">
                                     <strong>@HlidacStatu.Util.RenderData.NiceNumber(lastM)</strong><br>
@@ -219,7 +219,7 @@
                                     </span>
                                     <br />
                                     <span class="box-stats__progress-unit">oproti předchozímus</span>
-                                    
+
                                 </p>
                             </div>
                         </div>

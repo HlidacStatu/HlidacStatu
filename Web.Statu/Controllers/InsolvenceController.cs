@@ -8,13 +8,18 @@ namespace HlidacStatu.Web.Controllers
 {
 	public class InsolvenceController : GenericAuthController
 	{
+
+        public bool IsLimitedView()
+        {
+            return Framework.InsolvenceLimitedView.IsLimited(this);
+        }
 		// GET: Insolvence
 		public ActionResult Index()
 		{
 			var model = new InsolvenceIndexViewModel
 			{
-				NoveFirmyVInsolvenci = Insolvence.NewFirmyVInsolvenci(10),
-				NoveOsobyVInsolvenci = Insolvence.NewOsobyVInsolvenci(10)
+				NoveFirmyVInsolvenci = Insolvence.NewFirmyVInsolvenci(10, IsLimitedView()),
+				NoveOsobyVInsolvenci = Insolvence.NewOsobyVInsolvenci(10, IsLimitedView())
 			};
 
 			return View(model);
@@ -43,14 +48,17 @@ namespace HlidacStatu.Web.Controllers
             //show highlighting
             bool showHighliting = !string.IsNullOrEmpty(this.Request.QueryString["qs"]);
 
-			var model = Insolvence.LoadFromES(id,showHighliting ? true : false );
+			var model = Insolvence.LoadFromES(id,showHighliting ? true : false, false );
 			if (model == null)
 			{
 				return View("Error404");
 			}
+            if (IsLimitedView() && model.Rizeni.OnRadar == false)
+                return RedirectToAction("PristupOmezen", new { id = model.Rizeni.UrlId() });
+
             if (showHighliting)
             {
-                var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1, true);
+                var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1,0, true);
                 if (findRizeni.Total > 0)
                     ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlights;
             }
@@ -67,16 +75,19 @@ namespace HlidacStatu.Web.Controllers
 
             bool showHighliting = !string.IsNullOrEmpty(this.Request.QueryString["qs"]);
 
-            var data = Insolvence.LoadFromES(id, showHighliting ? true : false);
-            //var data = Insolvence.LoadFromES(id,false);
+            var data = Insolvence.LoadFromES(id, showHighliting ? true : false, false);
 			if (data == null)
 			{
 				return View("Error404");
 			}
+
+            if (IsLimitedView() && data.Rizeni.OnRadar == false)
+                return RedirectToAction("PristupOmezen", new { id = data.Rizeni.UrlId() });
+
             Nest.HighlightFieldDictionary highlighting = null;
             if (showHighliting)
             {
-                var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, true);
+                var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 0, true);
                 if (findRizeni.Total > 0)
                 {
                     highlighting = findRizeni.Result.Hits.First().Highlights;
@@ -99,13 +110,21 @@ namespace HlidacStatu.Web.Controllers
 				return View("Error404");
 			}
 
-			var dokument = Insolvence.LoadDokument(id);
+			var dokument = Insolvence.LoadDokument(id, false);
 			if (dokument == null)
 			{
 				return View("Error404");
 			}
+            if (IsLimitedView() && dokument.Rizeni.OnRadar == false)
+                return RedirectToAction("PristupOmezen", new { id = dokument.Rizeni.UrlId   () });
 
 			return View(dokument);
 		}
-	}
-}
+
+        public ActionResult PristupOmezen(string id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
+        }
+    }

@@ -1,0 +1,47 @@
+﻿@model HlidacStatu.Lib.Data.Insolvence.DokumentSeSpisovouZnackou
+
+@{
+	ViewBag.Title = "Insolvenční řízení " + ViewBag.Id + ".";
+	ViewBag.SubTitle = "Přístup k insolvenčnímu řízení je omezen.";
+}
+
+@section breadcrumb
+{
+		<ol class="breadcrumb">
+			<li><a href="/">Hlídač Státu</a></li>
+			<li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
+			<li class="active">@ViewBag.SubTitle</li>
+		</ol>
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3 class="panel-title">Přístup omezen</h3>
+    </div>
+    <div class="panel-body">
+        Z důvody ochrany osobních údajů <b>zobrazujeme</b> pouze insolvenční řízení, která splňují alespoň jednu z následujících podmínek:
+        <ol>
+            <li>týkají se podnikatelů, právnických osob a dalších nesoukromých subjektů</li>
+            <li>týkající se fyzické osoby, která je politicky angažovaní;</li>
+            <li>týkající se fyzické osoby, která sponzorovala alespoň jednou politickou stranu;</li>
+            <li>insolvence se týka osob či skutečností, kde je její zveřejněníve veřejném zájmu tuto info</li>
+        </ol>
+        <div class="small">
+            Pozn: Stát zveřejňuje v insolvenčních rejstříku všechna insolvenční řízení bez omezení. Tato omezení jsme si stanovili my sami dobrovolně s ohledem na
+            osobní údaje fyzických osob.
+        </div>
+        <br />
+        <br />
+        <h3>Chcete přístup ke všem insolvencím?</h3>
+        <div>
+            Přístup ke všem insolvencím bez omezení dáváme novinářům, datovým analytikům a dalším vybraným osobám s registrací na Hlídači.
+            <br />
+
+            Pokud spadáte do některé z uvedených kategorií, napište nám žádost o přístup na <a href="mailto:info@hlidacstatu.cz">info@hlidacstatu.cz</a> z emailu, pod kterým jste zde registrováni.
+            V mailu uveďte vaši <b>redakci</b> (novináři) nebo <b>firmu/účel</b> (datový analytik) a <b>váš telefon</b>, abychom vás mohli kontaktovat i telefonicky.
+
+        </div>
+    </div>
+</div>
+
+

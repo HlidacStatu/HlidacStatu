@@ -76,6 +76,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
             string modifiedQ = query; // ES.SearchTools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
+            if (searchdata.LimitedView)
+                modifiedQ = Lib.ES.SearchTools.ModifyQuery(modifiedQ, "onRadar:true");
 
             for (int i = 0; i < rules.GetLength(0); i++)
             {
@@ -202,16 +204,22 @@ namespace HlidacStatu.Lib.Data.Insolvence
         }
 
 
-        public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, bool withHighlighting = false,
+        public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
+            bool withHighlighting = false,
+            bool limitedView = true,
             AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
         {
-            return SimpleSearch(new InsolvenceSearchResult() {
-                Q=query,
+            return SimpleSearch(new InsolvenceSearchResult()
+            {
+                Q = query,
                 Page = page,
-                PageSize = pagesize               
-            }, withHighlighting, anyAggregation);
+                PageSize = pagesize,
+                LimitedView = limitedView,
+                Order = order.ToString()
+            }, withHighlighting, anyAggregation) ; ;
         }
-            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, bool withHighlighting = false,
+            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, 
+                bool withHighlighting = false,
                 AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
         {
             var client = Manager.GetESClient_Insolvence();
@@ -231,8 +239,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
-                        .Query(q => GetSimpleQuery(search))                        
-                        .Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
+                        .Query(q => GetSimpleQuery(search))
+                        //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
+                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                         .Highlight(h=> Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr=> anyAggregation)
                 );
@@ -269,6 +278,37 @@ namespace HlidacStatu.Lib.Data.Insolvence
             search.ElasticResults = res;
             search.ElapsedTime = sw.Elapsed;
             return search;
+        }
+
+        public static SortDescriptor<Data.Insolvence.Rizeni> GetSort(int iorder)
+        {
+            ES.InsolvenceSearchResult.InsolvenceOrderResult order = (ES.InsolvenceSearchResult.InsolvenceOrderResult)iorder;
+
+            SortDescriptor<Data.Insolvence.Rizeni> s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(f => f.Field("_score").Descending());
+            switch (order)
+            {
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedDesc:
+                    s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.DatumZalozeni).Descending());
+                    break;
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedAsc:
+                    s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.DatumZalozeni).Ascending());
+                    break;
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc:
+                    s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending());
+                    break;
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateAsc:
+                    s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Ascending());
+                    break;
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll:
+                    s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(f => f.Field("_doc"));
+                    break;
+                case ES.InsolvenceSearchResult.InsolvenceOrderResult.Relevance:
+                default:
+                    break;
+            }
+
+            return s;
+
         }
 
     }

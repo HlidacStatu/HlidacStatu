@@ -45,5 +45,6 @@ namespace HlidacStatu.Lib.Data.Insolvence
 		public Dokument Dokument { get; set; }
 		public string SpisovaZnacka { get; set; }
 		public string UrlId { get; set; }
-	}
+        public Rizeni Rizeni { get; set; }
+    }
 }
