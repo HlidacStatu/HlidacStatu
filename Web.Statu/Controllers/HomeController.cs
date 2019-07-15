@@ -429,7 +429,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult sendFeedbackMail(string typ, string email, string txt, string url, bool? auth, string data)
         {
-            string to = "michal@michalblaha.cz";
+            string to = "info@hlidacstatu.cz";
             string subject = "Zprava z HlidacStatu.cz: " + typ;
             if (!string.IsNullOrEmpty(data))
             {

@@ -63,7 +63,9 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             DateTime prvniZverejneni = item.casZverejneni;
             if (item.OtherVersions().Length > 0)
             {
-                prvniZverejneni = item.OtherVersions().Min(m => m.casZverejneni);
+                var newMin = item.OtherVersions().Min(m => m.casZverejneni);
+                if (prvniZverejneni > newMin)
+                    prvniZverejneni = newMin;
             }
 
             if (item.PravniRamec == Lib.Data.Smlouva.PravniRamce.Od072017 &&
