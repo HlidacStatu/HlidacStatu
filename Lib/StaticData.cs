@@ -168,7 +168,7 @@ namespace HlidacStatu.Lib
 
 
 
-        internal static void Init()
+        public static void Init()
         {
             string appDataPath = Lib.Init.WebAppDataPath;
 

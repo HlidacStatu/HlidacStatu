@@ -36,6 +36,8 @@ namespace HlidacStatu.Lib.Issues
 
             lock (objLock)
             {
+                if (issueAnalyzers != null)
+                    return issueAnalyzers;
 
                 ////load DLL's from disk
                 List<System.Reflection.Assembly> dlls = new List<System.Reflection.Assembly>();
