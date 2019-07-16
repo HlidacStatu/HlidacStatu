@@ -1325,6 +1325,7 @@
     <Content Include="Views\Sponzori\Top.cshtml" />
     <Content Include="Views\Weby\_Info.cshtml" />
     <Content Include="Views\Insolvence\PristupOmezen.cshtml" />
+    <Content Include="Views\Account\Bot.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

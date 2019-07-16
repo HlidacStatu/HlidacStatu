@@ -75,11 +75,16 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl, FormCollection form)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+            if (form["zip"] != "")
+            {
+                HlidacStatu.Util.Consts.Logger.Error("Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
+                return View("Bot");
             }
 
             // This doesn't count login failures towards account lockout
@@ -160,6 +165,11 @@ namespace HlidacStatu.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (form["zip"] != "")
+                {
+                    HlidacStatu.Util.Consts.Logger.Error("Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
+                    return View("Bot");
+                }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -310,12 +320,18 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model, FormCollection form)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+            if (form["zip"] != "")
+            {
+                HlidacStatu.Util.Consts.Logger.Error("Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
+                return View("Bot");
+            }
+
             var user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {

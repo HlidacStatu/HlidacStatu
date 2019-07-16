@@ -30,10 +30,24 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-sm-8">
             <input type="submit" class="btn btn-primary" value="Zaregistrovat" />
+            <input type="text" name="zip" id="zip" value="" placeholder="Your Zip code" />
         </div>
     </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(function () {
+        $('#zip').css({ "font-size": "1pt", "color": "white", "width": "1px", "border": "none"});
+    });
+    
+    </script>
+    <noscript>
+        <style>
+            #zip {
+                font-size: 1pt; color: white; width:1px; border:none;
+            }
+        </style>
+    </noscript>
 }

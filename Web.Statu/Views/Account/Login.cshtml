@@ -18,40 +18,42 @@
                     </div>
                 }
                 <h4>Přihlášení do Hlídače smluv.</h4>
-                <p>Pokud účet ještě nemáte, @Html.ActionLink("tady se snadno a zdarma zaregistrujte", "Register",new { nextUrl = ViewBag.ReturnUrl }).</p>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                        </div>
+                <p>Pokud účet ještě nemáte, @Html.ActionLink("tady se snadno a zdarma zaregistrujte", "Register", new { nextUrl = ViewBag.ReturnUrl }).</p>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                        <div class="col-sm-8">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-sm-8">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.RememberMe)
-                                @Html.LabelFor(m => m.RememberMe)
-                                <div class="text-warning small">
-                                    Nezaškrtávejte, pokud sdílíte počítač s více lidmi nebo jste u veřejného počítače.
-                                </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                            <div class="text-warning small">
+                                Nezaškrtávejte, pokud sdílíte počítač s více lidmi nebo jste u veřejného počítače.
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <input type="submit" value="Přihlásit se do Hlídače smluv" class="btn btn-primary" />
-                            <a class="btn btn-default" href="@Url.Action("ForgotPassword")" role="button">Nepamatuji si heslo</a>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" value="Přihlásit se do Hlídače smluv" class="btn btn-primary" />
+                        <a class="btn btn-default" href="@Url.Action("ForgotPassword")" role="button">Nepamatuji si heslo</a>
+                        <input type="text" name="zip" id="zip" value="" placeholder="Your Zip code" />
+
                     </div>
+                </div>
             }
         </section>
     </div>
@@ -65,4 +67,20 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(function () {
+        $('#zip').css({ "font-size": "1pt", "color": "white", "width": "1px", "border": "none"});
+    });
+
+    </script>
+    <noscript>
+        <style>
+            #zip {
+                font-size: 1pt;
+                color: white;
+                width: 1px;
+                border: none;
+            }
+        </style>
+    </noscript>
 }
