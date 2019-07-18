@@ -50,7 +50,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <input type="submit" value="Přihlásit se do Hlídače smluv" class="btn btn-primary" />
                         <a class="btn btn-default" href="@Url.Action("ForgotPassword")" role="button">Nepamatuji si heslo</a>
-                        <input type="text" name="zip" id="zip" value="" placeholder="Your Zip code" />
+                        <input type="text" name="@(HlidacStatu.Web.Controllers.AccountController.FormBotHoneyPot_Default)" id="@(HlidacStatu.Web.Controllers.AccountController.FormBotHoneyPot_Default)" value="" placeholder="Your Zip code" />
 
                     </div>
                 </div>
