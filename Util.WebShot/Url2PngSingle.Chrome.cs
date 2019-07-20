@@ -9,10 +9,10 @@ namespace HlidacStatu.Util.WebShot
 
         static object lockObj = new object();
 
-        public static byte[] Screenshot(string url, int cropWidth = 1000, int cropHeight = 1000)
-        {
-            return Screenshot(Chrome.TheOnlyStaticInstance, url, cropWidth, cropHeight);
-        }
+        //public static byte[] Screenshot(string url, int cropWidth = 1000, int cropHeight = 1000)
+        //{
+        //    return Screenshot(Chrome.TheOnlyStaticInstance, url, cropWidth, cropHeight);
+        //}
         public static byte[] Screenshot(Chrome instance, string url, int cropWidth = 1000, int cropHeight = 1000)
         {
             lock (lockObj)

@@ -28,7 +28,7 @@ namespace HlidacStatu.Util.WebShot
                         {
                             //Workers.Results[swr] = Url2Png.Screenshot(chrome, wr.Url, wr.cropWidth, wr.cropHeight);
                             Chrome.logger.Debug(workerName + ": getting screenshot " + swr);
-                            byte[] result = Url2PngSingle_Chrome .Screenshot(chrome, wr.Url, wr.cropWidth, wr.cropHeight);
+                            byte[] result = Url2PngSingle_Chrome.Screenshot(chrome, wr.Url, wr.cropWidth, wr.cropHeight);
                             Workers.Results.AddOrUpdate(swr, result, (k, upd) => result);
                             Chrome.logger.Debug(workerName + ": saved screenshot " + swr);
 

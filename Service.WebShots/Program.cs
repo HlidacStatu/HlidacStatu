@@ -14,7 +14,8 @@ namespace HlidacStatu.Service.WebShots
 
         static void Main(string[] args)
         {
-            logger.Info("Starting main process");
+            System.Threading.ThreadPool.GetMaxThreads(out int maxWT, out int complPT);
+            logger.Info($"Starting main process; ThreadPool.MaxThreads={maxWT} / {complPT}");
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
             AppDomain.CurrentDomain.DomainUnload += new EventHandler(CurrentDomain_ProcessExit);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
@@ -22,13 +23,19 @@ namespace HlidacStatu.Service.WebShots
             System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
             System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
 
+            int newMaxT = 30000;
+            logger.Info($"Setting ThreadPool.MaxThreads : {newMaxT}");
+            System.Threading.ThreadPool.SetMaxThreads(newMaxT,newMaxT);
+
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
+            bool console = false;
 
+            //force console param
 
+            console = true;
 
             try
             {
-                bool console = false;
                 if (args.Count() > 0)
                 {
                     logger.Info("starting with console parameter");
