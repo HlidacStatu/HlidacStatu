@@ -9,9 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HlidacStatu.Web.Models;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RobotFromIP]
     [Authorize]
     public class AccountController : Controller
     {
@@ -83,7 +85,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 return View(model);
             }
-            if (form[AccountController.FormBotHoneyPot_Default] != "")
+            if (form[AccountController.FormBotHoneyPot_Default] != "" )
             {
                 HlidacStatu.Util.Consts.Logger.Error("Login: Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
                 return View("Bot");

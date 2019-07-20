@@ -17,6 +17,7 @@ using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RobotFromIP]
     public partial class HomeController : Controller
     {
         public HomeController()
@@ -113,6 +114,11 @@ namespace HlidacStatu.Web.Controllers
             return RedirectPermanent("/texty/provoznipodminky");
         }
 
+        public ActionResult Bot()
+        {
+            return View();
+        }
+
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
         public ActionResult PorovnatSubjekty(string id, string ico, string ds, string title, int? width, string specialtype, string specialvalue, string part)
         {
@@ -177,7 +183,7 @@ namespace HlidacStatu.Web.Controllers
             int b = 2;
             //int c = (a / (b - 2));
             //Console.Write(c);
-            return View();
+            return View("Bot");
         }
 
         public ActionResult Index()
