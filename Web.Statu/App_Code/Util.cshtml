@@ -43,7 +43,7 @@
     @Html.Raw(HlidacStatu.Lib.ES.Highlighter.HighlightContentIntoHtmlBlock(
             highlights, path, contentToCompare,
             foundContentFormat, noHLContent, prefix,
-            postfix, icon)
+            postfix, highlightPartDelimiter, icon)
             )
 
 }
@@ -1098,7 +1098,7 @@ int count = 0;
         @foreach (var s in contents)
         {
             count++;
-        <div role="tabpanel" class="tab-pane active" id="@(id+count.ToString())">
+        <div role="tabpanel" class="tab-pane @Util.IfExists(first, "active")" id="@(id+count.ToString())">
             @Html.Raw(s)
 
         </div>
