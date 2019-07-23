@@ -4,12 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8b13f0f2ab3347c4acee3dacc0afd11f" Name="Diagram1">
-        <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Dluznici" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="8b13f0f2ab3347c4acee3dacc0afd11f" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Dokumenty" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Rizeni" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Spravci" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Veritele" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HlidacStatu.Lib.Db.Insolvence.Dluznici" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
