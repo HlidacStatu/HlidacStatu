@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="InsolvenceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Dluznici">
+          <Key>
+            <PropertyRef Name="RizeniId" />
+          </Key>
+          <Property Name="pk" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RizeniId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdPuvodce" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IdOsoby" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Typ" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="DatumNarozeni" Type="datetime" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="10" />
+          <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
+          <Property Name="Okres" Type="nvarchar" MaxLength="50" />
+          <Property Name="Zeme" Type="nchar" MaxLength="3" />
+          <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Dokumenty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="RizeniId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TypUdalosti" Type="int" Nullable="false" />
+          <Property Name="DatumVlozeni" Type="datetime" Nullable="false" />
+          <Property Name="Popis" Type="nvarchar" MaxLength="550" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Oddil" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Length" Type="int" Nullable="false" />
+          <Property Name="WordCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rizeni">
+          <Key>
+            <PropertyRef Name="SpisovaZnacka" />
+          </Key>
+          <Property Name="SpisovaZnacka" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Stav" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatumZalozeni" Type="datetime" Nullable="false" />
+          <Property Name="PosledniZmena" Type="datetime" Nullable="false" />
+          <Property Name="Soud" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="OnRadar" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Spravci">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="bigint" Nullable="false" />
+          <Property Name="RizeniId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdPuvodce" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IdOsoby" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Typ" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="DatumNarozeni" Type="datetime" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="10" />
+          <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
+          <Property Name="Okres" Type="nvarchar" MaxLength="50" />
+          <Property Name="Zeme" Type="nchar" MaxLength="3" />
+          <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Veritele">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="bigint" Nullable="false" />
+          <Property Name="RizeniId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdPuvodce" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IdOsoby" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Typ" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="DatumNarozeni" Type="datetime" />
+          <Property Name="ICO" Type="nvarchar" MaxLength="10" />
+          <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
+          <Property Name="Okres" Type="nvarchar" MaxLength="50" />
+          <Property Name="Zeme" Type="nchar" MaxLength="3" />
+          <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityContainer Name="InsolvenceModelStoreContainer">
+          <EntitySet Name="Dluznici" EntityType="Self.Dluznici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dokumenty" EntityType="Self.Dokumenty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rizeni" EntityType="Self.Rizeni" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Spravci" EntityType="Self.Spravci" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Veritele" EntityType="Self.Veritele" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InsolvenceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Dluznici">
+          <Key>
+            <PropertyRef Name="RizeniId" />
+          </Key>
+          <Property Name="pk" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RizeniId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdPuvodce" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdOsoby" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlneJmeno" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Typ" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
+          <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zeme" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Dokumenty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="RizeniId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TypUdalosti" Type="Int32" Nullable="false" />
+          <Property Name="DatumVlozeni" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Popis" Type="String" MaxLength="550" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Url" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Oddil" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Length" Type="Int32" Nullable="false" />
+          <Property Name="WordCount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rizeni">
+          <Key>
+            <PropertyRef Name="SpisovaZnacka" />
+          </Key>
+          <Property Name="SpisovaZnacka" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Stav" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DatumZalozeni" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PosledniZmena" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Soud" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OnRadar" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Spravci">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int64" Nullable="false" />
+          <Property Name="RizeniId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdPuvodce" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdOsoby" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlneJmeno" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Typ" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
+          <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zeme" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Veritele">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int64" Nullable="false" />
+          <Property Name="RizeniId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdPuvodce" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdOsoby" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlneJmeno" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Typ" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
+          <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zeme" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="InsolvenceEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Dluznicis" EntityType="Self.Dluznici" />
+          <EntitySet Name="Dokumenties" EntityType="Self.Dokumenty" />
+          <EntitySet Name="Rizenis" EntityType="Self.Rizeni" />
+          <EntitySet Name="Spravcis" EntityType="Self.Spravci" />
+          <EntitySet Name="Veriteles" EntityType="Self.Veritele" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InsolvenceModelStoreContainer" CdmEntityContainer="InsolvenceEntities">
+          <EntitySetMapping Name="Dluznicis">
+            <EntityTypeMapping TypeName="InsolvenceModel.Dluznici">
+              <MappingFragment StoreEntitySet="Dluznici">
+                <ScalarProperty Name="pk" ColumnName="pk" />
+                <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
+                <ScalarProperty Name="IdPuvodce" ColumnName="IdPuvodce" />
+                <ScalarProperty Name="IdOsoby" ColumnName="IdOsoby" />
+                <ScalarProperty Name="PlneJmeno" ColumnName="PlneJmeno" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Typ" ColumnName="Typ" />
+                <ScalarProperty Name="RC" ColumnName="RC" />
+                <ScalarProperty Name="DatumNarozeni" ColumnName="DatumNarozeni" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="Mesto" ColumnName="Mesto" />
+                <ScalarProperty Name="Okres" ColumnName="Okres" />
+                <ScalarProperty Name="Zeme" ColumnName="Zeme" />
+                <ScalarProperty Name="PSC" ColumnName="PSC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dokumenties">
+            <EntityTypeMapping TypeName="InsolvenceModel.Dokumenty">
+              <MappingFragment StoreEntitySet="Dokumenty">
+                <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TypUdalosti" ColumnName="TypUdalosti" />
+                <ScalarProperty Name="DatumVlozeni" ColumnName="DatumVlozeni" />
+                <ScalarProperty Name="Popis" ColumnName="Popis" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Oddil" ColumnName="Oddil" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="WordCount" ColumnName="WordCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rizenis">
+            <EntityTypeMapping TypeName="InsolvenceModel.Rizeni">
+              <MappingFragment StoreEntitySet="Rizeni">
+                <ScalarProperty Name="SpisovaZnacka" ColumnName="SpisovaZnacka" />
+                <ScalarProperty Name="Stav" ColumnName="Stav" />
+                <ScalarProperty Name="DatumZalozeni" ColumnName="DatumZalozeni" />
+                <ScalarProperty Name="PosledniZmena" ColumnName="PosledniZmena" />
+                <ScalarProperty Name="Soud" ColumnName="Soud" />
+                <ScalarProperty Name="OnRadar" ColumnName="OnRadar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Spravcis">
+            <EntityTypeMapping TypeName="InsolvenceModel.Spravci">
+              <MappingFragment StoreEntitySet="Spravci">
+                <ScalarProperty Name="pk" ColumnName="pk" />
+                <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
+                <ScalarProperty Name="IdPuvodce" ColumnName="IdPuvodce" />
+                <ScalarProperty Name="IdOsoby" ColumnName="IdOsoby" />
+                <ScalarProperty Name="PlneJmeno" ColumnName="PlneJmeno" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Typ" ColumnName="Typ" />
+                <ScalarProperty Name="RC" ColumnName="RC" />
+                <ScalarProperty Name="DatumNarozeni" ColumnName="DatumNarozeni" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="Mesto" ColumnName="Mesto" />
+                <ScalarProperty Name="Okres" ColumnName="Okres" />
+                <ScalarProperty Name="Zeme" ColumnName="Zeme" />
+                <ScalarProperty Name="PSC" ColumnName="PSC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Veriteles">
+            <EntityTypeMapping TypeName="InsolvenceModel.Veritele">
+              <MappingFragment StoreEntitySet="Veritele">
+                <ScalarProperty Name="pk" ColumnName="pk" />
+                <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
+                <ScalarProperty Name="IdPuvodce" ColumnName="IdPuvodce" />
+                <ScalarProperty Name="IdOsoby" ColumnName="IdOsoby" />
+                <ScalarProperty Name="PlneJmeno" ColumnName="PlneJmeno" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Typ" ColumnName="Typ" />
+                <ScalarProperty Name="RC" ColumnName="RC" />
+                <ScalarProperty Name="DatumNarozeni" ColumnName="DatumNarozeni" />
+                <ScalarProperty Name="ICO" ColumnName="ICO" />
+                <ScalarProperty Name="Mesto" ColumnName="Mesto" />
+                <ScalarProperty Name="Okres" ColumnName="Okres" />
+                <ScalarProperty Name="Zeme" ColumnName="Zeme" />
+                <ScalarProperty Name="PSC" ColumnName="PSC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -688,5 +688,114 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
 
             return data.OrderByDescending(o => o.Level).ToArray();
         }
+
+        public void SaveToDb(bool rewrite)
+        {
+            using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
+            {
+                var exists = idb.Rizenis.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
+                if (exists != null && rewrite == false)
+                    throw new System.ApplicationException($"Object Rizeni {this.SpisovaZnacka} already exists in db");
+                else if (exists != null && rewrite == true)
+                {
+                    idb.Rizenis.Remove(exists);
+                    foreach (var d in idb.Dokumenties.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dokumenties.Remove(d);                    
+                    foreach (var d in idb.Dokumenties.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dokumenties.Remove(d);
+                    foreach (var d in idb.Dluznicis.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dluznicis.Remove(d);
+
+                    foreach (var d in idb.Veriteles.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Veriteles.Remove(d);
+                    foreach (var d in idb.Spravcis.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Spravcis.Remove(d);
+                    idb.SaveChanges();
+
+                }
+
+                var r = new HlidacStatu.Lib.Db.Insolvence.Rizeni();
+                r.DatumZalozeni = this.DatumZalozeni ?? new DateTime(1990, 1, 1);
+                r.SpisovaZnacka = this.SpisovaZnacka;
+                r.OnRadar = this.OnRadar;
+                r.PosledniZmena = this.PosledniZmena;
+                r.Soud = this.Soud;
+                r.Stav = this.Stav;
+
+                idb.Rizenis.Add(r);
+
+                foreach (var td in this.Dluznici)
+                {
+                    Db.Insolvence.Dluznici d = new Db.Insolvence.Dluznici();
+                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.ICO = td.ICO;
+                    d.IdOsoby = td.IdOsoby;
+                    d.IdPuvodce = td.IdPuvodce;
+                    d.Mesto = td.Mesto;
+                    d.Okres = td.Okres;
+                    d.PlneJmeno = td.PlneJmeno;
+                    d.PSC = td.Psc;
+                    d.RC = td.Rc;
+                    d.RizeniId = this.SpisovaZnacka;
+                    d.Role = td.Role;
+                    d.Typ = td.Typ;
+                    d.Zeme = td.Zeme;
+                    idb.Dluznicis.Add(d);
+                }
+                foreach (var td in this.Veritele)
+                {
+                    Db.Insolvence.Veritele d = new Db.Insolvence.Veritele();
+                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.ICO = td.ICO;
+                    d.IdOsoby = td.IdOsoby;
+                    d.IdPuvodce = td.IdPuvodce;
+                    d.Mesto = td.Mesto;
+                    d.Okres = td.Okres;
+                    d.PlneJmeno = td.PlneJmeno;
+                    d.PSC = td.Psc;
+                    d.RC = td.Rc;
+                    d.RizeniId = this.SpisovaZnacka;
+                    d.Role = td.Role;
+                    d.Typ = td.Typ;
+                    d.Zeme = td.Zeme;
+                    idb.Veriteles.Add(d);
+                }
+                foreach (var td in this.Spravci)
+                {
+                    Db.Insolvence.Spravci d = new Db.Insolvence.Spravci();
+                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.ICO = td.ICO;
+                    d.IdOsoby = td.IdOsoby;
+                    d.IdPuvodce = td.IdPuvodce;
+                    d.Mesto = td.Mesto;
+                    d.Okres = td.Okres;
+                    d.PlneJmeno = td.PlneJmeno;
+                    d.PSC = td.Psc;
+                    d.RC = td.Rc;
+                    d.RizeniId = this.SpisovaZnacka;
+                    d.Role = td.Role;
+                    d.Typ = td.Typ;
+                    d.Zeme = td.Zeme;
+                    idb.Spravcis.Add(d);
+                }
+                foreach (var td in this.Dokumenty)
+                {
+                    Db.Insolvence.Dokumenty d = new Db.Insolvence.Dokumenty();
+                    d.DatumVlozeni = td.DatumVlozeni;
+                    d.Id = td.Id;
+                    d.Length = (int)td.Lenght;
+                    d.Oddil = td.Oddil;
+                    d.Popis = td.Popis;
+                    d.RizeniId = this.SpisovaZnacka;
+                    d.TypUdalosti = td.TypUdalosti;
+                    d.Url = td.Url;
+                    d.WordCount = (int)td.WordCount;
+                    idb.Dokumenties.Add(d);
+                }
+
+                idb.SaveChanges();
+            }
+
+        }
     }
 }

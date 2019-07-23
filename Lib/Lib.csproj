@@ -755,6 +755,10 @@
       <Project>{ec43f4f2-5fe7-4255-8d4d-7e70f07d1773}</Project>
       <Name>DBUpgrader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HlidacStatu.Lib.Db.Insolvence\HlidacStatu.Lib.Db.Insolvence.csproj">
+      <Project>{18cdeb72-04c2-45f2-9bd4-b1676aa0ca07}</Project>
+      <Name>HlidacStatu.Lib.Db.Insolvence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>
       <Name>Lib.Data.External</Name>
