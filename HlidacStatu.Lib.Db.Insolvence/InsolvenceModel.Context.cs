@@ -25,10 +25,10 @@ namespace HlidacStatu.Lib.Db.Insolvence
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Dluznici> Dluznicis { get; set; }
-        public virtual DbSet<Dokumenty> Dokumenties { get; set; }
-        public virtual DbSet<Rizeni> Rizenis { get; set; }
-        public virtual DbSet<Spravci> Spravcis { get; set; }
-        public virtual DbSet<Veritele> Veriteles { get; set; }
+        public virtual DbSet<Dluznici> Dluznici { get; set; }
+        public virtual DbSet<Dokumenty> Dokumenty { get; set; }
+        public virtual DbSet<Rizeni> Rizeni { get; set; }
+        public virtual DbSet<Spravci> Spravci { get; set; }
+        public virtual DbSet<Veritele> Veritele { get; set; }
     }
 }

@@ -93,8 +93,8 @@
       <DependentUpon>InsolvenceModel.tt</DependentUpon>
     </Compile>
     <Compile Include="InsolvenceModel.Designer.cs">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>InsolvenceModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

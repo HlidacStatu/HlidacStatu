@@ -689,27 +689,34 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             return data.OrderByDescending(o => o.Level).ToArray();
         }
 
-        public void SaveToDb(bool rewrite)
+        public bool ExistInDb()
         {
             using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
             {
-                var exists = idb.Rizenis.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
+                return idb.Rizeni.Any(m => m.SpisovaZnacka == this.SpisovaZnacka);
+            }
+        }
+            public void SaveToDb(bool rewrite)
+        {
+            using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
+            {
+                var exists = idb.Rizeni.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
                 if (exists != null && rewrite == false)
                     throw new System.ApplicationException($"Object Rizeni {this.SpisovaZnacka} already exists in db");
                 else if (exists != null && rewrite == true)
                 {
-                    idb.Rizenis.Remove(exists);
-                    foreach (var d in idb.Dokumenties.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dokumenties.Remove(d);                    
-                    foreach (var d in idb.Dokumenties.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dokumenties.Remove(d);
-                    foreach (var d in idb.Dluznicis.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dluznicis.Remove(d);
+                    foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dokumenty.Remove(d);                    
+                    foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dokumenty.Remove(d);
+                    foreach (var d in idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Dluznici.Remove(d);
 
-                    foreach (var d in idb.Veriteles.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Veriteles.Remove(d);
-                    foreach (var d in idb.Spravcis.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Spravcis.Remove(d);
+                    foreach (var d in idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Veritele.Remove(d);
+                    foreach (var d in idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                        idb.Spravci.Remove(d);
+                    idb.Rizeni.Remove(exists);
                     idb.SaveChanges();
 
                 }
@@ -722,7 +729,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 r.Soud = this.Soud;
                 r.Stav = this.Stav;
 
-                idb.Rizenis.Add(r);
+                idb.Rizeni.Add(r);
 
                 foreach (var td in this.Dluznici)
                 {
@@ -740,7 +747,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.Role = td.Role;
                     d.Typ = td.Typ;
                     d.Zeme = td.Zeme;
-                    idb.Dluznicis.Add(d);
+                    idb.Dluznici.Add(d);
                 }
                 foreach (var td in this.Veritele)
                 {
@@ -758,7 +765,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.Role = td.Role;
                     d.Typ = td.Typ;
                     d.Zeme = td.Zeme;
-                    idb.Veriteles.Add(d);
+                    idb.Veritele.Add(d);
                 }
                 foreach (var td in this.Spravci)
                 {
@@ -776,7 +783,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.Role = td.Role;
                     d.Typ = td.Typ;
                     d.Zeme = td.Zeme;
-                    idb.Spravcis.Add(d);
+                    idb.Spravci.Add(d);
                 }
                 foreach (var td in this.Dokumenty)
                 {
@@ -790,7 +797,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.TypUdalosti = td.TypUdalosti;
                     d.Url = td.Url;
                     d.WordCount = (int)td.WordCount;
-                    idb.Dokumenties.Add(d);
+                    idb.Dokumenty.Add(d);
                 }
 
                 idb.SaveChanges();

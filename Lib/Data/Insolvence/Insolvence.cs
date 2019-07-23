@@ -2,13 +2,14 @@
 using HlidacStatu.Lib.ES;
 using Nest;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
     public partial class Insolvence
     {
-		/*
+        /*
          * https://www.creditcheck.cz/SlovnicekPojmuDetail.aspx?id=23
          Stavy v insolvenčním řízení
 Insolvenční řízení (věc) prochází několika stavy:
@@ -43,26 +44,26 @@ K-PO ZRUŠ. =
 MORATORIUM = 
 
 */
-		public class StavRizeni
-		{
-			public const string Nevyrizena = "NEVYRIZENA";
-			public const string Moratorium = "MORATORIUM";
-			public const string Upadek = "ÚPADEK";
-			public const string Konkurs = "KONKURS";
-			public const string Oddluzeni = "ODDLUŽENÍ";
-			public const string Reorganizace = "REORGANIZ";
-			public const string Vyrizena = "VYRIZENA";
-			public const string Pravomocna = "PRAVOMOCNA";
-			public const string Odskrtnuta = "ODSKRTNUTA";
-			public const string Zruseno = "ZRUŠENO VS";
-			public const string KonkursPoZruseni = "K-PO ZRUŠ.";
-			public const string Obzivla = "OBZIVLA";
-			public const string MylnyZapis = "MYLNÝ ZÁP.";
-			public const string PostoupenaVec = "NEVYR-POST";
-		}
+        public class StavRizeni
+        {
+            public const string Nevyrizena = "NEVYRIZENA";
+            public const string Moratorium = "MORATORIUM";
+            public const string Upadek = "ÚPADEK";
+            public const string Konkurs = "KONKURS";
+            public const string Oddluzeni = "ODDLUŽENÍ";
+            public const string Reorganizace = "REORGANIZ";
+            public const string Vyrizena = "VYRIZENA";
+            public const string Pravomocna = "PRAVOMOCNA";
+            public const string Odskrtnuta = "ODSKRTNUTA";
+            public const string Zruseno = "ZRUŠENO VS";
+            public const string KonkursPoZruseni = "K-PO ZRUŠ.";
+            public const string Obzivla = "OBZIVLA";
+            public const string MylnyZapis = "MYLNÝ ZÁP.";
+            public const string PostoupenaVec = "NEVYR-POST";
+        }
 
 
-		[ShowNiceDisplayName()]
+        [ShowNiceDisplayName()]
         public enum StavInsolvence : int
         {
 
@@ -216,9 +217,9 @@ MORATORIUM =
 
             try
             {
-				var rizeni = includeDocumentsPlainText
-					? client.Get<Rizeni>(spisovaZnacka)
-					: client.Get<Rizeni>(spisovaZnacka, s => s
+                var rizeni = includeDocumentsPlainText
+                    ? client.Get<Rizeni>(spisovaZnacka)
+                    : client.Get<Rizeni>(spisovaZnacka, s => s
                             .SourceExclude("dokumenty.plainText")
                             //.SourceExclude("")
                             );
@@ -253,7 +254,7 @@ MORATORIUM =
             r.Save();
         }
 
-        public static DokumentSeSpisovouZnackou LoadDokument(string id, bool limitedView )
+        public static DokumentSeSpisovouZnackou LoadDokument(string id, bool limitedView)
         {
             var client = Manager.GetESClient_Insolvence();
 
@@ -296,7 +297,7 @@ MORATORIUM =
 
             try
             {
-                var rs = Insolvence.SimpleSearch("dluznici.typ:" + typ, 1, count, 
+                var rs = Insolvence.SimpleSearch("dluznici.typ:" + typ, 1, count,
                     (int)InsolvenceSearchResult.InsolvenceOrderResult.DateAddedDesc, false, limitedView, null);
                 //client.Search<Rizeni>(s =>
                 //s.Size(count)
@@ -322,6 +323,40 @@ MORATORIUM =
         {
             return new QueryContainerDescriptor<Osoba>().QueryString(qs =>
                             qs.Query($"spisovaZnacka:\"{spisovaZnacka}\""));
+        }
+
+        public static IEnumerable<string> AllIdsFromDB()
+        {
+            //return AllIdsFromDB(null);
+            using (Db.Insolvence.InsolvenceEntities db = new Db.Insolvence.InsolvenceEntities())
+            {
+                return db.  Rizeni.AsNoTracking().Select(m => m.SpisovaZnacka)
+                    .ToArray();//force query
+            }
+        }
+
+        public static IEnumerable<string> AllIdsFromES(Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        {
+
+            Func<int, int, Nest.ISearchResponse<Lib.Data.Insolvence.Rizeni>> searchFunc = (size, page) =>
+            {
+                return Lib.ES.Manager.GetESClient_Insolvence().Search<Lib.Data.Insolvence.Rizeni>(a => a
+                           .Size(size)
+                           .Source(ss1 => ss1.ExcludeAll())
+                           .From(page * size)
+                           .Query(q => q.MatchAll())
+                           .Scroll("10m")
+                            );
+            };
+
+            List<string> ids = new List<string>();
+            Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Insolvence.Rizeni>(Lib.ES.Manager.GetESClient_Insolvence(),
+                        searchFunc, (hit, param) =>
+                        {
+                            ids.Add(hit.Id);
+                            return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                        }, null, outputWriter, progressWriter, false, prefix: "stat_id_Insolvence ", blockSize: 10);
+            return ids;
         }
 
     }
