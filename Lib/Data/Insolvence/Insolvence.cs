@@ -355,7 +355,7 @@ MORATORIUM =
                         {
                             ids.Add(hit.Id);
                             return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-                        }, null, outputWriter, progressWriter, false, prefix: "stat_id_Insolvence ", blockSize: 10);
+                        }, null, outputWriter, progressWriter, false, prefix: "get_id_Insolvence ", blockSize: 10);
             return ids;
         }
 

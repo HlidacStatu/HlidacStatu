@@ -2,12 +2,18 @@
 using System.Linq;
 using System.Collections.Generic;
 using HlidacStatu.Util;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
+using System.Data.Entity.Infrastructure;
+using static Devmasters.Core.DateTimeUtil;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
     public class Rizeni
         : Bookmark.IBookmarkable, Util.ISocialInfo
     {
+
+        static DateTime MinSqlDate = new DateTime(1753, 1, 1); // 01/01/1753 
         public Rizeni()
         {
             Dokumenty = new List<Dokument>();
@@ -57,7 +63,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 foreach (var d in Dluznici)
                 {
 
-                    if (StaticData.Politici.Get().Any(m => 
+                    if (StaticData.Politici.Get().Any(m =>
                         m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
                         && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
                         && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue
@@ -696,7 +702,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 return idb.Rizeni.Any(m => m.SpisovaZnacka == this.SpisovaZnacka);
             }
         }
-            public void SaveToDb(bool rewrite)
+        public void SaveToDb(bool rewrite)
         {
             using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
             {
@@ -706,7 +712,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 else if (exists != null && rewrite == true)
                 {
                     foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dokumenty.Remove(d);                    
+                        idb.Dokumenty.Remove(d);
                     foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
                         idb.Dokumenty.Remove(d);
                     foreach (var d in idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka))
@@ -726,21 +732,21 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 r.SpisovaZnacka = this.SpisovaZnacka;
                 r.OnRadar = this.OnRadar;
                 r.PosledniZmena = this.PosledniZmena;
-                r.Soud = this.Soud;
-                r.Stav = this.Stav;
+                r.Soud = this.Soud ?? "";
+                r.Stav = this.Stav ?? "";
 
                 idb.Rizeni.Add(r);
 
                 foreach (var td in this.Dluznici)
                 {
                     Db.Insolvence.Dluznici d = new Db.Insolvence.Dluznici();
-                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.DatumNarozeni = td.DatumNarozeni < MinSqlDate ? MinSqlDate : td.DatumNarozeni;
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
                     d.Mesto = td.Mesto;
                     d.Okres = td.Okres;
-                    d.PlneJmeno = td.PlneJmeno;
+                    d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
                     d.PSC = td.Psc;
                     d.RC = td.Rc;
                     d.RizeniId = this.SpisovaZnacka;
@@ -752,13 +758,13 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 foreach (var td in this.Veritele)
                 {
                     Db.Insolvence.Veritele d = new Db.Insolvence.Veritele();
-                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.DatumNarozeni = td.DatumNarozeni < MinSqlDate ? MinSqlDate : td.DatumNarozeni;
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
                     d.Mesto = td.Mesto;
                     d.Okres = td.Okres;
-                    d.PlneJmeno = td.PlneJmeno;
+                    d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
                     d.PSC = td.Psc;
                     d.RC = td.Rc;
                     d.RizeniId = this.SpisovaZnacka;
@@ -770,13 +776,13 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 foreach (var td in this.Spravci)
                 {
                     Db.Insolvence.Spravci d = new Db.Insolvence.Spravci();
-                    d.DatumNarozeni = td.DatumNarozeni;
+                    d.DatumNarozeni = td.DatumNarozeni < MinSqlDate ? MinSqlDate : td.DatumNarozeni;
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
                     d.Mesto = td.Mesto;
                     d.Okres = td.Okres;
-                    d.PlneJmeno = td.PlneJmeno;
+                    d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno,250);
                     d.PSC = td.Psc;
                     d.RC = td.Rc;
                     d.RizeniId = this.SpisovaZnacka;
@@ -788,7 +794,8 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 foreach (var td in this.Dokumenty)
                 {
                     Db.Insolvence.Dokumenty d = new Db.Insolvence.Dokumenty();
-                    d.DatumVlozeni = td.DatumVlozeni;
+                    d.DatumVlozeni = td.DatumVlozeni < MinSqlDate
+                                        ? MinSqlDate : td.DatumVlozeni;
                     d.Id = td.Id;
                     d.Length = (int)td.Lenght;
                     d.Oddil = td.Oddil;
@@ -799,8 +806,45 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.WordCount = (int)td.WordCount;
                     idb.Dokumenty.Add(d);
                 }
+                try
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        idb.Database.Log = Console.WriteLine;
 
-                idb.SaveChanges();
+                    idb.SaveChanges();
+
+                }
+
+                catch (DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Debug.WriteLine(@"Entity of type ""{0}"" in state ""{1}"" 
+                   has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name,
+                            eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Debug.WriteLine(@"- Property: ""{0}"", Error: ""{1}""",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+                    throw;
+                }
+                catch (DbUpdateException e)
+                {
+                    //Add your code to inspect the inner exception and/or
+                    //e.Entries here.
+                    //Or just use the debugger.
+                    //Added this catch (after the comments below) to make it more obvious 
+                    //how this code might help this specific problem
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                    throw;
+                }
             }
 
         }

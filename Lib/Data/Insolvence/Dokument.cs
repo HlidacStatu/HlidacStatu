@@ -5,8 +5,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
 	public class Dokument
 	{
 		[Nest.Keyword]
-		public string Id { get; set; }
-		[Nest.Number]
+        public string Id { get; set; }
+
+        //ciselnik typu udalsoti https://isir.justice.cz/isir/help/Cis_udalosti.xls
+        [Nest.Number]
 		public int TypUdalosti { get; set; }
 		[Nest.Date]
 		public DateTime DatumVlozeni { get; set; }
