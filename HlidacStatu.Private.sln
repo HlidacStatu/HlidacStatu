@@ -121,7 +121,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Data.VZ.Import", "..\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Lib.Db.Insolvence", "HlidacStatu.Lib.Db.Insolvence\HlidacStatu.Lib.Db.Insolvence.csproj", "{18CDEB72-04C2-45F2-9BD4-B1676AA0CA07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsolvenceExport", "..\InsolvenceExport\InsolvenceExport.csproj", "{66EC3823-25A4-406F-A1FC-A6BF1938DE38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsolvenceExport", "..\PrivateInternals\InsolvenceExport\InsolvenceExport.csproj", "{66EC3823-25A4-406F-A1FC-A6BF1938DE38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
