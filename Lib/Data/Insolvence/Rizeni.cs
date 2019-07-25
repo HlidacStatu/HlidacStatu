@@ -744,7 +744,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
-                    d.Mesto = td.Mesto;
+                    d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto, 150);
                     d.Okres = td.Okres;
                     d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
                     d.PSC = td.Psc;
@@ -762,7 +762,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
-                    d.Mesto = td.Mesto;
+                    d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto, 150);
                     d.Okres = td.Okres;
                     d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
                     d.PSC = td.Psc;
@@ -780,7 +780,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     d.ICO = td.ICO;
                     d.IdOsoby = td.IdOsoby;
                     d.IdPuvodce = td.IdPuvodce;
-                    d.Mesto = td.Mesto;
+                    d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto,150);
                     d.Okres = td.Okres;
                     d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno,250);
                     d.PSC = td.Psc;
