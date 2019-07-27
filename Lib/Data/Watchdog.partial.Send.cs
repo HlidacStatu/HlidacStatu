@@ -16,6 +16,7 @@ namespace HlidacStatu.Lib.Data
                 smlouvy,
                 zakazky,
                 dataset,
+                insolvence,
                 global
             }
             public static void SendWatchDogs(WatchdogTypeForSend? type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null)
@@ -35,6 +36,11 @@ namespace HlidacStatu.Lib.Data
                     else if (type == WatchdogTypeForSend.zakazky.ToString())
                     {
                         _SendWatchDogs(typeof(VZ.VerejnaZakazka).Name, ids, userid, date, specificemail, forceSend, predicate);
+                        return;
+                    }
+                    else if (type == WatchdogTypeForSend.insolvence.ToString())
+                    {
+                        _SendWatchDogs(typeof(Insolvence.Rizeni).Name, ids, userid, date, specificemail, forceSend, predicate);
                         return;
                     }
                     else if (type == WatchdogTypeForSend.dataset.ToString())

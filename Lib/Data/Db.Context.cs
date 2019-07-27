@@ -49,7 +49,7 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<UserOptions> UserOptions { get; set; }
         public virtual DbSet<ItemToOcrQueue> ItemToOcrQueue { get; set; }
     
-        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string vazbyRaw)
+        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate)
         {
             var iCOParameter = iCO != null ?
                 new ObjectParameter("ICO", iCO) :
@@ -91,11 +91,7 @@ namespace HlidacStatu.Lib.Data
                 new ObjectParameter("VersionUpdate", versionUpdate) :
                 new ObjectParameter("VersionUpdate", typeof(int));
     
-            var vazbyRawParameter = vazbyRaw != null ?
-                new ObjectParameter("VazbyRaw", vazbyRaw) :
-                new ObjectParameter("VazbyRaw", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter, vazbyRawParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter);
         }
     
         public virtual int SmlouvaId_Save(string id, Nullable<int> active, Nullable<System.DateTime> created, Nullable<System.DateTime> updated)

@@ -245,8 +245,8 @@ namespace HlidacStatu.Lib.Data
 					{
                         var iqu = new ES.InsolvenceSearchResult { Q = query, PageSize = 5 };
                         res.Insolvence = iqu;
-                        if (showBeta)
-                            res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 5 });
+                        //if (showBeta)
+                        res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 5 });
 
                     }
                     catch (System.Exception e)

@@ -457,49 +457,58 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 }
 @helper AddWatchDog(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = true, string datasetId = null, bool showBtnIcon = true, string btnCss = null)
 {
-    string dataTypeName = "smlouvy";
-    string dataTypeName2 = "smluv";
-    if (dataType == typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
-    {
-        dataTypeName = "zakázky";
-        dataTypeName2 = "zakázek";
-    }
-    else if (dataType == typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet))
-    {
-        dataTypeName = "záznamy v datové sadě";
-        dataTypeName2 = "záznamů v datových sadách";
-    }
-    else if (dataType == null)
-    {
-        dataTypeName = "informace na Hlídači";
-        dataTypeName2 = "informací ve všech databázích Hlídače";
-    }
+string dataTypeName = "smlouvy";
+string dataTypeName2 = "smluv";
+if (dataType == typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
+{
+    dataTypeName = "zakázky";
+    dataTypeName2 = "zakázek";
+}
+else if (dataType == typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+{
+    dataTypeName = "insolvence";
+    dataTypeName2 = "insolvencí";
+}
+else if (dataType == typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet))
+{
+    dataTypeName = "záznamy v datové sadě";
+    dataTypeName2 = "záznamů v datových sadách";
+}
+else if (dataType == null)
+{
+    dataTypeName = "informace na Hlídači";
+    dataTypeName2 = "informací ve všech databázích Hlídače";
+}
 
-    string datatypeApi = dataType?.Name ?? HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
-    if (!string.IsNullOrEmpty(datasetId))
+string datatypeApi = dataType?.Name ?? HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
+if (!string.IsNullOrEmpty(datasetId))
+{
+    datatypeApi = datatypeApi + "." + datasetId;
+}
+
+var periodList = Devmasters.Core.Enums
+                  .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.WatchDog.PeriodTime))
+                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key, Disabled = (Convert.ToInt32(m.Value) < 2) })
+                  .ToList();
+
+string uid = System.Guid.NewGuid().ToString("N");
+
+if (btnCss == null)
+{
+    btnCss = "btn btn-warning";
+}
+
+if (btnText == null)
+{
+    btnText = $"Hlídat nové {dataTypeName}";
+    if (!string.IsNullOrEmpty(query))
     {
-        datatypeApi = datatypeApi + "." + datasetId;
+        btnText += $" pro hledání '{Devmasters.Core.TextUtil.ShortenText(query, 30,"...")}'";
     }
-
-    var periodList = Devmasters.Core.Enums
-                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.WatchDog.PeriodTime))
-                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key, Disabled = (Convert.ToInt32(m.Value) < 2) })
-                      .ToList();
-
-    string uid = System.Guid.NewGuid().ToString("N");
-
-    if (btnCss == null)
-    {
-        btnCss = "btn btn-warning";
-    }
-
-    if (btnText == null)
-    {
-        btnText = $"Hlídat nové {dataTypeName}";
-    }
-    if (preBtnText == null)
-    {
-        preBtnText = $@"
+}
+if (preBtnText == null)
+{
+    preBtnText = $@"
 <div class=""section-title"">
 Hlídání nových {dataTypeName2}
 </div>
@@ -514,15 +523,15 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 <div>
 ";
 
-        //"<div class=\"bs-callout bs-callout-noborder bs-callout-primary\"><div>Máme pro vás sledovat <b>nové " + dataTypeName + "</b> odpovídající tomuto dotazu a <b>každý den vás na ně upozornit</b> emailem ?";
-    }
-    if (postBtnText == null)
-    {
-        postBtnText = "</div>";
-    }
-    if (user?.Identity?.IsAuthenticated == true)
-    {
-        var availableWatchdogs = HlidacStatu.Lib.Data.Invoices.GetAvailableWatchdogs(user.Identity.GetUserId());
+    //"<div class=\"bs-callout bs-callout-noborder bs-callout-primary\"><div>Máme pro vás sledovat <b>nové " + dataTypeName + "</b> odpovídající tomuto dotazu a <b>každý den vás na ně upozornit</b> emailem ?";
+}
+if (postBtnText == null)
+{
+    postBtnText = "</div>";
+}
+if (user?.Identity?.IsAuthenticated == true)
+{
+    var availableWatchdogs = HlidacStatu.Lib.Data.Invoices.GetAvailableWatchdogs(user.Identity.GetUserId());
 
 
         <text>

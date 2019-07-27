@@ -181,10 +181,10 @@ namespace HlidacStatu.Lib.Data
                 res.Add(new WatchdogSmlouva(wd));
             if (wd.dataType == typeof(VZ.VerejnaZakazka).Name || wd.dataType == WatchDog.AllDbDataType)
                 res.Add(new WatchdogVerejnaZakazka(wd));
+            if (wd.dataType == typeof(Rizeni).Name || wd.dataType == WatchDog.AllDbDataType)
+                res.Add(new WatchdogInsolvence(wd));
             if (wd.dataType.StartsWith(typeof(Lib.Data.External.DataSets.DataSet).Name))
                 res.Add(new Lib.Data.External.DataSets.WatchdogDataset(wd));
-			//if (wd.dataType == typeof(Rizeni).Name || wd.dataType == WatchDog.AllDbDataType)
-			//	res.Add(new WatchdogInsolvenciRizeni(wd));
             return res;
         }
 

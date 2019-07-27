@@ -1,0 +1,46 @@
+﻿Content-Type: text/plain; charset=utf-8
+
+Dobrý den.
+
+Našli jsme nové záznamy pro hlídače nových insolvencí <b>@Model.WDName</b>.
+
+V době @Model.Interval @Model.TotalTxt pro dotaz "@Model.Query"
+
+@if (Model.AddResults > 0)
+{
+    <text>
+        Zobrazujeme prvních 30 nalezených insolvencí
+    </text>
+}
+
+
+<th>Dlužník</th>
+<th>Věritelé</th>
+<th>Poslední změna</th>
+<th>Datum vzniku</th>
+<th>Stav řízení</th>
+
+@foreach (HlidacStatu.Lib.Data.Insolvence.Rizeni item in @Model.Insolvence)
+{
+    <text>
+        ==================
+        Dlužníci: @Raw(item.Dluznici != null && item.Dluznici.Count > 0 ? (item.Dluznici[0].PlneJmeno) : "neuveden")
+        Věřitelé: @Raw(item.Veritele != null && item.Veritele.Count > 0 ? Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 1, "jeden věřitel", "{0} věřitelé", "{0} věřitelů") : "neuvedeni")
+        Poslední změna: @Raw(item.PosledniZmena != null ? item.PosledniZmena.ToShortDateString() : "neuvedena")
+        Datum vzniku insolvence: @Raw(item.DatumZalozeni != null ? item.DatumZalozeni.Value.ToShortDateString() : "neuvedena")
+        Stav řízení: @item.StavRizeni()
+        ===================
+    </text>
+}
+
+@if (Model.AddResults > 0)
+{
+    <text>
+        Zobrazujeme prvních 30 insolvencí, ale nalezli jsme jich celkem @(Model.TotalTxt).
+        Všechny nalezené insolvence: https://www.hlidacstatu.cz/Insolvence/Hledat?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more
+        </text>
+}
+
+
+@Raw(Model.EmailFooterText)
+

@@ -21,6 +21,6 @@ namespace HlidacStatu.Lib.Data
         public string Url { get; set; }
         public int ItemType { get; set; }
         public string ItemId { get; set; }
-        public Nullable<System.DateTime> Created { get; set; }
+        public System.DateTime Created { get; set; }
     }
 }

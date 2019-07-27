@@ -65,7 +65,7 @@
           <Property Name="Url" Type="varchar" MaxLength="4000" Nullable="false" />
           <Property Name="ItemType" Type="int" Nullable="false" />
           <Property Name="ItemId" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="Created" Type="datetime" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -349,7 +349,6 @@
           <Parameter Name="Source" Type="nvarchar" Mode="In" />
           <Parameter Name="Popis" Type="nvarchar" Mode="In" />
           <Parameter Name="VersionUpdate" Type="int" Mode="In" />
-          <Parameter Name="VazbyRaw" Type="nvarchar(max)" Mode="In" />
         </Function>
         <Function Name="SmlouvaId_Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="nvarchar" Mode="In" />
@@ -434,7 +433,6 @@
             <Parameter Name="Source" Mode="In" Type="String" />
             <Parameter Name="Popis" Mode="In" Type="String" />
             <Parameter Name="VersionUpdate" Mode="In" Type="Int32" />
-            <Parameter Name="VazbyRaw" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="DatoveSchrankies" EntityType="FirmyModel.DatoveSchranky" />
           <EntitySet Name="WatchDogs" EntityType="FirmyModel.WatchDog" />
@@ -783,7 +781,7 @@
           <Property Name="Url" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="false" />
           <Property Name="ItemType" Type="Int32" Nullable="false" />
           <Property Name="ItemId" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="Created" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
         <EntityType Name="UserOptions" Abstract="false">
           <Key>

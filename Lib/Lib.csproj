@@ -528,6 +528,7 @@
     <Compile Include="Data\VZ\VerejnaZakazka.Search.cs" />
     <Compile Include="Data\Watchdog.partial.Send.cs" />
     <Compile Include="Data\Watchdog.partial.cs" />
+    <Compile Include="Data\Watchdog.Insolvence.cs" />
     <Compile Include="Data\Watchdog.VerejnaZakazka.cs" />
     <Compile Include="Data\Watchdog.Smlouva.cs" />
     <Compile Include="Emails\Templates\FoundZakazkyItem.cs" />
@@ -723,6 +724,9 @@
     <None Include="Data\External\RZP\Response.xsd">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Text.cshtml" />
+    <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Html.cshtml" />
+    <EmbeddedResource Include="Emails\Templates\FoundInsolvence.cshtml" />
     <None Include="packages.config" />
     <None Include="xsd\dump_index.xsd">
       <SubType>Designer</SubType>

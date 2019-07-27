@@ -212,6 +212,8 @@ namespace HlidacStatu.Web.Controllers
                     wd.dataType = typeof(Smlouva).Name;
                 else if (dt.ToLower() == typeof(VerejnaZakazka).Name.ToLower())
                     wd.dataType = typeof(VerejnaZakazka).Name;
+                else if (dt.ToLower() == typeof(Lib.Data.Insolvence.Rizeni).Name.ToLower())
+                    wd.dataType = typeof(Lib.Data.Insolvence.Rizeni).Name;
                 else if (dt.ToLower().StartsWith(typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet).Name.ToLower()))
                 {
                     var dataSetId = dt.Replace("DataSet.", "");

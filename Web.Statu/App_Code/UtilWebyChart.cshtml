@@ -360,10 +360,14 @@ var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
                         <span class="badge">@(ZabTools.WebyItems("1")?.Count() ?? 0)</span>
                         Další důležité služby
                     </a>
+                    <a href="@Url.Action("Dalsi","Weby", new { @id="2" })" class="list-group-item @Util.IfExists(active=="2","disabled")">
+                        <span class="badge">@(ZabTools.WebyItems("2")?.Count() ?? 0)</span>
+                        Ostatní měřené služby
+                    </a>
                     @*<a href="#" class="list-group-item disabled">
-                            <span class="badge">Připravujeme</span>
-                            Služby krajů ČR
-                        </a>*@
+            <span class="badge">Připravujeme</span>
+            Služby krajů ČR
+        </a>*@
                     <a href="/statniweby/opendata" class="list-group-item @Util.IfExists(active=="opendata","disabled")">
                         <span class="badge">JSON</span>
                         Naměřené údaje jako open data
