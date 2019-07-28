@@ -1,17 +1,17 @@
 ﻿@model HlidacStatu.Lib.Data.Insolvence.DokumentSeSpisovouZnackou
 
 @{
-	ViewBag.Title = "Insolvenční řízení " + ViewBag.Id + ".";
-	ViewBag.SubTitle = "Přístup k insolvenčnímu řízení je omezen.";
+    ViewBag.Title = "Insolvenční řízení " + ViewBag.Id + ".";
+    ViewBag.SubTitle = "Přístup k insolvenčnímu řízení je omezen.";
 }
 
 @section breadcrumb
 {
-		<ol class="breadcrumb">
-			<li><a href="/">Hlídač Státu</a></li>
-			<li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
-			<li class="active">@ViewBag.SubTitle</li>
-		</ol>
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index", "Insolvence")">Hlídač Insolvencí</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
 }
 
 <div class="panel panel-danger">
@@ -19,17 +19,34 @@
         <h3 class="panel-title">Přístup omezen</h3>
     </div>
     <div class="panel-body">
-        Z důvody ochrany osobních údajů <b>zobrazujeme</b> pouze insolvenční řízení, která splňují alespoň jednu z následujících podmínek:
-        <ol>
-            <li>týkají se podnikatelů, právnických osob a dalších nesoukromých subjektů</li>
-            <li>týkající se fyzické osoby, která je politicky angažovaní;</li>
-            <li>týkající se fyzické osoby, která sponzorovala alespoň jednou politickou stranu;</li>
-            <li>insolvence se týka osob či skutečností, kde je její zveřejněníve veřejném zájmu tuto info</li>
-        </ol>
-        <div class="small">
-            Pozn: Stát zveřejňuje v insolvenčních rejstříku všechna insolvenční řízení bez omezení. Tato omezení jsme si stanovili my sami dobrovolně s ohledem na
-            osobní údaje fyzických osob.
-        </div>
+        @if (Request.IsAuthenticated == false)
+        {
+            <div>
+                Podrobné informace o insolvencích jsou dostupné pouze registrovaným uživatelům Hlídače Státu. Registrace je zdarma a je velmi jednoduchá.
+            </div>
+            <div>
+                Pokud jste již zaregistrováni, <a href="/account/login?returnUrl=" class="btn btn-default">zalogujte se</a>.
+            </div>
+            <div>
+                <a href="/account/Register?returnUrl=" class="btn btn-primary">Jinak se zaregistrujte</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                Z důvody ochrany osobních údajů <b>zobrazujeme</b> pouze insolvenční řízení, která splňují alespoň jednu z následujících podmínek:
+                <ol>
+                    <li>týkají se podnikatelů, právnických osob a dalších nesoukromých subjektů</li>
+                    <li>týkající se fyzické osoby, která je politicky angažovaní;</li>
+                    <li>týkající se fyzické osoby, která sponzorovala alespoň jednou politickou stranu;</li>
+                    <li>insolvence se týka osob či skutečností, kde je její zveřejněníve veřejném zájmu tuto info</li>
+                </ol>
+                <div class="small">
+                    Pozn: Stát zveřejňuje v insolvenčních rejstříku všechna insolvenční řízení bez omezení. Tato omezení jsme si stanovili my sami dobrovolně s ohledem na
+                    ochranu osobních údajů fyzických osob.
+                </div>
+            </div>
+        }
         <br />
         <br />
         <h3>Chcete přístup ke všem insolvencím?</h3>
