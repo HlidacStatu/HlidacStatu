@@ -462,17 +462,25 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        string anontitle = "Veřejné zakázky";
+        string anonbody = "Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu. Registrace je zdarma a je velmi jednoduchá.";
+        if (Request.Url.AbsolutePath.ToLower().Contains("insolvence"))
+        {
+            anontitle = "Insolvence";
+            anonbody = "Podrobné informace o insolvencích jsou dostupné pouze registrovaným uživatelům Hlídače Státu. Registrace je zdarma a je velmi jednoduchá. " 
+                + "<br/><br/><b>Novináři a datový analytici</b> mají přístup ke všem datům, ostatní pouze k insolvencím, které mají vztah ke kontrole státu a firem a osob s ním obchodujícím.";
+        }
+
         <div id="VZInfoAnon" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Veřejné zakázky</h4>
+                        <h4 class="modal-title">@anontitle</h4>
                     </div>
                     <div class="modal-body">
                         <p>
-                            Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
-                            Registrace je zdarma a je velmi jednoduchá.
+                            @Html.Raw(anonbody)
                         </p>
                         <p>Pokud jste již zaregistrováni, <a id="VZInfoAnonLogin" href="/account/login?returnUrl=" class="btn btn-default">zalogujte se</a>. </p>
                     </div>
