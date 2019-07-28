@@ -94,6 +94,9 @@ namespace HlidacStatu.Lib
 
         //public static SingletonManagerWithSetup<Data.External.TwitterPublisher, Tweetinvi.Models.TwitterCredentials> TweetingManager = null;
 
+        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Data.Darujme.Stats> DarujmeStats = null;
+
+
         public static string[] HejtmaniOd2016 = new string[] {
             "jaroslava-jermanova",
             "ivana-straska",
@@ -286,6 +289,39 @@ namespace HlidacStatu.Lib
                 //if (!System.Diagnostics.Debugger.IsAttached)
                 Politici.Get(); //force to load
                 SponzorujiciFirmy_Vsechny.Get(); //force to load
+
+                HlidacStatu.Util.Consts.Logger.Info("Static data - DarujmeStats");
+
+                DarujmeStats = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Data.Darujme.Stats>(
+                        TimeSpan.FromHours(3), (obj) =>
+                        {
+                            var defData = new Darujme.Stats() {
+                                projectStats = new Darujme.Stats.Projectstats()
+                                    {
+                                         collectedAmountEstimate = new Darujme.Stats.Projectstats.Collectedamountestimate()
+                                         {
+                                              cents = 70891100,
+                                              currency  = "CZK"
+                                         },
+                                          donorsCount = 280,
+                                          projectId = 1200384
+                                    }
+                                };
+                            try
+                            {
+                                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent("https://www.darujme.cz/api/v1/project/1200384/stats?apiId=74233883&apiSecret=q2vqimypo2ohpa0qi6g9zwn37rb1bpaan12gulqk"))
+                                {
+                                    return Newtonsoft.Json.JsonConvert.DeserializeObject<Darujme.Stats>(url.GetContent().Text);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                HlidacStatu.Util.Consts.Logger.Error("Static data - DarujmeStats",e);
+
+                                return defData;
+                            }
+                        }
+                    );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - BasicStatisticData ");
                 BasicStatisticData = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<double>>(
