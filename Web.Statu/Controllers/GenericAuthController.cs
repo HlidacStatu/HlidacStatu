@@ -48,9 +48,36 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+        [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 24)]
+        [ChildActionOnly]
+        public ActionResult CachedAction_Child_24H(object model, string nameOfView, params string[] parameters)
+        {
+            ViewBag.NameOfView = nameOfView;
+            ViewBag.Parameters = parameters;
+            return View(nameOfView, model);
+        }
+
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 12)]
         [ChildActionOnly]
         public ActionResult CachedAction_Child_12H(object model, string nameOfView, params string[] parameters)
+        {
+            ViewBag.NameOfView = nameOfView;
+            ViewBag.Parameters = parameters;
+            return View(nameOfView, model);
+        }
+
+        [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 4)]
+        [ChildActionOnly]
+        public ActionResult CachedAction_Child_4H(object model, string nameOfView, params string[] parameters)
+        {
+            ViewBag.NameOfView = nameOfView;
+            ViewBag.Parameters = parameters;
+            return View(nameOfView, model);
+        }
+
+        [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 2)]
+        [ChildActionOnly]
+        public ActionResult CachedAction_Child_2H(object model, string nameOfView, params string[] parameters)
         {
             ViewBag.NameOfView = nameOfView;
             ViewBag.Parameters = parameters;

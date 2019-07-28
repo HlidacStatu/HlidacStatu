@@ -102,7 +102,7 @@ if (data.Count() == 0)
 string containerId = "chart_"+Guid.NewGuid().ToString("N");
 string sMaxVal = data.Max(m=>m.Value).ToString(HlidacStatu.Util.Consts.enCulture);
 string sdata = data
-    .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month},{m.Date.Day}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+    .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month-1},{m.Date.Day}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
     .Aggregate((f, s) => f + "," + s);
 
     <div id="@containerId" style="height:@(height)px;width:@(width)px"></div>

@@ -321,5 +321,24 @@ namespace HlidacStatu.Util
             }
         }
 
+        public static string ToJavascriptDateUTC(DateTime date)
+        {
+            DateTime m = date;
+            switch (date.Kind)
+            {
+                case DateTimeKind.Unspecified:
+                case DateTimeKind.Local:
+                    m = date.ToUniversalTime();
+                    break;
+                case DateTimeKind.Utc:
+                    m = date;
+                    break;
+                default:
+                    m = date.ToUniversalTime();
+                    break;
+            }
+
+            return $"Date.UTC({m.Date.Year},{ m.Date.Month - 1},{ m.Date.Day})";
+        }
     }
 }

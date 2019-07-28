@@ -114,7 +114,7 @@ namespace HlidacStatu.Web.Framework.Report
                 new ReportDataSource.Column() { Name="Měsíc",
                     TextRender = (s) => {
                                             DateTime dt = ((DateTime)s);
-                                            return string.Format("Date.UTC({0}, {1}, {2})", dt.Year, dt.Month, dt.Day);
+                                            return string.Format("Date.UTC({0}, {1}, {2})", dt.Year, dt.Month-1, dt.Day);
                                         }
                 },
                 new ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); } },

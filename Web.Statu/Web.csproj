@@ -1327,6 +1327,7 @@
     <Content Include="Views\Weby\_Info.cshtml" />
     <Content Include="Views\Insolvence\PristupOmezen.cshtml" />
     <Content Include="Views\Shared\Bot.cshtml" />
+    <Content Include="Views\Insolvence\Index.Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

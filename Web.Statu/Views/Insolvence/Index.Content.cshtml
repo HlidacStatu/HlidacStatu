@@ -12,6 +12,8 @@
 @{
     Layout = null;
 
+
+
 }
 
 
@@ -36,7 +38,7 @@
                                     DateTime thisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                                     string query = "-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\"";
                                     var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
-                                        "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
+                                        "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *]",
                                         1, 0, 0, limitedView: false, anyAggregation: aggs);
 
                                     IEnumerable<ReportDataTimeValue> data = ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
@@ -276,44 +278,6 @@
     @Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
 
 
-    <div class="col-xs-12">
-        <h2>Nové společnosti v insolvenci</h2>
-        @{
-            var spolecnosti = Model.NoveFirmyVInsolvenci;
-        }
-
-        <table class="table table-hover">
-            <thead>
-                @SearchResults.InsolvenceHead()
-            </thead>
-            <tbody>
-                @foreach (var item in spolecnosti.Result.Hits.Take(20))
-                {
-                    @SearchResults.InsolvenceRow(User, Request, item.Source, "")
-                }
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-xs-12">
-        <h2>Nové osoby v insolvenci</h2>
-        @{
-            var osoby = Model.NoveOsobyVInsolvenci;
-        }
-
-        <table class="table table-hover">
-            <thead>
-                @SearchResults.InsolvenceHead()
-            </thead>
-            <tbody>
-                @foreach (var item in osoby.Result.Hits.Take(20))
-                {
-                    @SearchResults.InsolvenceRow(User, Request, item.Source, "")
-                }
-            </tbody>
-        </table>
-    </div>
 </div>
 
 
