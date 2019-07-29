@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.ES
 {
-    public class SearchData<T> : Lib.Data.Search.ISearchResult
+    public class SearchDataResult<T> : Lib.Data.Search.ISearchResult
         where T : class 
     {
         public virtual int DefaultPageSize() { return 40; }
@@ -69,11 +69,11 @@ namespace HlidacStatu.Lib.ES
             return new List<System.Web.Mvc.SelectListItem>();
         };
 
-        public SearchData()
+        public SearchDataResult()
                 : this(emptyOrderList)
         { }
 
-        public SearchData(Func<List<System.Web.Mvc.SelectListItem>> createdOrderList)
+        public SearchDataResult(Func<List<System.Web.Mvc.SelectListItem>> createdOrderList)
         {
             if (createdOrderList == null)
                 createdOrderList = emptyOrderList;

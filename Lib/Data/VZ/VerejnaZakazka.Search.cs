@@ -198,47 +198,38 @@ namespace HlidacStatu.Lib.Data.VZ
             public static QueryContainer GetSimpleQuery(ES.VerejnaZakazkaSearchData searchdata)
             {
 
-                var query = searchdata.Q?.Trim();
-                //if (string.IsNullOrEmpty(query) || query == "*")
-                //    return new QueryContainerDescriptor<VerejnaZakazka>().MatchAll();
-
-
-                string regexPrefix = @"(^|\s|[(])";
-                string regexTemplate = "{0}(?<q>(-|\\w)*)\\s*";
-                //fix field prefixes
-                //ds: -> 
                 string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
-                    {@"holding:(?<q>(\d{1,8})) ","${ico}" },
+                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
+                    {@"holding:(?<q>(\d{1,8})) ","ico" },
                     {"cpv:","${cpv}" },
                     {"oblast:","${oblast}" },
                     {"form:","${form}" },
                     {"zahajeny:1","stavVZ:<=100" },
-                    {regexPrefix + "ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " },
-                    {regexPrefix + "icododavatel:","dodavatele.iCO:" },
-                    {regexPrefix + "icoprijemce:","dodavatele.iCO:" },
-                    {regexPrefix + "icozadavatel:","zadavatel.iCO:" },
-                    {regexPrefix + "icoplatce:","zadavatel.iCO:" },
+                    {"ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " },
+                    {"icododavatel:","dodavatele.iCO:" },
+                    {"icoprijemce:","dodavatele.iCO:" },
+                    {"icozadavatel:","zadavatel.iCO:" },
+                    {"icoplatce:","zadavatel.iCO:" },
                     {"jmenoprijemce:","dodavatele.jmeno:" },
                     {"jmenoplatce:","zadavatel.jmeno:" },
-                    {regexPrefix + "id:","id:" },
+                    {"id:","id:" },
                     {"popis:","(nazevZakazky:${q} OR popisZakazky:${q}) " },
                     {"cena:<=","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) " },
                     {"cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " },
                     {"cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " },
                     {"cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " },
-                    {regexPrefix + "cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " },
-                    {regexPrefix + "zverejneno:\\[","datumUverejneni:[" },
-                    {regexPrefix + "zverejneno:(?=[<>])","datumUverejneni:${q}" },
-                    {regexPrefix + "zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" },
-                    {regexPrefix + "podepsano:\\[","datumUzavreniSmlouvy:[" },
-                    {regexPrefix + "podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" },
-                    {regexPrefix + "podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" },
+                    {"cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " },
+                    {"zverejneno:\\[","datumUverejneni:[" },
+                    {"zverejneno:(?=[<>])","datumUverejneni:${q}" },
+                    {"zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" },
+                    {"podepsano:\\[","datumUzavreniSmlouvy:[" },
+                    {"podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" },
+                    {"podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" },
                     {"text:","prilohy.plainTextContent:" },
                 };
 
-
-                string modifiedQ = query; // ES.SearchTools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
+                var query = searchdata.Q?.Trim();
+                string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                 //check invalid query ( tag: missing value)
 
 
@@ -253,185 +244,10 @@ namespace HlidacStatu.Lib.Data.VZ
                 }
 
 
-                for (int i = 0; i < rules.GetLength(0); i++)
-                {
-                    string lookFor = rules[i, 0];
-                    string replaceWith = rules[i, 1];
-
-                    MatchEvaluator evalMatch = (m) =>
-                    {
-                        var s = m.Value;
-                        if (string.IsNullOrEmpty(s))
-                            return string.Empty;
-                        var newVal = replaceWith;
-                        if (newVal.Contains("${q}"))
-                            newVal = newVal.Replace("${q}", m.Groups["q"].Value);
-                        if (s.StartsWith("("))
-                            return " (" + newVal;
-                        else
-                            return " " + newVal;
-                    };
-
-                    //if (modifiedQ.ToLower().Contains(lookFor.ToLower()))
-                    if (Regex.IsMatch(modifiedQ, lookFor, regexQueryOption))
-                    {
-                        if (replaceWith.Contains("${q}"))
-                        {
-                            modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
-                        } //do regex replace
-                        //else if (replaceWith.Contains("${zahajeny}") && )
-                        //{
-                        //    modifiedQ = Regex.Replace(modifiedQ, lookFor, "stavVZ:<=100", regexQueryOption);
-                        //} //do regex replace
-                        else if (replaceWith.Contains("${oblast}"))
-                        {
-                            string cpv = "";
-                            if (replaceWith.Contains("${oblast}"))
-                            {
-                                var oblastVal = ParseTools.GetRegexGroupValue(modifiedQ, @"oblast:(?<oblast>\w*)", "oblast");
-                                var cpvs = CPVOblastToCPV(oblastVal);
-                                if (cpvs != null)
-                                {
-                                    var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-                                    modifiedQ = Regex.Replace(modifiedQ, @"oblast:(?<oblast>\w*)", q_cpv, regexQueryOption);
-                                }
-                            }
-                        }
-                        else if (replaceWith.Contains("${cpv}"))
-                        {
-                            string cpv = "";
-                            //Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                            //string cpv = "";
-                            //if (m.Success)
-                            //    cpv = m.Groups["q"].Value;
-                            cpv = ParseTools.GetRegexGroupValue(modifiedQ, @"cpv:(?<q>(-|,|\d)*)\s*", "q");
-                            lookFor = @"cpv:(?<q>(-|,|\d)*)\s*";
-                            if (!string.IsNullOrEmpty(cpv))
-                            {
-                                string[] cpvs = cpv.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                string q_cpv = "";
-                                if (cpvs.Length > 0)
-                                    q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, q_cpv, regexQueryOption);
-                            }
-                            else
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
-                        }
-                        else if (replaceWith.Contains("${form}"))
-                        {
-                            lookFor = @"form:(?<q>((F|CZ)\d{1,2}(,)?)*)\s*";
-                            Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                            string form = "";
-                            if (m.Success)
-                                form = m.Groups["q"].Value;
-                            if (!string.IsNullOrEmpty(form))
-                            {
-                                string[] forms = form.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                string q_form = "";
-                                if (forms.Length > 0)
-                                    q_form = "formulare.druh:(" + forms.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, q_form, regexQueryOption);
-                            }
-                            else
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
-                        }
-                        else if (lookFor.Contains("holding:"))
-                        {
-                            //list of ICO connected to this person
-                            Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                            string holdingIco = m.Groups["q"].Value;
-                            HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-                            Data.Firma f = Data.Firmy.Get(holdingIco);
-                            if (f != null && f.Valid)
-                            {
-                                var icos = new string[] { f.ICO }
-                                        .Union(f.AktualniVazby(aktualnost)
-                                            .Select(s => s.To.Id)
-                                            )
-                                    .Distinct();
-                                string icosQuery = "";
-                                var icosPresLidi = f.AktualniVazby(aktualnost)
-                                        .Where(o=>o.To.Type == Graph.Node.NodeType.Person)
-                                        .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
-                                        .Where(o => o != null)
-                                        .SelectMany(o => o.AktualniVazby(aktualnost))
-                                        .Select(v => v.To.Id)
-                                        .Distinct();
-                                icos = icos.Union(icosPresLidi).Distinct();
-
-                                var templ = "( ico:{0} ) ";
-                                if (icos != null && icos.Count() > 0)
-                                {
-                                    icosQuery = "( " + icos
-                                        .Select(t => string.Format(templ, t))
-                                        .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
-                                }
-                                else
-                                {
-                                    icosQuery = " ( ico:noOne ) ";
-                                }
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-
-                            }
-                        } //do regex replace
-                        else if (replaceWith.Contains("${ico}"))
-                        {
-                            //list of ICO connected to this person
-                            Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                            string nameId = m.Groups["q"].Value;
-                            Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
-                            string icosQuery = "";
-                            if (p != null)
-                            {
-                                var icos = p
-                                            .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                            .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                            .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                            .Select(w => w.To.Id)
-                                            .Distinct().ToArray();
-                                var templ = " ( ico:{0} ) ";
-                                if (icos != null && icos.Length > 0)
-                                {
-                                    icosQuery = " ( " + icos
-                                        .Select(t => string.Format(templ, t))
-                                        .Aggregate((f, s) => f + " OR " + s) + " ) ";
-                                }
-                                else
-                                {
-                                    icosQuery = " ( ico:noOne ) ";
-                                }
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-                            }
-                            else
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, " ( ico:noOne ) ", regexQueryOption);
-                        }
-                        else
-                        {
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, evalMatch, regexQueryOption);
-
-                        }
-                    }
-                }
-
-
-                QueryContainer qc = null;
-                if (modifiedQ == null)
-                    qc = new QueryContainerDescriptor<VerejnaZakazka>().MatchNone();
-                else if (string.IsNullOrEmpty(modifiedQ))
-                    qc = new QueryContainerDescriptor<VerejnaZakazka>().MatchAll();
-                else
-                {
-                    modifiedQ = modifiedQ.Replace(" | ", " OR ").Trim();
-                    qc = new QueryContainerDescriptor<VerejnaZakazka>()
-                        .QueryString(qs => qs
-                            .Query(modifiedQ)
-                            .DefaultOperator(Operator.And)
-                        );
-                }
+                var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, rules); ;
 
                 return qc;
+
             }
 
 
@@ -487,7 +303,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 if (fixQuery)
                 {
                     search.OrigQuery = query;
-                    query = ES.SearchTools.FixInvalidQuery(query, queryShorcuts, queryOperators);
+                    query = Lib.Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators);
                 }
                 if (logError && search.Q != search.OrigQuery)
                 {
@@ -511,7 +327,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Query(q => GetSimpleQuery(search))
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                             .Aggregations(aggrFunc)
-                            .Highlight(h =>ES.SearchTools.GetHighlight<VerejnaZakazka>(withHighlighting))
+                            .Highlight(h =>Lib.Search.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
                     );
 
                 }

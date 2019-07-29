@@ -47,203 +47,49 @@ namespace HlidacStatu.Lib.Data.Insolvence
             var query = searchdata.Q;
 
 
-            string regexPrefix = @"(^|\s|[(])";
-            string regexPostfix = @"($\s|\))?";
-            string regexTemplate = "{0}(?<q>(-|\\w)*)\\s*";
             //fix field prefixes
             //ds: -> 
             string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
-                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","${ico}" },
+                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
+                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" },
 
-                    {@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
-                    {@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
-                    {@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                    {@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" },
+                    {@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" },
+                    {@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" },
 
-                    {regexPrefix + "ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " },
-                    {regexPrefix + "icodluznik:","dluznici.iCO:" },
-                    {regexPrefix + "icoveritel:","veritele.iCO:" },
-                    {regexPrefix + "icospravce:","spravci.iCO:" },
-                    {regexPrefix + "jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" },
-                    {regexPrefix + "jmenodluznik:","dluznici.plneJmeno:" },
-                    {regexPrefix + "jmenoveritel:","veritele.plneJmeno:" },
-                    {regexPrefix + "jmenospravce:","spravci.plneJmeno:" },
-                    {regexPrefix + "spisovaznacka:","spisovaZnacka:" },
-                    {regexPrefix + "id:","spisovaZnacka:" },
+                    {"ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " },
+                    {"icodluznik:","dluznici.iCO:" },
+                    {"icoveritel:","veritele.iCO:" },
+                    {"icospravce:","spravci.iCO:" },
+                    {"jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" },
+                    {"jmenodluznik:","dluznici.plneJmeno:" },
+                    {"jmenoveritel:","veritele.plneJmeno:" },
+                    {"jmenospravce:","spravci.plneJmeno:" },
+                    {"spisovaznacka:","spisovaZnacka:" },
+                    {"id:","spisovaZnacka:" },
                     {"zmeneno:\\[","posledniZmena:[" },
                     {"zmeneno:(?=[<>])","posledniZmena:${q}" },
                     {"zmeneno:(?=\\d)","posledniZmena:[${q} TO ${q}||+1d]" },
                     {"zahajeno:\\[","datumZalozeni:[" },
                     {"zahajeno:(?=[<>])","datumZalozeni:${q}" },
                     {"zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" },
-                    {regexPrefix + "stav:","stav:" },
-                    {regexPrefix + "text:","dokumenty.plainText:" },
-                    {regexPrefix + "typdokumentu:","dokumenty.popis:" },
-                    {regexPrefix + "dokumenttyp:","dokumenty.popis:" },
-                    {regexPrefix + "oddil:","dokumenty.oddil:" },
+                    {"stav:","stav:" },
+                    {"text:","dokumenty.plainText:" },
+                    {"typdokumentu:","dokumenty.popis:" },
+                    {"dokumenttyp:","dokumenty.popis:" },
+                    {"oddil:","dokumenty.oddil:" },
             };
 
-            string modifiedQ = query; // ES.SearchTools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
+            string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
                 modifiedQ = Lib.ES.SearchTools.ModifyQuery(modifiedQ, "onRadar:true");
 
-            for (int i = 0; i < rules.GetLength(0); i++)
-            {
-                string lookFor = rules[i, 0];
-                string replaceWith = rules[i, 1];
-
-                MatchEvaluator evalMatch = (m) =>
-                {
-                    var s = m.Value;
-                    if (string.IsNullOrEmpty(s))
-                        return string.Empty;
-                    var newVal = replaceWith;
-                    if (newVal.Contains("${q}"))
-                        newVal = newVal.Replace("${q}", m.Groups["q"].Value);
-                    if (s.StartsWith("("))
-                        return " (" + newVal;
-                    else
-                        return " " + newVal;
-                };
-
-                //if (modifiedQ.ToLower().Contains(lookFor.ToLower()))
-                if (Regex.IsMatch(modifiedQ, lookFor, regexQueryOption))
-                {
-                    if (replaceWith.Contains("${q}"))
-                    {
-                        modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
-                    }
-                    else if (
-                        lookFor.Contains("holding:")
-                        || lookFor.Contains("holdingdluznik:")
-                        || lookFor.Contains("holdingveritel:")
-                        || lookFor.Contains("holdingspravce:")
-                        )
-
-                    {
-                        //list of ICO connected to this person
-                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string holdingIco = m.Groups["q"].Value;
-                        HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-                        Data.Firma f = Data.Firmy.Get(holdingIco);
-                        if (f != null && f.Valid)
-                        {
-                            var icos = new string[] { f.ICO }
-                                    .Union(f.AktualniVazby(aktualnost)
-                                        .Select(s => s.To.Id)
-                                        )
-                                .Distinct();
-                            string icosQuery = "";
-                            var icosPresLidi = f.AktualniVazby(aktualnost)
-                                    .Where(o => o.To.Type == Graph.Node.NodeType.Person)
-                                    .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
-                                    .Where(o => o != null)
-                                    .SelectMany(o => o.AktualniVazby(aktualnost))
-                                    .Select(v => v.To.Id)
-                                    .Distinct();
-                            icos = icos.Union(icosPresLidi).Distinct();
-
-                            string icoprefix = "ico";
-                            if (lookFor.Contains("holdingdluznik:"))
-                                icoprefix = "icodluznik";
-                            if (lookFor.Contains("holdingveritel:"))
-                                icoprefix = "icoveritel";
-                            if (lookFor.Contains("holdingspravce:"))
-                                icoprefix = "icospravce";
-
-
-                            var templ = $" ( {icoprefix}:{{0}} ) ";
-
-                            if (icos != null && icos.Count() > 0)
-                            {
-                                icosQuery = " ( " + icos
-                                    .Select(t => string.Format(templ, t))
-                                    .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
-                            }
-                            else
-                            {
-                                icosQuery = " ( ico:noOne ) ";
-                            }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-
-                        }
-                    } //do regex replace
-                    else if (
-                        lookFor.Contains("osobaid:")
-                        || lookFor.Contains("osobaiddluznik:")
-                        || lookFor.Contains("osobaidveritel:")
-                        || lookFor.Contains("osobaidspravce:")
-                        )  //(replaceWith.Contains("${ico}"))
-                    {
-                        //list of ICO connected to this person
-                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string nameId = m.Groups["q"].Value;
-                        Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
-                        string icosQuery = "";
-                        if (p != null)
-                        {
-                            var icos = p
-                                        .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                        .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                        .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                        .Select(w => w.To.Id)
-                                        .Distinct().ToArray();
-
-                            string icoprefix = "ico";
-                            if (lookFor.Contains("osobaiddluznik:"))
-                                icoprefix = "icodluznik";
-                            if (lookFor.Contains("osobaidveritel:"))
-                                icoprefix = "icoveritel";
-                            if (lookFor.Contains("osobaidspravce:"))
-                                icoprefix = "icospravce";
-
-
-                            var templ = $" ( {icoprefix}:{{0}} ) ";
-
-                            if (icos != null && icos.Length > 0)
-                            {
-                                icosQuery = " ( " + icos
-                                    .Select(t => string.Format(templ, t))
-                                    .Aggregate((f, s) => f + " OR " + s) + " ) ";
-                                icosQuery += " ";
-                            }
-                            else
-                            {
-                                icosQuery = " ( ico:noOne ) ";
-                            }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-                        }
-                        else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " ( ico:noOne ) ", regexQueryOption);
-                    }
-                    else
-                    {
-                        modifiedQ = Regex.Replace(modifiedQ, lookFor, evalMatch, regexQueryOption);
-
-                    }
-                }
-            }
-
-
-
-            QueryContainer qc = null;
-            if (modifiedQ == null)
-                qc = new QueryContainerDescriptor<Rizeni>().MatchNone();
-            else if (string.IsNullOrEmpty(modifiedQ))
-                qc = new QueryContainerDescriptor<Rizeni>().MatchAll();
-            else
-            {
-                modifiedQ = modifiedQ.Replace(" | ", " OR ").Trim();
-                qc = new QueryContainerDescriptor<Rizeni>()
-                    .QueryString(qs => qs
-                        .Query(modifiedQ)
-                        .DefaultOperator(Operator.And)
-                    );
-            }
+            var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
 
             return qc;
+
         }
 
 
@@ -271,7 +117,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             var sw = new StopWatchEx();
             sw.Start();
 
-            search.Q = SearchTools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
+            search.Q = Lib.Search.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
             ISearchResponse<Rizeni> res = null;
             try
@@ -285,7 +131,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Query(q => GetSimpleQuery(search))
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                        .Highlight(h => Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
+                        .Highlight(h => Lib.Search.Tools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                 );
             }

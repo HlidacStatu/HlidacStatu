@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HlidacStatu.Lib.ES
 {
     public class SmlouvaSearchResult
-        : SearchData<HlidacStatu.Lib.Data.Smlouva>
+        : SearchDataResult<HlidacStatu.Lib.Data.Smlouva>
     {
 
         public bool Chyby { get; set; } = false;

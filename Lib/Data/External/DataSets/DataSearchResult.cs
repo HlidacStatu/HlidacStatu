@@ -43,7 +43,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
     }
 
-    public class DataSearchResultBase<T> : SearchData<T>
+    public class DataSearchResultBase<T> : SearchDataResult<T>
     where T : class
     {
 

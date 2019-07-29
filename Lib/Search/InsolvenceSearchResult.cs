@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.ES
 {
-	public class InsolvenceSearchResult : SearchData<Data.Insolvence.Rizeni>
+	public class InsolvenceSearchResult : SearchDataResult<Data.Insolvence.Rizeni>
 	{
         public InsolvenceSearchResult()
             : base(getVZOrderList)

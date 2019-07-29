@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HlidacStatu.Lib.ES
 {
     public class VerejnaZakazkaSearchData
-        : SearchData<HlidacStatu.Lib.Data.VZ.VerejnaZakazka>
+        : SearchDataResult<HlidacStatu.Lib.Data.VZ.VerejnaZakazka>
     {
         public VerejnaZakazkaSearchData()
         : base(getVZOrderList)
