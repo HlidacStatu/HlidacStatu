@@ -230,8 +230,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             //ds: -> 
             string[,] rules = new string[,] {
                     {regexPrefix + "ico:","${ico}" },
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) (\s|$){1,}","${ico}" },
-                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","${ico}" },
+                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                    {@"holding:(?<q>(\d{1,8})) ","${ico}" },
                 };
 
 
@@ -302,19 +302,19 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                                 var icoquerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "{0}");
 
-                                var templ = "(ico:{0})";
+                                var templ = " ( ico:{0} ) ";
                                 if (!string.IsNullOrEmpty(icoquerypath))
                                     templ = icoquerypath;
 
                                 if (icos != null && icos.Count() > 0)
                                 {
-                                    icosQuery = "(" + icos
+                                    icosQuery = " ( " + icos
                                         .Select(t => string.Format(templ, t))
-                                        .Aggregate((fi, s) => fi + " OR " + s) + ")";
+                                        .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
                                 }
                                 else
                                 {
-                                    icosQuery = "(ico:noOne)";
+                                    icosQuery = " ( ico:noOne ) ";
                                 }
                                 modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
@@ -344,9 +344,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                             .Distinct().ToArray();
                                 if (icos != null && icos.Length > 0 && !string.IsNullOrEmpty(icoQuerypath))
                                 {
-                                    icosQuery = "(" + icos
+                                    icosQuery = " ( " + icos
                                         .Select(t => string.Format(icoQuerypath, t))
-                                        .Aggregate((f, s) => f + " OR " + s) + ")";
+                                        .Aggregate((f, s) => f + " OR " + s) + " ) ";
                                 }
                                 if (!string.IsNullOrEmpty(osobaidQuerypath))
                                 {
@@ -372,7 +372,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "{0}");
                         if (!string.IsNullOrEmpty(icoQuerypath))
                         {
-                            var templ = "(ico:{0})";
+                            var templ = " ( ico:{0} ) ";
                             if (!string.IsNullOrEmpty(icoQuerypath))
                                 templ = icoQuerypath;
 

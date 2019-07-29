@@ -307,8 +307,8 @@ namespace HlidacStatu.Lib.ES
             //fix field prefixes
             //ds: -> 
             string[,] rules = new string[,] {
-                {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) (\s|$){1,}","${ico}" },
-                {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","${ico}" },
+                {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                {@"holding:(?<q>(\d{1,8})) ","${ico}" },
                 {"ds:","(prijemce.datovaSchranka:${q} OR platce.datovaSchranka:${q}) " },
                 {"dsprijemce:","prijemce.datovaSchranka:" },
                 {"dsplatce:","platce.datovaSchranka:" },
@@ -391,16 +391,16 @@ namespace HlidacStatu.Lib.ES
                                     .Select(v => v.To.Id)
                                     .Distinct();
                             icos = icos.Union(icosPresLidi).Distinct();
-                            var templ = "(ico:{0})";
+                            var templ = " ( ico:{0} ) ";
                             if (icos != null && icos.Count() > 0)
                             {
-                                icosQuery = "(" + icos
+                                icosQuery = " ( " + icos
                                     .Select(t => string.Format(templ, t))
-                                    .Aggregate((fi, s) => fi + " OR " + s) + ")";
+                                    .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
                             }
                             else
                             {
-                                icosQuery = "(ico:noOne)";
+                                icosQuery = " ( ico:noOne ) ";
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
@@ -421,21 +421,21 @@ namespace HlidacStatu.Lib.ES
                                         .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
                                         .Select(w => w.To.Id)
                                         .Distinct().ToArray();
-                            var templ = "(ico:{0})";
+                            var templ = "( ico:{0} ) ";
                             if (icos != null && icos.Length > 0)
                             {
-                                icosQuery = "(" + icos
+                                icosQuery = " ( " + icos
                                     .Select(t => string.Format(templ, t))
-                                    .Aggregate((f, s) => f + " OR " + s) + ")";
+                                    .Aggregate((f, s) => f + " OR " + s) + " ) ";
                             }
                             else
                             {
-                                icosQuery = "(ico:noOne)";
+                                icosQuery = " ( ico:noOne ) ";
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
                         }
                         else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, "(ico:noOne)", regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " ( ico:noOne ) ", regexQueryOption);
                     }
                     else if (replaceWith.Contains("${level}"))
                     {
@@ -652,7 +652,7 @@ namespace HlidacStatu.Lib.ES
             if (string.IsNullOrEmpty(origQuery))
                 return anotherCondition;
             else
-                return string.Format("({0}) AND ({1})", origQuery, anotherCondition);
+                return string.Format("( {0} ) AND ( {1} ) ", origQuery, anotherCondition);
         }
 
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(string jsonQuery, int page, int pageSize, OrderResult order = OrderResult.Relevance,

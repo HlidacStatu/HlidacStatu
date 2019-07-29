@@ -25,11 +25,15 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 "jmenoveritel:",
                 "jmenospravce:",
                 "spisovaznacka:",
-                "zmeneno",
-                "zahajeno",
-                "stav",
-                "text",
-                "typdokumentu","dokumenttyp"
+                "zmeneno:",
+                "zahajeno:",
+                "stav:",
+                "text:",
+                "typdokumentu:","dokumenttyp:",
+                "osobaid:","holding:",
+                "osobaiddluznik:","holdingdluznik:",
+                "osobaidveritel:","holdingveritel:",
+                "osobaidspravce:","holdingspravce:",
             };
         static string[] queryOperators = new string[] { "AND", "OR" };
 
@@ -44,12 +48,18 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
 
             string regexPrefix = @"(^|\s|[(])";
+            string regexPostfix = @"($\s|\))?";
             string regexTemplate = "{0}(?<q>(-|\\w)*)\\s*";
             //fix field prefixes
             //ds: -> 
             string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) (\s|$){1,}","${ico}" },
+                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
                     {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","${ico}" },
+
+                    {@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                    {@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                    {@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+
                     {regexPrefix + "ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " },
                     {regexPrefix + "icodluznik:","dluznici.iCO:" },
                     {regexPrefix + "icoveritel:","veritele.iCO:" },
@@ -104,8 +114,14 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     if (replaceWith.Contains("${q}"))
                     {
                         modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
-                    } 
-                    else if (lookFor.Contains("holding:"))
+                    }
+                    else if (
+                        lookFor.Contains("holding:")
+                        || lookFor.Contains("holdingdluznik:")
+                        || lookFor.Contains("holdingveritel:")
+                        || lookFor.Contains("holdingspravce:")
+                        )
+
                     {
                         //list of ICO connected to this person
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
@@ -129,22 +145,37 @@ namespace HlidacStatu.Lib.Data.Insolvence
                                     .Distinct();
                             icos = icos.Union(icosPresLidi).Distinct();
 
-                            var templ = "(ico:{0})";
+                            string icoprefix = "ico";
+                            if (lookFor.Contains("holdingdluznik:"))
+                                icoprefix = "icodluznik";
+                            if (lookFor.Contains("holdingveritel:"))
+                                icoprefix = "icoveritel";
+                            if (lookFor.Contains("holdingspravce:"))
+                                icoprefix = "icospravce";
+
+
+                            var templ = $" ( {icoprefix}:{{0}} ) ";
+
                             if (icos != null && icos.Count() > 0)
                             {
-                                icosQuery = "(" + icos
+                                icosQuery = " ( " + icos
                                     .Select(t => string.Format(templ, t))
-                                    .Aggregate((fi, s) => fi + " OR " + s) + ")";
+                                    .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
                             }
                             else
                             {
-                                icosQuery = "(ico:noOne)";
+                                icosQuery = " ( ico:noOne ) ";
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
                         }
                     } //do regex replace
-                    else if (replaceWith.Contains("${ico}"))
+                    else if (
+                        lookFor.Contains("osobaid:")
+                        || lookFor.Contains("osobaiddluznik:")
+                        || lookFor.Contains("osobaidveritel:")
+                        || lookFor.Contains("osobaidspravce:")
+                        )  //(replaceWith.Contains("${ico}"))
                     {
                         //list of ICO connected to this person
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
@@ -159,21 +190,33 @@ namespace HlidacStatu.Lib.Data.Insolvence
                                         .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
                                         .Select(w => w.To.Id)
                                         .Distinct().ToArray();
-                            var templ = "(ico:{0})";
+
+                            string icoprefix = "ico";
+                            if (lookFor.Contains("osobaiddluznik:"))
+                                icoprefix = "icodluznik";
+                            if (lookFor.Contains("osobaidveritel:"))
+                                icoprefix = "icoveritel";
+                            if (lookFor.Contains("osobaidspravce:"))
+                                icoprefix = "icospravce";
+
+
+                            var templ = $" ( {icoprefix}:{{0}} ) ";
+
                             if (icos != null && icos.Length > 0)
                             {
-                                icosQuery = "(" + icos
+                                icosQuery = " ( " + icos
                                     .Select(t => string.Format(templ, t))
-                                    .Aggregate((f, s) => f + " OR " + s) + ")";
+                                    .Aggregate((f, s) => f + " OR " + s) + " ) ";
+                                icosQuery += " ";
                             }
                             else
                             {
-                                icosQuery = "(ico:noOne)";
+                                icosQuery = " ( ico:noOne ) ";
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
                         }
                         else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, "(ico:noOne)", regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " ( ico:noOne ) ", regexQueryOption);
                     }
                     else
                     {
@@ -216,11 +259,11 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 PageSize = pagesize,
                 LimitedView = limitedView,
                 Order = order.ToString()
-            }, withHighlighting, anyAggregation) ; ;
+            }, withHighlighting, anyAggregation); ;
         }
-            public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search, 
-                bool withHighlighting = false,
-                AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
+        public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search,
+            bool withHighlighting = false,
+            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
         {
             var client = Manager.GetESClient_Insolvence();
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
@@ -242,8 +285,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Query(q => GetSimpleQuery(search))
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                        .Highlight(h=> Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
-                        .Aggregations(aggr=> anyAggregation)
+                        .Highlight(h => Lib.ES.SearchTools.GetHighlight<Rizeni>(withHighlighting))
+                        .Aggregations(aggr => anyAggregation)
                 );
             }
             catch (Exception e)
@@ -259,7 +302,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 else
                 {
                     HlidacStatu.Util.Consts.Logger.Error("", e);
-                }   
+                }
                 throw;
             }
             sw.Stop();

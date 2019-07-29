@@ -208,8 +208,8 @@ namespace HlidacStatu.Lib.Data.VZ
                 //fix field prefixes
                 //ds: -> 
                 string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) (\s|$){1,}","${ico}" },
-                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","${ico}" },
+                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","${ico}" },
+                    {@"holding:(?<q>(\d{1,8})) ","${ico}" },
                     {"cpv:","${cpv}" },
                     {"oblast:","${oblast}" },
                     {"form:","${form}" },
@@ -227,13 +227,13 @@ namespace HlidacStatu.Lib.Data.VZ
                     {"cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " },
                     {"cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " },
                     {"cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " },
-                    {"cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " },
-                    {"zverejneno:\\[","datumUverejneni:[" },
-                    {"zverejneno:(?=[<>])","datumUverejneni:${q}" },
-                    {"zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" },
-                    {"podepsano:\\[","datumUzavreniSmlouvy:[" },
-                    {"podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" },
-                    {"podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" },
+                    {regexPrefix + "cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " },
+                    {regexPrefix + "zverejneno:\\[","datumUverejneni:[" },
+                    {regexPrefix + "zverejneno:(?=[<>])","datumUverejneni:${q}" },
+                    {regexPrefix + "zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" },
+                    {regexPrefix + "podepsano:\\[","datumUzavreniSmlouvy:[" },
+                    {regexPrefix + "podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" },
+                    {regexPrefix + "podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" },
                     {"text:","prilohy.plainTextContent:" },
                 };
 
@@ -361,16 +361,16 @@ namespace HlidacStatu.Lib.Data.VZ
                                         .Distinct();
                                 icos = icos.Union(icosPresLidi).Distinct();
 
-                                var templ = "(ico:{0})";
+                                var templ = "( ico:{0} ) ";
                                 if (icos != null && icos.Count() > 0)
                                 {
-                                    icosQuery = "(" + icos
+                                    icosQuery = "( " + icos
                                         .Select(t => string.Format(templ, t))
-                                        .Aggregate((fi, s) => fi + " OR " + s) + ")";
+                                        .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
                                 }
                                 else
                                 {
-                                    icosQuery = "(ico:noOne)";
+                                    icosQuery = " ( ico:noOne ) ";
                                 }
                                 modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
@@ -391,21 +391,21 @@ namespace HlidacStatu.Lib.Data.VZ
                                             .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
                                             .Select(w => w.To.Id)
                                             .Distinct().ToArray();
-                                var templ = "(ico:{0})";
+                                var templ = " ( ico:{0} ) ";
                                 if (icos != null && icos.Length > 0)
                                 {
-                                    icosQuery = "(" + icos
+                                    icosQuery = " ( " + icos
                                         .Select(t => string.Format(templ, t))
-                                        .Aggregate((f, s) => f + " OR " + s) + ")";
+                                        .Aggregate((f, s) => f + " OR " + s) + " ) ";
                                 }
                                 else
                                 {
-                                    icosQuery = "(ico:noOne)";
+                                    icosQuery = " ( ico:noOne ) ";
                                 }
                                 modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
                             }
                             else
-                                modifiedQ = Regex.Replace(modifiedQ, lookFor, "(ico:noOne)", regexQueryOption);
+                                modifiedQ = Regex.Replace(modifiedQ, lookFor, " ( ico:noOne ) ", regexQueryOption);
                         }
                         else
                         {
