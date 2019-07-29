@@ -713,16 +713,14 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 {
                     foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
                         idb.Dokumenty.Remove(d);
-                    foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dokumenty.Remove(d);
-                    foreach (var d in idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka))
-                        idb.Dluznici.Remove(d);
-
+                  
                     foreach (var d in idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka))
                         idb.Veritele.Remove(d);
                     foreach (var d in idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka))
                         idb.Spravci.Remove(d);
+
                     idb.Rizeni.Remove(exists);
+
                     idb.SaveChanges();
 
                 }
@@ -817,19 +815,23 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
 
                 catch (DbEntityValidationException e)
                 {
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
                     foreach (var eve in e.EntityValidationErrors)
                     {
-                        Debug.WriteLine(@"Entity of type ""{0}"" in state ""{1}"" 
-                   has the following validation errors:",
+                        sb.AppendFormat(@"Entity of type ""{0}"" in state ""{1}"" 
+                   has the following validation errors:\n",
                             eve.Entry.Entity.GetType().Name,
                             eve.Entry.State);
                         foreach (var ve in eve.ValidationErrors)
                         {
-                            Debug.WriteLine(@"- Property: ""{0}"", Error: ""{1}""",
+                            sb.AppendFormat(@"- Property: ""{0}"", Error: ""{1}""\n",
                                 ve.PropertyName, ve.ErrorMessage);
                         }
                     }
-                    throw;
+                    Debug.WriteLine(sb.ToString());
+
+                    throw new DbEntityValidationException(sb.ToString(),e);
                 }
                 catch (DbUpdateException e)
                 {
