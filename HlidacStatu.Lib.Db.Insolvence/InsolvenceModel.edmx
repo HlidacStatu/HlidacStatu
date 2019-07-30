@@ -16,7 +16,7 @@
           <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Typ" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="RC" Type="nvarchar" MaxLength="30" />
           <Property Name="DatumNarozeni" Type="datetime" />
           <Property Name="ICO" Type="nvarchar" MaxLength="10" />
           <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
@@ -60,7 +60,7 @@
           <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Typ" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="RC" Type="nvarchar" MaxLength="30" />
           <Property Name="DatumNarozeni" Type="datetime" />
           <Property Name="ICO" Type="nvarchar" MaxLength="10" />
           <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
@@ -79,7 +79,7 @@
           <Property Name="PlneJmeno" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Typ" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="RC" Type="nchar" MaxLength="12" />
+          <Property Name="RC" Type="nvarchar" MaxLength="30" />
           <Property Name="DatumNarozeni" Type="datetime" />
           <Property Name="ICO" Type="nvarchar" MaxLength="10" />
           <Property Name="Mesto" Type="nvarchar" MaxLength="150" />
@@ -134,7 +134,7 @@
           <Property Name="PlneJmeno" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Typ" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="RC" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
           <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
@@ -153,7 +153,7 @@
           <Property Name="PlneJmeno" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Typ" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="RC" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
           <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
@@ -179,7 +179,7 @@
           <Property Name="PlneJmeno" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Role" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Typ" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="RC" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+          <Property Name="RC" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="DatumNarozeni" Type="DateTime" Precision="3" />
           <Property Name="ICO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Mesto" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
