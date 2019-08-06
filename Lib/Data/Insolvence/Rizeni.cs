@@ -932,6 +932,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     {
                         HlidacStatu.Util.Consts.Logger.Info($"Updating Rizeni into DB {this.SpisovaZnacka}, {idb.ChangeTracker.Entries().Count(m=>m.State != System.Data.Entity.EntityState.Unchanged)} changes.");
                     }
+                    idb.Database.CommandTimeout = 120;
                     idb.SaveChanges();
 
                 }
@@ -975,7 +976,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
 
         public IOsoba UpdateIOsoba(Osoba d, IOsoba dd)
         {
-            dd.DatumNarozeni = d.DatumNarozeni;
+            dd.DatumNarozeni = d.DatumNarozeni < MinSqlDate ? MinSqlDate : d.DatumNarozeni;
             dd.ICO = d.ICO;
             dd.Mesto = d.Mesto;
             dd.Okres = d.Okres;
