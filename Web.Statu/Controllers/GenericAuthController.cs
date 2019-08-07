@@ -27,6 +27,18 @@ namespace HlidacStatu.Web.Controllers
             UserManager = userManager;
             SignInManager = signInManager;
         }
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
@@ -39,7 +51,9 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 48)]
+#endif 
         [ChildActionOnly]
         public ActionResult CachedAction_Child_48H(object model, string nameOfView, params string[] parameters)
         {
@@ -48,7 +62,9 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 24)]
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_24H(object model, string nameOfView, params string[] parameters)
         {
@@ -57,7 +73,9 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 12)]
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_12H(object model, string nameOfView, params string[] parameters)
         {
@@ -66,7 +84,9 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 4)]
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_4H(object model, string nameOfView, params string[] parameters)
         {
@@ -75,7 +95,9 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 2)]
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_2H(object model, string nameOfView, params string[] parameters)
         {
@@ -83,8 +105,9 @@ namespace HlidacStatu.Web.Controllers
             ViewBag.Parameters = parameters;
             return View(nameOfView, model);
         }
-
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_1H(object model, string nameOfView, params string[] parameters)
         {
@@ -101,17 +124,6 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
 
 
     }

@@ -112,7 +112,7 @@ namespace HlidacStatu.Lib.Data.External
             }
 
         }
-        public static IEnumerable<string> AllIcoInRS()
+        public static IEnumerable<string> AllIcoInRS(bool includedIcosInHoldings = false)
         {
             using (PersistLib p = new PersistLib())
             {
@@ -122,10 +122,31 @@ namespace HlidacStatu.Lib.Data.External
 
                 if (res.Tables.Count > 0 && res.Tables[0].Rows.Count > 0)
                 {
-                    return res.Tables[0]
+                    var allIcos = res.Tables[0]
                         .AsEnumerable()
                         .Where(r => Devmasters.Core.TextUtil.IsNumeric((string)r["ICO"]))
-                        .Select(r => (string)r["ICO"]);
+                        .Select(r => (string)r["ICO"])
+                        .ToArray();
+                    if (includedIcosInHoldings == false)
+                        return allIcos;
+                    else
+                    {
+                        HashSet<string> holdingIcos = new HashSet<string>();
+                        foreach (var i in allIcos)
+                        {
+                            if (!holdingIcos.Contains(i))
+                                holdingIcos.Add(i);
+                            Firma f = Firmy.Get(i);
+                            foreach (var hi in f.IcosInHolding( Relation.AktualnostType.Nedavny))
+                            {
+                                if (!holdingIcos.Contains(hi))
+                                    holdingIcos.Add(hi);
+                            }
+                        }
+                        return holdingIcos;
+
+                    }
+                    
                 }
                 else
                     return new string[] { };

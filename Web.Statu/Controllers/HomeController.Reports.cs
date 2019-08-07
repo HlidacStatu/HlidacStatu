@@ -9,7 +9,7 @@ using System.Web.Routing;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public partial class HomeController : Controller
+    public partial class HomeController : GenericAuthController
     {
 
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 12)]

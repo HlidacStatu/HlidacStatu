@@ -59,7 +59,14 @@ namespace HlidacStatu.Lib.Data.Insolvence
 		public string ICO { get; set; }
 		[Nest.Keyword]
 		public string Rc { get; set; }
-		[Nest.Date]
+
+        [Nest.Date]
+        public DateTime? Zalozen { get; set; }
+        [Nest.Date]
+        public DateTime? Odstranen { get; set; }
+
+
+        [Nest.Date]
 		public DateTime? DatumNarozeni { get; set; }
 		[Nest.Keyword]
 		public string Mesto { get; set; }

@@ -8,7 +8,9 @@
 
     ViewBag.Title = "" + Model.FullNameWithYear();
 
-    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.Parameters[1]
+        );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, aktualnost);
     var statDescription = string.Format("Celkem {0} v reg.smluv od 2016 za celkem {1}, {2}",

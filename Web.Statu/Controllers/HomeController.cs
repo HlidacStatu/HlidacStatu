@@ -18,42 +18,15 @@ using System.Web.Mvc;
 namespace HlidacStatu.Web.Controllers
 {
     [RobotFromIP]
-    public partial class HomeController : Controller
+    public partial class HomeController : GenericAuthController
     {
         public HomeController()
         {
         }
 
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
         public HomeController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+            : base (userManager, signInManager)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
         }
 
         public ActionResult Analyza(string id, string p, string q, string title, string description, string moreUrl)

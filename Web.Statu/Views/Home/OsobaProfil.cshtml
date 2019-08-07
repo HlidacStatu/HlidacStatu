@@ -7,7 +7,9 @@
 @{
     Layout = null;
 
-    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.Parameters[1]
+        );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
 
@@ -91,8 +93,7 @@
                             <div class="low-box" style="max-height:80px">
                                 <div class="low-box-content">
                                     @Html.Raw(Model.Description(true,
-        m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
-        12))
+        m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
                                 </div>
                                 <div class="low-box-line"><a href="#" class="more"></a></div>
                             </div>

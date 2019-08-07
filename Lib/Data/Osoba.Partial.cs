@@ -71,6 +71,7 @@ namespace HlidacStatu.Lib.Data
             return this.FullNameWithNarozeni();
         }
 
+
         public bool IsSponzor()
         {
             return this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor).Any();
@@ -86,14 +87,53 @@ namespace HlidacStatu.Lib.Data
         }
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
+            List<OsobaEvent> events = new List<OsobaEvent>();
             using (DbEntities db = new DbEntities())
             {
-                return db.OsobaEvent
+                events.AddRange(db.OsobaEvent
                     .AsNoTracking()
-                    .Where(predicate)
                     .Where(m => m.OsobaId == this.InternalId)
-                    .ToArray();
+                    .Where(predicate)
+                    .ToArray())
+                    ;
+
+                //sponzoring z navazanych firem kdyz byl statutar
+                IEnumerable<OsobaEvent> firmySponzoring = db.FirmaEvent.SqlQuery(@"
+                    select fe.* from firmaevent fe
+	                    inner join osobaVazby ov on ov.vazbakico=fe.ico and fe.Type=3
+                    and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
+                    and osobaid=" + this.InternalId)
+                    //convert to osobaEvent
+                    .Select(m=> {
+                        var v = this.VazbyProICO(m.ICO).FirstOrDefault();
+                        string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.Inicialy()} byl ve statut.orgánu)";
+                        if (v != null)
+                        {
+                            vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.Inicialy()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
+                        }
+                        return new OsobaEvent()
+                        {
+                            OsobaId = this.InternalId,
+                            AddInfo = m.AddInfo,
+                            AddInfoNum = m.AddInfoNum,
+                            Created = m.Created,
+                            DatumDo = m.DatumDo,
+                            DatumOd = m.DatumOd,
+                            Description = "",
+                            Title = vazba,
+                            Type = m.Type,
+                            Zdroj = m.Zdroj
+                            };
+                        }
+                    )
+                    .AsQueryable()
+                    .Where(predicate)
+                    .ToArray()
+                    ;
+                events.AddRange(firmySponzoring);
             }
+
+            return events;
         }
         public string Description(bool html, string template = "{0}", string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
@@ -413,6 +453,11 @@ namespace HlidacStatu.Lib.Data
             if (html)
                 s = s.Replace(" ", "&nbsp;");
             return s;
+        }
+
+        public string Inicialy()
+        {
+            return this.Jmeno.FirstOrDefault() + "" + this.Prijmeni.FirstOrDefault();
         }
         public string FullNameWithNarozeni(bool html = false)
         {
