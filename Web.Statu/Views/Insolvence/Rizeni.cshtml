@@ -125,7 +125,7 @@ else
                     <span class="text-muted small">
                         Sledování změn řízení
                     </span><br />
-                    @Util.AddWatchDogSmall(this.User,$"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni),"Hlídat změny v tomto řízení", showWDList:false)
+                    @Util.AddWatchDogSmall(this.User,$"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni),"Hlídat změny v tomto řízení", prefillWDname:"Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList:false)
                 </td>
                 <td colspan="2">
                     <span class="text-muted small">
@@ -188,7 +188,7 @@ else
                     Sledování změn řízení
                 </td>
                 <td>
-                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", showWDList: false)
+                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname:"Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
                 </td>
             </tr>
             <tr>
@@ -303,7 +303,7 @@ else
 {
     <div class="onlyembed">
             <div class="container text">
-                <h3>@Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
+                <h3>Insolvence @Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
                 <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Rizeni.InfoFacts(), 2, true, true, html: true)) </p>
                 <p><a href="@Model.GetUrl(false)" target="_top">Více informací o insolvenčním řízení</a></p>
             </div>
