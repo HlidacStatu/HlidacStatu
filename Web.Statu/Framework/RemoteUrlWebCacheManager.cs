@@ -13,7 +13,7 @@ namespace HlidacStatu.Web.Framework
         public static volatile FileCacheManager Manager
                 = FileCacheManager.GetSafeInstance("RemoteUrlFromWebCache",
                     urlfn => GetBinaryDataFromUrl(urlfn),
-                    TimeSpan.FromHours(24));
+                    TimeSpan.FromHours(24*5));
 
 
         private static byte[] GetBinaryDataFromUrl(KeyAndId ki)

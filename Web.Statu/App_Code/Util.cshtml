@@ -451,9 +451,11 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     </a>
 }
 
-@helper AddWatchDogSmall(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = true, string datasetId = null, string btnCss = null)
+@helper AddWatchDogSmall(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, 
+        string preBtnText = null, string postBtnText = null, string prefillWDname = "", 
+        bool showWDList = true, string datasetId = null, string btnCss = null)
 {
-    @AddWatchDog(user, query, dataType, null, "", "", prefillWDname, showWDList, datasetId, true, btnCss)
+    @AddWatchDog(user, query, dataType, btnText, preBtnText ?? "", postBtnText ?? "", prefillWDname, showWDList, datasetId, true, btnCss ?? "btn btn-warning btn-sm")
 }
 @helper AddWatchDog(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = true, string datasetId = null, bool showBtnIcon = true, string btnCss = null)
 {

@@ -7,7 +7,7 @@
 
         <form method="get" action="/insolvence/hledat"  class="form-search__input-wrapper"  role="form">
                     <input class="form-search__input" id="Q" name="Q" placeholder="Název společnosti, osoby, IČO, spisová značka, ..." 
-                           style="max-width: none;" type="text" value="@Model.Q">
+                           style="max-width: none;" type="text" value="@Model.RenderQuery()">
 
                         <button class="form-search__btn" type="submit">Hledat pouze v insolvencích</button>
         </form>

@@ -97,8 +97,8 @@ else
                 </td>
                 <td colspan="2">
                     <span class="text-muted small">Stálé URL řízení na Hlídači Státu</span><br />
-                    <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
-                        @(this.Request.Url.AbsoluteUri)
+                    <a href="@(Model.GetUrl(false))" target="_blank">
+                        @(Model.GetUrl(false))
                     </a>
                 </td>
                 <td>
@@ -121,13 +121,22 @@ else
             </tr>
 
             <tr>
-                <td colspan="4">
+                <td colspan="2">
+                    <span class="text-muted small">
+                        Sledování změn řízení
+                    </span><br />
+                    @Util.AddWatchDogSmall(this.User,$"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni),"Hlídat změny v tomto řízení", showWDList:false)
+                </td>
+                <td colspan="2">
                     <span class="text-muted small">
                         Sdílení
                     </span><br />
                     @Util.ShareFacebook(Model.Rizeni.GetUrl(false))
                     @Util.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                    @if (Model.Rizeni.OnRadar)
+                    {
+                        @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                    }
                 </td>
             </tr>
 
@@ -169,9 +178,17 @@ else
             <tr>
                 <td>Stálé URL řízení na Hlídači Státu</td>
                 <td>
-                    <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
-                        <code>@(this.Request.Url.AbsoluteUri)</code>
+                    <a href="@(Model.GetUrl(false))" target="_blank">
+                        <code>@(Model.GetUrl(false))</code>
                     </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Sledování změn řízení
+                </td>
+                <td>
+                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", showWDList: false)
                 </td>
             </tr>
             <tr>
@@ -284,13 +301,13 @@ else
 
 @section onlyembed
 {
-    @*<div class="onlyembed">
+    <div class="onlyembed">
             <div class="container text">
-                <h3>@Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 60)</h3>
-                <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 2, true, true, html: true)) </p>
-                <p><a href="@Model.GetUrl(false)" target="_top">Více informací o zakázce</a></p>
+                <h3>@Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
+                <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Rizeni.InfoFacts(), 2, true, true, html: true)) </p>
+                <p><a href="@Model.GetUrl(false)" target="_top">Více informací o insolvenčním řízení</a></p>
             </div>
-            <img src="@($"/socialbanner/zakazka?d={DateTime.Now.ToString("yyMMdd")}&v={Model.Id}")"
+            <img src="@($"/socialbanner/insolvence?d={DateTime.Now.ToString("yyMMdd")}&v={Model.Rizeni.SpisovaZnacka}")"
                  style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
-        </div>*@
+        </div>
 }

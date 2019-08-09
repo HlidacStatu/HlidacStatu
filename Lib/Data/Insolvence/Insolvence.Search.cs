@@ -34,6 +34,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 "osobaiddluznik:","holdingdluznik:",
                 "osobaidveritel:","holdingveritel:",
                 "osobaidspravce:","holdingspravce:",
+                "id:"
             };
         static string[] queryOperators = new string[] { "AND", "OR" };
 
@@ -116,7 +117,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             var sw = new StopWatchEx();
             sw.Start();
-
+            search.OrigQuery = search.Q;
             search.Q = Lib.Search.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
             ISearchResponse<Rizeni> res = null;

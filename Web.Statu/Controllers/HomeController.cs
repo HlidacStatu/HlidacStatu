@@ -1369,6 +1369,15 @@ text zpravy: {txt}";
                 }
 
             }
+            else if (id?.ToLower() == "insolvence")
+            {
+                var s = HlidacStatu.Lib.Data.Insolvence.Insolvence.LoadFromES(v,false,true)?.Rizeni;
+                if (s != null)
+                {
+                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
+                }
+
+            }
             else if (id?.ToLower() == "quote")
             {
                 url = mainUrl + "/imagebannercore/quote"

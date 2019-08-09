@@ -68,6 +68,13 @@ namespace HlidacStatu.Lib.ES
         {
             return new List<System.Web.Mvc.SelectListItem>();
         };
+        public virtual string RenderQuery()
+        {
+            if (!string.IsNullOrEmpty(this.OrigQuery))
+                return this.OrigQuery;
+            else
+                return this.Q;
+        }
 
         public SearchDataResult()
                 : this(emptyOrderList)

@@ -670,25 +670,37 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
         public InfoFact[] InfoFacts()
         {
             List<InfoFact> data = new List<InfoFact>();
-            string sumTxt = $"Zahájena {Util.RenderData.ToDate(this.DatumZalozeni)}.  Řeší ji " + this.SoudFullName();
-            sumTxt += Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
-                "",
-                "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
-                "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
-                "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
-                    + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
-                    + ". "
-                );
-            sumTxt += Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
+             string sumTxt = $"Zahájena {Util.RenderData.ToDate(this.DatumZalozeni)}. {this.StavRizeniDetail()}. Řeší ji {this.SoudFullName()}.";
+
+            data.Add(new InfoFact()
+            {
+                Level = InfoFact.ImportanceLevel.Summary,
+                Text = sumTxt
+            });
+
+            sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
+    "",
+    "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
+    "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
+    "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
+        + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
+        + ". "
+    );
+            data.Add(new InfoFact()
+            {
+                Level = InfoFact.ImportanceLevel.High,
+                Text = sumTxt
+            });
+
+            sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
                 "",
                 "Evidujeme jednoho věřitele.",
                 "Evidujeme {0} věřitele.",
                 "Evidujeme {0} věřitelů."
                 );
-
             data.Add(new InfoFact()
             {
-                Level = InfoFact.ImportanceLevel.Summary,
+                Level = InfoFact.ImportanceLevel.High,
                 Text = sumTxt
             });
 
@@ -1010,45 +1022,6 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             return (T)d;
         }
 
-        //private Spravci ToDbSpravce(Osoba td)
-        //{
-        //    Db.Insolvence.Spravci d = new Db.Insolvence.Spravci();
-        //    d.DatumNarozeni = td.DatumNarozeni < MinSqlDate ? MinSqlDate : td.DatumNarozeni;
-        //    d.ICO = td.ICO;
-        //    d.IdOsoby = td.IdOsoby;
-        //    d.IdPuvodce = td.IdPuvodce;
-        //    d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto, 150);
-        //    d.Okres = td.Okres;
-        //    d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
-        //    d.PSC = td.Psc;
-        //    d.RC = td.Rc;
-        //    d.RizeniId = this.SpisovaZnacka;
-        //    d.Role = td.Role;
-        //    d.Typ = td.Typ;
-        //    d.Zeme = td.Zeme;
-
-        //    return d;
-        //}
-
-        //private Veritele ToDbVeritel(Osoba td)
-        //{
-        //    Db.Insolvence.Veritele d = new Db.Insolvence.Veritele();
-        //    d.DatumNarozeni = td.DatumNarozeni < MinSqlDate ? MinSqlDate : td.DatumNarozeni;
-        //    d.ICO = td.ICO;
-        //    d.IdOsoby = td.IdOsoby;
-        //    d.IdPuvodce = td.IdPuvodce;
-        //    d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto, 150);
-        //    d.Okres = td.Okres;
-        //    d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
-        //    d.PSC = td.Psc;
-        //    d.RC = td.Rc;
-        //    d.RizeniId = this.SpisovaZnacka;
-        //    d.Role = td.Role;
-        //    d.Typ = td.Typ;
-        //    d.Zeme = td.Zeme;
-
-        //    return d;
-        //}
 
         private Dokumenty ToDbDokument(Dokument td)
         {
