@@ -52,11 +52,14 @@ namespace HlidacStatu.Lib.Data.Insolvence
             //ds: -> 
             string[,] rules = new string[,] {
                     {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
-                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" },
-
                     {@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" },
                     {@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" },
                     {@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" },
+
+                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" },
+                    {@"holdindluznik:(?<q>(\d{1,8})) (\s|$){1,}","icodluznik" },
+                    {@"holdingveritel:(?<q>(\d{1,8})) (\s|$){1,}","icoveritel" },
+                    {@"holdingspravce:(?<q>(\d{1,8})) (\s|$){1,}","icospravce" },
 
                     {"ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " },
                     {"icodluznik:","dluznici.iCO:" },

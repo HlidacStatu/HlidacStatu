@@ -57,6 +57,72 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public void PrepareForSave()
         {
+            foreach (var d in this.Dluznici)
+            {
+                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                {
+                    //try to find osobaId from db
+                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    if (found != null)
+                    {
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        if (o != null)
+                        {
+                            d.OsobaId = o.NameId;
+                            this.OnRadar = this.OnRadar || o.Status > 0;
+                        }
+                        else
+                            d.OsobaId = "";
+                    }
+                    else
+                        d.OsobaId = "";
+                }
+
+            }
+
+            foreach (var d in this.Spravci)
+            {
+                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                {
+                    //try to find osobaId from db
+                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    if (found != null)
+                    {
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        if (o != null)
+                        {
+                            d.OsobaId = o.NameId;
+                            this.OnRadar = this.OnRadar || o.Status > 0;
+                        }
+                        else
+                            d.OsobaId = "";
+                    }
+                    else
+                        d.OsobaId = "";
+                }
+            }
+            foreach (var d in this.Veritele)
+            {
+                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                {
+                    //try to find osobaId from db
+                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    if (found != null)
+                    {
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        if (o != null)
+                        {
+                            d.OsobaId = o.NameId;
+                            this.OnRadar = this.OnRadar || o.Status > 0;
+                        }
+                        else
+                            d.OsobaId = "";
+                    }
+                    else
+                        d.OsobaId = "";
+                }
+            }
+
             if (Dluznici.Any(m => m.Typ != "F"))
                 this.OnRadar = true;
             else
@@ -670,7 +736,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
         public InfoFact[] InfoFacts()
         {
             List<InfoFact> data = new List<InfoFact>();
-             string sumTxt = $"Zahájena {Util.RenderData.ToDate(this.DatumZalozeni)}. {this.StavRizeniDetail()}. Řeší ji {this.SoudFullName()}.";
+            string sumTxt = $"Zahájena {Util.RenderData.ToDate(this.DatumZalozeni)}. {this.StavRizeniDetail()}. Řeší ji {this.SoudFullName()}.";
 
             data.Add(new InfoFact()
             {
@@ -717,6 +783,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
         }
         public void SaveToDb(bool rewrite)
         {
+            PrepareForSave();
             using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
             {
                 var exists = idb.Rizeni.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
@@ -854,7 +921,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     {
                         //remove all and add orig
                         foreach (var d in dbVeritele)
-                                idb.Veritele.Remove(d);
+                            idb.Veritele.Remove(d);
                         foreach (var d in this.Veritele)
                             idb.Veritele.Add(ToIOsoba<Veritele>(d));
                     }
@@ -936,13 +1003,15 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
 
                 }
 
+
+
                 try
                 {
                     if (System.Diagnostics.Debugger.IsAttached)
                         idb.Database.Log = Console.WriteLine;
                     if (idb.ChangeTracker.HasChanges())
                     {
-                        HlidacStatu.Util.Consts.Logger.Info($"Updating Rizeni into DB {this.SpisovaZnacka}, {idb.ChangeTracker.Entries().Count(m=>m.State != System.Data.Entity.EntityState.Unchanged)} changes.");
+                        HlidacStatu.Util.Consts.Logger.Info($"Updating Rizeni into DB {this.SpisovaZnacka}, {idb.ChangeTracker.Entries().Count(m => m.State != System.Data.Entity.EntityState.Unchanged)} changes.");
                     }
                     idb.Database.CommandTimeout = 120;
                     idb.SaveChanges();
@@ -998,6 +1067,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             dd.Role = d.Role;
             dd.Typ = d.Typ;
             dd.Zeme = d.Zeme;
+            dd.OsobaId = d.OsobaId;
             return dd;
         }
 
@@ -1018,6 +1088,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             d.Role = td.Role;
             d.Typ = td.Typ;
             d.Zeme = td.Zeme;
+            d.OsobaId = td.OsobaId;
 
             return (T)d;
         }
