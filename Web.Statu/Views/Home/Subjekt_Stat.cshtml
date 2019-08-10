@@ -36,25 +36,25 @@
     }
 
 
-    <h3 id="vazbyNaPolitik">Obchody @Model.Jmeno s firmami navázanými na politiky</h3>
+    <h3 id="_vazby_na_politiky">Obchody @Model.Jmeno s firmami navázanými na politiky</h3>
     <table class="table table-hover table-new table-new--dotted">
         <tbody>
             <tr>
-                <td>Počet smluv</td>
+                <th>Počet smluv</th>
                 <td>
                     @Model.Jmeno uzavřel <b>@HlidacStatu.Util.PluralForm.Get((int)uradSVazbami.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv")</b> takových smluv, což je
                     <b>@numPercent</b> všech uzavřených smluv.
                 </td>
             </tr>
             <tr>
-                <td>Hodnota smluv</td>
+                <th>Hodnota smluv</th>
                 <td>
                     @Model.Jmeno uzavřel takových smlouv za <b>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(uradSVazbami.CelkemCena, html: true, shortFormat: true))</b>, což je
                     <b>@sumPercent</b> všech uzavřených smluv.
                 </td>
             </tr>
             <tr>
-                <td>Firmy navázané na politiky</td>
+                <th>Firmy navázané na politiky</th>
                 <td>
                     @{
                         System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -124,6 +124,9 @@
 
                     }
                     @Html.Raw(sb.ToString())
+
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                 </td>
             </tr>
         </tbody>

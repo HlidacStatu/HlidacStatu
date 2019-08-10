@@ -57,7 +57,7 @@
 }
 
 
-<h2>
+<h2 id="_top">
     @Util.AddBookmark(this.User, Model)
     @Model.Jmeno
 </h2>
@@ -86,15 +86,15 @@ else
             {
 
                 <tr>
-                    <td>Založena</td>
+                    <th>Založena</th>
                     <td>
                         <div>@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
                         @if (firstInRS.HasValue)
                         {
                             <div>
                                 @HlidacStatu.Lib.RenderTools.DateDiffShort(Model.Datum_Zapisu_OR.Value, firstInRS.Value,
- "První známá smlouva podepsána {0} po založení firmy.",
- "První známá smlouva podepsána {0} před založením firmy.")
+"První známá smlouva podepsána {0} po založení firmy.",
+"První známá smlouva podepsána {0} před založením firmy.")
                             </div>
                         }
                     </td>
@@ -103,25 +103,25 @@ else
             @if (Model.ICO != null && @Model.ICO.Length > 0)
             {
                 <tr>
-                    <td>IČO</td>
+                    <th>IČO</th>
                     <td>@Model.ICO</td>
                 </tr>
             }
             @if (Model.DatovaSchranka != null && @Model.DatovaSchranka.Length > 0)
             {
                 <tr>
-                    <td>Datová schránka</td>
+                    <th>Datová schránka</th>
                     <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
                 </tr>
             }
             <tr>
-                <td>Dceřinné společnosti</td>
+                <th>Dceřinné společnosti</th>
                 <td>
                     <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
                 </td>
             </tr>
             <tr>
-                <td>Další informace o subjektu</td>
+                <th>Další informace o subjektu</th>
                 <td>
                     @Util.FirmaMoreInfoLinks(Model.ICO)
                 </td>
@@ -129,7 +129,7 @@ else
             @if (firstInRS.HasValue)
             {
                 <tr>
-                    <td>První smlouva v RS uveřejněna</td>
+                    <th>První smlouva v RS uveřejněna</th>
                     <td>
                         @firstInRS.Value.ToString("d.M.yyyy")
                     </td>
@@ -139,7 +139,7 @@ else
             @if (lastInRS.HasValue)
             {
                 <tr>
-                    <td>Poslední smlouva v RS uveřejněna</td>
+                    <th>Poslední smlouva v RS uveřejněna</th>
                     <td>
                         @lastInRS.Value.ToString("d.M.yyyy")
                     </td>
@@ -147,7 +147,7 @@ else
 
             }
             <tr>
-                <td>Sdílení</td>
+                <th>Sdílení</th>
                 <td>
                     @Util.ShareFacebook(Model.GetUrl(false))
                     @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
@@ -158,11 +158,48 @@ else
                 long numFatalIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
                 long numVazneIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll).Total;
             }
+            <tr>
+                <th>Obsah stránky</th>
+                <td>
+                    <div id="_obsah"></div>
+                    @{
+                        Dictionary<string, string> obsah = new Dictionary<string, string>();
+                        obsah.Add("_pravni_problemy", "Právní problémy a varování");
+                        obsah.Add("_registr_smluv", "Statistiky registru smluv");
+                        obsah.Add("_smlouvy_s_politiky", "Smlouvy s politiky");
+                        obsah.Add("_vazby_na_politiky", "Obchodní vztahy s firmama navazanýma na politiky");
+                        obsah.Add("_nespolehlivy_platce_dph", "Nespolehlivý plátce DPH");
+                        obsah.Add("_podpora_politiku", "Podporovaní politici");
+                        obsah.Add("_insolvencni_rejstrik", "Insolvenční rejstřík");
+                        obsah.Add("_verejne_zakazky", "Veřejné zakázky");
+                        obsah.Add("_zakladni_dotazy", "Vyhledávání pro " + (Model.JsemOVM() ? "úřad" : "firmy"));
+                        obsah.Add("_navazani_politici", "Politici svázaní s " + (Model.JsemOVM() ? "úřadem" : "firmou"));
+                        obsah.Add("_dalsi_db", (Model.JsemOVM() ? "Úřad" : "Firmy") + " v dalších databázích");
+                        obsah.Add("_dodavatele", "Statistika dodavatelů " + (Model.JsemOVM() ? "úřadu" : "firmy"));
+                        obsah.Add("_odberatele", "Statistiky odběratelů " + (Model.JsemOVM() ? "úřadu" : "firmy"));
+                    }
+                    <script type="text/javascript">
+                        $(function () {
+
+                            var obs = [ @Html.Raw( obsah.Select(m=>  $"{{ id:\"{m.Key}\", val:\"{m.Value}\" }}").Aggregate((f,s)=>f + "," + s) ) ];
+                            var tobs = "";
+                            for (i = 0; i < obs.length; i++) {
+                                if ($("#" + obs[i].id).length) {
+                                    tobs = tobs + "\n" + "<li><a href='#" + obs[i].id + "'>" + obs[i].val + "</a></li>";
+                                }
+                            }
+                            $("#_obsah").html("<ol>" + tobs + "</ol>");
+
+
+                        });
+                    </script>
+                </td>
+            </tr>
             @if (numFatalIssue + numVazneIssue > 0)
             {
                 <tr>
                     <td colspan="2">
-                        <h3 class="text-danger">Problémy a varování</h3>
+                        <h3 id="_pravni_problemy" class="text-danger">Problémy a varování</h3>
                         <ul>
                             @if (numFatalIssue > 0)
                             {
@@ -202,13 +239,14 @@ else
                                 </li>
                             }
                         </ul>
+                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
                     </td>
                 </tr>
 
             }
             <tr>
                 <td colspan="2">
-                    <h3>Statistiky z registru smluv</h3>
+                    <h3 id="_registr_smluv">Statistiky z registru smluv</h3>
                     <p class="small text-muted">
                         Vysvětlení: Registr smluv je platný od poloviny roku 2016. První rok, od 1.7.2016 do 30.6.2017, probíhal v "testovacím" režimu, kdy za neuveřejnění smlouvy nehrozila žádná sankce.
                         Proto statistiky za 2016 neobsahují smlouvy za celý rok a rok 2017 nemusí být úplný.
@@ -216,7 +254,7 @@ else
                 </td>
             </tr>
             <tr>
-                <td>Souhrnné statistiky<br />pro @Model.Jmeno<br />od 2016</td>
+                <th>Souhrnné statistiky<br />pro @Model.Jmeno<br />od 2016</th>
                 <td>
                     @Html.Raw(Model.Statistic().BasicStatPerYear.SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=ico:" + Model.ICO))<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -230,7 +268,7 @@ else
                 )
             {
                 <tr>
-                    <td>Souhrnné statistiky<br />pro subjekt a všechny<br />provázané společnosti<br />od 2016</td>
+                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />provázané společnosti<br />od 2016</th>
                     <td>
                         @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -326,6 +364,7 @@ else
                             </div>
                         }
                     </div>
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
                 </td>
             </tr>
@@ -334,18 +373,18 @@ else
                 double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
                 numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
                 <tr>
-                    <td>Smlouvy s vazbou na politiky</td>
-                    <td>
-                        <a href="#vazbyNaPolitik">Zde najdete přehled navázaných osob a firem</a>.
+                    <th>Smlouvy s vazbou na politiky</th>
+                    <td id="_smlouvy_s_politiky">
+                        <a href="#_vazby_na_politiky">Zde najdete přehled navázaných osob a firem</a>.
 
-                        <table class="table table-condensed table-striped">
+                        <table class="table table-condensed table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Rok</th>
-                                    <th>Počet smluv</th>
-                                    <th>% podíl</th>
-                                    <th>Hodnota smluv v Kč</th>
-                                    <th>% podíl</th>
+                                    <th style="text-align:left">Rok</th>
+                                    <th style="text-align:center">Počet smluv</th>
+                                    <th style="text-align:center">% podíl</th>
+                                    <th style="text-align:center">Hodnota smluv v Kč</th>
+                                    <th style="text-align:center">% podíl</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -370,6 +409,8 @@ else
                                 </tr>
                             </tfoot>
                         </table>
+                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                     </td>
                 </tr>
             }
@@ -377,7 +418,7 @@ else
             {
 
                 <tr>
-                    <td>Další info</td>
+                    <th>Další info</th>
                     <td>
                         @Html.Raw(Model.Description(true))
                     </td>
@@ -389,16 +430,18 @@ else
             @if (Model.IsNespolehlivyPlatceDPH())
             {
                 <tr>
-                    <td><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma je nespolehlivý plátce DPH</span></td>
+                    <th id="_nespolehlivy_platce_dph"><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma je nespolehlivý plátce DPH</span></th>
                     <td>
                         <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")</span>
+                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                     </td>
                 </tr>
 
                 if (Model.NespolehlivyPlatceDPH_obchodSuradyStat() != null)
                 {
                     <tr>
-                        <td><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Které úřady s touto firmou přesto obchodovaly?</span></td>
+                        <th><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Které úřady s touto firmou přesto obchodovaly?</span></th>
                         <td>
                             <ul>
                                 @foreach (var ustat in Model.NespolehlivyPlatceDPH_obchodSuradyStat().Detail)
@@ -418,6 +461,8 @@ else
                                     </li>
                                 }
                             </ul>
+                            <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                         </td>
                     </tr>
 
@@ -432,7 +477,7 @@ else
                 if (numAnalyzed.Total + numByName.Total > 0)
                 {
                     <tr>
-                        <td>Podpora politických stran</td>
+                        <th id="_podpora_politiku">Podpora politických stran</th>
                         <td>
                             @if (Model.IsSponzor())
                             {
@@ -458,11 +503,14 @@ else
                                     </li>
                                 }
                             </ul>
+                            <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                         </td>
                     </tr>
                 }
             }
             @{
+                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
                 var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
@@ -475,7 +523,7 @@ else
             }
 
             <tr>
-                <td>Insolvenční rejstřík</td>
+                <th id="_insolvencni_rejstrik">Insolvenční rejstřík</th>
                 <td>
                     @foreach (var kv in insolv.OrderByDescending(m => m.Value))
                     {
@@ -495,12 +543,45 @@ else
 
                         </p>
                     }
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
                 </td>
             </tr>
-
             <tr>
-                <td>Základní dotazy pro tento subjekt</td>
+                @{
+                    var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
+                    var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, 1);
+                    var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, 1);
+                    Dictionary<string, long> vzakaz = new Dictionary<string, long>();
+                    vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
+                    vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
+                }
+                <th id="_verejne_zakazky">Veřejné zakázky</th>
+                <td>
+                    @foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
+                    {
+                        var text = kv.Key.Split('|');
+
+                        <p>
+                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[1]} nenašli", $" se vyskytuje v <b>jedné veřejné zakázce</b> jako {text[1]}", $" se vyskytuje v <b>{{0}} veřejných zakázkách</b> jako {text[1]}", $" se vyskytuje v <b>{{0}} veřejných zakázkach</b> jako {text[1]}")).
+                            @if (kv.Value > 0)
+                            {
+                                @Util.AddSearchBtn("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO, $" Vyhledat zakázky.")
+                                @Util.AddWatchDog(this.User, $"ico{text[0]}:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Pohlídat změny", "", prefillWDname: "Hlídat " + Model.Jmeno + $" jako {text[1]} ve veřejných zakázkach", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            }
+                            else
+                            {
+                                @Util.AddWatchDog(this.User, $"ico{text[0]}:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), $"Upozornit, když se stane {text[3]}", "", prefillWDname: "Hlídat " + Model.Jmeno + $" jako {text[1]} ve veřejných zakázkach", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            }
+
+                        </p>
+                    }
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+                </td>
+            </tr>
+            <tr>
+                <th id="_zakladni_dotazy">Základní dotazy pro tento subjekt</th>
                 <td>
                     <p>
                         @Util.AddSearchBtn("/hledat", "ico:" + Model.ICO, "Prohledat všechny databáze, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
@@ -518,20 +599,21 @@ else
                         @Util.AddSearchBtn("/insolvence/hledat", "ico:" + Model.ICO, "Ukázat všechny INSOLVENCE, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
                         @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Hlídat", "", prefillWDname: "Nové insolvence pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                     </p>
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
                 </td>
             </tr>
             @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
             {
                 <tr>
-                    <td>
+                    <th>
                         Základní dotazy pro tento subjekt<br />a všechny provázané společnosti
                         <br />
                         (celkem
                         @(Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(),
                                                                                                                                                                                     "1 subjekt", "{0} subjekty", "{0} subjektů"))
                         - <a href="/subjektVazby/@Model.ICO">jejich seznam</a>)
-                    </td>
+                    </th>
                     <td>
                         <p>
                             @Util.AddSearchBtn("/hledat", "holding:" + Model.ICO, "Prohledat VŠECHNY DATABÁZE, kde se vyskytuje vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
@@ -558,6 +640,8 @@ else
                                 <span class="glyphicon glyphicon-eye-open dark"></span>Hlídat pouze vybrané provázané společnosti k @Model.Jmeno
                             </a>
                         </p>
+                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                     </td>
                 </tr>
             }
@@ -565,7 +649,7 @@ else
             @if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(Model.ICO))
             {
                 <tr>
-                    <td>Námi sledované angažovanosti</td>
+                    <th id="_navazani_politici">Politicky aktivní osoby s vazbou na firmu</th>
                     <td>
                         @foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[Model.ICO])
                         {
@@ -583,6 +667,8 @@ else
                                 </p>
                             }
                         }
+                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
                     </td>
                 </tr>
 
@@ -594,7 +680,14 @@ else
 
     List<string> tabs = new List<string>();
     List<string> results = new List<string>();
-    var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
+
+    if (insRes.IsValid && insRes.Total > 0)
+    {
+        tabs.Add($"V insolvenčním rejstříku ({Util.PocetVysledku(insRes.Total)})");
+        results.Add(
+            SearchResults.InsolvenceTableResult(this.User, this.Request, 5, insRes).ToHtmlString()
+        );
+    }
 
     if (resVZ.IsValid && resVZ.Total > 0)
     {
@@ -616,10 +709,12 @@ else
 
     if (tabs.Count > 0)
     {
-        <h3>Informace z dalších databází</h3>
+        <h3 id="_dalsi_db">Informace z dalších databází</h3>
 
         <div class="row">
             @Util.VerticalTabs(tabs, results)
+            <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
         </div>
     }
 

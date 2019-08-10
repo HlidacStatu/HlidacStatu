@@ -2551,6 +2551,14 @@ a.form-search__hint:active:focus {
         border: 0;
         border-bottom: 1px solid #ddd;
     }
+    .table.table-bordered > tbody > tr > td {
+        line-height: 17px;
+        color: #333333;
+        font-size: 14px;
+        padding: 15px 10px;
+        vertical-align: middle;
+        border: 1px solid #ddd;
+    }
 
         .table > tbody > tr > td .fa-bookmark-o {
             font-size: 20px;

@@ -113,7 +113,7 @@
 @if (rdsPerIco.Data.Count > 0 || rdsPerPrice.Data.Count > 0)
 {
 
-    <h3 style="padding-bottom:20px;">@Model.Jmeno jako odběratel (plátce peněz)</h3>
+    <h3 id="_dodavatele" style="padding-bottom:20px;">@Model.Jmeno jako odběratel (plátce peněz)</h3>
 
     <div class="row">
         <div class="col-sm-6 col-xs-12">
@@ -144,5 +144,7 @@
                 }", q.Key)
             }
         </div>
+        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
     </div>
 }

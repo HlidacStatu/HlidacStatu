@@ -1351,7 +1351,14 @@ textarea {
                 content: "\A0\A0\25BD\A0\A0více"; /*▽*/
             }
 
-
+.obsah_top {
+    text-align: right;
+    padding-right: 10px;
+    font-size: 12px;
+    color: #3e6deb;
+    text-decoration: none;
+    /* content: ""; △*/
+}
 
     .line-text-divider {
         color: #ccc;
