@@ -178,7 +178,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 "jmenozadavatel:",
                 "jmenododavatel:",
                 "id:",
-                "osobaid:",
+                "osobaid:","osobaiddodavatel:","osobaidzadavatel:",
                 "cpv:",
                 "form:",
                 "zahajeny:",
@@ -188,7 +188,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 "podepsano:",
                 "text:",
                 "oblast:",
-                "holding:"
+                "holding:","holdingdodavatel:","holdingzadavatel:"
             };
             static string[] queryOperators = new string[] {
             "AND","OR"
@@ -200,7 +200,13 @@ namespace HlidacStatu.Lib.Data.VZ
 
                 string[,] rules = new string[,] {
                     {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
+                    {@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" },
+                    {@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icozadavatel" },
+
                     {@"holding:(?<q>(\d{1,8})) ","ico" },
+                    {@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" },
+                    {@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" },
+
                     {"cpv:","${cpv}" },
                     {"oblast:","${oblast}" },
                     {"form:","${form}" },
