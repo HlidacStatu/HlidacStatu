@@ -651,21 +651,19 @@ else
                 <tr>
                     <th id="_navazani_politici">Politicky aktivní osoby s vazbou na firmu</th>
                     <td>
-                        @foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[Model.ICO])
+                        @foreach (var p in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+                                .SoukromeFirmy[Model.ICO]
+                                .Select(pid => HlidacStatu.Lib.StaticData.Politici.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+                                .Where(p=>p != null)
+                                .OrderBy(p=>p.Prijmeni)
+                                )
                         {
-                            HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.Politici
-                            .Get()
-                            .Where(m => m.InternalId == pId)
-                            .FirstOrDefault();
-                            if (p != null)
-                            {
                                 <p>
                                     <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
                                     <div style="padding-left:20px;">
                                         @Util.RenderVazby(p.VazbyProICO(Model.ICO))
                                     </div>
                                 </p>
-                            }
                         }
                         <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
