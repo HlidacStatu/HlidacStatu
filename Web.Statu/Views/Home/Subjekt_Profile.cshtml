@@ -230,7 +230,7 @@ else
                 )
             {
                 <tr>
-                    <td>Souhrnné statistiky<br />pro subjekt a všechny<br/>provázané společnosti<br/>od 2016</td>
+                    <td>Souhrnné statistiky<br />pro subjekt a všechny<br />provázané společnosti<br />od 2016</td>
                     <td>
                         @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -462,24 +462,63 @@ else
                     </tr>
                 }
             }
+            @{
+                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+                Dictionary<string, long> insolv = new Dictionary<string, long>();
+                insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
+                insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
+                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
+
+            }
+
+            <tr>
+                <td>Insolvenční rejstřík</td>
+                <td>
+                    @foreach (var kv in insolv.OrderByDescending(m => m.Value))
+                    {
+                        var text = kv.Key.Split('|');
+
+                        <p>
+                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
+                            @if (kv.Value > 0)
+                            {
+                                @Util.AddSearchBtn("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO, $" Vyhledat je.")
+                                @Util.AddWatchDog(this.User, $"ico{text[0]}:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Pohlídat změny", "", prefillWDname: "Hlídat " + Model.Jmeno + $" jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            }
+                            else
+                            {
+                                @Util.AddWatchDog(this.User, $"ico{text[0]}:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), $"Upozornit, když se stane {text[3]}", "", prefillWDname: "Hlídat " + Model.Jmeno + $" jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            }
+
+                        </p>
+                    }
+
+                </td>
+            </tr>
 
             <tr>
                 <td>Základní dotazy pro tento subjekt</td>
                 <td>
                     <p>
-                        <a href="/Hledat?Q=ico:@Model.ICO">
-                        </a>
                         @Util.AddSearchBtn("/hledat", "ico:" + Model.ICO, "Prohledat všechny databáze, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
                         @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                     </p>
                     <p>
-                        @Util.AddSearchBtn("/hledatSmlouvy", "ico:" + Model.ICO, "Ukázat všechny smlouvy, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
-                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        @Util.AddSearchBtn("/hledatSmlouvy", "ico:" + Model.ICO, "Ukázat všechny SMLOUVY, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové smlouvy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                     </p>
                     <p>
-                        @Util.AddSearchBtn("/VerejneZakazky/hledat", "ico:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
-                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        @Util.AddSearchBtn("/VerejneZakazky/hledat", "ico:" + Model.ICO, "Ukázat všechny VEŘEJNÉ ZAKÁZKY, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové veřejné zakázky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                     </p>
+                    <p>
+                        @Util.AddSearchBtn("/insolvence/hledat", "ico:" + Model.ICO, "Ukázat všechny INSOLVENCE, kde se " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) + " vyskytuje")
+                        @Util.AddWatchDog(this.User, "ico:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Hlídat", "", prefillWDname: "Nové insolvence pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    </p>
+
                 </td>
             </tr>
             @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
@@ -495,16 +534,20 @@ else
                     </td>
                     <td>
                         <p>
-                            @Util.AddSearchBtn("/hledat", "holding:" + Model.ICO, "Prohledat všechny databáze, kde se vyskytuje vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
-                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            @Util.AddSearchBtn("/hledat", "holding:" + Model.ICO, "Prohledat VŠECHNY DATABÁZE, kde se vyskytuje vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null, "Hlídat", "", prefillWDname: "Nové záznamy kdekoliv pro " + Model.Jmeno + " a holding", btnCss: "btn btn-warning btn-xs", showWDList: false)
                         </p>
                         <p>
-                            @Util.AddSearchBtn("/hledatSmlouvy", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
-                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            @Util.AddSearchBtn("/hledatSmlouvy", "holding:" + Model.ICO, "Ukázat všechny SMLOUVY, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Smlouva), "Hlídat", "", prefillWDname: "Smlouvy pro " + Model.Jmeno + " a holding", btnCss: "btn btn-warning btn-xs", showWDList: false)
                         </p>
                         <p>
-                            @Util.AddSearchBtn("/VerejneZakazky/hledat", "holding:" + Model.ICO, "Ukázat všechny veřejné zakázky, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
-                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Nové záznamy pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                            @Util.AddSearchBtn("/VerejneZakazky/hledat", "holding:" + Model.ICO, "Ukázat všechny VEŘEJNÉ ZAKÁZKY, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Hlídat", "", prefillWDname: "Veřejné zakázky pro " + Model.Jmeno + " a holding", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        </p>
+                        <p>
+                            @Util.AddSearchBtn("/insolvence/hledat", "holding:" + Model.ICO, "Ukázat všechny INSOLVENCE, kde se vyskytuje " + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 25) + " a dceřinné společnosti")
+                            @Util.AddWatchDog(this.User, "holding:" + Model.ICO, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Hlídat", "", prefillWDname: "Insolvence pro " + Model.Jmeno + " a holding", btnCss: "btn btn-warning btn-xs", showWDList: false)
                         </p>
                         <hr />
                         <p>
@@ -561,13 +604,13 @@ else
         );
     }
     var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
-    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries,1,5);
+    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries, 1, 5);
     if (dsSearch.IsValid && dsSearch.Total > 0)
     {
         foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
         {
             tabs.Add($"{dss.DataSet.Registration().name} ({Util.PocetVysledku(dss.Total)})");
-            results.Add(dss.RenderResultsInHtml(dss.Q,5));
+            results.Add(dss.RenderResultsInHtml(dss.Q, 5));
         }
     }
 

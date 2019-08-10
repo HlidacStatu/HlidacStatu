@@ -1133,11 +1133,14 @@ int count = 0;
             <div class="list-group">
                 @foreach (var s in tabnames)
                 {
+                    if (s != null)
+                    {
                     <a href="#" class="list-group-item @(first ? "active" : "")">
                         @Html.Raw(s)
                     </a>
 
-                    first = false;
+                        first = false;
+                    }
                 }
             </div>
         </div>
@@ -1147,10 +1150,13 @@ int count = 0;
             }
             @foreach (var s in contents)
             {
-                <div class="verticaltab-content @(first ? "active" : "")">
-                    @Html.Raw(s)
-                </div>
-                first = false;
+                if (s != null)
+                {
+                    <div class="verticaltab-content @(first ? "active" : "")">
+                        @Html.Raw(s)
+                    </div>
+                    first = false;
+                }
             }
         </div>
 

@@ -31,7 +31,7 @@ namespace HlidacStatu.Web.Controllers
 			{
 				return View(new InsolvenceSearchResult());
 			}
-
+            model.LimitedView = IsLimitedView();
 			var res = Insolvence.SimpleSearch(model);
 			return View(res);
 		}

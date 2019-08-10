@@ -44,16 +44,16 @@
 
 @helper InsolvenceHead()
 {
-        <tr>
-            <th></th>
-            <th>Dlužníci</th>
-            <th>Věritelé</th>
-            <th>Datum vzniku</th>
-            <th>Poslední změna</th>
-            <th>Stav řízení</th>
-            <th>Soud</th>
-            <th>Spisová značka</th>
-        </tr>
+<tr>
+    <th></th>
+    <th>Spisová značka</th>
+    <th>Dlužníci</th>
+    <th>Věritelé</th>
+    <th>Datum vzniku</th>
+    <th>Poslední změna</th>
+    <th>Stav řízení</th>
+    <th>Soud</th>
+</tr>
     }
 
 @helper InsolvenceRow(System.Security.Principal.IPrincipal user, HttpRequestBase request, HlidacStatu.Lib.Data.Insolvence.Rizeni item, string query = "")
@@ -62,6 +62,16 @@
     <td>
         @{
             @Util.AddBookmark(user, item)
+        }
+    </td>
+    <td style="white-space: nowrap;">
+        @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request))
+        {
+            <a href="@item.GetUrl(true,query)">@item.SpisovaZnacka</a>
+        }
+        else
+        {
+            <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Insolvence/Rizeni/@item.UrlId()">@item.SpisovaZnacka</a>
         }
     </td>
     <td>
@@ -110,16 +120,6 @@
     </td>
     <td>
         <span>@item.SoudFullName()</span>
-    </td>
-    <td style="white-space: nowrap;">
-        @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request))
-        {
-        <a href="@item.GetUrl(true,query)">@item.SpisovaZnacka  <i class="far fa-long-arrow-right"></i></a>
-        }
-        else
-        {
-    <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/Insolvence/Rizeni/@item.UrlId()">@item.SpisovaZnacka  <i class="far fa-long-arrow-right"></i></a>
-        }
     </td>
 
 </tr>
