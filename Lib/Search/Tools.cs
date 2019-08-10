@@ -235,10 +235,106 @@ namespace HlidacStatu.Lib.Search
                 //if (modifiedQ.ToLower().Contains(lookFor.ToLower()))
                 if (Regex.IsMatch(modifiedQ, lookFor, regexQueryOption))
                 {
-                    if (replaceWith.Contains("${q}"))
+                    if (!string.IsNullOrEmpty(replaceWith)
+                        && (
+                            lookFor.Contains("holding:")
+                            || lookFor.Contains("holdingdluznik:")
+                            || lookFor.Contains("holdingveritel:")
+                            || lookFor.Contains("holdingspravce:")
+                            || lookFor.Contains("holdingdodavatel:")
+                            || lookFor.Contains("holdingzadavatel:")
+                        )
+                        )
                     {
-                        modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
+                        //list of ICO connected to this person
+                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
+                        string holdingIco = m.Groups["q"].Value;
+                        HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+                        Data.Firma f = Data.Firmy.Get(holdingIco);
+                        if (f != null && f.Valid)
+                        {
+                            var icos = new string[] { f.ICO }
+                                .Union(
+                                    f.AktualniVazby(aktualnost)
+                                    .Select(s => s.To.Id)
+                                )
+                                .Distinct();
+                            string icosQuery = "";
+                            var icosPresLidi = f.AktualniVazby(aktualnost)
+                                    .Where(o => o.To.Type == Data.Graph.Node.NodeType.Person)
+                                    .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
+                                    .Where(o => o != null)
+                                    .SelectMany(o => o.AktualniVazby(aktualnost))
+                                    .Select(v => v.To.Id)
+                                    .Distinct();
+                            icos = icos.Union(icosPresLidi).Distinct();
+
+                            string icoprefix = replaceWith;
+
+
+                            var templ = $" ( {icoprefix}:{{0}} ) ";
+
+                            if (icos != null && icos.Count() > 0)
+                            {
+                                icosQuery = " ( " + icos
+                                    .Select(t => string.Format(templ, t))
+                                    .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
+                            }
+                            else
+                            {
+                                icosQuery = $" ( {icoprefix}:noOne ) ";
+                            }
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
+
+                        }
                     } //do regex replace
+                    else if (!string.IsNullOrEmpty(replaceWith)
+                        && (
+                            lookFor.Contains("osobaid:")
+                            || lookFor.Contains("osobaiddluznik:")
+                            || lookFor.Contains("osobaidveritel:")
+                            || lookFor.Contains("osobaidspravce:")
+                            || lookFor.Contains("osobaidzadavatel:")
+                            || lookFor.Contains("osobaiddodavatel:")
+                            )
+                        )//(replaceWith.Contains("${ico}"))
+                    {
+                        //list of ICO connected to this person
+                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
+                        string nameId = m.Groups["q"].Value;
+                        Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
+                        string icosQuery = "";
+
+                        //string icoprefix = replaceWith;
+                        var templ = $" ( {replaceWith}:{{0}} ) ";
+                        if (replaceWith.Contains("${q}"))
+                            templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
+
+                        if (p != null)
+                        {
+                            var icos = p
+                                        .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
+                                        .Where(w => !string.IsNullOrEmpty(w.To.Id))
+                                        .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                        .Select(w => w.To.Id)
+                                        .Distinct().ToArray();
+
+
+                            if (icos != null && icos.Length > 0)
+                            {
+                                icosQuery = " ( " + icos
+                                    .Select(t => string.Format(templ, t))
+                                    .Aggregate((f, s) => f + " OR " + s) + " ) ";
+                            }
+                            else
+                            {
+                                icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
+                            }
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
+                        }
+                        else
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, string.Format(templ, "noOne"), regexQueryOption);
+                    }
 
                     //VZ
                     else if (replaceWith.Contains("${oblast}"))
@@ -298,100 +394,11 @@ namespace HlidacStatu.Lib.Search
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
                     }
 
-                    else if (!string.IsNullOrEmpty(replaceWith)
-                        && (
-                            lookFor.Contains("holding:")
-                            || lookFor.Contains("holdingdluznik:")
-                            || lookFor.Contains("holdingveritel:")
-                            || lookFor.Contains("holdingspravce:")
-                        )
-                        )
+                    else if (replaceWith.Contains("${q}"))
                     {
-                        //list of ICO connected to this person
-                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string holdingIco = m.Groups["q"].Value;
-                        HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-                        Data.Firma f = Data.Firmy.Get(holdingIco);
-                        if (f != null && f.Valid)
-                        {
-                            var icos = new string[] { f.ICO }
-                                .Union(
-                                    f.AktualniVazby(aktualnost)
-                                    .Select(s => s.To.Id)
-                                )
-                                .Distinct();
-                            string icosQuery = "";
-                            var icosPresLidi = f.AktualniVazby(aktualnost)
-                                    .Where(o => o.To.Type == Data.Graph.Node.NodeType.Person)
-                                    .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
-                                    .Where(o => o != null)
-                                    .SelectMany(o => o.AktualniVazby(aktualnost))
-                                    .Select(v => v.To.Id)
-                                    .Distinct();
-                            icos = icos.Union(icosPresLidi).Distinct();
-
-                            string icoprefix = replaceWith;
-
-
-                            var templ = $" ( {icoprefix}:{{0}} ) ";
-
-                            if (icos != null && icos.Count() > 0)
-                            {
-                                icosQuery = " ( " + icos
-                                    .Select(t => string.Format(templ, t))
-                                    .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
-                            }
-                            else
-                            {
-                                icosQuery = $" ( {icoprefix}:noOne ) ";
-                            }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-
-                        }
+                        modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
                     } //do regex replace
-                    else if (!string.IsNullOrEmpty(replaceWith)
-                        && (
-                            lookFor.Contains("osobaid:")
-                            || lookFor.Contains("osobaiddluznik:")
-                            || lookFor.Contains("osobaidveritel:")
-                            || lookFor.Contains("osobaidspravce:")
-                            )  
-                        )//(replaceWith.Contains("${ico}"))
-                    {
-                        //list of ICO connected to this person
-                        Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                        string nameId = m.Groups["q"].Value;
-                        Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
-                        string icosQuery = "";
 
-                        string icoprefix = replaceWith;
-                        var templ = $" ( {icoprefix}:{{0}} ) ";
-
-                        if (p != null)
-                        {
-                            var icos = p
-                                        .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                        .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                        .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                        .Select(w => w.To.Id)
-                                        .Distinct().ToArray();
-
-
-                            if (icos != null && icos.Length > 0)
-                            {
-                                icosQuery = " ( " + icos
-                                    .Select(t => string.Format(templ, t))
-                                    .Aggregate((f, s) => f + " OR " + s) + " ) ";
-                            }
-                            else
-                            {
-                                icosQuery = $" ( {icoprefix}:noOne ) ";
-                            }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
-                        }
-                        else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, $" ( {icoprefix}:noOne ) ", regexQueryOption);
-                    }
                     else if (lookFor.Contains("chyby:"))
                     {
                         string levelVal = ParseTools.GetRegexGroupValue(modifiedQ, @"chyby:(?<level>\w*)", "level")?.ToLower() ?? "";
