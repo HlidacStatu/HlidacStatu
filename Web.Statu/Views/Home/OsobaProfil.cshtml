@@ -8,7 +8,7 @@
     Layout = null;
 
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
-        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.Parameters[1]
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.Parameters[1]
         );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
@@ -118,71 +118,6 @@
 
 
 
-@{
-    List<string> tabs = new List<string>();
-    List<string> results = new List<string>();
-
-    tabs.Add("Základní info");
-    string zaklInfo = $"<h4>Hledání informací s vazbou na {Model.FullName()}</h4>"
-        + "<p>"
-        + $"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na " +
-        $" s vazbou na {Model.FullName()} nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou."
-        + "</p>"
-
-        + "<h4>Sdílení</h4>"
-        + "<div>"
-        + Util.ShareFacebook(Model.GetUrl(false)).ToHtmlString()
-        + Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}").ToHtmlString()
-        + Util.ShareWidget(Model.GetUrl(false))
-        + "</div>";
-
-    results.Add(zaklInfo);
-
-
-    var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
-    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
-    var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForOsoba(Model.InternalId, null, 0);
-    var ftxQuery = Model.FullName();
-    var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-    if (numByName.Total == 0)
-    {
-        ftxQuery = Model.Jmeno + " " + Model.Prijmeni;
-        numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-    }
-    tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
-        .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
-        );
-    foreach (var rds in dsSearch.Results
-       .Where(m => m.Total > 0)
-       .OrderByDescending(m => m.Total))
-    {
-        results.Add(rds.RenderResultsInHtml(dsQuery));
-    }
-
-    if (numAnalyzed.Total + numByName.Total > 0)
-    {
-        if (Model.IsSponzor())
-        {
-            tabs.Add("Sponzor politických stran");
-            results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")}</b>"
-                + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))}</b>)"
-                + $"politickým stranám. <a href=\"/ucty/hledat?osobaid={Model.NameId}\">Ukázat bankovní transakce s identifikovanými dary</a>"
-                );
-        }
-        if (numByName.Total > 0)
-        {
-            tabs.Add("Bankovní transakce na účtech polit.stran");
-            results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí")} </b>"
-        + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))}</b>)"
-        + $"s politickými stranami s osobou se jménem <b>{Model.FullName()}</b>."
-        + $"<a href=\"/ucty/hledat?q={System.Net.WebUtility.UrlEncode(ftxQuery)}\">Ukázat tyto bankovní transakce</a>"
-        + $"<br /><span class=\"text-info\">Upozornění: Jedná se o transakce ve kterých se vyskytuje osoba stejného jména. Nemusí jít o stejnou osobu.</span>");
-        }
-    }
-
-
-
-}
 
 <table class="table table-new table-new--dotted">
     <tbody>
@@ -202,6 +137,202 @@
 
             </td>
         </tr>
+
+
+        @{
+            string osobaInsQuery = $"{{0}}.osobaId:{Model.NameId}";
+            //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+            var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery,"dluznici"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+            var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery,"veritele"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+            var oinsSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery,"spravci"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+            Dictionary<string, long> oinsolv = new Dictionary<string, long>();
+            oinsolv.Add("dluznici|dlužník|dlužníka|dlužníkem", oinsDluznik.Total);
+            oinsolv.Add("veritele|věřitel|věřitele|veřitelem", oinsVeritel.Total);
+            oinsolv.Add("spravci|insolvenční správce|insolvenčního správce|insolvenčním správcem", oinsSpravce.Total);
+
+        }
+
+        <tr>
+            <th id="_insolvencni_rejstrik">@Model.FullName() osobně v insolvenčním rejstříku</th>
+            <td>
+                @foreach (var kv in oinsolv.OrderByDescending(m => m.Value))
+                {
+                    var text = kv.Key.Split('|');
+
+                    <p>
+                        @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
+                        @if (kv.Value > 0)
+                        {
+                            @Util.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery,text[0]), $" Vyhledat je.")
+                            @Util.AddWatchDog(this.User,string.Format(osobaInsQuery,text[0]), typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Pohlídat změny", "", prefillWDname: "Hlídat " + Model.FullName() + $" osobně jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        }
+                        else
+                        {
+                            @Util.AddWatchDog(this.User, string.Format(osobaInsQuery,text[0]), typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), $"Upozornit, když se stane {text[3]}", "", prefillWDname: "Hlídat " + Model.FullName() + $" osobně jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        }
+
+                    </p>
+                }
+                <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+            </td>
+        </tr>
+        @{
+            var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+            var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+            var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+            var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+            Dictionary<string, long> insolv = new Dictionary<string, long>();
+            insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
+            insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
+            insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
+
+        }
+
+        <tr>
+            <th id="_insolvencni_rejstrik">Firmy navázané na @Model.FullName() v insolvenčním rejstříku</th>
+            <td>
+                @foreach (var kv in insolv.OrderByDescending(m => m.Value))
+                {
+                    var text = kv.Key.Split('|');
+
+                <p>
+                    Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
+                    @if (kv.Value > 0)
+                    {
+                        @Util.AddSearchBtn("/insolvence/hledat", $"osobaid{text[0]}:" + Model.NameId, $" Vyhledat je.")
+                        @Util.AddWatchDog(this.User, $"osobaid{text[0]}:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), "Pohlídat změny", "", prefillWDname: "Firmy navázané na  " + Model.FullName() + $" jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    }
+                    else
+                    {
+                        @Util.AddWatchDog(this.User, $"osobaid{text[0]}:" + Model.NameId, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni), $"Upozornit, když se stane {text[3]}", "", prefillWDname: "Firmy navázané na " + Model.FullName() + $" jako {text[2]} v insolvencích", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    }
+
+                </p>
+                }
+                <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+            </td>
+        </tr>
+        <tr>
+            @{
+                var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaid:" + Model.NameId, null, 1, 5, 1);
+                var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaiddodavatel:" + Model.NameId, null, 1, 0, 1);
+                var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaidzadavatel:" + Model.NameId, null, 1, 0, 1);
+                Dictionary<string, long> vzakaz = new Dictionary<string, long>();
+                vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
+                vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
+            }
+            <th id="_verejne_zakazky">Veřejné zakázky firem navázaných na @Model.FullName()</th>
+            <td>
+                @foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
+                {
+                    var text = kv.Key.Split('|');
+
+                    <p>
+                        Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[1]} nenašli", $" se vyskytují v <b>jedné veřejné zakázce</b> jako {text[1]}", $" se vyskytují v <b>{{0}} veřejných zakázkách</b> jako {text[1]}", $" se vyskytují v <b>{{0}} veřejných zakázkach</b> jako {text[1]}")).
+                        @if (kv.Value > 0)
+                        {
+                            @Util.AddSearchBtn("/verejnezakazky/hledat", $"osobaid{text[0]}:" + Model.NameId, $" Vyhledat zakázky.")
+                            @Util.AddWatchDog(this.User, $"osobaid{text[0]}:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), "Pohlídat změny", "", prefillWDname: "Hlídat " + Model.FullName() + $" jako {text[1]} ve veřejných zakázkach", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        }
+                        else
+                        {
+                            @Util.AddWatchDog(this.User, $"osobaid{text[0]}:" + Model.NameId, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka), $"Upozornit, když se stane {text[3]}", "", prefillWDname: "Hlídat " + Model.FullName() + $" jako {text[1]} ve veřejných zakázkach", btnCss: "btn btn-warning btn-xs", showWDList: false)
+                        }
+
+                    </p>
+                }
+                <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+            </td>
+        </tr>
+
+
+        @{
+            List<string> tabs = new List<string>();
+            List<string> results = new List<string>();
+
+            tabs.Add("Základní info");
+            string zaklInfo = $"<h4>Hledání informací s vazbou na {Model.FullName()}</h4>"
+                + "<p>"
+                + $"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na " +
+                $" s vazbou na {Model.FullName()} nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou."
+                + "</p>"
+
+                + "<h4>Sdílení</h4>"
+                + "<div>"
+                + Util.ShareFacebook(Model.GetUrl(false)).ToHtmlString()
+                + Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}").ToHtmlString()
+                + Util.ShareWidget(Model.GetUrl(false))
+                + "</div>";
+
+            results.Add(zaklInfo);
+
+
+            if (insRes.IsValid && insRes.Total > 0)
+            {
+                tabs.Add($"V insolvenčním rejstříku ({Util.PocetVysledku(insRes.Total)})");
+                results.Add(
+                    SearchResults.InsolvenceTableResult(this.User, this.Request, 5, insRes).ToHtmlString()
+                );
+            }
+
+            if (resVZ.IsValid && resVZ.Total > 0)
+            {
+                tabs.Add($"Účast ve veřejných zakázkách ({Util.PocetVysledku(resVZ.Total)})");
+                results.Add(
+                    SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
+                );
+            }
+
+
+            var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
+            var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
+            var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForOsoba(Model.InternalId, null, 0);
+            var ftxQuery = Model.FullName();
+            var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
+            if (numByName.Total == 0)
+            {
+                ftxQuery = Model.Jmeno + " " + Model.Prijmeni;
+                numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
+            }
+            tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
+                .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
+                );
+            foreach (var rds in dsSearch.Results
+               .Where(m => m.Total > 0)
+               .OrderByDescending(m => m.Total))
+            {
+                results.Add(rds.RenderResultsInHtml(dsQuery));
+            }
+
+            if (numAnalyzed.Total + numByName.Total > 0)
+            {
+                if (Model.IsSponzor())
+                {
+                    tabs.Add("Sponzor politických stran");
+                    results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")}</b>"
+                        + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))}</b>)"
+                        + $"politickým stranám. <a href=\"/ucty/hledat?osobaid={Model.NameId}\">Ukázat bankovní transakce s identifikovanými dary</a>"
+                        );
+                }
+                if (numByName.Total > 0)
+                {
+                    tabs.Add("Bankovní transakce na účtech polit.stran");
+                    results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí")} </b>"
+                + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))}</b>)"
+                + $"s politickými stranami s osobou se jménem <b>{Model.FullName()}</b>."
+                + $"<a href=\"/ucty/hledat?q={System.Net.WebUtility.UrlEncode(ftxQuery)}\">Ukázat tyto bankovní transakce</a>"
+                + $"<br /><span class=\"text-info\">Upozornění: Jedná se o transakce ve kterých se vyskytuje osoba stejného jména. Nemusí jít o stejnou osobu.</span>");
+                }
+            }
+
+
+
+        }
         <tr>
             <td colspan="2">
                 @Util.VerticalTabs(tabs, results)
