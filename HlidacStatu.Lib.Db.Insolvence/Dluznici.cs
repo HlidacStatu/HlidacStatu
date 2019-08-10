@@ -28,5 +28,6 @@ namespace HlidacStatu.Lib.Db.Insolvence
         public string Okres { get; set; }
         public string Zeme { get; set; }
         public string PSC { get; set; }
+        public string OsobaId { get; set; }
     }
 }

@@ -23,6 +23,7 @@
           <Property Name="Okres" Type="nvarchar" MaxLength="50" />
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+          <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Dokumenty">
           <Key>
@@ -67,6 +68,7 @@
           <Property Name="Okres" Type="nvarchar" MaxLength="50" />
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+          <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Veritele">
           <Key>
@@ -86,6 +88,7 @@
           <Property Name="Okres" Type="nvarchar" MaxLength="50" />
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
+          <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityContainer Name="InsolvenceModelStoreContainer">
           <EntitySet Name="Dluznici" EntityType="Self.Dluznici" Schema="dbo" store:Type="Tables" />
@@ -141,6 +144,7 @@
           <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Veritele">
           <Key>
@@ -160,6 +164,7 @@
           <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="InsolvenceEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Dokumenty" EntityType="Self.Dokumenty" />
@@ -186,6 +191,7 @@
           <Property Name="Okres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -223,6 +229,7 @@
           <EntitySetMapping Name="Spravci">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Spravci">
               <MappingFragment StoreEntitySet="Spravci">
+                <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
                 <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
                 <ScalarProperty Name="IdPuvodce" ColumnName="IdPuvodce" />
@@ -243,6 +250,7 @@
           <EntitySetMapping Name="Veritele">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Veritele">
               <MappingFragment StoreEntitySet="Veritele">
+                <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
                 <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
                 <ScalarProperty Name="IdPuvodce" ColumnName="IdPuvodce" />
@@ -263,6 +271,7 @@
           <EntitySetMapping Name="Dluznici">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Dluznici">
               <MappingFragment StoreEntitySet="Dluznici">
+                <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="PSC" ColumnName="PSC" />
                 <ScalarProperty Name="Zeme" ColumnName="Zeme" />
                 <ScalarProperty Name="Okres" ColumnName="Okres" />
