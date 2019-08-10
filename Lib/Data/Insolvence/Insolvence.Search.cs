@@ -76,8 +76,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     {"zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" },
                     {"stav:","stav:" },
                     {"text:","dokumenty.plainText:" },
-                    {"typdokumentu:","dokumenty.popis:" },
-                    {"dokumenttyp:","dokumenty.popis:" },
+                    {"texttypdokumentu:","dokumenty.popis:" },
+                    {"typdokumentu:","dokumenty.typUdalosti:" },
                     {"oddil:","dokumenty.oddil:" },
             };
 
