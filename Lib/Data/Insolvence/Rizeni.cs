@@ -55,11 +55,11 @@ namespace HlidacStatu.Lib.Data.Insolvence
         public string UrlId() => SpisovaZnacka.Replace(" ", "_").Replace("/", "-");
 
 
-        public void PrepareForSave()
+        public void PrepareForSave(bool skipOsobaIdLink = false)
         {
             foreach (var d in this.Dluznici)
             {
-                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
                     var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
@@ -82,7 +82,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             foreach (var d in this.Spravci)
             {
-                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
                     var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
@@ -103,7 +103,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             }
             foreach (var d in this.Veritele)
             {
-                if (d.OsobaId == null && d.DatumNarozeni.HasValue)
+                if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
                     var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
@@ -127,17 +127,20 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 this.OnRadar = true;
             else
             {
-                foreach (var d in Dluznici)
+                if (skipOsobaIdLink == false)
                 {
+                    foreach (var d in Dluznici)
+                    {
 
-                    if (StaticData.Politici.Get().Any(m =>
-                        m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
-                        && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
-                        && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue
+                        if (StaticData.Politici.Get().Any(m =>
+                            m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
+                            && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
+                            && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue
+                            )
                         )
-                    )
-                        this.OnRadar = true;
-                    break;
+                            this.OnRadar = true;
+                        break;
+                    }
                 }
             }
         }
@@ -781,9 +784,9 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 return idb.Rizeni.Any(m => m.SpisovaZnacka == this.SpisovaZnacka);
             }
         }
-        public void SaveToDb(bool rewrite)
+        public void SaveToDb(bool rewrite, bool skipOsobaIdLink = false)
         {
-            PrepareForSave();
+            PrepareForSave(skipOsobaIdLink);
             using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
             {
                 var exists = idb.Rizeni.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
