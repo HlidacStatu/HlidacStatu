@@ -5,6 +5,7 @@
 
 
 @{
+        int PocetReportu = 24;
 
     ViewBag.Title = "Hlídač státu";
     ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
@@ -43,8 +44,8 @@
         <!-- desktop menu items only -->
         <div class="navbar__level2">
             <ul>
-                <li class=""><a href="/data">Databáze</a></li>
-                <li class=""><a href="/reporty">Analýzy a reporty</a></li>
+                <li class=""><a href="/data">Databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
+                <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
                 <li class=""><a href="/texty">Komentáře</a></li>
                 <li class=""><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
             </ul>
