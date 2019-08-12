@@ -71,6 +71,21 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
             }
         }
 
+        public static bool SkipThisTime(string hostid,  DateTime time)
+        {
+            foreach (var ign in ignoreIt)
+            {
+                if (
+                    (ign.hostid == hostid || string.IsNullOrEmpty(ign.hostid))
+                    && (ign.from < time && time < ign.to)
+                    )
+
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public ZabHostAvailability(ZabHost host, IEnumerable<ZabHistoryItem> measures, bool fillMissingWithNull = false, DateTime? lastExpectedTime = null)
         {
@@ -97,24 +112,14 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         {
                             DateTime prevTime = prev.Time.AddMinutes(j);
 
-                            bool skipIt = false;
-                            foreach (var ign in ignoreIt)
-                            {
-                                if ((this.Host.hostid == ign.hostid || string.IsNullOrEmpty(ign.hostid))
-                                    && (ign.from > prevTime || prevTime < ign.to)
-                                    ) //vypadek na nasi strane
-                                {
-                                    skipIt = true;
-                                    break;
-                                }
-                            }
-
-                            if (skipIt == false)
+                            if (SkipThisTime(this.Host.hostid,prevTime) == false)
                                 avail.Add(new ZabAvailability() { Time = prevTime, Response = ZabAvailability.TimeOuted });
                         }
                     }
                 }
-                avail.Add(new ZabAvailability() { Time = curr.clock, Response = curr.value, DownloadSpeed = null, HttpStatusCode = null });
+
+                if (SkipThisTime(this.Host.hostid, curr.clock) == false)
+                    avail.Add(new ZabAvailability() { Time = curr.clock, Response = curr.value, DownloadSpeed = null, HttpStatusCode = null });
 
                 prev = avail.Last();
 
@@ -130,7 +135,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     {
                         DateTime prevTime = prev.Time.AddMinutes(j);
 
-                        avail.Add(new ZabAvailability() { Time = prevTime, Response = ZabAvailability.TimeOuted });
+                        if (SkipThisTime(this.Host.hostid, prevTime) == false)
+                            avail.Add(new ZabAvailability() { Time = prevTime, Response = ZabAvailability.TimeOuted });
                     }
                 }
 

@@ -3,6 +3,7 @@ using System;
 
 namespace HlidacStatu.Lib.Data.External.Zabbix
 {
+    [System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 
     public class ZabAvailability
     {
@@ -65,6 +66,12 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                 return GetStatus(this.Response.Value);
         }
 
-
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return this.Time.ToString("M.d HH:mm:ss") + " " + (this.Response?.ToString() ?? "null") + " " + this.Status().ToString();
+            }
+        }
     }
 }

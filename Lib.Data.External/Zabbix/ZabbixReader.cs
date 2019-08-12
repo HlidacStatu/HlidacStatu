@@ -428,7 +428,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
             DateTime now = DateTime.Now;
             foreach (var host in dataResponseTime.Select(m => m.itemId).Distinct().Select(m => ZabTools.Weby().First(h => h.itemIdResponseTime == m)))
             {
-                var hint = dataResponseTime.Where(h => h.itemId == host.itemIdResponseTime).ToArray();
+                var hint = dataResponseTime.Where(h => h.itemId == host.itemIdResponseTime).OrderBy(m=>m.clock).ToArray();
                 ret.Add(new ZabHostAvailability(host, hint, fillMissingWithNull));
             }
 
