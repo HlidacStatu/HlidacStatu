@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @{
+        int PocetReportu = 24;
+
         /*
          ViewBag.Title = Title
          ViewBag.SubTitle = SubTitle
@@ -234,7 +236,7 @@
                     <a href="/Insolvence">Insolvence</a>
                     <a href="/sponzori">Sponzoři</a>
                     <a href="/ucty">Účty stran</a>
-                    <a href="/StatniWeby">Weby státu</a>
+                    <a href="/StatniWeby">Weby státu<sup style="top:0;text-decoration:none;color:#777;">@(HlidacStatu.Lib.Data.External.Zabbix.ZabTools.Weby()?.Count().ToString() ?? "")</sup></a>
                 </li>
 
                 <li class="hidden-sm hidden-xs">
@@ -263,8 +265,8 @@
                 </li>
 
                 <!-- mobile menu items below -->
-                <li class="level2"><a href="/data">Datové sady</a></li>
-                <li class="level2"><a href="/reporty">Analýzy a reporty</a></li>
+                <li class="level2"><a href="/data">Databáze<sup style="top:0;text-decoration:none;color:#777;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
+                <li class="level2"><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:#777;">@(PocetReportu)</sup></a></li>
                 <li class="level2"><a href="/texty">Komentáře</a></li>
                 <li class="level2"><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
 
@@ -301,8 +303,8 @@
             <!-- desktop menu items only -->
             <div class="navbar__level2">
                 <ul>
-                    <li class=""><a href="/data">Datové sady</a></li>
-                    <li class=""><a href="/reporty">Analýzy a reporty</a></li>
+                    <li class=""><a href="/data">Databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
+                    <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
                     <li class=""><a href="/texty">Komentáře</a></li>
                     <li class=""><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
                 </ul>

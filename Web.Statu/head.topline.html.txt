@@ -9,7 +9,7 @@
 
 
     <!-- mobile menu items below -->
-    <li class="level2"><a href="https://www.hlidacstatu.cz/data">Datové sady</a></li>
+    <li class="level2"><a href="https://www.hlidacstatu.cz/data">Databáze</a></li>
     <li class="level2"><a href="https://www.hlidacstatu.cz/reporty">Analýzy a reporty</a></li>
     <li class="level2"><a href="https://www.hlidacstatu.cz/texty">Komentáře</a></li>
     <li class="level2"><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>

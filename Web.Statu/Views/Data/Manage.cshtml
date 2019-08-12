@@ -7,7 +7,7 @@
 @using Devmasters.Core;
 
 @{
-    ViewBag.Title = "Správa datových sad";
+    ViewBag.Title = "Správa databází";
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
     bool isNoFlatDS = !Model?.GetDataset()?.IsFlatStructure() == true;
@@ -18,7 +18,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="/data">Databáze</a></li>
         @if (Model != null)
         {
             <li><a href="@Model.GetDataset().DatasetUrl()">@Model.name</a></li>

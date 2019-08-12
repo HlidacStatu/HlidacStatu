@@ -419,7 +419,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         HlidacStatu.Lib.Data.External.DataSets.DataSet ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(data);
                         to = ds.Registration().createdBy;
-                        subject = subject + $" ohledně datové sady {ds.DatasetId}";
+                        subject = subject + $" ohledně databáze {ds.DatasetId}";
                     }
                     catch (Exception)
                     {

@@ -324,9 +324,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     using (MailMessage msg = new MailMessage("info@hlidacstatu.cz", this.Registration().createdBy))
                     {
                         msg.Bcc.Add("michal@michalblaha.cz");
-                        msg.Subject = "Chyba v template vasi datove sady " + this.Registration().name;
+                        msg.Subject = "Chyba v template vasi databáze " + this.Registration().name;
                         msg.IsBodyHtml = false;
-                        msg.Body = $"Upozornění!V template vaší datové sady {this.Registration().datasetId} na adrese {url} došlo k chybě:\n\n{errMsg}\n\nProsíme opravte ji co nejdříve.\nDíky\n\nTeam Hlídače státu.";
+                        msg.Body = $"Upozornění!V template vaší databáze {this.Registration().datasetId} na adrese {url} došlo k chybě:\n\n{errMsg}\n\nProsíme opravte ji co nejdříve.\nDíky\n\nTeam Hlídače státu.";
                         msg.BodyEncoding = System.Text.Encoding.UTF8;
                         msg.SubjectEncoding = System.Text.Encoding.UTF8;
                         using (SmtpClient smtp = new SmtpClient())

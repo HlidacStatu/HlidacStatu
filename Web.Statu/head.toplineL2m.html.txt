@@ -1,4 +1,4 @@
-﻿<li><a href="https://www.hlidacstatu.cz/data"><span class="small blink" style="color:red">►</span>Datové sady</a></li>
+﻿<li><a href="https://www.hlidacstatu.cz/data"><span class="small blink" style="color:red">►</span>Databáze</a></li>
 <li><a href="https://www.hlidacstatu.cz/Reporty">Analýzy & reporty</a></li>
 <li><a href="https://www.hlidacstatu.cz/texty">Komentáře</a></li>
 <li><a href="https://platforma.hlidacstatu.cz/">Platforma</a></li>

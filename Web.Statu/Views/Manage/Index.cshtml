@@ -12,7 +12,7 @@
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
     <dl class="dl-horizontal">
-        <dt>Hlídači nových smluv, veřejných zakázek a datových sad:</dt>
+        <dt>Hlídači nových smluv, veřejných zakázek, insolvencí a další databází:</dt>
         @if (Model.HasWatchdogs)
         {
             <dd>
@@ -22,7 +22,7 @@
         else
         {
             <dd>
-                <a href="#" data-toggle="modal" data-target="#addWDhelp">Přidat hlídače nových smluv, veřejných zakázek a datových sad</a>
+                <a href="#" data-toggle="modal" data-target="#addWDhelp">Přidat hlídače nových smluv, veřejných zakázek, insolvencí a dalších databází</a>
                 <!-- Modal -->
                 <div class="modal fade" id="addWDhelp" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">

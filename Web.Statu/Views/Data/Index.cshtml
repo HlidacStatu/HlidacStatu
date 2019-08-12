@@ -5,7 +5,7 @@
 
 @{
     ViewBag.Title = "Hlídač státu";
-    ViewBag.SubTitle = "Další datové zdroje";
+    ViewBag.SubTitle = "Další databáze";
 
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
     bool showBeta = true;
@@ -25,16 +25,16 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Datové zdroje</a></li>
+        <li><a href="/data">Databáze</a></li>
         <li class="active">@ViewBag.SubTitle</li>
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
 
 <div class="bs-callout bs-callout-primary">
-    <h4>Datové sady</h4>
+    <h4>Databáze</h4>
     <div>
-        Na této stránce je přehled datových sad, které jsou na Hlídač Státu nahrány pomocí <a href="/api">našeho API</a>. Data sem může zdarma nahrát každý registrovaný uživatel Hlídače státu, a zpřístupnit je tak všem
+        Na této stránce je přehled databází, které jsou na Hlídač Státu nahrány pomocí <a href="/api">našeho API</a>. Data sem může zdarma nahrát každý registrovaný uživatel Hlídače státu, a zpřístupnit je tak všem
     </div>
     <div>
         Pokud máte tip na zajímavý zdroj dat, <a onclick="return trackOutLink(this,'data');" href="https://platforma.hlidacstatu.cz/t/datove-zdroje-vhodne-pro-zpracovani-tipy-a-napady/320" target="_blank">podělte se s ostatními</a>.
