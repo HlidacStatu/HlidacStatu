@@ -20,11 +20,56 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
         //static DateTime fixPolicieFrom = new DateTime(2017, 12, 18, 19, 05, 00);
         //static DateTime fixPolicieTo = new DateTime(2017, 12, 19, 11, 10, 00);
-        static IgnoreMissingData[] ignoreIt = new IgnoreMissingData[] {
-            new IgnoreMissingData(){ from = new DateTime(2018, 3, 18, 0, 17, 00, DateTimeKind.Local), to = new DateTime(2018, 3, 18, 00, 23, 00, DateTimeKind.Local), info="Zabbix restart"},
-            new IgnoreMissingData(){ from = new DateTime(2018, 3, 21, 10, 51, 00, DateTimeKind.Local), to = new DateTime(2018, 3, 21, 11, 04, 00, DateTimeKind.Local), info="Zabbix restart"},
-            new IgnoreMissingData(){ from = new DateTime(2018, 12, 16, 13, 35, 00, DateTimeKind.Local), to = new DateTime(2018, 12, 16, 15, 14, 00, DateTimeKind.Local), info="Zabbix restart"},
-        };
+        static List<IgnoreMissingData> ignoreIt = new List<IgnoreMissingData>();
+        //{
+        //new IgnoreMissingData(){ from = new DateTime(2018, 3, 18, 0, 17, 00, DateTimeKind.Local), to = new DateTime(2018, 3, 18, 00, 23, 00, DateTimeKind.Local), info="Zabbix restart"},
+        //new IgnoreMissingData(){ from = new DateTime(2018, 3, 21, 10, 51, 00, DateTimeKind.Local), to = new DateTime(2018, 3, 21, 11, 04, 00, DateTimeKind.Local), info="Zabbix restart"},
+        //new IgnoreMissingData(){ from = new DateTime(2018, 12, 16, 13, 35, 00, DateTimeKind.Local), to = new DateTime(2018, 12, 16, 15, 14, 00, DateTimeKind.Local), info="Zabbix restart"},
+        //};
+
+        static object zabHostAvailabilityStaticLock = new object();
+        static bool inicialized = false;
+        static ZabHostAvailability()
+        {
+            lock (zabHostAvailabilityStaticLock)
+            {
+                if (inicialized == false)
+                {
+                    var sdata = Devmasters.Core.Util.Config.GetConfigValue("ZabbixIgnoreDataIntervals") ?? "";
+                    //~2019-08-11T20:10:00~2019-08-11T23:53:00~Zabbix reinstall | hostid~2019-08-11T23:58:00~2019-08-11T23:53:00~Zabbix reinstall |2019-08-11T23:53:00~2019-08-12T10:59:00 enable IP6 
+                    try
+                    {
+                        foreach (var sd in sdata.Split('|'))
+                        {
+                            var parts = sd.Split(new char[] { '~' }, StringSplitOptions.None).Select(m=>m.Trim()).ToArray();
+                            string hostid = parts[0].Trim();
+                            var from = Util.ParseTools.ToDateTime(parts[1], "yyyy-MM-ddTHH:mm:ss");
+                            var to = Util.ParseTools.ToDateTime(parts[2], "yyyy-MM-ddTHH:mm:ss");
+                            var descr = parts[3];
+
+                            if (from.HasValue && to.HasValue)
+                                ignoreIt.Add(new IgnoreMissingData()
+                                {
+                                    from = from.Value,
+                                    to = to.Value,
+                                    hostid = hostid,
+                                    info = descr
+                                }
+                                    );
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("zabbix ZabbixIgnoreDataIntervals config error", e);
+                    }
+                    finally
+                    {
+                        inicialized = true;
+                    }
+                }
+            }
+        }
 
 
         public ZabHostAvailability(ZabHost host, IEnumerable<ZabHistoryItem> measures, bool fillMissingWithNull = false, DateTime? lastExpectedTime = null)
@@ -64,7 +109,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                                 }
                             }
 
-                            if (skipIt==false)
+                            if (skipIt == false)
                                 avail.Add(new ZabAvailability() { Time = prevTime, Response = ZabAvailability.TimeOuted });
                         }
                     }
@@ -136,7 +181,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
         {
             var d = this.Data
                 .Where(m => m.Time > fromDate)
-                .Select((v, index) => new[] { (long)(ToEpochLocalTime(v.Time) ), (int)line, (decimal?)(v.Response) })
+                .Select((v, index) => new[] { (long)(ToEpochLocalTime(v.Time)), (int)line, (decimal?)(v.Response) })
                 .ToArray();
 
             return d;
