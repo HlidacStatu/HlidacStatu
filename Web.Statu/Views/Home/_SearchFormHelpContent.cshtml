@@ -28,23 +28,24 @@
                 <dl>
                     <dt>Hledat všechna slova v různých tvarech</dt>
                     <dd>
-                        <kbd>trojbarevný velký deštník</kbd>
+                        <kbd>trojbarevný velký deštník</kbd>@Try("","trojbarevný velký deštník", true)
                         <br />Hledá smlouvy obsahující všechna uvedená slova v různých mluvnických tvarech
                     </dd>
                     <dt>Hledat přesně slovo nebo sousloví</dt>
                     <dd>
-                        <kbd>"velký deštník"</kbd>
+                        <kbd>"velký deštník"</kbd>@Try("", "\"velký deštník\"")
                         <br />Hledá smlouvy obsahující uvedená slova či sousloví v přesném tvaru jako je v uvozovkách
                     </dd>
                     <dt>Kterékoliv z těchto slov</dt>
                     <dd>
-                        mezi všechna požadovaná slova vložte operátor OR:<br /> <kbd>miniaturní OR standardní</kbd>
+                        mezi všechna požadovaná slova vložte operátor OR:<br /> <kbd>miniaturní OR standardní</kbd>@Try("", "miniaturní OR standardní")
                         <br />Hledá smlouvy obsahující alespoň jedno z uvedených slov
                     </dd>
                     <dt>Toto slovo tam být nesmí </dt>
                     <dd>
-                        Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>-hlodavec</kbd>
-                        nebo pro sousloví <kbd>-"Jack Russell"</kbd>
+                        Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>penicilin -lékárna</kbd>@Try("", "penicilin -lékárna").  
+                        Tento dotaz najde smlouvy se slovem penicilin, 
+                        nebo pro sousloví <kbd>-"Andrej Babiš"</kbd>@Try("", "-\"Andrej Babiš\"")
                     </dd>
                     <dt>Kombinace výrazů</dt>
                     <dd>
@@ -295,3 +296,9 @@
 
     </div>
 </div>
+
+
+@helper Try(string typ, string q, bool showT = false)
+{
+ <a class="small" href="@(typ + "/hledat?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@Util.IfExists(showT,"Zkusit ")<i class="fas fa-external-link-alt"></i></a>
+}

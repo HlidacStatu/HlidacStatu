@@ -103,19 +103,19 @@ namespace HlidacStatu.Web.Controllers
 
                 string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
                 string sql = @"select 'Celkem' as 'type',
-		                        (select count(*) from ItemToOcrQueue where started is null) as waiting,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is null) as running,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is null and started< dateadd(hh,-24,getdate())) as errors
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is null) as waiting,
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null) as running,
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null and started< dateadd(hh,-24,getdate())) as errors
                         union
 	                        select distinct t.itemtype as 'type',
-		                        (select count(*) from ItemToOcrQueue where started is null and itemtype = t.itemtype) as waiting,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is null and itemtype = t.itemtype) as running,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is not null 
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is null and itemtype = t.itemtype) as waiting,
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null and itemtype = t.itemtype) as running,
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is not null 
 		                        and done > DATEADD(dy,-1,getdate()) and itemtype = t.itemtype) as doneIn24H,
-		                        (select count(*) from ItemToOcrQueue where started is not null and done is null 
+		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null 
 		                        and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
-		                        from ItemToOcrQueue t 
+		                        from ItemToOcrQueue t with (nolock)
 		                        order by type";
                 using (var p = new Devmasters.Core.PersistLib())
                 {
