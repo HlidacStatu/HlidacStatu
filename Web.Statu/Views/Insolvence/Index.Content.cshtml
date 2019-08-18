@@ -1,5 +1,6 @@
 ﻿@using Nest;
 @using HlidacStatu.Lib;
+@using HlidacStatu.Util;
 @using System.Linq;
 @using Devmasters.Core;
 @using HlidacStatu.Web.Models;
@@ -217,12 +218,12 @@
                             <div class="box-stats__content">
                                 @{
                                     var sql = @"select r.spisovaznacka, r.stav, r.datumZalozeni, r. posledniZmena, o.nameid from insolvence..Dluznici d
-                                                    inner join Osoba o
-                                                        on d.OsobaId collate Czech_CI_AS = o.NameId and o.Status=3
-                                                    inner join insolvence..rizeni r
-                                                        on d.rizeniId = r.spisovaznacka and (stav != 'MYLNÝ ZÁP.' OR stav!='ZRUŠENO VS')
-                                                where osobaid is not null and OsobaId != ''
-                                                and d.Typ='F'";
+                                                                            inner join Osoba o
+                                                                                on d.OsobaId collate Czech_CI_AS = o.NameId and o.Status=3
+                                                                            inner join insolvence..rizeni r
+                                                                                on d.rizeniId = r.spisovaznacka and (stav != 'MYLNÝ ZÁP.' OR stav!='ZRUŠENO VS')
+                                                                        where osobaid is not null and OsobaId != ''
+                                                                        and d.Typ='F'";
 
                                     var politici = HlidacStatu.Lib.DirectDB
                                                     .GetList<string, string, DateTime, DateTime, string>(sql)
@@ -233,7 +234,7 @@
                                 }
                                 <p class="box-stats__title">
                                     <strong>@HlidacStatu.Util.RenderData.NiceNumber(politici.Count())</strong><br>
-                                    Politici v insolvenci
+                                    @Devmasters.Core.Lang.Plural.Get(politici.Count(), "Politik", "Politici", "Politiků") v insolvenci
                                 </p>
                             </div>
                             <div class="box-stats__media">
@@ -247,7 +248,7 @@
                                         sb.AppendLine(p.OrderBy(oo => oo.Item4).Select(m => $"<a href='{Rizeni.GetUrlFromId(m.Item1)}'>{m.Item1}</a> /z {m.Item4.ToString("yyyy")}/").Aggregate((f, s) => f + "<br/>" + s));
                                         sb.AppendLine("</div>");
                                     }
-                                    @Util.LowBox(80, sb.ToString() )
+                                    @Util.LowBox(80, sb.ToString())
                                 </div>
                             </div>
                         </div>
@@ -258,23 +259,45 @@
                         <div class="box-stats__inner">
                             <div class="box-stats__content">
                                 @{
-                                    var insolvenceFiremPolitiku = StaticData.Insolvence_firem_politiku_Cache.Get();
-                                        }
+                                    var insolvenceFiremPolitiku = HlidacStatu.Lib.StaticData.Insolvence_firem_politiku_Cache.Get()
+                                                        .OrderByDescending(o=>o.Item1.ToBasicData().CelkemCena);
+
+                                    var firmyPolitikuVInsolvenci = HlidacStatu.Lib.StaticData.Insolvence_firem_politiku_Cache.Get()
+                                                        .Select(m => m.Item2.Select(d => d.VybraniDluznici))
+                                                        .SelectMany(m => m)
+                                                        .Distinct();
+                                    sb.Clear();
+                                }
                                 <p class="box-stats__title">
-                                    <strong>@HlidacStatu.Util.RenderData.NiceNumber(lastM)</strong><br>
-                                    Počet firem v insolvenci za poslední měsíc
+                                    <strong>@HlidacStatu.Util.RenderData.NiceNumber(firmyPolitikuVInsolvenci.Count())</strong><br>
+                                    @Devmasters.Core.Lang.Plural.Get(firmyPolitikuVInsolvenci.Count(),"Firma","Firmy","Firem") s vazbou na politiky<sup>*)</sup> v insolvenci
+                                    <br/> <span class="text-muted small">(vypisujeme náhodný výběr)</span>
                                 </p>
                             </div>
-                            <div class="box-stats__side">
-                                <p class="box-stats__progress box-stats__progress--icon-right">
-                                    @(rozdil.ToString("P1"))
-                                    <span class="box-stats__progress-icon">
-                                        <i class="far fa-arrow-@(rozdil<0 ? "down" : "up")"></i>
-                                    </span>
-                                    <br />
-                                    <span class="box-stats__progress-unit">oproti předchozímu</span>
+                            <div class="box-stats__media">
+                                <div style="display:block">
+                                    @foreach (var p in insolvenceFiremPolitiku.Take(20).Shuffle())
+                                        {
+                                            var pd = new Devmasters.Core.Lang.PluralDef() { Values = new string[] { " a ještě jedna", "{0} další","{0} dalších" } };
+                                            var o = p.Item1.Osoba();
+                                            sb.AppendLine($"<b>{o.FullNameWithYear()}</b><br/>");
+                                            sb.AppendLine($"<div class='text-muted small-link' style='padding-left:2em;'>");
 
-                                </p>
+                                            sb.AppendLine(
+                                                RenderData.LimitedList(
+                                                    2,
+                                                    p.Item2.OrderByDescending(oo => oo.Zahajeni)
+                                                        .Select(m => $"<a href='{Rizeni.GetUrlFromId(m.SpisovaZnacka)}'>"
+                                                            + $"{Devmasters.Core.TextUtil.ShortenText(HlidacStatu.Lib.Data.Firmy.Get(m.VybraniDluznici.First()).Jmeno,20)}</a>"
+                                                            + $" /z {m.Zahajeni.ToString("yyyy")}/"),
+                                                    "{0}","<br/>",
+                                                    moreTextPrefix:"<br/>a ",
+                                                    morePluralForm: pd)
+                                            );
+                                        sb.AppendLine("</div>");
+                                    }
+                                    @Util.LowBox(80, sb.ToString())
+                                </div>
                             </div>
                         </div>
                     </div>

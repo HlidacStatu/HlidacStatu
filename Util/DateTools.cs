@@ -185,5 +185,68 @@ namespace HlidacStatu.Util
 
         }
 
+
+        public static bool IsDateInInterval(DateTime? from, DateTime? to, DateTime? date)
+        {
+            if (date == null)
+                return false;
+            else if (
+                        (from <= date && date <= to)
+                        || (from == null && date <= to)
+                        || (date <= to && to == null)
+                    )
+                return true;
+            else
+                return false;
+        }
+
+        //based on sql dbo.IsSomehowInInterval
+        public static bool IsOverlappingIntervals(DateTime? dateIntervalFrom,
+                                            DateTime? dateIntervalTo,
+                                            DateTime? dateRelFrom,
+                                            DateTime? dateRelTo)
+        {
+            int oks = 0;
+
+            if (dateIntervalFrom is null && dateIntervalTo is null)
+                return true;
+            if (dateRelFrom is null && dateRelTo is null)
+                return true;
+
+            if (dateRelFrom is null)
+                dateRelFrom = new DateTime(1900, 01, 01);
+            if (dateRelTo is null)
+                dateRelTo = DateTime.Now.AddDays(10);
+
+
+            if (IsDateInInterval(dateRelFrom, dateRelTo, dateIntervalFrom))
+                oks = oks + 1;
+
+            if (IsDateInInterval(dateRelFrom, dateRelTo, dateIntervalTo))
+                oks = oks + 1;
+
+            if (dateIntervalFrom <= dateRelFrom && dateRelTo <= dateIntervalTo
+                && dateIntervalFrom != null && dateRelFrom != null && dateRelTo != null && dateIntervalTo != null
+                )
+                oks = oks + 1;
+
+            if (oks == 0
+                && dateIntervalFrom is null
+                && dateIntervalTo > dateRelTo
+                )
+                oks = oks + 1;
+
+            if (oks == 0
+                && dateIntervalTo is null
+                && dateIntervalFrom < dateRelFrom
+                )
+                oks = oks + 1;
+
+            if (oks > 0)
+                return true;
+            else
+                return false; ;
+
+        }
     }
 }

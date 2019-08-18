@@ -119,7 +119,7 @@ namespace HlidacStatu.Util
             var stat = numbers
                 //.Select(n=>new { sc = GetBestScale(n) })
                 .GroupBy(k => GetBestScale(k), v => GetBestScale(v), (v, k) => new { sc = v, num = (double)k.Count() })
-                .OrderByDescending(o=>o.num)
+                .OrderByDescending(o => o.num)
                 .ToArray();
 
             if (stat.Count() == 1)
@@ -189,8 +189,8 @@ namespace HlidacStatu.Util
         }
 
         public static string ShortNiceNumber(decimal number,
-            bool html = false, 
-            ShowDecimalVal showDecimal = ShowDecimalVal.AsNeeded, 
+            bool html = false,
+            ShowDecimalVal showDecimal = ShowDecimalVal.AsNeeded,
             MaxScale exactScale = MaxScale.Any,
             bool hideSuffix = false)
         {
@@ -199,7 +199,7 @@ namespace HlidacStatu.Util
 
         public static string ShortNicePrice(decimal number,
             string valueIfZero = "0 {0}", string mena = "Kč", bool html = false,
-            ShowDecimalVal showDecimal = ShowDecimalVal.Hide, 
+            ShowDecimalVal showDecimal = ShowDecimalVal.Hide,
             MaxScale exactScale = MaxScale.Any,
             bool hideSuffix = false)
         {
@@ -207,7 +207,7 @@ namespace HlidacStatu.Util
             decimal n = number;
 
             string suffix;
-            if ((n > OneBil && exactScale == MaxScale.Any) || exactScale == MaxScale.Bilion )
+            if ((n > OneBil && exactScale == MaxScale.Any) || exactScale == MaxScale.Bilion)
             {
                 n /= OneBil;
                 suffix = "bil.";
@@ -217,12 +217,12 @@ namespace HlidacStatu.Util
                 n /= OneMld;
                 suffix = "mld.";
             }
-            else if ((n > OneMil && exactScale == MaxScale.Any) || exactScale == MaxScale.Milion )
+            else if ((n > OneMil && exactScale == MaxScale.Any) || exactScale == MaxScale.Milion)
             {
                 n /= OneMil;
                 suffix = "mil.";
             }
-            else if (exactScale == MaxScale.Tisic )
+            else if (exactScale == MaxScale.Tisic)
             {
                 n /= OneTh;
                 suffix = "";
@@ -257,7 +257,7 @@ namespace HlidacStatu.Util
             }
 
             ret = ret.Trim();
-            
+
 
             if (html)
             {
@@ -282,7 +282,7 @@ namespace HlidacStatu.Util
         }
 
         public static string NiceNumber(long number, bool html = false, ShowDecimalVal showDecimal = ShowDecimalVal.AsNeeded)
-            =>  NiceNumber((decimal) number, html, showDecimal);
+            => NiceNumber((decimal)number, html, showDecimal);
 
         public static string TextToHtml(string txt)
         {
@@ -340,5 +340,63 @@ namespace HlidacStatu.Util
 
             return $"Date.UTC({m.Date.Year},{ m.Date.Month - 1},{ m.Date.Day})";
         }
+
+        public static string LimitedList(int maxItems, IEnumerable<string> data, string format = "{0}",
+            string itemsDelimiter = "\n",
+            string moreTextPrefix = null, Devmasters.Core.Lang.PluralDef morePluralForm = null,
+            bool moreNumberFormat = true
+            )
+        {
+            return LimitedList(maxItems, data.Select(m => new string[] { m }), format, itemsDelimiter, moreTextPrefix, morePluralForm, moreNumberFormat);
+        }
+
+        public static string LimitedList(int maxItems, IEnumerable<string[]> data, string format="{0}", 
+            string itemsDelimiter = "\n", 
+            string moreTextPrefix = null, Devmasters.Core.Lang.PluralDef morePluralForm = null,
+            bool moreNumberFormat = true
+            )
+        {
+            if (maxItems == 0)
+                return string.Empty;
+            if (data == null)
+                return string.Empty;
+            if (data.Count() == 0)
+                return string.Empty;
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append( data.Take(maxItems)
+                .Select(m => string.Format(format, m))
+                .Aggregate((f, s) => f + itemsDelimiter + s)
+                );
+
+            string more = "";
+            if (data.Count() == maxItems+1)
+            {
+                sb.Append(itemsDelimiter);
+                sb.Append(string.Format(format, data.Last()));
+                maxItems = data.Count();
+            }
+            if (data.Count() > maxItems)
+            {
+                int diff = data.Count() - maxItems;
+                string sDiff = diff.ToString();
+                if (moreNumberFormat)
+                    sDiff = NiceNumber(diff);
+
+                if (!string.IsNullOrEmpty(moreTextPrefix))
+                {
+                    if (moreTextPrefix.Contains("{0}"))
+                        more = string.Format(moreTextPrefix, sDiff);
+                    else
+                        more = moreTextPrefix;
+                }
+                if (morePluralForm != null)
+                    more = more + Devmasters.Core.Lang.Plural.Get(diff,morePluralForm);
+
+            }
+            sb.Append(more);
+            return sb.ToString();
+        }
     }
 }
+
