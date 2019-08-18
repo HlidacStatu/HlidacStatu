@@ -36,8 +36,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Core, Version=1.472.3.35, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Core.1.472.3.35\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Core.1.472.4\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>

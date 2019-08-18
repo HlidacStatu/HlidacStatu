@@ -5,7 +5,7 @@ using System.Text;
 using DatabaseUpgrader;
 using System.Configuration;
 
-namespace HlidacSmluv.DBUpgrades
+namespace HlidacStatu.DBUpgrades
 {
     public static partial class DBUpgrader
     {

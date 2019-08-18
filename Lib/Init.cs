@@ -78,7 +78,7 @@ namespace HlidacStatu.Lib
                         WebAppRoot = WebAppRoot + "\\";
 
 
-                    HlidacSmluv.DBUpgrades.DBUpgrader.UpgradeDatabases();
+                    HlidacStatu.DBUpgrades.DBUpgrader.UpgradeDatabases();
                     //if (loadStaticData)
                     //    Lib.StaticData.Init();
                     initialised = true;

@@ -52,6 +52,8 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
 
+        public static Devmasters.Cache.V20.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
+
         //public static Devmasters.Cache.V20.File.FileCache<string[]> SmlouvySPolitiky_nedavne_Cache = null;
         //public static Devmasters.Cache.V20.File.FileCache<string[]> SmlouvySPolitiky_aktualni_Cache = null;
         //public static Devmasters.Cache.V20.File.FileCache<string[]> SmlouvySPolitiky_vsechny_Cache = null;
@@ -96,7 +98,6 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Data.Darujme.Stats> DarujmeStats = null;
 
-        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, HlidacStatu.Lib.Data.Insolvence.RizeniStatistic[]>> Insolvence_firem_politiku_Cache = null;
 
         public static string[] HejtmaniOd2016 = new string[] {
             "jaroslava-jermanova",
@@ -251,42 +252,77 @@ namespace HlidacStatu.Lib
                     );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
-                Insolvence_firem_politiku_Cache = new Devmasters.Cache.V20.File.FileCache<Dictionary<string, Data.Insolvence.RizeniStatistic[]>>(
-    StaticData.App_Data_Path,TimeSpan.Zero, "Insolvence_firem_politiku", (obj) =>
-    {
-        var ret = new Dictionary<string, Data.Insolvence.RizeniStatistic[]>();
-        var lockObj = new object();
-        Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(Politici.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik),
-            (o) =>
-            {
-                var icos = o.AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                .Select(w => w.To.Id);
-                if (icos.Count() > 0)
-                {
-                    var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 100,
-       (int)Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
-       limitedView: false);
-                    if (res.IsValid && res.Total>0)
-                        lock (lockObj)
-                        {
-                            ret.Add(o.NameId, res.Result.Hits
-                                                .Select(m => new Data.Insolvence.RizeniStatistic(m.Source, icos))
-                                                .ToArray()
-                                                );
-                        }
-                }
-                return new Devmasters.Core.Batch.ActionOutputData();
-            },
-            HlidacStatu.Util.Consts.outputWriter.OutputWriter,
-            HlidacStatu.Util.Consts.progressWriter.ProgressWriter,
-            true, //!System.Diagnostics.Debugger.IsAttached,
-            maxDegreeOfParallelism: 6);
+                Insolvence_firem_politiku_Cache = new Devmasters.Cache.V20.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]>(
+                                StaticData.App_Data_Path, TimeSpan.Zero, "Insolvence_firem_politiku", (obj) =>
+                                 {
+                                     var ret = new List<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>>();
+                                     var lockObj = new object();
+                                     Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(Politici.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik).Distinct(),
+                                         (o) =>
+                                         {
+                                             var icos = o.AktualniVazby(Data.Relation.AktualnostType.Nedavny)
+                                                             .Where(w => !string.IsNullOrEmpty(w.To.Id))
+                                                             //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                                             .Select(w => w.To.Id);
+                                             if (icos.Count() > 0)
+                                             {
+                                                 var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 100,
+                                                        (int)Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
+                                                        limitedView: false);
+                                                 if (res.IsValid && res.Total > 0)
+                                                 {
+                                                     List<HlidacStatu.Lib.Data.Insolvence.Rizeni> insolvenceIntoList = new List<Data.Insolvence.Rizeni>();
+                                                     foreach (var i in res.Result.Hits.Select(m => m.Source))
+                                                     {
+                                                         bool addToList = false;
+                                                         var pdluznici = i.Dluznici.Where(m => icos.Contains(m.ICO));
+                                                         if (pdluznici.Count() > 0)
+                                                         {
+                                                             foreach (var pd in pdluznici)
+                                                             {
+                                                                 Firma f = Firmy.Get(pd.ICO);
+                                                                 var vazby = o.VazbyProICO(pd.ICO);
+                                                                 foreach (var v in vazby)
+                                                                 {
+                                                                     if (HlidacStatu.Util.DateTools.IsOverlappingIntervals(i.DatumZalozeni, i.PosledniZmena, v.RelFrom, v.RelTo))
+                                                                     {
+                                                                         addToList = true;
+                                                                         goto addList;
+                                                                     }
+                                                                 }
+                                                             }
+                                                         }
+                                                     addList:
+                                                         if (addToList)
+                                                             insolvenceIntoList.Add(i);
+                                                     }
+                                                     if (insolvenceIntoList.Count() > 0)
+                                                     {
+                                                         lock (lockObj)
+                                                         {
+                                                             HlidacStatu.Lib.Analysis.OsobaStatistic stat = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
-        return ret;
-    }
-    );
+                                                             ret.Add(new Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>(
+                                                                                 stat, insolvenceIntoList
+                                                                                         .Select(m => new Data.Insolvence.RizeniStatistic(m, icos))
+                                                                                         .ToArray()
+                                                                                 )
+                                                                 );
+                                                         }
+                                                     }
+
+                                                 }
+                                             }
+                                             return new Devmasters.Core.Batch.ActionOutputData();
+                                         },
+                                         HlidacStatu.Util.Consts.outputWriter.OutputWriter,
+                                         HlidacStatu.Util.Consts.progressWriter.ProgressWriter,
+                                         true, //!System.Diagnostics.Debugger.IsAttached,
+                                         maxDegreeOfParallelism: 6);
+
+                                     return ret.ToArray();
+                                 }
+                                );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_Vsechny ");
 

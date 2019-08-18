@@ -8,6 +8,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
 {
     public class RizeniStatistic
     {
+        public RizeniStatistic()
+        {
+        }
         public RizeniStatistic(string spisovaZnacka, IEnumerable<string> filterDluzniciFromThisList = null)
             : this(Insolvence.LoadFromES(spisovaZnacka, false, false)?.Rizeni, filterDluzniciFromThisList)
         {

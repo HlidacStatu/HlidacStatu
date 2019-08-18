@@ -40,8 +40,8 @@
     <Reference Include="ChromeDevToolsClient, Version=0.5.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Zu.ChromeDevToolsClient.0.5.5\lib\net462\ChromeDevToolsClient.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.3.35, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.3.35\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.4\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Imaging, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Imaging.1.472.1.1\lib\net40\Devmasters.Imaging.dll</HintPath>
