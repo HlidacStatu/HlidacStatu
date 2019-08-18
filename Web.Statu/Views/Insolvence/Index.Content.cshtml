@@ -36,9 +36,10 @@
                                         );
                                     DateTime minDate = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, 1);
                                     DateTime thisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                    DateTime nextMonth = thisMonth.AddMonths(1);
                                     string query = "-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\"";
                                     var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
-                                        "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *]",
+                                        "( " + query + " ) AND datumZalozeni:[" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(nextMonth) + "}",
                                         1, 0, 0, limitedView: false, anyAggregation: aggs);
 
                                     IEnumerable<ReportDataTimeValue> data = ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
@@ -62,7 +63,7 @@
                                 </p>
                             </div>
                             <div class="box-stats__media">
-                                @UtilChart.RenderSimpleTimeChart(data, 230, 135, "Počet nových insolvencí", true)
+                                @UtilChart.RenderSimpleTimeChart(data.Where(m => m.Date < thisMonth), 230, 135, "Počet nových insolvencí", true)
 
                                 @*<img src="/Content/temp/stats-graph.png" width height alt class="box-stats__image">*@
                             </div>
@@ -90,7 +91,7 @@
 
                                     query = "(dokumenty.typUdalosti:174 OR dokumenty.typUdalosti:175)";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
-                                        "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
+                                        "( " + query + " ) AND datumZalozeni:[" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(nextMonth) + "}",
                                         1, 0, 0, limitedView: false, anyAggregation: aggs);
                                     var typ = ((SingleBucketAggregate)res.Result.Aggregations["typ"])
                                         .First().Value;
@@ -131,7 +132,7 @@
                                     minDate = DateTime.Now.Date.AddDays(-29);
                                     query = "dluznici.typ:\"F\" AND (-stav:\"MYLNÝ ZÁP.\" OR -stav:\"ZRUŠENO VS\")";
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
-                                        "( " + query + " ) AND datumZalozeni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO *}",
+                                        "( " + query + " ) AND datumZalozeni:[" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(nextMonth) + "}",
                                         1, 0, 0, limitedView: false);
                                     decimal lastM = res.Total;
 
@@ -208,77 +209,85 @@
                         </div>
                     </div>
                 </div>
-                <!--
-                            <div class="cross-stats__item cross-stats__item--half-md cross-stats__item--third-lg">
-                                <div class="box-stats">
-                                    <div class="box-stats__inner">
-                                        <div class="box-stats__content">
-                                            <p class="box-stats__title">
-                                                <strong>567</strong><br>
-                                                Schv&#xE1;leno zpen&#x11B;&#x17E;en&#xED; majetkov&#xE9; podstaty
-                                            </p>
-                                        </div>
-                                        <div class="box-stats__side">
-                                            <p class="box-stats__progress box-stats__progress--icon-right box-stats__progress--icon-sm">
-                                                +7%
-                                                <span class="box-stats__progress-icon">
-                                                    <i class="far fa-arrow-up"></i>
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
+
+                <!-- politici -->
+                <div class="cross-stats__item cross-stats__item--half-md">
+                    <div class="box-stats box-stats--middle">
+                        <div class="box-stats__inner">
+                            <div class="box-stats__content">
+                                @{
+                                    var sql = @"select r.spisovaznacka, r.stav, r.datumZalozeni, r. posledniZmena, o.nameid from insolvence..Dluznici d
+                                                    inner join Osoba o
+                                                        on d.OsobaId collate Czech_CI_AS = o.NameId and o.Status=3
+                                                    inner join insolvence..rizeni r
+                                                        on d.rizeniId = r.spisovaznacka and (stav != 'MYLNÝ ZÁP.' OR stav!='ZRUŠENO VS')
+                                                where osobaid is not null and OsobaId != ''
+                                                and d.Typ='F'";
+
+                                    var politici = HlidacStatu.Lib.DirectDB
+                                                    .GetList<string, string, DateTime, DateTime, string>(sql)
+                                                    .GroupBy(k => k.Item5, v => new Tuple<string, string, DateTime, DateTime>
+                                                                   (v.Item1, v.Item2, v.Item3, v.Item4));
+                                    var sb = new System.Text.StringBuilder();
+
+                                }
+                                <p class="box-stats__title">
+                                    <strong>@HlidacStatu.Util.RenderData.NiceNumber(politici.Count())</strong><br>
+                                    Politici v insolvenci
+                                </p>
+                            </div>
+                            <div class="box-stats__media">
+                                <div style="display:block">
+                                    @foreach (var p in politici)
+                                    {
+                                        var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(p.Key);
+                                        sb.AppendLine($"<b>{o.FullNameWithYear()}</b><br/>");
+                                        sb.AppendLine($"<div class='text-muted small-link' style='padding-left:2em;'>");
+
+                                        sb.AppendLine(p.OrderBy(oo => oo.Item4).Select(m => $"<a href='{Rizeni.GetUrlFromId(m.Item1)}'>{m.Item1}</a> /z {m.Item4.ToString("yyyy")}/").Aggregate((f, s) => f + "<br/>" + s));
+                                        sb.AppendLine("</div>");
+                                    }
+                                    @Util.LowBox(80, sb.ToString() )
                                 </div>
                             </div>
-                            <div class="cross-stats__item cross-stats__item--half-md cross-stats__item--third-lg">
-                                <div class="box-stats">
-                                    <div class="box-stats__inner">
-                                        <div class="box-stats__content">
-                                            <p class="box-stats__title">
-                                                <strong>32</strong><br>
-                                                Schv&#xE1;leno spl&#xE1;tkov&#xFD;m kalend&#xE1;&#x159;em
-                                            </p>
-                                        </div>
-                                        <div class="box-stats__side">
-                                            <p class="box-stats__progress box-stats__progress--icon-right box-stats__progress--icon-sm">
-                                                -7%
-                                                <span class="box-stats__progress-icon">
-                                                    <i class="far fa-arrow-down"></i>
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cross-stats__item cross-stats__item--half-md">
+                    <div class="box-stats box-stats--middle">
+                        <div class="box-stats__inner">
+                            <div class="box-stats__content">
+                                @{
+                                    var insolvenceFiremPolitiku = StaticData.Insolvence_firem_politiku_Cache.Get();
+                                        }
+                                <p class="box-stats__title">
+                                    <strong>@HlidacStatu.Util.RenderData.NiceNumber(lastM)</strong><br>
+                                    Počet firem v insolvenci za poslední měsíc
+                                </p>
                             </div>
-                            <div class="cross-stats__item cross-stats__item--half-md cross-stats__item--third-lg">
-                                <div class="box-stats">
-                                    <div class="box-stats__inner">
-                                        <div class="box-stats__content">
-                                            <p class="box-stats__title">
-                                                <strong>13</strong><br>
-                                                Schv&#xE1;leno kombinac&#xED; spl&#xE1;tkov&#xE9;ho kalend&#xE1;&#x159;e a zpen&#x11B;&#x17E;en&#xED;m majetkov&#xE9; podstaty
-                                            </p>
-                                        </div>
-                                        <div class="box-stats__side">
-                                            <p class="box-stats__progress box-stats__progress--icon-right box-stats__progress--icon-sm">
-                                                -5%
-                                                <span class="box-stats__progress-icon">
-                                                    <i class="far fa-arrow-down"></i>
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="box-stats__side">
+                                <p class="box-stats__progress box-stats__progress--icon-right">
+                                    @(rozdil.ToString("P1"))
+                                    <span class="box-stats__progress-icon">
+                                        <i class="far fa-arrow-@(rozdil<0 ? "down" : "up")"></i>
+                                    </span>
+                                    <br />
+                                    <span class="box-stats__progress-unit">oproti předchozímu</span>
+
+                                </p>
                             </div>
-                -->
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
     </div>
-
-    @Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
-
-
 </div>
+
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
+
+
 
 
 

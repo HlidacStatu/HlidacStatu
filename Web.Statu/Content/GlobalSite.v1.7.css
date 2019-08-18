@@ -1320,14 +1320,20 @@ textarea {
     max-height: 120px;
     overflow: hidden;
 }
+    .low-box .low-box-content {
+        top:-60px;
+        position:relative;
+    }
 
     .low-box .low-box-line {
-        position: absolute;
-        bottom: 0;
+        position: relative;
+        top: 75px;
+        height:60px;
         left: 0;
         width: 100%;
         margin: 0;
         padding: 28px 0 8px 0;
+        z-index: 1000;
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+55 */
         background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 55%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
         background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 55%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
@@ -1351,7 +1357,14 @@ textarea {
                 content: "\A0\A0\25BD\A0\A0více"; /*▽*/
             }
 
-
+.obsah_top {
+    text-align: right;
+    padding-right: 10px;
+    font-size: 12px;
+    color: #3e6deb;
+    text-decoration: none;
+    /* content: ""; △*/
+}
 
     .line-text-divider {
         color: #ccc;
@@ -1470,6 +1483,7 @@ div.verticaltab-container {
     border: 1px solid #ddd;
     border-bottom-color: transparent;
     font-size: 16px;
+    font-weight: bold;
 }
 
 .nav-tabs.border > li.active > a, .nav-tabs.border > li.active > a:hover, .nav-tabs.border > li.active > a:focus {
@@ -1495,6 +1509,7 @@ div.verticaltab-container {
 
     .highlighting highl {
         font-weight: bold;
+        background-color: #c5f74f;
     }
 
 
@@ -1512,3 +1527,52 @@ div.verticaltab-container {
     line-height: 1.5;
     border-radius: 3px;
 }
+
+
+.logo strong {
+    font-weight: 700;
+    color: #266cae;
+}
+
+
+.table.bankovnivypis td.small {
+    font-size: 80%;
+    color: #777;
+    border-top-width: 0 !important;
+}
+
+.bookmark, .bookmark:active, .bookmark:visited, .bookmark:focus, .bookmark:hover { /* z glyphicon glyphicon-star */
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings' !important;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 120%;
+    text-decoration: none;
+}
+
+    .bookmark:hover {
+        filter: brightness(85%);
+    }
+
+    .bookmark.bookmarkOn {
+        color: #c9302c;
+    }
+
+        .bookmark.bookmarkOn:before {
+            content: "\e044";
+        }
+
+    .bookmark.bookmarkOff {
+        color: #96C0E5;
+    }
+
+        .bookmark.bookmarkOff:before {
+            content: "\e044";
+        }
+
+

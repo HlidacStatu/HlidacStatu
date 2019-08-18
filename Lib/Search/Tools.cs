@@ -315,7 +315,7 @@ namespace HlidacStatu.Lib.Search
                             var icos = p
                                         .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
                                         .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                        .Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                        //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
                                         .Select(w => w.To.Id)
                                         .Distinct().ToArray();
 

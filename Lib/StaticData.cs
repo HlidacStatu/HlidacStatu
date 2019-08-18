@@ -96,6 +96,7 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Data.Darujme.Stats> DarujmeStats = null;
 
+        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, HlidacStatu.Lib.Data.Insolvence.RizeniStatistic[]>> Insolvence_firem_politiku_Cache = null;
 
         public static string[] HejtmaniOd2016 = new string[] {
             "jaroslava-jermanova",
@@ -200,7 +201,7 @@ namespace HlidacStatu.Lib
                     csv.Read();//skip second line
                     while (csv.Read())
                     {
-                        string kod = csv.GetField<string>("Kód")?.Trim();   
+                        string kod = csv.GetField<string>("Kód")?.Trim();
                         string text = csv.GetField<string>("Název")?.Trim();
                         if (!string.IsNullOrEmpty(kod) && !string.IsNullOrEmpty("text"))
                             CPVKody.Add(kod, text);
@@ -249,28 +250,67 @@ namespace HlidacStatu.Lib
                         }
                     );
 
+                HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
+                Insolvence_firem_politiku_Cache = new Devmasters.Cache.V20.File.FileCache<Dictionary<string, Data.Insolvence.RizeniStatistic[]>>(
+    StaticData.App_Data_Path,TimeSpan.Zero, "Insolvence_firem_politiku", (obj) =>
+    {
+        var ret = new Dictionary<string, Data.Insolvence.RizeniStatistic[]>();
+        var lockObj = new object();
+        Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(Politici.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik),
+            (o) =>
+            {
+                var icos = o.AktualniVazby(Data.Relation.AktualnostType.Nedavny)
+                                .Where(w => !string.IsNullOrEmpty(w.To.Id))
+                                //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                .Select(w => w.To.Id);
+                if (icos.Count() > 0)
+                {
+                    var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 100,
+       (int)Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
+       limitedView: false);
+                    if (res.IsValid && res.Total>0)
+                        lock (lockObj)
+                        {
+                            ret.Add(o.NameId, res.Result.Hits
+                                                .Select(m => new Data.Insolvence.RizeniStatistic(m.Source, icos))
+                                                .ToArray()
+                                                );
+                        }
+                }
+                return new Devmasters.Core.Batch.ActionOutputData();
+            },
+            HlidacStatu.Util.Consts.outputWriter.OutputWriter,
+            HlidacStatu.Util.Consts.progressWriter.ProgressWriter,
+            true, //!System.Diagnostics.Debugger.IsAttached,
+            maxDegreeOfParallelism: 6);
+
+        return ret;
+    }
+    );
+
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_Vsechny ");
 
+
                 SponzorujiciFirmy_Vsechny = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
-                        TimeSpan.FromHours(3), (obj) =>
-                        {
-                            List<FirmaEvent> firmy = null;
+                                TimeSpan.FromHours(3), (obj) =>
+                                {
+                                    List<FirmaEvent> firmy = null;
 
-                            using (Lib.Data.DbEntities db = new DbEntities())
-                            {
-                                firmy = db.FirmaEvent
-                                    .AsNoTracking()
-                                    .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
-                                    //.Where(m=>m.)
-                                    //.Select(m=>m.ICO)
-                                    .ToList();
+                                    using (Lib.Data.DbEntities db = new DbEntities())
+                                    {
+                                        firmy = db.FirmaEvent
+                                            .AsNoTracking()
+                                            .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
+                                            //.Where(m=>m.)
+                                            //.Select(m=>m.ICO)
+                                            .ToList();
 
-                                return firmy;
+                                        return firmy;
 
-                            }
+                                    }
 
-                        }
-                    );
+                                }
+                            );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_nedavne");
                 SponzorujiciFirmy_Nedavne = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
@@ -295,18 +335,19 @@ namespace HlidacStatu.Lib
                 DarujmeStats = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Data.Darujme.Stats>(
                         TimeSpan.FromHours(3), (obj) =>
                         {
-                            var defData = new Darujme.Stats() {
+                            var defData = new Darujme.Stats()
+                            {
                                 projectStats = new Darujme.Stats.Projectstats()
+                                {
+                                    collectedAmountEstimate = new Darujme.Stats.Projectstats.Collectedamountestimate()
                                     {
-                                         collectedAmountEstimate = new Darujme.Stats.Projectstats.Collectedamountestimate()
-                                         {
-                                              cents = 70891100,
-                                              currency  = "CZK"
-                                         },
-                                          donorsCount = 280,
-                                          projectId = 1200384
-                                    }
-                                };
+                                        cents = 70891100,
+                                        currency = "CZK"
+                                    },
+                                    donorsCount = 280,
+                                    projectId = 1200384
+                                }
+                            };
                             try
                             {
                                 using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent("https://www.darujme.cz/api/v1/project/1200384/stats?apiId=74233883&apiSecret=q2vqimypo2ohpa0qi6g9zwn37rb1bpaan12gulqk"))
@@ -316,7 +357,7 @@ namespace HlidacStatu.Lib
                             }
                             catch (Exception e)
                             {
-                                HlidacStatu.Util.Consts.Logger.Error("Static data - DarujmeStats",e);
+                                HlidacStatu.Util.Consts.Logger.Error("Static data - DarujmeStats", e);
 
                                 return defData;
                             }
@@ -381,7 +422,7 @@ namespace HlidacStatu.Lib
                         .Where(m => m.Element(StaticData.DatoveSchrankyNS + "TypDS")?.Value?.StartsWith("OVM") == true)
                         .Select(m => m.Element(StaticData.DatoveSchrankyNS + "ICO")?.Value ?? "")
                         .Where(i => !string.IsNullOrEmpty(i))
-                        .Select(i=> HlidacStatu.Util.ParseTools.MerkIcoToICO(i)) 
+                        .Select(i => HlidacStatu.Util.ParseTools.MerkIcoToICO(i))
                         )
                 {
                     Urady_OVM.Add(ico);

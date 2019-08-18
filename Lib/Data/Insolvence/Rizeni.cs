@@ -54,7 +54,6 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public string UrlId() => SpisovaZnacka.Replace(" ", "_").Replace("/", "-");
 
-
         public void PrepareForSave(bool skipOsobaIdLink = false)
         {
             foreach (var d in this.Dluznici)
@@ -166,7 +165,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public string GetUrl(bool local, string foundWithQuery)
         {
-            string url = $"/Insolvence/Rizeni/{this.UrlId()}";
+            string url = GetUrlFromId(this.SpisovaZnacka);// $"/Insolvence/Rizeni/{this.UrlId()}";
             if (!string.IsNullOrEmpty(foundWithQuery))
                 url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
             if (local == false)
@@ -174,6 +173,11 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             return url;
         }
+        public static string GetUrlFromId(string spisovaZnacka)
+        {
+            return $"/Insolvence/Rizeni/{spisovaZnacka.Replace(" ", "_").Replace("/", "-")}";
+        }
+
 
         public class ProgressItem
         {

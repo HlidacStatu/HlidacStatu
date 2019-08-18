@@ -482,6 +482,7 @@
     <Compile Include="Data\Insolvence\InsolvenceDetail.cs" />
     <Compile Include="Data\Insolvence\Osoba.cs" />
     <Compile Include="Data\Insolvence\Rizeni.cs" />
+    <Compile Include="Data\Insolvence\RizeniStatistic.cs" />
     <Compile Include="Data\ItemToOcrQueue.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>

@@ -409,8 +409,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\defs.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\GlobalSite.v1.5.css" />
-    <Content Include="Content\GlobalSite.v1.2.css" />
+    <Content Include="Content\GlobalSite.v1.7.css" />
     <Content Include="Content\icons\android-chrome-192x192.png" />
     <Content Include="Content\icons\apple-touch-icon-114x114.png" />
     <Content Include="Content\icons\apple-touch-icon-120x120.png" />
@@ -916,8 +915,7 @@
     <Content Include="Scripts\highlight\styles\xcode.css" />
     <Content Include="Scripts\highlight\styles\xt256.css" />
     <Content Include="Scripts\highlight\styles\zenburn.css" />
-    <Content Include="Scripts\hlidac.v1.5.js" />
-    <Content Include="Scripts\hlidac.v1.4.js" />
+    <Content Include="Scripts\hlidac.v1.7.js" />
     <Content Include="App_Code\SearchResults.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

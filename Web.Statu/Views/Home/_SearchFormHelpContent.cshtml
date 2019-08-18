@@ -28,7 +28,7 @@
                 <dl>
                     <dt>Hledat všechna slova v různých tvarech</dt>
                     <dd>
-                        <kbd>trojbarevný velký deštník</kbd>@Try("","trojbarevný velký deštník", true)
+                        <kbd>trojbarevný velký deštník</kbd>@Try("", "trojbarevný velký deštník", true)
                         <br />Hledá smlouvy obsahující všechna uvedená slova v různých mluvnických tvarech
                     </dd>
                     <dt>Hledat přesně slovo nebo sousloví</dt>
@@ -43,8 +43,8 @@
                     </dd>
                     <dt>Toto slovo tam být nesmí </dt>
                     <dd>
-                        Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>penicilin -lékárna</kbd>@Try("", "penicilin -lékárna").  
-                        Tento dotaz najde smlouvy se slovem penicilin, 
+                        Před slova, která nechcete, zadejte znaménko mínus:<br /><kbd>penicilin -lékárna</kbd>@Try("", "penicilin -lékárna").
+                        Tento dotaz najde smlouvy se slovem penicilin,
                         nebo pro sousloví <kbd>-"Andrej Babiš"</kbd>@Try("", "-\"Andrej Babiš\"")
                     </dd>
                     <dt>Kombinace výrazů</dt>
@@ -234,6 +234,12 @@
                         <kbd>icoveritel:12345678</kbd> - věřitel má uvedené IČO<br />
                         <kbd>icospravce:12345678</kbd> - insolvenční správce má uvedené IČO<br />
                         <br />
+                        <kbd>osobaid:andrej-babis</kbd> - ID osoby . Najdeme insolv.řízení, kde dlužníkem, věřitelem nebo insolvenčním správcem je libovolná firma na kterou má vliv uvedená osoba.<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ID osoby najdete v profilu každé osoby. Zde např. <a href="/osoba/andrej-babis">Andrej Babiš</a>.
+                        <kbd>osobaiddluznik:andrej-babis</kbd> - ID osoby . Najdeme insolv.řízení, kde dlužníkem je libovolná firma na kterou má vliv uvedená osoba.<br />
+                        <kbd>osobaidveritel:andrej-babis</kbd> - ID osoby . Najdeme insolv.řízení, kde věřitelem je libovolná firma na kterou má vliv uvedená osoba.<br />
+                        <kbd>osobaidspravce:andrej-babis</kbd> - ID osoby . Najdeme insolv.řízení, kde insolvenčním správcem je libovolná firma na kterou má vliv uvedená osoba.<br />
+                        <br />
                         <kbd>holding:12345678</kbd> - IČO matky holdingu. Najdeme insolv.řízení, kde dlužníkem, věřitelem nebo insolvenčním správcem je matka či libovolná firma holdingu<br />
                         <kbd>holdingdluznik:12345678</kbd> - IČO matky holdingu. Najdeme insolv.řízení, kde dlužníkem je matka či libovolná firma holdingu<br />
                         <kbd>holdingveritel:12345678</kbd> - IČO matky holdingu. Najdeme insolv.řízení, kde věřitelem je matka či libovolná firma holdingu<br />
@@ -300,5 +306,5 @@
 
 @helper Try(string typ, string q, bool showT = false)
 {
- <a class="small" href="@(typ + "/hledat?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@Util.IfExists(showT,"Zkusit ")<i class="fas fa-external-link-alt"></i></a>
+    <a class="small" href="@(typ + "/hledat?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@Util.IfExists(showT, "Zkusit ")<i class="fas fa-external-link-alt"></i></a>
 }

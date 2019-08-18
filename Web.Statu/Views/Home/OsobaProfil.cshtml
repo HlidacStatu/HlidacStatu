@@ -74,12 +74,7 @@
                             Funkce
                         </div>
                         <div class="new-p">
-                            <div class="low-box" style="max-height:80px">
-                                <div class="low-box-content">
-                                    @Html.Raw(funkceOsoba)
-                                </div>
-                                <div class="low-box-line"><a href="#" class="more"></a></div>
-                            </div>
+                            @Util.LowBox(80,funkceOsoba)
                         </div>
                     </div>
                 }
@@ -90,13 +85,7 @@
                             Podpora politických stran
                         </div>
                         <div class="new-p">
-                            <div class="low-box" style="max-height:80px">
-                                <div class="low-box-content">
-                                    @Html.Raw(Model.Description(true,
-        m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
-                                </div>
-                                <div class="low-box-line"><a href="#" class="more"></a></div>
-                            </div>
+                            @Util.LowBox(80, Model.Description(true,m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
                         </div>
                     </div>
                 }

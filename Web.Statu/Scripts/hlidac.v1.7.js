@@ -248,18 +248,20 @@ $(function () {
             totalHeight += $(this).outerHeight();
             // FAIL totalHeight += $(this).css("margin-bottom");
         });
-
         $up.css({
             // Set height to prevent instant jumpdown when max height is removed
             "height": $up.height(),
             "max-height": 9999
         })
             .animate({
-                "height": totalHeight
+                height: totalHeight,
+                top:"+=60"
             });
 
         // fade out read-more
-        $p.fadeOut();
+        $p.fadeOut(function () {
+            $ps.css({ "top": 0 });
+        });
         // prevent jump-down
         return false;
     });
