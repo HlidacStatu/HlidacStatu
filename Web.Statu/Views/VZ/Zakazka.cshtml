@@ -53,9 +53,10 @@
         Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
         <b>Registrace je zdarma a je velmi jednoduchá</b>. Stačí vám pouze platný email.
     </p>
-    <p>Pokud jste již zaregistrováni, <a href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
+    <p>Pokud jste již zaregistrováni, <a onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
     <p>
-        <a href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
+        <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;"
+           href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
     </p>
     <script>
         $(function () {

@@ -37,58 +37,59 @@
         <li><a href="@Url.Action("Index", "VZ", new { id=Model.Id })">Zakázka @Model.NazevZakazky</a></li>
         <li class="active">@ViewBag.SubTitle</li>
     </ol>
-    }
+}
 
-    @if (!HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
-    {
-        <h3>Omezený přístup pouze pro registrované uživatele.</h3>
-        <p>
-            Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
-            Registrace je zdarma a je velmi jednoduchá.
-        </p>
-        <p>Pokud jste již zaregistrováni, <a href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
-        <p>
-            <a href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
-        </p>
-        <script>
+@if (!HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
+{
+    <h3>Omezený přístup pouze pro registrované uživatele.</h3>
+    <p>
+        Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
+        Registrace je zdarma a je velmi jednoduchá.
+    </p>
+    <p>Pokud jste již zaregistrováni, <a onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
+    <p>
+        <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;"
+           href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
+    </p>
+    <script>
         $(function () {
             $("#VZInfoAnon").modal('show');
         });
-        </script>
+    </script>
+}
+else
+{
+
+    if (!string.IsNullOrEmpty(plainText))
+    {
+        <h3>
+            @Util.AddBookmark(this.User, Model)
+            Příloha @doc.Name
+        </h3>
+        <p>
+            <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
+            <a href="@doc.GetDocumentUrlToDownload()" target="_blank">originál dokumentu</a>
+        </p>
+
+        <hr />
+        <div class="row">
+            <div class="col-xs-12">
+                <pre>
+                @Html.Raw(plainText)
+            </pre>
+            </div>
+
+        </div>
     }
     else
     {
-
-        if (!string.IsNullOrEmpty(plainText))
-        {
-            <h3>
-                @Util.AddBookmark(this.User, Model)
-                Příloha @doc.Name
-            </h3>
-            <p>
-                <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
-                <a href="@doc.GetDocumentUrlToDownload()" target="_blank">originál dokumentu</a>
-            </p>
-
-            <hr />
-            <div class="row">
-                <div class="col-xs-12">
-                    <pre>
-                @Html.Raw(plainText)
-            </pre>
-                </div>
-
-            </div>
-        }
-        else
-        {
-            <span class="text-danger">
-                V odkazovaném dokumentu jsme nenašli žádný text.
-                <a href="@doc.GetDocumentUrlToDownload()" target="_blank">Stáhněte si originál</a>.
-            </span>
-        }
-
-
-
-
+        <span class="text-danger">
+            V odkazovaném dokumentu jsme nenašli žádný text.
+            <a href="@doc.GetDocumentUrlToDownload()" target="_blank">Stáhněte si originál</a>.
+        </span>
     }
+
+
+
+
+}

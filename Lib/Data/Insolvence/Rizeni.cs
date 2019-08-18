@@ -793,19 +793,19 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             PrepareForSave(skipOsobaIdLink);
             using (HlidacStatu.Lib.Db.Insolvence.InsolvenceEntities idb = new Db.Insolvence.InsolvenceEntities())
             {
-                var exists = idb.Rizeni.Where(m => m.SpisovaZnacka == this.SpisovaZnacka).FirstOrDefault();
+                var exists = idb.Rizeni.Where(m => m.SpisovaZnacka == this.SpisovaZnacka)?.ToList()?.FirstOrDefault();
                 bool addNew = exists == null;
 
                 if (exists != null && rewrite == true)
                 {
-                    foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                    foreach (var d in idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList())
                         idb.Dokumenty.Remove(d);
 
-                    foreach (var d in idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                    foreach (var d in idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList())
                         idb.Dluznici.Remove(d);
-                    foreach (var d in idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                    foreach (var d in idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList())
                         idb.Veritele.Remove(d);
-                    foreach (var d in idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka))
+                    foreach (var d in idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList())
                         idb.Spravci.Remove(d);
 
                     idb.Rizeni.Remove(exists);
@@ -867,7 +867,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     }
 
                     #region Dluznici
-                    var dbDluznici = idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka).ToArray();
+                    var dbDluznici = idb.Dluznici.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList();
                     //update existing
                     foreach (var d in this.Dluznici)
                     {
@@ -901,7 +901,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     #endregion
 
                     #region Veritele
-                    var dbVeritele = idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka).ToArray();
+                    var dbVeritele = idb.Veritele.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList();
                     //update existing
                     foreach (var d in this.Veritele)
                     {
@@ -935,7 +935,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     #endregion
 
                     #region Spravci
-                    var dbSpravci = idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka).ToArray();
+                    var dbSpravci = idb.Spravci.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList();
                     //update existing
                     foreach (var d in this.Spravci)
                     {
@@ -969,7 +969,10 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     #endregion
 
                     #region Dokumenty
-                    var dbDokumenty = idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka).ToArray();
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        idb.Database.Log = Console.WriteLine;
+
+                    var dbDokumenty = idb.Dokumenty.Where(m => m.RizeniId == exists.SpisovaZnacka).ToList();
                     //update existing
                     foreach (var d in this.Dokumenty)
                     {
@@ -1014,8 +1017,6 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
 
                 try
                 {
-                    if (System.Diagnostics.Debugger.IsAttached)
-                        idb.Database.Log = Console.WriteLine;
                     if (idb.ChangeTracker.HasChanges())
                     {
                         HlidacStatu.Util.Consts.Logger.Info($"Updating Rizeni into DB {this.SpisovaZnacka}, {idb.ChangeTracker.Entries().Count(m => m.State != System.Data.Entity.EntityState.Unchanged)} changes.");

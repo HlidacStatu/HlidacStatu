@@ -50,9 +50,10 @@
         Podrobné informace o insolvencích jsou dostupné pouze registrovaným uživatelům Hlídače Státu.
         <b>Registrace je zdarma a je velmi jednoduchá</b>. Stačí vám pouze platný email.
     </p>
-    <p>Pokud jste již zaregistrováni, <a href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
+    <p>Pokud jste již zaregistrováni, <a onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
     <p>
-        <a href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
+        <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;"
+           href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
     </p>
     <script>
         $(function () {
@@ -125,7 +126,7 @@ else
                     <span class="text-muted small">
                         Sledování změn řízení
                     </span><br />
-                    @Util.AddWatchDogSmall(this.User,$"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni),"Hlídat změny v tomto řízení", prefillWDname:"Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList:false)
+                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
                 </td>
                 <td colspan="2">
                     <span class="text-muted small">
@@ -188,7 +189,7 @@ else
                     Sledování změn řízení
                 </td>
                 <td>
-                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname:"Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
+                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
                 </td>
             </tr>
             <tr>
@@ -297,17 +298,17 @@ else
         $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
-    
+
 
 @section onlyembed
 {
     <div class="onlyembed">
-            <div class="container text">
-                <h3>Insolvence @Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
-                <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Rizeni.InfoFacts(), 2, true, true, html: true)) </p>
-                <p><a href="@Model.GetUrl(false)" target="_top">Více informací o insolvenčním řízení</a></p>
-            </div>
-            <img src="@($"/socialbanner/insolvence?d={DateTime.Now.ToString("yyMMdd")}&v={Model.Rizeni.SpisovaZnacka}")"
-                 style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
+        <div class="container text">
+            <h3>Insolvence @Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
+            <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Rizeni.InfoFacts(), 2, true, true, html: true)) </p>
+            <p><a href="@Model.GetUrl(false)" target="_top">Více informací o insolvenčním řízení</a></p>
         </div>
+        <img src="@($"/socialbanner/insolvence?d={DateTime.Now.ToString("yyMMdd")}&v={Model.Rizeni.SpisovaZnacka}")"
+             style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
+    </div>
 }

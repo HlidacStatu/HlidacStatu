@@ -256,11 +256,11 @@
                         }
                         nextUrl = System.Net.WebUtility.UrlEncode(nextUrl);
 
-                        <a href="/account/Login?returnUrl=@(nextUrl)" id="loginLink">
+                        <a  onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/account/Login?returnUrl=@(nextUrl)" id="loginLink">
                             <img src="/Content/img/icon-user.svg" style="padding-right: 8px;">
                             Přihlášení
                         </a>
-                        <a href="/account/Register?nextUrl=@(nextUrl)" id="regLink">Registrace</a>
+                        <a  onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/account/Register?nextUrl=@(nextUrl)" id="regLink">Registrace</a>
                     }
                 </li>
 
@@ -279,14 +279,14 @@
                 <li class="level2">
                     @if (Request.IsAuthenticated)
                     {
-                        <a title="Všechny uložené záložky" alt="Všechny uložené záložky" href="/manage/zalozky"><span style="color:#c9302c;" class="bookmark bookmarkOn"></span>Záložky</a>
-                        <a href="/manage/" title="Nastavení účtu" alt="Nastavení účtu"><span style="font-family: 'Glyphicons Halflings'" class="glyphicon glyphicon-user"></span>Účet</a>
-                        <a href="/Account/LogOff?rnd=@Guid.NewGuid().ToString("N")">Odhlásit</a>
+                        <a  onclick="ga('send', 'event', 'bookmarksBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" title="Všechny uložené záložky" alt="Všechny uložené záložky" href="/manage/zalozky"><span style="color:#c9302c;" class="bookmark bookmarkOn"></span>Záložky</a>
+                        <a  onclick="ga('send', 'event', 'manageBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/manage/" title="Nastavení účtu" alt="Nastavení účtu"><span style="font-family: 'Glyphicons Halflings'" class="glyphicon glyphicon-user"></span>Účet</a>
+                        <a  onclick="ga('send', 'event', 'logoffBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/Account/LogOff?rnd=@Guid.NewGuid().ToString("N")">Odhlásit</a>
                     }
                     else
                     {
-                        <a href="/Account/Login">Přihlášení</a>
-                        <a href="/account/Register">Registrace</a>
+                        <a  onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/Account/Login">Přihlášení</a>
+                        <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)'); return true;" href="/account/Register">Registrace</a>
                     }
                 </li>
             </ul>
@@ -488,7 +488,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
-                        <a id="VZInfoAnonRegister" href="/account/Register?returnUrl=" class="btn btn-primary">Zaregistrovat se</a>
+                        <a id="VZInfoAnonRegister" onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#VZPristupOmezen'); return true;" href="/account/Register?returnUrl=" class="btn btn-primary">Zaregistrovat se</a>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

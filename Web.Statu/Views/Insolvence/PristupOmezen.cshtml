@@ -25,10 +25,10 @@
                 Podrobné informace o insolvencích jsou dostupné pouze registrovaným uživatelům Hlídače Státu. Registrace je zdarma a je velmi jednoduchá.
             </div>
             <div>
-                Pokud jste již zaregistrováni, <a href="/account/login?returnUrl=" class="btn btn-default">zalogujte se</a>.
+                Pokud jste již zaregistrováni, <a  onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/login?returnUrl=" class="btn btn-default">zalogujte se</a>.
             </div>
             <div>
-                <a href="/account/Register?returnUrl=" class="btn btn-primary">Jinak se zaregistrujte</a>
+                <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Register?returnUrl=" class="btn btn-primary">Jinak se zaregistrujte</a>
             </div>
         }
         else

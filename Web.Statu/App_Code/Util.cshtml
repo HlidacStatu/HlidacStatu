@@ -11,10 +11,31 @@
         get { return ((WebViewPage)CurrentPage).Html; }
     }
 
-    private static UrlHelper Url
+    private static UrlHelper UrlH
     {
-        get { return ((WebViewPage)CurrentPage).Url; }
+        get
+        {
+            return ((WebViewPage)CurrentPage).Url;
+        }
     }
+
+    private static Uri CurrPageUrl
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Request.Url;
+            //return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+    private static string CurrPageUrlPath
+    {
+        get
+        {
+            return "/" + CurrPageUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        }
+    }
+
+
     private static WebViewPage CurrPage
     {
         get { return (WebViewPage)CurrentPage; }
@@ -51,7 +72,9 @@
 @helper AddVisitImg(string path)
 {
     string base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(path));
-    <text><img src="/visitimg/@base64" width="1" height="1" /></text>
+    <text>
+        <img src="/visitimg/@base64" width="1" height="1" />
+    </text>
 }
 
 @helper RenderSmartLookTrackingCode(bool withScriptTag = true)
@@ -113,7 +136,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
                 <script>
                     ga('send', 'event', 'darujAd', 'shown', { nonInteraction: true });
 
-/**/</script>
+                    /**/</script>
                 <div class="alert alert-orange text-center">
                     <div class="row">
                         <div class="col-sm-10 col-xs-12">
@@ -256,7 +279,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 
 @helper ShareFacebook(string url, string title = "na Facebook")
 {
-    <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u=@Html.Raw(Url.Encode(url))&display=popup&ref=plugin&src=share_button" class="ssk ssk-text ssk-facebook ssk-xs" target="_blank">@title</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u=@Html.Raw(UrlH.Encode(url))&display=popup&ref=plugin&src=share_button" class="ssk ssk-text ssk-facebook ssk-xs" target="_blank">@title</a>
 }
 
 @helper ShareTwitter(HttpRequestBase req, string text, string title = "na Twitter")
@@ -266,7 +289,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 
 @helper ShareTwitter(string url, string text, string title = "na Twitter")
 {
-    <a href="https://twitter.com/intent/tweet?original_referer=@Html.Raw(Url.Encode(url))&ref_src=twsrc%5Etfw&text=@Html.Raw(Url.Encode(text))&tw_p=tweetbutton&url=@Html.Raw(Url.Encode(url))" class="ssk ssk-text ssk-twitter ssk-xs" target="_blank">@title</a>
+    <a href="https://twitter.com/intent/tweet?original_referer=@Html.Raw(UrlH.Encode(url))&ref_src=twsrc%5Etfw&text=@Html.Raw(UrlH.Encode(text))&tw_p=tweetbutton&url=@Html.Raw(UrlH.Encode(url))" class="ssk ssk-text ssk-twitter ssk-xs" target="_blank">@title</a>
 }
 
 @helper ShareWidget(HttpRequestBase req, string title = "Vložit do vlastní stránky", int width = 500)
@@ -668,8 +691,8 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                         </div>
                         <div class="modal-footer">
                             <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseForm', 'anonym');" class="btn btn-default" data-dismiss="modal">Zavřít</button>
-                            <a href="/account/register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Register', 'anonym');" role="button" class="btn btn-primary">Zdarma zaregistrovat</a>
-                            <a href="/account/login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Login', 'anonym');" role="button" class="btn btn-success">Přihlásit se</a>
+                            <a  onclick="ga('send', 'event', 'registerBtn', 'click','@CurrPageUrlPath'); return true;" href="/account/register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Register', 'anonym');" role="button" class="btn btn-primary">Zdarma zaregistrovat</a>
+                            <a  onclick="ga('send', 'event', 'registerBtn', 'click','@CurrPageUrlPath'); return true;" href="/account/login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Login', 'anonym');" role="button" class="btn btn-success">Přihlásit se</a>
                         </div>
                     </div>
                 </div>
@@ -1017,12 +1040,16 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 @helper ExportButton(System.Security.Principal.IPrincipal user, string typ, string q,
         string order = "0", string title = "Export výsledků hledání",
-        string style = "", string moreParams = ""
-        )
+        string style = "", string moreParams = "", string gaPageEventId = null)
 {
+    if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+
     var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
     <!-- Button trigger modal -->
-    <a href="#" class="@style" role="button" data-toggle="modal" data-target="#modal@(modalid)"><span class="small">Exportovat výsledky do Excelu</span></a>
+    <a href="#" class="@style" onclick="ga('send', 'event', 'exportBtn', 'click','@gaPageEventId'); return true;" role="button" data-toggle="modal" data-target="#modal@(modalid)"><span class="small">Exportovat výsledky do Excelu</span></a>
     <!-- Modal -->
     <div class="modal fade" id="modal@(modalid)" tabindex="-1" role="dialog" aria-labelledby="modal@(modalid)">
         <div class="modal-dialog" role="document">
@@ -1045,6 +1072,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                     {
                         <p>
                             <a role="button" class="btn btn-primary btn-sm" target="_blank"
+                                onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;" 
                                href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.ES.SearchTools.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
                                 Export do Excelu
                             </a>
@@ -1063,7 +1091,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                         <hr />
                         <p><b>Export funguje pouze, když jste přihlášeni.</b></p>
                         <p>
-                            <a href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a>
+                            <a onclick="ga('send', 'event', 'registerBtn', 'click','@gaPageEventId'); return true;" href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a>
                             je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
                         </p>
 
@@ -1079,8 +1107,13 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 
 
-@helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null)
+@helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents,
+    string containerCss = null, string gaPageEventId = null)
 {
+    if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
     containerCss = containerCss ?? "col-xs-12";
     //tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
     //contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
@@ -1095,7 +1128,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 count++;
 
                 <li role="presentation" @Util.IfExists(first, " class='active' ")>
-                    <a href="#@(id+count.ToString())" aria-controls="@(id+count.ToString())" role="tab" data-toggle="tab">@Html.Raw(tabn)</a>
+                    <a href="#@(id+count.ToString())" onclick="ga('send', 'event', 'tabHorizontal', 'change_@count','@gaPageEventId'); return true;" aria-controls="@(id+count.ToString())" role="tab" data-toggle="tab">@Html.Raw(tabn)</a>
                 </li>
                 first = false;
             }
@@ -1122,20 +1155,27 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 }
 
 
-@helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null, string tabColCss = null, string contentColCss = null)
+@helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null,
+    string tabColCss = null, string contentColCss = null, string gaPageEventId = null)
 {
+    if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
     containerCss = containerCss ?? "col-xs-12";
     tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
     contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
     bool first = true;
+    var arrTabnames = tabnames.ToArray();
     <div class="@containerCss verticaltab-container">
         <div class="@tabColCss verticaltab-menu">
             <div class="list-group">
-                @foreach (var s in tabnames)
+                @for (int i = 0; i < arrTabnames.Length; i++)
                 {
+                    string s = arrTabnames[i];
                     if (s != null)
                     {
-                        <a href="#" class="list-group-item @(first ? "active" : "")">
+                        <a href="#" onclick="ga('send', 'event', 'tabVertical', 'change_@i','@gaPageEventId'); return true;" class="list-group-item @(first ? "active" : "")">
                             @Html.Raw(s)
                         </a>
 
@@ -1163,19 +1203,23 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
     </div>
 }
 
-@helper LowBox(string content)
+@helper LowBox(string content, string gaPageEventId = null)
 {
-    @LowBox(120, content)
+    @LowBox(120, content, gaPageEventId)
 }
 
-@helper LowBox(int width, string content)
-{ 
-<div class="low-box" style="max-height:@(width)px">
-    <div class="low-box-line" style="top:@(width-55)px"><a href="#" class="more"></a></div>
-    <div class="low-box-content">
-        @Html.Raw(content)
+@helper LowBox(int width, string content, string gaPageEventId = null)
+{
+    if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+    <div class="low-box" style="max-height:@(width)px">
+        <div class="low-box-line" style="top:@(width-55)px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@gaPageEventId'); return true;" class="more"></a></div>
+        <div class="low-box-content">
+            @Html.Raw(content)
+        </div>
     </div>
-</div>
 
 }
 
