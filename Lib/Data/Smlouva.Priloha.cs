@@ -592,7 +592,8 @@ namespace HlidacStatu.Lib.Data
             }
 
 
-            public static string GetFileFromPrilohaRepository(HlidacStatu.Lib.Data.Smlouva.Priloha att, Lib.Data.Smlouva smlouva)
+            public static string GetFileFromPrilohaRepository(HlidacStatu.Lib.Data.Smlouva.Priloha att, 
+                Lib.Data.Smlouva smlouva)
             {
                 var ext = ".pdf";
                 try
@@ -626,6 +627,7 @@ namespace HlidacStatu.Lib.Data
                 if (System.IO.File.Exists(localFile))
                 {
                     //do local copy
+                    Consts.Logger.Debug($"Copying priloha {att.nazevSouboru} for smlouva {smlouva.Id} from local disk {localFile}");
                     System.IO.File.Copy(localFile, tmpFn, true);
                 }
                 else
@@ -633,6 +635,7 @@ namespace HlidacStatu.Lib.Data
 
                     try
                     {
+                        Consts.Logger.Debug($"Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                         byte[] data = null;
                         using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
                         {
@@ -640,12 +643,14 @@ namespace HlidacStatu.Lib.Data
                             data = web.GetBinary().Binary;
                             System.IO.File.WriteAllBytes(tmpFn, data);
                         }
+                        Consts.Logger.Debug($"Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                     }
                     catch (Exception)
                     {
                         try
                         {
                             byte[] data = null;
+                            Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                             using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
                             {
                                 web.Tries = 5;
@@ -655,6 +660,7 @@ namespace HlidacStatu.Lib.Data
                                 data = web.GetBinary().Binary;
                                 System.IO.File.WriteAllBytes(tmpFn, data);
                             }
+                            Consts.Logger.Debug($"Second try: Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                             return tmpFn;
                         }
                         catch (Exception e)

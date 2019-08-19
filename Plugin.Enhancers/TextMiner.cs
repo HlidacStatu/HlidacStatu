@@ -29,7 +29,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 pathToOcr += "\\";
         }
 
-        public TextMiner(bool skipOCR, bool forceAlreadyMined,  bool asyncOCR = false, int priority = 5)
+        public TextMiner(bool skipOCR, bool forceAlreadyMined, bool asyncOCR = false, int priority = 5)
             : this()
         {
             this.skipOCR = skipOCR;
@@ -73,7 +73,9 @@ namespace HlidacStatu.Plugin.Enhancers
                         att.LastUpdate = DateTime.Now.AddDays(-7);
                         continue;
                     }
+                    Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id}");
                     string downloadedFile = Lib.Data.Smlouva.Priloha.GetFileFromPrilohaRepository(att, item);
+                    Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id} done.");
                     if (downloadedFile != null)
                     {
                         try
@@ -86,18 +88,24 @@ namespace HlidacStatu.Plugin.Enhancers
 
                             HlidacStatu.Lib.OCR.Api.Result res = null;
                             if (asyncOCR)
-                                //res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
+                            {                                //res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
                                 //    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
                                 //    downloadedFile, "TextMiner",
                                 //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity
                                 //    ); //TODOcallBackData: item.CallbackDataForOCRReq(i) );
-                                res = Lib.Data.ItemToOcrQueue.AddNewTask( Lib.Data.ItemToOcrQueue.ItemToOcrType.Smlouva, item.Id, priority: this.priority);
+                                Base.Logger.Debug($"TextMiner Client.TextFromFile Adding NewTask Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
+                                res = Lib.Data.ItemToOcrQueue.AddNewTask(Lib.Data.ItemToOcrQueue.ItemToOcrType.Smlouva, item.Id, priority: this.priority);
+                                Base.Logger.Debug($"TextMiner Client.TextFromFile Added NewTask Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
+                            }
                             else
+                            {
+                                Base.Logger.Debug($"TextMiner Client.TextFromFile Doing OCR Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
                                 res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
                                     Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
                                     downloadedFile, "TextMiner",
-                                HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity);
-
+                                    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity);
+                                Base.Logger.Debug($"TextMiner Client.TextFromFile Done OCR Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
+                            }
 
                             if (res.IsValid == HlidacStatu.Lib.OCR.Api.Result.ResultStatus.InQueueWithCallback)
                             {
@@ -145,6 +153,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         }
                         finally
                         {
+                            Base.Logger.Debug($"deleting temporary {downloadedFile} file TextMiner Client.TextFromFile Id:" + item.Id + " att:" + att.nazevSouboru);
                             HlidacStatu.Util.IOTools.DeleteFile(downloadedFile);
                         }
 

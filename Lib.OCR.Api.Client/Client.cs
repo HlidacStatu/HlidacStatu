@@ -302,14 +302,18 @@ namespace HlidacStatu.Lib.OCR.Api
                         + "&restartIn=" + (int)(restartTaskAfterTime?.TotalSeconds ?? 0)
                         + "&callbackData=" + System.Net.WebUtility.UrlEncode(callBackDataString);
 
+
+                    logger.Debug("Uploading file for OCR " + "addTask.ashx?" + param);
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
                     var resbyte = wc.UploadFile(fullUrl, "POST", fileOnDisk);
+                    logger.Debug("Uploaded file for OCR " + "addTask.ashx?" + param);
 
                     var res = System.Text.Encoding.UTF8.GetString(resbyte);
                     Newtonsoft.Json.Linq.JToken json = Newtonsoft.Json.Linq.JToken.Parse(res);
 
                     if (json["taskid"] != null)
                     {
+                        logger.Debug("Uploaded into task " + json["taskid"].ToString() + " file for OCR " + "addTask.ashx?" + param);
                         return json["taskid"].ToString();
                     }
                     else
