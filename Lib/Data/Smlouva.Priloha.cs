@@ -317,7 +317,7 @@ namespace HlidacStatu.Lib.Data
 
                     [NiceDisplayName("Ostatní")]
                     XOSTATNI,
-    
+
                 }
 
                 public static ContractDocTypes? GetDocType(string value)
@@ -592,7 +592,7 @@ namespace HlidacStatu.Lib.Data
             }
 
 
-            public static string GetFileFromPrilohaRepository(HlidacStatu.Lib.Data.Smlouva.Priloha att, 
+            public static string GetFileFromPrilohaRepository(HlidacStatu.Lib.Data.Smlouva.Priloha att,
                 Lib.Data.Smlouva smlouva)
             {
                 var ext = ".pdf";
@@ -622,54 +622,68 @@ namespace HlidacStatu.Lib.Data
 
                     }
                 }
-                string tmpFn = System.IO.Path.GetTempFileName() + HlidacStatu.Lib.OCR.DocTools.PrepareFilenameForOCR(att.nazevSouboru);
-                //System.IO.File.Delete(fn);
-                if (System.IO.File.Exists(localFile))
-                {
-                    //do local copy
-                    Consts.Logger.Debug($"Copying priloha {att.nazevSouboru} for smlouva {smlouva.Id} from local disk {localFile}");
-                    System.IO.File.Copy(localFile, tmpFn, true);
-                }
-                else
+                string tmpFnSystem = System.IO.Path.GetTempFileName();
+                string tmpFn = tmpFnSystem + HlidacStatu.Lib.OCR.DocTools.PrepareFilenameForOCR(att.nazevSouboru);
+                try
                 {
 
-                    try
+                    //System.IO.File.Delete(fn);
+                    if (System.IO.File.Exists(localFile))
                     {
-                        Consts.Logger.Debug($"Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
-                        byte[] data = null;
-                        using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
-                        {
-                            web.Timeout = web.Timeout * 10;
-                            data = web.GetBinary().Binary;
-                            System.IO.File.WriteAllBytes(tmpFn, data);
-                        }
-                        Consts.Logger.Debug($"Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
+                        //do local copy
+                        Consts.Logger.Debug($"Copying priloha {att.nazevSouboru} for smlouva {smlouva.Id} from local disk {localFile}");
+                        System.IO.File.Copy(localFile, tmpFn, true);
                     }
-                    catch (Exception)
+                    else
                     {
+
                         try
                         {
+                            Consts.Logger.Debug($"Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                             byte[] data = null;
-                            Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                             using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
                             {
-                                web.Tries = 5;
-                                web.IgnoreHttpErrors = true;
-                                web.TimeInMsBetweenTries = 1000;
-                                web.Timeout = web.Timeout * 20;
+                                web.Timeout = web.Timeout * 10;
                                 data = web.GetBinary().Binary;
                                 System.IO.File.WriteAllBytes(tmpFn, data);
                             }
-                            Consts.Logger.Debug($"Second try: Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
-                            return tmpFn;
+                            Consts.Logger.Debug($"Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
+                            try
+                            {
+                                byte[] data = null;
+                                Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
+                                using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
+                                {
+                                    web.Tries = 5;
+                                    web.IgnoreHttpErrors = true;
+                                    web.TimeInMsBetweenTries = 1000;
+                                    web.Timeout = web.Timeout * 20;
+                                    data = web.GetBinary().Binary;
+                                    System.IO.File.WriteAllBytes(tmpFn, data);
+                                }
+                                Consts.Logger.Debug($"Second try: Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
+                                return tmpFn;
+                            }
+                            catch (Exception e)
+                            {
 
-                            HlidacStatu.Util.Consts.Logger.Error(att.odkaz, e);
-                            return null;
+                                HlidacStatu.Util.Consts.Logger.Error(att.odkaz, e);
+                                return null;
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    HlidacStatu.Util.Consts.Logger.Error(att.odkaz, e);
+                    throw;
+                }
+                finally
+                {
+                    HlidacStatu.Util.IOTools.DeleteFile(tmpFnSystem);
                 }
                 return tmpFn;
 

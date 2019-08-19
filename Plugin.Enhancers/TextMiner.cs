@@ -75,7 +75,7 @@ namespace HlidacStatu.Plugin.Enhancers
                     }
                     Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id}");
                     string downloadedFile = Lib.Data.Smlouva.Priloha.GetFileFromPrilohaRepository(att, item);
-                    Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id} done.");
+                    Base.Logger.Debug($"Getdone priloha {att.nazevSouboru} for smlouva {item.Id} done.");
                     if (downloadedFile != null)
                     {
                         try
