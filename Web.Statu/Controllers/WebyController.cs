@@ -97,22 +97,12 @@ namespace HlidacStatu.Web.Controllers
 
                     break;
                 case "1":
-                    data = ZabTools.WebyData(ZabTools.WebyItems("1"))
-                        ?.OrderBy(o => o.Host.publicname)
-                        ?.Reverse()
-                        ?.ToList();
-                    break;
                 case "2":
-                    data = ZabTools.WebyData(ZabTools.WebyItems("2"))
+                case "3":
+                    data = ZabTools.WebyData(ZabTools.WebyItems(id))
                         ?.OrderBy(o => o.Host.publicname)
                         ?.Reverse()
                         ?.ToList();
-                    break;
-                case "3":
-                    //data = ZabTools.WebyData(ZabTools.WebyItems("3"))
-                    //    ?.OrderBy(o => o.Host.publicname)
-                    //    ?.Reverse()
-                    //    ?.ToList();
                     break;
                 case "ustredni":
                     data = ZabTools.WebyData(ZabTools.WebyItems("ustredni"))
