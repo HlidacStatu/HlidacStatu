@@ -356,6 +356,10 @@ var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
                         <span class="badge">@(ZabTools.WebyItems("ustredni")?.Count() ?? 0)</span>
                         Služby ústředních orgánů státní správy
                     </a>
+                    <a href="@Url.Action("Dalsi","Weby", new { @id="3" })" class="list-group-item @Util.IfExists(active=="3","disabled")">
+                        <span class="badge">@(ZabTools.WebyItems("3")?.Count() ?? 0)</span>
+                        Open source/open data weby
+                    </a>
                     <a href="@Url.Action("Dalsi","Weby", new { @id="1" })" class="list-group-item @Util.IfExists(active=="1","disabled")">
                         <span class="badge">@(ZabTools.WebyItems("1")?.Count() ?? 0)</span>
                         Další důležité služby
