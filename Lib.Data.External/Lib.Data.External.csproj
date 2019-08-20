@@ -470,6 +470,7 @@
     <Compile Include="Zabbix\ZabAvailabilityInterval.cs" />
     <Compile Include="Zabbix\ZabAvailabilityStatistics.cs" />
     <Compile Include="Zabbix\ZabbixReader.cs" />
+    <Compile Include="Zabbix\ZabConfig.cs" />
     <Compile Include="Zabbix\ZabDataPerStatus.cs" />
     <Compile Include="Zabbix\ZabHistoryItem.cs" />
     <Compile Include="Zabbix\ZabHost.cs" />

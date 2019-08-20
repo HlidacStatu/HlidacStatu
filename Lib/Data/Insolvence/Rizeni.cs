@@ -979,12 +979,12 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                         for (int i = 0; i < dbDokumenty.Count(); i++)
                         {
                             var dd = dbDokumenty[i];
-                            if (d.Id == dd.Id)
+                            if (d.Id == dd.DokumentId)
                             {
                                 //same
                                 if (!Validators.AreObjectsEqual(ToDbDokument(d), dd, false))
                                 {
-                                    dd.Id = d.Id;
+                                    dd.DokumentId = d.Id;
                                     dd.Length = (int)d.Lenght;
                                     dd.Oddil = d.Oddil;
                                     dd.Popis = d.Popis;
@@ -999,14 +999,14 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                     if (this.Dokumenty.Count() > dbDokumenty.Count())
                     {
                         foreach (var d in this.Dokumenty)
-                            if (!dbDokumenty.Any(m => m.Id == d.Id))
+                            if (!dbDokumenty.Any(m => m.DokumentId == d.Id))
                                 idb.Dokumenty.Add(ToDbDokument(d));
                     }
 
                     if (this.Dokumenty.Count() < dbDokumenty.Count())
                     {
                         foreach (var d in dbDokumenty)
-                            if (!this.Dokumenty.Any(m => m.Id == d.Id))
+                            if (!this.Dokumenty.Any(m => m.Id == d.DokumentId))
                                 idb.Dokumenty.Remove(d);
                     }
                     #endregion
@@ -1107,7 +1107,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             Db.Insolvence.Dokumenty d = new Db.Insolvence.Dokumenty();
             d.DatumVlozeni = td.DatumVlozeni < MinSqlDate
                                 ? MinSqlDate : td.DatumVlozeni;
-            d.Id = td.Id;
+            d.DokumentId = td.Id;
             d.Length = (int)td.Lenght;
             d.Oddil = td.Oddil;
             d.Popis = td.Popis;

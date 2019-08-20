@@ -15,7 +15,6 @@ namespace HlidacStatu.Lib.Db.Insolvence
     public partial class Dokumenty
     {
         public string RizeniId { get; set; }
-        public string Id { get; set; }
         public int TypUdalosti { get; set; }
         public System.DateTime DatumVlozeni { get; set; }
         public string Popis { get; set; }
@@ -23,5 +22,7 @@ namespace HlidacStatu.Lib.Db.Insolvence
         public string Oddil { get; set; }
         public int Length { get; set; }
         public int WordCount { get; set; }
+        public int pk { get; set; }
+        public string DokumentId { get; set; }
     }
 }

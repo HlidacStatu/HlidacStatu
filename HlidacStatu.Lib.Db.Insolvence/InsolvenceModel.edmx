@@ -27,10 +27,10 @@
         </EntityType>
         <EntityType Name="Dokumenty">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="pk" />
           </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RizeniId" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TypUdalosti" Type="int" Nullable="false" />
           <Property Name="DatumVlozeni" Type="datetime" Nullable="false" />
           <Property Name="Popis" Type="nvarchar" MaxLength="550" Nullable="false" />
@@ -38,6 +38,7 @@
           <Property Name="Oddil" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Length" Type="int" Nullable="false" />
           <Property Name="WordCount" Type="int" Nullable="false" />
+          <Property Name="DokumentId" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Rizeni">
           <Key>
@@ -103,10 +104,9 @@
       <Schema Namespace="HlidacStatu.Lib.Db.Insolvence" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Dokumenty">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="pk" />
           </Key>
           <Property Name="RizeniId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TypUdalosti" Type="Int32" Nullable="false" />
           <Property Name="DatumVlozeni" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Popis" Type="String" MaxLength="550" FixedLength="false" Unicode="true" Nullable="false" />
@@ -114,6 +114,8 @@
           <Property Name="Oddil" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Length" Type="Int32" Nullable="false" />
           <Property Name="WordCount" Type="Int32" Nullable="false" />
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DokumentId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Rizeni">
           <Key>
@@ -202,8 +204,9 @@
           <EntitySetMapping Name="Dokumenty">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Dokumenty">
               <MappingFragment StoreEntitySet="Dokumenty">
+                <ScalarProperty Name="DokumentId" ColumnName="DokumentId" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
                 <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TypUdalosti" ColumnName="TypUdalosti" />
                 <ScalarProperty Name="DatumVlozeni" ColumnName="DatumVlozeni" />
                 <ScalarProperty Name="Popis" ColumnName="Popis" />
