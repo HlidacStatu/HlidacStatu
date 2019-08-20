@@ -22,7 +22,7 @@ namespace Ysq.Zabbix
             _port = port;
         }
 
-        public SenderResponse Send(string host, string itemKey, string value, int timeout = 500)
+        public SenderResponse Send(string host, string itemKey, string value, int timeout = 2500)
         {
             dynamic req = new ExpandoObject();
             req.request = "sender data";
@@ -35,7 +35,23 @@ namespace Ysq.Zabbix
             using (var tcpClient = new TcpClient(_zabbixServer, _port))
             using(var networkStream = tcpClient.GetStream())
             {
+                byte[] zabxHeader = Encoding.ASCII.GetBytes("ZBXD");
                 var data = Encoding.ASCII.GetBytes(jsonReq);
+
+                byte[] header = new byte[] {
+                    zabxHeader[0],zabxHeader[1],zabxHeader[2],zabxHeader[3], 1,
+                    (byte)(data.Length & 0xFF),
+                    (byte)((data.Length >> 8) & 0xFF),
+                    (byte)((data.Length >> 16) & 0xFF),
+                    (byte)((data.Length >> 24) & 0xFF),
+                    0, 0, 0, 0};
+
+                //byte[] finalDataArray = new byte[header.Length + data.Length];
+
+                //System.Buffer.BlockCopy(header, 0, finalDataArray, 0, header.Length);
+                //System.Buffer.BlockCopy(data, 0, finalDataArray, header.Length, data.Length);
+
+                networkStream.Write(header, 0, header.Length);
                 networkStream.Write(data, 0, data.Length);
                 networkStream.Flush();
                 var counter = 0;

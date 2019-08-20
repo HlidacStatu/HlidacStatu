@@ -21,6 +21,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                             d.AddRange(zr.RefreshHosts(0) ?? new List<ZabHost>());
                             d.AddRange(zr.RefreshHosts(1) ?? new List<ZabHost>());
                             d.AddRange(zr.RefreshHosts(2) ?? new List<ZabHost>());
+                            d.AddRange(zr.RefreshHosts(3) ?? new List<ZabHost>());
                             HlidacStatu.Util.Consts.Logger.Info("Cache statniweby_list refreshnuta");
                         }
                         return d;
