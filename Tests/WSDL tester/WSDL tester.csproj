@@ -61,8 +61,8 @@
     <Reference Include="Frontenac.Gremlinq, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe2d4176a64ca6d1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Frontenac.Blueprints.2.5.0\lib\net40\Frontenac.Gremlinq.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\HtmlAgilityPack.1.11.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.12.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.11.12\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
@@ -88,12 +88,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VelocityDb, Version=8.2.1.0, Culture=neutral, PublicKeyToken=f050dff7995aa24a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VelocityDB.8.2.1\lib\net45\VelocityDb.dll</HintPath>
-    </Reference>
-    <Reference Include="VelocityGraph, Version=8.2.1.0, Culture=neutral, PublicKeyToken=033a993463f9cfa3, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VelocityGraph.8.2.1\lib\Net45\VelocityGraph.dll</HintPath>
-    </Reference>
     <Reference Include="vOKOsCom, Version=5.2.0.23890, Culture=neutral, PublicKeyToken=31204d55c91e542b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\vOKO\vOKOsCom.dll</HintPath>
