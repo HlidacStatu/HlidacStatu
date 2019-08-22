@@ -17,6 +17,10 @@ namespace HlidacStatu.Lib.Db.Insolvence
         string Role { get; set; }
         string Typ { get; set; }
         string RC { get; set; }
+        DateTime? Zalozen { get; set; }
+        DateTime? Odstranen { get; set; }
+
+
         Nullable<System.DateTime> DatumNarozeni { get; set; }
         string ICO { get; set; }
         string Mesto { get; set; }

@@ -29,5 +29,7 @@ namespace HlidacStatu.Lib.Db.Insolvence
         public string Zeme { get; set; }
         public string PSC { get; set; }
         public string OsobaId { get; set; }
+        public Nullable<System.DateTime> Zalozen { get; set; }
+        public Nullable<System.DateTime> Odstranen { get; set; }
     }
 }

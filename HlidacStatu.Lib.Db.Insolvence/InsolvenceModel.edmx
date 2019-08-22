@@ -24,6 +24,8 @@
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
           <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
+          <Property Name="Zalozen" Type="datetime" />
+          <Property Name="Odstranen" Type="datetime" />
         </EntityType>
         <EntityType Name="Dokumenty">
           <Key>
@@ -70,6 +72,8 @@
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
           <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
+          <Property Name="Zalozen" Type="datetime" />
+          <Property Name="Odstranen" Type="datetime" />
         </EntityType>
         <EntityType Name="Veritele">
           <Key>
@@ -90,6 +94,8 @@
           <Property Name="Zeme" Type="nvarchar" MaxLength="150" />
           <Property Name="PSC" Type="nvarchar" MaxLength="10" />
           <Property Name="OsobaId" Type="nvarchar" MaxLength="250" />
+          <Property Name="Zalozen" Type="datetime" />
+          <Property Name="Odstranen" Type="datetime" />
         </EntityType>
         <EntityContainer Name="InsolvenceModelStoreContainer">
           <EntitySet Name="Dluznici" EntityType="Self.Dluznici" Schema="dbo" store:Type="Tables" />
@@ -147,6 +153,8 @@
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Zalozen" Type="DateTime" Precision="3" />
+          <Property Name="Odstranen" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Veritele">
           <Key>
@@ -167,6 +175,8 @@
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Zalozen" Type="DateTime" Precision="3" />
+          <Property Name="Odstranen" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityContainer Name="InsolvenceEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Dokumenty" EntityType="Self.Dokumenty" />
@@ -194,6 +204,8 @@
           <Property Name="Zeme" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="PSC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="OsobaId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Zalozen" Type="DateTime" Precision="3" />
+          <Property Name="Odstranen" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -232,6 +244,8 @@
           <EntitySetMapping Name="Spravci">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Spravci">
               <MappingFragment StoreEntitySet="Spravci">
+                <ScalarProperty Name="Odstranen" ColumnName="Odstranen" />
+                <ScalarProperty Name="Zalozen" ColumnName="Zalozen" />
                 <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
                 <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
@@ -253,6 +267,8 @@
           <EntitySetMapping Name="Veritele">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Veritele">
               <MappingFragment StoreEntitySet="Veritele">
+                <ScalarProperty Name="Odstranen" ColumnName="Odstranen" />
+                <ScalarProperty Name="Zalozen" ColumnName="Zalozen" />
                 <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
                 <ScalarProperty Name="RizeniId" ColumnName="RizeniId" />
@@ -274,6 +290,8 @@
           <EntitySetMapping Name="Dluznici">
             <EntityTypeMapping TypeName="HlidacStatu.Lib.Db.Insolvence.Dluznici">
               <MappingFragment StoreEntitySet="Dluznici">
+                <ScalarProperty Name="Odstranen" ColumnName="Odstranen" />
+                <ScalarProperty Name="Zalozen" ColumnName="Zalozen" />
                 <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="PSC" ColumnName="PSC" />
                 <ScalarProperty Name="Zeme" ColumnName="Zeme" />
