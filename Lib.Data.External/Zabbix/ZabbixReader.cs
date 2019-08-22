@@ -121,7 +121,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
                 foreach (var r in res.result)
                 {
-                    if (r.lastclock != "0")
+                    if (true || r.lastclock != "0")
                     {
                         ZabHost h = new ZabHost(r.hosts[0].hostid, r.hosts[0].host, r.hosts[0].name, r.hosts[0].description, new string[] { priority.ToString() });
 
@@ -144,7 +144,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                 });
                 foreach (var r in res.result)
                 {
-                    if (r.lastclock != "0")
+                    if (true || r.lastclock != "0")
                     {
                         var hostid = r.hosts[0].hostid;
                         var exist = tmp.Where(m => m.hostid == hostid).FirstOrDefault();
@@ -173,7 +173,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                 });
                 foreach (var r in res.result)
                 {
-                    if (r.lastclock != "0")
+                    if (true || r.lastclock != "0")
                     {
                         var hostid = r.hosts[0].hostid;
                         var exist = tmp.Where(m => m.hostid == hostid).FirstOrDefault();

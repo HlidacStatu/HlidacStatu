@@ -106,7 +106,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
         public static IEnumerable<string> WebySslItems(string group)
         {
             return Weby(group)
-                .Select(m => m.itemIdSsl);
+                .Select(m => m.itemIdSsl)
+                .Where (m=> !string.IsNullOrWhiteSpace(m));
         }
 
         public static IEnumerable<string> WebyItems()
@@ -116,7 +117,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
         public static IEnumerable<string> WebyItems(string group)
         {
             return Weby(group)
-                .Select(m => m.itemIdResponseTime);
+                .Select(m => m.itemIdResponseTime)
+                .Where(m => !string.IsNullOrWhiteSpace(m));
         }
 
 
