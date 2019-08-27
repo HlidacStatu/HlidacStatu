@@ -232,7 +232,7 @@ namespace HlidacStatu.Lib.Data
                         id = this.OrigWD.Name.Replace(APIID_Prefix, ""),
                         found = result.Results
                                 .Cast<VZ.VerejnaZakazka>()
-                                .Take(200)
+                                .Take(400)
                                 .Select(m => m.Export())
                                 .ToArray()
                     };

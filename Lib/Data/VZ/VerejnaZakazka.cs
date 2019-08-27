@@ -1033,9 +1033,37 @@ namespace HlidacStatu.Lib.Data.VZ
         }
         public class ExportedVZ
         {
+            public class SubjectExport 
+            {
+                public SubjectExport() { }
+
+                public SubjectExport(Subject s)
+                {
+                    if (s != null)
+                    {
+                        this.ICO = s.ICO;
+                        this.Jmeno = s.Jmeno;
+                    }
+                    if (!string.IsNullOrEmpty(s?.ICO))
+                    {
+                        var f = Firma.FromIco(s.ICO);
+                        if (f != null && f.Valid)
+                        {
+                            this.KrajId = f.KrajId;
+                            this.OkresId = f.OkresId;
+                        }
+                    }
+                }
+
+
+                public string ICO { get; set; }
+                public string Jmeno { get; set; }
+                public string KrajId { get; set; }
+                public string OkresId { get; set; }
+            }
             public string Id { get; set; }
             public string EvidencniCisloZakazky { get; set; }
-            public Subject Zadavatel { get; set; }
+            public SubjectExport Zadavatel { get; set; }
             public Subject[] Dodavatele { get; set; }
             public string NazevZakazky { get; set; }
             public string PopisZakazky { get; set; }
@@ -1072,7 +1100,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 PopisZakazky = this.PopisZakazky,
                 PosledniZmena = this.PosledniZmena,
                 StavZakazky = this.StavZakazky,
-                Zadavatel = this.Zadavatel,
+                Zadavatel = new ExportedVZ.SubjectExport(this.Zadavatel),
                 ZdrojZakazky = this.ZdrojZakazkyUrl(),
 
             };

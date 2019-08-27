@@ -469,6 +469,7 @@
     <Compile Include="DatoveSchranky\ISDS.cs" />
     <Compile Include="Discourse.cs" />
     <Compile Include="RequestLimiter.cs" />
+    <Compile Include="Vazby\FromGraphDb.cs" />
     <Compile Include="Zabbix\ZabAvailability.cs" />
     <Compile Include="Zabbix\ZabAvailabilityInterval.cs" />
     <Compile Include="Zabbix\ZabAvailabilityStatistics.cs" />

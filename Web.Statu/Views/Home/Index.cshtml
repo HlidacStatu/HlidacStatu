@@ -392,6 +392,7 @@
                 </div>
                 <div class="block-table">
                     @{
+
                         var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
                                 .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                                     .Size(6)
@@ -404,7 +405,9 @@
                     }
                     @foreach (var item in res.Hits)
                     {
-                        <div class="table-row">
+                        try
+                        {
+                            <div class="table-row">
                             <div class="table-col">
                                 <a href='@item.Source.GetUrl(true)'>
                                     @Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(item.Source.Castka, html: true))
@@ -414,6 +417,11 @@
                                 pro <a href="@item.Source.BU.GetSubjektUrl(true)">@item.Source.BU.Subjekt</a>
                             </div>
                         </div>
+                        }
+                        catch (Exception e)
+                        {
+                            HlidacStatu.Util.Consts.Logger.Error("HP", e);
+                        }
                     }
                 </div>
                 <a href="/ucty" class="link">Další transakce</a>

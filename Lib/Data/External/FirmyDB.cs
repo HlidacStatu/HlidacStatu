@@ -185,6 +185,8 @@ namespace HlidacStatu.Lib.Data.External
             f.VersionUpdate = (int)dr["VersionUpdate"];
             //f.VazbyRaw = (string)PersistLib.IsNull(dr["vazbyRaw"], (string)"[]");
             f.IsInRS = (short?)PersistLib.IsNull(dr["IsInRS"], null);
+            f.KrajId = (string)PersistLib.IsNull(dr["krajid"], string.Empty);
+            f.OkresId = (string)PersistLib.IsNull(dr["okresid"], string.Empty);
 
             if (skipDS_Nace == false)
             {
