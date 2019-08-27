@@ -12,7 +12,7 @@
     <appender-ref ref="ES-RollingLogFileAppenderError" />
   </logger>
 
-  <logger name="HlidacSmluv">
+  <logger name="HlidacStatu">
     <appender-ref ref="RollingLogFileAppenderDebug" /> 
     <appender-ref ref="RollingLogFileAppenderInfo" />
     <appender-ref ref="RollingLogFileAppenderWarn" />

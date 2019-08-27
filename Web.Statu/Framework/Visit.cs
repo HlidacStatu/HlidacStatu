@@ -55,10 +55,12 @@ namespace HlidacStatu.Web.Framework
         {
             if (string.IsNullOrEmpty(page))
                 return;
-            HlidacStatu.Lib.DirectDB.NoResult("AddVisit", 
-                new System.Data.SqlClient.SqlParameter("@page", page.ToLower()),
-                new System.Data.SqlClient.SqlParameter("@date", DateTime.Now.Date),
-                new System.Data.SqlClient.SqlParameter("@channel", (int)channel)
+            HlidacStatu.Lib.DirectDB.NoResult("AddVisit", System.Data.CommandType.StoredProcedure, 
+                new System.Data.IDataParameter[] {
+                    new System.Data.SqlClient.SqlParameter("@page", page.ToLower()),
+                    new System.Data.SqlClient.SqlParameter("@date", DateTime.Now.Date),
+                    new System.Data.SqlClient.SqlParameter("@channel", (int)channel)
+                }
                 );
         }
 
