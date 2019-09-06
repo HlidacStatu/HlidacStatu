@@ -170,8 +170,8 @@ namespace HlidacStatu.Web.Controllers
         }
 
         public ActionResult PridatSe()
-        {
-            return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se-k-nam-pomozte-nam/");
+        {           
+            return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se/");
             //return View(new Models.PridatSeModel());
         }
 
