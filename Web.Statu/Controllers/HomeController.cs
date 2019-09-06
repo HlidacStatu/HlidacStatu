@@ -171,35 +171,15 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult PridatSe()
         {
-            return View(new Models.PridatSeModel());
+            return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se-k-nam-pomozte-nam/");
+            //return View(new Models.PridatSeModel());
         }
-
-        Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<Dictionary<string, string>> slackChannels = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<Dictionary<string, string>>
-            (TimeSpan.FromHours(12), (o) =>
-            {
-                var list = new Dictionary<string, string>();
-
-                var slackRes = new System.Net.WebClient().DownloadString("https://slack.com/api/channels.list?token=xoxp-160733539584-162133403223-264615274039-935dab6d5515d60c2a1fa2929757bbd2");
-                JToken slackJson = JToken.Parse(slackRes);
-                if (((bool?)slackJson["ok"]) == true)
-                {
-                    foreach (JToken ch in slackJson["channels"])
-                    {
-                        if ((bool?)ch["is_channel"] == true)
-                        {
-                            list.Add(ch["name"].Value<string>(), ch["id"].Value<string>());
-                        }
-                    }
-                }
-
-
-                return list;
-            });
 
 
         [HttpPost]
         public ActionResult PridatSe(Models.PridatSeModel model, FormCollection form)
         {
+            return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se/");
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -262,28 +242,6 @@ namespace HlidacStatu.Web.Controllers
                         }
                         new HlidacStatu.Lib.Data.External.Discourse().InviteNewUser(model.Email);
 
-                        if (true)
-                        {
-                            List<string> joinChannels = new List<string>();
-                            joinChannels.Add(slackChannels.Get()["general"]);
-                            foreach (var tp in model.TypPrace)
-                            {
-                                if (slackChannels.Get().ContainsKey(tp))
-                                    joinChannels.Add(slackChannels.Get()[tp]);
-                                else if (tp == "other")
-                                    joinChannels.Add(slackChannels.Get()["komunita"]);
-                                else if (tp == "writing" && !joinChannels.Contains(slackChannels.Get()["marketing"]))
-                                    joinChannels.Add(slackChannels.Get()["marketing"]);
-                            }
-                            string channelsToJoin = "channels=" + joinChannels.Aggregate((f, s) => f + "," + s);
-
-                            var slackRes = new System.Net.WebClient().DownloadString("https://slack.com/api/users.admin.invite?token=xoxp-160733539584-162133403223-264615274039-935dab6d5515d60c2a1fa2929757bbd2&email=" + user.Email + "&resend=true&" + channelsToJoin);
-                            Newtonsoft.Json.Linq.JToken slackJson = Newtonsoft.Json.Linq.JToken.Parse(slackRes);
-                            if (((bool?)slackJson["ok"]) != true)
-                            {
-                                HlidacStatu.Util.Consts.Logger.Error("Slack Join new user. Error: " + slackRes);
-                            }
-                        }
                     }
                     catch (Exception e)
                     {

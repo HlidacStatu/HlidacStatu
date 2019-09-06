@@ -7,21 +7,6 @@
 
     Html.EnableClientValidation();
 
-    Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<int[]> SlackUsers = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<int[]>(
-               TimeSpan.FromMinutes(10), "SlackUsers", (obj) =>
-               {
-                   var j = new System.Net.WebClient().DownloadString("https://slack.com/api/users.list?token=xoxp-160733539584-162133403223-264615274039-935dab6d5515d60c2a1fa2929757bbd2&presence=true");
-                   Newtonsoft.Json.Linq.JToken sj = Newtonsoft.Json.Linq.JToken.Parse(j);
-                   if (sj.Value<bool?>("ok") == true)
-                   {
-                       var all = sj["members"].Where(m => m.Value<bool>("is_bot") == false && m.Value<bool>("deleted") == false).ToArray();
-                       var online = all.Where(m => m.Value<string>("presence") == "active").ToArray();
-                       return new int[] { all.Count(), online.Count() };
-                   }
-                   else
-                   { return new int[] { 0, 0 }; }
-               }
-           );
 
     //var slackData = SlackUsers.Get();
     //https://slack.com/api/users.list?token=xoxp-160733539584-162133403223-264615274039-935dab6d5515d60c2a1fa2929757bbd2&presence=true
@@ -41,14 +26,15 @@
     <div class="row">
         <div class="col-xs-12 col-sm-offset-2 col-sm-8">
             @*<h2 style="margin-bottom:0">Přidejte se k našemu teamu dobrovolníků</h2>
-                @if (@slackData[0] > 0)
-                {
-                    <h3 style="margin-top:0;margin-bottom:40px">
-                        Máme již @slackData[0] spolupracovníků @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero(slackData[1], "", ", zrovna je <b class='text-danger'>jeden</b> online", ", zrovna jsou <b class='text-danger'>{0}</b> online", ", zrovna je <b class='text-danger'>{0}</b> online")).
-                    </h3>
-                }*@
+        @if (@slackData[0] > 0)
+        {
+            <h3 style="margin-top:0;margin-bottom:40px">
+                Máme již @slackData[0] spolupracovníků @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero(slackData[1], "", ", zrovna je <b class='text-danger'>jeden</b> online", ", zrovna jsou <b class='text-danger'>{0}</b> online", ", zrovna je <b class='text-danger'>{0}</b> online")).
+            </h3>
+        }*@
             @using (Html.BeginForm("PridatSe", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
+                @Html.AntiForgeryToken()
                 @Html.ValidationSummary()
                 <div class="form-group">
                     @Html.LabelFor(m => m.Jmeno, new { @class = "col-sm-2 control-label" })

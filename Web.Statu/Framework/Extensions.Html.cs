@@ -8,10 +8,37 @@ namespace HlidacStatu.Web.Framework
 {
     public static class HtmlExtensions
     {
+        public static string FormBotHoneyPotInputName_Default = "email2";
+        public static System.Web.IHtmlString HoneyPotInput(this HtmlHelper self, string inputName = null)
+        {
+            inputName = inputName ?? FormBotHoneyPotInputName_Default;
 
+            var input = $"<input type='text' name='{inputName}' id='{inputName}' value='' placeholder='Your Zip code' />";
+            var js = @"
+<script>
+    $(function () {
+        $('#" + inputName + @"').css({ ""font-size"": ""1pt"", ""color"": ""white"", ""width"": ""1px"", ""border"": ""none""});
+    });    
+    </script>
+    <noscript>
+        <style>
+            #zip {
+                font-size: 1pt; color: white; width:1px; border:none;
+            }
+        </style>
+    </noscript>";
+
+            return self.Raw(input + js);
+        }
+
+        public static bool DetectedBotWithHoneyPot(FormCollection form, string inputName = null)
+        {
+            inputName = inputName ?? FormBotHoneyPotInputName_Default;
+            return (form[inputName] != "");
+        }
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText)
         {
-            return CurrentLink(self, linkText, null, null,null);
+            return CurrentLink(self, linkText, null, null, null);
         }
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText, object additionalRouteValues, string[] ignoreRouteValues = null)
         {
@@ -23,7 +50,7 @@ namespace HlidacStatu.Web.Framework
         }
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText, object additionalRouteValues, object htmlAttributes, string[] ignoreRouteValues = null)
         {
-            return CurrentLink(self, linkText, new RouteValueDictionary(additionalRouteValues), new RouteValueDictionary(htmlAttributes),ignoreRouteValues);
+            return CurrentLink(self, linkText, new RouteValueDictionary(additionalRouteValues), new RouteValueDictionary(htmlAttributes), ignoreRouteValues);
         }
 
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText, string actionName, string controllerName, object additionalRouteValues, object htmlAttributes, string[] ignoreRouteValues = null)
@@ -32,7 +59,7 @@ namespace HlidacStatu.Web.Framework
         }
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText, RouteValueDictionary additionalRouteValues, IDictionary<string, object> htmlAttributes, string[] ignoreRouteValues = null)
         {
-            return CurrentLink(self, linkText, null, null, additionalRouteValues, htmlAttributes,ignoreRouteValues);
+            return CurrentLink(self, linkText, null, null, additionalRouteValues, htmlAttributes, ignoreRouteValues);
         }
         public static MvcHtmlString CurrentLink(this HtmlHelper self, string linkText, string actionName, string controllerName, RouteValueDictionary additionalRouteValues, IDictionary<string, object> htmlAttributes, string[] ignoreRouteValues = null)
         {

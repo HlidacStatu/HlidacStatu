@@ -17,7 +17,6 @@ namespace HlidacStatu.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public static string FormBotHoneyPot_Default = "email2";
 
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -85,7 +84,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 return View(model);
             }
-            if (form[AccountController.FormBotHoneyPot_Default] != "" )
+            if (HtmlExtensions.DetectedBotWithHoneyPot(form))
             {
                 HlidacStatu.Util.Consts.Logger.Error("Login: Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
                 return View("Bot");
@@ -169,7 +168,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (form[AccountController.FormBotHoneyPot_Default] != "")
+                if (HtmlExtensions.DetectedBotWithHoneyPot(form))
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Register: Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
                     return View("Bot");
@@ -330,7 +329,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 return View(model);
             }
-            if (form[AccountController.FormBotHoneyPot_Default] != "")
+            if (HtmlExtensions.DetectedBotWithHoneyPot(form))
             {
                 HlidacStatu.Util.Consts.Logger.Error("ResetPassword: Detected form bot " + Request.UserHostAddress + " | " + form["email"]);
                 return View("Bot");
