@@ -17,13 +17,13 @@ namespace HlidacStatu.Lib.Data
             {
                 public class Collectedamountestimate
                 {
-                    public int cents { get; set; }
+                    public long cents { get; set; }
                     public string currency { get; set; }
                 }
 
-                public int projectId { get; set; }
+                public long projectId { get; set; }
                 public Collectedamountestimate collectedAmountEstimate { get; set; }
-                public int donorsCount { get; set; }
+                public long donorsCount { get; set; }
             }
 
         }
