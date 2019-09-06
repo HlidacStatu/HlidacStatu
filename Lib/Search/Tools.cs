@@ -269,10 +269,9 @@ namespace HlidacStatu.Lib.Search
                                     .Distinct();
                             icos = icos.Union(icosPresLidi).Distinct();
 
-                            string icoprefix = replaceWith;
-
-
-                            var templ = $" ( {icoprefix}:{{0}} ) ";
+                            var templ = $" ( {replaceWith}:{{0}} ) ";
+                            if (replaceWith.Contains("${q}"))
+                                templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
 
                             if (icos != null && icos.Count() > 0)
                             {
@@ -282,7 +281,7 @@ namespace HlidacStatu.Lib.Search
                             }
                             else
                             {
-                                icosQuery = $" ( {icoprefix}:noOne ) ";
+                                icosQuery = string.Format(templ,"noOne") ; //$" ( {icoprefix}:noOne ) ";
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
