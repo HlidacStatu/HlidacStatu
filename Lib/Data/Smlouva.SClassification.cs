@@ -135,7 +135,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Potraviny")]
                 jidlo_potrava = 10601,
                 [NiceDisplayName("Pitná voda, nápoje, tabák atd.")]
-                jidlo_voda = 10601,
+                jidlo_voda = 10602,
 
                 [NiceDisplayName("Bezpečnostní a ochranné vybavení a údržba")]
                 bezpecnost = 10700,
