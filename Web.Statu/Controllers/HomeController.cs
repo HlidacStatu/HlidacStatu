@@ -206,15 +206,6 @@ namespace HlidacStatu.Web.Controllers
                             + "Vzkaz: " + model.Vzkaz + "\n"
                             + "Temata: " + string.Join(", ", model.TypPrace) + "\n"
                             );
-                        smtp.Send("info@hlidacstatu.cz", "jan.matosik@gmail.com", "Nový spolupracovník Hlidac Statu",
-                            "Email: " + model.Email + "\n"
-                            + "Jmeno: " + model.Jmeno + "\n"
-                            + "Prijmeni: " + model.Prijmeni + "\n"
-                            + "Tel: " + model.Phone + "\n"
-                            + "Vzkaz: " + model.Vzkaz + "\n"
-                            + "Temata: " + string.Join(", ", model.TypPrace) + "\n"
-                            );
-
                         smtp.Send("info@hlidacstatu.cz", "platforma+public-support@hlidacstatu.cz", "Nový spolupracovník Hlidac Statu",
                             "Email: " + model.Email + "\n"
                             + "Jmeno: " + model.Jmeno + "\n"
@@ -366,7 +357,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult sendFeedbackMail(string typ, string email, string txt, string url, bool? auth, string data)
         {
-            string to = "info@hlidacstatu.cz";
+            string to = "podpora@hlidacstatu.cz";
             string subject = "Zprava z HlidacStatu.cz: " + typ;
             if (!string.IsNullOrEmpty(data))
             {
@@ -396,7 +387,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         using (var smtp = new System.Net.Mail.SmtpClient())
                         {
-                            System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage("info@hlidacstatu.cz", to);
+                            System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage("podpora@hlidacstatu.cz", to);
                             if (to != "michal@michalblaha.cz")
                                 msg.Bcc.Add("michal@michalblaha.cz");
                             msg.Subject = subject;
