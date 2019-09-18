@@ -101,7 +101,7 @@
                 <p>
                     Informace o smlouvách a jejich návaznost na stát a firmy
                     <br>
-                    Celkem <strong>@RenderData.NiceNumber((int)platnych)</strong> smluv za <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true))</strong>
+                    Celkem <strong>@RenderData.NiceNumber((decimal)platnych)</strong> smluv za <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true))</strong>
                 </p>
             </div>
 
