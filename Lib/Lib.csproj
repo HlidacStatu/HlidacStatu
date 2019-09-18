@@ -527,6 +527,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Users.cs" />
+    <Compile Include="Data\Validations.cs" />
     <Compile Include="Data\VZ\ProfilZadavatele.cs" />
     <Compile Include="Data\VZ\VerejnaZakazka.Search.cs" />
     <Compile Include="Data\Watchdog.partial.Send.cs" />

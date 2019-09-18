@@ -2,6 +2,7 @@
 using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,6 +10,7 @@ using System.Text;
 
 namespace HlidacStatu.Lib.Data
 {
+    [MetadataType(typeof(OsobaMetadata))] // napojení na metadata (validace)
     public partial class Osoba
         : Bookmark.IBookmarkable, ISocialInfo
     {
@@ -979,6 +981,58 @@ namespace HlidacStatu.Lib.Data
                 else
                     return Get(oei.OsobaId);
             }
+        }
+
+        public static Osoba Update(Osoba osoba, string user)
+        {
+            //goto 675
+
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var osobaToUpdate = db.Osoba
+                .Where(m =>
+                    m.InternalId == osoba.InternalId
+                ).FirstOrDefault();
+
+                var osobaOriginal = osobaToUpdate.ShallowCopy();
+
+                if( osobaToUpdate != null)
+                {
+                    osobaToUpdate.Jmeno = osoba.Jmeno;
+                    osobaToUpdate.Prijmeni = osoba.Prijmeni;
+                    osobaToUpdate.TitulPo = osoba.TitulPo;
+                    osobaToUpdate.TitulPred = osoba.TitulPred;
+                    osobaToUpdate.Narozeni = osoba.Narozeni;
+                    osobaToUpdate.Status = osoba.Status;
+
+                    osobaToUpdate.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Jmeno);
+                    osobaToUpdate.PrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Prijmeni);
+                    osobaToUpdate.PuvodniPrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.PuvodniPrijmeni);
+                    osobaToUpdate.LastUpdate = DateTime.Now;
+
+                    Audit.Add(Audit.Operations.Update, user, osobaToUpdate, osobaOriginal);
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!db.Osoba.Any(os => os.InternalId == osoba.InternalId))
+                        {
+                            // lognout tady - pravděpodobně někdo stihnul osobu smáznout během updatu.
+                        }
+                        throw;
+                    }
+
+                    return osobaToUpdate;
+                }
+            }
+            return osoba;
+        }
+
+        public Osoba ShallowCopy()
+        {
+            return (Osoba)this.MemberwiseClone();
         }
 
         public static string Capitalize(string s)

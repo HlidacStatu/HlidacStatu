@@ -1,0 +1,108 @@
+﻿@model IEnumerable<HlidacStatu.Lib.Data.Osoba>
+
+@{
+    ViewBag.Title = "FindPerson";
+}
+
+<h2>FindPerson</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <form asp-action="FindPerson" method="get" class="form-inline">
+            <div class="form-group">
+                <label for="jmeno">Jmeno</label>
+                <input type="text" class="form-control" id="jmeno" name="jmeno" placeholder="Jmeno">
+            </div>
+            <div class="form-group">
+                <label for="prijmeni">Prijmeni</label>
+                <input type="text" class="form-control" id="prijmeni" name="prijmeni" placeholder="Prijmeni">
+            </div>
+            <div class="form-group">
+                <label for="narozeni">Datum narození</label>
+                <input type="date" class="form-control" id="narozeni" name="narozeni" placeholder="Datum narozeni">
+            </div>
+            <button type="submit" class="btn btn-default">Hledej</button>
+
+        </form>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "CreatePerson")
+</p>
+
+@if (Model == null)
+{
+    <p>Vyhledejte svoji osobu.</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th nowrap="nowrap">
+                Celé jméno
+            </th>
+            <th>
+                Pohlaví
+            </th>
+            <th nowrap="nowrap">
+                Datum narození / úmrtí
+            </th>
+            <th>
+                Stav
+            </th>
+            <th>
+                Modifikováno
+            </th>
+            <th>
+                Eventy
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var osoba in Model)
+        {
+            <tr>
+                <td nowrap="nowrap">
+                    @osoba.TitulPred @osoba.Jmeno @osoba.Prijmeni @osoba.TitulPo
+                </td>
+                <td>
+                    @osoba.Pohlavi
+                </td>
+                <td nowrap="nowrap">
+                    @(osoba.Narozeni?.ToString("dd.MM.yyyy")) / @(osoba.Umrti?.ToString("dd.MM.yyyy"))
+                </td>
+                <td>
+                    @osoba.StatusOsoby()
+                </td>
+                <td>
+                    @osoba.LastUpdate
+                </td>
+                <td>
+                    <table class="table">
+                        <tr> <th>událost</th> <th>datum</th> <th></th> </tr>
+                        @foreach (var ev in osoba.Events())
+                        {
+                            <tr>
+                                <td>
+                                    @ev.Title
+                                </td>
+                                <td>
+                                    @(ev.DatumOd?.ToString("dd.MM.yyyy")) - @(ev.DatumDo?.ToString("dd.MM.yyyy"))
+                                </td>
+                                <td>
+                                    @Html.ActionLink("EditEvent", "EditEvent", new { id = ev.pk })
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = osoba.InternalId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = osoba.InternalId })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}

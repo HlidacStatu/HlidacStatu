@@ -367,6 +367,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
+    <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ManageController.Api.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -1334,6 +1335,9 @@
     <Content Include="Views\Insolvence\PristupOmezen.cshtml" />
     <Content Include="Views\Shared\Bot.cshtml" />
     <Content Include="Views\Insolvence\Index.Content.cshtml" />
+    <Content Include="Views\Manage\FindPerson.cshtml" />
+    <Content Include="Views\Manage\CreatePerson.cshtml" />
+    <Content Include="Views\Manage\EditPersonNP.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

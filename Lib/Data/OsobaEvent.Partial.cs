@@ -52,6 +52,18 @@ namespace HlidacStatu.Lib.Data
             this.DatumDo = new DateTime(year, 12, 31);
         }
 
+        public static OsobaEvent GetById(int id)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                return db.OsobaEvent
+                .Where(m =>
+                    m.pk == id
+                )
+                .FirstOrDefault();
+            }
+        }
+
 
         public string RenderText(string delimeter = "\n")
         {
