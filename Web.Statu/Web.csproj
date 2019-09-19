@@ -1338,6 +1338,7 @@
     <Content Include="Views\Manage\FindPerson.cshtml" />
     <Content Include="Views\Manage\CreatePerson.cshtml" />
     <Content Include="Views\Manage\EditPersonNP.cshtml" />
+    <Content Include="Views\Manage\PersonDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

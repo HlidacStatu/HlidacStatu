@@ -2,6 +2,10 @@
 
 @{
     ViewBag.Title = "CreatePerson";
+    var statusList = Devmasters.Core.Enums
+                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum))
+                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
+                      .ToList();
 }
 
 <h2>CreatePerson</h2>
@@ -58,9 +62,9 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EnumDropDownListFor(model => model.Status,
-                new { htmlAttributes = new { @class = "form-control" } }
-            )
+            @Html.DropDownListFor(model => model.Status, statusList,
+                    new { @class = "form-control form-control-new", style = "width: 340px" }
+                )
             @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
         </div>
     </div>

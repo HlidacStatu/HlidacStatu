@@ -1,0 +1,207 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Core
+@using HlidacStatu.Lib.Data
+
+@{
+    ViewBag.Title = "PersonDetail";
+}
+
+<h2>PersonDetail</h2>
+
+<div>
+    <h4>Osoba</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.TitulPred)</dt>
+        <dd>@Html.DisplayFor(model => model.TitulPred)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Jmeno)</dt>
+        <dd>@Html.DisplayFor(model => model.Jmeno)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Prijmeni)</dt>
+        <dd>@Html.DisplayFor(model => model.Prijmeni)</dd>
+        <dt>@Html.DisplayNameFor(model => model.TitulPo)</dt>
+        <dd>@Html.DisplayFor(model => model.TitulPo)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Narozeni)</dt>
+        <dd>@Html.DisplayFor(model => model.Narozeni)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Umrti)</dt>
+        <dd>@Html.DisplayFor(model => model.Umrti)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+        <dd>@Html.DisplayFor(model => model.Status)</dd>
+        <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
+        <dd>@Html.DisplayFor(model => model.LastUpdate)</dd>
+    </dl>
+</div>
+<div>
+    <h4>Události</h4>
+    <hr />
+    @if (Model.Events().Count() > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Datum od</th>
+                    <th>Datum do</th>
+                    <th>Titulek</th>
+                    <th>Politická strana</th>
+                    <th>Částka</th>
+                    <th>Typ události</th>
+                    <th>Zdroj</th>
+                    <th>akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var udalost in Model.Events())
+                {
+                    <tr>
+                        <td>
+                            @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
+                        </td>
+                        <td>
+                            @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.AddInfo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.AddInfoNum)
+                        </td>
+                        <td>
+                            @(((HlidacStatu.Lib.Data.OsobaEvent.Types)udalost.Type).ToNiceDisplayName())
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.Zdroj)
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#eventModal"
+                                    data-eventid="@udalost.pk"
+                                    data-datumod="@(udalost.DatumOd?.ToString("yyyy-MM-dd"))"
+                                    data-datumdo="@(udalost.DatumDo?.ToString("yyyy-MM-dd"))"
+                                    data-titulek="@udalost.Title"
+                                    data-polstr="@udalost.AddInfo"
+                                    data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                                    data-typ="@udalost.Type"
+                                    data-zdroj="@udalost.Zdroj">
+                                Editovat
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.InternalId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+<!-- MODAL WINDOW HÝR -->
+<!-- Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Editovat událost</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="eventId" value="0" />
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Datum od:</label>
+                        <input type="date" class="form-control" id="datumOd">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Datum do:</label>
+                        <input type="date" class="form-control" id="datumDo">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Titulek:</label>
+                        <input type="text" class="form-control" id="titulek">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Politická strana:</label>
+                        <input type="text" class="form-control" id="polstr">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Částka:</label>
+                        <input type="text" class="form-control" id="castka">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Typ události:</label>
+                        <input type="text" class="form-control" id="typ">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Zdroj:</label>
+                        <input type="text" class="form-control" id="zdroj">
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zrušit</button>
+                <button type="button" onclick="sendEvent();" class="btn btn-primary">Uložit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#eventModal').on('show.bs.modal', function (event) {
+        // load data
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var eventId = button.data('eventid') // Extract info from data-* attributes
+        var datumOd = button.data('datumod')
+        var datumDo = button.data('datumdo')
+        var titulek = button.data('titulek')
+        var polstr = button.data('polstr')
+        var castka = button.data('castka')
+        var typ = button.data('typ')
+        var zdroj = button.data('zdroj')
+
+        // set modal window
+        var modal = $(this)
+        modal.find('#eventId').val(eventId)
+        modal.find('#datumOd').val(datumOd)
+        modal.find('#datumDo').val(datumDo)
+        modal.find('#titulek').val(titulek)
+        modal.find('#polstr').val(polstr)
+        modal.find('#castka').val(castka)
+        modal.find('#typ').val(typ)
+        modal.find('#zdroj').val(zdroj)
+    })
+
+    function sendEvent() {
+        var osobaEvent = {
+            "pk": document.getElementById("eventId").value,
+            "Title": document.getElementById("titulek").value,
+            "AddInfo": document.getElementById("polstr").value,
+            "AddInfoNum": document.getElementById("castka").value,
+            "DatumOd": document.getElementById("datumOd").value,
+            "DatumDo": document.getElementById("datumDo").value,
+            "Type": document.getElementById("typ").value,
+            "Zdroj": document.getElementById("zdroj").value,
+
+        }
+        $.post("/manage/updateEvent", osobaEvent)
+            .done(function (data) {
+                window.location.reload();
+            })
+            .fail(function (data) {
+                alert("neco se pokazilo" + data);
+
+                // something like $('input[name="' + err.key + '"]')
+            });
+
+    }
+</script>

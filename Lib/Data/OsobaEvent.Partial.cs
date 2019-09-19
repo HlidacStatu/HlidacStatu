@@ -64,6 +64,54 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var eventToUpdate = db.OsobaEvent
+                .Where(m =>
+                    m.pk == osobaEvent.pk
+                ).FirstOrDefault();
+
+                var eventOriginal = eventToUpdate.ShallowCopy();
+
+                if (eventToUpdate != null)
+                {
+                    eventToUpdate.DatumOd = osobaEvent.DatumOd;
+                    eventToUpdate.DatumDo = osobaEvent.DatumDo;
+                    eventToUpdate.AddInfo = osobaEvent.AddInfo;
+                    eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
+                    eventToUpdate.Title = osobaEvent.Title;
+                    eventToUpdate.Type = osobaEvent.Type;
+                    eventToUpdate.Zdroj = osobaEvent.Zdroj;
+
+                    eventToUpdate.Created =  DateTime.Now;
+
+                    Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!db.OsobaEvent.Any(os => os.pk == osobaEvent.pk))
+                        {
+                            // lognout tady - pravděpodobně někdo stihnul osobu smáznout během updatu.
+                        }
+                        throw;
+                    }
+
+                    return eventToUpdate;
+                }
+            }
+            return osobaEvent;
+        }
+
+        public OsobaEvent ShallowCopy()
+        {
+            return (OsobaEvent)this.MemberwiseClone();
+        }
+
 
         public string RenderText(string delimeter = "\n")
         {

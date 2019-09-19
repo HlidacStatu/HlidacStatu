@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<HlidacStatu.Lib.Data.Osoba>
-
+@using Devmasters.Core
 @{
     ViewBag.Title = "FindPerson";
 }
@@ -36,73 +36,62 @@
 }
 else
 {
-    <table class="table">
-        <tr>
-            <th nowrap="nowrap">
-                Celé jméno
-            </th>
-            <th>
-                Pohlaví
-            </th>
-            <th nowrap="nowrap">
-                Datum narození / úmrtí
-            </th>
-            <th>
-                Stav
-            </th>
-            <th>
-                Modifikováno
-            </th>
-            <th>
-                Eventy
-            </th>
-            <th></th>
-        </tr>
-
+    <ul class="list-group">
         @foreach (var osoba in Model)
         {
-            <tr>
-                <td nowrap="nowrap">
-                    @osoba.TitulPred @osoba.Jmeno @osoba.Prijmeni @osoba.TitulPo
-                </td>
-                <td>
-                    @osoba.Pohlavi
-                </td>
-                <td nowrap="nowrap">
-                    @(osoba.Narozeni?.ToString("dd.MM.yyyy")) / @(osoba.Umrti?.ToString("dd.MM.yyyy"))
-                </td>
-                <td>
-                    @osoba.StatusOsoby()
-                </td>
-                <td>
-                    @osoba.LastUpdate
-                </td>
-                <td>
-                    <table class="table">
-                        <tr> <th>událost</th> <th>datum</th> <th></th> </tr>
-                        @foreach (var ev in osoba.Events())
-                        {
-                            <tr>
-                                <td>
-                                    @ev.Title
-                                </td>
-                                <td>
-                                    @(ev.DatumOd?.ToString("dd.MM.yyyy")) - @(ev.DatumDo?.ToString("dd.MM.yyyy"))
-                                </td>
-                                <td>
-                                    @Html.ActionLink("EditEvent", "EditEvent", new { id = ev.pk })
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = osoba.InternalId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = osoba.InternalId })
-                </td>
-            </tr>
+            <li class="list-group-item d-flex flex-row">
+
+                <div class="col-sm-4 col-md-3">
+                    <div class="person-profile-thumb person-profile-thumb--small">
+                        <div class="photo">
+                            <a href="@osoba.GetUrl(false)">
+                                <div class="profile-picture" style="background-image: url('@osoba.GetPhotoUrl(true)')"></div>
+                            </a>
+                            <br />
+                            @if (osoba.HasPhoto())
+                            {
+                                var zdroj = osoba.GetPhotoSource() ?? "";
+                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Změnit fotku</a>
+                                <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Přidat fotku</a>
+                            }
+
+                        </div>
+                        <div>
+                            @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class="section-title link--blue" })
+                            <div class="new-p new-p--gray new-p--small">
+                                @osoba.NarozeniYear()
+                            </div>
+                            <div class="new-p new-p--gray new-p--small">
+                                @osoba.StatusOsoby().ToNiceDisplayName()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @{
+                    var funkceOsoba = osoba.Description(true,
+                           m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
+                                && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
+                           20);
+
+                }
+                <div class="row col-sm-8 col-md-9">
+                    @if (osoba.Events().Count() > 0)
+                    {
+                        <div class="col">
+                            <div class="search-result-label">
+                                Události
+                            </div>
+                            <div class="new-p text-wrap">
+                                @Util.LowBox(80, osoba.Description(true, m => true))
+                            </div>
+                        </div>
+                    }
+                </div>
+            </li>
         }
-
-    </table>
-
+    </ul>
 }

@@ -1,9 +1,8 @@
 ﻿using HlidacStatu.Lib.Data;
 using HlidacStatu.Util;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
@@ -27,6 +26,15 @@ namespace HlidacStatu.Web.Controllers
                 osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, nar);
 
             return View(osoby);
+        }
+
+        public ActionResult PersonDetail(int? id)
+        {
+            if (id == null) return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+
+            Osoba osoba = HlidacStatu.Lib.Data.Osoba.GetByInternalId(id ?? 0);
+
+            return View(osoba);
         }
 
 
@@ -93,6 +101,7 @@ namespace HlidacStatu.Web.Controllers
         // add create event
 
 
+
         // tohle dodělat až potom co rozšířím strukturu
         [Authorize(Roles = "canEditData")]
         public ActionResult EditPersonEvent(int? id)
@@ -109,6 +118,34 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult EditPersonEvent(string id, FormCollection form)
         {
             return Redirect("Index");
+        }
+
+        // add create event
+
+        [Authorize(Roles = "canEditData")]
+        [HttpPost]
+        public JsonResult UpdateEvent(string id, OsobaEvent osobaEvent)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = OsobaEvent.Update(osobaEvent, this.User.Identity.Name);
+                return Json(new { Success = true });
+            }
+            // https://stackoverflow.com/questions/14005773/use-asp-net-mvc-validation-with-jquery-ajax
+
+            var errorModel =
+                    from x in ModelState.Keys
+                    where ModelState[x].Errors.Count > 0
+                    select new
+                    {
+                        key = x,
+                        errors = ModelState[x].Errors.
+                                                      Select(y => y.ErrorMessage).
+                                                      ToArray()
+                    };
+
+            Response.StatusCode = 400;
+            return new JsonResult() { Data = errorModel };
         }
     }
 }
