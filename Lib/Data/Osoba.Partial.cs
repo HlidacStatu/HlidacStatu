@@ -105,11 +105,11 @@ namespace HlidacStatu.Lib.Data
                     and osobaid=" + this.InternalId)
                     //convert to osobaEvent
                     .Select(m=> {
-                        var v = this.VazbyProICO(m.ICO).FirstOrDefault();
-                        string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.Inicialy()} byl ve statut.orgánu)";
+                        var v = this.VazbyProICO(m.ICO, m.DatumOd,m.DatumDo).FirstOrDefault();
+                        string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.ShortName()} byl ve statut.orgánu)";
                         if (v != null)
                         {
-                            vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.Inicialy()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
+                            vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
                         }
                         return new OsobaEvent()
                         {
@@ -346,7 +346,7 @@ namespace HlidacStatu.Lib.Data
 
 
         Graph.Shortest.EdgePath shortestGraph = null;
-        public Graph.Edge[] VazbyProICO(string ico)
+        public Graph.Edge[] VazbyProICO(string ico, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
         {
             List<Graph.Edge> ret = new List<Graph.Edge>();
 
@@ -354,7 +354,8 @@ namespace HlidacStatu.Lib.Data
             {
                 shortestGraph = new Graph.Shortest.EdgePath(this.Vazby());
             }
-            return shortestGraph.ShortestTo(ico).ToArray();
+            return shortestGraph.ShortestTo(ico, overlapDateFrom, overlapDateTo)
+                .ToArray();
         }
         public long VazbyProICOCalls()
         {
@@ -453,6 +454,15 @@ namespace HlidacStatu.Lib.Data
             if (html)
                 s = s.Replace(" ", "&nbsp;");
             return s;
+        }
+
+        public string ShortName()
+        {
+            var f = this.Jmeno.FirstOrDefault();
+            if (f == default(char))
+                return this.Prijmeni;
+            else
+                return f + ". " + this.Prijmeni;
         }
 
         public string Inicialy()

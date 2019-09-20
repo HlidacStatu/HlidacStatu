@@ -41,15 +41,17 @@
 
                 }
 
-                public IEnumerable<Edge> ShortestTo(string ico)
+                public IEnumerable<Edge> ShortestTo(string ico, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
                 {
-                    var node = this.nodes.Where(n => n.Type == Node.NodeType.Company && n.Id == ico).FirstOrDefault();
+                    var node = this.nodes
+                        .Where(n => n.Type == Node.NodeType.Company && n.Id == ico)
+                        .FirstOrDefault();
                     if (node == null)
                         return new Edge[] { };
-                    return this.ShortestTo(node);
+                    return this.ShortestTo(node, overlapDateFrom,overlapDateTo);
                 }
 
-                public IEnumerable<Edge> ShortestTo(Node node)
+                public IEnumerable<Edge> ShortestTo(Node node, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
                 {
                     calls++;
                     List<Edge> edges = new List<Edge>();
@@ -64,6 +66,7 @@
                         //found corresponding edge
                         var foundE = this.edges
                             .Where(m => m.From?.UniqId == prev?.UniqId && m.To?.UniqId == n.UniqId)
+                            .Where(m=> HlidacStatu.Util.DateTools.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
                             .OrderBy(e=>e.NumberOfDaysFromToday())
                             .ThenByDescending(e=>e.LengthOfEdgeInDays())
                             .FirstOrDefault();

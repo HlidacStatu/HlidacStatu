@@ -34,8 +34,8 @@ BEGIN
 if (@id is null and @email is null)
 	return;
 
-if (@id is null and @email is not null)
-	set @id = select id from AspNetUsers where email like @email
+--if (@id is null and @email is not null)
+--	set @id = select id from AspNetUsers where email like @email
 
 
 begin tran
