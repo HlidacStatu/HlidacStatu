@@ -25,11 +25,6 @@
     return;
 }
 
-@if (classif == null)
-{
-    <h2>Zadna klasifikace</h2>
-    return;
-}
 
 <table class="table table-new table-new--dotted table-hover">
     <tbody>
@@ -57,9 +52,24 @@
         <tr>
             <td>Nalezené klasifikace</td>
             <td><textarea rows="13" style="width:100%">
-@foreach (var cl in classif)
+@if (classif == null)
 {
+    if (exc != null)
+    {
+
+@Html.Raw(exc.ToString())
+    }
+    else
+    {
+@Html.Raw("Zadna klasifikace")
+    }
+}
+else
+{
+    foreach (var cl in classif)
+    {
     @Html.Raw(cl.Key.ToNiceDisplayName() + "\t" + cl.Value + "\n")
+    }
 }
 </textarea></td>
         </tr>
