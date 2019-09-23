@@ -81,7 +81,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     eventToUpdate.DatumOd = osobaEvent.DatumOd;
                     eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                    eventToUpdate.AddInfo = osobaEvent.AddInfo;
+                    eventToUpdate.PolitickaStrana = osobaEvent.PolitickaStrana;
                     eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
                     eventToUpdate.Title = osobaEvent.Title;
                     eventToUpdate.Type = osobaEvent.Type;
@@ -121,17 +121,17 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.ClenStrany:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.AddInfo);
+                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
                     return sb.ToString();
                 case Types.Poslanec:
                     sb.AppendFormat("Poslanec {0} ", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.AddInfo))
-                        sb.Append(" za " + AddInfo);
+                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
+                        sb.Append(" za " + PolitickaStrana);
                     return sb.ToString();
                 case Types.Senator:
                     sb.AppendFormat("Senator {0} ", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.AddInfo))
-                        sb.Append(" za " + AddInfo);
+                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
+                        sb.Append(" za " + PolitickaStrana);
                     return sb.ToString();
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum)  : "");
@@ -178,17 +178,17 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.ClenStrany:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.AddInfo);
+                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
                     return sb.ToString();
                 case Types.Poslanec:
                     sb.AppendFormat("Poslanec {0}", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.AddInfo))
-                        sb.Append(" za " + AddInfo);
+                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
+                        sb.Append(" za " + PolitickaStrana);
                     return sb.ToString() + zdroj;
                 case Types.Senator:
                     sb.AppendFormat("Poslanec {0}", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.AddInfo))
-                        sb.Append(" za " + AddInfo);
+                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
+                        sb.Append(" za " + PolitickaStrana);
                     return sb.ToString() + zdroj;
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;

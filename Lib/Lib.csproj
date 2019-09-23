@@ -445,6 +445,12 @@
     </Compile>
     <Compile Include="Data\Bookmark.Partial.cs" />
     <Compile Include="Data\Darujme.cs" />
+    <Compile Include="Data\EventSubType.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EventType.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\External\DataSets\ApiResonseStatus.cs" />
     <Compile Include="Data\External\DataSets\RuntimeClassBuilder.cs" />
     <Compile Include="Data\External\DataSets\DataSearchResult.cs" />

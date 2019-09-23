@@ -990,7 +990,7 @@ namespace HlidacStatu.Web.Controllers
                 return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { valid = false, error = "Invalid nameId. Osoba not found" }), "application/json");
 
             OsobaEvent oe = new OsobaEvent(o.InternalId, title, description, type);
-            oe.AddInfo = addInfo;
+            oe.PolitickaStrana = addInfo;
             oe.AddInfoNum = addInfoNum;
             oe.DatumOd = odDatum;
             oe.DatumDo = doDatum;

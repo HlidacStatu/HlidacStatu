@@ -54,6 +54,9 @@ namespace HlidacStatu.Lib.Data
         [Display(Name = "Další informace")]
         public string AddInfo { get; set; }
 
+        [Display(Name = "Politická strana")]
+        public string PolitickaStrana { get; set; }
+
         [Display(Name = "Částka")]
         public decimal? AddInfoNum { get; set; }
 

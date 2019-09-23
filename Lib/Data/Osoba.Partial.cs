@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib.Data
                         return new OsobaEvent()
                         {
                             OsobaId = this.InternalId,
-                            AddInfo = m.AddInfo,
+                            PolitickaStrana = m.AddInfo,
                             AddInfoNum = m.AddInfoNum,
                             Created = m.Created,
                             DatumDo = m.DatumDo,
@@ -816,7 +816,7 @@ namespace HlidacStatu.Lib.Data
                 }
             }
             OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Popis);
-            oe.AddInfo = ParseTools.NormalizaceStranaShortName(strana);
+            oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             return AddOrUpdateEvent(oe, user);
         }
@@ -824,7 +824,7 @@ namespace HlidacStatu.Lib.Data
         public OsobaEvent AddFunkce(string pozice, string strana, int rokOd, int? rokDo, string zdroj, string user)
         {
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("{0}", pozice), "", OsobaEvent.Types.PolitickaFunkce);
-            oe.AddInfo = ParseTools.NormalizaceStranaShortName(strana);
+            oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             oe.DatumOd = new DateTime(rokOd, 1, 1, 0, 0, 0, DateTimeKind.Local);
             oe.DatumDo = rokDo == null ? (DateTime?)null : new DateTime(rokDo.Value, 12, 31, 0, 0, 0, DateTimeKind.Local);
@@ -834,7 +834,7 @@ namespace HlidacStatu.Lib.Data
         public OsobaEvent AddClenStrany(string strana, int rokOd, int? rokDo, string zdroj, string user)
         {
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Člen strany {0}", strana), "", OsobaEvent.Types.ClenStrany);
-            oe.AddInfo = ParseTools.NormalizaceStranaShortName(strana);
+            oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             oe.DatumOd = new DateTime(rokOd, 1, 1, 0, 0, 0, DateTimeKind.Local);
             oe.DatumDo = rokDo == null ? (DateTime?)null : new DateTime(rokDo.Value, 12, 31, 0, 0, 0, DateTimeKind.Local);
@@ -867,7 +867,7 @@ namespace HlidacStatu.Lib.Data
                                 .FirstOrDefault(m =>
                                         m.OsobaId == this.InternalId
                                         && m.Type == ev.Type
-                                        && m.AddInfo == ev.AddInfo
+                                        && m.PolitickaStrana == ev.PolitickaStrana
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd
                                         && m.DatumDo == ev.DatumDo
@@ -913,7 +913,7 @@ namespace HlidacStatu.Lib.Data
 
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Sponzor {0}", strana), "", t);
             oe.AddInfoNum = castka;
-            oe.AddInfo = strana;
+            oe.PolitickaStrana = strana;
             oe.Zdroj = zdroj;
             oe.SetYearInterval(rok);
             return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);
@@ -1127,7 +1127,7 @@ namespace HlidacStatu.Lib.Data
                     if (this.IsSponzor() && this.Sponzoring().Where(m => m.DatumOd >= datumOd).Count() > 0)
                     {
                         var sponzoring = this.Sponzoring().Where(m => m.DatumOd >= datumOd).ToArray();
-                        string[] strany = sponzoring.Select(m => m.AddInfo).Distinct().ToArray();
+                        string[] strany = sponzoring.Select(m => m.PolitickaStrana).Distinct().ToArray();
                         DateTime[] roky = sponzoring.Select(m => m.DatumOd.Value).Distinct().OrderBy(y => y).ToArray();
                         decimal celkem = sponzoring.Sum(m => m.AddInfoNum) ?? 0;
                         decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;

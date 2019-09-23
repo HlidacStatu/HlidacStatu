@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Data
                 new JSON.ev()
                 {
                     pk = m.pk,
-                    AddInfo = m.AddInfo,
+                    PolitickaStrana = m.PolitickaStrana,
                     DatumOd = m.DatumOd?.ToString("yyyy-MM-dd") ?? "",
                     DatumDo = m.DatumDo?.ToString("yyyy-MM-dd") ?? "",
                     Title = m.Title,
@@ -106,7 +106,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     OsobaEvent ev = new OsobaEvent();
                     ev.pk = e.pk;
-                    ev.AddInfo = e.AddInfo;
+                    ev.PolitickaStrana = e.PolitickaStrana;
                     ev.AddInfoNum = e.AddInfoNum;
                     ev.DatumOd = ParseTools.ToDateTime(e.DatumOd, "yyyy-MM-dd");
                     ev.DatumDo = ParseTools.ToDateTime(e.DatumDo, "yyyy-MM-dd");
@@ -245,8 +245,8 @@ namespace HlidacStatu.Lib.Data
 
 
                 /// <summary>Pokud politik, tak za jakou stranu</summary>
-                [JsonProperty("addInfo", Required = Required.Default)]
-                public string AddInfo
+                [JsonProperty("politickaStrana", Required = Required.Default)]
+                public string PolitickaStrana
                 {
                     get; set;
                 }

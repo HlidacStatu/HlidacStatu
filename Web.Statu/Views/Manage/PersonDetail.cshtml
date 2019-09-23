@@ -71,7 +71,7 @@
                             @Html.DisplayFor(modelItem => udalost.Title)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => udalost.AddInfo)
+                            @Html.DisplayFor(modelItem => udalost.PolitickaStrana)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => udalost.AddInfoNum)
@@ -91,7 +91,7 @@
                                     data-datumod="@(udalost.DatumOd?.ToString("yyyy-MM-dd"))"
                                     data-datumdo="@(udalost.DatumDo?.ToString("yyyy-MM-dd"))"
                                     data-titulek="@udalost.Title"
-                                    data-polstr="@udalost.AddInfo"
+                                    data-polstr="@udalost.PolitickaStrana"
                                     data-castka="@(udalost.AddInfoNum?.ToString("0"))"
                                     data-typ="@udalost.Type"
                                     data-zdroj="@udalost.Zdroj">
@@ -142,7 +142,7 @@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Politická strana:</label>
                         <input type="text" class="form-control" id="polstr">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="PolitickaStrana" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Částka:</label>
@@ -209,7 +209,7 @@
         var osobaEvent = {
             "pk": document.getElementById("eventId").value,
             "Title": document.getElementById("titulek").value,
-            "AddInfo": document.getElementById("polstr").value,
+            "PolitickaStrana": document.getElementById("polstr").value,
             "AddInfoNum": document.getElementById("castka").value,
             "DatumOd": document.getElementById("datumOd").value,
             "DatumDo": document.getElementById("datumDo").value,

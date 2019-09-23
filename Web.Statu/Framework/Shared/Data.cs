@@ -20,7 +20,7 @@ namespace HlidacStatu.Web.Framework.Shared
                             foreach (var strana in HlidacStatu.Lib.Data.Sponsors.VelkeStrany)
                             {
                                 var res = db.OsobaEvent
-                                    .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.AddInfo == strana)
+                                    .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.PolitickaStrana == strana)
                                     .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
                                     .OrderByDescending(o => o.oe.AddInfoNum)
                                     .Take(1000)

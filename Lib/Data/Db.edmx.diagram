@@ -28,6 +28,8 @@
         <EntityTypeShape EntityType="FirmyModel.Bookmark" Width="1.5" PointX="14.375" PointY="3.75" />
         <EntityTypeShape EntityType="FirmyModel.UserOptions" Width="1.5" PointX="14.75" PointY="0.75" />
         <EntityTypeShape EntityType="FirmyModel.ItemToOcrQueue" Width="1.5" PointX="4.5" PointY="5.125" />
+        <EntityTypeShape EntityType="FirmyModel.EventSubType" Width="1.5" PointX="14.375" PointY="7.75" />
+        <EntityTypeShape EntityType="FirmyModel.EventType" Width="1.5" PointX="14.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

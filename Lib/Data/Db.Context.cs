@@ -48,8 +48,10 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<Bookmark> Bookmark { get; set; }
         public virtual DbSet<UserOptions> UserOptions { get; set; }
         public virtual DbSet<ItemToOcrQueue> ItemToOcrQueue { get; set; }
+        public virtual DbSet<EventSubType> EventSubType { get; set; }
+        public virtual DbSet<EventType> EventType { get; set; }
     
-        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate)
+        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string krajId, string okresId)
         {
             var iCOParameter = iCO != null ?
                 new ObjectParameter("ICO", iCO) :
@@ -91,7 +93,15 @@ namespace HlidacStatu.Lib.Data
                 new ObjectParameter("VersionUpdate", versionUpdate) :
                 new ObjectParameter("VersionUpdate", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter);
+            var krajIdParameter = krajId != null ?
+                new ObjectParameter("KrajId", krajId) :
+                new ObjectParameter("KrajId", typeof(string));
+    
+            var okresIdParameter = okresId != null ?
+                new ObjectParameter("okresId", okresId) :
+                new ObjectParameter("okresId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter, krajIdParameter, okresIdParameter);
         }
     
         public virtual int SmlouvaId_Save(string id, Nullable<int> active, Nullable<System.DateTime> created, Nullable<System.DateTime> updated)

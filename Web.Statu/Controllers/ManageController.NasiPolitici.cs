@@ -30,7 +30,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult PersonDetail(int? id)
         {
-            if (id == null) return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+            if (id == null) return RedirectToAction(nameof(FindPerson));
 
             Osoba osoba = HlidacStatu.Lib.Data.Osoba.GetByInternalId(id ?? 0);
 
@@ -68,7 +68,7 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         public ActionResult EditPersonNP(int? id)
         {
-            if (id == null) return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+            if (id == null) return RedirectToAction(nameof(FindPerson));
 
             Osoba osoba = HlidacStatu.Lib.Data.Osoba.GetByInternalId(id ?? 0);
 
@@ -80,7 +80,7 @@ namespace HlidacStatu.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Status")] Osoba osoba)
         {
-            if (id != osoba.InternalId) return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+            if (id != osoba.InternalId) return RedirectToAction(nameof(FindPerson));
             if (ModelState.IsValid)
             {
                 Osoba result = Osoba.Update(osoba, this.User.Identity.Name);
@@ -106,18 +106,10 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         public ActionResult EditPersonEvent(int? id)
         {
-            if (id == null) return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+            if (id == null) return RedirectToAction(nameof(FindPerson));
             OsobaEvent osobaEvent = OsobaEvent.GetById(id ?? 0);
             
             return View(osobaEvent);
-        }
-
-        [Authorize(Roles = "canEditData")]
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult EditPersonEvent(string id, FormCollection form)
-        {
-            return Redirect("Index");
         }
 
         // add create event

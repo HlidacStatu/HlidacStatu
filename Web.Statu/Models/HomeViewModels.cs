@@ -62,7 +62,7 @@ namespace HlidacStatu.Web.Models
             public DateTime? DatumOd { get; set; }
             public DateTime? DatumDo { get; set; }
 
-            public string AddInfo { get; set; }
+            public string PolitickaStrana { get; set; }
 
         }
 

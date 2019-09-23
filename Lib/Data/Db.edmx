@@ -76,6 +76,22 @@
           <Property Name="DetailJson" Type="nvarchar(max)" />
           <Property Name="Url" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="EventSubType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="EventTypeId" Type="int" />
+          <Property Name="NameMale" Type="nvarchar" MaxLength="200" />
+          <Property Name="NameFemale" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="EventType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="FirmaEvent">
           <Key>
             <PropertyRef Name="pk" />
@@ -224,6 +240,8 @@
           <Property Name="AddInfoNum" Type="decimal" Precision="18" Scale="9" />
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="Zdroj" Type="nvarchar(max)" />
+          <Property Name="SubType" Type="int" />
+          <Property Name="PolitickaStrana" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="OsobaExternalId">
           <Key>
@@ -349,6 +367,8 @@
           <Parameter Name="Source" Type="nvarchar" Mode="In" />
           <Parameter Name="Popis" Type="nvarchar" Mode="In" />
           <Parameter Name="VersionUpdate" Type="int" Mode="In" />
+          <Parameter Name="KrajId" Type="nvarchar" Mode="In" />
+          <Parameter Name="okresId" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SmlouvaId_Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="nvarchar" Mode="In" />
@@ -379,6 +399,8 @@
           <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bookmarks" EntityType="Self.Bookmarks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EventSubType" EntityType="Self.EventSubType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EventType" EntityType="Self.EventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaEvent" EntityType="Self.FirmaEvent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaVazby" EntityType="Self.FirmaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceItems" EntityType="Self.InvoiceItems" Schema="dbo" store:Type="Tables" />
@@ -433,6 +455,8 @@
             <Parameter Name="Source" Mode="In" Type="String" />
             <Parameter Name="Popis" Mode="In" Type="String" />
             <Parameter Name="VersionUpdate" Mode="In" Type="Int32" />
+            <Parameter Name="KrajId" Mode="In" Type="String" />
+            <Parameter Name="okresId" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="DatoveSchrankies" EntityType="FirmyModel.DatoveSchranky" />
           <EntitySet Name="WatchDogs" EntityType="FirmyModel.WatchDog" />
@@ -484,6 +508,8 @@
             <Parameter Name="languageId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="ItemToOcrQueue" EntityType="FirmyModel.ItemToOcrQueue" />
+          <EntitySet Name="EventSubType" EntityType="FirmyModel.EventSubType" />
+          <EntitySet Name="EventType" EntityType="FirmyModel.EventType" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -635,6 +661,8 @@
           <Property Name="AddInfoNum" Type="Decimal" Precision="18" Scale="9" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SubType" Type="Int32" />
+          <Property Name="PolitickaStrana" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OsobaExternalId">
           <Key>
@@ -817,6 +845,22 @@
           <Property Name="success" Type="Int32" />
           <Property Name="priority" Type="Int32" />
         </EntityType>
+        <EntityType Name="EventSubType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="EventTypeId" Type="Int32" />
+          <Property Name="NameMale" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="NameFemale" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EventType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -968,6 +1012,8 @@
           <EntitySetMapping Name="OsobaEvent">
             <EntityTypeMapping TypeName="FirmyModel.OsobaEvent">
               <MappingFragment StoreEntitySet="OsobaEvent">
+                <ScalarProperty Name="PolitickaStrana" ColumnName="PolitickaStrana" />
+                <ScalarProperty Name="SubType" ColumnName="SubType" />
                 <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="AddInfoNum" ColumnName="AddInfoNum" />
@@ -1161,6 +1207,24 @@
                 <ScalarProperty Name="itemSubType" ColumnName="itemSubType" />
                 <ScalarProperty Name="itemType" ColumnName="itemType" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventSubType">
+            <EntityTypeMapping TypeName="FirmyModel.EventSubType">
+              <MappingFragment StoreEntitySet="EventSubType">
+                <ScalarProperty Name="NameFemale" ColumnName="NameFemale" />
+                <ScalarProperty Name="NameMale" ColumnName="NameMale" />
+                <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventType">
+            <EntityTypeMapping TypeName="FirmyModel.EventType">
+              <MappingFragment StoreEntitySet="EventType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
