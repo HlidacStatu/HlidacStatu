@@ -423,7 +423,7 @@ text zpravy: {txt}";
             if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(hash))
                 return NotFound();
 
-            var model = HlidacStatu.Lib.ES.Manager.Load(Id);
+            var model = HlidacStatu.Lib.Data.Smlouva.Load(Id);
             if (model == null)
             {
                 return NotFound();
@@ -455,7 +455,7 @@ text zpravy: {txt}";
             if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(hash))
                 return NotFound();
 
-            var model = HlidacStatu.Lib.ES.Manager.Load(Id);
+            var model = HlidacStatu.Lib.Data.Smlouva.Load(Id);
             if (model == null)
             {
                 return NotFound();
@@ -1046,7 +1046,7 @@ text zpravy: {txt}";
             if (string.IsNullOrWhiteSpace(Id))
                 return NotFound();
 
-            var model = HlidacStatu.Lib.ES.Manager.Load(Id);
+            var model = HlidacStatu.Lib.Data.Smlouva.Load(Id);
             if (model == null)
             {
                 return NotFound();
@@ -1311,7 +1311,7 @@ text zpravy: {txt}";
             }
             else if (id?.ToLower() == "smlouva")
             {
-                Smlouva s = HlidacStatu.Lib.ES.Manager.Load(v);
+                Smlouva s = HlidacStatu.Lib.Data.Smlouva.Load(v);
                 if (s != null)
                 {
                     url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);

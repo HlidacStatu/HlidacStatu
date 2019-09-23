@@ -247,22 +247,26 @@ namespace HlidacStatu.Lib.Data
                 return false;
         }
 
-        public bool Delete()
+        public bool Delete(ElasticClient client = null)
         {
-            var client = Lib.ES.Manager.GetESClient();
+            return Delete(this.Id);
+        }
+        public static bool Delete(string Id, ElasticClient client = null)
+        {
+            if (client == null)
+                client = Lib.ES.Manager.GetESClient();
             var res = client
                 .Delete<Lib.Data.Smlouva>(Id);
             return res.IsValid;
         }
-
-        public bool Save()
+        public bool Save(ElasticClient client = null)
         {
             var item = this;
             if (item == null)
                 return false;
 
             item.PrepareBeforeSave();
-            ElasticClient c = null;
+            ElasticClient c = client;
             if (c == null)
             {
                 if (item.platnyZaznam)
@@ -1138,6 +1142,31 @@ namespace HlidacStatu.Lib.Data
 
             return ids;
         }
+
+        public static bool ExistsZaznam(string id, ElasticClient client = null)
+        {
+            bool noSetClient = client == null;
+            if (client == null)
+                client = Lib.ES.Manager.GetESClient();
+            var res = client
+                    .DocumentExists<Lib.Data.Smlouva>(id);
+            if (noSetClient)
+            {
+                if (res.Exists)
+                    return true;
+                client = ES.Manager.GetESClient_Sneplatne();
+                res = client.DocumentExists<Lib.Data.Smlouva>(id);
+                if (res.IsValid)
+                    return res.Exists;
+                else
+                    throw new ApplicationException(res.DebugInformation, res.OriginalException);
+
+            }
+            else
+                return res.Exists;
+
+        }
+
 
         public static Smlouva Load(string idVerze, ElasticClient client = null)
         {

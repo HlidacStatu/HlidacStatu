@@ -666,7 +666,7 @@ namespace HlidacStatu.Web.Controllers
                 if (string.IsNullOrWhiteSpace(Id))
                     return View("Error404");
 
-                var model = HlidacStatu.Lib.ES.Manager.Load(Id);
+                var model = HlidacStatu.Lib.Data.Smlouva.Load(Id);
                 if (model == null)
                 {
                     return View("Error404");
@@ -733,7 +733,7 @@ namespace HlidacStatu.Web.Controllers
                 if (string.IsNullOrWhiteSpace(Id))
                     return View("Error404");
 
-                var model = HlidacStatu.Lib.ES.Manager.Load(Id);
+                var model = HlidacStatu.Lib.Data.Smlouva.Load(Id);
                 if (model == null)
                 {
                     return View("Error404");
@@ -754,7 +754,7 @@ namespace HlidacStatu.Web.Controllers
                         p.DatlClassification = new Smlouva.Priloha.Classification() { Created = DateTime.Now };
 
                     }
-                    HlidacStatu.Lib.ES.Manager.Save(model);
+                    model.Save();
                 }
 
 
@@ -1032,7 +1032,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CheckText(string smlouvaid)
         {
             HlidacStatu.Lib.Issues.IIssueAnalyzer textCheck = new HlidacStatu.Plugin.IssueAnalyzers.Text();
-            Smlouva s = HlidacStatu.Lib.ES.Manager.Load(smlouvaid);
+            Smlouva s = HlidacStatu.Lib.Data.Smlouva.Load(smlouvaid);
             if (s != null)
             {
                 if (s.Prilohy != null && s.Prilohy.Count() > 0)
@@ -1040,7 +1040,7 @@ namespace HlidacStatu.Web.Controllers
                     var newIss = s.Issues.Where(m => m.IssueTypeId != 200).ToList();
                     newIss.AddRange(textCheck.FindIssues(s));
                     s.Issues = newIss.ToArray();
-                    HlidacStatu.Lib.ES.Manager.Save(s);
+                    s.Save();
                 }
             }
             return Content("OK");
