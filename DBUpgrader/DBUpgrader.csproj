@@ -214,6 +214,7 @@
     <Compile Include="V1\UpgradeDB.1.0.0.029.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.028.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.045.cs" />
+    <Compile Include="V1\UpgradeDB.1.0.0.062.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.061.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.060.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.059.cs" />
