@@ -635,7 +635,6 @@ namespace HlidacStatu.Lib.Data.VZ
         }
 
 
-        static RegexOptions regexOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
 
         static string cisloZakazkyRegex = @"Evidenční \s* číslo \s* zakázky: \s*(?<zakazka>(Z?)\d{1,8}([-]*\d{1,7})?)\s+";
         static string cisloConnectedFormRegex = @"Evidenční \s* číslo \s* souvisejícího \s* formuláře: \s*(?<zakazka>(F?)\d{1,8}([-]*\d{1,7})?)\s+";
@@ -969,8 +968,8 @@ namespace HlidacStatu.Lib.Data.VZ
 
             //2006 https://old.vestnikverejnychzakazek.cz/cs/Searching/SearchContractNumber?cococode=847422
             //2016 https://www.vestnikverejnychzakazek.cz/SearchForm/SearchContract?contractNumber=
-            string outUrl = "";
-            bool urlOk = false;
+
+
 
 
             string searchUrl = null;

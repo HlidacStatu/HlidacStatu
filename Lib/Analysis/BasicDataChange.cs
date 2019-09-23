@@ -61,8 +61,6 @@
             string increaseTxt = "nárůst o {0:P2}"
             )
         {
-
-            string ret = "";
             if (-0.001m < change && change < 0.001m)
                 return equallyTxt.Contains("{0") ? string.Format(equallyTxt, change) : equallyTxt;
             else if (change <= -0.001m)

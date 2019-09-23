@@ -213,7 +213,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
+        //static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
         public static QueryContainer GetSimpleQuery(DataSet ds, string query)
         {
 

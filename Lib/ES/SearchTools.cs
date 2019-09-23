@@ -113,6 +113,8 @@ namespace HlidacStatu.Lib.ES
                 "holding:",
                 "holdingprijemce:",
                 "holdingplatce:",
+                "holdingdodavatel:",
+                "holdingzadavatel:",
             };
 
         public static string FixInvalidQuery(string query)
@@ -144,6 +146,8 @@ namespace HlidacStatu.Lib.ES
                 {@"holding:(?<q>(\d{1,8})) ","ico" },
                 {@"holdingprijemce:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" },
                 {@"holdingplatce:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" },
+                {@"holdingdodavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" },
+                {@"holdingzadavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" },
 
                 {"ds:","(prijemce.datovaSchranka:${q} OR platce.datovaSchranka:${q}) " },
                 {"dsprijemce:","prijemce.datovaSchranka:" },

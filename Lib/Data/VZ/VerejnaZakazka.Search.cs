@@ -21,7 +21,7 @@ namespace HlidacStatu.Lib.Data.VZ
             static System.Text.RegularExpressions.RegexOptions options = ((System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace | System.Text.RegularExpressions.RegexOptions.Multiline)
                         | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             static System.Text.RegularExpressions.Regex regFindRegex = new System.Text.RegularExpressions.Regex(regex, options);
-            static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
+
 
 
 
@@ -188,7 +188,8 @@ namespace HlidacStatu.Lib.Data.VZ
                 "podepsano:",
                 "text:",
                 "oblast:",
-                "holding:","holdingdodavatel:","holdingzadavatel:"
+                "holding:","holdingdodavatel:","holdingzadavatel:", "holdingprijemce:","holdingplatce:",
+
             };
             static string[] queryOperators = new string[] {
             "AND","OR"
@@ -206,6 +207,8 @@ namespace HlidacStatu.Lib.Data.VZ
                     {@"holding:(?<q>(\d{1,8})) ","ico" },
                     {@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" },
                     {@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" },
+                    {@"holdingprijemce:(?<q>(\d{1,8})) ","icododavatel" },
+                    {@"holdingplatce:(?<q>(\d{1,8})) ","icozadavatel" },
 
                     {"cpv:","${cpv}" },
                     {"oblast:","${oblast}" },

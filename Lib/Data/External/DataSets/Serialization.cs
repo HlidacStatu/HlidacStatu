@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public class PublicDatasetContractResolver : DefaultContractResolver
         {
-            public static new readonly PublicDatasetContractResolver Instance = new PublicDatasetContractResolver();
+            public static readonly PublicDatasetContractResolver Instance = new PublicDatasetContractResolver();
 
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
