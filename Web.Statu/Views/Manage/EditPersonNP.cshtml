@@ -90,6 +90,7 @@
 
 <div>
     @Html.ActionLink("Back to List", "FindPerson")
+    @Html.ActionLink("Go to detail", "PersonDetail", new { id = Model.InternalId })
 </div>
 
 @section Scripts {

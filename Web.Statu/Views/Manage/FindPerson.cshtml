@@ -39,59 +39,57 @@ else
     <ul class="list-group">
         @foreach (var osoba in Model)
         {
-            <li class="list-group-item d-flex flex-row">
+        <li class="list-group-item d-flex flex-row">
 
-                <div class="col-sm-4 col-md-3">
-                    <div class="person-profile-thumb person-profile-thumb--small">
-                        <div class="photo">
-                            <a href="@osoba.GetUrl(false)">
-                                <div class="profile-picture" style="background-image: url('@osoba.GetPhotoUrl(true)')"></div>
-                            </a>
-                            <br />
-                            @if (osoba.HasPhoto())
-                            {
-                                var zdroj = osoba.GetPhotoSource() ?? "";
-                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Změnit fotku</a>
-                                <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
-                            }
-                            else
-                            {
-                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Přidat fotku</a>
-                            }
+            <div class="col-sm-4 col-md-3">
+                <div class="person-profile-thumb person-profile-thumb--small">
+                    <div class="photo">
+                        <a href="@osoba.GetUrl(false)">
+                            <div class="profile-picture" style="background-image: url('@osoba.GetPhotoUrl(true)')"></div>
+                        </a>
+                        <br />
+                        @if (osoba.HasPhoto())
+                        {
+                            var zdroj = osoba.GetPhotoSource() ?? "";
+                            <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Změnit fotku</a>
+                            <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Přidat fotku</a>
+                        }
 
+                    </div>
+                    <div>
+                        @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class = "section-title link--blue" })
+                        <div class="new-p new-p--gray new-p--small">
+                            @osoba.NarozeniYear()
                         </div>
-                        <div>
-                            @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class="section-title link--blue" })
-                            <div class="new-p new-p--gray new-p--small">
-                                @osoba.NarozeniYear()
-                            </div>
-                            <div class="new-p new-p--gray new-p--small">
-                                @osoba.StatusOsoby().ToNiceDisplayName()
-                            </div>
+                        <div class="new-p new-p--gray new-p--small">
+                            @osoba.StatusOsoby().ToNiceDisplayName()
                         </div>
                     </div>
                 </div>
-                @{
-                    var funkceOsoba = osoba.Description(true,
-                           m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
-                                && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
-                           20);
+            </div>
 
-                }
-                <div class="row col-sm-8 col-md-9">
-                    @if (osoba.Events().Count() > 0)
-                    {
-                        <div class="col">
-                            <div class="search-result-label">
-                                Události
-                            </div>
-                            <div class="new-p text-wrap">
-                                @Util.LowBox(80, osoba.Description(true, m => true))
-                            </div>
+            <div class="row col-sm-7 col-md-8">
+                @if (osoba.Events().Count() > 0)
+                {
+                    <div class="col">
+                        <div class="search-result-label">
+                            Události
                         </div>
-                    }
-                </div>
-            </li>
+                        <div class="new-p text-wrap">
+                            @Util.LowBox(80, osoba.Description(true, m => true))
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-sm-1 col-md-1">
+                @*@Html.ActionLink("Detail", "PersonDetail", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-primary-new" })*@
+                @Html.ActionLink("Edit", "EditPersonNP", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
+            </div>
+        </li>
         }
     </ul>
 }

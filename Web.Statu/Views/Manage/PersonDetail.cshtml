@@ -4,11 +4,16 @@
 
 @{
     ViewBag.Title = "PersonDetail";
+    var typeList = Devmasters.Core.Enums
+                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
+                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
+                      .ToList();
+
 }
 
 <h2>PersonDetail</h2>
 
-<div>
+<div class="col-xs-12">
     <h4>Osoba</h4>
     <hr />
     <dl class="dl-horizontal">
@@ -29,10 +34,14 @@
         <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
         <dd>@Html.DisplayFor(model => model.LastUpdate)</dd>
     </dl>
+    <p>
+        @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
+    </p>
 </div>
-<div>
+<div class="col-xs-12">
     <h4>Události</h4>
     <hr />
+    @Html.ActionLink("Přidat událost", "CreatePersonEvent")
     @if (Model.Events().Count() > 0)
     {
         <table class="table">
@@ -96,8 +105,8 @@
     }
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.InternalId }) |
-    @Html.ActionLink("Back to List", "Index")
+    
+    @Html.ActionLink("Back to List", "FindPerson")
 </p>
 
 
@@ -118,18 +127,22 @@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Datum od:</label>
                         <input type="date" class="form-control" id="datumOd">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Datum do:</label>
                         <input type="date" class="form-control" id="datumDo">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Titulek:</label>
                         <input type="text" class="form-control" id="titulek">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Politická strana:</label>
                         <input type="text" class="form-control" id="polstr">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Částka:</label>
@@ -138,11 +151,19 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Typ události:</label>
-                        <input type="text" class="form-control" id="typ">
+                        @*<input type="text" class="form-control" id="typ">*@
+                        <select class="form-control" id="typ">
+                            @for (int i = 0; i < typeList.Count; i++)
+                            {
+                                <option value="@typeList[i].Value">@typeList[i].Text</option>
+                            }
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Zdroj:</label>
                         <input type="text" class="form-control" id="zdroj">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
                     </div>
 
 
@@ -158,6 +179,9 @@
 
 <script>
     $('#eventModal').on('show.bs.modal', function (event) {
+        // clear previous error messages
+        document.querySelectorAll("#eventModal .modal-body .field-validation-valid").forEach(item => item.innerText = "");
+
         // load data
         var button = $(event.relatedTarget) // Button that triggered the modal
         var eventId = button.data('eventid') // Extract info from data-* attributes
@@ -198,10 +222,17 @@
                 window.location.reload();
             })
             .fail(function (data) {
-                alert("neco se pokazilo" + data);
+                displayValidationErrors(data.responseJSON);
 
                 // something like $('input[name="' + err.key + '"]')
             });
 
     }
+
+    function displayValidationErrors(errors) {
+        for (var i = 0; i < errors.length; i++) {
+            $('span[data-valmsg-for="' + errors[i].key + '"]').text(errors[i].errors[0]);
+        }
+    }
+
 </script>

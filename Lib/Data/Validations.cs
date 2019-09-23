@@ -29,4 +29,36 @@ namespace HlidacStatu.Lib.Data
         public DateTime? Narozeni;
         
     }
+
+    public class OsobaEventMetadata
+    {
+
+        [Required(ErrorMessage ="Prosím, vyplňte titulek.")]
+        [Display(Name = "Titulek")]
+        
+        public string Title { get; set; }
+
+        [Display(Name = "Popis")]
+        public string Description { get; set; }
+
+        [Required]
+        [Display(Name = "Prosím, vyberte typ události.")]
+        public int Type { get; set; }
+
+        [Display(Name = "Datum od")]
+        public DateTime? DatumOd { get; set; }
+
+        [Display(Name = "Datum do")]
+        public DateTime? DatumDo { get; set; }
+
+        [Display(Name = "Další informace")]
+        public string AddInfo { get; set; }
+
+        [Display(Name = "Částka")]
+        public decimal? AddInfoNum { get; set; }
+
+        [Display(Name = "Zdroj informace")]
+        public string Zdroj { get; set; }
+
+    }
 }
