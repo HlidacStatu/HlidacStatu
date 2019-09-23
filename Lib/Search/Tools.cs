@@ -238,15 +238,20 @@ namespace HlidacStatu.Lib.Search
                     if (!string.IsNullOrEmpty(replaceWith)
                         && (
                             lookFor.Contains("holding:")
+                            //RS
+                            || lookFor.Contains("holdingprijemce:")
+                            || lookFor.Contains("holdingplatce:")
+                            //insolvence
                             || lookFor.Contains("holdingdluznik:")
                             || lookFor.Contains("holdingveritel:")
                             || lookFor.Contains("holdingspravce:")
+                            //VZ
                             || lookFor.Contains("holdingdodavatel:")
                             || lookFor.Contains("holdingzadavatel:")
                         )
                         )
                     {
-                        //list of ICO connected to this person
+                        //list of ICO connected to this holding
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
                         string holdingIco = m.Groups["q"].Value;
                         HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;

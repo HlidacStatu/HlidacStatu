@@ -247,11 +247,86 @@ namespace HlidacStatu.Lib.Data
                 return false;
         }
 
-        public void Save()
+        public bool Delete()
         {
-            Lib.ES.Manager.Save(this);
+            var client = Lib.ES.Manager.GetESClient();
+            var res = client
+                .Delete<Lib.Data.Smlouva>(Id);
+            return res.IsValid;
         }
 
+        public bool Save()
+        {
+            var item = this;
+            if (item == null)
+                return false;
+
+            item.PrepareBeforeSave();
+            ElasticClient c = null;
+            if (c == null)
+            {
+                if (item.platnyZaznam)
+                    c = Lib.ES.Manager.GetESClient();
+                else
+                    c = Lib.ES.Manager.GetESClient_Sneplatne();
+            }
+            var res = c
+                //.Update<Lib.Data.Smlouva>()
+                .Index<Lib.Data.Smlouva>(item, m => m.Id(item.Id));
+
+            if (item.platnyZaznam == false && res.IsValid)
+            {
+                //zkontroluj zda neni v indexu s platnymi. pokud ano, smaz ho tam
+                var cExist = ES.Manager.GetESClient();
+                var s = Load(item.Id, cExist);
+                if (s != null)
+                    Delete();
+            }
+
+            if (res.IsValid)
+            {
+                try
+                {
+
+                    DirectDB.NoResult("exec smlouvaId_save @id,@active, @created, @updated",
+                        new System.Data.SqlClient.SqlParameter("id", item.Id),
+                        new System.Data.SqlClient.SqlParameter("created", item.casZverejneni),
+                        new System.Data.SqlClient.SqlParameter("updated", item.LastUpdate),
+                        new System.Data.SqlClient.SqlParameter("active", item.znepristupnenaSmlouva() ? (int)0 : (int)1)
+                        );
+                }
+                catch (Exception e)
+                {
+                    ES.Manager.ESLogger.Error("Manager Save", e);
+                }
+
+
+
+                if (!string.IsNullOrEmpty(item.Platce?.ico))
+                {
+                    DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
+                    new System.Data.SqlClient.SqlParameter("ico", item.Platce?.ico)
+                    );
+                }
+                if (!string.IsNullOrEmpty(item.VkladatelDoRejstriku?.ico))
+                {
+                    DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
+                    new System.Data.SqlClient.SqlParameter("ico", item.VkladatelDoRejstriku?.ico)
+                    );
+                }
+                foreach (var s in item.Prijemce ?? new Data.Smlouva.Subjekt[] { })
+                {
+                    if (!string.IsNullOrEmpty(s.ico))
+                    {
+                        DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
+                            new System.Data.SqlClient.SqlParameter("ico", s.ico)
+                            );
+                    }
+                }
+
+            }
+            return res.IsValid;
+        }
         public Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassification()
         {
             Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
@@ -1062,6 +1137,45 @@ namespace HlidacStatu.Lib.Data
             }
 
             return ids;
+        }
+
+        public static Smlouva Load(string idVerze, ElasticClient client = null)
+        {
+            try
+            {
+                ElasticClient c = client;
+                if (client == null)
+                    c = Lib.ES.Manager.GetESClient();
+
+                var res = c
+                    .Get<Lib.Data.Smlouva>(idVerze);
+                if (res.Found)
+                    return res.Source;
+                else
+                {
+                    if (client == null)
+                    {
+                        c = ES.Manager.GetESClient_Sneplatne();
+                    }
+                    res = c.Get<Lib.Data.Smlouva>(idVerze);
+                    if (res.Found)
+                        return res.Source;
+                    else
+                    {
+                        ES.Manager.ESLogger.Warning("Cannot load Smlouva Id " + idVerze, res.OriginalException);
+                        DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
+                    }
+
+                    return null;
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                ES.Manager.ESLogger.Error("Cannot load Smlouva Id " + idVerze, e);
+                return null;
+            }
         }
 
         public static IEnumerable<string> AllIdsFromES()

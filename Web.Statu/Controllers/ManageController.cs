@@ -393,6 +393,13 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [Authorize(Roles = "canEditData")]
+        public ActionResult ShowClassification(string id, bool force = false)
+        {
+
+            return View(new Tuple<string,bool>(id, force));
+        }
+
+        [Authorize(Roles = "canEditData")]
         public ActionResult Reviews(string id, string a, string reason)
         {
             var model = new List<Review>();

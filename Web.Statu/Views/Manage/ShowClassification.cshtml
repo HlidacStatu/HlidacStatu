@@ -1,0 +1,67 @@
+﻿@model Tuple<string, bool>
+@using Devmasters.Core;
+@{
+    ViewBag.Title = "Ukaž klasifikaci smlouvy";
+    HlidacStatu.Lib.Data.Smlouva sml = null;
+    Dictionary<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> classif = null;
+    Exception exc = null;
+    try
+    {
+        sml = HlidacStatu.Lib.Data.Smlouva.Load(Model.Item1);
+        classif = sml?.GetClassification();
+
+    }
+    catch (Exception e)
+    {
+
+        exc = e;
+    }
+}
+
+@if (sml == null)
+{
+    <h2>Smlouva nenalezena</h2>
+
+    return;
+}
+
+@if (classif == null)
+{
+    <h2>Zadna klasifikace</h2>
+    return;
+}
+
+<table class="table table-new table-new--dotted table-hover">
+    <tbody>
+        <tr>
+            <td>
+                Smlouva
+            </td>
+            <td>
+                <div>Zveřejněna <b>@sml.casZverejneni.ToShortDateString() @(sml.casZverejneni.ToLongTimeString())</b></div>
+                <div>
+                    ID smlouvy @(sml.identifikator.idSmlouvy)
+                </div>
+                <div>ID Verze: @(sml.identifikator.idVerze)</div>
+                <div>
+                    Uzavřena @sml.datumUzavreni.ToShortDateString(), číslo smlouvy @sml.cisloSmlouvy
+                    @Util.IfExists(sml.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", sml.navazanyZaznam))
+                    @Util.IfExists(sml.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(sml.schvalil), sml.schvalil))
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Odkaz na smlouvu</td>
+            <td><a href="@sml.GetUrl(false)">@sml.GetUrl(false)</a></td>
+        </tr>
+        <tr>
+            <td>Nalezené klasifikace</td>
+            <td><textarea rows="13" style="width:100%">
+@foreach (var cl in classif)
+{
+    @Html.Raw(cl.Key.ToNiceDisplayName() + "\t" + cl.Value + "\n")
+}
+</textarea></td>
+        </tr>
+    </tbody>
+</table>

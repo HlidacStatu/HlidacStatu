@@ -69,7 +69,7 @@
                             .Where(m=> HlidacStatu.Util.DateTools.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
                             .OrderBy(e=>e.NumberOfDaysFromToday())
                             .ThenByDescending(e=>e.LengthOfEdgeInDays())
-                            .FirstOrDefault();
+                            .FirstOrDefault(); //TODO zmena na vsechna obdobi
                         if (foundE != null)
                         {
                             edges.Add(foundE);

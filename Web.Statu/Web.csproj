@@ -1334,6 +1334,7 @@
     <Content Include="Views\Insolvence\PristupOmezen.cshtml" />
     <Content Include="Views\Shared\Bot.cshtml" />
     <Content Include="Views\Insolvence\Index.Content.cshtml" />
+    <Content Include="Views\Manage\ShowClassification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

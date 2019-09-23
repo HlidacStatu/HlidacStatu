@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.ES
             Logs,
             //DataSourceDb,
             DataSource,
-			Insolvence
+            Insolvence
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -43,8 +43,8 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
         public static string defaultIndexName_Firmy = "firmy";
         public static string defaultIndexName_Logs = "logs";
-		//public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
-		public static string defaultIndexName_Insolvence = "insolvencnirestrik";
+        //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
+        public static string defaultIndexName_Insolvence = "insolvencnirestrik";
 
 
         private static object _clientLock = new object();
@@ -118,12 +118,12 @@ namespace HlidacStatu.Lib.ES
                 );
         }
 
-		public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
-		{
-			return GetESClient(defaultIndexName_Insolvence, timeOut, connectionLimit, IndexType.Insolvence);
-		}
+        public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_Insolvence, timeOut, connectionLimit, IndexType.Insolvence);
+        }
 
-		public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
+        public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Firmy, timeOut, connectionLimit, IndexType.Firmy);
         }
@@ -369,11 +369,11 @@ namespace HlidacStatu.Lib.ES
             res = client
                 .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
                     .InitializeUsing(idxSt)
-                    .Mappings(m => m.Map("data",mm=>mm
-                        .Properties(ps=>ps
-                            .Date(psn=>psn.Name("DbCreated"))
-                            .Keyword(psn=>psn.Name("DbCreatedBy"))
-                            )
+                    .Mappings(m => m.Map("data", mm => mm
+                         .Properties(ps => ps
+                             .Date(psn => psn.Name("DbCreated"))
+                             .Keyword(psn => psn.Name("DbCreatedBy"))
+                             )
                         )
                     )
                 );
@@ -458,7 +458,7 @@ namespace HlidacStatu.Lib.ES
                        .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Mappings(m => m
-                                .Map<Data.Firma.Search.FirmaInElastic>(map=>map.AutoMap(maxRecursion:1))
+                                .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
                                )
                        );
                     break;
@@ -512,8 +512,8 @@ namespace HlidacStatu.Lib.ES
         //    return res;
         //}
 
-        
 
+        [Obsolete()]
         public static Nest.IIndexResponse Save(Lib.Data.Smlouva item, ElasticClient client = null)
         {
             if (item == null)
@@ -587,6 +587,7 @@ namespace HlidacStatu.Lib.ES
         }
 
 
+        [System.Obsolete()]
         public static Lib.Data.Smlouva Load(string Id, ElasticClient client = null)
         {
             try
@@ -643,6 +644,7 @@ namespace HlidacStatu.Lib.ES
         //}
 
 
+        [System.Obsolete()]
         public static bool Delete(string Id, ElasticClient client = null)
         {
             if (client == null)

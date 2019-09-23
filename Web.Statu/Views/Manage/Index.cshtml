@@ -74,6 +74,11 @@
             @if (this.User.IsInRole("canEditData"))
             {
                 <dl>
+                    <dt>Klasifikace smluv</dt>
+                    <dd><form action="showclassification" method="get"><input type="text" id="id" name="id" value="" placeholder="ID smlouvy" >
+                        <input type="submit" value="Ukaz" /></form></dd>
+                </dl>
+                <dl>
                     <dt>Reviews:</dt>
                     <dd>
                         <a href="/manage/reviews">Reviews</a>
