@@ -36,16 +36,14 @@ namespace HlidacStatu.Lib.Data
 
         public enum Types
         {
-            Popis = 0,
-            Poslanec = 1,
-            Senator = 2,
+            Jina = 0,
+            VolenaFunkce = 1,
+            SoukromaPracovni = 2,
             Sponzor = 3,
-            OsobniVztah = 4,
-            Pribuzny = 5,
-            StatniUrednik = 6,
-            PolitickaFunkce = 7,
-            ClenStrany = 8,
-            SponzorZuctu = 33 //sponzor z transparentniho uctu
+            Osobni = 4,
+            VerejnaSpravaPracovni = 6,
+            Politicka = 7,
+            PolitickaPracovni = 9
         }
 
         public void SetYearInterval(int year)
@@ -53,6 +51,45 @@ namespace HlidacStatu.Lib.Data
             this.DatumOd = new DateTime(year, 1, 1);
             this.DatumDo = new DateTime(year, 12, 31);
         }
+
+        public string TypeName
+        {
+            get
+            {
+                using (Lib.Data.DbEntities db = new Data.DbEntities())
+                {
+                    string result = db.EventType
+                    .Where(type =>
+                        type.Id == this.Type
+                    )
+                    .Select(type => type.Name)
+                    .FirstOrDefault();
+
+                    return result;
+                }
+            }
+        }
+        public string SubTypeName
+        {
+            get
+            {
+                if (this.SubType is null)
+                    return "";
+                using (Lib.Data.DbEntities db = new Data.DbEntities())
+                {
+                    string result = db.EventSubType
+                    .Where(subType =>
+                        subType.EventTypeId == this.Type &&
+                        subType.Id == this.SubType
+                    )
+                    .Select(subtype => subtype.NameMale)
+                    .FirstOrDefault();
+
+                    return result;
+                }
+            }
+        }
+
 
         public static OsobaEvent GetById(int id)
         {
@@ -120,23 +157,18 @@ namespace HlidacStatu.Lib.Data
             StringBuilder sb = new StringBuilder();
             switch ((Types)this.Type)
             {
-                case Types.ClenStrany:
+                case Types.Politicka:
                     sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
                     return sb.ToString();
-                case Types.Poslanec:
-                    sb.AppendFormat("Poslanec {0} ", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
-                        sb.Append(" za " + PolitickaStrana);
-                    return sb.ToString();
-                case Types.Senator:
-                    sb.AppendFormat("Senator {0} ", this.RenderDatum());
+                // poslanec a senátor sloučeni
+                case Types.VolenaFunkce:
+                    sb.Append($"{this.SubTypeName} {this.RenderDatum()} ");
                     if (!string.IsNullOrEmpty(this.PolitickaStrana))
                         sb.Append(" za " + PolitickaStrana);
                     return sb.ToString();
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum)  : "");
-                case Types.OsobniVztah:
-                case Types.Pribuzny:
+                case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
@@ -148,7 +180,7 @@ namespace HlidacStatu.Lib.Data
                     else
                         return this.Title + " " + Description;
 
-                case Types.Popis:
+                case Types.Jina:
                 default:
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Description))
                         return this.Title + delimeter + this.Description;
@@ -177,23 +209,18 @@ namespace HlidacStatu.Lib.Data
             StringBuilder sb = new StringBuilder();
             switch ((Types)this.Type)
             {
-                case Types.ClenStrany:
+                case Types.Politicka:
                     sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
                     return sb.ToString();
-                case Types.Poslanec:
-                    sb.AppendFormat("Poslanec {0}", this.RenderDatum());
-                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
-                        sb.Append(" za " + PolitickaStrana);
-                    return sb.ToString() + zdroj;
-                case Types.Senator:
-                    sb.AppendFormat("Poslanec {0}", this.RenderDatum());
+                // poslanec a senátor sloučeni
+                case Types.VolenaFunkce:
+                    sb.Append($"{this.SubTypeName} {this.RenderDatum()} ");
                     if (!string.IsNullOrEmpty(this.PolitickaStrana))
                         sb.Append(" za " + PolitickaStrana);
                     return sb.ToString() + zdroj;
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
-                case Types.OsobniVztah:
-                case Types.Pribuzny:
+                case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
@@ -205,7 +232,7 @@ namespace HlidacStatu.Lib.Data
                     else
                         return this.Title + " " + Description + zdroj;
 
-                case Types.Popis:
+                case Types.Jina:
                 default:
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Description))
                         return this.Title + delimeter + this.Description + zdroj;

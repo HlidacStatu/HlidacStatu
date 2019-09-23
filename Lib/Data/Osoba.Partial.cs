@@ -146,11 +146,10 @@ namespace HlidacStatu.Lib.Data
             string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
             var fixedOrder = new List<int>() {
-                (int)OsobaEvent.Types.PolitickaFunkce,
-                (int)OsobaEvent.Types.Poslanec,
-                (int)OsobaEvent.Types.Senator,
-                (int)OsobaEvent.Types.StatniUrednik,
-                (int)OsobaEvent.Types.ClenStrany
+                (int)OsobaEvent.Types.PolitickaPracovni,
+                (int)OsobaEvent.Types.VolenaFunkce,
+                (int)OsobaEvent.Types.VerejnaSpravaPracovni,
+                (int)OsobaEvent.Types.Politicka
         };
             StringBuilder sb = new StringBuilder();
             var events = this.Events(predicate);
@@ -809,13 +808,13 @@ namespace HlidacStatu.Lib.Data
         {
             if (deletePrevious)
             {
-                var oes = this.Events(m => m.Type == (int)OsobaEvent.Types.Popis);
+                var oes = this.Events(m => m.Type == (int)OsobaEvent.Types.Jina);
                 foreach (var o in oes)
                 {
                     o.Delete(user, true);
                 }
             }
-            OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Popis);
+            OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Jina);
             oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             return AddOrUpdateEvent(oe, user);
@@ -823,7 +822,7 @@ namespace HlidacStatu.Lib.Data
 
         public OsobaEvent AddFunkce(string pozice, string strana, int rokOd, int? rokDo, string zdroj, string user)
         {
-            OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("{0}", pozice), "", OsobaEvent.Types.PolitickaFunkce);
+            OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("{0}", pozice), "", OsobaEvent.Types.PolitickaPracovni);
             oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             oe.DatumOd = new DateTime(rokOd, 1, 1, 0, 0, 0, DateTimeKind.Local);
@@ -833,7 +832,7 @@ namespace HlidacStatu.Lib.Data
 
         public OsobaEvent AddClenStrany(string strana, int rokOd, int? rokDo, string zdroj, string user)
         {
-            OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Člen strany {0}", strana), "", OsobaEvent.Types.ClenStrany);
+            OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Člen strany {0}", strana), "", OsobaEvent.Types.Politicka);
             oe.PolitickaStrana = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             oe.DatumOd = new DateTime(rokOd, 1, 1, 0, 0, 0, DateTimeKind.Local);
@@ -908,8 +907,10 @@ namespace HlidacStatu.Lib.Data
         public OsobaEvent AddSponsoring(string strana, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
         {
             var t = OsobaEvent.Types.Sponzor;
-            if (zdroj?.Contains("https://www.hlidacstatu.cz/ucty/transakce/") == true)
-                t = OsobaEvent.Types.SponzorZuctu;
+
+            // Pokud dobře chápu, tak tohle zaniká
+            //if (zdroj?.Contains("https://www.hlidacstatu.cz/ucty/transakce/") == true)
+            //    t = OsobaEvent.Types.SponzorZuctu;
 
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Sponzor {0}", strana), "", t);
             oe.AddInfoNum = castka;
