@@ -951,8 +951,7 @@ namespace HlidacStatu.Web.Controllers
                 //if (dDo.HasValue == false)
                 //    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { valid = false, error = "Invalid date format DoDatum. Use yyyy-MM-dd format." }), "application/json");
 
-                return AddEvent(auth, nameId, OsobaEvent.Types.Poslanec, "", "", strana, null, dOd, dDo, zdroj);
-
+                return AddEvent(auth, nameId, OsobaEvent.Types.VolenaFunkce, "", "", strana, null, dOd, dDo, zdroj, (int)OsobaEvent.SubTypes.Poslanec);
             }
             else
             {
@@ -972,8 +971,7 @@ namespace HlidacStatu.Web.Controllers
                 //if (dDo.HasValue == false)
                 //    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { valid = false, error = "Invalid date format DoDatum. Use yyyy-MM-dd format." }), "application/json");
 
-                return AddEvent(auth, nameId, OsobaEvent.Types.Senator, "", "", strana, null, dOd, dDo, zdroj);
-
+                return AddEvent(auth, nameId, OsobaEvent.Types.VolenaFunkce, "", "", strana, null, dOd, dDo, zdroj, (int)OsobaEvent.SubTypes.Senator);
             }
             else
             {
@@ -983,18 +981,19 @@ namespace HlidacStatu.Web.Controllers
 
 
         private ActionResult AddEvent(Framework.ApiAuth.Result auth, string nameId, OsobaEvent.Types type, string title, string description,
-            string addInfo, decimal? addInfoNum, DateTime? odDatum, DateTime? doDatum, string zdroj)
+            string politickaStrana, decimal? addInfoNum, DateTime? odDatum, DateTime? doDatum, string zdroj, int? subtype)
         {
             Osoba o = Osoba.GetByNameId(nameId);
             if (o == null)
                 return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { valid = false, error = "Invalid nameId. Osoba not found" }), "application/json");
 
             OsobaEvent oe = new OsobaEvent(o.InternalId, title, description, type);
-            oe.PolitickaStrana = addInfo;
+            oe.PolitickaStrana = politickaStrana;
             oe.AddInfoNum = addInfoNum;
             oe.DatumOd = odDatum;
             oe.DatumDo = doDatum;
             oe.Zdroj = zdroj;
+            oe.SubType = subtype;
             o.AddOrUpdateEvent(oe, auth.ApiCall.User);
 
             return Content(Newtonsoft.Json.JsonConvert.SerializeObject(

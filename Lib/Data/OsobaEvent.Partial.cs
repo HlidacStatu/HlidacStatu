@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Devmasters.Core;
-
+using HlidacStatu.Util;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -46,12 +46,32 @@ namespace HlidacStatu.Lib.Data
             PolitickaPracovni = 9
         }
 
+        public enum SubTypes
+        {
+            Prezident = 1,
+            Poslanec = 2,
+            Senator = 3,
+            ClenKrajskehoZastupitelstva = 4,
+            ClenObecnihoZastupitelstva = 5,
+            ClenNarodnihoVyboru = 6,
+            PoslanecEvropskehoParlamentu = 7,
+            PredsedaPoslaneckeSnemovnyParlamentuCR = 8,
+            PredsedaSenatuParlamentuCR = 9,
+            MistopredsedaPoslaneckeSnemovnyParlamentuCR = 10,
+            MistopredsedaSenatuParlamentuCR = 11,
+            PredsedaVladyCR = 12,
+            MistopredsedaVladyCR = 13,
+            MinistrVladyCR = 14,
+            StarostaPrimator = 15
+        }
+
         public void SetYearInterval(int year)
         {
             this.DatumOd = new DateTime(year, 1, 1);
             this.DatumDo = new DateTime(year, 12, 31);
         }
 
+        // není nejrychlejší, ale asi stačí
         public string TypeName
         {
             get
@@ -69,6 +89,8 @@ namespace HlidacStatu.Lib.Data
                 }
             }
         }
+
+        // není nejrychlejší
         public string SubTypeName
         {
             get
@@ -103,13 +125,29 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static OsobaEvent Create(OsobaEvent osobaEvent, string user)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                if (osobaEvent.OsobaId > 0)
+                {
+                    osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
+                    osobaEvent.Created = DateTime.Now;
+                    db.OsobaEvent.Add(osobaEvent);
+                    Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
+                    db.SaveChanges();
+                }
+                return osobaEvent;
+            }
+        }
+
         public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
                 var eventToUpdate = db.OsobaEvent
-                .Where(m =>
-                    m.pk == osobaEvent.pk
+                .Where(ev =>
+                    ev.pk == osobaEvent.pk
                 ).FirstOrDefault();
 
                 var eventOriginal = eventToUpdate.ShallowCopy();
@@ -118,27 +156,16 @@ namespace HlidacStatu.Lib.Data
                 {
                     eventToUpdate.DatumOd = osobaEvent.DatumOd;
                     eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                    eventToUpdate.PolitickaStrana = osobaEvent.PolitickaStrana;
+                    eventToUpdate.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
                     eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
                     eventToUpdate.Title = osobaEvent.Title;
                     eventToUpdate.Type = osobaEvent.Type;
                     eventToUpdate.Zdroj = osobaEvent.Zdroj;
 
-                    eventToUpdate.Created =  DateTime.Now;
+                    eventToUpdate.Created = DateTime.Now;
 
                     Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!db.OsobaEvent.Any(os => os.pk == osobaEvent.pk))
-                        {
-                            // lognout tady - pravděpodobně někdo stihnul osobu smáznout během updatu.
-                        }
-                        throw;
-                    }
+                    db.SaveChanges();
 
                     return eventToUpdate;
                 }
@@ -167,7 +194,7 @@ namespace HlidacStatu.Lib.Data
                         sb.Append(" za " + PolitickaStrana);
                     return sb.ToString();
                 case Types.Sponzor:
-                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum)  : "");
+                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
                     {

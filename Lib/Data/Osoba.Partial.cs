@@ -866,6 +866,7 @@ namespace HlidacStatu.Lib.Data
                                 .FirstOrDefault(m =>
                                         m.OsobaId == this.InternalId
                                         && m.Type == ev.Type
+                                        && m.SubType == ev.SubType
                                         && m.PolitickaStrana == ev.PolitickaStrana
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd

@@ -26,6 +26,7 @@ namespace HlidacStatu.Lib.Data
         public string TitulPo;
 
         [Display(Name = "Narození")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? Narozeni;
         
     }
@@ -35,20 +36,21 @@ namespace HlidacStatu.Lib.Data
 
         [Required(ErrorMessage ="Prosím, vyplňte titulek.")]
         [Display(Name = "Titulek")]
-        
         public string Title { get; set; }
 
         [Display(Name = "Popis")]
         public string Description { get; set; }
 
-        [Required]
-        [Display(Name = "Prosím, vyberte typ události.")]
+        [Required(ErrorMessage = "Prosím, vyberte typ události.")]
+        [Display(Name = "Typ")]
         public int Type { get; set; }
 
         [Display(Name = "Datum od")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? DatumOd { get; set; }
 
         [Display(Name = "Datum do")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? DatumDo { get; set; }
 
         [Display(Name = "Další informace")]

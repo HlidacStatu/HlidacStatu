@@ -2,6 +2,7 @@
 using HlidacStatu.Util;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -48,7 +49,7 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreatePerson([Bind(Include = "TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Status")] Osoba osoba)
+        public ActionResult CreatePerson(Osoba osoba)
         {
             if (ModelState.IsValid)
             {
@@ -97,47 +98,54 @@ namespace HlidacStatu.Web.Controllers
             return View(osoba);
         }
 
-
-        // add create event
-
-
-
-        // tohle dodělat až potom co rozšířím strukturu
-        [Authorize(Roles = "canEditData")]
-        public ActionResult EditPersonEvent(int? id)
-        {
-            if (id == null) return RedirectToAction(nameof(FindPerson));
-            OsobaEvent osobaEvent = OsobaEvent.GetById(id ?? 0);
-            
-            return View(osobaEvent);
-        }
-
-        // add create event
-
         [Authorize(Roles = "canEditData")]
         [HttpPost]
-        public JsonResult UpdateEvent(string id, OsobaEvent osobaEvent)
+        public JsonResult UpdateEvent(OsobaEvent osobaEvent)
         {
             if(ModelState.IsValid)
             {
                 var result = OsobaEvent.Update(osobaEvent, this.User.Identity.Name);
                 return Json(new { Success = true });
             }
-            // https://stackoverflow.com/questions/14005773/use-asp-net-mvc-validation-with-jquery-ajax
 
-            var errorModel =
-                    from x in ModelState.Keys
-                    where ModelState[x].Errors.Count > 0
-                    select new
-                    {
-                        key = x,
-                        errors = ModelState[x].Errors.
-                                                      Select(y => y.ErrorMessage).
-                                                      ToArray()
-                    };
+            var errorModel = GetModelErrorsJSON();
+     
+            Response.StatusCode = 400;
+            return new JsonResult() { Data = errorModel };
+        }
+
+        [Authorize(Roles = "canEditData")]
+        [HttpPost]
+        public JsonResult CreateEvent(OsobaEvent osobaEvent)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = OsobaEvent.Create(osobaEvent, this.User.Identity.Name);
+                return Json(new { Success = true });
+            }
+
+            var errorModel = GetModelErrorsJSON();
+                    
 
             Response.StatusCode = 400;
             return new JsonResult() { Data = errorModel };
+        }
+
+        private IEnumerable<ErrorModel> GetModelErrorsJSON()
+        {
+            return from x in ModelState.Keys
+                   where ModelState[x].Errors.Count > 0
+                   select new ErrorModel()
+                   {
+                       key = x,
+                       errors = ModelState[x].Errors.Select(y => y.ErrorMessage).ToArray()
+                   };
+        }
+
+        private class ErrorModel
+        {
+            public string key { get; set; }
+            public string[] errors { get; set; }
         }
     }
 }

@@ -113,6 +113,7 @@ namespace HlidacStatu.Lib.Data
                     ev.Description = e.Description;
                     ev.Title = e.Title;
                     ev.Type = (int)e.Typ;
+                    ev.SubType = (int)e.SubTyp;
                     ev.Zdroj = e.Zdroj;
                     ev.OsobaId = o.InternalId;                    
                     o.AddOrUpdateEvent(ev,user);
@@ -261,6 +262,13 @@ namespace HlidacStatu.Lib.Data
                 [JsonProperty("typ", Required = Required.Default)]
                 [JsonConverter(typeof(StringEnumConverter))]
                 public OsobaEvent.Types Typ
+                {
+                    get; set;
+                }
+
+                [JsonProperty("subtyp", Required = Required.Default)]
+                [JsonConverter(typeof(StringEnumConverter))]
+                public OsobaEvent.SubTypes SubTyp
                 {
                     get; set;
                 }
