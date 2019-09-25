@@ -114,22 +114,22 @@ namespace HlidacStatu.Web.Controllers
             return new JsonResult() { Data = errorModel };
         }
 
-        [Authorize(Roles = "canEditData")]
-        [HttpPost]
-        public JsonResult CreateEvent(OsobaEvent osobaEvent)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = OsobaEvent.Create(osobaEvent, this.User.Identity.Name);
-                return Json(new { Success = true });
-            }
+        //[Authorize(Roles = "canEditData")]
+        //[HttpPost]
+        //public JsonResult CreateEvent(OsobaEvent osobaEvent)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = OsobaEvent.Create(osobaEvent, this.User.Identity.Name);
+        //        return Json(new { Success = true });
+        //    }
 
-            var errorModel = GetModelErrorsJSON();
+        //    var errorModel = GetModelErrorsJSON();
                     
 
-            Response.StatusCode = 400;
-            return new JsonResult() { Data = errorModel };
-        }
+        //    Response.StatusCode = 400;
+        //    return new JsonResult() { Data = errorModel };
+        //}
 
         private IEnumerable<ErrorModel> GetModelErrorsJSON()
         {

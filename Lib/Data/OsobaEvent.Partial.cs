@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Data
 {
     [MetadataType(typeof(OsobaEventMetadata))]
     public partial class OsobaEvent
-        : Audit.IAuditable
+        : Audit.IAuditable, IValidatableObject
     {
 
         private static ObjectsComparer.Comparer<OsobaEvent> comparer = new ObjectsComparer.Comparer<OsobaEvent>();
@@ -125,49 +125,66 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static OsobaEvent Create(OsobaEvent osobaEvent, string user)
+        //public static OsobaEvent Create(OsobaEvent osobaEvent, string user)
+        //{
+        //    using (Lib.Data.DbEntities db = new Data.DbEntities())
+        //    {
+        //        if (osobaEvent.OsobaId > 0)
+        //        {
+        //            osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
+        //            osobaEvent.Created = DateTime.Now;
+        //            db.OsobaEvent.Add(osobaEvent);
+        //            Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
+        //            db.SaveChanges();
+        //        }
+        //        return osobaEvent;
+        //    }
+        //}
+
+        public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
-                if (osobaEvent.OsobaId > 0)
+                // create
+                if (osobaEvent.pk == 0 && osobaEvent.OsobaId > 0)
                 {
                     osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
                     osobaEvent.Created = DateTime.Now;
                     db.OsobaEvent.Add(osobaEvent);
                     Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
                     db.SaveChanges();
+                    return osobaEvent;
                 }
-                return osobaEvent;
-            }
-        }
 
-        public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
-        {
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
-            {
-                var eventToUpdate = db.OsobaEvent
-                .Where(ev =>
-                    ev.pk == osobaEvent.pk
-                ).FirstOrDefault();
-
-                var eventOriginal = eventToUpdate.ShallowCopy();
-
-                if (eventToUpdate != null)
+                // update
+                if (osobaEvent.pk > 0)
                 {
-                    eventToUpdate.DatumOd = osobaEvent.DatumOd;
-                    eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                    eventToUpdate.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
-                    eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
-                    eventToUpdate.Title = osobaEvent.Title;
-                    eventToUpdate.Type = osobaEvent.Type;
-                    eventToUpdate.Zdroj = osobaEvent.Zdroj;
+                    var eventToUpdate = db.OsobaEvent
+                    .Where(ev =>
+                        ev.pk == osobaEvent.pk
+                    ).FirstOrDefault();
 
-                    eventToUpdate.Created = DateTime.Now;
+                    var eventOriginal = eventToUpdate.ShallowCopy();
 
-                    Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
-                    db.SaveChanges();
+                    if (eventToUpdate != null)
+                    {
+                        eventToUpdate.DatumOd = osobaEvent.DatumOd;
+                        eventToUpdate.DatumDo = osobaEvent.DatumDo;
+                        eventToUpdate.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
+                        eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
+                        eventToUpdate.AddInfo = osobaEvent.AddInfo;
+                        eventToUpdate.Title = osobaEvent.Title;
+                        eventToUpdate.Type = osobaEvent.Type;
+                        eventToUpdate.SubType = osobaEvent.SubType;
+                        eventToUpdate.Zdroj = osobaEvent.Zdroj;
 
-                    return eventToUpdate;
+                        eventToUpdate.Created = DateTime.Now;
+
+                        Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
+                        db.SaveChanges();
+
+                        return eventToUpdate;
+                    }
                 }
             }
             return osobaEvent;
@@ -323,6 +340,16 @@ namespace HlidacStatu.Lib.Data
         public static bool Compare(OsobaEvent a, OsobaEvent b)
         {
             return comparer.Compare(a, b);
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!EventSubType.IsValidSubtype(this.Type, this.SubType))
+            {
+                yield return new ValidationResult(
+                    $"Zvolený podtyp nepatří ke zvolenému typu.",
+                    new[] { nameof(Type), nameof(SubType) });
+            }
         }
     }
 }

@@ -8,118 +8,133 @@
                       .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
                       .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
                       .ToList();
+    //var subTypeList = Devmasters.Core.Enums
+    //                  .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.SubTypes))
+    //                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key,  })
+    //                  .ToList();
 
+    var subTypeList = Newtonsoft.Json.JsonConvert.SerializeObject(HlidacStatu.Lib.Data.EventSubType.GetListItems());
+    var castkuZobrazitPro = Newtonsoft.Json.JsonConvert.SerializeObject(new[] { (int)OsobaEvent.Types.Sponzor });
 }
 
 <h2>PersonDetail</h2>
-
-<div class="col-xs-12">
-    <h4>Osoba</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>@Html.DisplayNameFor(model => model.TitulPred)</dt>
-        <dd>@Model.TitulPred</dd>
-        <dt>@Html.DisplayNameFor(model => model.Jmeno)</dt>
-        <dd>@Model.Jmeno</dd>
-        <dt>@Html.DisplayNameFor(model => model.Prijmeni)</dt>
-        <dd>@Model.Prijmeni</dd>
-        <dt>@Html.DisplayNameFor(model => model.TitulPo)</dt>
-        <dd>@Model.TitulPo</dd>
-        <dt>@Html.DisplayNameFor(model => model.Narozeni)</dt>
-        <dd>@(Model.Narozeni?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
-        <dt>@Html.DisplayNameFor(model => model.Umrti)</dt>
-        <dd>@(Model.Umrti?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
-        <dt>@Html.DisplayNameFor(model => model.Status)</dt>
-        <dd>@(((HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum)Model.Status).ToNiceDisplayName())</dd>
-        <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
-        <dd>@Model.LastUpdate</dd>
-    </dl>
-    <p>
-        @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
-    </p>
-</div>
-<div class="col-xs-12">
-    <h4>Události</h4>
-    <hr />
-    <button type="button"
-            class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#eventModal"
-            data-personid="@Model.InternalId"
-            data-eventid=""
-            data-datumod=""
-            data-datumdo=""
-            data-titulek=""
-            data-polstr=""
-            data-castka=""
-            data-typ=""
-            data-zdroj=""
-            data-action="create">
-        Přidat event
-    </button>
-    @if (Model.Events().Count() > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Datum od</th>
-                    <th>Datum do</th>
-                    <th>Titulek</th>
-                    <th>Politická strana</th>
-                    <th>Částka</th>
-                    <th>Typ události</th>
-                    <th>Zdroj</th>
-                    <th>akce</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var udalost in Model.Events())
-                {
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Osoba</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>@Html.DisplayNameFor(model => model.TitulPred)</dt>
+            <dd>@Model.TitulPred</dd>
+            <dt>@Html.DisplayNameFor(model => model.Jmeno)</dt>
+            <dd>@Model.Jmeno</dd>
+            <dt>@Html.DisplayNameFor(model => model.Prijmeni)</dt>
+            <dd>@Model.Prijmeni</dd>
+            <dt>@Html.DisplayNameFor(model => model.TitulPo)</dt>
+            <dd>@Model.TitulPo</dd>
+            <dt>@Html.DisplayNameFor(model => model.Narozeni)</dt>
+            <dd>@(Model.Narozeni?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
+            <dt>@Html.DisplayNameFor(model => model.Umrti)</dt>
+            <dd>@(Model.Umrti?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
+            <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+            <dd>@(((HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum)Model.Status).ToNiceDisplayName())</dd>
+            <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
+            <dd>@Model.LastUpdate</dd>
+        </dl>
+        <p>
+            @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
+        </p>
+    </div>
+    <div class="col-xs-12">
+        <h4>Události</h4>
+        <hr />
+        <button type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#eventModal"
+                data-personid="@Model.InternalId"
+                data-eventid="0"
+                data-datumod=""
+                data-datumdo=""
+                data-titulek=""
+                data-polstr=""
+                data-castka=""
+                data-addinfo=""
+                data-typ=""
+                data-subtyp=""
+                data-zdroj=""
+                data-action="create">
+            Přidat event
+        </button>
+        @if (Model.Events().Count() > 0)
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
-                        </td>
-                        <td>
-                            @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => udalost.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => udalost.PolitickaStrana)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => udalost.AddInfoNum)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => udalost.TypeName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => udalost.Zdroj)
-                        </td>
-                        <td>
-                            <button type="button"
-                                    class="btn btn-primary"
-                                    data-toggle="modal"
-                                    data-target="#eventModal"
-                                    data-personid="@Model.InternalId"
-                                    data-eventid="@udalost.pk"
-                                    data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
-                                    data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
-                                    data-titulek="@udalost.Title"
-                                    data-polstr="@udalost.PolitickaStrana"
-                                    data-castka="@(udalost.AddInfoNum?.ToString("0"))"
-                                    data-typ="@udalost.Type"
-                                    data-zdroj="@udalost.Zdroj"
-                                    data-action="edit">
-                                Editovat
-                            </button>
-                        </td>
+                        <th>Datum od</th>
+                        <th>Datum do</th>
+                        <th>Titulek</th>
+                        <th>Politická strana</th>
+                        <th>Částka</th>
+                        <th>Typ události</th>
+                        <th>Podtyp události</th>
+                        <th>Zdroj</th>
+                        <th>akce</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
+                </thead>
+                <tbody>
+                    @foreach (var udalost in Model.Events())
+                    {
+                        <tr>
+                            <td>
+                                @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
+                            </td>
+                            <td>
+                                @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.PolitickaStrana)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.AddInfoNum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.TypeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.SubTypeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => udalost.Zdroj)
+                            </td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#eventModal"
+                                        data-personid="@Model.InternalId"
+                                        data-eventid="@udalost.pk"
+                                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                                        data-titulek="@udalost.Title"
+                                        data-polstr="@udalost.PolitickaStrana"
+                                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                                        data-addinfo="@udalost.AddInfo"
+                                        data-typ="@udalost.Type"
+                                        data-subtyp="@udalost.SubType"
+                                        data-zdroj="@udalost.Zdroj"
+                                        data-action="edit">
+                                    Editovat
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
 </div>
 <p>
 
@@ -143,34 +158,30 @@
                     <input type="hidden" id="eventId" value="0" />
                     <input type="hidden" id="personId" value="0" />
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label text-box single-line">Datum od:</label>
+                        <label for="datumOd" class="col-form-label text-box single-line">Datum od:</label>
                         <input type="datetime" class="form-control" id="datumOd">
                         <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label text-box single-line">Datum do:</label>
+                        <label for="datumDo" class="col-form-label text-box single-line">Datum do:</label>
                         <input type="datetime" class="form-control" id="datumDo">
                         <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Titulek:</label>
+                        <label for="titulek" class="col-form-label">Titulek:</label>
                         <input type="text" class="form-control" id="titulek">
                         <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Politická strana:</label>
+                        <label for="polstr" class="col-form-label">Politická strana:</label>
                         <input type="text" class="form-control" id="polstr">
                         <span class="field-validation-valid text-danger" data-valmsg-for="PolitickaStrana" data-valmsg-replace="true"></span>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Částka:</label>
-                        <input type="text" class="form-control" id="castka">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Typ události:</label>
+                        <label for="typ" class="col-form-label">Typ události:</label>
                         @*<input type="text" class="form-control" id="typ">*@
-                        <select class="form-control" id="typ">
+                        <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
                             @for (int i = 0; i < typeList.Count; i++)
                             {
                                 <option value="@typeList[i].Value">@typeList[i].Text</option>
@@ -178,8 +189,23 @@
                         </select>
                         <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
                     </div>
+                    <div class="form-group" id="subtyp_toggle">
+                        <label for="subtyp" class="col-form-label">Podtyp události:</label>
+                        <select class="form-control" id="subtyp"></select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="SubType" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group" id="castka_toggle">
+                        <label for="castka" class="col-form-label">Částka:</label>
+                        <input type="text" class="form-control" id="castka">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group" id="addInfo_toggle">
+                        <label for="addInfo" class="col-form-label">Podrobnosti:</label>
+                        <input type="text" class="form-control" id="addInfo">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
+                    </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Zdroj:</label>
+                        <label for="zdroj" class="col-form-label">Zdroj:</label>
                         <input type="text" class="form-control" id="zdroj">
                         <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
                     </div>
@@ -189,7 +215,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zrušit</button>
-                <button type="button" class="btn btn-primary" id="sendButton">Uložit</button>
+                <button type="button" onclick="editEvent();" class="btn btn-primary" id="sendButton">Uložit</button>
             </div>
         </div>
     </div>
@@ -209,18 +235,20 @@
         var titulek = button.data('titulek')
         var polstr = button.data('polstr')
         var castka = button.data('castka')
+        var addinfo = button.data('addinfo')
         var typ = button.data('typ')
+        var subtyp = button.data('subtyp')
         var zdroj = button.data('zdroj')
 
         // set modal window
         var modal = $(this)
         if (button.data('action') === 'create') {
             modal.find('#eventModalLabel').text("Vytvořit novou událost");
-            modal.find('#sendButton').off("click").on("click", function () { createEvent() });
+            //modal.find('#sendButton').off("click").on("click", function () { createEvent() });
         }
         else {
             modal.find('#eventModalLabel').text("Editovat událost");
-            modal.find('#sendButton').off("click").on("click", function () { editEvent() });
+            //modal.find('#sendButton').off("click").on("click", function () { editEvent() });
         }
         modal.find('#eventId').val(eventId)
         modal.find('#personId').val(personId)
@@ -228,23 +256,29 @@
         modal.find('#datumDo').val(datumDo)
         modal.find('#titulek').val(titulek)
         modal.find('#polstr').val(polstr)
-        modal.find('#castka').val(castka)
         modal.find('#typ').val(typ)
+        drawSubtype(typ)
+        modal.find('#subtyp').val(subtyp)
+        modal.find('#castka').val(castka)
+        modal.find('#addInfo').val(addinfo)
         modal.find('#zdroj').val(zdroj)
     })
 
     function editEvent() {
         var osobaEvent = {
-            "pk": document.getElementById("eventId").value,
-            "Title": document.getElementById("titulek").value,
-            "PolitickaStrana": document.getElementById("polstr").value,
-            "AddInfoNum": document.getElementById("castka").value,
-            "DatumOd": document.getElementById("datumOd").value,
-            "DatumDo": document.getElementById("datumDo").value,
-            "Type": document.getElementById("typ").value,
-            "Zdroj": document.getElementById("zdroj").value
-
+            "OsobaId": $("#personId").val(),
+            "pk": $("#eventId").val(),
+            "Title": $("#titulek").val(),
+            "PolitickaStrana": $("#polstr").val(),
+            "AddInfoNum": $("#castka").val(),
+            "AddInfo": $("#addInfo").val(),
+            "DatumOd": $("#datumOd").val(),
+            "DatumDo": $("#datumDo").val(),
+            "Type": $("#typ").val(),
+            "SubType": $("#subtyp").val(),
+            "Zdroj": $("#zdroj").val()
         }
+        
         clearErrorMessages();
         $.post("/manage/updateEvent", osobaEvent)
             .done(function (data) {
@@ -257,27 +291,28 @@
             });
     }
 
-    function createEvent() {
-        var osobaEvent = {
-            "OsobaId": document.getElementById("personId").value,
-            "Title": document.getElementById("titulek").value,
-            "PolitickaStrana": document.getElementById("polstr").value,
-            "AddInfoNum": document.getElementById("castka").value,
-            "DatumOd": document.getElementById("datumOd").value,
-            "DatumDo": document.getElementById("datumDo").value,
-            "Type": document.getElementById("typ").value,
-            "Zdroj": document.getElementById("zdroj").value
+    //function createEvent() {
+    //    var osobaEvent = {
+    //        "OsobaId": document.getElementById("personId").value,
+    //        "Title": document.getElementById("titulek").value,
+    //        "PolitickaStrana": document.getElementById("polstr").value,
+    //        "AddInfoNum": document.getElementById("castka").value,
+    //        "DatumOd": document.getElementById("datumOd").value,
+    //        "DatumDo": document.getElementById("datumDo").value,
+    //        "Type": document.getElementById("typ").value,
+    //        "SubType": document.getElementById("subtyp").value,
+    //        "Zdroj": document.getElementById("zdroj").value
 
-        }
-        clearErrorMessages();
-        $.post("/manage/createEvent", osobaEvent)
-            .done(function (data) {
-                window.location.reload();
-            })
-            .fail(function (data) {
-                displayValidationErrors(data.responseJSON);
-            });
-    }
+    //    }
+    //    clearErrorMessages();
+    //    $.post("/manage/createEvent", osobaEvent)
+    //        .done(function (data) {
+    //            window.location.reload();
+    //        })
+    //        .fail(function (data) {
+    //            displayValidationErrors(data.responseJSON);
+    //        });
+    //}
 
 
     function displayValidationErrors(errors) {
@@ -288,6 +323,44 @@
 
     function clearErrorMessages() {
         document.querySelectorAll("#eventModal .modal-body .field-validation-valid").forEach(item => item.innerText = "");
+    }
+
+    function drawSubtype(eventTypeId) {
+        var eventTypeIdInt = parseInt(eventTypeId, 10);
+        var subtypeSelect = $("#subtyp");
+        subtypeSelect.empty();
+        const possibleSubtypes = @Html.Raw(subTypeList);
+        const castkaForTypes = @Html.Raw(castkuZobrazitPro); 
+
+        if (castkaForTypes.includes(eventTypeIdInt)) {
+            //display addinfonum instead of selectbox
+            console.log("should display castka");
+            $("#castka_toggle").show();
+            $("#subtyp_toggle").hide();
+            $("#addInfo_toggle").hide();
+            $("#subtyp").val("");
+            $("#addInfo").val("");
+        } else if (possibleSubtypes.some(st => st.EventTypeId == eventTypeIdInt)) {
+            console.log("should display selectbox for subtype");
+            $("#castka_toggle").hide();
+            $("#subtyp_toggle").show();
+            $("#addInfo_toggle").hide();
+            $("#castka").val("");
+            $("#addInfo").val("");
+        } else {
+            console.log("should display addinfo");
+            $("#castka_toggle").hide();
+            $("#subtyp_toggle").hide();
+            $("#addInfo_toggle").show();
+            $("#castka").val("");
+            $("#subtyp").val("");
+        }
+
+        var filteredSubtypes = possibleSubtypes.filter(subtype => subtype.EventTypeId == eventTypeIdInt);
+
+        filteredSubtypes.forEach(subtype => {
+            subtypeSelect.append('<option value="' + subtype.Id + '">' + subtype.NameMale + '</option>');
+        });
     }
 
 </script>

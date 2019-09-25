@@ -448,6 +448,7 @@
     <Compile Include="Data\EventSubType.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\EventSubType.partial.cs" />
     <Compile Include="Data\EventType.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>

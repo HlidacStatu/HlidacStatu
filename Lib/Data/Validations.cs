@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HlidacStatu.Lib.Data
@@ -45,6 +46,9 @@ namespace HlidacStatu.Lib.Data
         [Display(Name = "Typ")]
         public int Type { get; set; }
 
+        [Display(Name = "Podtyp")]
+        public int SubType { get; set; }
+
         [Display(Name = "Datum od")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? DatumOd { get; set; }
@@ -64,6 +68,9 @@ namespace HlidacStatu.Lib.Data
 
         [Display(Name = "Zdroj informace")]
         public string Zdroj { get; set; }
+
+
+        
 
     }
 }
