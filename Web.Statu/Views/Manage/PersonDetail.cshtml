@@ -13,8 +13,16 @@
     //                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key,  })
     //                  .ToList();
 
-    var subTypeList = Newtonsoft.Json.JsonConvert.SerializeObject(HlidacStatu.Lib.Data.EventSubType.GetListItems());
-    var castkuZobrazitPro = Newtonsoft.Json.JsonConvert.SerializeObject(new[] { (int)OsobaEvent.Types.Sponzor });
+    var subTypeList = HlidacStatu.Lib.Data.EventSubType.GetListItems();
+    var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor };
+}
+
+@section scripts
+{
+
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
 }
 
 <h2>PersonDetail</h2>
@@ -74,9 +82,8 @@
                         <th>Datum do</th>
                         <th>Titulek</th>
                         <th>Politická strana</th>
-                        <th>Částka</th>
                         <th>Typ události</th>
-                        <th>Podtyp události</th>
+                        <th>Podrobnosti</th>
                         <th>Zdroj</th>
                         <th>akce</th>
                     </tr>
@@ -98,13 +105,21 @@
                                 @Html.DisplayFor(modelItem => udalost.PolitickaStrana)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => udalost.AddInfoNum)
-                            </td>
-                            <td>
                                 @Html.DisplayFor(modelItem => udalost.TypeName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => udalost.SubTypeName)
+                                @if (castkuZobrazitPro.Contains(udalost.Type))
+                                {
+                                    @Html.DisplayFor(modelItem => udalost.AddInfoNum)
+                                }
+                                else if (subTypeList.Where(it => it.EventTypeId == udalost.Type).Any())
+                                {
+                                    @Html.DisplayFor(modelItem => udalost.SubTypeName)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => udalost.AddInfo)
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => udalost.Zdroj)
@@ -220,7 +235,7 @@
                         </div>
                         <div class="form-group" id="addInfo_toggle">
                             <label for="addInfo" class="col-form-label">Podrobnosti:</label>
-                            <input type="text" class="form-control" id="addInfo">
+                            <input type="text" class="form-control typeahead input-lg" id="addInfo">
                             <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
@@ -372,8 +387,8 @@
         var eventTypeIdInt = parseInt(eventTypeId, 10);
         var subtypeSelect = $("#subtyp");
         subtypeSelect.empty();
-        const possibleSubtypes = @Html.Raw(subTypeList);
-        const castkaForTypes = @Html.Raw(castkuZobrazitPro);
+        const possibleSubtypes = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(subTypeList));
+        const castkaForTypes = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(castkuZobrazitPro));
 
         if (castkaForTypes.includes(eventTypeIdInt)) {
             //display addinfonum instead of selectbox
@@ -405,5 +420,32 @@
             subtypeSelect.append('<option value="' + subtype.Id + '">' + subtype.NameMale + '</option>');
         });
     }
+
+    // našeptávání
+    $(function () {
+
+        values = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/v1/addInfo?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('.typeahead').typeahead(null, {
+//            display: 'value',
+            name: "values",
+            source: values,
+            limit: 30,
+        });
+
+        //$('.typeahead').bind('typeahead:select', function (ev, suggestion) {
+        //    //$("#AddressId").val(suggestion.id).trigger('change');
+        //    console.log(suggestion);
+
+        //});
+
+    });
 
 </script>

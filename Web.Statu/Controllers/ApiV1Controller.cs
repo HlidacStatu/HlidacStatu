@@ -527,6 +527,27 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+        public ActionResult AddInfo(string q)
+        {
+            List<string> result = new List<string>();
+
+            if (string.IsNullOrEmpty(q) || q.Length <2)
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            result = OsobaEvent.GetAddInfos(q, null, 200).ToList();
+                
+
+            if (!string.IsNullOrEmpty(Request.Headers["Origin"]))
+            {
+                if (Request.Headers["Origin"].Contains(".hlidacstatu.cz")
+                    //|| Request.Headers["Origin"].Contains(".hlidacstatu.cz")
+                    )
+                    Response.AddHeader("Access-Control-Allow-Origin", Request.Headers["Origin"]);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
         public ActionResult TransparentniUctyExport()
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("TransparentniUctyExport", "") }).Authentificated)

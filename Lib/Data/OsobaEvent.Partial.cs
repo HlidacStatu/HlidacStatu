@@ -125,21 +125,25 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        //public static OsobaEvent Create(OsobaEvent osobaEvent, string user)
-        //{
-        //    using (Lib.Data.DbEntities db = new Data.DbEntities())
-        //    {
-        //        if (osobaEvent.OsobaId > 0)
-        //        {
-        //            osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
-        //            osobaEvent.Created = DateTime.Now;
-        //            db.OsobaEvent.Add(osobaEvent);
-        //            Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
-        //            db.SaveChanges();
-        //        }
-        //        return osobaEvent;
-        //    }
-        //}
+        // tohle by ještě sneslo optimalizaci - ale až budou k dispozici data
+        public static IEnumerable<string> GetAddInfos(string jmeno, int? eventTypeId, int maxNumOfResults = 1500)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var result = db.OsobaEvent
+                    //.Where(m => (eventTypeId == null) ? true : (m.Type == eventTypeId))
+                    .Where(m => m != null)
+                    .Where(m => m.AddInfo.Contains(jmeno))
+                    //.OrderBy(m => m.AddInfo)
+                    .Select(m => m.AddInfo)
+                    .Distinct()
+                    .Take(maxNumOfResults)
+                    .ToList();
+
+                return result;
+            }
+        }
+
 
         public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
         {

@@ -218,6 +218,7 @@ namespace HlidacStatu.Lib.Data
 
             if (narozeni.HasValue == false)
             {
+                p.Umrti = umrti;
                 p.Status = (int)status;
                 p.Save();
                 Audit.Add(Audit.Operations.Create, user, p, null);
@@ -228,9 +229,9 @@ namespace HlidacStatu.Lib.Data
 
             if (exiO == null)
             {
+                p.Umrti = umrti;
                 p.Status = (int)status;
                 p.Narozeni = narozeni;
-                p.Umrti = umrti;
                 p.Save();
                 Audit.Add(Audit.Operations.Create, user, p, null);
                 return p;
@@ -424,19 +425,16 @@ namespace HlidacStatu.Lib.Data
         }
         public string NarozeniYear(bool html = false)
         {
-            string s = " ";
-            if (this.Narozeni.HasValue)
+            string result = "";
+            if (this.Narozeni.HasValue || this.Umrti.HasValue)
             {
-                s = string.Format(" (*{0}", this.Narozeni.Value.Year);
-                if (this.Umrti.HasValue)
-                {
-                    s = s + string.Format("- ✝{0}", this.Umrti.Value.Year);
-                }
-                s = s + ")";
+                string narozeni = this.Narozeni?.ToString("*yyyy") ?? "* ???";
+                string umrti = this.Umrti?.ToString("- ✝yyyy") ?? "";
+                result = $" ({narozeni} {umrti})";
             }
             if (html)
-                s = s.Replace(" ", "&nbsp;");
-            return s;
+                result = result.Replace(" ", "&nbsp;");
+            return result;
         }
 
         public string FullName(bool html = false)
