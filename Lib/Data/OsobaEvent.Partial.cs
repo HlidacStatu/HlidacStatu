@@ -151,8 +151,8 @@ namespace HlidacStatu.Lib.Data
                     osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
                     osobaEvent.Created = DateTime.Now;
                     db.OsobaEvent.Add(osobaEvent);
-                    Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
                     db.SaveChanges();
+                    Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
                     return osobaEvent;
                 }
 
@@ -180,8 +180,8 @@ namespace HlidacStatu.Lib.Data
 
                         eventToUpdate.Created = DateTime.Now;
 
-                        Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
                         db.SaveChanges();
+                        Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
 
                         return eventToUpdate;
                     }

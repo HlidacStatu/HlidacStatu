@@ -29,7 +29,11 @@ namespace HlidacStatu.Lib.Data
         [Display(Name = "Narození")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? Narozeni;
-        
+
+        [Display(Name = "Úmrtí")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
+        public DateTime? Umrti;
+
     }
 
     public class OsobaEventMetadata

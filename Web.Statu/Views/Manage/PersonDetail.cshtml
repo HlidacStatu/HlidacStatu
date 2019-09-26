@@ -128,6 +128,24 @@
                                         data-action="edit">
                                     Editovat
                                 </button>
+                                <button type="button"
+                                        class="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#eventModal"
+                                        data-personid="@Model.InternalId"
+                                        data-eventid="@udalost.pk"
+                                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                                        data-titulek="@udalost.Title"
+                                        data-polstr="@udalost.PolitickaStrana"
+                                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                                        data-addinfo="@udalost.AddInfo"
+                                        data-typ="@udalost.Type"
+                                        data-subtyp="@udalost.SubType"
+                                        data-zdroj="@udalost.Zdroj"
+                                        data-action="delete">
+                                    Smazat
+                                </button>
                             </td>
                         </tr>
                     }
@@ -143,79 +161,79 @@
 
 
 <!-- ------------------------------MODAL WINDOW------------------------------ -->
-<!-- Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Editovat událost</h5>
+                <h4 class="modal-title" id="eventModalLabel">Editovat událost</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" id="eventId" value="0" />
-                    <input type="hidden" id="personId" value="0" />
-                    <div class="form-group">
-                        <label for="datumOd" class="col-form-label text-box single-line">Datum od:</label>
-                        <input type="datetime" class="form-control" id="datumOd">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="datumDo" class="col-form-label text-box single-line">Datum do:</label>
-                        <input type="datetime" class="form-control" id="datumDo">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="titulek" class="col-form-label">Titulek:</label>
-                        <input type="text" class="form-control" id="titulek">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="polstr" class="col-form-label">Politická strana:</label>
-                        <input type="text" class="form-control" id="polstr">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="PolitickaStrana" data-valmsg-replace="true"></span>
-                    </div>
+                    <fieldset id="modalForm">
+                        <input type="hidden" id="eventId" value="0" />
+                        <input type="hidden" id="personId" value="0" />
+                        <div class="form-group">
+                            <label for="datumOd" class="col-form-label text-box single-line">Datum od:</label>
+                            <input type="datetime" class="form-control" id="datumOd">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="datumDo" class="col-form-label text-box single-line">Datum do:</label>
+                            <input type="datetime" class="form-control" id="datumDo">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="titulek" class="col-form-label">Titulek:</label>
+                            <input type="text" class="form-control" id="titulek">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="polstr" class="col-form-label">Politická strana:</label>
+                            <input type="text" class="form-control" id="polstr">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="PolitickaStrana" data-valmsg-replace="true"></span>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="typ" class="col-form-label">Typ události:</label>
-                        @*<input type="text" class="form-control" id="typ">*@
-                        <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
-                            @for (int i = 0; i < typeList.Count; i++)
-                            {
-                                <option value="@typeList[i].Value">@typeList[i].Text</option>
-                            }
-                        </select>
-                        <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group" id="subtyp_toggle">
-                        <label for="subtyp" class="col-form-label">Podtyp události:</label>
-                        <select class="form-control" id="subtyp"></select>
-                        <span class="field-validation-valid text-danger" data-valmsg-for="SubType" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group" id="castka_toggle">
-                        <label for="castka" class="col-form-label">Částka:</label>
-                        <input type="text" class="form-control" id="castka">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group" id="addInfo_toggle">
-                        <label for="addInfo" class="col-form-label">Podrobnosti:</label>
-                        <input type="text" class="form-control" id="addInfo">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="zdroj" class="col-form-label">Zdroj:</label>
-                        <input type="text" class="form-control" id="zdroj">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
-                    </div>
-
-
+                        <div class="form-group">
+                            <label for="typ" class="col-form-label">Typ události:</label>
+                            @*<input type="text" class="form-control" id="typ">*@
+                            <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
+                                @for (int i = 0; i < typeList.Count; i++)
+                                {
+                                    <option value="@typeList[i].Value">@typeList[i].Text</option>
+                                }
+                            </select>
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group" id="subtyp_toggle">
+                            <label for="subtyp" class="col-form-label">Podtyp události:</label>
+                            <select class="form-control" id="subtyp"></select>
+                            <span class="field-validation-valid text-danger" data-valmsg-for="SubType" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group" id="castka_toggle">
+                            <label for="castka" class="col-form-label">Částka:</label>
+                            <input type="text" class="form-control" id="castka">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group" id="addInfo_toggle">
+                            <label for="addInfo" class="col-form-label">Podrobnosti:</label>
+                            <input type="text" class="form-control" id="addInfo">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="zdroj" class="col-form-label">Zdroj:</label>
+                            <input type="text" class="form-control" id="zdroj">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Zrušit</button>
-                <button type="button" onclick="editEvent();" class="btn btn-primary" id="sendButton">Uložit</button>
+                <button type="button" class="btn btn-primary" id="sendButton">Uložit</button>
             </div>
         </div>
     </div>
@@ -244,12 +262,46 @@
         var modal = $(this)
         if (button.data('action') === 'create') {
             modal.find('#eventModalLabel').text("Vytvořit novou událost");
-            //modal.find('#sendButton').off("click").on("click", function () { createEvent() });
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { editEvent() })
+                .text("Vytvořit")
+                .removeClass("btn-warning")
+                .addClass("btn-primary");
+            modal.find('#modalForm').attr("disabled", false);
+
+            modal.find('.modal-header').removeClass("alert-danger");
+            modal.find('.modal-footer').removeClass("alert-danger");
         }
-        else {
+        else if (button.data('action') === 'edit') {
             modal.find('#eventModalLabel').text("Editovat událost");
-            //modal.find('#sendButton').off("click").on("click", function () { editEvent() });
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { editEvent() })
+                .text("Změnit")
+                .removeClass("btn-warning")
+                .addClass("btn-primary");
+            modal.find('#modalForm').attr("disabled", false);
+
+            modal.find('.modal-header').removeClass("alert-danger");
+            modal.find('.modal-footer').removeClass("alert-danger");
+        } else if (button.data('action') === 'delete') {
+            modal.find('#eventModalLabel').text("Opravdu chcete smazat tuto událost?");
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { deleteEvent() })
+                .text("Smazat")
+                .removeClass("btn-primary")
+                .addClass("btn-danger");
+            modal.find('#modalForm').attr("disabled", true);
+
+            modal.find('.modal-header').addClass("alert-danger");
+            modal.find('.modal-footer').addClass("alert-danger");
+        } else {
+            this.console.log("Neznámá akce");
         }
+
+
         modal.find('#eventId').val(eventId)
         modal.find('#personId').val(personId)
         modal.find('#datumOd').val(datumOd)
@@ -278,9 +330,9 @@
             "SubType": $("#subtyp").val(),
             "Zdroj": $("#zdroj").val()
         }
-        
+
         clearErrorMessages();
-        $.post("/manage/updateEvent", osobaEvent)
+        $.post("/manage/UpdateEvent", osobaEvent)
             .done(function (data) {
                 window.location.reload();
             })
@@ -291,28 +343,19 @@
             });
     }
 
-    //function createEvent() {
-    //    var osobaEvent = {
-    //        "OsobaId": document.getElementById("personId").value,
-    //        "Title": document.getElementById("titulek").value,
-    //        "PolitickaStrana": document.getElementById("polstr").value,
-    //        "AddInfoNum": document.getElementById("castka").value,
-    //        "DatumOd": document.getElementById("datumOd").value,
-    //        "DatumDo": document.getElementById("datumDo").value,
-    //        "Type": document.getElementById("typ").value,
-    //        "SubType": document.getElementById("subtyp").value,
-    //        "Zdroj": document.getElementById("zdroj").value
-
-    //    }
-    //    clearErrorMessages();
-    //    $.post("/manage/createEvent", osobaEvent)
-    //        .done(function (data) {
-    //            window.location.reload();
-    //        })
-    //        .fail(function (data) {
-    //            displayValidationErrors(data.responseJSON);
-    //        });
-    //}
+    function deleteEvent() {
+        var osobaEvent = {
+            "id": $("#eventId").val(),
+        }
+        clearErrorMessages();
+        $.post("/manage/DeleteEvent", osobaEvent)
+            .done(function (data) {
+                window.location.reload();
+            })
+            .fail(function (data) {
+                console.log(data.responseJSON);
+            });
+    }
 
 
     function displayValidationErrors(errors) {
@@ -330,7 +373,7 @@
         var subtypeSelect = $("#subtyp");
         subtypeSelect.empty();
         const possibleSubtypes = @Html.Raw(subTypeList);
-        const castkaForTypes = @Html.Raw(castkuZobrazitPro); 
+        const castkaForTypes = @Html.Raw(castkuZobrazitPro);
 
         if (castkaForTypes.includes(eventTypeIdInt)) {
             //display addinfonum instead of selectbox

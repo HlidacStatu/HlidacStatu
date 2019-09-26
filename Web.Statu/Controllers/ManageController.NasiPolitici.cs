@@ -53,9 +53,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //ještě mi chybí user
-                Osoba.GetOrCreateNew(osoba.TitulPred, osoba.Jmeno, osoba.Prijmeni, osoba.TitulPo, osoba.Narozeni, (Osoba.StatusOsobyEnum)osoba.Status, this.User.Identity.Name);
-                return RedirectToAction(nameof(FindPerson), // asi by šlo rovnou id...
+                Osoba.GetOrCreateNew(osoba.TitulPred, osoba.Jmeno, osoba.Prijmeni, osoba.TitulPo, osoba.Narozeni, (Osoba.StatusOsobyEnum)osoba.Status, this.User.Identity.Name, osoba.Umrti);
+                return RedirectToAction(nameof(FindPerson), 
                     new {
                         jmeno = osoba.Jmeno,
                         prijmeni = osoba.Prijmeni,
@@ -79,14 +78,14 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Status")] Osoba osoba)
+        public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Umrti,Status")] Osoba osoba)
         {
             if (id != osoba.InternalId) return RedirectToAction(nameof(FindPerson));
             if (ModelState.IsValid)
             {
                 Osoba result = Osoba.Update(osoba, this.User.Identity.Name);
 
-                return RedirectToAction(nameof(FindPerson), // asi by šlo rovnou id...
+                return RedirectToAction(nameof(FindPerson),
                     new
                     {
                         jmeno = osoba.Jmeno,
@@ -114,22 +113,21 @@ namespace HlidacStatu.Web.Controllers
             return new JsonResult() { Data = errorModel };
         }
 
-        //[Authorize(Roles = "canEditData")]
-        //[HttpPost]
-        //public JsonResult CreateEvent(OsobaEvent osobaEvent)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var result = OsobaEvent.Create(osobaEvent, this.User.Identity.Name);
-        //        return Json(new { Success = true });
-        //    }
+        [Authorize(Roles = "canEditData")]
+        [HttpPost]
+        public JsonResult DeleteEvent(int? id)
+        {
+            if ( (id ?? 0) == 0)
+            {
+                Response.StatusCode = 400;
+                return new JsonResult() { Data = "chybí id" };
+            }
+            OsobaEvent osobaEvent = OsobaEvent.GetById(id ?? 0);
+            osobaEvent.Delete(this.User.Identity.Name, true);
 
-        //    var errorModel = GetModelErrorsJSON();
-                    
+            return Json(new { Success = true });
+        }
 
-        //    Response.StatusCode = 400;
-        //    return new JsonResult() { Data = errorModel };
-        //}
 
         private IEnumerable<ErrorModel> GetModelErrorsJSON()
         {

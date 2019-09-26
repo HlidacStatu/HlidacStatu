@@ -208,7 +208,7 @@ namespace HlidacStatu.Lib.Data
             return GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, ParseTools.ToDate(narozeni), status, user);
         }
         public static Osoba GetOrCreateNew(string titulPred, string jmeno, string prijmeni, string titulPo,
-            DateTime? narozeni, StatusOsobyEnum status, string user)
+            DateTime? narozeni, StatusOsobyEnum status, string user, DateTime? umrti = null)
         {
             var p = new Data.Osoba();
             p.TitulPred = NormalizeTitul(titulPred, true);
@@ -230,6 +230,7 @@ namespace HlidacStatu.Lib.Data
             {
                 p.Status = (int)status;
                 p.Narozeni = narozeni;
+                p.Umrti = umrti;
                 p.Save();
                 Audit.Add(Audit.Operations.Create, user, p, null);
                 return p;
@@ -987,8 +988,6 @@ namespace HlidacStatu.Lib.Data
 
         public static Osoba Update(Osoba osoba, string user)
         {
-            //goto 675
-
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
                 var osobaToUpdate = db.Osoba
@@ -1006,25 +1005,15 @@ namespace HlidacStatu.Lib.Data
                     osobaToUpdate.TitulPred = osoba.TitulPred;
                     osobaToUpdate.Narozeni = osoba.Narozeni;
                     osobaToUpdate.Status = osoba.Status;
+                    osobaToUpdate.Umrti = osoba.Umrti;
 
                     osobaToUpdate.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Jmeno);
                     osobaToUpdate.PrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Prijmeni);
                     osobaToUpdate.PuvodniPrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.PuvodniPrijmeni);
                     osobaToUpdate.LastUpdate = DateTime.Now;
 
+                    db.SaveChanges();
                     Audit.Add(Audit.Operations.Update, user, osobaToUpdate, osobaOriginal);
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!db.Osoba.Any(os => os.InternalId == osoba.InternalId))
-                        {
-                            // lognout tady - pravděpodobně někdo stihnul osobu smáznout během updatu.
-                        }
-                        throw;
-                    }
 
                     return osobaToUpdate;
                 }
