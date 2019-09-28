@@ -122,7 +122,12 @@
                 </td>
             </tr>
             <tr>
-                <td><h4>Dodavatelé</h4></td>
+                <td><h4>Dodavatelé</h4>
+                @if (this.User?.IsInRole("canEditData") == true)
+                {
+                    <br/><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit sml.strany</a>
+                }
+                </td>
                 <td>
                     @for (int i = 0; i < Model.Prijemce.Length; i++)
                     {

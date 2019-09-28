@@ -1,0 +1,93 @@
+﻿@using Devmasters.Core;
+@using HlidacStatu.Lib.Data;
+
+@{
+    ViewBag.Title = "Zmena smluvnich stran";
+    Smlouva s = Smlouva.Load(ViewBag.SmlouvaId);
+
+    if (s == null)
+    {
+        <h2>Smlouva neexistuje</h2>
+        return;
+    }
+    var subjList = s.Prijemce.ToList();
+    subjList.Insert(0, s.Platce);
+}
+
+<h2>@s.FullTitle()</h2>
+
+<table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+    <tbody>
+        <tr>
+            <td>
+                <h4>Publikující strana do Rejstříku smluv</h4>
+            </td>
+            <td>
+                @RenderSubjekt(s.VkladatelDoRejstriku)
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Plátce/Objednatel</h4></td>
+            <td>
+                @RenderSubjekt(s.Platce)
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Dodavatelé</h4></td>
+            <td>
+                @for (int i = 0; i < s.Prijemce.Length; i++)
+                {
+                    @RenderSubjekt(s.Prijemce[i])<br />
+                }
+            </td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+<h2>Jinak uspořádané smluvní strany</h2>
+<form method="post">
+    <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+        <tbody>
+            <tr>
+                <td><h4>Plátce/Objednatel</h4></td>
+                <td><h4>Dodavatelé</h4></td>
+            </tr>
+            <tr>
+                <td>
+                    @for (int i = 0; i < subjList.Count; i++)
+                    {
+                        <div> <input type="checkbox" name="platce" value="@i" />@RenderSubjekt(subjList[i]) </div>
+                    }
+                </td>
+                <td>
+                    @for (int i = 0; i < subjList.Count; i++)
+                    {
+                        <div> <input type="checkbox" name="prijemce" value="@i" />@RenderSubjekt(subjList[i]) </div>
+                    }
+                </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+
+    <script>
+        $(function () {
+            $('input[type="checkbox"][name="platce"]').on('change', function () {
+                $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+            });
+        });
+    </script>
+    <input type="submit" value="Změnit" />
+</form>
+
+@Util.HideFundingInFooter()
+
+@helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt)
+{
+    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
+
+    <span><b>@subjekt.nazev</b> (ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka)</span>
+}

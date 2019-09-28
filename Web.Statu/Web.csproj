@@ -367,6 +367,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
+    <Compile Include="Controllers\ManageController.Admin.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ManageController.Api.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -1335,6 +1336,7 @@
     <Content Include="Views\Shared\Bot.cshtml" />
     <Content Include="Views\Insolvence\Index.Content.cshtml" />
     <Content Include="Views\Manage\ShowClassification.cshtml" />
+    <Content Include="Views\Manage\ZmenaSmluvnichStran.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
@@ -1374,6 +1376,10 @@
     <ProjectReference Include="..\Lib\Lib.csproj">
       <Project>{40133098-338c-4a5b-bfaa-69a748d73a87}</Project>
       <Name>Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugin.Enhancers\Plugin.Enhancers.csproj">
+      <Project>{af654e2b-6add-46e5-bc27-9fd76d7e0a38}</Project>
+      <Name>Plugin.Enhancers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugin.IssueAnalyzers\Plugin.IssueAnalyzers.csproj">
       <Project>{2547bded-06a2-4c2b-a3ad-c719713140da}</Project>

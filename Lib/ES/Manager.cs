@@ -372,7 +372,7 @@ namespace HlidacStatu.Lib.ES
             filter.Add("lowercase");
             filter.Add("czech_stop");
             //an.Filter.Add("czech_keywords");
-            filter.Add("czech_stemmer");
+            filter.Add("czech_stemmer"); //pouzit Hunspell
             filter.Add("asciifolding");
             an.Filter = filter;
             // Add the Analyzer with a name
@@ -384,7 +384,7 @@ namespace HlidacStatu.Lib.ES
 
             set.Analysis.Analyzers.Add("default", an);
             set.Analysis.TokenFilters.Add("czech_stop", new StopTokenFilter() { StopWords = new string[] { "_czech_" } });
-            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" });
+            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" }); //Humspell
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
