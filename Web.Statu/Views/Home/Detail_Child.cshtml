@@ -52,6 +52,20 @@
     </h3>
     <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
         <tbody>
+
+            @if (User.IsInRole("BetaTester") && Model?.Classification?.Types?.Count() > 0)
+            {
+                <tr>
+                    <td>Nová klasifikace smluv
+                    <br/><b>BETA</b></td>
+                    <td>
+                        @foreach (var cl in Model.Classification.Types)
+                        {
+                            <div>@(cl.ClassifType().ToNiceDisplayName()) - @(cl.ClassifProbability)</div>
+                        }
+                    </td>
+                </tr>
+            }
             <tr>
                 <td>
                     Základní informace
@@ -122,11 +136,12 @@
                 </td>
             </tr>
             <tr>
-                <td><h4>Dodavatelé</h4>
-                @if (this.User?.IsInRole("canEditData") == true)
-                {
-                    <br/><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit sml.strany</a>
-                }
+                <td>
+                    <h4>Dodavatelé</h4>
+                    @if (this.User?.IsInRole("canEditData") == true)
+                    {
+                        <br /><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit sml.strany</a>
+                    }
                 </td>
                 <td>
                     @for (int i = 0; i < Model.Prijemce.Length; i++)

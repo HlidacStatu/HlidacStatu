@@ -365,7 +365,7 @@ namespace HlidacStatu.Lib.Data
                     classif.Method = Devmasters.Net.Web.MethodEnum.POST;
                     classif.Tries = 3;
                     classif.TimeInMsBetweenTries = 5000;
-                    classif.Timeout = 30000;
+                    classif.Timeout = 180000;
                     classif.ContentType = "application/json; charset=utf-8";
                     classif.RequestParams.RawContent = stems.Text;
                     Devmasters.Net.Web.TextContentResult classifier = null;
