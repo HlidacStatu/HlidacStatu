@@ -68,6 +68,10 @@
     <Reference Include="Devmasters.Net, Version=1.472.3.24, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Net.1.472.3.24\lib\Net45\Devmasters.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Elastic.Apm, Version=1.0.1.0, Culture=neutral, PublicKeyToken=ae7400d2c189cf22, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.dll</HintPath>
+    </Reference>
     <Reference Include="Elastic.Apm.AspNetFullFramework">
       <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.AspNetFullFramework.dll</HintPath>
     </Reference>

@@ -67,6 +67,9 @@
     <Reference Include="Devmasters.Render, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Render.1.472.1.1\lib\net40\Devmasters.Render.dll</HintPath>
     </Reference>
+    <Reference Include="Elastic.Apm">
+      <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.dll</HintPath>
+    </Reference>
     <Reference Include="Elasticsearch.Net, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\Elasticsearch.Net.6.4.0\lib\net461\Elasticsearch.Net.dll</HintPath>
     </Reference>
