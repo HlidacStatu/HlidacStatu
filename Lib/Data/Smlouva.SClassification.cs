@@ -36,6 +36,9 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Ostatní")]
                 OSTATNI=0,
 
+                [NiceDisplayName("IT")]
+                it_generic = 10000,
+
                 [NiceDisplayName("IT HW")]
                 it_hw=10001,
                 [NiceDisplayName("IT SW")]
@@ -53,6 +56,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Internetové služby a počítačové sítě")]
                 it_site = 10008,
 
+                [NiceDisplayName("Stavebnictví")]
+                stav_generic = 10100,
                 [NiceDisplayName("Stavební konstrukce a materiály")]
                 stav_materialy = 10101,
                 [NiceDisplayName("Stavební práce")]
@@ -84,6 +89,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Technicko_inženýrské služby")]
                 stav_inzenyr = 10115,
 
+                [NiceDisplayName("Doprava")]
+                doprava_generic = 10200,
                 [NiceDisplayName("Osobní vozidla")]
                 doprava_osobni = 10201,
                 [NiceDisplayName("Specializovaná vozidla")]
@@ -109,6 +116,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Poštovní a telekomunikační služby")]
                 doprava_posta = 10212,
 
+                [NiceDisplayName("Stroje a zařízení")]
+                stroje_generic = 10300,
                 [NiceDisplayName("Elektricke stroje")]
                 stroje_elektricke = 10301,
                 [NiceDisplayName("Laboratorní přístroje a zařízení")]
@@ -116,6 +125,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Průmyslové stroje")]
                 stroje_prumysl = 10303,
 
+                [NiceDisplayName("Telco")]
+                telco_generic = 10400,
                 [NiceDisplayName("TV")]
                 telco_tv = 10401,
                 [NiceDisplayName("Sítě a přenos dat")]
@@ -123,6 +134,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Telekomunikační služby")]
                 telco_sluzby = 10403,
 
+                [NiceDisplayName("Zdravotnictví")]
+                zdrav_generic = 10500,
                 [NiceDisplayName("Zdravotnické přístroje")]
                 zdrav_pristroje = 10501,
                 [NiceDisplayName("Leciva")]
@@ -132,14 +145,19 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Opravy a údržba zdravotnických přístrojů")]
                 zdrav_opravy = 10504,
 
+                [NiceDisplayName("Voda a potraviny")]
+                jidlo_generic = 10600,
                 [NiceDisplayName("Potraviny")]
                 jidlo_potrava = 10601,
                 [NiceDisplayName("Pitná voda, nápoje, tabák atd.")]
                 jidlo_voda = 10602,
 
                 [NiceDisplayName("Bezpečnostní a ochranné vybavení a údržba")]
-                bezpecnost = 10700,
+                bezpecnost_generic = 10700,
+                bezpecnost = 10701,
 
+                [NiceDisplayName("Přírodní zdroje")]
+                prirodnizdroj_generic = 10800,
                 [NiceDisplayName("Písky a jíly")]
                 prirodnizdroj_pisky = 10801,
                 [NiceDisplayName("Chemické výrobky")]
@@ -147,6 +165,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Jiné přírodní zdroje")]
                 prirodnizdroj_vse = 10803,
 
+                [NiceDisplayName("Energie")]
+                energie_generic = 10900,
                 [NiceDisplayName("Paliva a oleje")]
                 energie_paliva = 10901,
                 [NiceDisplayName("Elektricka energie")]
@@ -156,6 +176,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Veřejné služby pro energie")]
                 energie_sluzby = 10904,
 
+                [NiceDisplayName("Zemědělství")]
+                agro_generic = 11000,
                 [NiceDisplayName("Lesnictví")]
                 agro_les = 11001,
                 [NiceDisplayName("Těžba dřeva")]
@@ -163,6 +185,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Zahradnické služby")]
                 agro_zahrada = 11003,
 
+                [NiceDisplayName("Kancelář")]
+                kancelar_generic = 11100,
                 [NiceDisplayName("Tisk")]
                 kancelar_tisk = 11101,
                 [NiceDisplayName("Kancelářské stroje (mimo počítače a nábytek)")]
@@ -178,6 +202,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Vyhledávací a bezpečnostní služby")]
                 kancelar_bezpecnost = 11107,
 
+                [NiceDisplayName("Řemesla")]
+                remeslo_generic = 11200,
                 [NiceDisplayName("Oděvy")]
                 remeslo_odevy = 11201,
                 [NiceDisplayName("Textilie")]
@@ -185,6 +211,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Hudební nástroje")]
                 remeslo_hudba = 11203,
 
+                [NiceDisplayName("Sociální služby")]
+                social_generic = 11300,
                 [NiceDisplayName("Vzdělávání")]
                 social_vzdelavani = 11301,
                 [NiceDisplayName("Školení")]
@@ -200,6 +228,8 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Sportovní služby")]
                 social_sport = 11307,
 
+                [NiceDisplayName("Finance")]
+                finance_generic = 11400,
                 [NiceDisplayName("Finanční a pojišťovací služby")]
                 finance_sluzby = 11401,
                 [NiceDisplayName("Účetní, revizní a peněžní služby")]
@@ -207,11 +237,13 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Podnikatelské a manažerské poradenství a související služby")]
                 finance_poradenstvi = 11403,
 
+                legal_generic = 11500,
                 [NiceDisplayName("Realitní služby")]
                 legal_reality = 11501,
                 [NiceDisplayName("Právní služby")]
                 legal_pravni =  11502,
 
+                techsluzby_generic = 11600,
                 [NiceDisplayName("Kanalizace")]
                 techsluzby_kanaly = 11601,
                 [NiceDisplayName("Čistící a hygienické služby")]
@@ -219,12 +251,17 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Úklidové služby")]
                 techsluzby_uklid = 11603,
 
+
                 [NiceDisplayName("Výzkum a vývoj a související služby")]
-                vyzkum = 11700,
+                vyzkum_generic = 11700,
+                [NiceDisplayName("Výzkum a vývoj a související služby")]
+                vyzkum = 11701,
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
-                marketing = 11800,
+                marketing_generic = 11800,
+                marketing = 11801,
 
+                jine_generic = 11900,
                 [NiceDisplayName("Pohostinství a ubytovací služby a maloobchodní služby")]
                 jine_pohostinstvi = 11901,
                 [NiceDisplayName("Služby závodních jídelen")]
