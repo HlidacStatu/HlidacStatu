@@ -354,6 +354,7 @@ App.Release.config
 WebApp.Debug.config
 WebApp.Stage.config
 WebApp.Release.config
+WebApp.Stage_Release.config
 Web.Statu/Web.config
 ApplicationInsights.config
 
