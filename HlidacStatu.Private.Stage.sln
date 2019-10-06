@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29230.47
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib", "Lib\Lib.csproj", "{40133098-338C-4A5B-BFAA-69A748D73A87}"
 EndProject
@@ -662,7 +662,6 @@ Global
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Debug|x86.Build.0 = Debug|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|x64.ActiveCfg = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|x64.Build.0 = Release|Any CPU
 		{77ED1AF0-96C2-4896-9503-75C8A520C79E}.Release|x86.ActiveCfg = Release|Any CPU
@@ -940,8 +939,8 @@ Global
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
