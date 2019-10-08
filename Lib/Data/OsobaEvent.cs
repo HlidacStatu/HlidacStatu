@@ -17,15 +17,14 @@ namespace HlidacStatu.Lib.Data
         public int pk { get; set; }
         public int OsobaId { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
-        public int Type { get; set; }
+        public string Note { get; set; }
         public Nullable<System.DateTime> DatumOd { get; set; }
         public Nullable<System.DateTime> DatumDo { get; set; }
+        public int Type { get; set; }
         public string AddInfo { get; set; }
         public Nullable<decimal> AddInfoNum { get; set; }
         public System.DateTime Created { get; set; }
         public string Zdroj { get; set; }
-        public Nullable<int> SubType { get; set; }
-        public string PolitickaStrana { get; set; }
+        public string Organizace { get; set; }
     }
 }

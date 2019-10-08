@@ -36,7 +36,6 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<SmlouvyId> SmlouvyIds { get; set; }
         public virtual DbSet<FirmaVazby> FirmaVazby { get; set; }
         public virtual DbSet<Osoba> Osoba { get; set; }
-        public virtual DbSet<OsobaEvent> OsobaEvent { get; set; }
         public virtual DbSet<OsobaExternalId> OsobaExternalId { get; set; }
         public virtual DbSet<OsobaVazby> OsobaVazby { get; set; }
         public virtual DbSet<FirmaEvent> FirmaEvent { get; set; }
@@ -48,8 +47,8 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<Bookmark> Bookmark { get; set; }
         public virtual DbSet<UserOptions> UserOptions { get; set; }
         public virtual DbSet<ItemToOcrQueue> ItemToOcrQueue { get; set; }
-        public virtual DbSet<EventSubType> EventSubType { get; set; }
         public virtual DbSet<EventType> EventType { get; set; }
+        public virtual DbSet<OsobaEvent> OsobaEvent { get; set; }
     
         public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string krajId, string okresId)
         {

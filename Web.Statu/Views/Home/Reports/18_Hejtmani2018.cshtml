@@ -44,7 +44,7 @@
                     HtmlRender = (s) => {
                         Osoba o = (Osoba)s;
                         OsobaEvent oe = o.Events()
-                            .Where(m=>m.Type==(int)OsobaEvent.Types.Poslanec)
+                            .Where(m=>m.Type==(int)OsobaEvent.Types.VolenaFunkce && "poslanec".Equals(m.AddInfo, StringComparison.InvariantCultureIgnoreCase))
                             .OrderByDescending(m=>m.DatumOd)
                             .FirstOrDefault();
                         if (oe == null)
@@ -53,13 +53,13 @@
                         }
                         else
                         {
-                            return oe.PolitickaStrana;
+                            return oe.Organizace;
                         }
                     },
                     OrderValueRender = (s) => {
                         Osoba o = (Osoba)s;
                         OsobaEvent oe = o.Events()
-                            .Where(m=>m.Type==(int)OsobaEvent.Types.Poslanec)
+                            .Where(m=>m.Type==(int)OsobaEvent.Types.VolenaFunkce && "poslanec".Equals(m.AddInfo, StringComparison.InvariantCultureIgnoreCase))
                             .OrderByDescending(m=>m.DatumOd)
                             .FirstOrDefault();
                         if (oe == null)
@@ -68,7 +68,7 @@
                         }
                         else
                         {
-                            return oe.PolitickaStrana;
+                            return oe.Organizace;
                         }
 
                     }

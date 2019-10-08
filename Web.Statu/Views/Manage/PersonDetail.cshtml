@@ -13,7 +13,7 @@
     //                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key,  })
     //                  .ToList();
 
-    var subTypeList = HlidacStatu.Lib.Data.EventSubType.GetListItems();
+    //var subTypeList = HlidacStatu.Lib.Data.EventSubType.GetListItems();
     var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor };
 }
 
@@ -68,7 +68,6 @@
                 data-castka=""
                 data-addinfo=""
                 data-typ=""
-                data-subtyp=""
                 data-zdroj=""
                 data-action="create">
             Přidat event
@@ -102,7 +101,7 @@
                                 @Html.DisplayFor(modelItem => udalost.Title)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => udalost.PolitickaStrana)
+                                @Html.DisplayFor(modelItem => udalost.Organizace)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => udalost.TypeName)
@@ -111,10 +110,6 @@
                                 @if (castkuZobrazitPro.Contains(udalost.Type))
                                 {
                                     @Html.DisplayFor(modelItem => udalost.AddInfoNum)
-                                }
-                                else if (subTypeList.Where(it => it.EventTypeId == udalost.Type).Any())
-                                {
-                                    @Html.DisplayFor(modelItem => udalost.SubTypeName)
                                 }
                                 else
                                 {
@@ -134,11 +129,10 @@
                                         data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
                                         data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
                                         data-titulek="@udalost.Title"
-                                        data-polstr="@udalost.PolitickaStrana"
+                                        data-polstr="@udalost.Organizace"
                                         data-castka="@(udalost.AddInfoNum?.ToString("0"))"
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
-                                        data-subtyp="@udalost.SubType"
                                         data-zdroj="@udalost.Zdroj"
                                         data-action="edit">
                                     Editovat
@@ -152,11 +146,10 @@
                                         data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
                                         data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
                                         data-titulek="@udalost.Title"
-                                        data-polstr="@udalost.PolitickaStrana"
+                                        data-polstr="@udalost.Organizace"
                                         data-castka="@(udalost.AddInfoNum?.ToString("0"))"
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
-                                        data-subtyp="@udalost.SubType"
                                         data-zdroj="@udalost.Zdroj"
                                         data-action="delete">
                                     Smazat
@@ -209,7 +202,7 @@
                         <div class="form-group">
                             <label for="polstr" class="col-form-label">Politická strana:</label>
                             <input type="text" class="form-control" id="polstr">
-                            <span class="field-validation-valid text-danger" data-valmsg-for="PolitickaStrana" data-valmsg-replace="true"></span>
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Organizace" data-valmsg-replace="true"></span>
                         </div>
 
                         <div class="form-group">
@@ -222,11 +215,6 @@
                                 }
                             </select>
                             <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
-                        </div>
-                        <div class="form-group" id="subtyp_toggle">
-                            <label for="subtyp" class="col-form-label">Podtyp události:</label>
-                            <select class="form-control" id="subtyp"></select>
-                            <span class="field-validation-valid text-danger" data-valmsg-for="SubType" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group" id="castka_toggle">
                             <label for="castka" class="col-form-label">Částka:</label>
@@ -336,7 +324,7 @@
             "OsobaId": $("#personId").val(),
             "pk": $("#eventId").val(),
             "Title": $("#titulek").val(),
-            "PolitickaStrana": $("#polstr").val(),
+            "Organizace": $("#polstr").val(),
             "AddInfoNum": $("#castka").val(),
             "AddInfo": $("#addInfo").val(),
             "DatumOd": $("#datumOd").val(),
@@ -385,40 +373,21 @@
 
     function drawSubtype(eventTypeId) {
         var eventTypeIdInt = parseInt(eventTypeId, 10);
-        var subtypeSelect = $("#subtyp");
-        subtypeSelect.empty();
-        const possibleSubtypes = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(subTypeList));
         const castkaForTypes = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(castkuZobrazitPro));
 
         if (castkaForTypes.includes(eventTypeIdInt)) {
             //display addinfonum instead of selectbox
             console.log("should display castka");
             $("#castka_toggle").show();
-            $("#subtyp_toggle").hide();
             $("#addInfo_toggle").hide();
-            $("#subtyp").val("");
-            $("#addInfo").val("");
-        } else if (possibleSubtypes.some(st => st.EventTypeId == eventTypeIdInt)) {
-            console.log("should display selectbox for subtype");
-            $("#castka_toggle").hide();
-            $("#subtyp_toggle").show();
-            $("#addInfo_toggle").hide();
-            $("#castka").val("");
             $("#addInfo").val("");
         } else {
             console.log("should display addinfo");
             $("#castka_toggle").hide();
-            $("#subtyp_toggle").hide();
             $("#addInfo_toggle").show();
             $("#castka").val("");
-            $("#subtyp").val("");
         }
 
-        var filteredSubtypes = possibleSubtypes.filter(subtype => subtype.EventTypeId == eventTypeIdInt);
-
-        filteredSubtypes.forEach(subtype => {
-            subtypeSelect.append('<option value="' + subtype.Id + '">' + subtype.NameMale + '</option>');
-        });
     }
 
     // našeptávání

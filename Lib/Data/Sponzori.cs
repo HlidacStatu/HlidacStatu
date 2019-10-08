@@ -75,7 +75,7 @@ namespace HlidacStatu.Lib.Data
                                 .Where(m => m.Type == 3 && m.DatumOd.HasValue)
                                 .ToArray()
                                 .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                                .GroupBy(g => new { rok = g.rok, strana = g.oe.PolitickaStrana }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.Organizace }, oe => oe.oe, (r, oe) => new StranaPerYear()
                                 {
                                     Rok = r.rok,
                                     Strana = r.strana,
@@ -216,7 +216,7 @@ namespace HlidacStatu.Lib.Data
                             .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
                             .OrderByDescending(o => o.oe.AddInfoNum)
                             .ToArray()
-                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumDo.Value.Year, strana = g.oe.PolitickaStrana }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
+                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumDo.Value.Year, strana = g.oe.Organizace }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
                             {
                                 Sponzor = o.osoba,
                                 CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
@@ -303,7 +303,7 @@ namespace HlidacStatu.Lib.Data
                 this.Name = Osoba.GetByInternalId(oe.OsobaId).FullNameWithYear();
                 this.Amount = oe.AddInfoNum ?? 0;
                 this.SubjectUrl = Osoba.GetByInternalId(oe.OsobaId).GetUrl();
-                this.Strana = oe.PolitickaStrana;
+                this.Strana = oe.Organizace;
                 //transaction
                 if (!string.IsNullOrEmpty(oe.Zdroj) && oe.Zdroj.ToLower().StartsWith("https://www.hlidacstatu.cz/ucty/transakce/"))
                 {

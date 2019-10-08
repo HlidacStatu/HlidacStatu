@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Data
 {
     [MetadataType(typeof(OsobaEventMetadata))]
     public partial class OsobaEvent
-        : Audit.IAuditable, IValidatableObject
+        : Audit.IAuditable //, IValidatableObject
     {
 
         private static ObjectsComparer.Comparer<OsobaEvent> comparer = new ObjectsComparer.Comparer<OsobaEvent>();
@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Data
         {
             this.OsobaId = osobaId;
             this.Title = title;
-            this.Description = description;
+            this.Note = description;
             this.Type = (int)type;
             this.Created = DateTime.Now;
         }
@@ -90,27 +90,28 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        // todo: delete
         // není nejrychlejší
-        public string SubTypeName
-        {
-            get
-            {
-                if (this.SubType is null)
-                    return "";
-                using (Lib.Data.DbEntities db = new Data.DbEntities())
-                {
-                    string result = db.EventSubType
-                    .Where(subType =>
-                        subType.EventTypeId == this.Type &&
-                        subType.Id == this.SubType
-                    )
-                    .Select(subtype => subtype.NameMale)
-                    .FirstOrDefault();
+        //public string SubTypeName
+        //{
+        //    get
+        //    {
+        //        if (this.SubType is null)
+        //            return "";
+        //        using (Lib.Data.DbEntities db = new Data.DbEntities())
+        //        {
+        //            string result = db.EventSubType
+        //            .Where(subType =>
+        //                subType.EventTypeId == this.Type &&
+        //                subType.Id == this.SubType
+        //            )
+        //            .Select(subtype => subtype.NameMale)
+        //            .FirstOrDefault();
 
-                    return result;
-                }
-            }
-        }
+        //            return result;
+        //        }
+        //    }
+        //}
 
 
         public static OsobaEvent GetById(int id)
@@ -152,7 +153,7 @@ namespace HlidacStatu.Lib.Data
                 // create
                 if (osobaEvent.pk == 0 && osobaEvent.OsobaId > 0)
                 {
-                    osobaEvent.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
+                    osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
                     osobaEvent.Created = DateTime.Now;
                     db.OsobaEvent.Add(osobaEvent);
                     db.SaveChanges();
@@ -174,12 +175,11 @@ namespace HlidacStatu.Lib.Data
                     {
                         eventToUpdate.DatumOd = osobaEvent.DatumOd;
                         eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                        eventToUpdate.PolitickaStrana = ParseTools.NormalizaceStranaShortName(osobaEvent.PolitickaStrana);
+                        eventToUpdate.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
                         eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
                         eventToUpdate.AddInfo = osobaEvent.AddInfo;
                         eventToUpdate.Title = osobaEvent.Title;
                         eventToUpdate.Type = osobaEvent.Type;
-                        eventToUpdate.SubType = osobaEvent.SubType;
                         eventToUpdate.Zdroj = osobaEvent.Zdroj;
 
                         eventToUpdate.Created = DateTime.Now;
@@ -206,13 +206,13 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
+                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.Organizace);
                     return sb.ToString();
                 // poslanec a senátor sloučeni
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.SubTypeName} {this.RenderDatum()} ");
-                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
-                        sb.Append(" za " + PolitickaStrana);
+                    sb.Append($"{this.AddInfo} {this.RenderDatum()} ");
+                    if (!string.IsNullOrEmpty(this.Organizace))
+                        sb.Append(" za " + Organizace);
                     return sb.ToString();
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
@@ -223,19 +223,19 @@ namespace HlidacStatu.Lib.Data
                         if (o != null)
                             return this.Title + " s " + o.FullName();
                         else
-                            return this.Title + " " + Description;
+                            return this.Title + " " + Note;
                     }
                     else
-                        return this.Title + " " + Description;
+                        return this.Title + " " + Note;
 
                 case Types.Jina:
                 default:
-                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Description))
-                        return this.Title + delimeter + this.Description;
+                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
+                        return this.Title + delimeter + this.Note;
                     else if (!string.IsNullOrEmpty(this.Title))
                         return this.Title;
-                    else if (!string.IsNullOrEmpty(this.Description))
-                        return this.Description;
+                    else if (!string.IsNullOrEmpty(this.Note))
+                        return this.Note;
                     else
                         return string.Empty;
 
@@ -258,13 +258,13 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.PolitickaStrana);
+                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.Organizace);
                     return sb.ToString();
                 // poslanec a senátor sloučeni
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.SubTypeName} {this.RenderDatum()} ");
-                    if (!string.IsNullOrEmpty(this.PolitickaStrana))
-                        sb.Append(" za " + PolitickaStrana);
+                    sb.Append($"{this.AddInfo} {this.RenderDatum()} ");
+                    if (!string.IsNullOrEmpty(this.Organizace))
+                        sb.Append(" za " + Organizace);
                     return sb.ToString() + zdroj;
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
@@ -275,19 +275,19 @@ namespace HlidacStatu.Lib.Data
                         if (o != null)
                             return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrl(), o.FullName()) + zdroj;
                         else
-                            return this.Title + " " + Description + zdroj;
+                            return this.Title + " " + Note + zdroj;
                     }
                     else
-                        return this.Title + " " + Description + zdroj;
+                        return this.Title + " " + Note + zdroj;
 
                 case Types.Jina:
                 default:
-                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Description))
-                        return this.Title + delimeter + this.Description + zdroj;
+                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
+                        return this.Title + delimeter + this.Note + zdroj;
                     else if (!string.IsNullOrEmpty(this.Title))
                         return this.Title + zdroj;
-                    else if (!string.IsNullOrEmpty(this.Description))
-                        return this.Description + zdroj;
+                    else if (!string.IsNullOrEmpty(this.Note))
+                        return this.Note + zdroj;
                     else
                         return string.Empty;
 
@@ -346,15 +346,16 @@ namespace HlidacStatu.Lib.Data
             return comparer.Compare(a, b);
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (!EventSubType.IsValidSubtype(this.Type, this.SubType))
-            {
-                yield return new ValidationResult(
-                    $"Zvolený podtyp nepatří ke zvolenému typu.",
-                    new[] { nameof(Type), nameof(SubType) });
-            }
-        }
+        // todo: delete
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (!EventSubType.IsValidSubtype(this.Type, this.SubType))
+        //    {
+        //        yield return new ValidationResult(
+        //            $"Zvolený podtyp nepatří ke zvolenému typu.",
+        //            new[] { nameof(Type), nameof(SubType) });
+        //    }
+        //}
     }
 }
 

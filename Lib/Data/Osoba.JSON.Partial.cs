@@ -35,11 +35,11 @@ namespace HlidacStatu.Lib.Data
                 new JSON.ev()
                 {
                     pk = m.pk,
-                    PolitickaStrana = m.PolitickaStrana,
+                    Organizace = m.Organizace,
                     DatumOd = m.DatumOd?.ToString("yyyy-MM-dd") ?? "",
                     DatumDo = m.DatumDo?.ToString("yyyy-MM-dd") ?? "",
                     Title = m.Title,
-                    Description = m.Description,
+                    Note = m.Note,
                     Typ = (OsobaEvent.Types)m.Type,
                     AddInfoNum = m.AddInfoNum,
                     Zdroj = m.Zdroj
@@ -106,14 +106,14 @@ namespace HlidacStatu.Lib.Data
                 {
                     OsobaEvent ev = new OsobaEvent();
                     ev.pk = e.pk;
-                    ev.PolitickaStrana = e.PolitickaStrana;
+                    ev.Organizace = e.Organizace;
                     ev.AddInfoNum = e.AddInfoNum;
                     ev.DatumOd = ParseTools.ToDateTime(e.DatumOd, "yyyy-MM-dd");
                     ev.DatumDo = ParseTools.ToDateTime(e.DatumDo, "yyyy-MM-dd");
-                    ev.Description = e.Description;
+                    ev.Note = e.Note;
                     ev.Title = e.Title;
                     ev.Type = (int)e.Typ;
-                    ev.SubType = (int)e.SubTyp;
+                    ev.AddInfo = e.AddInfo;
                     ev.Zdroj = e.Zdroj;
                     ev.OsobaId = o.InternalId;                    
                     o.AddOrUpdateEvent(ev,user);
@@ -238,16 +238,16 @@ namespace HlidacStatu.Lib.Data
                 {
                     get; set;
                 }
-                [JsonProperty("description", Required = Required.Default)]
-                public string Description
+                [JsonProperty("note", Required = Required.Default)]
+                public string Note
                 {
                     get; set;
                 }
 
 
                 /// <summary>Pokud politik, tak za jakou stranu</summary>
-                [JsonProperty("politickaStrana", Required = Required.Default)]
-                public string PolitickaStrana
+                [JsonProperty("organizace", Required = Required.Default)]
+                public string Organizace
                 {
                     get; set;
                 }
@@ -266,9 +266,8 @@ namespace HlidacStatu.Lib.Data
                     get; set;
                 }
 
-                [JsonProperty("subtyp", Required = Required.Default)]
-                [JsonConverter(typeof(StringEnumConverter))]
-                public OsobaEvent.SubTypes SubTyp
+                [JsonProperty("addinfo", Required = Required.Default)]
+                public string AddInfo
                 {
                     get; set;
                 }
