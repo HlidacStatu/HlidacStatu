@@ -25,11 +25,11 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public OsobaEvent(int osobaId, string title, string description, Types type)
+        public OsobaEvent(int osobaId, string title, string note, Types type)
         {
             this.OsobaId = osobaId;
             this.Title = title;
-            this.Note = description;
+            this.Note = note;
             this.Type = (int)type;
             this.Created = DateTime.Now;
         }
@@ -132,7 +132,7 @@ namespace HlidacStatu.Lib.Data
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
                 var result = db.OsobaEvent
-                    //.Where(m => (eventTypeId == null) ? true : (m.Type == eventTypeId))
+                    .Where(m => m.Type == eventTypeId )
                     .Where(m => m != null)
                     .Where(m => m.AddInfo.Contains(jmeno))
                     //.OrderBy(m => m.AddInfo)

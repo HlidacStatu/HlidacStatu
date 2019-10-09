@@ -397,8 +397,12 @@
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: '/api/v1/addInfo?q=%QUERY',
-                wildcard: '%QUERY'
+                url: '/api/v1/addInfo?',
+                //wildcard: '%QUERY',
+                replace: function (url, query) {
+                    var selectedType = $("#typ").val();
+                    return url + 't=' + selectedType + '&q=' + query;
+                }
             }
         });
 

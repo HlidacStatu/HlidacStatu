@@ -527,14 +527,14 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        public ActionResult AddInfo(string q)
+        public ActionResult AddInfo(string q, int t)
         {
             List<string> result = new List<string>();
 
-            if (string.IsNullOrEmpty(q) || q.Length <2)
-                return Json(result, JsonRequestBehavior.AllowGet);
+            //if (string.IsNullOrEmpty(q) || q.Length <2)
+            //    return Json(result, JsonRequestBehavior.AllowGet);
 
-            result = OsobaEvent.GetAddInfos(q, null, 200).ToList();
+            result = OsobaEvent.GetAddInfos(q, t, 200).ToList();
                 
 
             if (!string.IsNullOrEmpty(Request.Headers["Origin"]))

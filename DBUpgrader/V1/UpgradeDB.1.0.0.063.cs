@@ -9,8 +9,8 @@ namespace HlidacStatu.DBUpgrades
 		private partial class UpgradeDB
 		{
 
-			[DatabaseUpgradeMethod("1.0.0.62")]
-			public static void Init_1_0_0_62(IDatabaseUpgrader du)
+			[DatabaseUpgradeMethod("1.0.0.63")]
+			public static void Init_1_0_0_63(IDatabaseUpgrader du)
 			{
                 string sql = @"
 CREATE TABLE EventType(

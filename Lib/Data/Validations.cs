@@ -44,14 +44,11 @@ namespace HlidacStatu.Lib.Data
         public string Title { get; set; }
 
         [Display(Name = "Popis")]
-        public string Description { get; set; }
+        public string Note { get; set; }
 
         [Required(ErrorMessage = "Prosím, vyberte typ události.")]
         [Display(Name = "Typ")]
         public int Type { get; set; }
-
-        [Display(Name = "Podtyp")]
-        public int SubType { get; set; }
 
         [Display(Name = "Datum od")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
