@@ -210,5 +210,13 @@ namespace HlidacStatu.Lib.ES
                 ret = ret + "&oblast=" + oblast.ToString();
             return ret;
         }
+
+        public override string SocialInfoTitle()
+        {
+            string spocet = Devmasters.Core.Lang.Plural.GetWithZero((int)this.Total, 
+                "Žádné zakázky jsme na H"
+                );
+            return $"Nalezeno {this.Total}";
+        }
     }
 }

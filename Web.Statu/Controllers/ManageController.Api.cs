@@ -50,7 +50,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult ExportResult(string id, string q, string h, string o, string ct)
+        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int num = 1000 )
         {
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -73,11 +73,19 @@ namespace HlidacStatu.Web.Controllers
             if (ct == "txt")
                 contentType = "text/tab-separated-values";
 
+            int numOfRecords = 1000;
+            if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
+                numOfRecords = 100;
+
+            if (this.User.IsInRole("Admin"))
+            {
+                numOfRecords = num;
+            }
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(q) || string.IsNullOrEmpty(h))
                 return File(System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici"), "text/plain", "export.txt");
             if (id == "smlouvy" && HlidacStatu.Lib.ES.SearchTools.IsQueryHashCorrect(id, q, h))
             {
-                var sres = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(q, 0, 1000,
+                var sres = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(q, 0, num,
               (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Util.ParseTools.ToInt(o) ?? 0),
               logError: false);
 
@@ -114,12 +122,9 @@ namespace HlidacStatu.Web.Controllers
             }
             else if (id == "zakazky" && HlidacStatu.Lib.ES.SearchTools.IsQueryHashCorrect(id, q, h))
             {
-                int pocetZaznamu = 1000;
-                if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
-                    pocetZaznamu = 100;
 
                 string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
-                var sres = VerejnaZakazka.Searching.SimpleSearch(q, cpvs, 1, pocetZaznamu,
+                var sres = VerejnaZakazka.Searching.SimpleSearch(q, cpvs, 1, numOfRecords,
                     Util.ParseTools.ToInt(o) ?? 0, (Request.QueryString["zahajeny"] == "1")
                     );
 

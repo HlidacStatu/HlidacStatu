@@ -115,8 +115,21 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        static object objGeneralSearchLock = new object();
+
         public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false)
+        {
+            return Elastic.Apm.Agent.Tracer.CaptureTransaction<MultiResult>("GeneralSearch", "search",
+                (tran) =>
+                {
+                    tran.Labels.Add("query", query);
+                    return GeneralSearch(tran, query, page, pageSize, showBeta);
+                }
+            );
+        }
+
+
+        static object objGeneralSearchLock = new object();
+        private static MultiResult GeneralSearch(Elastic.Apm.Api.ITransaction apmtran, string query, int page = 1, int pageSize = 10, bool showBeta = false)
         {
             MultiResult res = new MultiResult() { Query = query };
 
@@ -130,35 +143,49 @@ namespace HlidacStatu.Lib.Data
             Parallel.Invoke(po,
                 () =>
                 {
+                    Elastic.Apm.Api.ISpan sp=null;
                     try
                     {
-                        res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query,null,1,5);
-    
-                        if (res.Datasets.Exceptions.Count > 0)
+                        apmtran.CaptureSpan("Dataset GeneralSearch", "search", () =>
                         {
-                            HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
-                                res.Datasets.GetExceptions());
-                        }
+
+                            res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query, null, 1, 5);
+                            if (res.Datasets.Exceptions.Count > 0)
+                            {
+                                HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
+                                    res.Datasets.GetExceptions());
+                            }
+                        });
                     }
                     catch (System.Exception e)
                     {
                         HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query, e);
                     }
+                    finally
+                    {
+                    }
                 },
                 () =>
                 {
+                    Elastic.Apm.Api.ISpan sp = null;
                     try
                     {
-
-                        res.Smlouvy = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, 1, 20, ES.SearchTools.OrderResult.Relevance,
-                            anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
-                            );
-
+                        apmtran.CaptureSpan("Smlouvy", "search", () =>
+                        {
+                            res.Smlouvy = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, 1, 20, ES.SearchTools.OrderResult.Relevance,
+                                anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
+                                );
+                        });
                     }
                     catch (System.Exception e)
                     {
                         HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for Smlouvy query" + query, e);
                     }
+                    finally
+                    {
+                        sp?.End();
+                    }
+
                 },
                 () =>
                 {

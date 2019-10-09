@@ -428,7 +428,11 @@ namespace HlidacStatu.Web.Controllers
             if (page < 1)
                 page = 1;
             if (page > 200)
-                page = 200;
+                return Content(
+                    Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new { total = 0, page = 201, results = Array.Empty<dynamic>() }
+                )
+                , "application/json");
 
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {

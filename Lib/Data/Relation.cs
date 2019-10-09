@@ -247,18 +247,14 @@ namespace HlidacStatu.Lib.Data
             {
                 case TiskEnum.Text:
                     return string.Format(textTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ,null, withStats));
-                    break;
                 case TiskEnum.Html:
                     return string.Format(htmlTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ,null, withStats));
-                    break;
                 case TiskEnum.Json:
                     return string.Format(jsonTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ, null,withStats));
-                    break;
                 case TiskEnum.Checkbox:
                     return string.Format(checkboxTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ, null, withStats));
                 default:
                     return string.Empty;
-                    break;
             }
 
         }

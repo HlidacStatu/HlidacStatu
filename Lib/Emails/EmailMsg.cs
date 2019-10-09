@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Emails
         public string TextTemplate { get; set; }
 
         public string To { get; set; }
-        public string From { get; set; } = "info@HlidacStatu.cz";
+        public string From { get; set; } = "podpora@HlidacStatu.cz";
 
         public string Subject { get; set; }
 

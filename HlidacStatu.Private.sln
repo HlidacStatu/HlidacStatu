@@ -96,19 +96,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_deploy", "_deploy", "{58A6
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		..\PrivateInternals\.gitignore = ..\PrivateInternals\.gitignore
-		..\PrivateInternals\_deploy\buildWeb.bat = ..\PrivateInternals\_deploy\buildWeb.bat
-		..\PrivateInternals\_deploy\buildWeb.OldHlidacSmluv.bat = ..\PrivateInternals\_deploy\buildWeb.OldHlidacSmluv.bat
-		..\PrivateInternals\_deploy\deployAll.bat = ..\PrivateInternals\_deploy\deployAll.bat
-		..\PrivateInternals\_deploy\deployDownloader.bat = ..\PrivateInternals\_deploy\deployDownloader.bat
-		..\PrivateInternals\_deploy\deployHlidacSmluv.bat = ..\PrivateInternals\_deploy\deployHlidacSmluv.bat
-		..\PrivateInternals\_deploy\deployHlidacStatu.bat = ..\PrivateInternals\_deploy\deployHlidacStatu.bat
-		..\PrivateInternals\_deploy\deployHlidacStatu.Stage.bat = ..\PrivateInternals\_deploy\deployHlidacStatu.Stage.bat
-		..\PrivateInternals\_deploy\deployHlidacStatuAdmin.bat = ..\PrivateInternals\_deploy\deployHlidacStatuAdmin.bat
-		..\PrivateInternals\_deploy\deployOCRHlidacStatu.bat = ..\PrivateInternals\_deploy\deployOCRHlidacStatu.bat
-		..\PrivateInternals\_deploy\deployPlatformMonitor.bat = ..\PrivateInternals\_deploy\deployPlatformMonitor.bat
-		..\PrivateInternals\_deploy\msbuild.14.bat = ..\PrivateInternals\_deploy\msbuild.14.bat
-		..\PrivateInternals\_deploy\msbuild.15.bat = ..\PrivateInternals\_deploy\msbuild.15.bat
-		..\PrivateInternals\_deploy\msbuild.Stage.15.bat = ..\PrivateInternals\_deploy\msbuild.Stage.15.bat
+		..\PrivateInternals\_deployGH\buildWeb.bat = ..\PrivateInternals\_deployGH\buildWeb.bat
+		..\PrivateInternals\_deployGH\deployAll.bat = ..\PrivateInternals\_deployGH\deployAll.bat
+		..\PrivateInternals\_deployGH\deployDownloader.bat = ..\PrivateInternals\_deployGH\deployDownloader.bat
+		..\PrivateInternals\_deployGH\deployHlidacStatu.bat = ..\PrivateInternals\_deployGH\deployHlidacStatu.bat
+		..\PrivateInternals\_deployGH\deployHlidacStatu.Stage.bat = ..\PrivateInternals\_deployGH\deployHlidacStatu.Stage.bat
+		..\PrivateInternals\_deployGH\deployHlidacStatuAdmin.bat = ..\PrivateInternals\_deployGH\deployHlidacStatuAdmin.bat
+		..\PrivateInternals\_deployGH\deployOCRHlidacStatu.bat = ..\PrivateInternals\_deployGH\deployOCRHlidacStatu.bat
+		..\PrivateInternals\_deployGH\deployPlatformMonitor.bat = ..\PrivateInternals\_deployGH\deployPlatformMonitor.bat
+		..\PrivateInternals\_deployGH\msbuild.14.bat = ..\PrivateInternals\_deployGH\msbuild.14.bat
+		..\PrivateInternals\_deployGH\msbuild.15.bat = ..\PrivateInternals\_deployGH\msbuild.15.bat
+		..\PrivateInternals\_deployGH\msbuild.Stage.15.bat = ..\PrivateInternals\_deployGH\msbuild.Stage.15.bat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacWebu.CustomMonitors", "..\PrivateInternals\HlidacWebu.CustomMonitors\HlidacWebu.CustomMonitors.csproj", "{DDA06DE1-D9AC-4CFF-92D8-A7D051779CFF}"
@@ -948,8 +946,8 @@ Global
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

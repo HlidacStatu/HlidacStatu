@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.ES
 {
-    public class SearchDataResult<T> : Lib.Data.Search.ISearchResult
+    public class SearchDataResult<T> : Lib.Data.Search.ISearchResult, ISocialInfo
         where T : class 
     {
         public virtual int DefaultPageSize() { return 40; }
@@ -94,5 +95,39 @@ namespace HlidacStatu.Lib.ES
         {
             this.OrderList = this.orderFill();
         }
+
+
+        #region ISocialInfo
+        public virtual string SocialInfoTitle()
+        {
+            return string.Empty;
+        }
+
+        public virtual string SocialInfoSubTitle()
+        {
+            return string.Empty;
+        }
+
+        public virtual string SocialInfoBody()
+        {
+            return string.Empty;
+        }
+
+        public virtual string SocialInfoFooter()
+        {
+            return string.Empty;
+        }
+
+        public virtual string SocialInfoImageUrl()
+        {
+            return string.Empty;
+        }
+
+        public InfoFact[] InfoFacts()
+        {
+            return Array.Empty<InfoFact>();
+        }
+        #endregion
+
     }
 }

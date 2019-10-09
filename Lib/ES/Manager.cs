@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.ES
             Logs,
             //DataSourceDb,
             DataSource,
-			Insolvence
+            Insolvence
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -43,8 +43,8 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
         public static string defaultIndexName_Firmy = "firmy";
         public static string defaultIndexName_Logs = "logs";
-		//public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
-		public static string defaultIndexName_Insolvence = "insolvencnirestrik";
+        //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
+        public static string defaultIndexName_Insolvence = "insolvencnirestrik";
 
 
         private static object _clientLock = new object();
@@ -118,12 +118,12 @@ namespace HlidacStatu.Lib.ES
                 );
         }
 
-		public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
-		{
-			return GetESClient(defaultIndexName_Insolvence, timeOut, connectionLimit, IndexType.Insolvence);
-		}
+        public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_Insolvence, timeOut, connectionLimit, IndexType.Insolvence);
+        }
 
-		public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
+        public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Firmy, timeOut, connectionLimit, IndexType.Firmy);
         }
@@ -307,30 +307,6 @@ namespace HlidacStatu.Lib.ES
 
 
 
-        public static bool ExistsZaznam(string id, ElasticClient client = null)
-        {
-            bool noSetClient = client == null;
-            if (client == null)
-                client = Lib.ES.Manager.GetESClient();
-            var res = client
-                    .DocumentExists<Lib.Data.Smlouva>(id);
-            if (noSetClient)
-            {
-                if (res.Exists)
-                    return true;
-                client = GetESClient_Sneplatne();
-                res = client.DocumentExists<Lib.Data.Smlouva>(id);
-                if (res.IsValid)
-                    return res.Exists;
-                else
-                    throw new ApplicationException(res.DebugInformation, res.OriginalException);
-
-            }
-            else
-                return res.Exists;
-
-        }
-
         //public static void CreateIndex()
         //{
         //    CreateIndex(defaultIndexName);
@@ -369,11 +345,11 @@ namespace HlidacStatu.Lib.ES
             res = client
                 .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
                     .InitializeUsing(idxSt)
-                    .Mappings(m => m.Map("data",mm=>mm
-                        .Properties(ps=>ps
-                            .Date(psn=>psn.Name("DbCreated"))
-                            .Keyword(psn=>psn.Name("DbCreatedBy"))
-                            )
+                    .Mappings(m => m.Map("data", mm => mm
+                         .Properties(ps => ps
+                             .Date(psn => psn.Name("DbCreated"))
+                             .Keyword(psn => psn.Name("DbCreatedBy"))
+                             )
                         )
                     )
                 );
@@ -396,7 +372,7 @@ namespace HlidacStatu.Lib.ES
             filter.Add("lowercase");
             filter.Add("czech_stop");
             //an.Filter.Add("czech_keywords");
-            filter.Add("czech_stemmer");
+            filter.Add("czech_stemmer"); //pouzit Hunspell
             filter.Add("asciifolding");
             an.Filter = filter;
             // Add the Analyzer with a name
@@ -408,7 +384,7 @@ namespace HlidacStatu.Lib.ES
 
             set.Analysis.Analyzers.Add("default", an);
             set.Analysis.TokenFilters.Add("czech_stop", new StopTokenFilter() { StopWords = new string[] { "_czech_" } });
-            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" });
+            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" }); //Humspell
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
@@ -458,7 +434,7 @@ namespace HlidacStatu.Lib.ES
                        .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Mappings(m => m
-                                .Map<Data.Firma.Search.FirmaInElastic>(map=>map.AutoMap(maxRecursion:1))
+                                .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
                                )
                        );
                     break;
@@ -498,167 +474,9 @@ namespace HlidacStatu.Lib.ES
                     break;
             }
 
-
-            //Console.WriteLine(res.IsValid);
-        }
-
-        //public static Nest.IIndexResponse Save(Person p, ElasticClient client = null)
-        //{
-        //    p.PrepareBeforeSave();
-        //    if (client == null)
-        //        client = Lib.ES.Manager.GetESClient();
-        //    var res = client
-        //        .Index<Lib.Data.Person>(p);
-        //    return res;
-        //}
-
-        
-
-        public static Nest.IIndexResponse Save(Lib.Data.Smlouva item, ElasticClient client = null)
-        {
-            if (item == null)
-                return new Nest.IndexResponse();
-
-            item.PrepareBeforeSave();
-            ElasticClient c = client;
-            if (c == null)
-            {
-                if (item.platnyZaznam)
-                    c = Lib.ES.Manager.GetESClient();
-                else
-                    c = Lib.ES.Manager.GetESClient_Sneplatne();
-            }
-            var res = c
-                //.Update<Lib.Data.Smlouva>()
-                .Index<Lib.Data.Smlouva>(item, m => m.Id(item.Id));
-
-            if (item.platnyZaznam == false && res.IsValid && client == null)
-            {
-                //zkontroluj zda neni v indexu s platnymi. pokud ano, smaz ho tam
-                var cExist = GetESClient();
-                var s = Manager.Load(item.Id, cExist);
-                if (s != null)
-                    Delete(item.Id, cExist);
-            }
-
-            if (res.IsValid)
-            {
-                try
-                {
-
-                    DirectDB.NoResult("exec smlouvaId_save @id,@active, @created, @updated",
-                        new System.Data.SqlClient.SqlParameter("id", item.Id),
-                        new System.Data.SqlClient.SqlParameter("created", item.casZverejneni),
-                        new System.Data.SqlClient.SqlParameter("updated", item.LastUpdate),
-                        new System.Data.SqlClient.SqlParameter("active", item.znepristupnenaSmlouva() ? (int)0 : (int)1)
-                        );
-                }
-                catch (Exception e)
-                {
-                    ESLogger.Error("Manager Save", e);
-                }
-
-
-
-                if (!string.IsNullOrEmpty(item.Platce?.ico))
-                {
-                    DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
-                    new System.Data.SqlClient.SqlParameter("ico", item.Platce?.ico)
-                    );
-                }
-                if (!string.IsNullOrEmpty(item.VkladatelDoRejstriku?.ico))
-                {
-                    DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
-                    new System.Data.SqlClient.SqlParameter("ico", item.VkladatelDoRejstriku?.ico)
-                    );
-                }
-                foreach (var s in item.Prijemce ?? new Data.Smlouva.Subjekt[] { })
-                {
-                    if (!string.IsNullOrEmpty(s.ico))
-                    {
-                        DirectDB.NoResult("exec Firma_IsInRS_Save @ico",
-                            new System.Data.SqlClient.SqlParameter("ico", s.ico)
-                            );
-                    }
-                }
-
-            }
-            return res;
         }
 
 
-        public static Lib.Data.Smlouva Load(string Id, ElasticClient client = null)
-        {
-            try
-            {
-                ElasticClient c = client;
-                if (client == null)
-                    c = Lib.ES.Manager.GetESClient();
-
-                var res = c
-                    .Get<Lib.Data.Smlouva>(Id);
-                if (res.Found)
-                    return res.Source;
-                else
-                {
-                    if (client == null)
-                    {
-                        c = GetESClient_Sneplatne();
-                    }
-                    res = c.Get<Lib.Data.Smlouva>(Id);
-                    if (res.Found)
-                        return res.Source;
-                    else
-                    {
-                        ESLogger.Warning("Cannot load Smlouva Id " + Id, res.OriginalException);
-                        DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", Id));
-                    }
-
-                    return null;
-                }
-
-
-            }
-            catch (Exception e)
-            {
-                ESLogger.Error("Cannot load Smlouva Id " + Id, e);
-                return null;
-            }
-        }
-
-        //public static Lib.Data.Person LoadPerson(Guid Id)
-        //{
-        //    return LoadPerson(Id.ToString());
-        //}
-        //public static Lib.Data.Person LoadPerson(string Id, ElasticClient client = null)
-        //{
-        //    if (client == null)
-        //        client = Lib.ES.Manager.GetESClient();
-        //    var res = client
-        //        .Get<Lib.Data.Person>(Id);
-        //    if (res.Found)
-        //        return res.Source;
-        //    else
-        //        return null;
-        //}
-
-
-        public static bool Delete(string Id, ElasticClient client = null)
-        {
-            if (client == null)
-                client = Lib.ES.Manager.GetESClient();
-            var res = client
-                .Delete<Lib.Data.Smlouva>(Id);
-            return res.IsValid;
-        }
-        //public static bool DeletePerson(Guid Id, ElasticClient client = null)
-        //{
-        //    if (client == null)
-        //        client = Lib.ES.Manager.GetESClient();
-        //    var res = client
-        //        .Delete<Lib.Data.Person>(Id);
-        //    return res.IsValid;
-        //}
 
         public static void LogQueryError<T>(Nest.ISearchResponse<T> esReq, string text = "", System.Web.HttpContextBase httpContext = null, Exception ex = null)
             where T : class

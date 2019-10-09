@@ -13,7 +13,6 @@ namespace HlidacStatu.Lib.Data.Insolvence
         static System.Text.RegularExpressions.RegexOptions options = ((System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace | System.Text.RegularExpressions.RegexOptions.Multiline)
                     | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         static System.Text.RegularExpressions.Regex regFindRegex = new System.Text.RegularExpressions.Regex(regex, options);
-        static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
 
         static string[] queryShorcuts = new string[] {
                 "ico:",
