@@ -13,18 +13,10 @@ namespace HlidacStatu.Web.Controllers
     {
 
         // find people
-        public ActionResult FindPerson(string jmeno, string prijmeni, string narozeni )
+        public ActionResult FindPerson(string jmeno, string prijmeni, string narozeni)
         {
-            if(string.IsNullOrWhiteSpace(jmeno) 
-                && string.IsNullOrWhiteSpace(prijmeni)
-                && string.IsNullOrWhiteSpace(narozeni))
-            {
-                return View();
-            }
-            DateTime? nar = ParseTools.ToDateTime(narozeni, "yyyy-MM-dd");
-            var osoby = Osoba.GetAllByName(jmeno, prijmeni, nar);
-            if (osoby.Count() == 0)
-                osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, nar);
+            // šlo by urychlit pomocí full text searche
+            var osoby = Osoba.FindAll(jmeno, prijmeni, narozeni);
 
             return View(osoby);
         }

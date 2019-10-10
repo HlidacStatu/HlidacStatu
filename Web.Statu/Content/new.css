@@ -1,3 +1,23 @@
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    z-index: 20;
+}
+
+.tableStickyHeader {
+    overflow-y: auto;
+    height: 100px;
+}
+
+    .tableStickyHeader thead th {
+        position: sticky;
+        top: 0;
+        background: white;
+    }
+
 
 .new-font, .new-body, h1, .link, .link--small, .link--blue, .navbar__level1 ul li a, .navbar__level2 ul li a, .watcher-block .block-list a, .watcher-block .block-status-list .status-item a, .footer__content__col a, .link--big, .header__content .header__search__hint, .breadcrumb a, .new-p, .small-darkgray-text, .table-new table th, .table-new table td, .table-new th, .table-new td, .watcher__title span, .search-result-label, .funding .funding-box .funding-secured-by, .searching__intro, .searching__questions, .new-title, .section-title, .btn-default, .btn-default-new, .btn-primary, .btn-primary-new, .btn-success, .btn-info, .btn-warning, .btn-danger, .header__content .header__search__btn, .funding .funding-box .btn-funding, .tag, .form-control-new, .header__content .header__search__input, .form-control, .label, .input-error, .navbar__level1 ul, .watcher-blocks {
     font-family: 'Cabin', sans-serif;

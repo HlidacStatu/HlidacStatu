@@ -506,6 +506,38 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        // search all people by neme, surname and dob
+        public static IEnumerable<Osoba> FindAll(string jmeno, string prijmeni, string rokNarozeni)
+        {
+            if (string.IsNullOrWhiteSpace(jmeno)
+                && string.IsNullOrWhiteSpace(prijmeni)
+                && string.IsNullOrWhiteSpace(rokNarozeni))
+            {
+                return new Osoba[0];
+            }
+
+            jmeno = jmeno.Trim();
+            prijmeni = prijmeni.Trim();
+            rokNarozeni = rokNarozeni.Trim();
+            // diakritika, velikost
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                if (int.TryParse(rokNarozeni, out int dob))
+                    return db.Osoba.AsNoTracking()
+                    .Where(m =>
+                        m.Jmeno.Contains(jmeno)
+                        && m.Prijmeni.Contains(prijmeni)
+                        && m.Narozeni.Value.Year == dob
+                    ).ToArray();
+                else
+                    return db.Osoba.AsNoTracking()
+                        .Where(m =>
+                            m.Jmeno.Contains(jmeno)
+                            && m.Prijmeni.Contains(prijmeni)
+                        ).ToArray();
+            }
+        }
+
         public static IEnumerable<Osoba> GetPolitikByNameFtx(string jmeno, int maxNumOfResults = 1500)
         {
             string nquery = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno.NormalizeToPureTextLower());
@@ -817,13 +849,13 @@ namespace HlidacStatu.Lib.Data
         {
             if (deletePrevious)
             {
-                var oes = this.Events(m => m.Type == (int)OsobaEvent.Types.Jina);
+                var oes = this.Events(m => m.Type == (int)OsobaEvent.Types.Specialni);
                 foreach (var o in oes)
                 {
                     o.Delete(user, true);
                 }
             }
-            OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Jina);
+            OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Specialni);
             oe.Organizace = ParseTools.NormalizaceStranaShortName(strana);
             oe.Zdroj = zdroj;
             return AddOrUpdateEvent(oe, user);
