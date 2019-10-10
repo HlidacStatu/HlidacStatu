@@ -83,7 +83,7 @@
                     <td>
                         <p>
                             Datový zdroj @Devmasters.Core.Lang.Plural.GetWithZero((int)Model.SearchData("", 1, 0).Total
-,"neobsahuje žádný záznam","obsahuje jeden záznam", "obsahuje {0} záznamy","obsahuje {0} záznamů")
+, "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů")
                         </p>
                         @if (first.Total > 0)
                         {
@@ -101,26 +101,35 @@
                 <tr>
                     <td>Kontaktovat autora</td>
                     <td>
-                        @Util.FeedbackModal("Poslat autorovi zprávu", null,null,null,
+                        @Util.FeedbackModal("Poslat autorovi zprávu", null, null, null,
                             new string[]{ "Chyba","Chci upozornit na chybu",
                         "Stiznost","Chci si stěžovat",
                         "Pochvala","Chci vás pochválit",
                         "NabidkaPomoci","Nabízím vám pomoc",
                         "Jiné","Jiné",
-                        }, true,"dataset|" + @Model.DatasetId)
+                        }, true, "dataset|" + @Model.DatasetId)
 
 
                     </td>
                 </tr>
- <tr>
-     <td colspan="2">
-         <a href="/data/TechnickeInfo/@Model.DatasetId" class="btn btn-default">Technické detaily</a>
-         @if (showEditBtn)
-         {
-         <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning" style="margin-left:10px"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
-         }
-     </td>
- </tr>
+                <tr>
+                    <td colspan="2">
+                        <a href="/data/TechnickeInfo/@Model.DatasetId" class="btn btn-default">Technické detaily</a>
+                        @if (showEditBtn)
+                        {
+                            <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning" style="margin-left:10px"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
+                        }
+                    </td>
+                </tr>
+                @if (Model.DatasetId == "stav-mostu")
+                {
+                    <tr>
+                        <td colspan="2">
+                            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1q2tP7lpTxs1AxzG1NO6a6-HYxl0jmqQq" width="800" height="600"></iframe>
+                        </td>
+                    </tr>
+                }
+
             </tbody>
         </table>
 

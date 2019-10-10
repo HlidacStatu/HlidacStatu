@@ -146,10 +146,10 @@ namespace HlidacStatu.Lib.Data
             string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
             var fixedOrder = new List<int>() {
-                (int)OsobaEvent.Types.PolitickaPracovni,
                 (int)OsobaEvent.Types.VolenaFunkce,
+                (int)OsobaEvent.Types.PolitickaPracovni,
+                (int)OsobaEvent.Types.Politicka,
                 (int)OsobaEvent.Types.VerejnaSpravaPracovni,
-                (int)OsobaEvent.Types.Politicka
             };
 
             var events = this.Events(predicate);

@@ -258,14 +258,16 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.Organizace);
+                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(template:"({0})"), this.Organizace);
                     return sb.ToString();
                 // poslanec a senátor sloučeni
+                case Types.PolitickaPracovni:
+                case Types.:
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.AddInfo} {this.RenderDatum()} ");
+                    sb.Append($"{this.AddInfo} {this.RenderDatum(template:"({0})")} ");
                     if (!string.IsNullOrEmpty(this.Organizace))
-                        sb.Append(" za " + Organizace);
-                    return sb.ToString() + zdroj;
+                        sb.Append(" - " + Organizace);
+                    return sb.ToString();
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:

@@ -61,9 +61,8 @@
         <div class="col-sm-8 col-md-9">
             @{
                 var funkceOsoba = Model.Description(true,
-                       m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
-                            && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
-                       20);
+                       m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
+                       200);
 
             }
             <div class="row">
