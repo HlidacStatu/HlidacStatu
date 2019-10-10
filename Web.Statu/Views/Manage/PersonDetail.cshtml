@@ -8,12 +8,7 @@
                       .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
                       .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
                       .ToList();
-    //var subTypeList = Devmasters.Core.Enums
-    //                  .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.SubTypes))
-    //                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key,  })
-    //                  .ToList();
-
-    //var subTypeList = HlidacStatu.Lib.Data.EventSubType.GetListItems();
+    
     var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor };
 }
 
@@ -49,14 +44,14 @@
             <dd>@Model.LastUpdate</dd>
         </dl>
         <p>
-            @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
+            @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-sm btn-primary btn-primary-new" })
         </p>
     </div>
     <div class="col-xs-12">
         <h4>Události</h4>
         <hr />
         <button type="button"
-                class="btn btn-primary"
+                class="btn btn-primary btn-sm"
                 data-toggle="modal"
                 data-target="#eventModal"
                 data-personid="@Model.InternalId"
@@ -64,25 +59,25 @@
                 data-datumod=""
                 data-datumdo=""
                 data-titulek=""
-                data-polstr=""
+                data-organizace=""
                 data-castka=""
                 data-addinfo=""
                 data-typ=""
                 data-zdroj=""
                 data-action="create">
-            Přidat event
+            Přidat událost
         </button>
         @if (Model.Events().Count() > 0)
         {
-            <table class="table">
+            <table class="table tableStickyHeader">
                 <thead>
                     <tr>
                         <th>Datum od</th>
                         <th>Datum do</th>
                         <th>Titulek</th>
-                        <th>Politická strana</th>
                         <th>Typ události</th>
-                        <th>Podrobnosti</th>
+                        <th>Organizace</th>
+                        <th>Role</th>
                         <th>Zdroj</th>
                         <th>akce</th>
                     </tr>
@@ -101,10 +96,10 @@
                                 @Html.DisplayFor(modelItem => udalost.Title)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => udalost.Organizace)
+                                @Html.DisplayFor(modelItem => udalost.TypeName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => udalost.TypeName)
+                                @Html.DisplayFor(modelItem => udalost.Organizace)
                             </td>
                             <td>
                                 @if (castkuZobrazitPro.Contains(udalost.Type))
@@ -116,12 +111,12 @@
                                     @Html.DisplayFor(modelItem => udalost.AddInfo)
                                 }
                             </td>
-                            <td>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                                 @Html.DisplayFor(modelItem => udalost.Zdroj)
                             </td>
                             <td>
                                 <button type="button"
-                                        class="btn btn-primary"
+                                        class="btn btn-primary btn-sm"
                                         data-toggle="modal"
                                         data-target="#eventModal"
                                         data-personid="@Model.InternalId"
@@ -129,7 +124,7 @@
                                         data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
                                         data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
                                         data-titulek="@udalost.Title"
-                                        data-polstr="@udalost.Organizace"
+                                        data-organizace="@udalost.Organizace"
                                         data-castka="@(udalost.AddInfoNum?.ToString("0"))"
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
@@ -138,7 +133,7 @@
                                     Editovat
                                 </button>
                                 <button type="button"
-                                        class="btn btn-primary"
+                                        class="btn btn-danger btn-sm"
                                         data-toggle="modal"
                                         data-target="#eventModal"
                                         data-personid="@Model.InternalId"
@@ -146,7 +141,7 @@
                                         data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
                                         data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
                                         data-titulek="@udalost.Title"
-                                        data-polstr="@udalost.Organizace"
+                                        data-organizace="@udalost.Organizace"
                                         data-castka="@(udalost.AddInfoNum?.ToString("0"))"
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
@@ -164,7 +159,7 @@
 </div>
 <p>
 
-    @Html.ActionLink("Back to List", "FindPerson")
+    @Html.ActionLink("Zpět na vyhledávání", "FindPerson")
 </p>
 
 
@@ -186,12 +181,12 @@
                         <input type="hidden" id="personId" value="0" />
                         <div class="form-group">
                             <label for="datumOd" class="col-form-label text-box single-line">Datum od:</label>
-                            <input type="datetime" class="form-control" id="datumOd">
+                            <input type="datetime" class="form-control" id="datumOd" placeholder="dd.mm.yyyy">
                             <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
                             <label for="datumDo" class="col-form-label text-box single-line">Datum do:</label>
-                            <input type="datetime" class="form-control" id="datumDo">
+                            <input type="datetime" class="form-control" id="datumDo" placeholder="dd.mm.yyyy">
                             <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
@@ -200,14 +195,7 @@
                             <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
-                            <label for="polstr" class="col-form-label">Politická strana:</label>
-                            <input type="text" class="form-control" id="polstr">
-                            <span class="field-validation-valid text-danger" data-valmsg-for="Organizace" data-valmsg-replace="true"></span>
-                        </div>
-
-                        <div class="form-group">
                             <label for="typ" class="col-form-label">Typ události:</label>
-                            @*<input type="text" class="form-control" id="typ">*@
                             <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
                                 @for (int i = 0; i < typeList.Count; i++)
                                 {
@@ -216,6 +204,12 @@
                             </select>
                             <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
                         </div>
+
+                        <div class="form-group">
+                            <label for="organizace" class="col-form-label">Organizace:</label>
+                            <input type="text" class="form-control orgahead input-lg" id="organizace">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Organizace" data-valmsg-replace="true"></span>
+                        </div>
                         <div class="form-group" id="castka_toggle">
                             <label for="castka" class="col-form-label">Částka:</label>
                             <input type="text" class="form-control" id="castka">
@@ -223,7 +217,7 @@
                         </div>
                         <div class="form-group" id="addInfo_toggle">
                             <label for="addInfo" class="col-form-label">Podrobnosti:</label>
-                            <input type="text" class="form-control typeahead input-lg" id="addInfo">
+                            <input type="text" class="form-control roleahead input-lg" id="addInfo">
                             <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
@@ -242,6 +236,8 @@
     </div>
 </div>
 
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+
 <script>
     $('#eventModal').on('show.bs.modal', function (event) {
         // clear previous error messages
@@ -254,11 +250,10 @@
         var datumOd = button.data('datumod')
         var datumDo = button.data('datumdo')
         var titulek = button.data('titulek')
-        var polstr = button.data('polstr')
+        var organizace = button.data('organizace')
         var castka = button.data('castka')
         var addinfo = button.data('addinfo')
         var typ = button.data('typ')
-        var subtyp = button.data('subtyp')
         var zdroj = button.data('zdroj')
 
         // set modal window
@@ -310,10 +305,9 @@
         modal.find('#datumOd').val(datumOd)
         modal.find('#datumDo').val(datumDo)
         modal.find('#titulek').val(titulek)
-        modal.find('#polstr').val(polstr)
+        modal.find('#organizace').val(organizace)
         modal.find('#typ').val(typ)
         drawSubtype(typ)
-        modal.find('#subtyp').val(subtyp)
         modal.find('#castka').val(castka)
         modal.find('#addInfo').val(addinfo)
         modal.find('#zdroj').val(zdroj)
@@ -324,13 +318,12 @@
             "OsobaId": $("#personId").val(),
             "pk": $("#eventId").val(),
             "Title": $("#titulek").val(),
-            "Organizace": $("#polstr").val(),
+            "Organizace": $("#organizace").val(),
             "AddInfoNum": $("#castka").val(),
             "AddInfo": $("#addInfo").val(),
             "DatumOd": $("#datumOd").val(),
             "DatumDo": $("#datumDo").val(),
             "Type": $("#typ").val(),
-            "SubType": $("#subtyp").val(),
             "Zdroj": $("#zdroj").val()
         }
 
@@ -393,12 +386,11 @@
     // našeptávání
     $(function () {
 
-        values = new Bloodhound({
+        roles = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/api/v1/addInfo?',
-                //wildcard: '%QUERY',
                 replace: function (url, query) {
                     var selectedType = $("#typ").val();
                     return url + 't=' + selectedType + '&q=' + query;
@@ -406,18 +398,51 @@
             }
         });
 
-        $('.typeahead').typeahead(null, {
-//            display: 'value',
-            name: "values",
-            source: values,
-            limit: 30,
+        organisations = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/v1/organisations?',
+                replace: function (url, query) {
+                    var selectedType = $("#typ").val();
+                    return url + 't=' + selectedType + '&q=' + query;
+                }
+            }
         });
 
-        //$('.typeahead').bind('typeahead:select', function (ev, suggestion) {
-        //    //$("#AddressId").val(suggestion.id).trigger('change');
-        //    console.log(suggestion);
+        $('.roleahead').typeahead(null, {
+            name: "roles",
+            source: roles,
+            limit: 8,
+        });
 
-        //});
+        $('.orgahead').typeahead(null, {
+            name: "organisations",
+            source: organisations,
+            limit: 8,
+        });
+
+    });
+
+    // scroll top
+    $(document).ready(function(){
+     $(window).scroll(function () {
+            if ($(this).scrollTop() > 800) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+        
+        $('#back-to-top').tooltip('show');
 
     });
 

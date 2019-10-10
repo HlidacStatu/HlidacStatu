@@ -34,16 +34,29 @@ namespace HlidacStatu.Lib.Data
             this.Created = DateTime.Now;
         }
 
+        [ShowNiceDisplayName()]
         public enum Types
         {
-            Jina = 0,
+            [NiceDisplayName("Speciální")]
+            Specialni = 0,
+            [NiceDisplayName("Volená funkce")]
             VolenaFunkce = 1,
+            [NiceDisplayName("Soukromá pracovní")]
             SoukromaPracovni = 2,
+            [NiceDisplayName("Sponzor")]
             Sponzor = 3,
+            [NiceDisplayName("Osobní")]
             Osobni = 4,
+            [NiceDisplayName("Veřejná správa pracovní")]
             VerejnaSpravaPracovni = 6,
+            [NiceDisplayName("Politická")]
             Politicka = 7,
-            PolitickaPracovni = 9
+            [NiceDisplayName("Politická pracovní")]
+            PolitickaPracovni = 9,
+            [NiceDisplayName("Veřejná správa jiné")]
+            VerejnaSpravaJine = 10,
+            [NiceDisplayName("Jiné")]
+            Jine = 11
         }
 
         public enum SubTypes
@@ -145,6 +158,24 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static IEnumerable<string> GetOrganisations(string jmeno, int? eventTypeId, int maxNumOfResults = 1500)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var result = db.OsobaEvent
+                    .Where(m => m.Type == eventTypeId)
+                    .Where(m => m != null)
+                    .Where(m => m.Organizace.Contains(jmeno))
+                    //.OrderBy(m => m.AddInfo)
+                    .Select(m => m.Organizace)
+                    .Distinct()
+                    .Take(maxNumOfResults)
+                    .ToList();
+
+                return result;
+            }
+        }
+
 
         public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
         {
@@ -228,7 +259,7 @@ namespace HlidacStatu.Lib.Data
                     else
                         return this.Title + " " + Note;
 
-                case Types.Jina:
+                case Types.Specialni:
                 default:
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
                         return this.Title + delimeter + this.Note;
@@ -282,7 +313,7 @@ namespace HlidacStatu.Lib.Data
                     else
                         return this.Title + " " + Note + zdroj;
 
-                case Types.Jina:
+                case Types.Specialni:
                 default:
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
                         return this.Title + delimeter + this.Note + zdroj;
