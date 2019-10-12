@@ -108,14 +108,28 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult OsobaMerge(string osoba1, string osoba2)
         {
-            Osoba o1 = Osoba.GetByNameId(osoba1.Trim());
-            Osoba o2 = Osoba.GetByNameId(osoba2.Trim());
-            if (o1 != null && o2 != null)
+            if (ParseTools.ToInt(osoba1).HasValue && ParseTools.ToInt(osoba2).HasValue)
             {
-                o1.MergeWith(o2, this.User.Identity.Name);
-                return Redirect(o1.GetUrl(true));
+                Osoba o1 = Osoba.GetByInternalId(ParseTools.ToInt(osoba1).Value);
+                Osoba o2 = Osoba.GetByInternalId(ParseTools.ToInt(osoba2).Value);
+                if (o1 != null && o2 != null)
+                {
+                    o1.MergeWith(o2, this.User.Identity.Name);
+                    return Redirect(o1.GetUrl(true));
+                }
+
             }
-            return View();
+            else
+            {
+                Osoba o1 = Osoba.GetByNameId(osoba1.Trim());
+                Osoba o2 = Osoba.GetByNameId(osoba2.Trim());
+                if (o1 != null && o2 != null)
+                {
+                    o1.MergeWith(o2, this.User.Identity.Name);
+                    return Redirect(o1.GetUrl(true));
+                }
+            }
+            return View("index");
         }
 
         public ActionResult SubjektHlidac(string Id)
