@@ -162,36 +162,33 @@ namespace HlidacStatu.Lib
 
             string normalizedText = Devmasters.Core.TextUtil
                                         .ReplaceDuplicates(Regex.Replace(text, @"[,;\[\]:]", " "), ' ');
-            normalizedText = Devmasters.Core.TextUtil
-                                        .ReplaceDuplicates(normalizedText.Replace(".", ". "), ' ');
             //fix errors Ĺ => Í,ĺ => í 
             normalizedText = normalizedText.Replace((char)314, (char)237).Replace((char)313, (char)205);
-
-            text = Devmasters.Core.TextUtil
-                .RemoveDiacritics(text.Replace(".", ". ").ToLower())
-                .Trim()
-                ;
 
             //remove tituly
             var titulyPo = Osoba.TitulyPo.Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
             var titulyPred = Osoba.TitulyPred.Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
+
             List<string> lWords = new List<string>();
 
             var titulPred = string.Empty;
             var titulPo = string.Empty;
-            foreach (var w in text.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var w in normalizedText
+                                .Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                )
             {
                 var newW = w;
+                string cw = TextUtil.RemoveDiacritics(w).ToLower();
                 for (int i = 0; i < titulyPo.Length; i++)
                 {
                     var t = titulyPo[i];
-                    if (w == t)
+                    if (cw == t)
                     {
                         newW = "";
                         titulPo = titulPo + " " + Osoba.TitulyPo[i];
                         break;
                     }
-                    else if (t.EndsWith(".") && w == t.Substring(0, t.Length - 1))
+                    else if (t.EndsWith(".") && cw == t.Substring(0, t.Length - 1))
                     {
                         newW = "";
                         titulPo = titulPo + " " + Osoba.TitulyPo[i];
@@ -202,13 +199,13 @@ namespace HlidacStatu.Lib
                 {
                     var t = titulyPred[i];
 
-                    if (w == t)
+                    if (cw == t)
                     {
                         newW = "";
                         titulPred = titulPred + " " + Osoba.TitulyPred[i];
                         break;
                     }
-                    else if (t.EndsWith(".") && w == t.Substring(0, t.Length - 1))
+                    else if (t.EndsWith(".") && cw == t.Substring(0, t.Length - 1))
                     {
                         newW = "";
                         titulPred = titulPred + " " + Osoba.TitulyPred[i];
@@ -219,8 +216,17 @@ namespace HlidacStatu.Lib
                 titulPred = titulPred.Trim();
                 lWords.Add(newW);
             }
-            string[] words = lWords.ToArray();
+
+            //reset normalizedText after titulPred, titulPo
+            normalizedText = lWords.Aggregate((f, s) => f + " " + s).Trim();
+            normalizedText = Devmasters.Core.TextUtil
+                            .ReplaceDuplicates(normalizedText.Replace(".", ". "), ' ');
+            normalizedText = Devmasters.Core.TextUtil
+                            .ReplaceDuplicates(normalizedText, " ");
             string[] wordsFromNormalizedText = normalizedText.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] words = wordsFromNormalizedText.Select(m=>TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
+
+
             int maxWords = 2;
             int minWords = 2;
             for (int firstWord = 0; firstWord < words.Length - 1; firstWord++)
