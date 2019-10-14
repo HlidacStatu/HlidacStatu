@@ -381,6 +381,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\SponzoriController.cs" />
+    <Compile Include="Controllers\NasiPoliticiController.cs" />
     <Compile Include="Controllers\VZController.cs" />
     <Compile Include="Controllers\WebyController.cs" />
     <Compile Include="Controllers\UctyController.cs" />
@@ -1349,6 +1350,7 @@
     <Content Include="Views\Manage\PersonDetail.cshtml" />
     <Content Include="Views\Manage\ShowClassification.cshtml" />
     <Content Include="Views\Manage\ZmenaSmluvnichStran.cshtml" />
+    <Content Include="Views\NasiPolitici\Politik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
