@@ -41,7 +41,7 @@ else
         {
             <li class="list-group-item d-flex flex-row">
 
-                <div class="col-sm-4 col-md-3">
+                <div class="col-sm-3 col-md-3">
                     <div class="person-profile-thumb person-profile-thumb--small">
                         <div class="photo">
                             <a href="@osoba.GetUrl(false)">
@@ -72,7 +72,7 @@ else
                     </div>
                 </div>
 
-                <div class="row col-sm-7 col-md-8">
+                <div class="row col-sm-7 col-md-7">
                     @if (osoba.Events().Count() > 0)
                     {
                         <div class="col">
@@ -85,9 +85,9 @@ else
                         </div>
                     }
                 </div>
-                <div class="col-sm-1 col-md-1">
-                    @*@Html.ActionLink("Detail", "PersonDetail", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-primary-new" })*@
-                    @Html.ActionLink("Edit", "EditPersonNP", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-primary-new" })
+                <div class="col-sm-2 col-md-2">
+                    @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
+                    @Html.ActionLink("Editovat události", "PersonDetail", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
                 </div>
             </li>
         }
