@@ -60,9 +60,17 @@
         </div>
         <div class="col-sm-8 col-md-9">
             @{
+                int[] types = {
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
+                    };
                 var funkceOsoba = Model.Description(true,
-                       m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
-                            && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
+                       m =>  types.Contains(m.Type),
                        20);
 
             }

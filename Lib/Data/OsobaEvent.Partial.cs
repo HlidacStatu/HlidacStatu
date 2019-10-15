@@ -236,37 +236,54 @@ namespace HlidacStatu.Lib.Data
             StringBuilder sb = new StringBuilder();
             switch ((Types)this.Type)
             {
+
                 case Types.Politicka:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.Organizace);
-                    return sb.ToString();
-                // poslanec a senátor sloučeni
+                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:"do", template:"({0})"), this.Organizace);
+                //    return sb.ToString();
+                //// poslanec a senátor sloučeni
+                case Types.PolitickaPracovni:
+                case Types.VerejnaSpravaJine:
+                case Types.VerejnaSpravaPracovni:
+                case Types.SoukromaPracovni:
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.AddInfo} {this.RenderDatum()} ");
+                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
                     if (!string.IsNullOrEmpty(this.Organizace))
-                        sb.Append(" za " + Organizace);
+                        sb.Append(" - " + Organizace);
                     return sb.ToString();
                 case Types.Sponzor:
-                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") ;
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)
                             return this.Title + " s " + o.FullName();
-                        else
-                            return this.Title + " " + Note;
+                    }
+                    if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
+                    {
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        if (!string.IsNullOrEmpty(this.Organizace))
+                            sb.Append(" - " + Organizace);
+                        return sb.ToString();
                     }
                     else
-                        return this.Title + " " + Note;
+                        return (this.Title + " " + Note).Trim();
 
                 case Types.Specialni:
                 default:
+                    if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
+                    {
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        if (!string.IsNullOrEmpty(this.Organizace))
+                            sb.Append(" - " + Organizace);
+                        return sb.ToString();
+                    }
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
-                        return this.Title + delimeter + this.Note;
+                        return this.Title + delimeter + this.Note ;
                     else if (!string.IsNullOrEmpty(this.Title))
-                        return this.Title;
+                        return this.Title ;
                     else if (!string.IsNullOrEmpty(this.Note))
-                        return this.Note;
+                        return this.Note ;
                     else
                         return string.Empty;
 
@@ -289,14 +306,18 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(), this.Organizace);
-                    return sb.ToString();
-                // poslanec a senátor sloučeni
+                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:"do", template:"({0})"), this.Organizace);
+                //    return sb.ToString();
+                //// poslanec a senátor sloučeni
+                case Types.PolitickaPracovni:
+                case Types.VerejnaSpravaJine:
+                case Types.VerejnaSpravaPracovni:
+                case Types.SoukromaPracovni:
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.AddInfo} {this.RenderDatum()} ");
+                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
                     if (!string.IsNullOrEmpty(this.Organizace))
-                        sb.Append(" za " + Organizace);
-                    return sb.ToString() + zdroj;
+                        sb.Append(" - " + Organizace);
+                    return sb.ToString();
                 case Types.Sponzor:
                     return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:
@@ -304,15 +325,27 @@ namespace HlidacStatu.Lib.Data
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)
-                            return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrl(), o.FullName()) + zdroj;
-                        else
-                            return this.Title + " " + Note + zdroj;
+                            return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrl(), o.FullName());
+                    }                    
+                    if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
+                    {
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        if (!string.IsNullOrEmpty(this.Organizace))
+                            sb.Append(" - " + Organizace);
+                        return sb.ToString();
                     }
                     else
-                        return this.Title + " " + Note + zdroj;
+                        return (this.Title + " " + Note).Trim() ;
 
                 case Types.Specialni:
                 default:
+                    if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
+                    {
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        if (!string.IsNullOrEmpty(this.Organizace))
+                            sb.Append(" - " + Organizace);
+                        return sb.ToString();
+                    }
                     if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
                         return this.Title + delimeter + this.Note + zdroj;
                     else if (!string.IsNullOrEmpty(this.Title))

@@ -44,6 +44,11 @@ namespace HlidacStatu.Web
                 url: "Sponzori/{action}/{id}",
                 defaults: new { controller = "Sponzori", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "NasiPoliticiController",
+                url: "PrototypNP/{action}/{id}",
+                defaults: new { controller = "NasiPolitici", action = "Index", id = UrlParameter.Optional }
+            );
 
             routes.MapRoute(
                 name: "WebyController",

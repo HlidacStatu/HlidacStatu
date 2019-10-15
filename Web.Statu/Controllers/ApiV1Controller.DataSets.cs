@@ -444,7 +444,7 @@ namespace HlidacStatu.Web.Controllers
                 .Authentificated)
             {
                 //Response.StatusCode = 401;
-                return Json(ApiResponseStatus.ApiUnauthorizedAccess);
+                return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
             }
             else
             {

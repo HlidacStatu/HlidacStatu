@@ -1,0 +1,356 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@{
+    Layout = null;
+
+    if (Model == null)
+    {
+        <h1>Politik nenalezen</h1>
+        return;
+    }
+    var statDescription =
+        HlidacStatu.Util.InfoFact.RenderInfoFacts(
+            Model.InfoFacts().Where(i => i.Level != HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
+                , 4, true, true, "", "<p>{0}</p>");
+
+    int[] types = {
+                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
+                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
+                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
+                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
+                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                };
+    var funkceOsoba = Model.Description(true,
+            m => types.Contains(m.Type),
+            20);
+
+
+    string osobaInsQuery = $"{{0}}.osobaId:{Model.NameId}";
+    //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+    var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+    var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+    var oinsSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "spravci"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+    Dictionary<string, long> oinsolv = new Dictionary<string, long>();
+    oinsolv.Add("dluznici|dlužník|dlužníka|dlužníkem", oinsDluznik.Total);
+    oinsolv.Add("veritele|věřitel|věřitele|veřitelem", oinsVeritel.Total);
+    oinsolv.Add("spravci|insolvenční správce|insolvenčního správce|insolvenčním správcem", oinsSpravce.Total);
+
+    var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+    var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+    var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+    var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + Model.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+    Dictionary<string, long> insolv = new Dictionary<string, long>();
+    insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
+    insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
+    insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Politik @Model.FullNameWithYear()</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    @*<link rel="stylesheet" href="" />
+        <link rel="stylesheet" href="" />
+        <link rel="stylesheet" href="" />
+        <link rel="stylesheet" href="" />*@
+    <script src="/Scripts/Highcharts-6/js/highcharts.js"></script>
+    <script src="/Scripts/highcharts.global.options.js"></script>
+    <script src=""></script>
+    <style>
+
+        .low-box {
+            max-height: 120px;
+            overflow: hidden;
+        }
+
+            .low-box .low-box-content {
+                top: -60px;
+                position: relative;
+            }
+
+            .low-box .low-box-line {
+                position: relative;
+                top: 75px;
+                height: 60px;
+                left: 0;
+                width: 100%;
+                margin: 0;
+                padding: 28px 0 8px 0;
+                z-index: 1000;
+                /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+55 */
+                background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 55%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 55%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 55%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+            }
+
+
+                .low-box .low-box-line .more {
+                    padding: 5px 10px;
+                    color: #3e6deb;
+                    text-decoration: none;
+                    vertical-align: middle;
+                }
+
+                    .low-box .low-box-line .more.big {
+                        font-size: 1.3em;
+                    }
+
+                    .low-box .low-box-line .more:before, .low-box .line .more.big {
+                        content: "\A0\A0\25BD\A0\A0více"; /*▽*/
+                    }
+    </style>
+    <script>
+        var _showFAD = true;
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-154075-22', 'auto');
+        ga('send', 'pageview');
+
+        $(function () {
+
+            $(".low-box").each(function () {
+                var t = $(this);
+                var more = t.find(".low-box-line:first");
+                var actheight = t.outerHeight();
+                var cssheight = parseInt(t.css("max-height"), 10);
+                if (actheight < cssheight) {
+                    more.hide();
+                }
+            });
+            $(".low-box .low-box-line .more").click(function () {
+                var totalHeight = 0;
+                $el = $(this); $p = $el.parent(); $up = $p.parent();
+                $ps = $up.find(".low-box-content:first");
+                // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+                $ps.each(function () {
+                    totalHeight += $(this).outerHeight();
+                    // FAIL totalHeight += $(this).css("margin-bottom");
+                });
+                $up.css({
+                    // Set height to prevent instant jumpdown when max height is removed
+                    "height": $up.height(),
+                    "max-height": 9999
+                })
+                    .animate({
+                        height: totalHeight,
+                        top: "+=60"
+                    });
+
+                // fade out read-more
+                $p.fadeOut(function () {
+                    $ps.css({ "top": 0 });
+                });
+                // prevent jump-down
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="card sm-12">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="@Model.GetPhotoUrl()" class="card-img" alt="@Model.FullName()">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">@Model.FullNameWithYear()</h5>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Základní informace</h3>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Ve zkratce</h5>
+                        <p class="card-text">
+                            @Util.LowBox(180, statDescription)
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Role</h5>
+                        <p class="card-text">
+                            @Util.LowBox(180, funkceOsoba)
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Demagog</h5>
+                        <p class="card-text">
+                            <br />
+                            Demagog
+                            <br />
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-xs-12 col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Odkazy</h5>
+                        <p class="card-text">
+                            <ul>
+                                <li><a href="$">Odkaz 1 </a></li>
+                                <li><a href="$">Odkaz 2 </a></li>
+                                <li><a href="$">Odkaz 3 </a></li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Majetková propojení</h5>
+                        <p class="card-text">
+                            @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(
+         Model.InfoFacts().Where(i => i.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
+             , 4, true, true, "", "<p>{0}</p>")
+     )
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="col-xs-12 col-sm-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Sponzorství</h5>
+                        <p class="card-text">
+                            @Util.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, 6))
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Insolvence</h5>
+                        <p class="card-text">
+                            @if (oinsolv.Sum(m => m.Value) == 0)
+                            {
+                                <span>@Model.FullName() se osobně nevyskytuje v insolvenčním rejstříku.</span>
+                            }
+                            @foreach (var kv in oinsolv.Where(m => m.Value > 0).OrderByDescending(m => m.Value))
+                            {
+                                var text = kv.Key.Split('|');
+
+                                <span>
+                                    @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
+                                    @if (kv.Value > 0)
+                                    {
+                                        @Util.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
+                                    }
+                                </span>
+                            }
+                        </p>
+                        <p class="card-text">
+                            @if (oinsolv.Sum(m => m.Value) == 0)
+                            {
+                                <span>Firmy navázané na @Model.FullName() se nevyskytují v insolvenčním rejstříku.</span>
+                            }
+
+                            @foreach (var kv in insolv.Where(m => m.Value > 0).OrderByDescending(m => m.Value))
+                            {
+                                var text = kv.Key.Split('|');
+
+                                <span>
+                                    Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " nejsou v insolvečním rejstříku", " se vyskytují v <b>jedné insolvenci</b>", " se vyskytují v <b>{0} insolvencích</b>", " se vyskytují v <b>{0} insolvencích</b>")) jako @text[1].
+                                    @if (kv.Value > 0)
+                                    {
+                                        @Util.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
+                                    }
+                                </span>
+                            }
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-xs-12 col-sm-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Centrální registr oznámení (TBD)</h5>
+                        <p class="card-text">
+                            @{
+                                var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
+                                var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery,
+                                    new HlidacStatu.Lib.Data.External.DataSets.DataSet[] { 
+                                        HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("centralniregistroznameni") 
+                                    },
+                                    pageSize: 5);
+                            }
+                            @if (dsSearch.Total == 0)
+                            {
+                                <span>Nevyskytuje se v Centrálním registru oznámení(TBD)</span>
+                            }
+                            else
+                            { 
+                                @Html.Raw(dsSearch.Results.First().RenderResultsInHtml(dsQuery))
+                            }
+                        </p>
+                        <a href="#" class="card-link">Další podrobnosti</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

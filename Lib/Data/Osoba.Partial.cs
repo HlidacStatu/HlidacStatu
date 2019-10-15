@@ -92,6 +92,8 @@ namespace HlidacStatu.Lib.Data
             List<OsobaEvent> events = new List<OsobaEvent>();
             using (DbEntities db = new DbEntities())
             {
+                //db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+
                 events.AddRange(db.OsobaEvent
                     .AsNoTracking()
                     .Where(m => m.OsobaId == this.InternalId)
@@ -146,10 +148,13 @@ namespace HlidacStatu.Lib.Data
             string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
             var fixedOrder = new List<int>() {
-                (int)OsobaEvent.Types.PolitickaPracovni,
                 (int)OsobaEvent.Types.VolenaFunkce,
+                (int)OsobaEvent.Types.PolitickaPracovni,
+                (int)OsobaEvent.Types.Politicka,
+                (int)OsobaEvent.Types.VerejnaSpravaJine,
                 (int)OsobaEvent.Types.VerejnaSpravaPracovni,
-                (int)OsobaEvent.Types.Politicka
+                (int)OsobaEvent.Types.Osobni,
+                (int)OsobaEvent.Types.Jine
             };
 
             var events = this.Events(predicate);
@@ -1124,6 +1129,16 @@ namespace HlidacStatu.Lib.Data
         {
             lock (lockInfoObj)
             {
+                int[] types = {
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
+                    };
+
                 if (_infofacts == null)
                 {
                     List<InfoFact> f = new List<InfoFact>();
@@ -1132,8 +1147,7 @@ namespace HlidacStatu.Lib.Data
                     if (DateTime.Now.Month <= 2)
                         rok = rok - 1;
                     var kdoje = this.Description(false,
-                           m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
-                                && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
+                           m => types.Contains(m.Type),
                            2, itemDelimeter: ", ");
                     var descr = $"<b>{this.FullNameWithYear()}</b>";
                     if (!string.IsNullOrEmpty(kdoje))
