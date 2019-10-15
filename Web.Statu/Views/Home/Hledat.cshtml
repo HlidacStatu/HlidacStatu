@@ -17,6 +17,8 @@
     //ViewBag.SubTitle = Model?.Query;
 
     bool hasPreview = Model.HasOsoby;
+
+    Dictionary<string, System.TimeSpan> viewRenderTimes = new Dictionary<string, TimeSpan>();
 }
 @section scripts
     {
@@ -203,12 +205,10 @@ else if (Model.HasResults == false)
     </div>
 </div>
 
-<!--
-    times: @Html.Raw(string.Join("\n", Model.SearchTimes().Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
--->
-
 @if (Model.HasSmlouvy)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
     <div class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
@@ -271,17 +271,27 @@ else if (Model.HasResults == false)
             </div>
         </div>
     }
+
+    sw.Stop();
+    viewRenderTimes.Add("smlouvy", sw.Elapsed);
+
 }
 
 
 @if (Model.HasVZ)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
     @RenderVZBox(numOfVZ)
+    sw.Stop();
+    viewRenderTimes.Add("VZ", sw.Elapsed);
 }
 
 
 @if (Model.HasInsolvence)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
     <div class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
@@ -329,17 +339,30 @@ else if (Model.HasResults == false)
             </div>
         </div>
     }
+
+    sw.Stop();
+    viewRenderTimes.Add("Insolvence", sw.Elapsed);
+
 }
 
 
 @if (Model.HasOsoby)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
+
     @RenderOsobyBox(numOfOsob)
+    sw.Stop();
+    viewRenderTimes.Add("Osoby", sw.Elapsed);
+
 }
 
 
 @if (Model.HasFirmy)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
+
     <div class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
@@ -383,12 +406,17 @@ else if (Model.HasResults == false)
             </div>
 
         }*@
+    sw.Stop();
+    viewRenderTimes.Add("Firmy", sw.Elapsed);
 
 }
 
 
 @if (Model.HasTransakce)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
+
     <div class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
@@ -435,6 +463,8 @@ else if (Model.HasResults == false)
         </div>
 
     }
+    sw.Stop();
+    viewRenderTimes.Add("Transakce", sw.Elapsed);
 
 
 }
@@ -442,6 +472,9 @@ else if (Model.HasResults == false)
 
 @if (Model.HasDatasets)
 {
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
+
     <div id="datasets" class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
@@ -471,6 +504,28 @@ else if (Model.HasResults == false)
         }
         @Util.VerticalTabs(tabs, results)
     </div>
+    sw.Stop();
+    viewRenderTimes.Add("Datasets", sw.Elapsed);
+
+}
+
+
+
+<!--
+    searchtimes: @Html.Raw(string.Join("\n", Model.SearchTimes().Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
+-->
+<!--
+    viewrendertimes: @Html.Raw(string.Join("\n", viewRenderTimes.Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
+-->
+@{ 
+    var t = Elastic.Apm.Agent.Tracer.StartTransaction("/hledej","render");
+    foreach (var vrt in viewRenderTimes)
+    {
+        var sp = t.StartSpan(vrt.Key, "render");
+        sp.Duration = vrt.Value.TotalMilliseconds;
+        sp.End();
+    }
+    t.End();
 }
 
 @helper RenderOsobyBox(int numOfOsob)
@@ -709,4 +764,6 @@ else if (Model.HasResults == false)
             </div>
         </div>
     }
+
+
 }
