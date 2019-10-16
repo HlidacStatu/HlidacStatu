@@ -157,22 +157,26 @@
 
     </tr>
 }
-@helper SmlouvyHead(bool small = false)
+@helper SmlouvyHead(System.Security.Principal.IPrincipal user, bool small = false)
 {
-    <tr>
-        <th></th>
-        <th>&nbsp;</th>
-        <th>Smlouva podepsána</th>
-        @if (small == false)
-        {
-            <th>Smlouva zveřejněna</th>
-        }
-        <th>&nbsp;</th>
-        <th title="Publikující smluvní strana">Plátce</th>
-        <th title="Smluvní strana/y">Dodavatel/é</th>
-        <th>Popis smlouvy</th>
-        <th>Hodnota smlouvy</th>
-    </tr>
+<tr>
+    <th></th>
+    <th>&nbsp;</th>
+    <th>Smlouva podepsána</th>
+    @if (small == false)
+    {
+        <th>Smlouva zveřejněna</th>
+    }
+    <th>&nbsp;</th>
+    <th title="Publikující smluvní strana">Plátce</th>
+    <th title="Smluvní strana/y">Dodavatel/é</th>
+    <th>Popis smlouvy</th>
+    <th>Hodnota smlouvy</th>
+    @if (user.IsInRole("BetaTester"))
+    {
+        <th>Klasifikace</th>
+    }
+</tr>
 }
 
 @helper SmlouvyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Smlouva rec, HlidacStatu.Lib.ES.SmlouvaSearchResult Model, bool small = false)
@@ -187,79 +191,91 @@
         iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
     }
 
-    <tr class="bg@(bgLevel)">
+<tr class="bg@(bgLevel)">
+    <td>
+        @{
+            @Util.AddBookmark(user, rec)
+        }
+    </td>
+    <td>@Html.Raw(iconLevel)</td>
+    <td>@rec.datumUzavreni.ToShortDateString()</td>
+    @if (small == false)
+    {
         <td>
-            @{
-                @Util.AddBookmark(user, rec)
+            @if (rec.platnyZaznam)
+            {
+                @rec.casZverejneni.ToShortDateString()
+            }
+            else
+            {
+                <span class="text-warning">Zneplatněná smlouva</span>
             }
         </td>
-        <td>@Html.Raw(iconLevel)</td>
-        <td>@rec.datumUzavreni.ToShortDateString()</td>
-        @if (small == false)
+    }
+    @if (small == false)
+    {
+        <td><a href="@rec.GetUrl(true,Model.Q)">Detail smlouvy</a></td>
+    }
+    else
+    {
+        <td><a href="@rec.GetUrl(true,Model.Q)">Detail</a></td>
+    }
+    <td>
+        @if (!string.IsNullOrEmpty(rec.Platce?.ico))
         {
-            <td>
-                @if (rec.platnyZaznam)
-                {
-                    @rec.casZverejneni.ToShortDateString()
-                }
-                else
-                {
-                    <span class="text-warning">Zneplatněná smlouva</span>
-                }
-            </td>
-        }
-        @if (small == false)
-        {
-            <td><a href="@rec.GetUrl(true,Model.Q)">Detail smlouvy</a></td>
+            <a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a>
         }
         else
         {
-            <td><a href="@rec.GetUrl(true,Model.Q)">Detail</a></td>
+            @(rec.Platce?.nazev)
         }
-        <td>
-            @if (!string.IsNullOrEmpty(rec.Platce?.ico))
+    </td>
+    <td>
+        @if (rec.Prijemce.Count() == 1)
+        {
+            if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
             {
-                <a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a>
+                <a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a>
             }
             else
             {
-                @(rec.Platce?.nazev)
+                @rec.Prijemce[0].nazev
             }
-        </td>
-        <td>
-            @if (rec.Prijemce.Count() == 1)
-            {
-                if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
+        }
+        else
+        {
+            <ol>
+                @foreach (var subj in rec.Prijemce.Take(2))
                 {
-                    <a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a>
-                }
-                else
-                {
-                    @rec.Prijemce[0].nazev
-                }
-            }
-            else
-            {
-                <ol>
-                    @foreach (var subj in rec.Prijemce.Take(2))
+                    if (!string.IsNullOrEmpty(subj.ico))
                     {
-                        if (!string.IsNullOrEmpty(subj.ico))
-                        {
-                            <li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li>
-                        }
-                        else
-                        {
-                            <li>@subj.nazev</li>
-                        }
+                        <li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li>
                     }
-                </ol>
-                @Util.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+                    else
+                    {
+                        <li>@subj.nazev</li>
+                    }
+                }
+            </ol>
+            @Util.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+        }
+    </td>
+    <td>@rec.predmet</td>
+    <td>@Html.Raw(rec.NicePrice(html: true))</td>
+    @if (user.IsInRole("BetaTester"))
+    {
+    <td style="font-size:11px;letter-spacing: -0.4px;line-height:11px;">
+        @if (rec.Classification?.Types?.Count() > 0)
+        {
+            foreach (var cl in rec.Classification.Types)
+            {
+            <div style="">@(cl.ClassifType().ToNiceDisplayName())&nbsp;-&nbsp;@(cl.ClassifProbability.ToString("P4"))</div>
             }
-        </td>
-        <td>@rec.predmet</td>
-        <td>@Html.Raw(rec.NicePrice(html: true))</td>
+        }
+    </td>
+    }
 
-    </tr>
+</tr>
 }
 @helper SmlouvyRowChyby(HlidacStatu.Lib.Data.Smlouva rec)
 {

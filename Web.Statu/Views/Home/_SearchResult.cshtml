@@ -101,7 +101,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 <div style="height:32px;"></div>
 <table class="table table-hover">
     <thead>
-        @SearchResults.SmlouvyHead()
+        @SearchResults.SmlouvyHead(this.User)
     </thead>
     <tbody>
         @foreach (var item in Model?.Result.Hits)

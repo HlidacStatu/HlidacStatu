@@ -294,7 +294,8 @@ namespace HlidacStatu.Lib.Data
 
             );
 
-            if (res.HasFirmy && (res.Osoby == null || res.Osoby.Total < 5))
+            //TODO too slow, temporarily disabled
+            if (false && res.HasFirmy && (res.Osoby == null || res.Osoby.Total < 5))
             {
                 var sw = new Devmasters.Core.StopWatchEx();
                 sw.Start();

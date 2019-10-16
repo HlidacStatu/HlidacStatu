@@ -235,7 +235,7 @@ else if (Model.HasResults == false)
 
                     <table class="table table-hover">
                         <thead>
-                            @SearchResults.SmlouvyHead(true)
+                            @SearchResults.SmlouvyHead(this.User,true)
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Smlouvy.Result.Hits

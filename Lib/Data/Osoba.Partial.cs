@@ -574,6 +574,9 @@ namespace HlidacStatu.Lib.Data
                 bool skipRest = false;
                 foreach (var fico in firmy)
                 {
+                    if (skipRest)
+                        break;
+
                     if (StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(fico))
                     {
                         foreach (var osobaId in StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[fico])
