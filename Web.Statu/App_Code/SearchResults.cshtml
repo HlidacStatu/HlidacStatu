@@ -269,7 +269,7 @@
         {
             foreach (var cl in rec.Classification.Types)
             {
-            <div style="">@(cl.ClassifType().ToNiceDisplayName())&nbsp;-&nbsp;@(cl.ClassifProbability.ToString("P4"))</div>
+            <div style=""><b>@(cl.ClassifType().ToNiceDisplayName())</b>&nbsp;-&nbsp;@Html.Raw(cl.ClassifProbability.ToString("P4").Replace(" ","&nbsp;"))</div>
             }
         }
     </td>
