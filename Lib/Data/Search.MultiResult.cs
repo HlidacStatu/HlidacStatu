@@ -9,7 +9,8 @@ namespace HlidacStatu.Lib.Data
 
         public class MultiResult
         {
-
+            public System.TimeSpan TotalSearchTime { get; set; } = System.TimeSpan.Zero;
+            public System.TimeSpan AddOsobyTime { get; set; } = System.TimeSpan.Zero;
             public string Query { get; set; }
             public Lib.ES.SmlouvaSearchResult Smlouvy { get; set; } = null;
             public Lib.ES.VerejnaZakazkaSearchData VZ { get; set; } = null;
@@ -52,6 +53,11 @@ namespace HlidacStatu.Lib.Data
                 }
 				if (Insolvence != null)
 					times.Add("Insolvence", Insolvence.ElapsedTime);
+                if (AddOsobyTime.Ticks > 0)
+                    times.Add("AddOsobyTime", AddOsobyTime);
+
+                if (TotalSearchTime.Ticks > 0)
+                    times.Add("Total", TotalSearchTime);
 				return times;
             }
 
@@ -136,35 +142,14 @@ namespace HlidacStatu.Lib.Data
             if (string.IsNullOrEmpty(query))
                 return res;
 
+            var totalsw = new Devmasters.Core.StopWatchEx();
+            totalsw.Start();
 
             ParallelOptions po = new ParallelOptions();
-            po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
+            po.MaxDegreeOfParallelism = 20;
+            //po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
 
-            Parallel.Invoke(po,
-                () =>
-                {
-                    Elastic.Apm.Api.ISpan sp=null;
-                    try
-                    {
-                        apmtran.CaptureSpan("Dataset GeneralSearch", "search", () =>
-                        {
-
-                            res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query, null, 1, 5);
-                            if (res.Datasets.Exceptions.Count > 0)
-                            {
-                                HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
-                                    res.Datasets.GetExceptions());
-                            }
-                        });
-                    }
-                    catch (System.Exception e)
-                    {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query, e);
-                    }
-                    finally
-                    {
-                    }
-                },
+            Parallel.Invoke(po,               
                 () =>
                 {
                     Elastic.Apm.Api.ISpan sp = null;
@@ -281,11 +266,38 @@ namespace HlidacStatu.Lib.Data
 						Util.Consts.Logger.Error("MultiResult GeneralSearch for insolvence query" + query, e);
 					}
 
-				}
-			);
+				},
+                () =>
+                 {
+                     Elastic.Apm.Api.ISpan sp = null;
+                     try
+                     {
+                         apmtran.CaptureSpan("Dataset GeneralSearch", "search", () =>
+                         {
+
+                             res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query, null, 1, 5);
+                             if (res.Datasets.Exceptions.Count > 0)
+                             {
+                                 HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
+                                     res.Datasets.GetExceptions());
+                             }
+                         });
+                     }
+                     catch (System.Exception e)
+                     {
+                         HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query, e);
+                     }
+                     finally
+                     {
+                     }
+                 }
+
+            );
 
             if (res.HasFirmy && (res.Osoby == null || res.Osoby.Total < 5))
             {
+                var sw = new Devmasters.Core.StopWatchEx();
+                sw.Start();
                 if (res.Osoby == null)
                     res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
 
@@ -294,10 +306,12 @@ namespace HlidacStatu.Lib.Data
                             )
                         );
                 res.OsobaFtx = true;
+                sw.Stop();
+                res.AddOsobyTime = sw.Elapsed;
             }
 
-
-
+            totalsw.Stop();
+            res.TotalSearchTime = totalsw.Elapsed;
 
             return res;
         }
