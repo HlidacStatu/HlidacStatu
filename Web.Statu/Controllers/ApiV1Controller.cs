@@ -527,6 +527,7 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult AddInfo(string q, int t)
         {
             List<string> result = new List<string>();
@@ -548,6 +549,7 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult Organisations(string q, int t)
         {
             List<string> result = new List<string>();

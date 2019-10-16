@@ -13,6 +13,7 @@ namespace HlidacStatu.Web.Controllers
     {
 
         // find people
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult FindPerson(string jmeno, string prijmeni, string narozeni)
         {
             // šlo by urychlit pomocí full text searche
@@ -21,6 +22,7 @@ namespace HlidacStatu.Web.Controllers
             return View(osoby);
         }
 
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult PersonDetail(int? id)
         {
             if (id == null) return RedirectToAction(nameof(FindPerson));
@@ -31,14 +33,14 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult CreatePerson()
         {
             return View();
         }
 
         // Create a new person
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePerson(Osoba osoba)
@@ -57,7 +59,7 @@ namespace HlidacStatu.Web.Controllers
             return View(osoba);
         }
 
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult EditPersonNP(int? id)
         {
             if (id == null) return RedirectToAction(nameof(FindPerson));
@@ -67,7 +69,7 @@ namespace HlidacStatu.Web.Controllers
             return View(osoba);
         }
 
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Umrti,Status")] Osoba osoba)
@@ -89,7 +91,7 @@ namespace HlidacStatu.Web.Controllers
             return View(osoba);
         }
 
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         [HttpPost]
         public JsonResult UpdateEvent(OsobaEvent osobaEvent)
         {
@@ -105,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
             return new JsonResult() { Data = errorModel };
         }
 
-        [Authorize(Roles = "canEditData")]
+        [Authorize(Roles = "NasiPoliticiAdmin")]
         [HttpPost]
         public JsonResult DeleteEvent(int? id)
         {
