@@ -751,33 +751,39 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
                 Text = sumTxt
             });
 
-            sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
-    "",
-    "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
-    "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
-    "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
-        + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
-        + ". "
-    );
-            data.Add(new InfoFact()
+            if (this.Dluznici.Count > 0)
             {
-                Level = InfoFact.ImportanceLevel.High,
-                Text = sumTxt
-            });
 
-            sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
+                sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
+        "",
+        "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
+        "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
+        "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
+            + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
+            + ". "
+        );
+                data.Add(new InfoFact()
+                {
+                    Level = InfoFact.ImportanceLevel.High,
+                    Text = sumTxt
+                });
+            }
+            if (this.Veritele.Count > 0)
+            {
+
+                sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
                 "",
                 "Evidujeme jednoho věřitele.",
                 "Evidujeme {0} věřitele.",
                 "Evidujeme {0} věřitelů."
                 );
-            data.Add(new InfoFact()
-            {
-                Level = InfoFact.ImportanceLevel.High,
-                Text = sumTxt
-            });
+                data.Add(new InfoFact()
+                {
+                    Level = InfoFact.ImportanceLevel.High,
+                    Text = sumTxt
+                });
 
-
+            }
             return data.OrderByDescending(o => o.Level).ToArray();
         }
 
