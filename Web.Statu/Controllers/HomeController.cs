@@ -520,7 +520,7 @@ text zpravy: {txt}";
         }
         public ActionResult ORegistru()
         {
-            return RedirectPermanent("https://www.hlidacstatu.cz/texty/oregistru");
+            return RedirectPermanent("https://www.hlidacstatu.cz/texty/o-registru");
         }
 
         public ActionResult Afery()

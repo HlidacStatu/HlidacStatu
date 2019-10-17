@@ -19,12 +19,15 @@ namespace HlidacStatu.Lib.Data
         {
             osobaPhoto,
             osobaPopis,
+            other
         }
 
         public ItemTypes ItemType
         {
             get
             {
+                if (string.IsNullOrEmpty(this.itemType))
+                    return ItemTypes.other;
                 return EnumsNET.Enums.Parse<ItemTypes>(this.itemType);
             }
             set
