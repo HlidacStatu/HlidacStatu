@@ -36,7 +36,8 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult CreatePerson()
         {
-            return View();
+            Osoba osoba = new Osoba();
+            return View(osoba);
         }
 
         // Create a new person
@@ -52,7 +53,7 @@ namespace HlidacStatu.Web.Controllers
                     new {
                         jmeno = osoba.Jmeno,
                         prijmeni = osoba.Prijmeni,
-                        narozeni = osoba.Narozeni
+                        narozeni = osoba.Narozeni?.ToString("dd.MM.yyyy")
                     });
             }
 
@@ -84,7 +85,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         jmeno = osoba.Jmeno,
                         prijmeni = osoba.Prijmeni,
-                        narozeni = osoba.Narozeni
+                        narozeni = osoba.Narozeni?.ToString("dd.MM.yyyy")
                     });
             }
 

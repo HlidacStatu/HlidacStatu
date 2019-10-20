@@ -443,6 +443,20 @@ namespace HlidacStatu.Lib.Data
             return result;
         }
 
+        public string NarozeniUmrtiFull(bool html = false)
+        {
+            string result = "";
+            if (this.Narozeni.HasValue || this.Umrti.HasValue)
+            {
+                string narozeni = this.Narozeni?.ToString("*dd.MM.yyyy") ?? "* ???";
+                string umrti = this.Umrti?.ToString("- ✝dd.MM.yyyy") ?? "";
+                result = $" ({narozeni} {umrti})";
+            }
+            if (html)
+                result = result.Replace(" ", "&nbsp;");
+            return result;
+        }
+
         public string FullName(bool html = false)
         {
             string ret = string.Format("{0} {1} {2}{3}", this.TitulPred, this.Jmeno, this.Prijmeni, string.IsNullOrEmpty(this.TitulPo) ? "" : ", " + this.TitulPo).Trim();
@@ -521,9 +535,9 @@ namespace HlidacStatu.Lib.Data
                 return new Osoba[0];
             }
 
-            jmeno = jmeno.Trim();
-            prijmeni = prijmeni.Trim();
-            rokNarozeni = rokNarozeni.Trim();
+            jmeno = jmeno?.Trim();
+            prijmeni = prijmeni?.Trim();
+            rokNarozeni = rokNarozeni?.Trim();
             // diakritika, velikost
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {

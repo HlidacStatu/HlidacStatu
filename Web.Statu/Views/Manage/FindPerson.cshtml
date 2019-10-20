@@ -63,7 +63,7 @@ else
                         <div>
                             @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class = "section-title link--blue" })
                             <div class="new-p new-p--gray new-p--small">
-                                @osoba.NarozeniYear()
+                                @(osoba.NarozeniUmrtiFull())
                             </div>
                             <div class="new-p new-p--gray new-p--small">
                                 @osoba.StatusOsoby().ToNiceDisplayName()

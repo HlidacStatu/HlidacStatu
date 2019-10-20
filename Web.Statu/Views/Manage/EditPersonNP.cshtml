@@ -57,7 +57,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Narozeni, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Narozeni, new { htmlAttributes = new { @class = "form-control", placeholder = "dd.mm.yyyy" } })
+                <input type="datetime" class="form-control text-box single-line" id="Narozeni" name="Narozeni" placeholder="dd.mm.yyyy" value="@(Model.Narozeni?.ToString("dd.MM.yyyy"))">
+                <span class="field-validation-valid text-danger" data-valmsg-for="Narozeni" data-valmsg-replace="true"></span>
                 @Html.ValidationMessageFor(model => model.Narozeni, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -65,7 +66,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Umrti, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Umrti, new { htmlAttributes = new { @class = "form-control", placeholder = "dd.mm.yyyy" } })
+                <input type="datetime" class="form-control text-box single-line" id="Umrti" name="Umrti" placeholder="dd.mm.yyyy" value="@(Model.Umrti?.ToString("dd.MM.yyyy"))">
+                <span class="field-validation-valid text-danger" data-valmsg-for="Umrti" data-valmsg-replace="true"></span>
                 @Html.ValidationMessageFor(model => model.Umrti, "", new { @class = "text-danger" })
             </div>
         </div>
