@@ -46,6 +46,11 @@ namespace HlidacStatu.Lib.Data
                 if (datasetsWithQuery == null || datasetsWithQuery.Count == 0)
                     return res;
 
+                if (!Lib.Search.Tools.ValidateQuery(datasetsWithQuery.First().Value))
+                {
+                    res.Exceptions.Add(new System.Exception($"Invalid Query: {datasetsWithQuery.First().Value}"));
+                    return res;                   
+                }
 
                 ParallelOptions po = new ParallelOptions();
                 po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;

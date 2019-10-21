@@ -491,7 +491,7 @@ namespace HlidacStatu.Lib.ES
                     .SetException(ex)
                     .SetCustomKeyValue("URL", httpContext?.Request?.RawUrl)
                     .SetCustomKeyValue("Stack-trace", System.Environment.StackTrace)
-                        .SetCustomKeyValue("Referer", httpContext?.Request?.UrlReferrer?.AbsoluteUri)
+                    .SetCustomKeyValue("Referer", httpContext?.Request?.UrlReferrer?.AbsoluteUri)
                     .SetCustomKeyValue("User-agent", httpContext?.Request?.Browser?.Browser)
                     .SetCustomKeyValue("IP", httpContext?.Request?.UserHostAddress + " " + System.Web.HttpContext.Current?.Request?.UserHostName)
                     );

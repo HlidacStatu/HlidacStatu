@@ -176,6 +176,52 @@ namespace HlidacStatu.Lib.Search
             return found.ToArray();
         }
 
+
+        public static bool ValidateQuery<T>(Nest.ElasticClient client, QueryContainer qc)
+       where T : class
+        {
+            return ValidateSpecificQueryRaw<T>(client, qc)?.Valid ?? false;
+        }
+        public static bool ValidateQuery(Nest.ElasticClient client, QueryContainer qc, string type)
+        {
+            return ValidateSpecificQueryRaw(client, qc, type)?.Valid ?? false;
+
+        }
+
+        public static bool ValidateQuery(string query)
+        {
+            return ValidateQueryRaw(query)?.Valid ?? false;
+        }
+        public static IValidateQueryResponse ValidateQueryRaw(string query)
+        {
+            return ValidateSpecificQueryRaw<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(),
+                ES.SearchTools.GetSimpleQuery(ES.SearchTools.FixInvalidQuery(query)));
+        }
+
+
+            public static IValidateQueryResponse ValidateSpecificQueryRaw<T>(Nest.ElasticClient client, QueryContainer qc)
+            where T: class
+        {
+
+            var res = client
+                .ValidateQuery<T>(v => v
+                    .Query(q => qc)
+                );
+
+            return res;
+        }
+        public static IValidateQueryResponse ValidateSpecificQueryRaw(Nest.ElasticClient client, QueryContainer qc, string type)
+        {
+
+            return client
+                .ValidateQuery<object>(v => v
+                    .Type(type)
+                    .Query(q => qc)
+                );
+
+        }
+
+
         public static QueryContainer GetSimpleQuery<T>(string query, string[,] rules)
                         where T : class
         {

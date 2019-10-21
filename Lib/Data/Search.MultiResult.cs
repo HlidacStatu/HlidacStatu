@@ -142,6 +142,15 @@ namespace HlidacStatu.Lib.Data
             if (string.IsNullOrEmpty(query))
                 return res;
 
+            if (!Lib.Search.Tools.ValidateQuery(query))
+            {
+                res.Smlouvy = new ES.SmlouvaSearchResult();
+                res.Smlouvy.Q = query;
+                res.Smlouvy.IsValid = false;
+                
+                return res;
+            }
+
             var totalsw = new Devmasters.Core.StopWatchEx();
             totalsw.Start();
 

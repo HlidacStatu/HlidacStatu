@@ -60,6 +60,12 @@ namespace HlidacStatu.Lib.Data
                 if (string.IsNullOrEmpty(query))
                     return res;
 
+                if (!Lib.Search.Tools.ValidateQuery(query))
+                {                    
+                    res.Exceptions.Add(new System.Exception($"Invalid Query: {query}"));
+                    return res;
+                }
+
                 if (datasets == null)
                     datasets = Lib.Data.External.DataSets.DataSetDB.ProductionDataSets.Get();
 
