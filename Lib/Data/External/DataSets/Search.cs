@@ -37,6 +37,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         static string[] queryShorcuts = new string[] {
                 "ico:",
                 "osobaid:",
+                "holding:",
                 "gps_lat:",
                 "gps_lng:",
                 "id:",
