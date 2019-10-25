@@ -9,6 +9,60 @@ namespace HlidacStatu.Util
     public static class ParseTools
     {
 
+        /// <summary>
+        /// support simple LIKE syntaxt from T-SQL 
+        /// %asdf 
+        /// asdf%
+        /// %asdf%
+        /// </summary>
+        public static bool FindInStringSqlLike(string wholetext, string stringToFind, StringComparison sc = StringComparison.OrdinalIgnoreCase)
+        {
+            if (stringToFind.StartsWith("%") && stringToFind.EndsWith("%"))
+                return wholetext.IndexOf(stringToFind.Substring(1, stringToFind.Length - 2), sc) >= 0;
+            else if (stringToFind.StartsWith("%"))
+                return wholetext.EndsWith(stringToFind.Substring(1, stringToFind.Length - 1), sc);
+            else if (stringToFind.EndsWith("%"))
+                return wholetext.StartsWith(stringToFind.Substring(0, stringToFind.Length - 1), sc);
+            else
+                return string.Equals(wholetext, stringToFind, sc);
+
+
+        }
+
+        static Dictionary<string, string> FunkceNormalizaction = new Dictionary<string, string>()
+        {
+            {"poslanec%","poslanec" },
+            {"poslankyně%","poslanec" },
+            {"místopředsed%","místopředseda" },
+            {"předsed%","předseda" },
+            {"senátor%","senátor" },
+            {"evropská komisařk%","komisař eu" },
+            {"evropský komisař","komisař eu" },
+            {"komisař%","komisař eu" },
+            {"viceprezident%","viceprezident" },
+            {"prezident%","prezident" },
+            {"ministr%","ministr" },
+            {"místopředsedkyn%","místopředseda" },
+            {"starost%","starosta" },
+            {"hejtman%","hejtman" },
+            {"primátor%","primátor" },
+            {"guvernér%","guvernér" },
+            {"ředitel%","ředitel" },
+            {"náměstkyn%","náměstek" },
+            {"náměstek","náměstek" },
+            {"%zastupitel%","zastupitel" },
+        };
+
+        public static string NormalizePolitikFunkce(string fce)
+        {
+            foreach (var fkv in FunkceNormalizaction)
+            {
+                if (FindInStringSqlLike(fce, fkv.Key))
+                    return fkv.Value;
+            }
+            return fce;
+        }
+
         public static string NormalizeIco(string ico)
         {
             if (ico == null)
