@@ -118,26 +118,32 @@ namespace HlidacStatu.Web.Controllers
                             string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
                             && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
                             )
+                        .ToArray();
                         ;
 
             if (found?.Count() > 0)
-                return found;
+            {
 
-            string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
-            string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
-            found = HlidacStatu.Lib.StaticData.Politici.Get()
-                        .Where(o =>
-                            string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
-                            && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
-                            );
-
+            }
+            else
+            {
+                string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
+                string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+                found = HlidacStatu.Lib.StaticData.Politici.Get()
+                            .Where(o =>
+                                string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
+                                && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
+                                )
+                            .ToArray();
+            }
 
             funkce = HlidacStatu.Util.ParseTools.NormalizePolitikFunkce(funkce);
 
             found = found
                 .Where(m =>
                     m.Events().Any(e => HlidacStatu.Util.ParseTools.FindInStringSqlLike(e.AddInfo, funkce))
-                    );
+                    )
+                .ToArray();
 
             return found ?? new Lib.Data.Osoba[] { };
         }
@@ -663,7 +669,8 @@ namespace HlidacStatu.Web.Controllers
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id),
-                    new Framework.ApiCall.CallParameter("dataid", dataid)
+                    new Framework.ApiCall.CallParameter("dataid", dataid),
+                    new Framework.ApiCall.CallParameter("mode", mode)
                 });
             if (!apiAuth.Authentificated)
             {
