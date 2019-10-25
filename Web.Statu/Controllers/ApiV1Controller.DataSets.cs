@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Collections.Generic;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -35,15 +36,16 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        [System.Web.Mvc.NonAction]
-        public ActionResult FindOsobaId(string jmeno, string prijmeni, string narozeni)
+        public ActionResult FindOsobaId(string jmeno, string prijmeni, string celejmeno, string narozeni, string funkce)
         {
 
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("jmeno", jmeno),
                     new Framework.ApiCall.CallParameter("prijmeni", prijmeni),
-                    new Framework.ApiCall.CallParameter("narozeni", narozeni)
+                    new Framework.ApiCall.CallParameter("celejmeno", celejmeno),
+                    new Framework.ApiCall.CallParameter("narozeni", narozeni),
+                    new Framework.ApiCall.CallParameter("funkce", funkce)
                 })
                 .Authentificated)
             {
@@ -53,43 +55,121 @@ namespace HlidacStatu.Web.Controllers
             else
             {
                 DateTime? dt = ParseTools.ToDateTime(narozeni, "yyyy-MM-dd");
-                if (dt.HasValue == false)
+                if (dt.HasValue == false && string.IsNullOrEmpty(funkce))
                 {
                     var status = ApiResponseStatus.InvalidFormat;
                     status.error.errorDetail = "invalid date format for parameter 'narozeni'. Use yyyy-MM-dd format.";
                     return Json(status, JsonRequestBehavior.AllowGet);
                 }
 
-                var found = HlidacStatu.Lib.StaticData.Politici.Get()
-                    .Where(o =>
-                    string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
-                    && o.Narozeni == dt.Value)
-                    .FirstOrDefault();
-                if (found == null) //try without diacritics
+                if (string.IsNullOrEmpty(jmeno) && string.IsNullOrEmpty(prijmeni) && !string.IsNullOrEmpty(celejmeno))
                 {
-                    string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
-                    string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
-                    found = HlidacStatu.Lib.StaticData.Politici.Get()
-                    .Where(o =>
-                    string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
-                    && o.Narozeni == dt.Value)
-                    .FirstOrDefault();
+                    Lib.Data.Osoba osobaZeJmena = Lib.Validators.OsobaInText(celejmeno );
+                    if (osobaZeJmena == null)
+                    {
+                        jmeno = "";
+                        prijmeni = "";
+                    }
+                    else
+                    {
+                        jmeno = osobaZeJmena.Jmeno;
+                        prijmeni = osobaZeJmena.Prijmeni;
+                    }
+                }
+                if (string.IsNullOrEmpty(jmeno) || string.IsNullOrEmpty(prijmeni))
+                {
+                    var status = ApiResponseStatus.InvalidFormat;
+                    status.error.errorDetail = "no data for parameter 'jmeno' or 'prijmeni' or 'celejmeno'.";
+                    return Json(status, JsonRequestBehavior.AllowGet);
+
                 }
 
-                if (found == null)
+                IEnumerable<Lib.Data.Osoba> found = null;
+                if (dt.HasValue)
+                    found = FindByDate(jmeno, prijmeni, dt);
+                else
+                    found = FindByFunkce(jmeno, prijmeni, funkce);
+
+                if (found == null || found?.Count() == 0)
                     return Json(new { }, JsonRequestBehavior.AllowGet);
                 else
-                    return Json(new
-                    {
-                        Jmeno = found.Jmeno,
-                        Prijmeni = found.Prijmeni,
-                        Narozeni = found.Narozeni.Value.ToString("yyyy-MM-dd"),
-                        OsobaId = found.NameId
-                    }
+                {
+                    var f = found.First();
+                    return Json(new {
+                                    Jmeno = f.Jmeno,
+                                    Prijmeni = f.Prijmeni,
+                                    //Narozeni = found.Narozeni.Value.ToString("yyyy-MM-dd"),
+                                    OsobaId = f.NameId}
                             , JsonRequestBehavior.AllowGet);
+                }
             }
+        }
+
+        [System.Web.Mvc.NonAction]
+        private IEnumerable<Lib.Data.Osoba> FindByFunkce(string jmeno, string prijmeni, string funkce)
+        {
+            if (string.IsNullOrEmpty(funkce))
+            {
+                return new Lib.Data.Osoba[] { };
+            }
+
+            var found = HlidacStatu.Lib.StaticData.Politici.Get()
+                        .Where(o =>
+                            string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
+                            )
+                        ;
+
+            if (found?.Count() > 0)
+                return found;
+
+            string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
+            string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+            found = HlidacStatu.Lib.StaticData.Politici.Get()
+                        .Where(o =>
+                            string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
+                            );
+
+
+            funkce = HlidacStatu.Util.ParseTools.NormalizePolitikFunkce(funkce);
+
+            found = found
+                .Where(m =>
+                    m.Events().Any(e => HlidacStatu.Util.ParseTools.FindInStringSqlLike(e.AddInfo, funkce))
+                    );
+
+            return found ?? new Lib.Data.Osoba[] { };
+        }
+
+
+        [System.Web.Mvc.NonAction]
+        private IEnumerable<Lib.Data.Osoba> FindByDate(string jmeno, string prijmeni, DateTime? dt)
+        {
+            if (dt.HasValue == false)
+            {
+                return new Lib.Data.Osoba[] { };
+            }
+
+            var found = HlidacStatu.Lib.StaticData.Politici.Get()
+                        .Where(o =>
+                            string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
+                            && o.Narozeni == dt.Value);
+
+            if (found?.Count() > 0)
+                return found;
+
+            string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
+            string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+            found = HlidacStatu.Lib.StaticData.Politici.Get()
+                        .Where(o =>
+                            string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
+                            && o.Narozeni == dt.Value)
+                        ;
+
+            return found ?? new Lib.Data.Osoba[] { };
         }
 
 
@@ -124,8 +204,8 @@ namespace HlidacStatu.Web.Controllers
                 else if (type == "search")
                 {
                     var res = ds.SearchData("*", 1, 5, "DbCreated desc");
-                    var temp = new Registration.Template() { body = template } ;
-                    
+                    var temp = new Registration.Template() { body = template };
+
                     var html = temp.Render(ds, res, "*");
 
                     return Content(html);
