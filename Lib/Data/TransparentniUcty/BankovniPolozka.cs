@@ -51,8 +51,13 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
             [Nest.Keyword]
             public string Author { get; set; }
+
+            [Nest.Text]
             public string Value { get; set; }
+
+            [Nest.Number]
             public int ValueInt { get; set; }
+            [Nest.Date]
             public DateTime Created { get; set; } = DateTime.Now;
         }
 
