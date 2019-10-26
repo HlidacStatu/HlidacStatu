@@ -199,42 +199,42 @@ namespace HlidacStatu.Lib.Data.VZ
             public static QueryContainer GetSimpleQuery(ES.VerejnaZakazkaSearchData searchdata)
             {
 
-                string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
-                    {@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" },
-                    {@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icozadavatel" },
+                Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+                   new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
+                   new Lib.Search.Rule(@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
+                   new Lib.Search.Rule(@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icozadavatel" ),
 
-                    {@"holding:(?<q>(\d{1,8})) ","ico" },
-                    {@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" },
-                    {@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" },
-                    {@"holdingprijemce:(?<q>(\d{1,8})) ","icododavatel" },
-                    {@"holdingplatce:(?<q>(\d{1,8})) ","icozadavatel" },
+                   new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ","ico" ),
+                   new Lib.Search.Rule(@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" ),
+                   new Lib.Search.Rule(@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" ),
+                   new Lib.Search.Rule(@"holdingprijemce:(?<q>(\d{1,8})) ","icododavatel" ),
+                   new Lib.Search.Rule(@"holdingplatce:(?<q>(\d{1,8})) ","icozadavatel" ),
 
-                    {"cpv:","${cpv}" },
-                    {"oblast:","${oblast}" },
-                    {"form:","${form}" },
-                    {"zahajeny:1","stavVZ:<=100" },
-                    {"ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " },
-                    {"icododavatel:","dodavatele.iCO:" },
-                    {"icoprijemce:","dodavatele.iCO:" },
-                    {"icozadavatel:","zadavatel.iCO:" },
-                    {"icoplatce:","zadavatel.iCO:" },
-                    {"jmenoprijemce:","dodavatele.jmeno:" },
-                    {"jmenoplatce:","zadavatel.jmeno:" },
-                    {"id:","id:" },
-                    {"popis:","(nazevZakazky:${q} OR popisZakazky:${q}) " },
-                    {"cena:<=","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) " },
-                    {"cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " },
-                    {"cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " },
-                    {"cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " },
-                    {"cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " },
-                    {"zverejneno:\\[","datumUverejneni:[" },
-                    {"zverejneno:(?=[<>])","datumUverejneni:${q}" },
-                    {"zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" },
-                    {"podepsano:\\[","datumUzavreniSmlouvy:[" },
-                    {"podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" },
-                    {"podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" },
-                    {"text:","prilohy.plainTextContent:" },
+                   new Lib.Search.Rule("cpv:","${cpv}" ),
+                   new Lib.Search.Rule("oblast:","${oblast}" ),
+                   new Lib.Search.Rule("form:","${form}" ),
+                   new Lib.Search.Rule("zahajeny:1","stavVZ:<=100" ),
+                   new Lib.Search.Rule("ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " ),
+                   new Lib.Search.Rule("icododavatel:","dodavatele.iCO:" ),
+                   new Lib.Search.Rule("icoprijemce:","dodavatele.iCO:" ),
+                   new Lib.Search.Rule("icozadavatel:","zadavatel.iCO:" ),
+                   new Lib.Search.Rule("icoplatce:","zadavatel.iCO:" ),
+                   new Lib.Search.Rule("jmenoprijemce:","dodavatele.jmeno:" ),
+                   new Lib.Search.Rule("jmenoplatce:","zadavatel.jmeno:" ),
+                   new Lib.Search.Rule("id:","id:" ),
+                   new Lib.Search.Rule("popis:","(nazevZakazky:${q} OR popisZakazky:${q}) " ),
+                   new Lib.Search.Rule("cena:<=","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) " ),
+                   new Lib.Search.Rule("cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " ),
+                   new Lib.Search.Rule("cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " ),
+                   new Lib.Search.Rule("cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " ),
+                   new Lib.Search.Rule("cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " ),
+                   new Lib.Search.Rule("zverejneno:\\[","datumUverejneni:[" ),
+                   new Lib.Search.Rule("zverejneno:(?=[<>])","datumUverejneni:${q}" ),
+                   new Lib.Search.Rule("zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" ),
+                   new Lib.Search.Rule("podepsano:\\[","datumUzavreniSmlouvy:[" ),
+                   new Lib.Search.Rule("podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" ),
+                   new Lib.Search.Rule("podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" ),
+                   new Lib.Search.Rule("text:","prilohy.plainTextContent:" ),
                 };
 
                 var query = searchdata.Q?.Trim();
@@ -243,13 +243,13 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
                 if (searchdata.Zahajeny)
-                    modifiedQ = Lib.ES.SearchTools.ModifyQuery(modifiedQ, "zahajeny:1");
+                    modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "zahajeny:1");
 
                 if (!string.IsNullOrWhiteSpace(searchdata.Oblast))
                 {
                     var oblValue = NormalizeOblastValue(searchdata.Oblast);
                     if (!string.IsNullOrEmpty(oblValue))
-                        modifiedQ = Lib.ES.SearchTools.ModifyQuery(modifiedQ, "oblast:" + oblValue);
+                        modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "oblast:" + oblValue);
                 }
 
 

@@ -145,11 +145,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             return Search.SearchDataRaw(this, queryString, page, pageSize, sort,excludeBigProperties, withHighlighting);
         }
-        public IEnumerable<string> GetMappingList(string specificMapName = null)
+        public IEnumerable<string> GetMappingList(string specificMapName = null, string attrNameModif = "")
         {
             List<string> properties = new List<string>();
             var mapping = GetElasticMapping();
-            properties.AddRange(getMappingType("", null, mapping, specificMapName));
+            properties.AddRange(getMappingType("", null, mapping, specificMapName, attrNameModif));
             return properties;
         }
         public IEnumerable<string> GetTextMappingList()
@@ -159,7 +159,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             properties.AddRange(getMappingType("", typeof(Nest.TextProperty), mapping));
             return properties;
         }
-        protected IEnumerable<string> getMappingType(string prefix, Type mappingType, IEnumerable<Nest.CorePropertyBase> props, string specName = null)
+        protected IEnumerable<string> getMappingType(string prefix, Type mappingType, IEnumerable<Nest.CorePropertyBase> props, string specName = null, string attrNameModif = "")
         {
             List<string> _props = new List<string>();
 
@@ -168,7 +168,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 if (mappingType == null || p.GetType() == mappingType)
                 {
                     if (specName == null || p.Name.Name == specName)
-                        _props.Add(prefix + p.Name.Name);
+                        _props.Add(prefix + attrNameModif + p.Name.Name + attrNameModif);
                 }
 
                 if (p.GetType() == typeof(Nest.ObjectProperty))
@@ -176,7 +176,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Nest.ObjectProperty pObj = (Nest.ObjectProperty)p;
                     if (pObj.Properties != null)
                     {
-                        _props.AddRange(getMappingType(prefix + p.Name.Name + ".", mappingType, pObj.Properties.Select(m => (Nest.CorePropertyBase)m.Value), specName));
+                        _props.AddRange(getMappingType(prefix + p.Name.Name + ".", mappingType, pObj.Properties.Select(m => (Nest.CorePropertyBase)m.Value), specName, attrNameModif));
                     }
                 }
             }

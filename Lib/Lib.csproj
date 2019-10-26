@@ -633,6 +633,7 @@
     <Compile Include="Search\Highlighter.cs" />
     <Compile Include="Search\InsolvenceSearchResult.cs" />
     <Compile Include="ES\Manager.cs" />
+    <Compile Include="Search\Rule.cs" />
     <Compile Include="Search\SearchDataResult.cs" />
     <Compile Include="Search\Tools.cs" />
     <Compile Include="Search\VerejnaZakazkaSearchResult.cs" />

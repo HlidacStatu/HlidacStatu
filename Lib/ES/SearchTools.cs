@@ -140,41 +140,41 @@ namespace HlidacStatu.Lib.ES
         public static QueryContainer GetSimpleQuery(string query)
         {
             //ds: -> 
-            string[,] rules = new string[,] {
-                {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
+            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+                new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
 
-                {@"holding:(?<q>(\d{1,8})) ","ico" },
-                {@"holdingprijemce:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" },
-                {@"holdingplatce:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" },
-                {@"holdingdodavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" },
-                {@"holdingzadavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" },
+               new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ","ico" ),
+               new Lib.Search.Rule(@"holdingprijemce:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" ),
+               new Lib.Search.Rule(@"holdingplatce:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" ),
+               new Lib.Search.Rule(@"holdingdodavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoprijemce" ),
+               new Lib.Search.Rule(@"holdingzadavatel:(?<q>(\d{1,8})) (\s|$){1,}","icoplatce" ),
 
-                {"ds:","(prijemce.datovaSchranka:${q} OR platce.datovaSchranka:${q}) " },
-                {"dsprijemce:","prijemce.datovaSchranka:" },
-                {"dsplatce:","platce.datovaSchranka:" },
-                {"ico:","(prijemce.ico:${q} OR platce.ico:${q}) " },
-                {"icoprijemce:","prijemce.ico:" },
-                {"icoplatce:","platce.ico:" },
-                {"jmenoprijemce:","prijemce.nazev:" },
-                {"jmenoplatce:","platce.nazev:" },
-                {"id:","id:" },
-                {"idverze:","id:" },
-                {"idsmlouvy:","identifikator.idSmlouvy:" },
-                {"predmet:","predmet:" },
-                {"cislosmlouvy:","cisloSmlouvy:" },
-                {"mena:","ciziMena.mena:" },
-                {"cenasdph:","hodnotaVcetneDph:" },
-                {"cenabezdph:","hodnotaBezDph:" },
-                {"cena:","calculatedPriceWithVATinCZK:" },
-                {"zverejneno:\\[","casZverejneni:[" },
-                {"zverejneno:(?=[<>])","casZverejneni:${q}" },
-                {"zverejneno:(?=\\d)","casZverejneni:[${q} TO ${q}||+1d]" },
-                {"podepsano:\\[","datumUzavreni:[" },
-                {"podepsano:(?=[<>])","datumUzavreni:${q}" },
-                {"podepsano:(?=\\d)","datumUzavreni:[${q} TO ${q}||+1d]" },
-                {"schvalil:","schvalil:" },
-                {"textsmlouvy:","prilohy.plainTextContent:" },
-                {"chyby:","${level}" },
+               new Lib.Search.Rule("ds:","(prijemce.datovaSchranka:${q} OR platce.datovaSchranka:${q}) " ),
+               new Lib.Search.Rule("dsprijemce:","prijemce.datovaSchranka:" ),
+               new Lib.Search.Rule("dsplatce:","platce.datovaSchranka:" ),
+               new Lib.Search.Rule("ico:","(prijemce.ico:${q} OR platce.ico:${q}) " ),
+               new Lib.Search.Rule("icoprijemce:","prijemce.ico:" ),
+               new Lib.Search.Rule("icoplatce:","platce.ico:" ),
+               new Lib.Search.Rule("jmenoprijemce:","prijemce.nazev:" ),
+               new Lib.Search.Rule("jmenoplatce:","platce.nazev:" ),
+               new Lib.Search.Rule("id:","id:" ),
+               new Lib.Search.Rule("idverze:","id:" ),
+               new Lib.Search.Rule("idsmlouvy:","identifikator.idSmlouvy:" ),
+               new Lib.Search.Rule("predmet:","predmet:" ),
+               new Lib.Search.Rule("cislosmlouvy:","cisloSmlouvy:" ),
+               new Lib.Search.Rule("mena:","ciziMena.mena:" ),
+               new Lib.Search.Rule("cenasdph:","hodnotaVcetneDph:" ),
+               new Lib.Search.Rule("cenabezdph:","hodnotaBezDph:" ),
+               new Lib.Search.Rule("cena:","calculatedPriceWithVATinCZK:" ),
+               new Lib.Search.Rule("zverejneno:\\[","casZverejneni:[" ),
+               new Lib.Search.Rule("zverejneno:(?=[<>])","casZverejneni:${q}" ),
+               new Lib.Search.Rule("zverejneno:(?=\\d)","casZverejneni:[${q} TO ${q}||+1d]" ),
+               new Lib.Search.Rule("podepsano:\\[","datumUzavreni:[" ),
+               new Lib.Search.Rule("podepsano:(?=[<>])","datumUzavreni:${q}" ),
+               new Lib.Search.Rule("podepsano:(?=\\d)","datumUzavreni:[${q} TO ${q}||+1d]" ),
+               new Lib.Search.Rule("schvalil:","schvalil:" ),
+               new Lib.Search.Rule("textsmlouvy:","prilohy.plainTextContent:" ),
+               new Lib.Search.Rule("chyby:","${level}" ),
 
             };
 
@@ -267,7 +267,7 @@ namespace HlidacStatu.Lib.ES
             }
 
             if (platnyZaznam.HasValue)
-                query = ModifyQuery(query, "platnyZaznam:" + platnyZaznam.Value);
+                query = Lib.Search.Tools.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value);
 
 
             ISearchResponse<Lib.Data.Smlouva> res =
@@ -352,13 +352,6 @@ namespace HlidacStatu.Lib.ES
             return res;
         }
 
-        public static string ModifyQuery(string origQuery, string anotherCondition)
-        {
-            if (string.IsNullOrEmpty(origQuery))
-                return anotherCondition;
-            else
-                return string.Format("( {0} ) AND ( {1} ) ", origQuery, anotherCondition);
-        }
 
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(string jsonQuery, int page, int pageSize, OrderResult order = OrderResult.Relevance,
             AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, int? platnyZaznam = null, bool includeNeplatne = false

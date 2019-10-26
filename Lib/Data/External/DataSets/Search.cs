@@ -9,9 +9,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     public static class Search
     {
 
-        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query)
+        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query, string attrNameModif="")
         {
-            var props = ds.GetMappingList(mappingProperty).ToArray();
+            var props = ds.GetMappingList(mappingProperty, attrNameModif).ToArray();
             var qSearch = SearchDataQuery(props, query);
             return qSearch;
         }
@@ -214,16 +214,34 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
+        static string simpleQueryOsobaPrefix = "___";
         //static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
         public static QueryContainer GetSimpleQuery(DataSet ds, string query)
         {
 
             var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "${q}");
+            var osobaIdQuerypathToIco = HlidacStatu.Lib.Data.External.DataSets.Search
+                            .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}")
+                            + " OR ( " + simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${v} )";
 
-            string[,] rules = new string[,] {
-                    {"ico:",icoQuerypath },
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ",icoQuerypath },
-                    {@"holding:(?<q>(\d{1,8})) ",icoQuerypath },
+            var osobaIdQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search
+                .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}");
+
+            var osobaQP = "";
+            if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
+                osobaQP = $"({icoQuerypath} OR {osobaIdQuerypathToIco})";
+            else if (!string.IsNullOrEmpty(icoQuerypath))
+                osobaQP = icoQuerypath;
+            else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
+                osobaQP = osobaIdQuerypathToIco;
+
+            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+                    new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico"){ 
+                        AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}" 
+                    },
+                    new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),
+                    new Lib.Search.Rule("ico:",icoQuerypath ),
+                    new Lib.Search.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
                 };
 
 

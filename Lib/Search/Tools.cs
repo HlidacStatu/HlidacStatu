@@ -222,7 +222,7 @@ namespace HlidacStatu.Lib.Search
         }
 
 
-        public static QueryContainer GetSimpleQuery<T>(string query, string[,] rules)
+        public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules)
                         where T : class
         {
             string modifiedQ = GetSimpleQueryCore<T>(query, rules);
@@ -244,7 +244,7 @@ namespace HlidacStatu.Lib.Search
             return qc;
         }
 
-        public static string GetSimpleQueryCore<T>(string query, string[,] rules)
+        public static string GetSimpleQueryCore<T>(string query, Rule[] rules)
             where T : class
         {
             query = query?.Trim();
@@ -259,10 +259,14 @@ namespace HlidacStatu.Lib.Search
             string modifiedQ = query; //FixInvalidQuery(query) ?? "";
             //check invalid query ( tag: missing value)
 
-            for (int i = 0; i < rules.GetLength(0); i++)
+            for (int i = 0; i < rules.Length; i++)
             {
-                string lookFor = regexPrefix + rules[i, 0];
-                string replaceWith = rules[i, 1];
+                string lookFor = regexPrefix + rules[i].LookFor;
+                string replaceWith = rules[i].ReplaceWith;
+                bool doFullReplace = rules[i].FullReplace;
+
+
+
 
                 MatchEvaluator evalMatch = (m) =>
                 {
@@ -271,7 +275,15 @@ namespace HlidacStatu.Lib.Search
                         return string.Empty;
                     var newVal = replaceWith;
                     if (newVal.Contains("${q}"))
-                        newVal = newVal.Replace("${q}", m.Groups["q"].Value);
+                    {
+                        var capt = m.Groups["q"].Captures;
+                        var captVal = "";
+                        foreach (Capture c in capt)
+                            if (c.Value.Length > captVal.Length)
+                                captVal = c.Value;
+
+                        newVal = newVal.Replace("${q}", captVal);
+                    }
                     if (s.StartsWith("("))
                         return " (" + newVal;
                     else
@@ -281,7 +293,12 @@ namespace HlidacStatu.Lib.Search
                 //if (modifiedQ.ToLower().Contains(lookFor.ToLower()))
                 if (Regex.IsMatch(modifiedQ, lookFor, regexQueryOption))
                 {
-                    if (!string.IsNullOrEmpty(replaceWith)
+                    Match mFirst = Regex.Match(modifiedQ, lookFor, regexQueryOption);
+                    string foundValue = mFirst.Groups["q"].Value;
+
+
+                    if (doFullReplace 
+                        && !string.IsNullOrEmpty(replaceWith)
                         && (
                             lookFor.Contains("holding:")
                             //RS
@@ -338,15 +355,16 @@ namespace HlidacStatu.Lib.Search
 
                         }
                     } //do regex replace
-                    else if (!string.IsNullOrEmpty(replaceWith)
-                        && (
-                            lookFor.Contains("osobaid:")
-                            || lookFor.Contains("osobaiddluznik:")
-                            || lookFor.Contains("osobaidveritel:")
-                            || lookFor.Contains("osobaidspravce:")
-                            || lookFor.Contains("osobaidzadavatel:")
-                            || lookFor.Contains("osobaiddodavatel:")
-                            )
+                    else if (doFullReplace
+                                && !string.IsNullOrEmpty(replaceWith)
+                                && (
+                                    lookFor.Contains("osobaid:")
+                                    || lookFor.Contains("osobaiddluznik:")
+                                    || lookFor.Contains("osobaidveritel:")
+                                    || lookFor.Contains("osobaidspravce:")
+                                    || lookFor.Contains("osobaidzadavatel:")
+                                    || lookFor.Contains("osobaiddodavatel:")
+                                    )
                         )//(replaceWith.Contains("${ico}"))
                     {
                         //list of ICO connected to this person
@@ -359,6 +377,8 @@ namespace HlidacStatu.Lib.Search
                         var templ = $" ( {replaceWith}:{{0}} ) ";
                         if (replaceWith.Contains("${q}"))
                             templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
+
+
 
                         if (p != null)
                         {
@@ -387,7 +407,7 @@ namespace HlidacStatu.Lib.Search
                     }
 
                     //VZ
-                    else if (replaceWith.Contains("${oblast}"))
+                    else if (doFullReplace && replaceWith.Contains("${oblast}"))
                     {
                         string cpv = "";
                         if (replaceWith.Contains("${oblast}"))
@@ -402,7 +422,7 @@ namespace HlidacStatu.Lib.Search
                         }
                     }
                     //VZs
-                    else if (replaceWith.Contains("${cpv}"))
+                    else if (doFullReplace && replaceWith.Contains("${cpv}"))
                     {
                         string cpv = "";
                         //Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
@@ -424,7 +444,7 @@ namespace HlidacStatu.Lib.Search
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
                     }
                     //VZ
-                    else if (replaceWith.Contains("${form}"))
+                    else if (doFullReplace && replaceWith.Contains("${form}"))
                     {
                         lookFor = @"form:(?<q>((F|CZ)\d{1,2}(,)?)*)\s*";
                         Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
@@ -446,10 +466,11 @@ namespace HlidacStatu.Lib.Search
 
                     else if (replaceWith.Contains("${q}"))
                     {
+                        
                         modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
                     } //do regex replace
 
-                    else if (lookFor.Contains("chyby:"))
+                    else if (doFullReplace && lookFor.Contains("chyby:"))
                     {
                         string levelVal = ParseTools.GetRegexGroupValue(modifiedQ, @"chyby:(?<level>\w*)", "level")?.ToLower() ?? "";
                         string levelQ = "";
@@ -469,10 +490,35 @@ namespace HlidacStatu.Lib.Search
                         modifiedQ = Regex.Replace(modifiedQ, lookFor, evalMatch, regexQueryOption);
 
                     }
+
+                    if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                    {
+                        if (rules[i].AddLastCondition.Contains("${q}"))
+                        {
+                            rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
+                        }
+
+                        modifiedQ = ModifyQueryOR(modifiedQ, rules[i].AddLastCondition);
+                    }
                 }
             }
 
             return modifiedQ;
+        }
+
+        public static string ModifyQueryAND(string origQuery, string anotherCondition)
+        {
+            if (string.IsNullOrEmpty(origQuery))
+                return anotherCondition;
+            else
+                return string.Format("( {0} ) AND ( {1} ) ", origQuery, anotherCondition);
+        }
+        public static string ModifyQueryOR(string origQuery, string anotherCondition)
+        {
+            if (string.IsNullOrEmpty(origQuery))
+                return anotherCondition;
+            else
+                return string.Format("( {0} ) OR ( {1} ) ", origQuery, anotherCondition);
         }
 
     }

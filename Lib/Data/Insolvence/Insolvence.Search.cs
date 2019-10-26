@@ -49,45 +49,45 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             //fix field prefixes
             //ds: -> 
-            string[,] rules = new string[,] {
-                    {@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" },
-                    {@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" },
-                    {@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" },
-                    {@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" },
+            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+                   new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
+                   new Lib.Search.Rule(@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" ),
+                   new Lib.Search.Rule(@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" ),
+                   new Lib.Search.Rule(@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" ),
 
-                    {@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" },
-                    {@"holdindluznik:(?<q>(\d{1,8})) (\s|$){1,}","icodluznik" },
-                    {@"holdingveritel:(?<q>(\d{1,8})) (\s|$){1,}","icoveritel" },
-                    {@"holdingspravce:(?<q>(\d{1,8})) (\s|$){1,}","icospravce" },
+                   new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" ),
+                   new Lib.Search.Rule(@"holdindluznik:(?<q>(\d{1,8})) (\s|$){1,}","icodluznik" ),
+                   new Lib.Search.Rule(@"holdingveritel:(?<q>(\d{1,8})) (\s|$){1,}","icoveritel" ),
+                   new Lib.Search.Rule(@"holdingspravce:(?<q>(\d{1,8})) (\s|$){1,}","icospravce" ),
 
-                    {"ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " },
-                    {"icodluznik:","dluznici.iCO:" },
-                    {"icoveritel:","veritele.iCO:" },
-                    {"icospravce:","spravci.iCO:" },
-                    {"jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" },
-                    {"jmenodluznik:","dluznici.plneJmeno:" },
-                    {"jmenoveritel:","veritele.plneJmeno:" },
-                    {"jmenospravce:","spravci.plneJmeno:" },
-                    {"spisovaznacka:","spisovaZnacka:" },
-                    {"id:","spisovaZnacka:" },
-                    {"zmeneno:\\[","posledniZmena:[" },
-                    {"zmeneno:(?=[<>])","posledniZmena:${q}" },
-                    {"zmeneno:(?=\\d)","posledniZmena:[${q} TO ${q}||+1d]" },
-                    {"zahajeno:\\[","datumZalozeni:[" },
-                    {"zahajeno:(?=[<>])","datumZalozeni:${q}" },
-                    {"zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" },
-                    {"stav:","stav:" },
-                    {"text:","dokumenty.plainText:" },
-                    {"texttypdokumentu:","dokumenty.popis:" },
-                    {"typdokumentu:","dokumenty.typUdalosti:" },
-                    {"oddil:","dokumenty.oddil:" },
+                   new Lib.Search.Rule("ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " ),
+                   new Lib.Search.Rule("icodluznik:","dluznici.iCO:" ),
+                   new Lib.Search.Rule("icoveritel:","veritele.iCO:" ),
+                   new Lib.Search.Rule("icospravce:","spravci.iCO:" ),
+                   new Lib.Search.Rule("jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" ),
+                   new Lib.Search.Rule("jmenodluznik:","dluznici.plneJmeno:" ),
+                   new Lib.Search.Rule("jmenoveritel:","veritele.plneJmeno:" ),
+                   new Lib.Search.Rule("jmenospravce:","spravci.plneJmeno:" ),
+                   new Lib.Search.Rule("spisovaznacka:","spisovaZnacka:" ),
+                   new Lib.Search.Rule("id:","spisovaZnacka:" ),
+                   new Lib.Search.Rule("zmeneno:\\[","posledniZmena:[" ),
+                   new Lib.Search.Rule("zmeneno:(?=[<>])","posledniZmena:${q}" ),
+                   new Lib.Search.Rule("zmeneno:(?=\\d)","posledniZmena:[${q} TO ${q}||+1d]" ),
+                   new Lib.Search.Rule("zahajeno:\\[","datumZalozeni:[" ),
+                   new Lib.Search.Rule("zahajeno:(?=[<>])","datumZalozeni:${q}" ),
+                   new Lib.Search.Rule("zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" ),
+                   new Lib.Search.Rule("stav:","stav:" ),
+                   new Lib.Search.Rule("text:","dokumenty.plainText:" ),
+                   new Lib.Search.Rule("texttypdokumentu:","dokumenty.popis:" ),
+                   new Lib.Search.Rule("typdokumentu:","dokumenty.typUdalosti:" ),
+                   new Lib.Search.Rule("oddil:","dokumenty.oddil:" ),
             };
 
             string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
-                modifiedQ = Lib.ES.SearchTools.ModifyQuery(modifiedQ, "onRadar:true");
+                modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
 
