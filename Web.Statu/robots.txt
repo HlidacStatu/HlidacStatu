@@ -3,4 +3,6 @@ Disallow: /Account/*
 Disallow: /Admin/*
 Disallow: /Api/*
 
+Disallow: /osoba/radek-jonke
+
 Sitemap: https://www.HlidacStatu.cz/sitemap.xml

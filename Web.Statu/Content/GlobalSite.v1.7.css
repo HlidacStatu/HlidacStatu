@@ -1503,11 +1503,17 @@ div.verticaltab-container {
 }
 
 .highlighting {
+}
+
+.highlighting.snippet {
     color: #666;
-    font-style: italic;
+    font-style: normal;
 }
 
     .highlighting highl {
+        font-weight: bold;
+    }
+    .highlighting.snippet highl {
         font-weight: bold;
         background-color: #c5f74f;
     }

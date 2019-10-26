@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace HlidacStatu.Lib.ES
+namespace HlidacStatu.Lib.Search
 {
 
     public class Highlighter
@@ -23,6 +23,28 @@ namespace HlidacStatu.Lib.ES
                 }
             }
             return false;
+        }
+
+        public static string HighlightFullContent(Nest.HighlightFieldDictionary highlights, string path, string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return string.Empty;
+
+            highlights = highlights ?? new Nest.HighlightFieldDictionary();
+
+            string hContent = content;
+
+            foreach (var hlk in highlights.Where(k => k.Key == path))
+            {
+                foreach (var txt in hlk.Value.Highlights)
+                {
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
+
+                    hContent = hContent.Replace(stxt, txt); //orig text replace with text with highl tags
+
+                }
+            }
+            return hContent;
         }
 
         public static string HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string content, string highlightPartDelimiter = " ..... ")
@@ -63,7 +85,7 @@ namespace HlidacStatu.Lib.ES
             highlights = highlights ?? new Nest.HighlightFieldDictionary();
             //foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
 
-            string result = HlidacStatu.Lib.ES.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
+            string result = HlidacStatu.Lib.Search.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
             if (string.IsNullOrEmpty(result))
             {
                 return noHLContent;
@@ -78,7 +100,7 @@ namespace HlidacStatu.Lib.ES
                 }
                 else
                 {
-                    sb.AppendLine("<span class='highlighting'>");
+                    sb.AppendLine("<span class='highlighting snippet'>");
                     if (!string.IsNullOrEmpty(icon))
                     {
                         sb.AppendLine("<div class='row'>");

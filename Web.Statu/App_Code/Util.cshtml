@@ -61,7 +61,7 @@
         string foundContentFormat = null, string noHLContent = "", string prefix = "",
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
-    @Html.Raw(HlidacStatu.Lib.ES.Highlighter.HighlightContentIntoHtmlBlock(
+    @Html.Raw(HlidacStatu.Lib.Search.Highlighter.HighlightContentIntoHtmlBlock(
             highlights, path, contentToCompare,
             foundContentFormat, noHLContent, prefix,
             postfix, highlightPartDelimiter, icon)

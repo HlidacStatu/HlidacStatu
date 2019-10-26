@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                     string path = System.Text.RegularExpressions.
                                         Regex.Replace(jobj.Path, @"\[\d{1,}\]", "")
                                         + ".DocumentPlainText";
-                                    HLresult = ES.Highlighter.HighlightContentIntoHtmlBlock(highlightingData,
+                                    HLresult = HlidacStatu.Lib.Search.Highlighter.HighlightContentIntoHtmlBlock(highlightingData,
                                         path,
                                         jobj["DocumentPlainText"].Value<string>(), " ..... ",
                                         prefix: highlPrefix, postfix: highlPostfix);
@@ -231,6 +231,19 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return s;
                     //return s;
                 }
+
+                public static string fn_HighligthText(Nest.HighlightFieldDictionary highlightingData, dynamic text, string attrPath)
+                {
+                    var s = fn_FixPlainText(text);
+
+
+
+                    return "<div class='highlighting'>"
+                        + Lib.Search.Highlighter.HighlightFullContent(highlightingData, attrPath, s)
+                        + "</div>";
+                    //return s;
+                }
+
                 public static string fn_NormalizeText(dynamic text)
                 {
                     if (text == null)
