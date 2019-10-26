@@ -35,6 +35,32 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        public ActionResult GetJmenoPrijmeniFromString(string text)
+        {
+            if (!Framework.ApiAuth.IsApiAuth(this,
+                   parameters: new Framework.ApiCall.CallParameter[] {
+                                new Framework.ApiCall.CallParameter("text", text),
+                   })
+                   .Authentificated)
+            {
+                //Response.StatusCode = 401;
+                return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var o = HlidacStatu.Lib.Validators.OsobaInText(text);
+                if (o == null)
+                    return Json(new { }, JsonRequestBehavior.AllowGet);
+                else
+                    return Json(new {
+                                        titulPred = o.TitulPred,
+                                        jmeno = o.Jmeno,
+                                        prijmeni = o.Prijmeni,
+                                        titulPo = o.TitulPo                                        
+                                    }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
         public ActionResult FindOsobaId(string jmeno, string prijmeni, string celejmeno, string narozeni, string funkce)
         {
