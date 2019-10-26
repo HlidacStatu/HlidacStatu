@@ -1511,11 +1511,15 @@ div.verticaltab-container {
 }
 
     .highlighting highl {
-        font-weight: bold;
+        font-weight: 900;
+        letter-spacing: 0.2rem;
+        padding-left: 0.3em;
+        padding-right: 0.3em;
     }
     .highlighting.snippet highl {
-        font-weight: bold;
+        font-weight: 900;
         background-color: #c5f74f;
+        letter-spacing: 0.05rem;
     }
 
 
