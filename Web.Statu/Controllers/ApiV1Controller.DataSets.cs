@@ -467,7 +467,13 @@ namespace HlidacStatu.Web.Controllers
                                 new JsonSerializerSettings() { ContractResolver = Serialization.PublicDatasetContractResolver.Instance })
                             , "application/json");
                     else
-                        return Content(Newtonsoft.Json.JsonConvert.SerializeObject(DataSetDB.Instance.SearchData("id:" + id, 1, 100).Result), "application/json");
+                    {
+                        var ds = DataSetDB.CachedDatasets.Get(id);
+                        if (ds==null)
+                            return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
+                        else
+                            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ds),"application/json");
+                    }
 
                 }
                 catch (DataSetException dse)

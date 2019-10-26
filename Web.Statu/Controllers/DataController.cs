@@ -15,7 +15,7 @@ namespace HlidacStatu.Web.Controllers
 
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
-                return RedirectToAction("index");
+                return RedirectToAction("index","Data",new {id="" });
 
             return View("Dataset", ds);
         }
