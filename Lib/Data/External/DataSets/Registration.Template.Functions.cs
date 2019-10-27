@@ -232,7 +232,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     //return s;
                 }
 
-                public static string fn_HighligthText(Nest.HighlightFieldDictionary highlightingData, dynamic text, string attrPath)
+                public static string fn_HighlightText(Nest.HighlightFieldDictionary highlightingData, dynamic text, string attrPath)
                 {
                     var s = fn_FixPlainText(text);
 
