@@ -569,6 +569,8 @@ namespace HlidacStatu.Web.Controllers
                 try
                 {
                     var ds = DataSet.CachedDatasets.Get(id?.ToLower());
+                    if (ds == null)
+                        return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
 
                     if (false)
                     {
@@ -600,9 +602,9 @@ namespace HlidacStatu.Web.Controllers
                     }
 
                 }
-                catch (DataSetException)
+                catch (DataSetException dex)
                 {
-                    return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
+                    return Json(dex.APIResponse, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
