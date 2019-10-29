@@ -278,7 +278,7 @@ namespace HlidacStatu.Lib.Data
 
             public DateTime? LastUpdate { get; set; } = null;
 
-            public int Version { get; set; } = 0;
+            public int Version { get; set; } = 1;
 
             public Classification[] Types { get; set; } = null;
 

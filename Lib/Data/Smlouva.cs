@@ -226,21 +226,27 @@ namespace HlidacStatu.Lib.Data
             return true;
         }
 
-        public bool SetClassification(bool rewrite = false) //true if changed
+        public bool SetClassification(bool rewrite = false, bool addNewVersion = false) //true if changed
         {
-            if (rewrite || this.Classification?.LastUpdate == null)
+            if (addNewVersion || rewrite || this.Classification?.LastUpdate == null)
             {
                 var types = GetClassification();
-                SetClassification(new SClassification(types
+
+                SClassification.Classification[] newClass = types
                                         .Select(m => new SClassification.Classification()
                                         {
                                             TypeValue = (int)m.Key,
                                             ClassifProbability = m.Value
                                         }
                                         )
-                                        .ToArray()
-                                    )
-                                );
+                                        .ToArray();
+
+                if (addNewVersion)
+                    newClass = newClass
+                        .Concat(this.Classification?.Types ?? new SClassification.Classification[] { })
+                        .ToArray();
+
+                SetClassification(new SClassification(newClass));
                 return true;
             }
             else
