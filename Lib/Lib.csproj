@@ -448,6 +448,9 @@
     </Compile>
     <Compile Include="Data\Bookmark.Partial.cs" />
     <Compile Include="Data\Darujme.cs" />
+    <Compile Include="Data\Dotace\Dotace.cs" />
+    <Compile Include="Data\Dotace\DotaceService.cs" />
+    <Compile Include="Data\Dotace\DotaceService.Search.cs" />
     <Compile Include="Data\EventType.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
@@ -630,6 +633,7 @@
     <Compile Include="Enhancers\IEnhancer.cs" />
     <Compile Include="Enhancers\Util.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Search\DotaceSearchResult.cs" />
     <Compile Include="Search\Highlighter.cs" />
     <Compile Include="Search\InsolvenceSearchResult.cs" />
     <Compile Include="ES\Manager.cs" />

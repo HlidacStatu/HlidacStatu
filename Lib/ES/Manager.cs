@@ -29,7 +29,8 @@ namespace HlidacStatu.Lib.ES
             Logs,
             //DataSourceDb,
             DataSource,
-            Insolvence
+            Insolvence,
+            Dotace
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -45,6 +46,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_Logs = "logs";
         //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
         public static string defaultIndexName_Insolvence = "insolvencnirestrik";
+        public static string defaultIndexName_Dotace = "dotace";
 
 
         private static object _clientLock = new object();
@@ -121,6 +123,11 @@ namespace HlidacStatu.Lib.ES
         public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Insolvence, timeOut, connectionLimit, IndexType.Insolvence);
+        }
+
+        public static ElasticClient GetESClient_Dotace(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_Dotace, timeOut, connectionLimit, IndexType.Dotace);
         }
 
         public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
