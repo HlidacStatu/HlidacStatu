@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HlidacStatu.Lib.Data.Dotace;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.ES
 {
     public class DotaceSearchResult : SearchDataResult<Dotace>
     {
@@ -61,10 +61,10 @@ namespace HlidacStatu.Lib.Search
             Relevance = 0,
 
             [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("nově zahájené první")]
+            [Devmasters.Core.NiceDisplayName("nové první")]
             DateAddedDesc = 1,
 
-            [Devmasters.Core.NiceDisplayName("nově zveřejněné poslední")]
+            [Devmasters.Core.NiceDisplayName("nové poslední")]
             [Devmasters.Core.SortValue(2)]
             DateAddedAsc = 2,
 
@@ -75,7 +75,7 @@ namespace HlidacStatu.Lib.Search
 
             [Devmasters.Core.SortValue(4)]
             [Devmasters.Core.NiceDisplayName("naposled změněné poslední")]
-            LatestUpdateAsc = 43,
+            LatestUpdateAsc = 4,
 
 
             [Devmasters.Core.Disabled]

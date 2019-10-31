@@ -1,5 +1,7 @@
-﻿using HlidacStatu.Lib.Search;
+﻿using Devmasters.Core;
+using HlidacStatu.Lib.ES;
 using Nest;
+using System;
 
 namespace HlidacStatu.Lib.Data.Dotace
 {
@@ -23,11 +25,11 @@ namespace HlidacStatu.Lib.Data.Dotace
         static string[] queryOperators = new string[] { "AND", "OR" };
 
 
-        public static QueryContainer GetSimpleQuery(string query)
+        public QueryContainer GetSimpleQuery(string query)
         {
             return GetSimpleQuery(new DotaceSearchResult() { Q = query, Page = 1 });
         }
-        public static QueryContainer GetSimpleQuery(DotaceSearchResult searchdata)
+        public QueryContainer GetSimpleQuery(DotaceSearchResult searchdata)
         {
             var query = searchdata.Q;
             
@@ -55,5 +57,109 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         }
 
+        public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
+            bool withHighlighting = false,
+            bool limitedView = true,
+            AggregationContainerDescriptor<Dotace> anyAggregation = null)
+        {
+            return SimpleSearch(new DotaceSearchResult()
+            {
+                Q = query,
+                Page = page,
+                PageSize = pagesize,
+                LimitedView = limitedView,
+                Order = order.ToString()
+            }, withHighlighting, anyAggregation); ;
+        }
+        public DotaceSearchResult SimpleSearch(DotaceSearchResult search,
+            bool withHighlighting = false,
+            AggregationContainerDescriptor<Dotace> anyAggregation = null)
+        {
+            
+            var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
+
+            var sw = new StopWatchEx();
+            sw.Start();
+            search.OrigQuery = search.Q;
+            search.Q = Lib.Search.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
+
+            ISearchResponse<Dotace> res = null;
+            try
+            {
+                res = _esClient
+                        .Search<Dotace>(s => s
+                        .Size(search.PageSize)
+                        .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
+                        .From(page * search.PageSize)
+                        .Query(q => GetSimpleQuery(search))
+                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                        .Highlight(h => Lib.Search.Tools.GetHighlight<Dotace>(withHighlighting))
+                        .Aggregations(aggr => anyAggregation)
+                );
+            }
+            catch (Exception e)
+            {
+                if (res != null && res.ServerError != null)
+                {
+                    Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
+                        + search.OrigQuery + "   query:"
+                        + search.Q
+                        + "\n\n res:" + search.Result.ToString()
+                        , ex: e);
+                }
+                else
+                {
+                    HlidacStatu.Util.Consts.Logger.Error("", e);
+                }
+                throw;
+            }
+            sw.Stop();
+
+            if (res.IsValid == false)
+            {
+                Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
+                    + search.OrigQuery + "   query:"
+                    + search.Q
+                    + "\n\n res:" + search.Result?.ToString()
+                    );
+            }
+
+            search.Total = res?.Total ?? 0;
+            search.IsValid = res?.IsValid ?? false;
+            search.ElasticResults = res;
+            search.ElapsedTime = sw.Elapsed;
+            return search;
+        }
+
+        public SortDescriptor<Dotace> GetSort(int iorder)
+        {
+            DotaceSearchResult.DotaceOrderResult order = (DotaceSearchResult.DotaceOrderResult)iorder;
+
+            SortDescriptor<Dotace> s = new SortDescriptor<Dotace>().Field(f => f.Field("_score").Descending());
+            switch (order)
+            {
+                case DotaceSearchResult.DotaceOrderResult.DateAddedDesc:
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotacePodpisDatum).Descending());
+                    break;
+                case DotaceSearchResult.DotaceOrderResult.DateAddedAsc:
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotacePodpisDatum).Ascending());
+                    break;
+                case DotaceSearchResult.DotaceOrderResult.LatestUpdateDesc:
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceDTAktualizace).Descending());
+                    break;
+                case DotaceSearchResult.DotaceOrderResult.LatestUpdateAsc:
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceDTAktualizace).Ascending());
+                    break;
+                case DotaceSearchResult.DotaceOrderResult.FastestForScroll:
+                    s = new SortDescriptor<Dotace>().Field(f => f.Field("_doc"));
+                    break;
+                case DotaceSearchResult.DotaceOrderResult.Relevance:
+                default:
+                    break;
+            }
+
+            return s;
+
+        }
     }
 }
