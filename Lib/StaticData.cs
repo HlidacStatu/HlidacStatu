@@ -27,6 +27,7 @@ namespace HlidacStatu.Lib
         public static System.Xml.Linq.XDocument DatoveSchranky = null;
         public static XNamespace DatoveSchrankyNS = null;
         public static string App_Data_Path = null;
+        public static string Dumps_Path = null;
         public static string Web_Root = null;
         public static string[] Mestske_Firmy = new string[] { };
         public static HashSet<string> VsechnyStatniMestskeFirmy = new HashSet<string>();
@@ -190,6 +191,12 @@ namespace HlidacStatu.Lib
                     throw new ArgumentNullException("appDataPath");
                 }
                 App_Data_Path = appDataPath;
+                Dumps_Path = Devmasters.Core.Util.Config.GetConfigValue("DumpsPath");
+                if (string.IsNullOrEmpty(Dumps_Path))
+                    throw new ArgumentNullException(".config param DumpsPath missing");
+                if (!Dumps_Path.EndsWith(@"\"))
+                    Dumps_Path = Dumps_Path + @"\";
+
 
                 Web_Root = new System.IO.DirectoryInfo(appDataPath).Parent.FullName;
 

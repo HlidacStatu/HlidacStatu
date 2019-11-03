@@ -145,9 +145,9 @@ namespace HlidacStatu.Web.Controllers
 
             string baseUrl = "https://www.hlidacstatu.cz/api/v1/";
             List<DumpInfoModel> data = new List<DumpInfoModel>();
-            if (System.IO.File.Exists(HlidacStatu.Lib.StaticData.App_Data_Path + "dump\\smlouvy.dump.zip"))
+            if (System.IO.File.Exists(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip"))
             {
-                System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.App_Data_Path + "dump\\smlouvy.dump.zip");
+                System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip");
                 data.Add(
                     new DumpInfoModel() { url = baseUrl + "Dump", created = fi.LastWriteTimeUtc, date = fi.LastWriteTimeUtc, fulldump = true, size = fi.Length }
                     );
@@ -155,7 +155,7 @@ namespace HlidacStatu.Web.Controllers
             for (int i = 1; i < 31; i++)
             {
                 DateTime date = DateTime.Now.Date.AddDays(-1 * i);
-                string fn = HlidacStatu.Lib.StaticData.App_Data_Path + "dump\\smlouvy.dump-" + date.ToString("yyyy-MM-dd") + ".zip";
+                string fn = HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump-" + date.ToString("yyyy-MM-dd") + ".zip";
                 if (System.IO.File.Exists(fn))
                 {
                     System.IO.FileInfo fil = new FileInfo(fn);
@@ -188,7 +188,7 @@ namespace HlidacStatu.Web.Controllers
 
                 DateTime? specificDate = ParseTools.ToDateTime(date, "yyyy-MM-dd");
                 string onlyfile = "smlouvy.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
-                string fn = HlidacStatu.Lib.StaticData.App_Data_Path + $"dump\\{onlyfile}" + ".zip";
+                string fn = HlidacStatu.Lib.StaticData.Dumps_Path + $"{onlyfile}" + ".zip";
                 if (System.IO.File.Exists(fn))
                 {
                     long FileL = (new FileInfo(fn)).Length;

@@ -1122,6 +1122,7 @@ namespace HlidacStatu.Lib.Data
                     p.FileMetadata = null;
                 }
             }
+            s.Classification = null;
             s.SVazbouNaPolitiky = null;
             s.SVazbouNaPolitikyAktualni = null;
             s.SVazbouNaPolitikyNedavne = null;
