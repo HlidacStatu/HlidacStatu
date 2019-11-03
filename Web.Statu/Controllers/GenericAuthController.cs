@@ -55,10 +55,15 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 48)]
 #endif 
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_48H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_48H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 
@@ -66,21 +71,31 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 24)]
 #endif
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_24H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_24H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 
-#if (!DEBUG)
+        #if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 12)]
-#endif
+        #endif
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_12H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_12H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 
@@ -88,10 +103,15 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 4)]
 #endif
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_4H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_4H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 
@@ -99,28 +119,43 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 2)]
 #endif
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_2H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_2H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 #if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
 #endif
         [ChildActionOnly]
-        public ActionResult CachedAction_Child_1H(object model, string nameOfView, params string[] parameters)
+        public ActionResult CachedAction_Child_1H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 
         [ChildActionOnly]
-        public ActionResult Action_Child(object model, string nameOfView, params string[] parameters)
+        public ActionResult Action_Child(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4)
         {
             ViewBag.NameOfView = nameOfView;
-            ViewBag.Parameters = parameters;
+            ViewBag.keyParam = key;
+            ViewBag.param1 = param1;
+            ViewBag.param2 = param2;
+            ViewBag.param3 = param3;
+            ViewBag.param4 = param4;
+            ViewBag.authParam = auth;
             return View(nameOfView, model);
         }
 

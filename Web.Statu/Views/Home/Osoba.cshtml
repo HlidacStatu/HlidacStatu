@@ -43,13 +43,13 @@
 }
 
 @*@Html.Action("Osoba_child", new { model = Model, auth = this.User.Identity.IsAuthenticated, aktualnost = aktualnost, NameOfView = "OsobaProfil" }) //+ (string.IsNullOrEmpty(Request.QueryString["beta"]) ? "" : "2")*@
-@Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", parameters = new string[] { "aktualnost", aktualnost.ToString() } })
+@Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", param0 = Model.NameId, param1 = aktualnost.ToString() } )
 
 <div style="margin-top:40px"></div>
 
 @if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
 {
-    @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", parameters = new string[] { "aktualnost", aktualnost.ToString() } })
+    @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", param0=Model.NameId, param1=aktualnost.ToString() } )
 }
 
 
