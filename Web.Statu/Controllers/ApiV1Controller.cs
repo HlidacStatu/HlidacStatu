@@ -182,7 +182,7 @@ namespace HlidacStatu.Web.Controllers
                 data.Add(
                     new DumpInfoModel()
                     {
-                        url = baseUrl + "dump?date=" + date?.ToString("yyyy-MM-dd") ?? "",
+                        url = baseUrl + $"dump?datatype={datatype}&date={date?.ToString("yyyy-MM-dd") ?? ""}" ,
                         created = fi.LastWriteTimeUtc,
                         date = date,
                         fulldump = date.HasValue == false,
