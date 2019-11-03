@@ -251,6 +251,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     else
                         return Devmasters.Core.TextUtil.ReplaceHTMLEntities(text.ToString());
                 }
+
+                public static string fn_Pluralize(int number, string zeroText, string oneText, string twoText, string moreText)
+                {
+                    return Devmasters.Core.Lang.Plural.GetWithZero(number, zeroText, oneText, twoText, moreText);
+                }
+
+
                 public static bool fn_IsNullOrEmpty(dynamic text)
                 {
                     if (text == null)
