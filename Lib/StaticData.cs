@@ -196,7 +196,7 @@ namespace HlidacStatu.Lib
                     throw new ArgumentNullException(".config param DumpsPath missing");
                 if (!Dumps_Path.EndsWith(@"\"))
                     Dumps_Path = Dumps_Path + @"\";
-
+                System.IO.Directory.CreateDirectory(Dumps_Path);
 
                 Web_Root = new System.IO.DirectoryInfo(appDataPath).Parent.FullName;
 

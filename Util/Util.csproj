@@ -112,6 +112,7 @@
     <Compile Include="Cache\Manager.cs" />
     <Compile Include="Cache\MemoryCacheManager.cs" />
     <Compile Include="InfinitiveTask.cs" />
+    <Compile Include="IO\ThrottledStream.cs" />
     <Compile Include="ISocialInfo.cs" />
     <Compile Include="InfoFact.cs" />
     <Compile Include="IOTools.cs" />

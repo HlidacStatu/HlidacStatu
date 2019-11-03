@@ -98,11 +98,11 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        public ActionResult OCRStats(string type="")
+        public ActionResult OCRStats(string type = "")
         {
 
-                string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
-                string sql = @"select 'Celkem' as 'type',
+            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string sql = @"select 'Celkem' as 'type',
 		                        (select count(*) from ItemToOcrQueue with (nolock) where started is null) as waiting,
 		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null) as running,
 		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
@@ -117,27 +117,27 @@ namespace HlidacStatu.Web.Controllers
 		                        and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
 		                        from ItemToOcrQueue t with (nolock)
 		                        order by type";
-                using (var p = new Devmasters.Core.PersistLib())
+            using (var p = new Devmasters.Core.PersistLib())
+            {
+                var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+                sb.AppendLine("Typ\tVe frontě\tZpracovavane\tHotovo za 24hod\tChyby pri zpracovani");
+                foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
                 {
-                    var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
-                    sb.AppendLine("Typ\tVe frontě\tZpracovavane\tHotovo za 24hod\tChyby pri zpracovani");
-                    foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                    {
-                        sb.Append((string)dr[0]);
-                        sb.Append("\t");
-                        sb.Append((int)dr[1]);
-                        sb.Append("\t");
-                        sb.Append((int)dr[2]);
-                        sb.Append("\t");
-                        sb.Append((int)dr[3]);
-                        sb.Append("\t");
-                        sb.Append((int)dr[4]);
-                        sb.AppendLine();
-                    }
-                    return Content(sb.ToString());
+                    sb.Append((string)dr[0]);
+                    sb.Append("\t");
+                    sb.Append((int)dr[1]);
+                    sb.Append("\t");
+                    sb.Append((int)dr[2]);
+                    sb.Append("\t");
+                    sb.Append((int)dr[3]);
+                    sb.Append("\t");
+                    sb.Append((int)dr[4]);
+                    sb.AppendLine();
                 }
-            
+                return Content(sb.ToString());
+            }
+
         }
 
         private List<Models.ApiV1Models.DumpInfoModel> GetDumps()
@@ -145,39 +145,60 @@ namespace HlidacStatu.Web.Controllers
 
             string baseUrl = "https://www.hlidacstatu.cz/api/v1/";
             List<DumpInfoModel> data = new List<DumpInfoModel>();
-            if (System.IO.File.Exists(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip"))
-            {
-                System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip");
-                data.Add(
-                    new DumpInfoModel() { url = baseUrl + "Dump", created = fi.LastWriteTimeUtc, date = fi.LastWriteTimeUtc, fulldump = true, size = fi.Length }
-                    );
-            }
-            for (int i = 1; i < 31; i++)
-            {
-                DateTime date = DateTime.Now.Date.AddDays(-1 * i);
-                string fn = HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump-" + date.ToString("yyyy-MM-dd") + ".zip";
-                if (System.IO.File.Exists(fn))
-                {
-                    System.IO.FileInfo fil = new FileInfo(fn);
-                    data.Add(
-                        new DumpInfoModel()
-                        {
-                            url = baseUrl + "dump?date=" + date.ToString("yyyy-MM-dd"),
-                            created = fil.LastWriteTimeUtc,
-                            date = date,
-                            fulldump = false,
-                            size = fil.Length
-                        }
-                        );
+            //if (System.IO.File.Exists(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip"))
+            //{
+            //    System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip");
+            //    data.Add(
+            //        new DumpInfoModel() { url = baseUrl + "Dump", created = fi.LastWriteTimeUtc, date = fi.LastWriteTimeUtc, fulldump = true, size = fi.Length }
+            //        );
+            //}
+            //for (int i = 1; i < 31; i++)
+            //{
+            //    DateTime date = DateTime.Now.Date.AddDays(-1 * i);
+            //    string fn = HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump-" + date.ToString("yyyy-MM-dd") + ".zip";
+            //    if (System.IO.File.Exists(fn))
+            //    {
+            //        System.IO.FileInfo fil = new FileInfo(fn);
+            //        data.Add(
+            //            new DumpInfoModel()
+            //            {
+            //                url = baseUrl + "dump?date=" + date.ToString("yyyy-MM-dd"),
+            //                created = fil.LastWriteTimeUtc,
+            //                date = date,
+            //                fulldump = false,
+            //                size = fil.Length
+            //            }
+            //            );
 
-                }
+            //    }
+            //}
+
+            foreach (var fi in new System.IO.DirectoryInfo(Lib.StaticData.Dumps_Path).GetFiles("*.zip"))
+            {
+                var fn = fi.Name;
+                DateTime? date = Util.ParseTools.ToDateTimeFromCode(Util.ParseTools.GetRegexGroupValue(fn, @"(?<type>\w*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip", "date"));
+                string datatype = Util.ParseTools.GetRegexGroupValue(fn, @"(?<type>\w*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip", "type");
+
+                data.Add(
+                    new DumpInfoModel()
+                    {
+                        url = baseUrl + "dump?date=" + date?.ToString("yyyy-MM-dd") ?? "",
+                        created = fi.LastWriteTimeUtc,
+                        date = date,
+                        fulldump = date.HasValue == false,
+                        size = fi.Length,
+                        dataType = datatype
+                    }
+                    ); ;
             }
+
+
 
             return data;
         }
 
 
-        public ActionResult Dump(string date)
+        public ActionResult Dump(string date, string datatype = "smlouvy")
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Dump", date) }).Authentificated)
             {
@@ -187,7 +208,7 @@ namespace HlidacStatu.Web.Controllers
                             );
 
                 DateTime? specificDate = ParseTools.ToDateTime(date, "yyyy-MM-dd");
-                string onlyfile = "smlouvy.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
+                string onlyfile = $"{datatype}.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
                 string fn = HlidacStatu.Lib.StaticData.Dumps_Path + $"{onlyfile}" + ".zip";
                 if (System.IO.File.Exists(fn))
                 {
@@ -536,7 +557,7 @@ namespace HlidacStatu.Web.Controllers
             //    return Json(result, JsonRequestBehavior.AllowGet);
 
             result = OsobaEvent.GetAddInfos(q, t, 200).ToList();
-                
+
 
             if (!string.IsNullOrEmpty(Request.Headers["Origin"]))
             {
@@ -983,7 +1004,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-       
+
         public ActionResult OsobaHledat(string jmeno, string prijmeni, string narozen)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
