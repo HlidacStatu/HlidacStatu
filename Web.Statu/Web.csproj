@@ -1351,6 +1351,7 @@
     <Content Include="Views\Manage\ShowClassification.cshtml" />
     <Content Include="Views\Manage\ZmenaSmluvnichStran.cshtml" />
     <Content Include="Views\NasiPolitici\Politik.cshtml" />
+    <Content Include="Views\Data\_SearchForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

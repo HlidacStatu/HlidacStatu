@@ -35,23 +35,10 @@
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
-<div class="row">
-    <div class="col-xs-12">
-        <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">Hledání v @Model.DataSet.Registration().name</h3>
-        <form method="get" action="/data/Hledat/@Model.DataSet.DatasetId" class="form-inline" role="form">
-            <div class="input-group col-xs-12">
-                <input class="form-control input" id="Q" name="Q" placeholder="Hledaný výraz" style="max-width: none;" type="text" value="@Model.Q">
 
-                <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
-                    <button class="btn btn-default btn" type="submit">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
-                </span>
 
-            </div>
-        </form>
-    </div>
-</div>
+@Html.Partial("_SearchForm", Model)
+
 
 <hr style="margin-top: 35px;padding-bottom:15px;" />
 
