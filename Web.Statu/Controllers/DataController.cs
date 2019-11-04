@@ -271,8 +271,9 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.Id = id;
                 return View(new Models.DataDetailModel() { Dataset = ds, Data = dataid });
             }
-            catch (DataSetException)
+            catch (DataSetException ex)
             {
+                Util.Consts.Logger.Error("Dataset Detail", ex);
                 return RedirectToAction("index");
             }
 

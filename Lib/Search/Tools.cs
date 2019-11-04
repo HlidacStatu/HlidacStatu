@@ -351,6 +351,18 @@ namespace HlidacStatu.Lib.Search
                             {
                                 icosQuery = string.Format(templ,"noOne") ; //$" ( {icoprefix}:noOne ) ";
                             }
+                            if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                            {
+                                if (rules[i].AddLastCondition.Contains("${q}"))
+                                {
+                                    rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
+                                }
+
+                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                rules[i].AddLastCondition = null; //done, don't do it anywhere
+                            }
+
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
 
                         }
@@ -399,6 +411,17 @@ namespace HlidacStatu.Lib.Search
                             else
                             {
                                 icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
+                            }
+                            if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                            {
+                                if (rules[i].AddLastCondition.Contains("${q}"))
+                                {
+                                    rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
+                                }
+
+                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                rules[i].AddLastCondition = null; //done, don't do it anywhere
                             }
                             modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
                         }
