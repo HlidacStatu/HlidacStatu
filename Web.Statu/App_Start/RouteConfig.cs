@@ -51,6 +51,12 @@ namespace HlidacStatu.Web
             );
 
             routes.MapRoute(
+                name: "DotaceController",
+                url: "Dotace/{action}/{id}",
+                defaults: new { controller = "Dotace", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "WebyController",
                 url: "StatniWeby/{action}/{id}",
                 defaults: new { controller = "Weby", action = "Index", id = UrlParameter.Optional }

@@ -59,7 +59,7 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
             bool withHighlighting = false,
-            bool limitedView = true,
+            bool limitedView = false,
             AggregationContainerDescriptor<Dotace> anyAggregation = null)
         {
             return SimpleSearch(new DotaceSearchResult()

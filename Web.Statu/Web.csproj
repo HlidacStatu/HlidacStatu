@@ -1356,6 +1356,8 @@
     <Content Include="Views\Dotace\_SearchForm.cshtml" />
     <Content Include="Views\Dotace\_SearchFormHelp.cshtml" />
     <Content Include="Views\Dotace\_SearchFormHelpContent.cshtml" />
+    <Content Include="Views\Dotace\Hledat.cshtml" />
+    <Content Include="Views\Dotace\_SearchResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

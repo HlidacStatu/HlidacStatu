@@ -25,7 +25,7 @@ namespace HlidacStatu.Lib.ES
             }
         }
 
-        public bool LimitedView { get; set; } = true;
+        public bool LimitedView { get; set; } = false;
 
         public object ToRouteValues(int page)
         {

@@ -1,12 +1,13 @@
 ﻿using Nest;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Dotace
 {
-    [ElasticsearchType(IdProperty = nameof(IdRozhodnuti))]
+    [ElasticsearchType(IdProperty = nameof(IdDotace))]
     public partial class Dotace
     {
-
         [Nest.Keyword]
         public string IdPrijemce { get; set; }
         [Nest.Keyword]
@@ -103,62 +104,31 @@ namespace HlidacStatu.Lib.Data.Dotace
         public DateTime? DotaceGrantoveSchemaZaznamPlatnostOdDatum { get; set; }
         [Nest.Date]
         public DateTime? DotaceGrantoveSchemaZaznamPlatnostDoDatum { get; set; }
-        [Nest.Keyword]
-        public string IdRozhodnuti { get; set; }
+        [Nest.Object]
+        public List<Rozhodnuti> Rozhodnuti { get; set; }
+
+        // calculated fields
+        private float? _dotaceCelkem;
+        private float? _pujckaCelkem;
+
         [Nest.Number]
-        public float? RozhodnutiCastkaPozadovana { get; set; }
-        [Nest.Number]
-        public float? RozhodnutiCastkaRozhodnuta { get; set; }
-        [Nest.Number]
-        public int? RozhodnutiRokRozhodnuti { get; set; }
-        [Nest.Boolean]
-        public bool RozhodnutiInvesticeIndikator { get; set; }
-        [Nest.Boolean]
-        public bool RozhodnutiNavratnostIndikator { get; set; }
-        [Nest.Boolean]
-        public bool RozhodnutiRefundaceIndikator { get; set; }
-        [Nest.Boolean]
-        public bool RozhodnutiTuzemskyZdroj { get; set; }
-        [Nest.Keyword]
-        public string RozhodnutiFinancniZdrojKod { get; set; }
-        [Nest.Text]
-        public string RozhodnutiFinancniZdrojNazev { get; set; }
-        [Nest.Keyword]
-        public string RozhodnutiDotacePoskytovatelKod { get; set; }
-        [Nest.Text]
-        public string RozhodnutiDotacePoskytovatelNazev { get; set; }
-        [Nest.Keyword]
-        public string IdObdobi { get; set; }
-        [Nest.Number]
-        public float? ObdobiCastkaCerpana { get; set; }
-        [Nest.Number]
-        public float? ObdobiCastkaUvolnena { get; set; }
-        [Nest.Number]
-        public float? ObdobiCastkaVracena { get; set; }
-        [Nest.Number]
-        public float? ObdobiCastkaSpotrebovana { get; set; }
-        [Nest.Number]
-        public int? ObdobiRozpoctoveObdobi { get; set; }
-        [Nest.Keyword]
-        public string ObdobiIriDotacniTitul { get; set; }
-        [Nest.Keyword]
-        public string ObdobiIriUcelovyZnak { get; set; }
-        [Nest.Date]
-        public DateTime? ObdobiDPlatnost { get; set; }
-        [Nest.Date]
-        public DateTime? ObdobiDTAktualizace { get; set; }
-        [Nest.Keyword]
-        public string ObdobiDotaceTitulKod { get; set; }
-        [Nest.Text]
-        public string ObdobiDotaceTitulNazev { get; set; }
-        [Nest.Keyword]
-        public string ObdobiUcelZnakKod { get; set; }
-        [Nest.Text]
-        public string ObdobiUcelZnakNazev { get; set; }
+        public float DotaceCelkem 
+        { 
+            get => _dotaceCelkem ?? Rozhodnuti.Where(p => p.RozhodnutiRefundaceIndikator == false)
+                .Sum(p => p.RozhodnutiCastkaRozhodnuta); 
+            set => _dotaceCelkem = value; 
+        }
+        public float PujckaCelkem 
+        { 
+            get => _pujckaCelkem ?? Rozhodnuti
+                .Where(p => p.RozhodnutiRefundaceIndikator == false && p.RozhodnutiNavratnostIndikator)
+                .Sum(p => p.RozhodnutiCastkaRozhodnuta); 
+            set => _pujckaCelkem = value; 
+        }
 
         public void Save()
         {
-            var res = ES.Manager.GetESClient_Dotace().Index<Dotace>(this, o => o.Id(this.IdRozhodnuti)); //druhy parametr musi byt pole, ktere je unikatni
+            var res = ES.Manager.GetESClient_Dotace().Index<Dotace>(this, o => o.Id(this.IdDotace)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 throw new ApplicationException(res.ServerError?.ToString());
