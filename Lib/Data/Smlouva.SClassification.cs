@@ -242,6 +242,11 @@ namespace HlidacStatu.Lib.Data
                 legal_reality = 11501,
                 [NiceDisplayName("Právní služby")]
                 legal_pravni =  11502,
+                [NiceDisplayName("Nájemní smlouvy")]
+                legal_najem = 11503,
+                [NiceDisplayName("Pronájem pozemků")]
+                legal_pozemky = 11504,
+
 
                 techsluzby_generic = 11600,
                 [NiceDisplayName("Kanalizace")]
