@@ -118,6 +118,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 .Sum(p => p.RozhodnutiCastkaRozhodnuta); 
             set => _dotaceCelkem = value; 
         }
+        [Nest.Number]
         public float PujckaCelkem 
         { 
             get => _pujckaCelkem ?? Rozhodnuti

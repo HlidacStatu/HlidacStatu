@@ -527,10 +527,11 @@
     <th></th>
     <th>Jméno příjemce</th>
     <th>IČO příjemce</th>
-    <th>Id dotace</th>
-    <th>Název dotace</th>
+    <th>Projekt id</th>
+    <th>Název projektu</th>
     <th>Datum podpisu</th>
     <th>Celková částka</th>
+    <th>Z toho půjčka</th>
 </tr>
 }
 
@@ -549,7 +550,7 @@
         @item.PrijemceIco
     </td>
     <td>
-        @item.IdDotace
+        @item.DotaceProjektIdentifikator
     </td>
     <td>
         @item.DotaceProjektNazev
@@ -558,7 +559,10 @@
         @(item.DotacePodpisDatum?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
     </td>
     <td>
-        @item.RozhodnutiCastkaRozhodnuta
+        @item.DotaceCelkem.ToString("0.##")
+    </td>
+    <td>
+        @item.PujckaCelkem
     </td>
 </tr>
 }

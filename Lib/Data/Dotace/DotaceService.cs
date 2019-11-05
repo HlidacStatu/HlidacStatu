@@ -9,13 +9,13 @@ namespace HlidacStatu.Lib.Data.Dotace
     {
         private Nest.ElasticClient _esClient = ES.Manager.GetESClient_Dotace();
 
-        public Dotace Get(string idRozhodnuti)
+        public Dotace Get(string idDotace)
         {
             try
             {
                 // použít get místo search.
                 // var searchResponse = _esClient.Search<Dotace>(s => s.From(0).Size(1).Query(q => q.Term(t => t.Field(p => p.IdObdobi).Value(idRozhodnuti))));
-                var response = _esClient.Get<Dotace>(idRozhodnuti);
+                var response = _esClient.Get<Dotace>(idDotace);
 
                 return response.IsValid
                     ? response.Source
