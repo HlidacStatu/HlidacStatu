@@ -413,11 +413,16 @@ namespace HlidacStatu.Lib.Data
                             decimal prob = jsonData[i][1].Value<decimal>();
                             if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
                             {
-                                data.Add(typ, prob);
+                                    if (!data.ContainsKey(typ))
+                                       data.Add(typ, prob);
+                                else if (typ == SClassification.ClassificationsTypes.OSTATNI)
+                                    Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
+
+
                             }
                             else
                             {
-                                Util.Consts.Logger.Error("Invalid key " + key);
+                                Util.Consts.Logger.Warning("Invalid key " + key);
                                 data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
                             }
                         }

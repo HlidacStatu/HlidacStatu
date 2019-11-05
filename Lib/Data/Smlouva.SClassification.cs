@@ -14,10 +14,9 @@ namespace HlidacStatu.Lib.Data
 
             public SClassification() { }
 
-            public SClassification(Classification[] types, int version = 0)
+            public SClassification(Classification[] types)
             {
                 this.LastUpdate = DateTime.Now;
-                this.Version = version;
                 this.Types = types;
             }
 
