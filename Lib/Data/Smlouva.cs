@@ -422,7 +422,7 @@ namespace HlidacStatu.Lib.Data
                             }
                             else
                             {
-                                Util.Consts.Logger.Warning("Invalid key " + key);
+                                Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
                                 data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
                             }
                         }
