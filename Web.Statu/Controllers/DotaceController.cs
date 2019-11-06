@@ -26,5 +26,15 @@ namespace HlidacStatu.Web.Controllers
             var res = _dotaceService.SimpleSearch(model);
             return View(res);
         }
+
+        public ActionResult Detail(string idDotace)
+        {
+            if (string.IsNullOrWhiteSpace(idDotace))
+            {
+                return View();
+            }
+            var dotace = _dotaceService.Get(idDotace);
+            return View(dotace);
+        }
     }
 }

@@ -108,32 +108,65 @@ namespace HlidacStatu.Lib.Data.Dotace
         public List<Rozhodnuti> Rozhodnuti { get; set; }
 
         // calculated fields
-        private float? _dotaceCelkem;
-        private float? _pujckaCelkem;
+        [Nest.Number]
+        public float DotaceCelkem { get; set; }
+        [Nest.Number]
+        public float PujckaCelkem { get; set; }
+        
+        public string GetNazevDotace()
+        {
+            if (!string.IsNullOrWhiteSpace(DotaceProjektNazev))
+            {
+                return DotaceProjektNazev;
+            }
+            if (!string.IsNullOrWhiteSpace(DotaceProjektIdentifikator))
+            {
+                return DotaceProjektIdentifikator;
+            }
 
-        [Nest.Number]
-        public float DotaceCelkem 
-        { 
-            get => _dotaceCelkem ?? Rozhodnuti.Where(p => p.RozhodnutiRefundaceIndikator == false)
-                .Sum(p => p.RozhodnutiCastkaRozhodnuta); 
-            set => _dotaceCelkem = value; 
-        }
-        [Nest.Number]
-        public float PujckaCelkem 
-        { 
-            get => _pujckaCelkem ?? Rozhodnuti
-                .Where(p => p.RozhodnutiRefundaceIndikator == false && p.RozhodnutiNavratnostIndikator)
-                .Sum(p => p.RozhodnutiCastkaRozhodnuta); 
-            set => _pujckaCelkem = value; 
+            return "";
         }
 
         public void Save()
         {
+            //calculate fields before saving
+            CalculateTotals();
             var res = ES.Manager.GetESClient_Dotace().Index<Dotace>(this, o => o.Id(this.IdDotace)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 throw new ApplicationException(res.ServerError?.ToString());
             }
         }
+
+        private void CalculateTotals()
+        {
+            DotaceCelkem = Rozhodnuti.Where(p => p.RozhodnutiRefundaceIndikator == false)
+                .Sum(p => p.RozhodnutiCastkaRozhodnuta);
+            PujckaCelkem = Rozhodnuti
+                .Where(p => p.RozhodnutiRefundaceIndikator == false && p.RozhodnutiNavratnostIndikator)
+                .Sum(p => p.RozhodnutiCastkaRozhodnuta);
+        }
+
+        public Dictionary<string,string> GetDetail()
+        {
+            var result = new Dictionary<string, string>()
+            {
+                ["Jméno příjemce"] = PrijemceJmenoPrijemce,
+                ["IČO"] = PrijemceIco,
+                ["Kód projektu"] = DotaceProjektKod,
+                ["Identifikátor projektu"] = DotaceProjektIdentifikator,
+                ["Název projektu"] = DotaceProjektNazev,
+                ["Datum podpisu"] = DotacePodpisDatum?.ToString("dd.MM.yyyy"),
+                ["Kód operačního programu"] = DotaceOperacniProgramKod,
+                ["Název operačního programu"] = DotaceOperacniProgramNazev,
+                ["Kód grantového schematu"] = DotaceGrantoveSchemaKod,
+                ["Název grantového schematu"] = DotaceGrantoveSchemaNazev
+
+            };
+
+            return result;
+        }
+
+
     }
 }

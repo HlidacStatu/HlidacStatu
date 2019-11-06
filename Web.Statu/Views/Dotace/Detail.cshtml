@@ -1,0 +1,81 @@
+﻿@model HlidacStatu.Lib.Data.Dotace.Dotace
+
+@{
+
+    ViewBag.Title = "Hlídač dotací";
+    ViewBag.SubTitle = "Detail dotace";
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index", "Dotace")">Hlídač Dotací</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.DotaceSearchResult())
+
+<h2>
+   Detail dotace "@Model.GetNazevDotace()"
+</h2>
+<div>
+    <dl>
+        @foreach(var item in Model.GetDetail())
+        {
+            <dt>@item.Key</dt>
+            <dd>@item.Value</dd>
+        }
+    </dl>
+</div>
+
+<h3 style="margin-top:50px">Rozhodnutí</h3>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rok rozhodnutí</th>
+                <th>Požadovaná částka</th>
+                <th>Částka rozhodnutá</th>
+                <th>Je půjčkou</th>
+                <th>Je investicí</th>
+                <th>Zdroj financí</th>
+                <th>Poskytovatel financí</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rozhodnuti in Model.Rozhodnuti)
+            {
+                <tr>
+                    <td>
+                        @rozhodnuti.RozhodnutiRokRozhodnuti
+                    </td>
+                    <td>
+                        @rozhodnuti.RozhodnutiCastkaPozadovana.ToString("### ### ### ### ###.##")
+                    </td>
+                    <td>
+                        @rozhodnuti.RozhodnutiCastkaRozhodnuta.ToString("### ### ### ### ###.##")
+                    </td>
+                    <td>
+                        @(@rozhodnuti.RozhodnutiNavratnostIndikator ? "ano" : "ne")
+                    </td>
+                    <td>
+                        @(@rozhodnuti.RozhodnutiInvesticeIndikator ? "ano" : "ne")
+                    </td>
+                    <td>
+                        @rozhodnuti.RozhodnutiFinancniZdrojNazev
+                    </td>
+                    <td>
+                        @rozhodnuti.RozhodnutiDotacePoskytovatelNazev
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
