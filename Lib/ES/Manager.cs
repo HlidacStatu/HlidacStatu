@@ -420,6 +420,25 @@ namespace HlidacStatu.Lib.ES
                        );
                     break;
 
+                case IndexType.Insolvence:
+                    res = client
+                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Mappings(m => m
+                               .Map<Lib.Data.Insolvence.Rizeni>(map => map.AutoMap().DateDetection(false))
+                               )
+                       );
+                    break;
+                case IndexType.Dotace:
+                    res = client
+                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Mappings(m => m
+                               .Map<Lib.Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
+                               )
+                       );
+                    break;
+
                 case IndexType.Smlouvy:
                     res = client
                        .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i

@@ -1,10 +1,8 @@
 ﻿@model HlidacStatu.Lib.Data.Dotace.Dotace
 
 @{
-
     ViewBag.Title = "Hlídač dotací";
     ViewBag.SubTitle = "Detail dotace";
-
 }
 
 @section breadcrumb
@@ -22,17 +20,63 @@
 @Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.DotaceSearchResult())
 
 <h2>
-   Detail dotace "@Model.GetNazevDotace()"
+    Detail dotace "@Model.GetNazevDotace()"
 </h2>
-<div>
-    <dl>
-        @foreach(var item in Model.GetDetail())
-        {
-            <dt>@item.Key</dt>
-            <dd>@item.Value</dd>
-        }
-    </dl>
-</div>
+<table class="table table-new table-new--dotted">
+    <tbody>
+        <tr>
+            <th>Příjemce dotace</th>
+            <td>@Model.PrijemceJmenoPrijemce</td>
+        </tr>
+        <tr>
+            <th>IČO</th>
+            <td><a href="/dotace/hledat?q=ico:@Model.PrijemceIco" title="Vyhledat všechny dotace pro tento subjekt">@Model.PrijemceIco</a></td>
+        </tr>
+        <tr>
+            <th>Kód projektu</th>
+            <td>@Model.ProjektKod</td>
+        </tr>
+        <tr>
+            <th>Identifikátor projektu</th>
+            <td>@Model.ProjektIdentifikator</td>
+        </tr>
+        <tr>
+            <th>Název projektu</th>
+            <td>@Model.ProjektNazev</td>
+        </tr>
+        <tr>
+            <th>Datum podpisu</th>
+            <td>@(Model.PodpisDatum?.ToString("dd.MM.yyyy"))</td>
+        </tr>
+        <tr>
+            <th>Celková částka</th>
+            <td>
+                <p>@(HlidacStatu.Util.RenderData.NicePrice((decimal)Model.DotaceCelkem))</p>
+                @if (Model.PujckaCelkem > 0)
+                {
+                    <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Kód operačního programu</th>
+            <td>@Model.OperacniProgramKod</td>
+        </tr>
+        <tr>
+            <th>Název operačního programu</th>
+            <td>@Model.OperacniProgramNazev</td>
+        </tr>
+        <tr>
+            <th>Kód grantového schematu</th>
+            <td>@Model.GrantoveSchemaKod</td>
+        </tr>
+        <tr>
+            <th>Název grantového schematu</th>
+            <td>@Model.GrantoveSchemaNazev</td>
+        </tr>
+    </tbody>
+</table>
+
 
 <h3 style="margin-top:50px">Rozhodnutí</h3>
 <div>
@@ -46,6 +90,7 @@
                 <th>Je investicí</th>
                 <th>Zdroj financí</th>
                 <th>Poskytovatel financí</th>
+                <th>IČO poskytovatele</th>
             </tr>
         </thead>
         <tbody>
@@ -53,25 +98,28 @@
             {
                 <tr>
                     <td>
-                        @rozhodnuti.RozhodnutiRokRozhodnuti
+                        @rozhodnuti.RokRozhodnuti
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
                     </td>
                     <td>
-                        @rozhodnuti.RozhodnutiCastkaPozadovana.ToString("### ### ### ### ###.##")
+                        @(@rozhodnuti.NavratnostIndikator ? "ano" : "ne")
                     </td>
                     <td>
-                        @rozhodnuti.RozhodnutiCastkaRozhodnuta.ToString("### ### ### ### ###.##")
+                        @(@rozhodnuti.InvesticeIndikator ? "ano" : "ne")
                     </td>
                     <td>
-                        @(@rozhodnuti.RozhodnutiNavratnostIndikator ? "ano" : "ne")
+                        @rozhodnuti.FinancniZdrojNazev
                     </td>
                     <td>
-                        @(@rozhodnuti.RozhodnutiInvesticeIndikator ? "ano" : "ne")
+                        @rozhodnuti.DotacePoskytovatelNazev
                     </td>
                     <td>
-                        @rozhodnuti.RozhodnutiFinancniZdrojNazev
-                    </td>
-                    <td>
-                        @rozhodnuti.RozhodnutiDotacePoskytovatelNazev
+                        @rozhodnuti.PoskytovatelIco
                     </td>
 
                 </tr>

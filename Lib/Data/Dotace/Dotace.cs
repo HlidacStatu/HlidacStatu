@@ -39,71 +39,71 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Keyword]
         public string IdDotace { get; set; }
         [Nest.Keyword]
-        public string DotaceProjektKod { get; set; }
+        public string ProjektKod { get; set; }
         [Nest.Date]
-        public DateTime? DotacePodpisDatum { get; set; }
+        public DateTime? PodpisDatum { get; set; }
         [Nest.Keyword]
-        public string DotaceSubjektRozliseniKod { get; set; }
+        public string SubjektRozliseniKod { get; set; }
         [Nest.Date]
-        public DateTime? DotaceUkonceniPlanovaneDatum { get; set; }
+        public DateTime? UkonceniPlanovaneDatum { get; set; }
         [Nest.Date]
-        public DateTime? DotaceUkonceniSkutecneDatum { get; set; }
+        public DateTime? UkonceniSkutecneDatum { get; set; }
         [Nest.Date]
-        public DateTime? DotaceZahajeniPlanovaneDatum { get; set; }
+        public DateTime? ZahajeniPlanovaneDatum { get; set; }
         [Nest.Date]
-        public DateTime? DotaceZahajeniSkutecneDatum { get; set; }
+        public DateTime? ZahajeniSkutecneDatum { get; set; }
         [Nest.Boolean]
-        public bool DotaceZmenaSmlouvyIndikator { get; set; }
+        public bool ZmenaSmlouvyIndikator { get; set; }
         [Nest.Keyword]
-        public string DotaceProjektIdentifikator { get; set; }
+        public string ProjektIdentifikator { get; set; }
         [Nest.Text]
-        public string DotaceProjektNazev { get; set; }
+        public string ProjektNazev { get; set; }
         [Nest.Keyword]
-        public string DotaceIriOperacniProgram { get; set; }
+        public string IriOperacniProgram { get; set; }
         [Nest.Keyword]
-        public string DotaceIriPodprogram { get; set; }
+        public string IriPodprogram { get; set; }
         [Nest.Keyword]
-        public string DotaceIriPriorita { get; set; }
+        public string IriPriorita { get; set; }
         [Nest.Keyword]
-        public string DotaceIriOpatreni { get; set; }
+        public string IriOpatreni { get; set; }
         [Nest.Keyword]
-        public string DotaceIriPodopatreni { get; set; }
+        public string IriPodopatreni { get; set; }
         [Nest.Keyword]
-        public string DotaceIriGrantoveSchema { get; set; }
+        public string IriGrantoveSchema { get; set; }
         [Nest.Keyword]
-        public string DotaceIriProgramPodpora { get; set; }
+        public string IriProgramPodpora { get; set; }
         [Nest.Keyword]
-        public string DotaceIriTypCinnosti { get; set; }
+        public string IriTypCinnosti { get; set; }
         [Nest.Keyword]
-        public string DotaceIriProgram { get; set; }
+        public string IriProgram { get; set; }
         [Nest.Date]
-        public DateTime? DotaceDPlatnost { get; set; }
+        public DateTime? DPlatnost { get; set; }
         [Nest.Date]
-        public DateTime? DotaceDTAktualizace { get; set; }
+        public DateTime? DTAktualizace { get; set; }
         [Nest.Keyword]
         public string IdOperacniProgram { get; set; }
         [Nest.Keyword]
-        public string DotaceOperacniProgramKod { get; set; }
+        public string OperacniProgramKod { get; set; }
         [Nest.Text]
-        public string DotaceOperacniProgramNazev { get; set; }
+        public string OperacniProgramNazev { get; set; }
         [Nest.Number]
-        public int? DotaceOperacniProgramCislo { get; set; }
+        public int? OperacniProgramCislo { get; set; }
         [Nest.Date]
-        public DateTime? DotaceOperacniProgramZaznamPlatnostOdDatum { get; set; }
+        public DateTime? OperacniProgramZaznamPlatnostOdDatum { get; set; }
         [Nest.Date]
-        public DateTime? DotaceOperacniProgramZaznamPlatnostDoDatum { get; set; }
+        public DateTime? OperacniProgramZaznamPlatnostDoDatum { get; set; }
         [Nest.Keyword]
         public string IdGrantoveSchema { get; set; }
         [Nest.Keyword]
-        public string DotaceGrantoveSchemaKod { get; set; }
+        public string GrantoveSchemaKod { get; set; }
         [Nest.Text]
-        public string DotaceGrantoveSchemaNazev { get; set; }
+        public string GrantoveSchemaNazev { get; set; }
         [Nest.Number]
-        public int? DotaceGrantoveSchemaCislo { get; set; }
+        public int? GrantoveSchemaCislo { get; set; }
         [Nest.Date]
-        public DateTime? DotaceGrantoveSchemaZaznamPlatnostOdDatum { get; set; }
+        public DateTime? GrantoveSchemaZaznamPlatnostOdDatum { get; set; }
         [Nest.Date]
-        public DateTime? DotaceGrantoveSchemaZaznamPlatnostDoDatum { get; set; }
+        public DateTime? GrantoveSchemaZaznamPlatnostDoDatum { get; set; }
         [Nest.Object]
         public List<Rozhodnuti> Rozhodnuti { get; set; }
 
@@ -115,13 +115,13 @@ namespace HlidacStatu.Lib.Data.Dotace
         
         public string GetNazevDotace()
         {
-            if (!string.IsNullOrWhiteSpace(DotaceProjektNazev))
+            if (!string.IsNullOrWhiteSpace(ProjektNazev))
             {
-                return DotaceProjektNazev;
+                return ProjektNazev;
             }
-            if (!string.IsNullOrWhiteSpace(DotaceProjektIdentifikator))
+            if (!string.IsNullOrWhiteSpace(ProjektIdentifikator))
             {
-                return DotaceProjektIdentifikator;
+                return ProjektIdentifikator;
             }
 
             return "";
@@ -140,33 +140,12 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         private void CalculateTotals()
         {
-            DotaceCelkem = Rozhodnuti.Where(p => p.RozhodnutiRefundaceIndikator == false)
-                .Sum(p => p.RozhodnutiCastkaRozhodnuta);
+            DotaceCelkem = Rozhodnuti.Where(p => p.RefundaceIndikator == false)
+                .Sum(p => p.CastkaRozhodnuta);
             PujckaCelkem = Rozhodnuti
-                .Where(p => p.RozhodnutiRefundaceIndikator == false && p.RozhodnutiNavratnostIndikator)
-                .Sum(p => p.RozhodnutiCastkaRozhodnuta);
+                .Where(p => p.RefundaceIndikator == false && p.NavratnostIndikator)
+                .Sum(p => p.CastkaRozhodnuta);
         }
-
-        public Dictionary<string,string> GetDetail()
-        {
-            var result = new Dictionary<string, string>()
-            {
-                ["Jméno příjemce"] = PrijemceJmenoPrijemce,
-                ["IČO"] = PrijemceIco,
-                ["Kód projektu"] = DotaceProjektKod,
-                ["Identifikátor projektu"] = DotaceProjektIdentifikator,
-                ["Název projektu"] = DotaceProjektNazev,
-                ["Datum podpisu"] = DotacePodpisDatum?.ToString("dd.MM.yyyy"),
-                ["Kód operačního programu"] = DotaceOperacniProgramKod,
-                ["Název operačního programu"] = DotaceOperacniProgramNazev,
-                ["Kód grantového schematu"] = DotaceGrantoveSchemaKod,
-                ["Název grantového schematu"] = DotaceGrantoveSchemaNazev
-
-            };
-
-            return result;
-        }
-
 
     }
 }

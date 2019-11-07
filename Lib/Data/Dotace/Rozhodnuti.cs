@@ -11,26 +11,28 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Keyword]
         public string IdRozhodnuti { get; set; }
         [Nest.Number]
-        public float RozhodnutiCastkaPozadovana { get; set; }
+        public float CastkaPozadovana { get; set; }
         [Nest.Number]
-        public float RozhodnutiCastkaRozhodnuta { get; set; }
+        public float CastkaRozhodnuta { get; set; }
         [Nest.Number]
-        public int? RozhodnutiRokRozhodnuti { get; set; }
+        public int? RokRozhodnuti { get; set; }
         [Nest.Boolean]
-        public bool RozhodnutiInvesticeIndikator { get; set; }
+        public bool InvesticeIndikator { get; set; }
         [Nest.Boolean]
-        public bool RozhodnutiNavratnostIndikator { get; set; }
+        public bool NavratnostIndikator { get; set; }
         [Nest.Boolean]
-        public bool RozhodnutiRefundaceIndikator { get; set; }
+        public bool RefundaceIndikator { get; set; }
         [Nest.Boolean]
-        public bool RozhodnutiTuzemskyZdroj { get; set; }
+        public bool TuzemskyZdroj { get; set; }
         [Nest.Keyword]
-        public string RozhodnutiFinancniZdrojKod { get; set; }
+        public string FinancniZdrojKod { get; set; }
         [Nest.Text]
-        public string RozhodnutiFinancniZdrojNazev { get; set; }
+        public string FinancniZdrojNazev { get; set; }
         [Nest.Keyword]
-        public string RozhodnutiDotacePoskytovatelKod { get; set; }
+        public string DotacePoskytovatelKod { get; set; }
         [Nest.Text]
-        public string RozhodnutiDotacePoskytovatelNazev { get; set; }
+        public string DotacePoskytovatelNazev { get; set; }
+        [Nest.Keyword]
+        public string PoskytovatelIco { get; set; }
     }
 }

@@ -525,42 +525,46 @@
 {
     <tr>
         <th></th>
-        <th>Jméno příjemce</th>
+        <th>Příjemce</th>
         <th>IČO příjemce</th>
         <th>Název projektu</th>
         <th>Datum podpisu</th>
         <th>Částka</th>
+        <th></th>
     </tr>
 }
 
 @helper DotaceRow(System.Security.Principal.IPrincipal user, HttpRequestBase request, HlidacStatu.Lib.Data.Dotace.Dotace item, string query = "")
 {
-    <tr>
-        <td>
-            @{
-                @Util.AddBookmark(user, item)
-            }
-        </td>
-        <td style="white-space: nowrap;">
-            @item.PrijemceJmenoPrijemce
-        </td>
-        <td>
-            @item.PrijemceIco
-        </td>
-        <td>
-            <a href="detail?idDotace=@item.IdDotace">@item.GetNazevDotace()</a>
-        </td>
-        <td>
-            @(item.DotacePodpisDatum?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
-        </td>
-        <td>
-            @item.DotaceCelkem.ToString("### ### ### ### ###.##")
-
-            @if (item.PujckaCelkem > 0)
-            {
-                <br />
-                <p class="text-muted">z toho @item.PujckaCelkem je půjčka</p>
-            }
-        </td>
-    </tr>
+<tr>
+    <td>
+        @{
+            @Util.AddBookmark(user, item)
+        }
+    </td>
+    <td class="text-nowrap">
+        @item.PrijemceJmenoPrijemce
+    </td>
+    <td>
+        <a href="/subjekt/@item.PrijemceIco" title="Informace o subjektu">@item.PrijemceIco</a>
+</td>
+    <td>
+        @item.GetNazevDotace()
+    </td>
+    <td class="text-nowrap">
+        @(item.PodpisDatum?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
+    </td>
+    <td class="text-nowrap text-right">
+        @HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem)
+        
+        @if (item.PujckaCelkem > 0)
+        {
+            <br />
+            <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem) je půjčka</p>
+        }
+    </td>
+    <td>
+        <a href="detail?idDotace=@item.IdDotace">Detail</a>
+    </td>
+</tr>
 }

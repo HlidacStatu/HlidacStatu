@@ -139,16 +139,16 @@ namespace HlidacStatu.Lib.Data.Dotace
             switch (order)
             {
                 case DotaceSearchResult.DotaceOrderResult.DateAddedDesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotacePodpisDatum).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.DateAddedAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotacePodpisDatum).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.LatestUpdateDesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceDTAktualizace).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DTAktualizace).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.LatestUpdateAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceDTAktualizace).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DTAktualizace).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.FastestForScroll:
                     s = new SortDescriptor<Dotace>().Field(f => f.Field("_doc"));
