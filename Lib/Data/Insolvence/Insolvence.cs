@@ -330,7 +330,7 @@ MORATORIUM =
             //return AllIdsFromDB(null);
             using (Db.Insolvence.InsolvenceEntities db = new Db.Insolvence.InsolvenceEntities())
             {
-                return db.  Rizeni.AsNoTracking().Select(m => m.SpisovaZnacka)
+                return db.Rizeni.AsNoTracking().Select(m => m.SpisovaZnacka)
                     .ToArray();//force query
             }
         }

@@ -56,6 +56,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public void PrepareForSave(bool skipOsobaIdLink = false)
         {
+            if (skipOsobaIdLink == false)
+                this.OnRadar = false; //reset settings
+
             foreach (var d in this.Dluznici)
             {
                 if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
@@ -91,7 +94,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         if (o != null)
                         {
                             d.OsobaId = o.NameId;
-                            this.OnRadar = this.OnRadar || o.Status > 0;
+                            //this.OnRadar = this.OnRadar || o.Status > 0;
                         }
                         else
                             d.OsobaId = "";
@@ -112,7 +115,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         if (o != null)
                         {
                             d.OsobaId = o.NameId;
-                            this.OnRadar = this.OnRadar || o.Status > 0;
+                            //this.OnRadar = this.OnRadar || o.Status > 0;
                         }
                         else
                             d.OsobaId = "";
@@ -122,7 +125,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 }
             }
 
-            if (Dluznici.Any(m => m.Typ != "F"))
+            if (Dluznici.Any(m => !(m.Typ == "F" || m.Typ== "PODNIKATEL")))
                 this.OnRadar = true;
             else
             {
