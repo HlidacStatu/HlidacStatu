@@ -25,7 +25,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
         public HomeController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-            : base (userManager, signInManager)
+            : base(userManager, signInManager)
         {
         }
 
@@ -170,7 +170,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
         public ActionResult PridatSe()
-        {           
+        {
             return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se/");
             //return View(new Models.PridatSeModel());
         }
@@ -347,10 +347,17 @@ namespace HlidacStatu.Web.Controllers
             }
 
             HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
+
             if (!HlidacStatu.Lib.Data.Firma.IsValid(firma))
             {
-                return View("Subjekt_err_nezname");
+                if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
+                    return View("Subjekt_zahranicni", new HlidacStatu.Lib.Data.Firma() { ICO = ico, Jmeno = ico });
+                else
+                    return View("Subjekt_err_nezname");
             }
+            if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
+                return View("Subjekt_zahranicni", firma);
+
             //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
             return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
         }
@@ -1053,7 +1060,7 @@ text zpravy: {txt}";
             }
             if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
             {
-                var findSm = Lib.ES.SearchTools.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 
+                var findSm = Lib.ES.SearchTools.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
                     Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
                 if (findSm.Total > 0)
                     ViewBag.Highlighting = findSm.Result.Hits.First().Highlights;
@@ -1094,10 +1101,10 @@ text zpravy: {txt}";
         public ActionResult Hledat(string q)
         {
             bool showBeta = false;
-            if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(),"BetaTester") == true)
+            if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(), "BetaTester") == true)
                 showBeta = true;
 
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q,1,5, showBeta);
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, 5, showBeta);
             if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
             {
@@ -1320,7 +1327,7 @@ text zpravy: {txt}";
             }
             else if (id?.ToLower() == "insolvence")
             {
-                var s = HlidacStatu.Lib.Data.Insolvence.Insolvence.LoadFromES(v,false,true)?.Rizeni;
+                var s = HlidacStatu.Lib.Data.Insolvence.Insolvence.LoadFromES(v, false, true)?.Rizeni;
                 if (s != null)
                 {
                     url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);

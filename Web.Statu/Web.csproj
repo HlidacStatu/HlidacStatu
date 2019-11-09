@@ -1352,6 +1352,7 @@
     <Content Include="Views\Manage\ZmenaSmluvnichStran.cshtml" />
     <Content Include="Views\NasiPolitici\Politik.cshtml" />
     <Content Include="Views\Data\_SearchForm.cshtml" />
+    <Content Include="Views\Home\Subjekt_Zahranicni.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

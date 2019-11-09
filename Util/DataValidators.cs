@@ -18,13 +18,14 @@ namespace HlidacStatu.Util
             var tmp = System.IO.File.ReadLines("staty.txt")
                 //.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(m => m.Split('\t'))
-                .Select(mm => {
+                .Select(mm =>
+                {
                     if (mm.Length == 1)
                         return new KeyValuePair<string, string>(Devmasters.Core.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), "xx");
                     else
                         return new KeyValuePair<string, string>(Devmasters.Core.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), mm[1].Length == 0 ? "xx" : mm[1].Trim());
                 });
-            foreach (var kv in tmp.Where(m=> !string.IsNullOrEmpty( m.Key)))
+            foreach (var kv in tmp.Where(m => !string.IsNullOrEmpty(m.Key)))
             {
                 if (!ciziStaty.ContainsKey(kv.Key))
                     ciziStaty.Add(kv.Key, kv.Value);
@@ -37,6 +38,21 @@ namespace HlidacStatu.Util
                     .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
 
+        }
+
+
+        public static string FirmaIcoZahranicni(string ico)
+        {
+            if (string.IsNullOrEmpty(ico))
+                return null;
+
+            var pref = Util.ParseTools.GetRegexGroupValue(ico, @"^(?<pref>\w{2}-).{1,}", "pref");
+
+            return pref;//je-li prefix, je to zahranicni ico
+        }
+        public static bool IsFirmaIcoZahranicni(string ico)
+        {
+            return !string.IsNullOrEmpty(FirmaIcoZahranicni(ico));//je-li prefix, je to zahranicni ico
         }
 
         //zdroj http://devon.blog.zive.cz/2009/09/kontrola-rodneho-cisla/
@@ -158,14 +174,14 @@ namespace HlidacStatu.Util
 
         public static bool IsZahranicniAdresa(string adresa)
         {
-           
+
             return ZahranicniAdresa(adresa) != null;
         }
 
         public static string ZahranicniAdresa(string adresa)
         {
             if (!string.IsNullOrEmpty(adresa))
-            {                
+            {
                 string dadresa = Devmasters.Core.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
 
 
@@ -196,7 +212,7 @@ namespace HlidacStatu.Util
                     //(\s|,|;)mexiko($|\s)
                     string reg = "(\\s|,|;)" + o.Replace(" ", "\\s{1,3}") + "($|\\s)";
 
-                    if (Regex.IsMatch(adresa,reg, Consts.DefaultRegexQueryOption))
+                    if (Regex.IsMatch(adresa, reg, Consts.DefaultRegexQueryOption))
                         return o;
                 }
             }
