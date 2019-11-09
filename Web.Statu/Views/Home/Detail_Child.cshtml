@@ -546,12 +546,19 @@
     @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
 
     @subjekt.adresa<br />
-    @if (!HlidacStatu.Util.DataValidators.IsZahranicniAdresa(subjekt.adresa))
+    @if (!string.IsNullOrEmpty(subjekt.ico))
     {
         <text>
-            ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka
+            ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
         </text>
     }
+    @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
+    {
+        <text>
+            &nbsp;dat.schránka @subjekt.datovaSchranka
+        </text>
+    }
+
 
     @if (typSubjektu == 1)
     {
@@ -563,10 +570,7 @@
     {
         <text>
             <br />Příjemce peněz
-            @if (!HlidacStatu.Util.DataValidators.IsZahranicniAdresa(subjekt.adresa))
-            { 
-                <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
-            }
+            <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
         </text>
     }
     else if (typSubjektu == 3) //vkladatel do rejstriku

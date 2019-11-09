@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib
         public static string[] Mestske_Firmy = new string[] { };
         public static HashSet<string> VsechnyStatniMestskeFirmy = new HashSet<string>();
 
-        public static List<string> CiziStaty = new List<string>();
+        //public static List<string> CiziStaty = new List<string>();
         public static HashSet<string> Jmena = new HashSet<string>();
         public static HashSet<string> Prijmeni = new HashSet<string>();
         public static HashSet<string> TopJmena = new HashSet<string>();
@@ -773,12 +773,12 @@ namespace HlidacStatu.Lib
                                 .OrderBy(or => or.Jmeno);
                         });
 
-                List<string> cizistaty = new List<string>();
-                foreach (var line in System.IO.File.ReadAllLines(App_Data_Path + "staty.txt"))
-                {
-                    cizistaty.Add(Devmasters.Core.TextUtil.RemoveDiacritics(line.ToLower().Trim()));
-                }
-                CiziStaty = cizistaty.Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
+                //List<string> cizistaty = new List<string>();
+                //foreach (var line in System.IO.File.ReadAllLines(App_Data_Path + "staty.txt"))
+                //{
+                //    cizistaty.Add(Devmasters.Core.TextUtil.RemoveDiacritics(line.ToLower().Trim()));
+                //}
+                //CiziStaty = cizistaty.Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
 
 
                 Jmena = new HashSet<string>(System.IO.File.ReadAllLines(App_Data_Path + "jmena.txt")

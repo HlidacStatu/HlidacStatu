@@ -1,947 +1,963 @@
-﻿
-Afghanistan
-Afghánistán
-Aland Islands
-Alandské ostrovy
-Alandy
-Albania
-Albanien
-Albánie
-Albánská republika
-Algeria
-Algerien
-Alžírsko
-Alžírská demokratická a lidová republika
-American Samoa
-Americká Samoa
-Americké Panenské ostrovy
-Andorra
-Andorrské knížectví
-Angola
-Angolská republika
-Anguilla
-Antarctica
-Antarktida
-Antigua & Barbuda
-Antigua a Barbuda
-Antigua and Barbuda
-Antigua und Barbuda
-Arabische Republik Syrien
-Arabische Republik Ägypten
-Argentina
-Argentinien
-Argentinische Republik
-Argentinská republika
-Armenia
-Armenien
-Arménie
-Arménská republika
-Aruba
-Aserbaidschan
-Australia
-Australien
-Austria
-Austrálie
-Azerbaijan
-Bahamas
-Bahamské společenství
-Bahamy
-Bahrain
-Bahrajn
-Bangladesch
-Bangladesh
-Bangladéš
-Bangladéšská lidová republika
-Barbados
-Barma
-Belarus
-Belgické království
-Belgie
-Belgien
-Belgium
-Belize
-Benin
-Beninská republika
-Bermuda
-Bermudy
-Bhutan
-Bhútán
-Bhútánské království
-Bolivarische Republik Venezuela
-Bolivia
-Bolivien
-Bolívarovská republika Venezuela
+﻿Čad
+Zair
+CA	US
+SK	SK
+Súdán
+UK	UK
+DE 	DE
+Ruanda
+Srbsko
+Tschad
+Ungarn
+USA	US
+Zypern
+ČLR	CN
 Bolívie
-Bonaire, Svatý Eustach a Saba
-Bosna a Hercegovina
-Bosnia & Herzegovina
-Bosnia and Herzegovina
-Bosnien und Herzegowina
-Botsuana
-Botswana
-Bouvet Island
-Bouvetův ostrov
-Brasilien
-Brazil
-Brazilská federativní republika
-Brazílie
-British Indian Ocean Territory
-Britské indickooceánské území
-Britské Panenské ostrovy
-Brunei
-Brunei Darussalam
-Brunej
-Brunej Darussalam
-Bulgaria
-Bulgarien
-Bulharsko
-Bulharská republika
-Bundesrepublik Deutschland
-Bundesrepublik Nigeria
-Burkina Faso
-Burundi
-Bývalá jugoslávská republika Makedonie
-Bělorusko
-Běloruská republika
-CA
-Cabo Verde
-Cambodia
-Cameroon
-Canada
-Cape Verde
-Cayman Islands
-Central African Republic
-Ceylon
-Chad
-Chile
-Chilská republika
-China
-Chorvatsko
-Chorvatská republika
-Christmas Island
-Cocos Islands
-Colombia
-Commonwealth der Bahamas
-Commonwealth Dominica
-Comoros
-Congo
-Congo, The Democratic Republic of the
-Cook Islands
-Cookinseln
-Cookovy ostrovy
-Costa Rica
-Cote d'Ivoire
-Croatia
-Cuba
-Curaçao
-Cyprus
-Czech Republic
-Côte d'Ivoire
-DE
-Democratic Republic of Korea
-Democratic Republic of the Congo
-Demokratická republika Kongo
-Demokratická republika Svatý Tomáš a Princův ostrov
-Demokratická republika Východní Timor
-Demokratische Bundesrepublik Nepal
-demokratische Republik Kongo
-Demokratische Republik Sri Lanka
-Demokratische Republik São Tomé und Príncipe
-Demokratische Republik Timor-Leste
-Demokratische Volksrepublik Algerien
-demokratische Volksrepublik Korea
-Demokratische Volksrepublik Laos
-Demokratische Volksrepublik Äthiopien
-Denmark
-Deutschland
-Djibouti
-Dominica
-Dominican Republic
-Dominické společenství
-Dominika
-Dominikanische Republik
-Dominikánská republika
-Dschibuti
-Dánsko
-Dánské království
-Dänemark
-Džibutsko
-Džibutská republika
-Ecuador
-Egypt
-Egyptská arabská republika
-Ekvádor
-Ekvádorská republika
-El Salvador
-Equatorial Guinea
-Eritrea
-Estland
-Estonia
-Estonsko
-Estonská republika
-Ethiopia
-Etiopie
-Etiopská federativní demokratická republika
-Faerské ostrovy
-Falkland Islands
-Falklandské ostrovy 
-Falklandy
-Faroe Islands
-Federativní státy Mikronésie
-Fidschi
-Fidži
-Fidžijská republika
-Fiji
-Filipínská republika
-Filipíny
-Finland
-Finnland
-Finsko
-Finská republika
-France
-Francie
-Francouzská Guyana
-Francouzská jižní území
-Francouzská Polynésie
-Francouzská republika
-Frankreich
-Französische Republik
-French Guiana
-French Polynesia
-French Southern Territories
-Föderation St. Kitts und Nevis
-Föderative Republik Brasilien
-Föderierten Staaten von Mikronesien
-Fürstentum Andorra
-Fürstentum Liechtenstein
-Fürstentum Monaco
-Gabon
-Gabonská republika
-Gabun
-Gabunische Republik
-Gambia
-Gambie
-Gambijská republika
-Georgia
-Georgien
-Germany
-Ghana
-Ghanská republika
-Gibraltar
-Great Britain
-Greece
-Greenland
-Grenada
-Griechenland
-Großbritannien
-Großherzogtum Luxemburg
-Gruzie
-Grónsko
-Guadeloupe
-Guam
-Guatemala
-Guatemalská republika
-Guernsey
-Guinea
-Guinea-Bissau
-Guinejská republika
-Guyana
-Guyanská republika
-Haiti
-Haschemitische Königreich Jordanien
-Heard Island and McDonald Islands
-Heardův ostrov a McDonaldovy ostrovy
-Hellenische Republik
-Holy See Vatican City State
-Honduras
-Honduraská republika
-Hong Kong
-Hongkong
-Horní Volta
-Hungary
-Iceland
-India
-Indická republika
-Indie
-Indien
-Indonesia
-Indonesien
-Indonésie
-Indonéská republika
-Irak
-Iran
-Iraq
-Ireland
-Irland
-Irsko
-Irácká republika
-Irák
-Islamische Republik Iran
-Islamische Republik Mauretanien
-islamische Republik Pakistan
-Islamische Staat Afghanistan
-Island
-Islandská republika
-Isle of Man
-Islámská republika Afghánistán
-Israel
-Italien
-Italienische Republik
-Italská republika
-Italy
-Itálie
-Ivory Coast
-Izrael
-Jamaica
-Jamaika
-Jamajka
-Japan
-Japonsko
-Jemen
-Jemenská republika
-Jersey
-Jihoafrická republika
-Jihosúdánská republika
-Jižní Afrika
-Jižní Georgie a Jižní Sandwichovy ostrovy
-Jižní Súdán
-Jordan
-Jordanien
-Jordánsko
-Jordánské hášimovské království
-Kajmanské ostrovy
-Kambodscha
-Kambodža
-Kambodžské království
-Kamerun
-Kamerunská republika
-Kanada
-Kapverdská republika
-Kapverdy
-Kasachstan
-Katar
-Kazachstán
-Kazakhstan
-Keeling
-Keelingovy ostrovy
-Kenia
-Kenya
-Keňa
-Keňská republika
-Kirgisische Republik
-Kirgisistan
-Kiribati
-KLDR
-Kokosové ostrovy
-Kolumbie
-Kolumbien
-Kolumbijská republika
-Komoren
-Komorský svaz
-Komory
-Kongo
-Kongo demokratická republika
-Kongo republika
-Kongo, demokratická republika
-Kongo, Demokratische Republik
-Konžská demokratická republika
-Konžská republika
-Kooperative Republik Guyana
-Korea
-Korea lidově demokratická republika
-Korea, Democratic People's Republic of
-Korea, Demokratische Volksrepublik
-Korea, lidově demokratická republika
-Korea, Republic of
-Korea, Republik
-Korea, republika
-Korejská lidově demokratická republika
-Korejská republika
-Kosovo
-Kostarická republika
-Kostarika
-Kroatien
-Království Bahrajn
-Království Lesotho
-Království Saúdská Arábie
-Království Tonga
-Kuba
-Kubánská republika
-Kuvajt
-Kuwait
-Kyperská republika
-Kypr
-Kyrgyz Republic (Kyrgyzstan)
-Kyrgyzská republika
-Kyrgyzstan
-Kyrgyzstán
-Königreich Bahrain
-Königreich Belgien
-Königreich Bhutan
-Königreich der Niederlande
-Königreich Dänemark
-Königreich Kambodscha
-Königreich Lesotho
-Königreich Marokko
-Königreich Norwegen
-Königreich Saudi-Arabien
-Königreich Schweden
-Königreich Spanien
-Königreich Swasiland
-Königreich Thailand
-Königreich Tonga
-Laos
-Laoská lidově demokratická republika
-Latvia
-Lebanon
-Lesotho
-Lettland
-Libanesische Republik
-Libanon
-Libanonská republika
-Liberia
-Liberijská republika
-Libya
-Libye
-Libyen
-Libyjská arabská džamáhíríje
-Libérie
-Lichtenštejnsko
-Lichtenštejnské knížectví
-Liechtenstein
-Litauen
-Litevská republika
-Lithuania
-Litva
-Lotyšsko
-Lotyšská republika
-Lucembursko
-Lucemburské velkovévodství
-Luxembourg
-Luxemburg
-Macao
-Macedonia
-Madagascar
-Madagaskar
-Madagaskarská republika
-Makedonie
-Makedonie, bývalá jugoslávská republika
-Malajsie
-Malawi
-Malaysia
-Maldives
-Malediven
-Maledivská republika
-Maledivy
-Mali
-Malta
-Maltská republika
-Malvinas
-Malvíny
-Marocké království
-Marokko
-Maroko
-Marshall Islands
-Marshallinseln
-Marshallovy ostrovy
-Martinik
-Martinique
-Mauretanien
-Mauricijská republika
-Mauricius
-Mauritania
-Mauritius
-Mauritánie
-Mauritánská islámská republika
-Mayotte
-Mazedonien
-Maďarsko
-Menší odlehlé ostrovy USA
-Mexico
-Mexiko
-Micronesia
-Mikronesien
-Mikronésie
-Mikronésie, federativní státy
-Mnohonárodní stát Bolívie
-Moldau
-Moldavsko
-Moldavská republika
-Moldova
-Moldova, Republic of
-Monacké knížectví
-Monaco
-Monako
-Mongolei
-Mongolia
-Mongolsko
-Montenegro
-Montserrat
-Morocco
-Mosambická republika
-Mosambik
-Mozambique
-Myanma
-Myanmar
-Myanmar/Burma
-Namibia
-Namibie
-Namibijská republika
-Nauru
-Nederlande
-Nepal
-Nepál
-Nepálská federativní demokratická republika
-Netherlands
-Netherlands Antilles
-Neuseeland
-New Caledonia
-New Zealand
-Nezávislý stát Samoa
-Nicaragua
-Niederlande
-Niger
-Nigeria
-Nigerijská federativní republika
-Nigerská republika
-Nigérie
-Nikaragua
-Nikaragujská republika
-Niue
-Nizozemsko
-Nizozemské Antily
-Nizozemské království
-Norfolk Island
-Norsko
-Norské království
-North Korea
-Northern Mariana Islands
-Norway
-Norwegen
-Nová Kaledonie
-Nový Zéland
-Německo
-Occupied Territories
-Okupované palestinské území
-Oman
-Omán
-Ostrov Man
-Ostrov Norfolk
-Ostrovy Severní Mariany
-Ostrovy Turks a Caicos
-Ostrovy Wallis a Futuna
-Pacific Islands
-Pakistan
-Palau
-Palestina
-Palestine
-Palestinská území
-Palestinské území 
-Panama
-Panamská republika
-Panenské ostrovy
-Panenské ostrovy, americké
-Panenské ostrovy, britské
-Papua New Guinea
-Papua Nová Guinea
-Papua-Neuguinea
-Papua-Nová Guinea
-Paraguay
-Paraguayská republika
-Peru
-Peruánská republika
-Philippinen
-Philippines
-Pitcairn
-Pobřeží slonoviny
-Poland
-Polen
-Polsko
-Polská republika
-Portoriko
-Portugal
-Portugalsko
-Portugalská republika
-Portugiesische Republik
-Puerto Rico
-Pákistán
-Pákistánská islámská republika
-Qatar
-Rakousko
-Rakouská republika
-Republic of Korea
-Republic of Macedonia
-Republic of Moldova
-Republik Albanien
-Republik Angola
-Republik Armenien
-Republik Aserbaidschan
-Republik Belarus
+Chad	TD
+Cuba	CU
+Fiji	FJ
+Guam	GU
+Irak	IQ
+Iran	IR
+Iraq	IQ
+Irák	IQ
+Keňa	KE
+KLDR	KP
+Kypr	CY
+Mali	ML
+Niue	NU
+Oman	OM
+Omán	OM
+Peru	PE
+Reunion
+Togo	TG
+Vatikán
+Ägypten
+Írán	IR
+Čína	CN
+Aruba	AW
+Barma	MM
+Benin	BJ
+Chile	CL
+China	CN
+Congo	CG
+Egypt	EG
+Fidži	FJ
+Gabon	GA
+Gabun	GA
+Ghana	GH
+Haiti	HT
+India	IN
+Indie	IN
+Irsko	IE
+Italy	IT
+Japan	JP
+Jemen	YE
+Katar	QA
+Kenia	KE
+Kenya	KE
+Kuba 	CU
+Laos 	LA
+Libya	LY
+Libye	LY
+Litva	LT
+Macao	MO
+Malta	MT
+Nauru	NR
+Nepal	NP
+Nepál	NP
+Niger	NE
+Palau	PW
+Polen	PL
+Qatar	QA
+Samoa	WS
+Spain	ES
+Sudan	SD
+Syria	SY
+Südsudan
+Tonga	TO
+Yemen	YE
+Řecko	GR
+Alandy	AX
+Angola	AO
+Bahamy	BS
+Belgie	BE
+Belize	BZ
+Bhutan	BT
+Bhútán	BT
+Brazil	BR
+Brunei	BN
+Brunej	BN
+Canada	CA
+Ceylon	LK
+Cyprus	CY
+Dánsko	DK
+Dänemark	
+Finsko	FI
+France	FR
+Gambia	GM
+Gambie	GM
+Greece	GR
+Gruzie	GE
+Guinea	GN
+Guyana	GY
+Indien	IN
+Irland	IE
+Island	IS
+Israel	IL
+Itálie	IT
+Jersey	JE
+Jordan	JO
+Komory	KM
+Kongo 	CG
+Korea 	KR
+Kuwait	KW
+Latvia	LV
+Libyen	LY
+Malawi	MW
+Maroko	MA
+Mexico	MX
+Mexiko	MX
+Moldau	MD
+Monaco	MC
+Monako	MC
+Myanma	MM
+Norsko	NO
+Norway	NO
+Panama	PA
+Poland	PL
+Polsko	PL
+Rusko 	RU
+Russia	RU
+Rwanda	RW
+Sambia	WS
+Serbia	RS
+St. Lucia
+Svazijsko
+Swasiland
+Swaziland
+Sweden	SE
+Syrien	SY
+Südafrika
+Sýrie 	SY
+Taiwan	TW
+Turkey	TR
+Tuvalu	TV
+Türkei	TR
+Uganda	UG
+Zambia	ZM
+Zambie	ZM
+Äthiopien
+Albania	AL
+Albánie	AL
+Algeria	DZ
+Andorra	AD
+Armenia	AM
+Arménie	AM
+Austria	AT
+Bahamas	BS
+Bahrain	BH
+Bahrajn	BH
+Belarus	BY
+Belgien	BE
+Belgium	BE
+Bermuda	BM
+Bermudy	BM
+Bolivia	BO
+Burundi	BI
+Comoros	KM
+Croatia	HR
+Curaçao	CW
+Czechia	CZ
+Denmark	DK
+Ecuador	EC
+Ekvádor	EC
+Eritrea	ER
+Estland	EE
+Estonia	EE
+Etiopie	ET
+Fidschi	FJ
+Finland	FI
+Francie	FR
+Georgia	GE
+Germany	DE
+Grenada	GD
+Grónsko	GL
+Hungary	HU
+Iceland	IS
+Ireland	IE
+Italien	IT
+Izrael 	IL
+Jamaica	JM
+Jamaika	JM
+Jamajka	JM
+Kamerun	CM
+Kanada 	CA
+Komoren	KM
+Kosovo 	XK
+Kuvajt	KW 
+Lebanon	LB
+Lesotho	LS
+Libanon	LB
+Liberia	LR
+Libérie	LY
+Litauen	LT
+Malvíny	FK
+Marokko	MA
+Mayotte	YT
+Moldova	MD
+Morocco	MA
+Myanmar	MM
+Namibia	NA
+Namibie	NA
+Nigeria	NG
+Nigérie	NG
+Romania	RO
+Réunion	RE
+Schweiz	CH
+Senegal	SN
+Serbien	RS
+Somalia	SO
+Somálsko	S
+Spanien	ES
+Stát Katar
+Surinam	SR
+Thajsko	TH
+Tokelau	TK
+Tunisia	TN
+Tunisko	TN
+Turecko	TR
+Ukraine	UA
+Uruguay	UY
+Usbekistan
+Uzbekistán
+Vanuatu	VU
+Černá Hora
+Švédsko	SE
+Albanien	AL
+Algerien	DZ
+Alžírsko	DZ
+Anguilla	AI
+Armenien	AM
+Barbados	BB
+Bolivien	BO
+Botsuana	BW
+Botswana	BW
+Brazílie	BR
+Bulgaria	BG
+Cambodia	KH
+Cameroon	CM
+Colombia	CO
+Djibouti	DJ
+Dominica	DM
+Dominika	DO
+Dänemark	DK
+Estonsko	EE
+Eswatini	SZ
+Ethiopia	ET
+Filipíny	PH
+Finnland	FI
+Georgien	GE
+Guernsey	GG
+Holy See	VA
+Honduras	HN
+Japonsko	JP
+Kapverdy	CV
+Keeling 	CC
+Kiribati	KI
+Kolumbie	CO
+Lettland	LV
+Lotyšsko	LV
+Malajsie	MY
+Malaysia	MY
+Maldives	MV
+Maledivy	MV
+Martinik	MQ
+Mongolei	MN
+Mongolia	MN
+Mosambik	MZ
+Norwegen	NO
+Německo 	DE
+Pakistan	PK
+Paraguay	PY
+Pitcairn	PN
+Portugal	PT
+Rumänien	RO
+Schweden	SE
+Seychely	SC
+Singapur	SG
+Slovakia	SK
+Slovenia	SI
+Slowakei	SK
+Staat Katar
+Stát Izrael
+Stát Kuvajt
+Suriname	SR
+Svatá Lucie
+Tansania	TZ
+Tanzania	TZ
+Tanzanie	TZ
+Thailand	TH
+Tunesien	TN
+Tádžikistán
+Viet Nam	VN
+Vietnam 	VN
+Zimbabwe	ZW
+Ázerbájdžán
+Argentina	AR
+Australia	AU
+Austrálie	AU
+Bangladéš	BD
+Brasilien	BR
+Bulgarien	BG
+Bulharsko	BG
+Bělorusko	BY
+Congo ( )	CD
+Dschibuti	DJ
+Džibutsko	DJ
+Falklandy	FK
+Gibraltar	GI
+Greenland	GL
+Guatemala	GT
+Hong Kong	HK
+Hongkong 	HK
+Indonesia	ID
+Indonésie	ID
+Jordanien	JO
+Jordánsko	JO
+Kambodža 	KH
+Kolumbien	CO
+Kostarika	CR
+Kroatien 	HR
+Lithuania	LT
+Luxemburg	LU
+Makedonie	MK
+Malediven	MV
+Malvinas 	FK
+Mauricius	MU
+Mauritius	MU
+Maďarsko 	HU
+Moldavsko	MD
+Mongolsko	MN
+Nicaragua	NI
+Nikaragua	NI
+Palestina	PS
+Palestine	PS
+Portoriko	PR
+Pákistán 	PK
+Rakousko 	AT
+Rumunsko 	RO
+Salvador 	SV
+Simbabwe 	ZW
+Singapore	SG
+Slovensko	SK
+Slovinsko	SI
+Slowenien	SI
+Sri Lanka	LK
+Srí Lanka	LK
+Staat Israel
+Staat Kuwait
+Svatá Helena
+Svatý Martin
+Svatý stolec
+Ukrajina 	UA
+Vatikanstadt
+Španělsko	ES
+Švýcarsko	CH
+Antarctica	AQ
+Antarktida	AQ
+Australien	AU
+Azerbaijan	AZ
+Bangladesh	BD
+Cabo Verde	CV
+Chorvatsko	HR
+Cookinseln	CK
+Costa Rica	CR
+Frankreich	FR
+Guadeloupe	GP
+Indonesien	ID
+Kazachstán	KZ
+Kazakhstan	KZ
+Kyrgyzstan	KG
+Kyrgyzstán	KG
+Luxembourg	LU
+Macedonia 	MK
+Madagascar	MG
+Madagaskar	MG
+Martinique	MQ
+Mauritania	MR
+Mauritánie	MR
+Mazedonien	MK
+Micronesia	FM
+Mikronésie	FM
+Montenegro	ME
+Montserrat	MS
+Mozambique	MZ
+Neuseeland	NL
+Nizozemsko	NL
+Republik Irak
+Republik Kuba
+Republik Mali
+Republik Peru
+Republik Togo
+San Marino	SM
+Seychellen	SC
+Seychelles	SC
+Staat Eritrea
+Sultanat Oman
+Sultanát Omán
+Svatý Martin 
+Svatý stolec 
+Tadschikistan
+Tajikistan	TJ
+Tchaj-wan 	TW
+Union Myanmar
+Uzbekistan	UZ
+Österreich	AT
+Afghánistán	AF
+Argentinien	AR
+Bangladesch	BD
+Deutschland	DE
+El Salvador	SV
+Isle of Man	IM
+Kambodscha 	KH
+Kasachstan 	KZ
+Lucembursko	LU
+Mauretanien	MR
+Mikronesien	FM
+Nederlande 	NL
+Netherlands	NL
+New Zealand	NZ
+Niederlande	NL
+Ostrov Man 	IM
+Philippinen	PH
+Philippines	PH
+Portugalsko	PT
+Puerto Rico	PR
 Republik Benin
-Republik Bolivien
-Republik Botsuana
-Republik Bulgarien
-Republik Burundi
-Republik Cabo Verde
 Republik Chile
 Republik China
-Republik Costa Rica
-Republik Côte d´Ivoire
-Republik der Philippinen
-Republik Dschibuti
-Republik Ecuador
-Republik EL Salvador
-Republik Estland
-Republik Fidschi
-Republik Finnland
-Republik Gambia
 Republik Ghana
-Republik Guatemala
-Republik Guinea
-Republik Guinea-Bissau
 Republik Haiti
-Republik Honduras
-Republik Indien
-Republik Indonesien
-Republik Irak
-Republik Island
 Republik Jemen
-Republik Kamerun
-Republik Kasachstan
 Republik Kenia
-Republik Kiribati
-Republik Kolumbien
 Republik Kongo
 Republik Korea
-Republik Kosovo
-Republik Kroatien
-Republik Kuba
-Republik Lettland
-Republik Liberia
-Republik Litauen
-Republik Madagaskar
-Republik Malawi
-Republik Malediven
-Republik Mali
 Republik Malta
-Republik Marshallinseln
-Republik Mauritius
-Republik Mazedonien
-Republik Moldau
-Republik Montenego
-Republik Mosambik
-Republik Namibia
 Republik Nauru
-Republik Nicaragua
 Republik Niger
 Republik Palau
-Republik Panama
-Republik Paraguay
-Republik Peru
 Republik Polen
+Republik Sudan
+Republika Mali
+Republika Togo
+Saint Lucia	LC
+South Sudan	SS
+Switzerland	CH
+The Bahamas	BS
+Timor Leste	TL
+Timor-Leste	TL
+Vánoční ostrov
+Východní Timor
+Západní Sahara
+Burkina Faso	BF
+Cook Islands	CK
+Griechenland	GL
+Horní Volta 	XX
+Ivory Coast 	CI
+Jižní Afrika	ZA
+Jižní Súdán 	SS
+Kirgisistan 	KG
+North Korea 	KP
+Nový Zéland 	NZ
+Republik Angola
+Republik Gambia
+Republik Guinea
+Republik Indien
+Republik Island
+Republik Kosovo
+Republik Malawi
+Republik Moldau
+Republik Panama
 Republik Ruanda
 Republik Sambia
-Republik San Marino
-Republik Senegal
-Republik Serbien
-Republik Seychellen
-Republik Sierra Leone
-Republik Simbabwe
-Republik Singapur
-Republik Slowakei
-Republik Slowenien
-Republik Somalia
-Republik Sudan
-Republik Suriname
-Republik Südafrika
-Republik Südsudan
-Republik Tadschikistan
-Republik Togo
-Republik Trinidad und Tobago
 Republik Tschad
 Republik Türkei
 Republik Uganda
 Republik Ungarn
-Republik Usbekistan
-Republik Vanuatu
 Republik Zypern
-Republik Äquatorialguinea
-Republik Österreich
-Republik Östlich des Uruguay
-Republika Botswana
-Republika Burundi
-Republika Guinea-Bissau
 Republika Haiti
-Republika Kazachstán
-Republika Kiribati
-Republika Kosovo
-Republika Malawi
-Republika Mali
-Republika Marshallovy ostrovy
-Republika Myanmarský svaz
 Republika Nauru
 Republika Palau
-Republika Pobřeží Slonoviny
-Republika Rovníková Guinea
-Republika Rwanda
-Republika San Marino
-Republika Sierra Leone
-Republika Srbsko
-Republika Togo
-Republika Trinidad a Tobago
-Republika Tádžikistán
-Republika Uzbekistán
-Republika Vanuatu
-Republika Zimbabwe
-Reunion
-Romania
-Rovníková Guinea
-Ruanda
-Rumunsko
-Rumänien
-Rusko
-Ruská federace
-Russia
-Russian Federation
-Russische Föderation
-Rwanda
-Réunion
-Saint Barthelemy
-Saint Helena
-Saint Kitts and Nevis
-Saint Lucia
-Saint Martin
-Saint Pierre a Miquelon
-Saint Pierre and Miquelon
-Saint Vincent and the Grenadines
-Saint Vincent's & Grenadines
-Salomonen
-Salvador
-Salvadorská republika
-Sambia
-Samoa
-San Marino
-Sao Tome and Principe
-Saudi Arabia
-Saudi-Arabien
-Saúdská Arábie
-Schweden
-Schweiz
-Schweizerische Eidgenossenschaft
-Senegal
-Senegalská republika
-Serbia
-Serbien
+Saint Helena	SH
+Saint Martin	MF
+Saudi Arabia	SA
 Severní Mariany
-Seychellen
-Seychelles
-Seychelská republika
-Seychely
-Sierra Leone
-Simbabwe
-Singapore
-Singapur
-Singapurská republika
-Sjednocená tanzanská republika
-SK
-Slovak Republic 
-Slovakia
-Slovenia
-Slovensko
-Slovenská republika
-Slovinsko
-Slovinská republika
-Slowakei
-Slowenien
-Solomon Islands
-Somalia
-Somálsko
-Somálská republika
-South Africa
-South Georgia and the South Sandwich Islands
-South Korea
-South Sudan
-Sozialistische Republik Vietnam
-Spain
-Spanien
-Spojené arabské emiráty
-Spojené království
-Spojené království Velké Británie a Severního Irska
-Spojené státy
-Spojené státy americké
-Spojené státy mexické
-Společenství Ostrovy Severní Mariany
-Spolková republika Německo
-Srbsko
-Sri Lanka
-Srí Lanka
-Srílanská demokratická socialistická republika
-St. Kitts und Nevis
-St. Lucia
-St. Vincent und die Grenadinen
-Staat Eritrea
-Staat Israel
-Staat Katar
-Staat Kuwait
-Staat Vatikanstadt
-Stát Izrael
-Stát Katar
-Stát Kuvajt
-Středoafrická republika
-Sudan
-Sultanat Oman
+Sierra Leone	SL
+South Africa	ZA
+South Korea 	KR
 Sultanát Brunej
-Sultanát Omán
-Surinam
-Suriname
-Surinamská republika
-Svalbard a Jan Mayen
-Svalbard and Jan Mayen
-Svatá Helena
-Svatá Helena, Ascension a Tristan da Cunha
-Svatá Lucie
-Svatý Bartoloměj
-Svatý Kryštof a Nevis
-Svatý Martin
-Svatý Martin 
-Svatý Pierre a Miquelon
-Svatý stolec
-Svatý stolec 
-Svatý Tomáš a Princův ostrov
-Svatý Vincenc a Grenadiny
-Svazijsko
-Svazijské království
-Swasiland
-Swaziland
-Sweden
-Switzerland
-Syria
-Syrien
-Syrská arabská republika
-São Tomé und Príncipe
-Súdán
-Súdánská republika
-Südafrika
-Südsudan
-Sýrie
-Tadschikistan
-Taiwan
-Tajikistan
-Tansania
-Tanzania
-Tanzanie
-Tanzanská sjednocená republika
-Tchaj-wan
-Thailand
-Thajsko
-Thajské království
-Timor Leste
-Timor-Leste
-Togo
-Tokelau
-Tonga
-Trinidad & Tobago
-Trinidad a Tobago
-Trinidad and Tobago
-Trinidad und Tobago
-Tschad
-Tschechische Republik
-Tunesien
-Tunesische Republik
-Tunisia
-Tunisko
-Tuniská republika
-Turecko
-Turecká republika
-Turkey
-Turkmenistan
-Turkmenistán
-Turks & Caicos Islands
-Turks and Caicos Islands
-Tuvalu
-Tádžikistán
-Türkei
-Uganda
-Ugandská republika
-UK
-Ukraine
-Ukrajina
-Unabhängige Staat Papua-Neuguinea
-Unabhängige Staat Samoa
-Ungarn
-Union der Komoren
-Union Myanmar
-United Arab Emirates
-United Kingdom
-United States
-United States Minor Outlying Islands
-United States of America 
-Uruguay
-Uruguayská východní republika
-USA
-Usbekistan
-Uzbekistan
-Uzbekistán
-Vanuatu
-Vatikanstadt
-Vatikán
-Vatikánský městský stát
-Venezuela
-Vereinigte Arabische Emirate
-Vereinigte Königreich von Großbritannien und Nordirland
-Vereinigte Republik Tansania
-Vereinigte Staaten
-Vereinigten Arabischen Emirate
-Vereinigten Mexikanischen Staaten
-Vereinigten Staaten von Amerika
-Viet Nam
-Vietnam
-Vietnamská socialistická republika
-Virgin Islands
-Virgin Islands, British
-Virgin Islands, U.S.
-Volksrepublik Bangladesch
-Volksrepublik China
-Vánoční ostrov
+Turkmenistan	TM
+Turkmenistán	TM
 Vánoční ostrovy
-Východní Timor
 Wallis a Futuna
-Wallis and Futuna
-Western Sahara
-Yemen
-Zair
-Zambia
-Zambie
-Zambijská republika
-Zentralafrikanische Republik
-Zimbabwe
-Zvláštní administrativní oblast Číny Hongkong
-Zvláštní administrativní oblast Číny Macao
-Zypern
-Západní Sahara
-Ázerbájdžán
-Ázerbájdžánská republika
-Ägypten
+Aland Islands	AX
+Aserbaidschan	AZ
+Bouvet Island	BV
+Cocos Islands	CC
+Cote d'Ivoire	CI
+Côte d'Ivoire	CI
+Faroe Islands	FO
+French Guiana	GF
+Great Britain	UK
+Guinea-Bissau	GW
+Komorský svaz	KM
+Liechtenstein	LI
+Myanmar/Burma	MM
+New Caledonia	NC
+Republik Belarus
+Republik Burundi
+Republik Ecuador
+Republik Estland
+Republik Fidschi
+Republik Kamerun
+Republik Liberia
+Republik Litauen
+Republik Namibia
+Republik Senegal
+Republik Serbien
+Republik Somalia
+Republik Vanuatu
+Republika Kosovo
+Republika Malawi
+Republika Rwanda
+Republika Srbsko
+Rovníková Guinea
+Saudi-Arabien	SA
+Svatý Bartoloměj
+United States	US
 Äquatorialguinea
-Äthiopien
-Írán
-Íránská islámská republika
-Österreich
-Čad
+Åland Islands	AX
 Čadská republika
-Černá Hora
-Česká republika
-ČLR
-Čína
-Čínská lidová republika
-Řecko
-Řecká republika
+Americká Samoa	AS
+Cayman Islands	KY
+Czech Republic	CZ
+Großbritannien	UK
+Marshallinseln	MA
+Norfolk Island	NF
+Nová Kaledonie	NC
+Ostrov Norfolk	NF
+Republik Armenien
+Republik Bolivien
+Republik Botsuana
+Republik Finnland
+Republik Honduras
+Republik Kiribati
+Republik Kroatien
+Republik Lettland
+Republik Mosambik
+Republik Paraguay
+Republik Simbabwe
+Republik Singapur
+Republik Slowakei
+Republik Suriname
+Republik Südsudan
+Republika Burundi
+Republika Vanuatu
+Ruská federace	RU
+Saúdská Arábie	SA
+Spojené státy 	US
+Union der Komoren
+United Kingdom	GB
+Western Sahara	EH
+Bouvetův ostrov	BV
+Cookovy ostrovy	CK
+Keeling Islands	CC
+Kongo republika	CG
+Korea, Republik	KR
+Lichtenštejnsko	LI
+Papua-Neuguinea	PG
+Republik Bulgarien
+Republik Dschibuti
+Republik Guatemala
+Republik Kolumbien
+Republik Malediven
+Republik Mauritius
+Republik Montenego
+Republik Nicaragua
+Republik Slowenien
+Republik Südafrika
+Republika Botswana
+Republika Kiribati
+Republika Zimbabwe
+Solomon Islands	SB
+Staat Vatikanstadt
+Súdánská republika
+Vereinigte Staaten
+Česká republika CZ
+Řecká republika	GR
+Alandské ostrovy	AX
+Christmas Island	CX
+Faerské ostrovy 	FO
+Falkland Islands	FK
+Finská republika	FI
+French Polynesia	PF
+Irácká republika	IE
+Keňská republika	KE
+Kokosové ostrovy	CC
+Korea, republika	KR
+Königreich Tonga	TO
+Marshall Islands	MH
+Pacific Islands 	XX
+Papua New Guinea	PG
+Polská republika	PL
+Republik Cabo Verde
+Republik Costa Rica
+Republik Indonesien
+Republik Kasachstan
+Republik Madagaskar
+Republik Mazedonien
+Republik San Marino
+Republik Seychellen
+Republik Usbekistan
+Republik Österreich
+Saint Barthélemy	BL
+Slovak Republic 	SK
+St. Kitts und Nevis
+Volksrepublik China
+Zambijská republika
 Šalamounovy ostrovy
 Šalomounovy ostrovy
-Španělsko
-Španělské království
+Antigua & Barbuda	AG
+Antigua a Barbuda	AG
+Brunei Darussalam	BN
+Brunej Darussalam	BN
+Chilská Republika	CL
+Equatorial Guinea	GQ
+Fürstentum Monaco	MC
+Ghanská republika	GH
+Italská republika	IT
+Kirgisische Republik
+Konžská republika	CG
+Království Tonga 	TO
+Maltská republika	MT
+Monacké knížectví	MC
+Nizozemské Antily	NL
+Norské království	NO
+Palestinská území	PS
+Panenské Ostrovy 	VG
+Papua Nová Guinea	PG
+Papua-Nová Guinea	PG
+Republik EL Salvador
+Republika Kazachstán
+Republika San Marino
+Republika Uzbekistán
+Somálská republika	S
+Surinamská republika
+Svazijské království
+Trinidad & Tobago	TT
+Trinidad a Tobago	TT
+Tuniská republika	TN
+Turecká republika	TR
+Virgin Islands, U.S.
+Wallis and Futuna	WF
+Albánská republika	AL
+Angolská republika	AO
+Arménská republika	AM
+Beninská republika	BJ
+Dominican Republic	DO
+Dánské království 	DK
+Estonská republika	EE
+Francouzská Guyana	FR
+Gabonská republika	GA
+Indická republika 	IN
+Jemenská republika	YE
+Kajmanské ostrovy 	KY
+Keelingovy ostrovy	CC
+Korea, Republic of	KR
+Korejská republika	KR
+Království Bahrajn	BH
+Kubánská republika	CU
+Kyperská republika	CY
+Königreich Bhutan 	BT
+Königreich Marokko	MA
+Königreich Spanien	ES
+Litevská republika	LT
+Lotyšská republika	LV
+Marocké království	MA
+Nigerská republika	NG
+Palestinské území 	PS
+Panamská republika	PA
+Pobřeží slonoviny 	CI
+Rakouská republika	AT
+Republic of Korea 	KR
+Republik Albanien 	AL
+Republik Sierra Leone
+Republika Tádžikistán
+Russian Federation	RU
+State of Palestine	PS
+Svatý Kryštof a Nevis
+São Tomé und Príncipe
+Thajské království	TH
+Ugandská republika	UG
 Špicberky a Jan Mayen
-Švédsko
-Švédské království
-Švýcarsko
-Švýcarská konfederace
+Švédské království	SE
+Andorrské knížectví	AD
+Antigua and Barbuda	AG
+Belgické království	BE
+Bosna a Hercegovina	BA
+Bulharská republika	BG
+Běloruská republika	BY
+Džibutská republika	DJ
+Fidžijská republika	FJ
+Fürstentum Andorra 	AD
+Gabunische Republik	GA
+Gambijská republika	GM
+Guinejská republika	GN
+Guyanská republika 	GY
+Indonéská republika	ID
+Islandská republika	IS
+Království Lesotho 	LS
+Kyrgyzská republika	KG
+Königreich Bahrain 	BH
+Königreich Belgien 	BE
+Königreich Lesotho 	LS
+Königreich Norwegen	NO
+Königreich Schweden	SE
+Marshallovy ostrovy	MA
+Moldavská republika	MD
+Peruánská republika	PE
+Republik Aserbaidschan
+Republik Côte d´Ivoire
+Republik Guinea-Bissau
+Republik Tadschikistan
+Republika Sierra Leone
+Slovenská republika	SK
+Slovinská republika	SI
+Spojené království 	UK
+Trinidad and Tobago	TT
+Tunesische Republik	TN
+Bhútánské království	BT
+Bosnia & Herzegovina	BA
+Chorvatská republika	HR
+Ekvádorská republika	EC
+Falklandské ostrovy 	FK
+Filipínská republika	PH
+Kamerunská republika	CM
+Königreich Dänemark 	DE
+Königreich Thailand 	TH
+Libanonská republika	LB
+Liberijská republika	LR
+Maledivská republika	MV
+Moldova, Republic of	MD
+Mosambická republika	MZ
+Namibijská republika	NA
+Netherlands Antilles	NL
+Occupied Territories	PS
+Republic of Moldova 	MD
+Republik Marshallinseln
+Republika Guinea-Bissau
+Russische Föderation	RU
+Senegalská republika	SN
+Seychelská republika	SC
+Středoafrická republika
+Svalbard a Jan Mayen	SJ
+Svatý Pierre a Miquelon
+Syrian Arab Republic	SY
+Unabhängige Staat Samoa
+United Arab Emirates	AE
+Vatikánský městský stát
+Virgin Islands, British
+Španělské království	ES
+Argentinská republika	AR
+Bahamské společenství	BS
+Commonwealth Dominica	DM
+Francouzská Polynésie	PF
+Francouzská Republika	FR
+Französische Republik	FR
+Guatemalská republika	GT
+Hellenische Republik 	SH
+Honduraská republika 	HN
+Italienische Republik	IT
+Jihoafrická republika	ZA
+Kambodžské království	KH
+Kapverdská republika 	CV
+Kolumbijská republika	CO
+Kostarická republika 	CR
+Libanesische Republik	LB
+Mauricijská republika	MU
+Nezávislý stát Samoa 	WS
+Nizozemské království	NL
+Paraguayská republika	PY
+Portugalská republika	PT
+Republik der Philippinen
+Saint Kitts and Nevis	KN
+Salvadorská republika	SV
+Sao Tome and Principe	ST
+Singapurská republika	SG
+Spojené státy mexické	MX
+Virgin Islands (U.S.)	VI
+Ázerbájdžánská republika
+Švýcarská konfederace	CH
+Argentinische Republik	AR
+Bosnia and Herzegovina	BA
+Bundesrepublik Nigeria	NE
+Dominikánská republika	DO
+Königreich Kambodscha 	KH
+Königreich Swasiland	SZ 	
+Nikaragujská republika	NI
+Republic of Macedonia 	MK
+Republik Äquatorialguinea
+Republika Myanmarský svaz
+Spojené státy americké	US
+Svalbard and Jan Mayen	SJ
+Svatý Vincenc a Grenadiny
+Tschechische Republik 	CZ
+Turks & Caicos Islands	TC
+Volksrepublik Bangladesch
+Bosnien und Herzegowina	BA
+Dominické společenství 	DO
+Dominikanische Republik	DO
+Francouzská jižní území	TF
+Jihosúdánská republika 	SS
+Korea (the Republic of)	KR
+Madagaskarská republika	MG
+Ostrovy Turks a Caicos 	TC
+Portugiesische Republik	PT
+Republika Rovníková Guinea
+Saint Pierre a Miquelon	PM
+Čínská lidová republika	CN
+Britské Panenské ostrovy	IO
+Central African Republic	CF
+Commonwealth der Bahamas	BS
+Fürstentum Liechtenstein	LI
+Großherzogtum Luxemburg 	LU
+Islamic Republic of Iran	IR
+Islamische Republik Iran	IN
+Northern Mariana Islands	MP
+Ostrovy Severní Mariany 	MP
+Ostrovy Wallis a Futuna 	WF
+Republika Pobřeží Slonoviny
+Republika Trinidad a Tobago
+Spojené arabské emiráty 	SA
+Syrská arabská republika	SY
+Turks and Caicos Islands	TC
+United States of America	US
+Virgin Islands (British)	VG
+Americké Panenské ostrovy	AS
+Arabische Republik Syrien	SY
+Království Saúdská Arábie	SA
+Königreich Saudi-Arabien 	SA
+Lichtenštejnské knížectví	LI
+Moldova (the Republic of)	MD
+Republik Trinidad und Tobago
+Republik Östlich des Uruguay
+Saint Pierre and Miquelon	PM
+Sint Maarten (Dutch part)	SX
+Svatý Tomáš a Princův ostrov
+Vereinigte Arabische Emirate
+Vereinigte Republik Tansania
+Zentralafrikanische Republik
+Americké Panenské ostrovy 	VI
+Arabische Republik Ägypten	SY
+Britské Panenské ostrovy  	VG
+Bundesrepublik Deutschland	DE
+Lucemburské velkovévodství	LU
+Menší odlehlé ostrovy USA	USA
+Mnohonárodní stát Bolívie 	BO
+Republika Marshallovy ostrovy
+Spolková republika Německo	DE
+Taiwan (Province of China)	TW
+Uruguayská východní republika
+Íránská islámská republika IR
+Egyptská arabská republika 	EG
+French Southern Territories	TF
+Holy See Vatican City State	VA
+Königreich der Niederlande 	NL
+Okupované palestinské území	PS
+Republic of North Macedonia	MK
+Sjednocená tanzanská republika
+St. Vincent und die Grenadinen
+Vereinigten Arabischen Emirate
+Democratic Republic of Congo	CG
+Democratic Republic of Congo CD
+Demokratická republika Kongo	CD
+Federativní státy Mikronésie	FM
+islamische Republik Pakistan	PK
+Kongo demokratická republika	CD
+Kooperative Republik Guyana 	GY
+Kyrgyz Republic (Kyrgyzstan)	KG
+Libyjská arabská džamáhíríje	LY
+Saint Vincent and Grenadines	VC
+Saint Vincent's & Grenadines	VC
+Tanzania, United Republic of	TZ
+Vereinigten Staaten von Amerika
+Bangladéšská lidová republika	BD
+Bonaire, Svatý Eustach a Saba	BQ
+Britské indickooceánské území	IO
+Democratic Republic of Korea 	KP
+demokratische Republik Kongo 	CD
+Föderative Republik Brasilien	BR
+Islamische Staat Afghanistan 	AF
+Kongo, demokratická republika	CD
+Kongo, Demokratische Republik	CD
+Mikronésie, federativní státy	FM
+British Indian Ocean Territory	IO
+Föderation St. Kitts und Nevis	KN
+Konžská demokratická republika	CD
+Mauritánská islámská republika	MR
+Pákistánská islámská republika	PK
+Tanzanská sjednocená republika	TZ
+Unabhängige Staat Papua-Neuguinea
+Vereinigten Mexikanischen Staaten
+Bolivarische Republik Venezuela	BO
+Brazilská federativní republika	BR
+Islamische Republik Mauretanien	MR
+Islámská republika Afghánistán 	AF
+Jordánské hášimovské království	JO
+Bolívarovská republika Venezuela	BO
+Bonaire, Sint Eustatius and Saba	BQ
+Lao People's Democratic Republic	LA
+Nigerijská federativní republika	NG
+Schweizerische Eidgenossenschaft	CH
+Sozialistische Republik Vietnam 	VN
+Demokratische Republik Sri Lanka 	LK
+Demokratische Volksrepublik Laos 	LA
+Heard Island and McDonald Islands	HM
+Společenství Ostrovy Severní Mariany
+demokratische Volksrepublik Korea 	KP
+Korea, Demokratische Volksrepublik	KP
+Venezuela (Bolivarian Republic of)	VE
+Demokratische Bundesrepublik Nepal 	NP
+Demokratische Republik Timor-Leste 	TL
+Föderierten Staaten von Mikronesien	FM
+Haschemitische Königreich Jordanien	JO
+Korea lidově demokratická republika	KP
+Vietnamská socialistická republika 	VN
+Demokratische Volksrepublik Algerien	AL
+Korea, lidově demokratická republika	KP
+Laoská lidově demokratická republika	LA
+United States Minor Outlying Islands	UM
+Demokratische Volksrepublik Äthiopien	ET
+Heardův ostrov a McDonaldovy ostrovy 	HM
+Bývalá jugoslávská republika Makedonie	MK
+Demokratická republika Východní Timor 	TL
+Korea, Democratic People's Republic of	KP
+Korejská lidově demokratická republika	KP
+Makedonie, bývalá jugoslávská republika	MK
+Svatá Helena, Ascension a Tristan da Cunha
+Zvláštní administrativní oblast Číny Macao
+Alžírská demokratická a lidová republika	DZ
+South Georgia and South Sandwich Islands	GS
+Jižní Georgie a Jižní Sandwichovy ostrovy 	GS
+Zvláštní administrativní oblast Číny Hongkong
+Etiopská federativní demokratická republika	ET
+Korea (the Democratic People's Republic of)	KP
+Nepálská federativní demokratická republika	NP
+Saint Helena, Ascension and Tristan da Cunha	SH
+Demokratische Republik São Tomé und Príncipe 	ST
+Srílanská demokratická socialistická republika	LK
+Spojené království Velké Británie a Severního Irska	UK
+Demokratická republika Svatý Tomáš a Princův ostrov 	ST
+United Kingdom of Great Britain and Northern Ireland	GB
+Vereinigte Königreich von Großbritannien und Nordirland

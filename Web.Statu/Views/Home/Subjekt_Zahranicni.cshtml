@@ -11,9 +11,9 @@
 
 
 @{
-    ViewBag.Title = "Informace o zahraniční firmě" + Model.nazev;
+    ViewBag.Title = "Informace o zahraniční firmě " + Model.Jmeno;
 
-    ViewBag.SocialShareTitle = "Zahraniční firma " + Model.nazev + " na HlidacStatu.cz";
+    ViewBag.SocialShareTitle = "Zahraniční firma " + Model.Jmeno + " na HlidacStatu.cz";
     ViewBag.SocialShareType = "article";
 }
 
@@ -33,7 +33,7 @@
 
 <h2 id="_top">
     @Util.AddBookmark(this.User, Model)
-    @(Model.nazev)
+    @(Model.Jmeno)
 </h2>
 <h4>zahraniční firma nebo úřad</h4>
 
@@ -66,15 +66,15 @@
         <tr>
             <th>Vyhledání</th>
             <td>
-                @if (string.IsNullOrEmpty(Model.ico))
+                @if (string.IsNullOrEmpty(Model.ICO))
                 {
-                    @Util.AddSearchBtn("/hledat", $"ico:{Model.ico}", $" Vyhledat tuto firmy ve všech databázích")
-                    @Util.AddWatchDog(this.User, $"ico:{Model.ico}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.nazev, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    @Util.AddSearchBtn("/hledat", $"ico:{Model.ICO}", $" Vyhledat tuto firmy ve všech databázích")
+                    @Util.AddWatchDog(this.User, $"ico:{Model.ICO}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                 }
                 else
                 {
-                    @Util.AddSearchBtn("/hledat", $"\"{Model.nazev}\"", $" Vyhledat tuto firmy ve všech databázích")
-                    @Util.AddWatchDog(this.User, $"\"ico:{Model.nazev}\"", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.nazev, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    @Util.AddSearchBtn("/hledat", $"\"{Model.Jmeno}\"", $" Vyhledat tuto firmy ve všech databázích")
+                    @Util.AddWatchDog(this.User, $"\"{Model.Jmeno}\"", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                 }
             </td>
         </tr>

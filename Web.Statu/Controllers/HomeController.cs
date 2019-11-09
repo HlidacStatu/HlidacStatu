@@ -340,11 +340,6 @@ namespace HlidacStatu.Web.Controllers
             //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
             //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
 
-            if (!HlidacStatu.Util.DataValidators.CheckCZICO(ico))
-            {
-
-                return View("Subjekt_err_spatneICO");
-            }
 
             HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
 
@@ -353,7 +348,13 @@ namespace HlidacStatu.Web.Controllers
                 if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
                     return View("Subjekt_zahranicni", new HlidacStatu.Lib.Data.Firma() { ICO = ico, Jmeno = ico });
                 else
-                    return View("Subjekt_err_nezname");
+                {
+                    if (!HlidacStatu.Util.DataValidators.CheckCZICO(ico))
+
+                        return View("Subjekt_err_spatneICO");
+                    else
+                        return View("Subjekt_err_nezname");
+                }
             }
             if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
                 return View("Subjekt_zahranicni", firma);

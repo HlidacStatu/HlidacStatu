@@ -10,12 +10,29 @@ namespace HlidacStatu.Util
     public static class DataValidators
     {
 
+        static string root = null;
         static List<string> czobce = new List<string>();
         static List<string> skobce = new List<string>();
         static Dictionary<string, string> ciziStaty = new Dictionary<string, string>();
         static DataValidators()
         {
-            var tmp = System.IO.File.ReadLines("staty.txt")
+
+            if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
+            {
+                root = Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath");
+            }
+            else if (System.Web.HttpContext.Current != null) //inside web app
+            {
+                root = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/");
+            }
+            else
+                root = Util.IOTools.GetExecutingDirectoryName();
+
+            if (!root.EndsWith(@"\"))
+                root = root + @"\";
+
+
+            var tmp = System.IO.File.ReadLines(root+"staty.txt")
                 //.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(m => m.Split('\t'))
                 .Select(mm =>
@@ -31,12 +48,13 @@ namespace HlidacStatu.Util
                     ciziStaty.Add(kv.Key, kv.Value);
             }
 
-            czobce = System.IO.File.ReadLines("czobce.txt")
+            czobce = System.IO.File.ReadLines(root + "czobce.txt")
                     .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
-            skobce = System.IO.File.ReadLines("skobce.txt")
+            skobce = System.IO.File.ReadLines(root + "skobce.txt")
                     .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
+
 
         }
 

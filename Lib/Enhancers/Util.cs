@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Enhancers
                         ps.Add(parser);
                         if (parser.Name == "FormalNormalizer")
                         {
-                            parser.SetInstanceData(StaticData.CiziStaty);
+                            //parser.SetInstanceData(StaticData.CiziStaty);
                         }
 
                             HlidacStatu.Util.Consts.Logger.Info("Creating instance of enhancer plugin " + type.FullName);
