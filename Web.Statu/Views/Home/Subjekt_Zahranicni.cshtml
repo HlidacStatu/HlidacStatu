@@ -66,7 +66,7 @@
         <tr>
             <th>Vyhledání</th>
             <td>
-                @if (string.IsNullOrEmpty(Model.ICO))
+                @if (!string.IsNullOrEmpty(Model.ICO))
                 {
                     @Util.AddSearchBtn("/hledat", $"ico:{Model.ICO}", $" Vyhledat tuto firmy ve všech databázích")
                     @Util.AddWatchDog(this.User, $"ico:{Model.ICO}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
