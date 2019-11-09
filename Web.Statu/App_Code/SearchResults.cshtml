@@ -399,7 +399,7 @@
         <td>
             @if (item.Zadavatel != null)
             {
-                if (HlidacStatu.Lib.Validators.CheckCZICO(item.Zadavatel.ICO))
+                if (HlidacStatu.Util.DataValidators.CheckCZICO(item.Zadavatel.ICO))
                 {
                     <a href="https://www.hlidacstatu.cz/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
                 }
@@ -414,7 +414,7 @@
             {
                 foreach (var d in item.Dodavatele.Take(2))
                 {
-                    if (HlidacStatu.Lib.Validators.CheckCZICO(d.ICO))
+                    if (HlidacStatu.Util.DataValidators.CheckCZICO(d.ICO))
                     {
                         <a href="https://www.hlidacstatu.cz/subjekt/@d.ICO">@d.Jmeno</a><br />
                     }

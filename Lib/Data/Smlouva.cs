@@ -1180,7 +1180,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static Smlouva Load(string idVerze, ElasticClient client = null)
+        public static Smlouva Load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
         {
             try
             {
@@ -1188,8 +1188,15 @@ namespace HlidacStatu.Lib.Data
                 if (client == null)
                     c = Lib.ES.Manager.GetESClient();
 
-                var res = c
-                    .Get<Lib.Data.Smlouva>(idVerze);
+                //var res = c.Get<Lib.Data.Smlouva>(idVerze);
+
+                var res = includePrilohy
+                    ? c.Get<Smlouva>(idVerze)
+                    : c.Get<Smlouva>(idVerze, s => s
+                            .SourceExclude("prilohy")
+                            );
+
+
                 if (res.Found)
                     return res.Source;
                 else
@@ -1198,7 +1205,11 @@ namespace HlidacStatu.Lib.Data
                     {
                         c = ES.Manager.GetESClient_Sneplatne();
                     }
-                    res = c.Get<Lib.Data.Smlouva>(idVerze);
+                    res = includePrilohy
+                        ? c.Get<Smlouva>(idVerze)
+                        : c.Get<Smlouva>(idVerze, s => s
+                                .SourceExclude("prilohy")
+                                );
                     if (res.Found)
                         return res.Source;
                     else

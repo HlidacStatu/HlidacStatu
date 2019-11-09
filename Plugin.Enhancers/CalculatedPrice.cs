@@ -28,6 +28,9 @@ namespace HlidacStatu.Plugin.Enhancers
                 return "CalculatedPrice updated";
             }
         }
+        public void SetInstanceData(object data)
+        {
+        }
 
         public void Update(ref Lib.Data.Smlouva item)
         {

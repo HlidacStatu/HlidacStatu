@@ -95,7 +95,7 @@ namespace HlidacStatu.Lib.Issues
                     {
                         IIssueAnalyzer parser = (IIssueAnalyzer)Activator.CreateInstance(type);
                         ps.Add(parser);
-                        HlidacStatu.Util.Consts.Logger.Info("Creating instance of plugin " + type.FullName);
+                        HlidacStatu.Util.Consts.Logger.Info("Creating instance of issueAnalyzer plugin " + type.FullName);
 
                     }
                     catch (Exception e)

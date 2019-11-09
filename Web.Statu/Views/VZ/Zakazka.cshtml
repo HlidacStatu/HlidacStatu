@@ -83,7 +83,7 @@ else
             <tr>
                 <td>Zadavatel</td>
                 <td>
-                    @if (Validators.CheckCZICO(Model.Zadavatel?.ICO))
+                    @if (HlidacStatu.Util.DataValidators.CheckCZICO(Model.Zadavatel?.ICO))
                     {
                         <a href="https://www.hlidacstatu.cz/subjekt/@Model.Zadavatel.ICO">@Model.Zadavatel.Jmeno (IČ @Model.Zadavatel.ICO)</a>
                     }
@@ -99,7 +99,7 @@ else
                 <td>
                     @foreach (var od in Model.Dodavatele ?? new HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Subject[] { })
                     {
-                        if (Validators.CheckCZICO(od.ICO))
+                        if (HlidacStatu.Util.DataValidators.CheckCZICO(od.ICO))
                         {
                             <a href="https://www.hlidacstatu.cz/subjekt/@od.ICO">@od.Jmeno (IČ @od.ICO)</a>
                         }

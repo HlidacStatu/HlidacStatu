@@ -538,45 +538,53 @@
 @helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt, int typSubjektu)
 {
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
-    <p>
-        <b>@subjekt.nazev</b>&nbsp;&nbsp;&nbsp;
-        @Util.FirmaMoreInfoLinks(subjekt.ico)
+<p>
+    <b>@subjekt.nazev</b>&nbsp;&nbsp;&nbsp;
+    @Util.FirmaMoreInfoLinks(subjekt.ico)
 
-        <br />
-        @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+    <br />
+    @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
 
-        @subjekt.adresa<br />
-        ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka
+    @subjekt.adresa<br />
+    @if (!HlidacStatu.Util.DataValidators.IsZahranicniAdresa(subjekt.adresa))
+    {
+        <text>
+            ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>, dat.schránka @subjekt.datovaSchranka
+        </text>
+    }
 
-        @if (typSubjektu == 1)
-        {
-            <text>
-                <br />Plátce peněz
-            </text>
-        }
-        else if (typSubjektu == 2)
-        {
-            <text>
-                <br />Příjemce peněz
+    @if (typSubjektu == 1)
+    {
+        <text>
+            <br />Plátce peněz
+        </text>
+    }
+    else if (typSubjektu == 2)
+    {
+        <text>
+            <br />Příjemce peněz
+            @if (!HlidacStatu.Util.DataValidators.IsZahranicniAdresa(subjekt.adresa))
+            { 
                 <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
-            </text>
-        }
-        else if (typSubjektu == 3) //vkladatel do rejstriku
-        {
-            <text>
-            </text>
-        }
-        @if (firma != null && firma.IsNespolehlivyPlatceDPH())
-        {
-            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
-        }
+            }
+        </text>
+    }
+    else if (typSubjektu == 3) //vkladatel do rejstriku
+    {
+        <text>
+        </text>
+    }
+    @if (firma != null && firma.IsNespolehlivyPlatceDPH())
+    {
+        <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
+    }
 
 
-        @if (!string.IsNullOrEmpty(subjekt.ico))
-        {
-            <br />
-        }
-    </p>
+    @if (!string.IsNullOrEmpty(subjekt.ico))
+    {
+        <br />
+    }
+</p>
 }
 
 

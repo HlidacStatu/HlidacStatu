@@ -19,131 +19,7 @@ namespace HlidacStatu.Lib
     public class Validators
     {
 
-        // https://cs.wikipedia.org/wiki/Přestupný_rok
-        static int[] prestupneRoky = new int[] { 1904, 2000, 2096, 2196, 2296, 2396, 1908, 2004, 2104, 2204, 2304, 2400, 1912, 2008, 2108, 2208, 2308, 2404, 1916, 2012, 2112, 2212, 2312, 2408, 1920, 2016, 2116, 2216, 2316, 2412, 1924, 2020, 2120, 2220, 2320, 2416, 1928, 2024, 2124, 2224, 2324, 2420, 1932, 2028, 2128, 2228, 2328, 2424, 1936, 2032, 2132, 2232, 2332, 2428, 1940, 2036, 2136, 2236, 2336, 2432, 1944, 2040, 2140, 2240, 2340, 2436, 1948, 2044, 2144, 2244, 2344, 2440, 1952, 2048, 2148, 2248, 2348, 2444, 1956, 2052, 2152, 2252, 2352, 2448, 1960, 2056, 2156, 2256, 2356, 2452, 1964, 2060, 2160, 2260, 2360, 2456, 1968, 2064, 2164, 2264, 2364, 2460, 1972, 2068, 2168, 2268, 2368, 2464, 1976, 2072, 2172, 2272, 2372, 2468, 1980, 2076, 2176, 2276, 2376, 2472, 1984, 2080, 2180, 2280, 2380, 2476, 1988, 2084, 2184, 2284, 2384, 2480, 1992, 2088, 2188, 2288, 2388, 2484, 1996, 2092, 2192, 2292, 2392, 2488 };
-        private static bool IsPrestupnyRok(int rok)
-        {
-            return prestupneRoky.Contains(rok);
-        }
-
-        //zdroj http://devon.blog.zive.cz/2009/09/kontrola-rodneho-cisla/
-        public static bool IsRcValid(string rc)
-        {
-            DateTime? ret;
-            return IsRcValid(rc, out ret);
-        }
-        public static bool IsRcValid(string rc, out DateTime? birthDate)
-        {
-            birthDate = null;
-
-            if (rc == null || (rc.Length < 9 || rc.Length > 10)) return false;
-            Regex validCharsLenTest = new Regex(@"\d{9}[0-9aA]?");
-            if (validCharsLenTest.IsMatch(rc) == false) return false;
-            // RC.Lenght == 9 -> roky 1900 .. 1953
-            // RC.Lenght == 10 -> roky 1954 .. 2053
-            int year = Convert.ToInt32(rc.Substring(0, 2));
-            if (rc.Length == 9 && year >= 54) return false;  // od 1.1.1954 ma RC 10 znaku
-            if (rc.Length == 9 || (rc.Length == 10 && year >= 54))
-            {
-                year += 1900;
-            }
-            else
-            {
-                year += 2000;
-            }
-            // muzi: 1 .. 12, 21 .. 32
-            // zeny: 51 .. 62, 71 .. 82
-            int month = Convert.ToInt32(rc.Substring(2, 2));
-            if (month > 70 && year > 2003) month -= 70;   // 53/2004 Sb.
-            if (month > 50) month -= 50;
-            if (month > 20 && year > 2003) month -= 20;   // 53/2004 Sb.
-            if (month < 1 || month > 12) return false;
-            int day = Convert.ToInt32(rc.Substring(4, 2));
-            if (day > 50) day -= 50;                      //den + 50 = cizinec, zijici v CR
-            if (day < 1 || day > 31) return false;
-
-            // maji jen 30 dni
-            if ((month == 4 || month == 6 || month == 9 || month == 11) && (day > 30)) return false;
-
-            // prestupny unor 29 dni
-            if ((month == 2) && (IsPrestupnyRok(year) == true) && (day > 29)) return false;
-
-            // neprestupny unor 28 dni
-            if ((month == 2) && (IsPrestupnyRok(year) == false) && (day > 28)) return false;
-
-            birthDate = new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local);
-            if (birthDate > DateTime.Now)
-            {
-                birthDate = null;
-                return false;
-            }
-            int rcBase = Convert.ToInt32(rc.Substring(0, 9));   // rrmmddccc
-            if (rc.Length > 9)
-            {
-                string controlstring = rc.Substring(9, 1);
-                int controlnum = 0;
-                if (controlstring == "a" || controlstring == "A")
-                {
-
-                    controlnum = 0;
-                }
-                else
-                {
-                    controlnum = Convert.ToInt32(controlstring);
-                }
-                int mod = rcBase % 11;
-                if (mod != controlnum)
-                {
-                    // zkusíme to jeste jednou pro 10
-                    if (controlnum == 0 && mod == 10) return true;
-                    // kdepak, je to spatne...
-                    return false;
-                }
-            }
-            return true;
-        }
-
-
-        public static bool CheckCZICO(string ico)
-        {
-            if (string.IsNullOrEmpty(ico))
-                return false;
-
-            if (!Devmasters.Core.TextUtil.IsNumeric(ico))
-                return false;
-            if (ico.Length < 8)
-            {
-                ico = ico.PadLeft(8, '0');
-            }
-
-            if (ico.Length != 8)
-                return false;
-
-            int sum = 0;
-            try
-            {
-                for (int i = 0; i < 7; i++)
-                {
-                    int num = int.Parse(ico[i].ToString());
-                    sum = sum + num * (8 - i);
-                }
-                int control = ((11 - sum % 11) % 10);
-
-                return (control == int.Parse(ico[7].ToString()));
-
-
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-        }
-
-        static System.Text.RegularExpressions.RegexOptions regexOptions =
-            ((System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace
-            | System.Text.RegularExpressions.RegexOptions.Multiline)
-            | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        static System.Text.RegularExpressions.RegexOptions regexOptions = Util.Consts.DefaultRegexQueryOption;
 
         //    static System.Text.RegularExpressions.RegexOptions regexOptions =
         //System.Text.RegularExpressions.RegexOptions.CultureInvariant |
@@ -457,7 +333,7 @@ namespace HlidacStatu.Lib
             List<string> icos = new List<string>();
             foreach (var num in numbers)
             {
-                if (Validators.CheckCZICO(num))
+                if (Util.DataValidators.CheckCZICO(num))
                     icos.Add(num);
             }
             return icos.ToArray();

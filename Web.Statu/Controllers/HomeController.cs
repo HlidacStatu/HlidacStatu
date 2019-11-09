@@ -340,7 +340,7 @@ namespace HlidacStatu.Web.Controllers
             //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
             //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
 
-            if (!HlidacStatu.Lib.Validators.CheckCZICO(ico))
+            if (!HlidacStatu.Util.DataValidators.CheckCZICO(ico))
             {
 
                 return View("Subjekt_err_spatneICO");
