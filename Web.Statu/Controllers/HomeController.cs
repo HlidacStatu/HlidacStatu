@@ -20,8 +20,20 @@ namespace HlidacStatu.Web.Controllers
     [RobotFromIP]
     public partial class HomeController : GenericAuthController
     {
+
+        static string[] dontIndexOsoby = null;
+        static HomeController()
+        {
+            dontIndexOsoby = Devmasters.Core.Util.Config
+                 .GetConfigValue("DontIndexOsoby")
+                 .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
+                 .Select(m => m.ToLower())
+                 .ToArray();
+        }
+
         public HomeController()
         {
+
         }
 
         public HomeController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -778,6 +790,8 @@ text zpravy: {txt}";
         public ActionResult Osoba(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
 
+
+
             Osoba o = null;
             if (string.IsNullOrWhiteSpace(Id))
                 return NotFound("/Osoby", "Pokračovat na seznamu politiků");
@@ -796,6 +810,13 @@ text zpravy: {txt}";
             }
 
             HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
+
+            if (dontIndexOsoby.Contains(model.NameId.ToLower()) 
+                &&
+                HlidacStatu.Web.Framework.LimitedAccess.IsSearchCrawler(this.Request)
+                )
+                return NotFound("/Osoby", "Pokračovat na seznamu politiků");
+
 
             if (aktualnost.HasValue == false)
                 aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;

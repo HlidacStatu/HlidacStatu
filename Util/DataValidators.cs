@@ -26,10 +26,7 @@ namespace HlidacStatu.Util
                 root = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/");
             }
             else
-                root = Util.IOTools.GetExecutingDirectoryName();
-
-            if (!root.EndsWith(@"\"))
-                root = root + @"\";
+                root = Util.IOTools.GetExecutingDirectoryName(true);
 
 
             var tmp = System.IO.File.ReadLines(root+"staty.txt")

@@ -32,5 +32,11 @@ namespace HlidacStatu.Web.Framework
             //return req.IsAuthenticated || MajorCrawler.Crawlers.Any(cr=>cr.Detected(req.UserHostAddress, req.UserAgent));
         }
 
+        public static bool IsSearchCrawler(HttpRequestBase req)
+        {
+            return allCrawl.Any(cr => cr.IsItCrawler(req.UserHostAddress, req.UserAgent));
+            //return req.IsAuthenticated || MajorCrawler.Crawlers.Any(cr=>cr.Detected(req.UserHostAddress, req.UserAgent));
+        }
+
     }
 }
