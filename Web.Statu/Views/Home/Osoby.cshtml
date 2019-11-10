@@ -11,7 +11,8 @@
 
     List<HlidacStatu.Lib.Data.Osoba> showList = null;
     List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, BasicData<string>>> topSponzori = null;
-    
+
+
 
     string prefix = "";
 
@@ -62,7 +63,7 @@
             showList = topOsoby
                 .OrderByDescending(o => o.CastkaCelkem)
                 .Take(20)
-                .Select(to=>to.Sponzor)
+                .Select(to => to.Sponzor)
                 .Union(vip.Select(s => HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(s)), EqualityComparerFactory<HlidacStatu.Lib.Data.Osoba>.CreateComparer(o => o.InternalId.GetHashCode(), (a, b) => a.InternalId == b.InternalId))
                 .OrderBy(m => m.Prijmeni)
                 .ToList();
@@ -81,6 +82,7 @@
 
 
 }
+
 
 @section scripts
 {

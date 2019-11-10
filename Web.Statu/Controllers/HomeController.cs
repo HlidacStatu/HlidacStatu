@@ -21,10 +21,10 @@ namespace HlidacStatu.Web.Controllers
     public partial class HomeController : GenericAuthController
     {
 
-        static string[] dontIndexOsoby = null;
+        public static string[] DontIndexOsoby = null;
         static HomeController()
         {
-            dontIndexOsoby = Devmasters.Core.Util.Config
+            DontIndexOsoby = Devmasters.Core.Util.Config
                  .GetConfigValue("DontIndexOsoby")
                  .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
                  .Select(m => m.ToLower())
@@ -810,13 +810,6 @@ text zpravy: {txt}";
             }
 
             HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
-
-            if (dontIndexOsoby.Contains(model.NameId.ToLower()) 
-                &&
-                HlidacStatu.Web.Framework.LimitedAccess.IsSearchCrawler(this.Request)
-                )
-                return NotFound("/Osoby", "Pokračovat na seznamu politiků");
-
 
             if (aktualnost.HasValue == false)
                 aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;

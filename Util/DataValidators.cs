@@ -28,6 +28,9 @@ namespace HlidacStatu.Util
             else
                 root = Util.IOTools.GetExecutingDirectoryName(true);
 
+            if (!root.EndsWith(@"\"))
+                root = root + @"\";
+
 
             var tmp = System.IO.File.ReadLines(root+"staty.txt")
                 //.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
