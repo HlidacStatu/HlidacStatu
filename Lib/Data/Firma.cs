@@ -22,6 +22,7 @@ namespace HlidacStatu.Lib.Data
 
         public static bool IsValid(Firma f)
         {
+
             if (f == null)
                 return false;
             else
