@@ -365,6 +365,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DataController.CreateWizards.cs" />
+    <Compile Include="Controllers\DotaceController.cs" />
     <Compile Include="Controllers\GenericAuthController.cs" />
     <Compile Include="Controllers\ApiV1Controller.StatniWeby.cs" />
     <Compile Include="Controllers\ApiV1Controller.DataSets.cs" />
@@ -1354,6 +1355,13 @@
     <Content Include="Views\Manage\ShowClassification.cshtml" />
     <Content Include="Views\Manage\ZmenaSmluvnichStran.cshtml" />
     <Content Include="Views\NasiPolitici\Politik.cshtml" />
+    <Content Include="Views\Dotace\Index.cshtml" />
+    <Content Include="Views\Dotace\_SearchForm.cshtml" />
+    <Content Include="Views\Dotace\_SearchFormHelp.cshtml" />
+    <Content Include="Views\Dotace\_SearchFormHelpContent.cshtml" />
+    <Content Include="Views\Dotace\Hledat.cshtml" />
+    <Content Include="Views\Dotace\_SearchResult.cshtml" />
+    <Content Include="Views\Dotace\Detail.cshtml" />
     <Content Include="Views\Data\_SearchForm.cshtml" />
     <Content Include="Views\Home\Subjekt_Zahranicni.cshtml" />
   </ItemGroup>

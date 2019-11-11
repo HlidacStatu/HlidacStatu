@@ -1,0 +1,129 @@
+﻿@model HlidacStatu.Lib.Data.Dotace.Dotace
+
+@{
+    ViewBag.Title = "Hlídač dotací";
+    ViewBag.SubTitle = "Detail dotace";
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Index", "Dotace")">Hlídač Dotací</a></li>
+        <li class="active">@ViewBag.SubTitle</li>
+    </ol>
+}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.DotaceSearchResult())
+
+<h2>
+    Detail dotace "@Model.GetNazevDotace()"
+</h2>
+<table class="table table-new table-new--dotted">
+    <tbody>
+        <tr>
+            <th>Příjemce dotace</th>
+            <td>@Model.PrijemceJmenoPrijemce</td>
+        </tr>
+        <tr>
+            <th>IČO</th>
+            <td><a href="/dotace/hledat?q=ico:@Model.PrijemceIco" title="Vyhledat všechny dotace pro tento subjekt">@Model.PrijemceIco</a></td>
+        </tr>
+        <tr>
+            <th>Kód projektu</th>
+            <td>@Model.ProjektKod</td>
+        </tr>
+        <tr>
+            <th>Identifikátor projektu</th>
+            <td>@Model.ProjektIdentifikator</td>
+        </tr>
+        <tr>
+            <th>Název projektu</th>
+            <td>@Model.ProjektNazev</td>
+        </tr>
+        <tr>
+            <th>Datum podpisu</th>
+            <td>@(Model.PodpisDatum?.ToString("dd.MM.yyyy"))</td>
+        </tr>
+        <tr>
+            <th>Celková částka</th>
+            <td>
+                <p>@(HlidacStatu.Util.RenderData.NicePrice((decimal)Model.DotaceCelkem))</p>
+                @if (Model.PujckaCelkem > 0)
+                {
+                    <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Kód operačního programu</th>
+            <td>@Model.OperacniProgramKod</td>
+        </tr>
+        <tr>
+            <th>Název operačního programu</th>
+            <td>@Model.OperacniProgramNazev</td>
+        </tr>
+        <tr>
+            <th>Kód grantového schematu</th>
+            <td>@Model.GrantoveSchemaKod</td>
+        </tr>
+        <tr>
+            <th>Název grantového schematu</th>
+            <td>@Model.GrantoveSchemaNazev</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h3 style="margin-top:50px">Rozhodnutí</h3>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rok rozhodnutí</th>
+                <th>Požadovaná částka</th>
+                <th>Částka rozhodnutá</th>
+                <th>Je půjčkou</th>
+                <th>Je investicí</th>
+                <th>Zdroj financí</th>
+                <th>Poskytovatel financí</th>
+                <th>IČO poskytovatele</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rozhodnuti in Model.Rozhodnuti)
+            {
+                <tr>
+                    <td>
+                        @rozhodnuti.RokRozhodnuti
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
+                    </td>
+                    <td>
+                        @(@rozhodnuti.NavratnostIndikator ? "ano" : "ne")
+                    </td>
+                    <td>
+                        @(@rozhodnuti.InvesticeIndikator ? "ano" : "ne")
+                    </td>
+                    <td>
+                        @rozhodnuti.FinancniZdrojNazev
+                    </td>
+                    <td>
+                        @rozhodnuti.DotacePoskytovatelNazev
+                    </td>
+                    <td>
+                        @rozhodnuti.PoskytovatelIco
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

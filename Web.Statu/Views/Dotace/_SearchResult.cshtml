@@ -1,0 +1,104 @@
+﻿@model HlidacStatu.Lib.ES.DotaceSearchResult
+@using HlidacStatu.Lib
+@using Devmasters.Core
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+@using HlidacStatu.Web.Models;
+@using HlidacStatu.Util;
+@if (Model?.Result?.IsValid == false || Model.Result == null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
+            <div>
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší straně, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-link", null).
+                Zkontrolujeme to.
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @*if (Model.ShowWatchdog && Model.Q != null)
+        {
+            @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+        }*@
+
+    if (Model.Result == null)
+    {
+        <span></span>
+    }
+    else if (Model.Result.Total == 0)
+    {
+        <h2>Žádné dotace jsme nenalezli.</h2>
+    }
+    else if (Model.Result.Total > 0)
+    {
+        <hr />
+
+        
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <h2 class="text-nowrap">
+                    @(PluralForm.Get((int)Model.Result.Total, "Nalezena {0} dotace;Nalezeny {0} dotace;Nalezeno {0} dotací")) 
+                    v celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.Result.Aggregations.Sum("souhrn").Value).
+                </h2>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                @SearchResults.DotaceHead()
+            </thead>
+            <tbody>
+                @foreach (var hit in Model.Result.Hits)
+                {
+                    @SearchResults.DotaceRow(User, Request, hit.Source, Model.Q)
+                }
+            </tbody>
+        </table>
+
+
+        <div class="text-center">
+            <ul class="pagination pagination-lg">
+                @{
+
+                    int page = Model.Page;
+                    string firstPageClass = "";
+                    string lastPageClass = "";
+
+                    if (page <= 1)
+                    {
+                        page = 1;
+                    }
+                    if (page == 1)
+                    {
+                        firstPageClass = "disabled";
+                    }
+                    if (Model.Result.Total < page * Model.DefaultPageSize())
+                    {
+                        lastPageClass = "disabled";
+                    }
+                    Model.Page = page;
+
+                }
+                @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
+                {
+                    <li class="@firstPageClass">
+                        @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+                    </li>
+                }
+                @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
+                {
+                    <li class="@lastPageClass">
+                        @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+                    </li>
+                }
+            </ul>
+        </div>
+
+
+    }
+}
+
+<div style="margin-bottom:50px;"></div>

@@ -1,0 +1,102 @@
+﻿@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Models;
+@using HlidacStatu.Lib.Data.Dotace;
+@using HlidacStatu.Lib.Render;
+
+@{
+
+    ViewBag.Title = "Hlídač dotací";
+    //ViewBag.SubTitle = "k " + HlidacStatu.Util.RenderData.ToDate(dataForDate);
+
+
+}
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">Hlídač Dotací</li>
+    </ol>
+}
+
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.DotaceSearchResult())
+
+@*@Html.Action("CachedAction_Child_48H", new { model = Model, NameOfView = "Index.Content" })*@
+
+@*<div class="row">
+
+        <div class="col-xs-12">
+            <h2>Nové společnosti v dotacích</h2>
+            @{
+                var spolecnosti = Model.NoveFirmyVInsolvenci;
+            }
+
+            <table class="table table-hover">
+                <thead>
+                    @SearchResults.InsolvenceHead()
+                </thead>
+                <tbody>
+                    @foreach (var item in spolecnosti.Result.Hits.Take(20))
+                    {
+                        @SearchResults.InsolvenceRow(User, Request, item.Source, "")
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-xs-12">
+            <h2>Nové osoby v insolvenci</h2>
+            @{
+                var osoby = Model.NoveOsobyVInsolvenci;
+            }
+
+            <table class="table table-hover">
+                <thead>
+                    @SearchResults.InsolvenceHead()
+                </thead>
+                <tbody>
+                    @foreach (var item in osoby.Result.Hits.Take(20))
+                    {
+                        @SearchResults.InsolvenceRow(User, Request, item.Source, "")
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>*@
+
+<h2>Ukázky možností</h2>
+<ul>
+    <li>
+        <a href="/dotace/hledat?Q=ico:00190489">Hledání podle IČO</a>
+    </li>
+    <li>
+        <a href="/dotace/hledat?Q=jmeno:'Ředitelství silnic a dálnic ČR'">Hledání podle jména</a>
+    </li>
+    <li>
+        <a href="/dotace/hledat?Q=osobaid:andrej-babis">Hledání podle osoby</a>
+    </li>
+    
+</ul>
+
+
+
+
+@*<div class="bs-callout bs-callout-primary small">
+    <h4>Politici a jejich vazby na firmy</h4>
+    <p>
+        Pro nás relevantní vazba politika na firmu je, že daná osoba byla (spolu)majitelem firmy anebo působila ve statutárním orgánu společnosti v době,
+        kdy byla udělena dotace firmě, kde osoba působila, nebo kde byl tento vztah nepřímý (tzn. firma s politikem vlastnila firmu B, ta firmu C, ktera spadla do insolvence)
+    </p>
+</div>*@
+
+
