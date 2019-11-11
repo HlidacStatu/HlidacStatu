@@ -262,7 +262,7 @@ MORATORIUM =
             {
                 var data = client.Search<Rizeni>(s => s
                         .Source(sr => sr.Includes(r => r.Fields("dokumenty.*").Fields("spisovaZnacka")))
-                        .Query(q => q.Match(m => m.Field("dokumenty.id").Query(id))));
+                        .Query(q => q.Match(m => m.Field("dokumenty.id").Query(id)))); //TODO
 
                 return data.IsValid
                     ? data.Hits.Select(h => new DokumentSeSpisovouZnackou
@@ -330,7 +330,7 @@ MORATORIUM =
             //return AllIdsFromDB(null);
             using (Db.Insolvence.InsolvenceEntities db = new Db.Insolvence.InsolvenceEntities())
             {
-                return db.  Rizeni.AsNoTracking().Select(m => m.SpisovaZnacka)
+                return db.Rizeni.AsNoTracking().Select(m => m.SpisovaZnacka)
                     .ToArray();//force query
             }
         }

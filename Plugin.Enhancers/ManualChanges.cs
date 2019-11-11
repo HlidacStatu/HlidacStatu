@@ -29,6 +29,9 @@ namespace HlidacStatu.Plugin.Enhancers
                 return Description;
             }
         }
+        public void SetInstanceData(object data)
+        {
+        }
 
         public void Update(ref Lib.Data.Smlouva item)
         {

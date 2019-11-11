@@ -41,16 +41,16 @@ namespace HlidacStatu.Lib.Data
             //url = url.Trim();
             //return Feedback.Lib.PDF.Net.PDFClient.GetURLinPDF(url);
 
-            SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
-            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(Print2Html());
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-            {
+            //SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
+            //SelectPdf.PdfDocument doc = converter.ConvertHtmlString(Print2Html());
+            //using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            //{
 
-                doc.Save(ms);
-                doc.Close();
-                return ms.ToArray();
-            }
-
+            //    doc.Save(ms);
+            //    doc.Close();
+            //    return ms.ToArray();
+            //}
+            throw new NotImplementedException();
         }
         private List<InvoiceItems> items = null;
         public List<InvoiceItems> GetItems(Lib.Data.DbEntities fc)

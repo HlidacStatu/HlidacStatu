@@ -22,7 +22,9 @@ namespace HlidacStatu.Util
                 new Devmasters.Core.Batch.ActionProgressWriter(10, new Devmasters.Core.Batch.LoggerWriter(HlidacStatu.Util.Consts.Logger).ProgressWriter).Write
             );
 
-        public static RegexOptions DefaultRegexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
+        public static RegexOptions DefaultRegexQueryOption = RegexOptions.IgnoreCase 
+                                                            | RegexOptions.IgnorePatternWhitespace 
+                                                            | RegexOptions.Multiline;
 
         public static System.Globalization.CultureInfo enCulture = System.Globalization.CultureInfo.InvariantCulture; //new System.Globalization.CultureInfo("en-US");
         public static System.Globalization.CultureInfo czCulture = System.Globalization.CultureInfo.GetCultureInfo("cs-CZ");

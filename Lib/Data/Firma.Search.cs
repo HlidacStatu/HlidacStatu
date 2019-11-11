@@ -47,9 +47,9 @@ namespace HlidacStatu.Lib.Data
                 //
                 modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(ico:|icoprijemce:|icoplatce:|icododavatel:|icozadavatel:)", "ico:", regexQueryOption);
 
-                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|icozadavatel:)", "ico:", regexQueryOption);
+                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|icozadavatel:)", "jmeno:", regexQueryOption);
 
-                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "\\s(AND|OR)\\s", " ", regexQueryOption);
+                //modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "\\s(AND|OR)\\s", " ", regexQueryOption);
 
                 List<string> found = new List<string>();
 
@@ -57,7 +57,7 @@ namespace HlidacStatu.Lib.Data
                 var qc = new QueryContainerDescriptor<Lib.Data.Smlouva>()
                     .QueryString(qs => qs
                         .Query(modifQ)
-                        .DefaultOperator(Operator.Or)
+                        .DefaultOperator(Operator.And)
                     );
 
                 ISearchResponse<FirmaInElastic> res = null;

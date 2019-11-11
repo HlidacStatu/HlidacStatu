@@ -15,6 +15,40 @@ namespace HlidacStatu.Lib.Data.External
 
         static string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
 
+
+        public static void AddZahranicniFirma(string ico, string jmeno, string adresa)
+        {
+            /*
+                         f.ICO = (string)dr["ico"];
+            f.DIC = (string)PersistLib.IsNull(dr["dic"], string.Empty);
+            f.Datum_Zapisu_OR = (DateTime?)PersistLib.IsNull(dr["datum_zapisu_or"], null);
+            f.Stav_subjektu = Convert.ToInt32(PersistLib.IsNull(dr["Stav_subjektu"], 1));
+            f.Jmeno = (string)PersistLib.IsNull(dr["jmeno"], string.Empty);
+            f.JmenoAscii = (string)PersistLib.IsNull(dr["jmenoascii"], string.Empty);
+            f.Kod_PF = (int?)PersistLib.IsNull(dr["Kod_PF"], null);
+            f.VersionUpdate = (int)dr["VersionUpdate"];
+            //f.VazbyRaw = (string)PersistLib.IsNull(dr["vazbyRaw"], (string)"[]");
+            f.IsInRS = (short?)PersistLib.IsNull(dr["IsInRS"], null);
+            f.KrajId = (string)PersistLib.IsNull(dr["krajid"], string.Empty);
+            f.OkresId = (string)PersistLib.IsNull(dr["okresid"], string.Empty);
+*/
+            using (PersistLib p = new PersistLib())
+            {
+                string sql = @"insert into firma(ico,dic,stav_subjektu, jmeno, jmenoascii, versionupdate, popis)
+                                values(@ico,@dic,@stav,@jmeno,@jmenoascii,0,@adresa)";
+
+                p.ExecuteNonQuery(cnnStr, System.Data.CommandType.Text, sql, new IDataParameter[] {
+                        new System.Data.SqlClient.SqlParameter("ico", ico),
+                        new System.Data.SqlClient.SqlParameter("dic", ico),
+                        new System.Data.SqlClient.SqlParameter("stav", (int)1),
+                        new System.Data.SqlClient.SqlParameter("jmeno", jmeno),
+                        new System.Data.SqlClient.SqlParameter("jmenoascii", Devmasters.Core.TextUtil.RemoveDiacritics(jmeno)),
+                        new System.Data.SqlClient.SqlParameter("versionupdate", (long)0),
+                        new System.Data.SqlClient.SqlParameter("adresa", Devmasters.Core.TextUtil.ShortenText(adresa,100)),
+                        });
+            }
+        }
+
         public static Firma FromIco(string ico)
         {
             Firma f = new Data.Firma();

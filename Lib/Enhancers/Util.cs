@@ -77,7 +77,12 @@ namespace HlidacStatu.Lib.Enhancers
                     {
                         IEnhancer parser = (IEnhancer)Activator.CreateInstance(type);
                         ps.Add(parser);
-                        HlidacStatu.Util.Consts.Logger.Info("Creating instance of parser " + type.FullName);
+                        if (parser.Name == "FormalNormalizer")
+                        {
+                            //parser.SetInstanceData(StaticData.CiziStaty);
+                        }
+
+                            HlidacStatu.Util.Consts.Logger.Info("Creating instance of enhancer plugin " + type.FullName);
 
                     }
                     catch (Exception e)

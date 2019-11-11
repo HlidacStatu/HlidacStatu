@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Analysis
         public static BasicDataPerYear GetBasicStatisticForICO(string ico)
         {
 
-            if (Lib.Validators.CheckCZICO(ico))
+            if (Util.DataValidators.CheckCZICO(ico))
             {
                 return basicStatForQuery.Get("ico:" + ico);
 
@@ -105,7 +105,7 @@ namespace HlidacStatu.Lib.Analysis
 
         private static RatingDataPerYear getRatingForICO(string ico)
         {
-            if (!Lib.Validators.CheckCZICO(ico))
+            if (!Util.DataValidators.CheckCZICO(ico))
             {
                 var s = new Dictionary<int, RatingData>();
                 s.Add(DataPerYear.AllYearsSummaryKey, RatingData.Empty());

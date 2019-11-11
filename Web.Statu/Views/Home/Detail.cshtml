@@ -33,6 +33,38 @@
     </ol>
 }
 
+
+
+@if (User.IsInRole("BetaTester") && Model?.Classification?.Types?.Count() > 0)
+{
+    <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+        <tbody>
+            <tr>
+                <td>
+                    Nová klasifikace smluv
+                    <br /><b>BETA</b>
+                </td>
+                <td>
+                    @foreach (var cl in Model.Classification.Types)
+                    {
+                        <div>@(cl.ClassifType().ToNiceDisplayName()) - @(cl.ClassifProbability)</div>
+                    }
+                </td>
+            </tr>
+            @if (this.User?.IsInRole("canEditData") == true)
+            {
+
+                <tr>
+                    <td colspan="2">
+                        <br /><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit smluvni strany</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 @Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })
 
 

@@ -259,7 +259,12 @@ else
                     @Html.Raw(Model.Statistic().BasicStatPerYear.SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=ico:" + Model.ICO))<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                    @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
+                    @if (Model.PatrimStatu())
+                    {
+                        <text>
+                            @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                        </text>
+                    }
                 </td>
             </tr>
             @if (
@@ -273,7 +278,12 @@ else
                         @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
+                        @if (Model.PatrimStatu())
+                        {
+                            <text>
+                                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                            </text>
+                        }
                     </td>
                 </tr>
             }
@@ -654,16 +664,16 @@ else
                         @foreach (var p in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
                                 .SoukromeFirmy[Model.ICO]
                                 .Select(pid => HlidacStatu.Lib.StaticData.Politici.Get().Where(m => m.InternalId == pid).FirstOrDefault())
-                                .Where(p=>p != null)
-                                .OrderBy(p=>p.Prijmeni)
+                                .Where(p => p != null)
+                                .OrderBy(p => p.Prijmeni)
                                 )
                         {
-                                <p>
-                                    <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
-                                    <div style="padding-left:20px;">
-                                        @Util.RenderVazby(p.VazbyProICO(Model.ICO))
-                                    </div>
-                                </p>
+                            <p>
+                                <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
+                                <div style="padding-left:20px;">
+                                    @Util.RenderVazby(p.VazbyProICO(Model.ICO))
+                                </div>
+                            </p>
                         }
                         <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 

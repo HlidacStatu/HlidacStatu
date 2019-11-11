@@ -262,20 +262,20 @@
         </td>
         <td>@rec.predmet</td>
         <td>@Html.Raw(rec.NicePrice(html: true))</td>
-        @if (user.IsInRole("BetaTester"))
+    @if (user.IsInRole("BetaTester"))
+    {
+    <td style="font-size:11px;letter-spacing: -0.4px;line-height:11px;">
+        @if (rec.Classification?.Types?.Count() > 0)
         {
-            <td style="font-size:11px;letter-spacing: -0.4px;line-height:11px;">
-                @if (rec.Classification?.Types?.Count() > 0)
-                {
-                    foreach (var cl in rec.Classification.Types)
-                    {
-                        <div style=""><b>@(cl.ClassifType().ToNiceDisplayName())</b>&nbsp;-&nbsp;@Html.Raw(cl.ClassifProbability.ToString("P4").Replace(" ", "&nbsp;"))</div>
-                    }
-                }
-            </td>
+            foreach (var cl in rec.Classification.Types.OrderByDescending(m=>m.ClassifProbability))
+            {
+            <div style=""><b>@(cl.ClassifType().ToNiceDisplayName())</b>&nbsp;-&nbsp;@Html.Raw(cl.ClassifProbability.ToString("P4").Replace(" ","&nbsp;"))</div>
+            }
         }
+    </td>
+    }
 
-    </tr>
+</tr>
 }
 @helper SmlouvyRowChyby(HlidacStatu.Lib.Data.Smlouva rec)
 {
@@ -399,7 +399,7 @@
         <td>
             @if (item.Zadavatel != null)
             {
-                if (HlidacStatu.Lib.Validators.CheckCZICO(item.Zadavatel.ICO))
+                if (HlidacStatu.Util.DataValidators.CheckCZICO(item.Zadavatel.ICO))
                 {
                     <a href="https://www.hlidacstatu.cz/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
                 }
@@ -414,7 +414,7 @@
             {
                 foreach (var d in item.Dodavatele.Take(2))
                 {
-                    if (HlidacStatu.Lib.Validators.CheckCZICO(d.ICO))
+                    if (HlidacStatu.Util.DataValidators.CheckCZICO(d.ICO))
                     {
                         <a href="https://www.hlidacstatu.cz/subjekt/@d.ICO">@d.Jmeno</a><br />
                     }

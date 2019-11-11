@@ -570,7 +570,7 @@ namespace HlidacStatu.Lib.Data
         }
         public static IEnumerable<IcoSmlouvaMinMax> GetFirmyCasovePodezreleZalozene(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
         {
-
+            HlidacStatu.Util.Consts.Logger.Debug("GetFirmyCasovePodezreleZalozene - getting all ico");
             var allIcos = Lib.Data.External.FirmyDB.AllIcoInRS();
             Dictionary<string, AnalysisCalculation.IcoSmlouvaMinMax> firmy = new Dictionary<string, AnalysisCalculation.IcoSmlouvaMinMax>();
             object lockFirmy = new object();
@@ -581,41 +581,58 @@ namespace HlidacStatu.Lib.Data
                 );
 
 
+            HlidacStatu.Util.Consts.Logger.Debug("GetFirmyCasovePodezreleZalozene - getting first smlouva for all ico from ES");
             Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(allIcos,
             (ico, param) =>
             {
-
-                var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs);
-                if (res.Result.Aggregations.Count > 0)
+            Firma ff = Firmy.Get(ico);
+                if (Firma.IsValid(ff))
                 {
-                    var epoch = ((Nest.ValueAggregate)res.Result.Aggregations.First().Value).Value;
-                    if (epoch.HasValue)
+                    if (ff.PatrimStatu()) //statni firmy tam nechci
                     {
-                        var mindate = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000);
+                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                    }
+                    else
+                    {
 
-                        lock (lockFirmy)
+                        var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs);
+                        if (res.Result.Aggregations.Count > 0)
                         {
-                            if (firmy.ContainsKey(ico))
+                            var epoch = ((Nest.ValueAggregate)res.Result.Aggregations.First().Value).Value;
+                            if (epoch.HasValue)
                             {
-                                if (firmy[ico].minUzavreni.HasValue == false)
-                                    firmy[ico].minUzavreni = mindate;
-                                else if (firmy[ico].minUzavreni.Value > mindate)
-                                    firmy[ico].minUzavreni = mindate;
-                            }
-                            else
-                            {
-                                firmy.Add(ico, new AnalysisCalculation.IcoSmlouvaMinMax()
+                                var mindate = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000);
+
+                                lock (lockFirmy)
                                 {
-                                    ico = ico,
-                                    minUzavreni = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000)
-                                });
+                                    if (firmy.ContainsKey(ico))
+                                    {
+                                        if (firmy[ico].minUzavreni.HasValue == false)
+                                            firmy[ico].minUzavreni = mindate;
+                                        else if (firmy[ico].minUzavreni.Value > mindate)
+                                            firmy[ico].minUzavreni = mindate;
+                                    }
+                                    else
+                                    {
+                                        firmy.Add(ico, new AnalysisCalculation.IcoSmlouvaMinMax()
+                                        {
+                                            ico = ico,
+                                            minUzavreni = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000)
+                                        });
+                                    }
+                                    if (ff.Datum_Zapisu_OR.HasValue)
+                                    {
+                                        firmy[ico].vznikIco = ff.Datum_Zapisu_OR.Value;
+                                        firmy[ico].jmeno = ff.Jmeno;
+                                    }
+
+                                }
+
+
                             }
                         }
-
-
                     }
                 }
-
                 return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             },
             null,
@@ -625,47 +642,50 @@ namespace HlidacStatu.Lib.Data
             );
 
 
-            List<string> privateCompanyIcos = new List<string>();
-            //filter statni firmy && add vznik
+            //List<string> privateCompanyIcos = new List<string>();
+            ////filter statni firmy && add vznik
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(firmy.Keys,
-            (ico, param) =>
-            {
-                Firma ff = Firmy.Get(ico);
-                if (Firma.IsValid(ff))
-                {
-                    if (ff.PatrimStatu()) //statni firmy tam nechci
-                    {
-                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-                    }
-                    else
-                    {
-                        if (ff.Datum_Zapisu_OR.HasValue)
-                        {
-                            firmy[ico].vznikIco = ff.Datum_Zapisu_OR.Value;
-                            firmy[ico].jmeno = ff.Jmeno;
-                            privateCompanyIcos.Add(ico);
-                        }
-                    }
-                }
+            //Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(firmy.Keys,
+            //(ico, param) =>
+            //{
+            //    Firma ff = Firmy.Get(ico);
+            //    if (Firma.IsValid(ff))
+            //    {
+            //        if (ff.PatrimStatu()) //statni firmy tam nechci
+            //        {
+            //            return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+            //        }
+            //        else
+            //        {
+            //            if (ff.Datum_Zapisu_OR.HasValue)
+            //            {
+            //                firmy[ico].vznikIco = ff.Datum_Zapisu_OR.Value;
+            //                firmy[ico].jmeno = ff.Jmeno;
+            //                privateCompanyIcos.Add(ico);
+            //            }
+            //        }
+            //    }
 
-                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-            },
-            null,
-            Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-            new Devmasters.Core.Batch.ActionProgressWriter(1f).Write,
-            true, maxDegreeOfParallelism: 5
-            );
+            //    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+            //},
+            //null,
+            //Devmasters.Core.Batch.Manager.DefaultOutputWriter,
+            //new Devmasters.Core.Batch.ActionProgressWriter(1f).Write,
+            //true, maxDegreeOfParallelism: 5
+            //);
 
+            HlidacStatu.Util.Consts.Logger.Debug("GetFirmyCasovePodezreleZalozene - filter with close dates");
 
             DateTime minDate = new DateTime(1990, 01, 01);
             var badF = firmy
-                .Where(kv => privateCompanyIcos.Contains(kv.Key))
                 .Select(m => m.Value)
                 .Where(f => f.minUzavreni > minDate)
                 .Where(f => f.days.HasValue && f.days.Value < 60)
-                .OrderBy(f => f.days.Value);
+                .OrderBy(f => f.days.Value)
+                .ToArray();
             //.Take(100)
+
+            HlidacStatu.Util.Consts.Logger.Debug($"GetFirmyCasovePodezreleZalozene - returning {badF.Count()} records." );
 
             return badF;
         }

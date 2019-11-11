@@ -83,7 +83,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
         public string ToHtml()
         {
             string dn = GetDatumNarozeni() != null ? $" (*{GetDatumNarozeni()?.Year})" : "";
-            if (!string.IsNullOrEmpty(ICO) && Validators.CheckCZICO(ICO))
+            if (!string.IsNullOrEmpty(ICO) && Util.DataValidators.CheckCZICO(ICO))
             {
                 return $"<a href='/subjekt/{ICO}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a> IČ:{ICO}";
             }

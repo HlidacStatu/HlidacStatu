@@ -98,7 +98,7 @@ else
                     <td>
                         @if (item.Zadavatel != null)
                         {
-                            if (Validators.CheckCZICO(item.Zadavatel.ICO))
+                            if (HlidacStatu.Util.DataValidators.CheckCZICO(item.Zadavatel.ICO))
                             {
                                 <a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
                             }
@@ -113,7 +113,7 @@ else
                         {
                             foreach (var d in item.Dodavatele)
                             {
-                                if (Validators.CheckCZICO(d.ICO))
+                                if (HlidacStatu.Util.DataValidators.CheckCZICO(d.ICO))
                                 {
                                     <a href="/subjekt/@d.ICO">@d.Jmeno</a><br />
                                 }

@@ -226,21 +226,27 @@ namespace HlidacStatu.Lib.Data
             return true;
         }
 
-        public bool SetClassification(bool rewrite = false) //true if changed
+        public bool SetClassification(bool rewrite = false, bool addNewVersion = false) //true if changed
         {
-            if (rewrite || this.Classification?.LastUpdate == null)
+            if (addNewVersion || rewrite || this.Classification?.LastUpdate == null)
             {
                 var types = GetClassification();
-                SetClassification(new SClassification(types
+
+                SClassification.Classification[] newClass = types
                                         .Select(m => new SClassification.Classification()
                                         {
                                             TypeValue = (int)m.Key,
                                             ClassifProbability = m.Value
                                         }
                                         )
-                                        .ToArray()
-                                    )
-                                );
+                                        .ToArray();
+
+                if (addNewVersion)
+                    newClass = newClass
+                        .Concat(this.Classification?.Types ?? new SClassification.Classification[] { })
+                        .ToArray();
+
+                SetClassification(new SClassification(newClass));
                 return true;
             }
             else
@@ -407,11 +413,16 @@ namespace HlidacStatu.Lib.Data
                             decimal prob = jsonData[i][1].Value<decimal>();
                             if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
                             {
-                                data.Add(typ, prob);
+                                    if (!data.ContainsKey(typ))
+                                       data.Add(typ, prob);
+                                else if (typ == SClassification.ClassificationsTypes.OSTATNI)
+                                    Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
+
+
                             }
                             else
                             {
-                                Util.Consts.Logger.Error("Invalid key " + key);
+                                Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
                                 data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
                             }
                         }
@@ -1116,6 +1127,7 @@ namespace HlidacStatu.Lib.Data
                     p.FileMetadata = null;
                 }
             }
+            s.Classification = null;
             s.SVazbouNaPolitiky = null;
             s.SVazbouNaPolitikyAktualni = null;
             s.SVazbouNaPolitikyNedavne = null;
@@ -1168,7 +1180,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static Smlouva Load(string idVerze, ElasticClient client = null)
+        public static Smlouva Load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
         {
             try
             {
@@ -1176,8 +1188,15 @@ namespace HlidacStatu.Lib.Data
                 if (client == null)
                     c = Lib.ES.Manager.GetESClient();
 
-                var res = c
-                    .Get<Lib.Data.Smlouva>(idVerze);
+                //var res = c.Get<Lib.Data.Smlouva>(idVerze);
+
+                var res = includePrilohy
+                    ? c.Get<Smlouva>(idVerze)
+                    : c.Get<Smlouva>(idVerze, s => s
+                            .SourceExclude("prilohy")
+                            );
+
+
                 if (res.Found)
                     return res.Source;
                 else
@@ -1186,7 +1205,11 @@ namespace HlidacStatu.Lib.Data
                     {
                         c = ES.Manager.GetESClient_Sneplatne();
                     }
-                    res = c.Get<Lib.Data.Smlouva>(idVerze);
+                    res = includePrilohy
+                        ? c.Get<Smlouva>(idVerze)
+                        : c.Get<Smlouva>(idVerze, s => s
+                                .SourceExclude("prilohy")
+                                );
                     if (res.Found)
                         return res.Source;
                     else

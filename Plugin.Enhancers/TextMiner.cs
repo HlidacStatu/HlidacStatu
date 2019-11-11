@@ -37,6 +37,9 @@ namespace HlidacStatu.Plugin.Enhancers
             this.asyncOCR = asyncOCR;
             this.priority = priority;
         }
+        public void SetInstanceData(object data)
+        {
+        }
 
         public string Description
         {

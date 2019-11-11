@@ -321,7 +321,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             {
                 try
                 {
-                    using (MailMessage msg = new MailMessage("info@hlidacstatu.cz", this.Registration().createdBy))
+                    using (MailMessage msg = new MailMessage("podpora@hlidacstatu.cz", this.Registration().createdBy))
                     {
                         msg.Bcc.Add("michal@michalblaha.cz");
                         msg.Subject = "Chyba v template vasi databáze " + this.Registration().name;

@@ -143,7 +143,7 @@ namespace HlidacStatu.Web.Controllers
 
             var res = DataSet.Api.Update(newReg, logged);
             if (res.valid)
-                return RedirectToAction("Manage", "Data", new { id = ds.DatasetId });
+                return RedirectToAction("Edit", "Data", new { id = ds.DatasetId });
             else
             {
                 ViewBag.ApiResponseError = res;
@@ -271,8 +271,9 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.Id = id;
                 return View(new Models.DataDetailModel() { Dataset = ds, Data = dataid });
             }
-            catch (DataSetException)
+            catch (DataSetException ex)
             {
+                Util.Consts.Logger.Error("Dataset Detail", ex);
                 return RedirectToAction("index");
             }
 

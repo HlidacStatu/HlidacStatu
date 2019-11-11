@@ -9,7 +9,7 @@
     ViewBag.Title = "" + Model.FullNameWithYear();
 
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
-        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.Parameters[1]
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.param1
         );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, aktualnost);

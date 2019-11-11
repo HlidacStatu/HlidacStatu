@@ -199,8 +199,8 @@ namespace HlidacStatu.Lib.Search
         }
 
 
-            public static IValidateQueryResponse ValidateSpecificQueryRaw<T>(Nest.ElasticClient client, QueryContainer qc)
-            where T: class
+        public static IValidateQueryResponse ValidateSpecificQueryRaw<T>(Nest.ElasticClient client, QueryContainer qc)
+        where T : class
         {
 
             var res = client
@@ -297,7 +297,7 @@ namespace HlidacStatu.Lib.Search
                     string foundValue = mFirst.Groups["q"].Value;
 
 
-                    if (doFullReplace 
+                    if (doFullReplace
                         && !string.IsNullOrEmpty(replaceWith)
                         && (
                             lookFor.Contains("holding:")
@@ -349,9 +349,21 @@ namespace HlidacStatu.Lib.Search
                             }
                             else
                             {
-                                icosQuery = string.Format(templ,"noOne") ; //$" ( {icoprefix}:noOne ) ";
+                                icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
                             }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
+                            if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                            {
+                                if (rules[i].AddLastCondition.Contains("${q}"))
+                                {
+                                    rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
+                                }
+
+                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                rules[i].AddLastCondition = null; //done, don't do it anywhere
+                            }
+
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " (" + icosQuery + ") ", regexQueryOption);
 
                         }
                     } //do regex replace
@@ -400,10 +412,21 @@ namespace HlidacStatu.Lib.Search
                             {
                                 icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
                             }
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, icosQuery, regexQueryOption);
+                            if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                            {
+                                if (rules[i].AddLastCondition.Contains("${q}"))
+                                {
+                                    rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
+                                }
+
+                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                rules[i].AddLastCondition = null; //done, don't do it anywhere
+                            }
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " (" + icosQuery + ") ", regexQueryOption);
                         }
                         else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, string.Format(templ, "noOne"), regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " (" + string.Format(templ, "noOne") + ") ", regexQueryOption);
                     }
 
                     //VZ
@@ -438,10 +461,10 @@ namespace HlidacStatu.Lib.Search
                             if (cpvs.Length > 0)
                                 q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
 
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, q_cpv, regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " (" + q_cpv + ") ", regexQueryOption);
                         }
                         else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " ", regexQueryOption);
                     }
                     //VZ
                     else if (doFullReplace && replaceWith.Contains("${form}"))
@@ -458,15 +481,15 @@ namespace HlidacStatu.Lib.Search
                             if (forms.Length > 0)
                                 q_form = "formulare.druh:(" + forms.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
 
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, q_form, regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " (" + q_form + ") ", regexQueryOption);
                         }
                         else
-                            modifiedQ = Regex.Replace(modifiedQ, lookFor, "", regexQueryOption);
+                            modifiedQ = Regex.Replace(modifiedQ, lookFor, " ", regexQueryOption);
                     }
 
                     else if (replaceWith.Contains("${q}"))
                     {
-                        
+
                         modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
                     } //do regex replace
 

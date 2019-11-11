@@ -27,11 +27,12 @@ namespace HlidacStatu.Lib
         public static System.Xml.Linq.XDocument DatoveSchranky = null;
         public static XNamespace DatoveSchrankyNS = null;
         public static string App_Data_Path = null;
+        public static string Dumps_Path = null;
         public static string Web_Root = null;
         public static string[] Mestske_Firmy = new string[] { };
         public static HashSet<string> VsechnyStatniMestskeFirmy = new HashSet<string>();
 
-        public static List<string> CiziStaty = new List<string>();
+        //public static List<string> CiziStaty = new List<string>();
         public static HashSet<string> Jmena = new HashSet<string>();
         public static HashSet<string> Prijmeni = new HashSet<string>();
         public static HashSet<string> TopJmena = new HashSet<string>();
@@ -190,6 +191,12 @@ namespace HlidacStatu.Lib
                     throw new ArgumentNullException("appDataPath");
                 }
                 App_Data_Path = appDataPath;
+                Dumps_Path = Devmasters.Core.Util.Config.GetConfigValue("DumpsPath");
+                if (string.IsNullOrEmpty(Dumps_Path))
+                    throw new ArgumentNullException(".config param DumpsPath missing");
+                if (!Dumps_Path.EndsWith(@"\"))
+                    Dumps_Path = Dumps_Path + @"\";
+                System.IO.Directory.CreateDirectory(Dumps_Path);
 
                 Web_Root = new System.IO.DirectoryInfo(appDataPath).Parent.FullName;
 
@@ -766,12 +773,12 @@ namespace HlidacStatu.Lib
                                 .OrderBy(or => or.Jmeno);
                         });
 
-                List<string> cizistaty = new List<string>();
-                foreach (var line in System.IO.File.ReadAllLines(App_Data_Path + "staty.txt"))
-                {
-                    cizistaty.Add(Devmasters.Core.TextUtil.RemoveDiacritics(line.ToLower().Trim()));
-                }
-                CiziStaty = cizistaty.Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
+                //List<string> cizistaty = new List<string>();
+                //foreach (var line in System.IO.File.ReadAllLines(App_Data_Path + "staty.txt"))
+                //{
+                //    cizistaty.Add(Devmasters.Core.TextUtil.RemoveDiacritics(line.ToLower().Trim()));
+                //}
+                //CiziStaty = cizistaty.Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
 
 
                 Jmena = new HashSet<string>(System.IO.File.ReadAllLines(App_Data_Path + "jmena.txt")

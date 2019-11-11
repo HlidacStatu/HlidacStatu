@@ -14,10 +14,9 @@ namespace HlidacStatu.Lib.Data
 
             public SClassification() { }
 
-            public SClassification(Classification[] types, int version = 0)
+            public SClassification(Classification[] types)
             {
                 this.LastUpdate = DateTime.Now;
-                this.Version = version;
                 this.Types = types;
             }
 
@@ -144,6 +143,8 @@ namespace HlidacStatu.Lib.Data
                 zdrav_kosmetika = 10503,
                 [NiceDisplayName("Opravy a údržba zdravotnických přístrojů")]
                 zdrav_opravy = 10504,
+                [NiceDisplayName("Zdravotnický materiál")] //TODO zdroje
+                zdrav_material = 10503,
 
                 [NiceDisplayName("Voda a potraviny")]
                 jidlo_generic = 10600,
@@ -155,6 +156,11 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Bezpečnostní a ochranné vybavení a údržba")]
                 bezpecnost_generic = 10700,
                 bezpecnost = 10701,
+                //bezpecnost;bezpecnost-generic;Bezpečnost generická;35;506;5155;519
+                //bezpecnost; bezpecnost; Bezpečnostní a ochranné vybavení a údržba;35;506;5155;519
+
+                //
+
 
                 [NiceDisplayName("Přírodní zdroje")]
                 prirodnizdroj_generic = 10800,
@@ -176,7 +182,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Veřejné služby pro energie")]
                 energie_sluzby = 10904,
 
-                [NiceDisplayName("Zemědělství")]
+                [NiceDisplayName("Zemědělství")] //mozna 
                 agro_generic = 11000,
                 [NiceDisplayName("Lesnictví")]
                 agro_les = 11001,
@@ -242,10 +248,16 @@ namespace HlidacStatu.Lib.Data
                 legal_reality = 11501,
                 [NiceDisplayName("Právní služby")]
                 legal_pravni =  11502,
+                [NiceDisplayName("Nájemní smlouvy")]
+                legal_najem = 11503,
+                [NiceDisplayName("Pronájem pozemků")]
+                legal_pozemky = 11504,
 
+
+                [NiceDisplayName("Kanalizace a odpady")]
                 techsluzby_generic = 11600,
-                [NiceDisplayName("Kanalizace")]
-                techsluzby_kanaly = 11601,
+                [NiceDisplayName("Odpady")]
+                techsluzby_odpady = 11601,
                 [NiceDisplayName("Čistící a hygienické služby")]
                 techsluzby_cisteni = 11602,
                 [NiceDisplayName("Úklidové služby")]
@@ -278,7 +290,7 @@ namespace HlidacStatu.Lib.Data
 
             public DateTime? LastUpdate { get; set; } = null;
 
-            public int Version { get; set; } = 0;
+            public int Version { get; set; } = 1;
 
             public Classification[] Types { get; set; } = null;
 

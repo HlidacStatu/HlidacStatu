@@ -25,10 +25,17 @@ namespace HlidacStatu.Plugin.Enhancers
         {
             get
             {
-                return "FormalNormalizer updater";
+                return "FormalNormalizer";
             }
         }
 
+        List<string> ciziStaty = new List<string>();
+        public void SetInstanceData(object data)
+        { 
+            var test = data as List<string>;
+            if (test != null)
+                ciziStaty = test;
+        }
         public void Update(ref Lib.Data.Smlouva item)
         {
 
@@ -51,13 +58,12 @@ namespace HlidacStatu.Plugin.Enhancers
             if (!string.IsNullOrEmpty(ico))
             {
                 var newIco = System.Text.RegularExpressions.Regex.Replace(ico, @"[^0-9]", string.Empty);
-                if (newIco != ico)
+                if (newIco != ico && Util.DataValidators.CheckCZICO(newIco))
                 {
                     item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Normalizováno IČO", "", parametrName, ico, newIco, this));
+                    return newIco;
                 }
-                return newIco;
             }
-            else
                 return ico;
         }
 

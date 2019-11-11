@@ -59,10 +59,11 @@ namespace HlidacStatu.Util
             return true;
         }
 
-        public static string GetExecutingDirectoryName()
+        public static string GetExecutingDirectoryName(bool endsWithBackslash)
         {
             var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
-            return new FileInfo(location.AbsolutePath).Directory.FullName;
+            var dir = new FileInfo(location.AbsolutePath).Directory.FullName + (endsWithBackslash ? @"\" : "");
+            return dir;
         }
 
 

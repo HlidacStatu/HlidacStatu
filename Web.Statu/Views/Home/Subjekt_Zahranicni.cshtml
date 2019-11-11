@@ -1,0 +1,97 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+
+
+@{
+    ViewBag.Title = "Informace o zahraniční firmě " + Model.Jmeno;
+
+    ViewBag.SocialShareTitle = "Zahraniční firma " + Model.Jmeno + " na HlidacStatu.cz";
+    ViewBag.SocialShareType = "article";
+}
+
+@section scripts
+{
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<h2 id="_top">
+    @Util.AddBookmark(this.User, Model)
+    @(Model.Jmeno)
+</h2>
+<h4>zahraniční firma nebo úřad</h4>
+
+<table class="table table-new table-new--dotted">
+    <tbody>
+        <tr>
+            <th>Upozornění</th>
+            <td>
+                Zahraniční subjekty zatím neumíme zpracovat obdobně, jako české subjekty.
+
+            </td>
+        </tr>
+        <tr>
+            <th>Odkazy za zahraniční obchodní rejstříky</th>
+            <td>
+                <ul>
+                    <li>
+                        <a href="https://cs.wikipedia.org/wiki/Seznam_obchodn%C3%ADch_rejstř%C3%ADků" target="_blank">
+                            Seznam zahraničních obchodních rejstříků (česky)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://en.wikipedia.org/wiki/List_of_company_registers" target="_blank">
+                            Úplný seznam zahraničních obchodních rejstříků (anglicky)
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Vyhledání</th>
+            <td>
+                @if (!string.IsNullOrEmpty(Model.ICO))
+                {
+                    @Util.AddSearchBtn("/hledat", $"ico:{Model.ICO}", $" Vyhledat tuto firmy ve všech databázích")
+                    @Util.AddWatchDog(this.User, $"ico:{Model.ICO}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                }
+                else
+                {
+                    @Util.AddSearchBtn("/hledat", $"\"{Model.Jmeno}\"", $" Vyhledat tuto firmy ve všech databázích")
+                    @Util.AddWatchDog(this.User, $"\"{Model.Jmeno}\"", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+@section footerscripts
+{
+    <script type="text/javascript">
+    SocialShareKit.init({
+        url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.ICO }))',
+        twitter: {
+            via: 'HlidacSmluv'
+        }
+    }
+    );
+    </script>
+}

@@ -109,7 +109,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
         {
             var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
-            var res = _searchData(ds, queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
+            var res = _searchData(ds, query , page, pageSize, sort, excludeBigProperties, withHighlighting);
             if (!res.IsValid)
             {
                 throw DataSetException.GetExc(ds.DatasetId,

@@ -11,8 +11,8 @@
     dynamic model = Model.Dataset.GetDataObj(Model.Data);
 
     string itemId = (model.Id ?? model.id) ?? "";
-    ViewBag.Title = itemId;
-    ViewBag.SubTitle = Model.Dataset.Registration().name; ;
+    ViewBag.Title = Model.Dataset.Registration().name;
+    ViewBag.SubTitle = itemId ;
 
     Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
 
@@ -38,14 +38,19 @@
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
-<div id="data-detail-content">
 
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() {DataSet = Model.Dataset,  Q = Request.QueryString["qs"] })
+
+
+<hr style="margin-top: 35px;padding-bottom:15px;" />
+
+<div id="data-detail-content">
     @{
         try
         {
             if (Model.Dataset.Registration()?.detailTemplate?.IsNewTemplate() == true)
             {
-                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model, highlightingData: highlightingData);    
+                var html = Model.Dataset.Registration().detailTemplate.Render(Model.Dataset, model, highlightingData: highlightingData);
                 @Html.Raw(html)
             }
             else

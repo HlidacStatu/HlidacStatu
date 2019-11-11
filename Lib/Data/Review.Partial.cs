@@ -59,7 +59,7 @@ namespace HlidacStatu.Lib.Data
                             {
                                 var m = new System.Net.Mail.MailMessage()
                                 {
-                                    From = new System.Net.Mail.MailAddress("info@hlidacstatu.cz"),
+                                    From = new System.Net.Mail.MailAddress("podpora@hlidacstatu.cz"),
                                     Subject = o.FullName() + " - nová fotka schválena.",
                                     IsBodyHtml = false,
                                     Body = "Vámi nahraná fotka byla právě schválena. Děkujeme za pomoc.\n\nHlídač Státu"
@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib.Data
                             {
                                 var m = new System.Net.Mail.MailMessage()
                                 {
-                                    From = new System.Net.Mail.MailAddress("info@hlidacstatu.cz"),
+                                    From = new System.Net.Mail.MailAddress("podpora@hlidacstatu.cz"),
                                     Subject = o.FullName() + " - nová fotka neschválena.",
                                     IsBodyHtml = false,
                                     Body = "Vámi nahraná fotka nebyla schválena k uveřejnění.\nDůvod:" + reason + "\n\nDěkujeme za pomoc.\n\nHlídač Státu"

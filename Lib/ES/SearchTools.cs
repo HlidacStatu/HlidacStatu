@@ -63,6 +63,8 @@ namespace HlidacStatu.Lib.ES
             [Devmasters.Core.SortValue(99)]
             ContractorAsc = 9,
 
+            [Devmasters.Core.Disabled]
+            ClassificationRelevance = 665,
 
             [Devmasters.Core.Disabled]
             FastestForScroll = 666,
@@ -406,6 +408,9 @@ namespace HlidacStatu.Lib.ES
                     break;
                 case OrderResult.LastUpdate:
                     s = new SortDescriptor<Data.Smlouva>().Field(f => f.Field("lastUpdate").Descending());
+                    break;
+                case OrderResult.ClassificationRelevance:
+                    s = new SortDescriptor<Data.Smlouva>().Field(f => f.Field("classification.types.classifProbability").Descending());
                     break;
                 case OrderResult.Relevance:
                 default:

@@ -1515,11 +1515,15 @@ div.verticaltab-container {
         letter-spacing: 0.2rem;
         padding-left: 0.3em;
         padding-right: 0.3em;
+        background-color: rgba(255, 255, 9, 0.3);
+        font-size: 120%;
     }
     .highlighting.snippet highl {
         font-weight: 900;
         background-color: #c5f74f;
         letter-spacing: 0.05rem;
+        background-color: rgba(255, 255, 9, 0.2);
+        font-size: 100%;
     }
 
 

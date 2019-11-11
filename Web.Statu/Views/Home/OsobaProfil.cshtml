@@ -8,7 +8,7 @@
     Layout = null;
 
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
-        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.Parameters[1]
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.param1
         );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
@@ -255,8 +255,8 @@
             tabs.Add("Základní info");
             string zaklInfo = $"<h4>Hledání informací s vazbou na {Model.FullName()}</h4>"
                 + "<p>"
-                + $"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na " +
-                $" s vazbou na {Model.FullName()} nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou."
+                + $"Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>, zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na " 
+                + $" {Model.FullName()} nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou."
                 + "</p>"
 
                 + "<h4>Sdílení</h4>"

@@ -44,11 +44,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     " qs = \"" + System.Net.WebUtility.UrlEncode(qs) + "\""
                     + "\n"
                     + "func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{datasetId}/' + $0 + '?qs=' + qs )"
+                    + $"    ret ('/data/Detail/{datasetId}/' + $0 + '?qs=' + qs )"
                     + "\n"
                     + "end}}"
                     + "\n"
-                    + "<!-- This is var1: `{{highlightingData}}` -->"
+                    //+ "<!-- This is var1: `{{highlightingData}}` -->"
                     + "\n\n";
 
                 return template;
