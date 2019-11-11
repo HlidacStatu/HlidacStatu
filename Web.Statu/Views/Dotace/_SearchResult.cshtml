@@ -39,7 +39,10 @@ else
         
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <h2>Nalezeno @(PluralForm.Get((int)Model.Result.Total, "{0} dotace;{0} dotace;{0} dotací")).</h2>
+                <h2 class="text-nowrap">
+                    @(PluralForm.Get((int)Model.Result.Total, "Nalezena {0} dotace;Nalezeny {0} dotace;Nalezeno {0} dotací")) 
+                    v celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.Result.Aggregations.Sum("souhrn").Value).
+                </h2>
             </div>
         </div>
 

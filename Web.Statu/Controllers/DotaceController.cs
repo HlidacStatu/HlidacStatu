@@ -23,7 +23,15 @@ namespace HlidacStatu.Web.Controllers
             {
                 return View(new DotaceSearchResult());
             }
-            var res = _dotaceService.SimpleSearch(model);
+
+            var aggs = new Nest.AggregationContainerDescriptor<Dotace>()
+                .Sum("souhrn", s => s
+                    .Field(f => f.DotaceCelkem)
+                
+                );
+
+
+            var res = _dotaceService.SimpleSearch(model, anyAggregation:aggs);
             return View(res);
         }
 
