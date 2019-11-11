@@ -10,7 +10,7 @@ namespace HlidacStatu.Web.Controllers
 {
     public class DotaceController : GenericAuthController
     {
-        private DotaceService _dotaceService = new DotaceService();
+        private readonly DotaceService _dotaceService = new DotaceService();
 
         public ActionResult Index()
         {

@@ -7,7 +7,7 @@ namespace HlidacStatu.Lib.Data.Dotace
 {
     public partial class DotaceService
     {
-        private Nest.ElasticClient _esClient = ES.Manager.GetESClient_Dotace();
+        private readonly Nest.ElasticClient _esClient = ES.Manager.GetESClient_Dotace();
 
         public Dotace Get(string idDotace)
         {
