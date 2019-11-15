@@ -216,7 +216,11 @@ namespace HlidacStatu.Util
                     }
                 }
             }
-
+            //czech sk adresa
+            if (SKAdresaObec(adresa) != null && CeskaAdresaObec(adresa) == null)
+            {
+                return "SK";
+            }
             return null;
         }
 

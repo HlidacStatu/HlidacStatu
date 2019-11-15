@@ -223,6 +223,8 @@ namespace HlidacStatu.Lib.Data
         public bool SetClassification(SClassification classif) //true if changed
         {
             this.Classification = classif;
+            this.Classification.LastUpdate = DateTime.Now;
+
             return true;
         }
 

@@ -35,6 +35,18 @@ namespace HlidacStatu.Web.Controllers
             //global::hlst
             ViewBag.Token = HlidacStatu.Lib.Data.AspNetUserToken.GetToken(this.User.Identity.Name).Token.ToString("N");
 
+            if (!string.IsNullOrEmpty(Request.QueryString["getocr"]))
+            {
+                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent(
+                    $"https://ocr.hlidacstatu.cz/AddApi.ashx?apikey={Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey")}&email={this.User.Identity.Name}"
+                    ))
+                {
+                    var json = Newtonsoft.Json.Linq.JToken.Parse(url.GetContent().Text);
+                    
+                    ViewBag.OcrToken = json.Value<string>("apikey");
+                }
+                
+            }
             return View();
         }
 

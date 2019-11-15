@@ -22,7 +22,9 @@ namespace HlidacStatu.Lib.Data
 
             public class Classification
             {
+                [Nest.Number]
                 public int TypeValue { get; set; }
+                [Nest.Number]
                 public decimal ClassifProbability { get; set; }
 
                 public ClassificationsTypes ClassifType() { return (ClassificationsTypes)TypeValue; }
@@ -288,8 +290,10 @@ namespace HlidacStatu.Lib.Data
                 jine_opravy = 11906,
             }
 
+            [Nest.Date]
             public DateTime? LastUpdate { get; set; } = null;
 
+            [Nest.Number]
             public int Version { get; set; } = 1;
 
             public Classification[] Types { get; set; } = null;

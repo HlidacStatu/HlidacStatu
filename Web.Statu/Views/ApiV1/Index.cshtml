@@ -38,10 +38,30 @@
                         <td>Kompletní dokumentace</td>
                         <td><a style="font-size:130%" href="https://hlidacstatu.docs.apiary.io/">https://hlidacstatu.docs.apiary.io/</a></td>
                     </tr>
-                    <tr>
-                        <td>GitHub</td>
-                        <td><a style="font-size:130%" href="https://github.com/HlidacStatu/">https://github.com/HlidacStatu/</a></td>
-                    </tr>
+                    @if (!string.IsNullOrEmpty(ViewBag.OcrToken))
+                    {
+                        <tr>
+                            <td>OCR Minion</td>
+                            <td>Api token: <code>@ViewBag.OcrToken</code>. Více o <a style="font-size:130%" href="https://github.com/HlidacStatu/OcrMinion">dokumentace OCRMinion</a></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>OCR Minion</td>
+                            <td>
+                                Klient pro dolování (OCR) textů z obrázkových dokumentů pro Hlídač státu. Pro použití je potřeba speciální API key pro OCR Minion
+                                <br />
+                                <a href="/api/v1/index?getocr=1" class="btn btn-warning" target="_blank">
+                                    Získat OCR Minion API key
+                                </a>
+
+<br />
+                                <a style="font-size:130%" href="https://github.com/HlidacStatu/OcrMinion">HlidacStatu OCRMinion</a>
+                            </td>
+                        </tr>
+                    }
+
                     <tr>
                         <td>Kontakt, API support</td>
                         <td><a style="font-size:130%" href="mailto:api@hlidacstatu.cz">api@hlidacstatu.cz</a></td>
