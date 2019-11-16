@@ -27,6 +27,10 @@ namespace HlidacStatu.Web.Controllers
         {
             return View();
         }
+        public ActionResult OcrStat()
+        {
+            return View();
+        }
 
         // GET: ApiV1
         [Authorize]

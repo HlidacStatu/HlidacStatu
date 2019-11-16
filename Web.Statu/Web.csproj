@@ -1364,6 +1364,7 @@
     <Content Include="Views\Dotace\Detail.cshtml" />
     <Content Include="Views\Data\_SearchForm.cshtml" />
     <Content Include="Views\Home\Subjekt_Zahranicni.cshtml" />
+    <Content Include="Views\ApiV1\OCRStat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

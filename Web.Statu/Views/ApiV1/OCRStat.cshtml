@@ -1,0 +1,140 @@
+﻿@using System.Text.RegularExpressions;
+@{
+    /**/
+
+    ViewBag.Title = "Statistika OCR serverů";
+    ViewBag.SubTitle = "";
+
+    var dataCache = new Devmasters.Cache.V20
+    .LocalMemory.LocalMemoryCache<string>(TimeSpan.FromMinutes(5), "Ocrstat.data.json",
+        (o) =>
+        {
+            return new WebClient().DownloadString("http://ocr.hlidacstatu.cz/stats.ashx");
+        });
+
+
+    dynamic json = Newtonsoft.Json.Linq.JObject.Parse(dataCache.Get());
+
+    var ocrservers = (json.servers as Newtonsoft.Json.Linq.JArray)
+        .Select(m=> new { server = m.Value<string>("server"), done = m.Value<int>("doneIn24h") } )
+        .ToArray()
+        ;
+
+
+
+    string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+    string sql = @"select 'Celkem' as 'type',
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is null) as waiting,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null) as running,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is not null and done > DATEADD(dy,-1,getdate())) as doneIn24H,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null and started< dateadd(hh,-24,getdate())) as errors
+                union
+	                select distinct t.itemtype as 'type',
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is null and itemtype = t.itemtype) as waiting,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null and itemtype = t.itemtype) as running,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is not null 
+		                and done > DATEADD(dy,-1,getdate()) and itemtype = t.itemtype) as doneIn24H,
+		                (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null 
+		                and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
+		                from ItemToOcrQueue t with (nolock)
+		                order by type";
+
+    string sdata = $"Za posledních 24 hodin jsme našimi OCR servery vydolovali data z <b>{json.queueStat.doneIn24hours}</b> stránek";
+
+    List<string> sdatalist = new List<string>();
+
+    using (var p = new Devmasters.Core.PersistLib())
+    {
+        var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
+        foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+        {
+            int num = (int)dr[3];
+            string col0 = ((string)dr[0]).ToLower();
+            if (col0.ToLower() == "dataset")
+            {
+                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jeden</b> záznam datasetu", "<b>{0}</b> záznamy datasetů", "<b>{0}</b> záznamů datasetů"));
+            }
+            else if (col0.ToLower() == "insolvence")
+            {
+                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> insolvenci", "<b>{0}</b> insolvence", "<b>{0}</b> insolvencí"));
+            }
+            if (col0.ToLower() == "smlouva")
+            {
+                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> smlouvu", "<b>{0}</b> smlouvy", "<b>{0}</b> smluv"));
+            }
+            if (col0.ToLower() == "verejnazakazka")
+            {
+                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> veř.zakázku", "<b>{0}</b> veř.zakázky", "<b>{0}</b> veř.zakázek"));
+            }
+
+        }
+    }
+    sdata = sdata + ", " + sdatalist.Aggregate((f,s)=> f + ", " + s) + ".";
+
+
+}
+@section scripts
+{
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<p style="font-size:100%">V rámci zpracovávání dat na Hlídači probíhá i intezivní dolování textových dat ze zdrojových dokumentů.</p>
+
+<p style="font-size:100%">Pro OCR dolování používáme jak vlastní servery, tak servery našich fanoušků, kteří dali k dispozici část svého přebytečného výpočetního výkonu pro potřebu Hlídače státu.</p>
+
+<p style="font-size:100%">Pro sdílení výpočetního výkonu jsme připravili velmi jednoducký Docker balíček - <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">OCR Minion</a>, který je možné nainstalovat téměř na jakékoliv zařízení, včetně např. domácích NAS serverů.</p>
+<p>Detaily o <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">OCR Minion</a> najdete na našem GitHubu <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">https://github.com/HlidacStatu/OcrMinion</a></p>
+<hr />
+
+<p style="font-size:130%">@Html.Raw(sdata)</p>
+
+<h3>Žebříček OCR Minion strojů za posledních 24 hodin</h3>
+
+<table class="table  table-hover table-condensed" style="width:auto">
+    <thead>
+        <tr>
+            <th>Jméno/provozovatel OCR Minion</th>
+            <th>OCR stránek za 24 hod</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in ocrservers.Where(m => m.server.Contains("@")).OrderByDescending(o => o.done))
+        {
+            Regex mr = new Regex(@"(?<prefix>.*)@(?<mid>(.|\w)*) (?<end>\. .*)$", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
+            Match mc = mr.Match(s.server);
+            string pref = mc.Groups["prefix"].Value;
+            string mid = mc.Groups["mid"].Value;
+            string end = mc.Groups["end"].Value;
+            string sanon = pref + "@"
+                + mid.Substring(0, 1) + "..."
+                + mid.Substring(mid.Length - 1, 1)
+                + end;
+
+            //string pref = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, , "");
+            //string mid = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, @"(?<prefix>.*)@(?<mid>(.|\w)*) (?<end>\. .*)$", "");
+
+
+            <tr>
+                <td>@sanon</td>
+                <td>@s.done</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2"><b>OCR stroje Hlídače státu</b></td>
+        </tr>
+        @foreach (var s in ocrservers.Where(m => !m.server.Contains("@")).OrderByDescending(o => o.done))
+        {
+            <tr>
+                <td>@s.server</td>
+                <td>@s.done</td>
+            </tr>
+        }
+    </tbody>
+</table>
