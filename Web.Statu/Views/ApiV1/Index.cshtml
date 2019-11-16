@@ -42,7 +42,12 @@
                     {
                         <tr>
                             <td>OCR Minion</td>
-                            <td>Api token: <code>@ViewBag.OcrToken</code>. Více o <a style="font-size:130%" href="https://github.com/HlidacStatu/OcrMinion">dokumentace OCRMinion</a></td>
+                            <td>
+                                Api token: <code>@ViewBag.OcrToken</code>
+                                <br/> Více o <a href="https://github.com/HlidacStatu/OcrMinion">dokumentace OCRMinion</a>
+                                <br/><br />
+                                <a href="ocrstat"><i class="fas fa-list-ol"></i> Statistiky a žebříček spuštěných OCR Minion</a>.
+                            </td>
                         </tr>
                     }
                     else
@@ -51,13 +56,14 @@
                             <td>OCR Minion</td>
                             <td>
                                 Klient pro dolování (OCR) textů z obrázkových dokumentů pro Hlídač státu. Pro použití je potřeba speciální API key pro OCR Minion
-                                <br />
+                                <br /><br />
+                                <a href="ocrstat"><i class="fas fa-list-ol"></i> Statistiky a žebříček spuštěných OCR Minion</a>.
+                                <br /><br />
                                 <a href="/api/v1/index?getocr=1" class="btn btn-warning" target="_blank">
-                                    Získat OCR Minion API key
+                                    Získat svůj OCR Minion API key
                                 </a>
-
-<br />
-                                <a style="font-size:130%" href="https://github.com/HlidacStatu/OcrMinion">HlidacStatu OCRMinion</a>
+                                <br/>
+                                <a href="https://github.com/HlidacStatu/OcrMinion">HlidacStatu OCR Minion na GitHubu</a> 
                             </td>
                         </tr>
                     }
