@@ -39,7 +39,7 @@
 		                from ItemToOcrQueue t with (nolock)
 		                order by type";
 
-    string sdata = $"Za posledních 24 hodin jsme našimi OCR servery vydolovali data z <b>{json.queueStat.doneIn24hours}</b> stránek";
+    string sdata = $"Za posledních 24 hodin jsme našimi OCR servery vydolovali data z celkem <b>{json.queueStat.imgDoneIn24hours}</b> stránek a {((int)json.queueStat.doneIn24hours - (int)json.queueStat.imgDoneIn24hours)} dokumentů, ";
 
     List<string> sdatalist = new List<string>();
 
@@ -71,6 +71,7 @@
     }
     sdata = sdata + ", " + sdatalist.Aggregate((f,s)=> f + ", " + s) + ".";
 
+    sdata += $" Na OCR zpracování čeká <b>{json.queueStat.imgInQueue}</b> souborů, <b>{json.queueStat.imgprocessing}</b> se právě zpracovává.";
 
 }
 @section scripts
