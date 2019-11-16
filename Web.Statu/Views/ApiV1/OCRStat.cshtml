@@ -112,19 +112,22 @@
             string pref = mc.Groups["prefix"].Value;
             string mid = mc.Groups["mid"].Value;
             string end = mc.Groups["end"].Value;
-            string sanon = pref + "@"
-                + mid.Substring(0, 1) + "..."
-                + mid.Substring(mid.Length - 1, 1)
-                + end;
+            if (mc.Success)
+            {
+                string sanon = pref + "@"
+                    + mid.Substring(0, 1) + "..."
+                    + mid.Substring(mid.Length - 1, 1)
+                    + end;
 
-            //string pref = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, , "");
-            //string mid = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, @"(?<prefix>.*)@(?<mid>(.|\w)*) (?<end>\. .*)$", "");
+                //string pref = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, , "");
+                //string mid = HlidacStatu.Util.ParseTools.RegexGroupValue(s.server, @"(?<prefix>.*)@(?<mid>(.|\w)*) (?<end>\. .*)$", "");
 
 
             <tr>
                 <td>@sanon</td>
                 <td>@s.done</td>
             </tr>
+            }
         }
         <tr>
             <td colspan="2"><b>OCR stroje Hlídače státu</b></td>

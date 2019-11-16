@@ -24,7 +24,7 @@
 
         <div class="bs-callout bs-callout-success" style="font-size:120%">
             <div>Autorizace je prováděna pomocí autentifikačního tokenu, který je Vám přidělen. Autorizační token je nutno odesílat v hlavičce každého požadavku na API.</div>
-            <div>Autorizační token: <code>@ViewBag.Token</code></div>
+            <div>Autorizační token: <code>@ViewBag.Token</code> <b>(toto není token pro OCR Minion. viz níže)</b></div>
             <div>
                 Příklad k použití:<br />
                 <code>curl -X GET https://www.hlidacstatu.cz/Api/v1/Detail/204737 -H 'Authorization: Token @ViewBag.Token'</code><br />
