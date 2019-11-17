@@ -6,7 +6,7 @@
     ViewBag.SubTitle = "";
 
     var dataCache = new Devmasters.Cache.V20
-    .LocalMemory.LocalMemoryCache<string>(TimeSpan.FromMinutes(5), "Ocrstat.data.json",
+    .LocalMemory.LocalMemoryCache<string>(TimeSpan.FromMinutes(2), "Ocrstat.data.json",
         (o) =>
         {
             return new WebClient().DownloadString("http://ocr.hlidacstatu.cz/stats.ashx");
@@ -39,7 +39,9 @@
 		                from ItemToOcrQueue t with (nolock)
 		                order by type";
 
-    string sdata = $"Za posledních 24 hodin jsme našimi OCR servery vydolovali data z celkem <b>{json.queueStat.imgDoneIn24hours}</b> stránek a {((int)json.queueStat.doneIn24hours - (int)json.queueStat.imgDoneIn24hours)} dokumentů, ";
+    string sdata = $"<p>Za posledních 24 hodin jsme našimi OCR servery vydolovali data z celkem "
+        +$"<b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.doneIn24hours - (int)json.queueStat.imgDoneIn24hours,"0 dokumentů","1 dokumentu","{0} dokumentů","{0} dokumentů")}</b>"
+        + $" a <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn24hours,"0 scanů","1 scan","{0} scany","{0} scanů")}</b>, ";
 
     List<string> sdatalist = new List<string>();
 
@@ -69,9 +71,14 @@
 
         }
     }
-    sdata = sdata + ", " + sdatalist.Aggregate((f,s)=> f + ", " + s) + ".";
+    sdata = sdata + "" + sdatalist.Aggregate((f,s)=> f + ", " + s) + ".</p>";
+   sdata= sdata + $"<p>Za posledních hodinu jsme našimi OCR servery vydolovali data z celkem <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.doneIn1hour - (int)json.queueStat.imgDoneIn1hour,"0 dokumentů","1 dokumentu","{0} dokumentů","{0} dokumentů")}</b>"
+        + $" dokumentů a <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn1hour,"0 scanů","1 scany","{0} scanů","{0} scanů")}</b>.</p>";
 
-    sdata += $" Na OCR zpracování čeká <b>{json.queueStat.imgInQueue}</b> souborů, <b>{json.queueStat.imgprocessing}</b> se právě zpracovává.";
+
+    sdata += $"<p> Na zpracování čeká <b>{json.queueStat.inQueue}</b> dokumentů a <b>{json.queueStat.processing}</b> se právě zpracovává."
+        +$". Právě probíhá OCR <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgprocessing,"0 scanů","1 scanu","{0} scanů","{0} scanů")}</b>, "
+        + $" <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgInQueue,"žádné nečekají","1 scan čeká","další {0} scany čekají","dalších {0} scanů čeká")}</b> ve frontě.</p>";
 
 }
 @section scripts
@@ -90,7 +97,7 @@
 
 <p style="font-size:100%">Pro OCR dolování používáme jak vlastní servery, tak servery našich fanoušků, kteří dali k dispozici část svého přebytečného výpočetního výkonu pro potřebu Hlídače státu.</p>
 
-<p style="font-size:100%">Pro sdílení výpočetního výkonu jsme připravili velmi jednoducký Docker balíček - <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">OCR Minion</a>, který je možné nainstalovat téměř na jakékoliv zařízení, včetně např. domácích NAS serverů.</p>
+<p style="font-size:100%">Pro sdílení výpočetního výkonu jsme připravili velmi jednoduchý Docker balíček - <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">OCR Minion</a>, který je možné nainstalovat téměř na jakékoliv zařízení, včetně např. domácích NAS serverů.</p>
 <p>Detaily o <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">OCR Minion</a> najdete na našem GitHubu <a href="https://github.com/HlidacStatu/OcrMinion" target="_blank">https://github.com/HlidacStatu/OcrMinion</a></p>
 <hr />
 
@@ -134,7 +141,11 @@
             <td colspan="2"><b>OCR stroje Hlídače státu</b></td>
         </tr>
         @foreach (var s in ocrservers.Where(m => !m.server.Contains("@")).OrderByDescending(o => o.done))
-        {
+        { Guid g;
+            if (Guid.TryParse(s.server, out g) || s.server.Contains("<script ")) //spatna jmena server nebo api klice. XSS resen jinde
+            {
+                continue;
+            }
             <tr>
                 <td>@s.server</td>
                 <td>@s.done</td>
