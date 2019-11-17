@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Devmasters.Core;
 
 namespace HlidacStatu.Util
@@ -18,6 +19,26 @@ namespace HlidacStatu.Util
             {"věci veřejné","VV" },
             {"starostové a nezávislí","STAN" },
         };
+
+        public static string EmailAnonymizer(string email)
+        {
+            //todo more validations
+            Regex mr = new Regex(@"(?<prefix>.*)@(?<mid>(.|\w)*) (?<end>\. .*)$", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
+            Match mc = mr.Match(email);
+            string pref = mc.Groups["prefix"].Value;
+            string mid = mc.Groups["mid"].Value;
+            string end = mc.Groups["end"].Value;
+            if (mc.Success)
+            {
+                return pref + "@"
+                    + mid.Substring(0, 1) + "..."
+                    + mid.Substring(mid.Length - 1, 1)
+                    + end;
+            }
+            else
+                return email;
+
+        }
 
         public static string StranaZkratka(string strana, int maxlength = 20)
         {
