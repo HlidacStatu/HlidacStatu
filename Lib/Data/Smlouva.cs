@@ -220,35 +220,31 @@ namespace HlidacStatu.Lib.Data
 
         public SClassification Classification { get; set; } = new SClassification();
 
-        public bool SetClassification(SClassification classif) //true if changed
-        {
-            this.Classification = classif;
-            this.Classification.LastUpdate = DateTime.Now;
 
-            return true;
-        }
-
-        public bool SetClassification(bool rewrite = false, bool addNewVersion = false) //true if changed
+        public bool SetClassification(bool rewrite = false, bool rewriteStems = false) //true if changed
         {
-            if (addNewVersion || rewrite || this.Classification?.LastUpdate == null)
+            if (rewrite || rewriteStems || this.Classification?.LastUpdate == null)
             {
-                var types = GetClassification();
+                var types = SClassification.GetClassificationFromServer(this, rewriteStems);
+                if (types == null)
+                {
+                    this.Classification = null;
+                }
+                else
+                {
+                    SClassification.Classification[] newClass = types
+                                            .Select(m => new SClassification.Classification()
+                                            {
+                                                TypeValue = (int)m.Key,
+                                                ClassifProbability = m.Value
+                                            }
+                                            )
+                                            .ToArray();
 
-                SClassification.Classification[] newClass = types
-                                        .Select(m => new SClassification.Classification()
-                                        {
-                                            TypeValue = (int)m.Key,
-                                            ClassifProbability = m.Value
-                                        }
-                                        )
-                                        .ToArray();
 
-                if (addNewVersion)
-                    newClass = newClass
-                        .Concat(this.Classification?.Types ?? new SClassification.Classification[] { })
-                        .ToArray();
-
-                SetClassification(new SClassification(newClass));
+                    this.Classification = new SClassification(newClass);
+                    this.Classification.LastUpdate = DateTime.Now;
+                }
                 return true;
             }
             else
@@ -339,105 +335,6 @@ namespace HlidacStatu.Lib.Data
             }
             return res.IsValid;
         }
-        public Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassification()
-        {
-            Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
-
-            string baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url");
-
-            var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
-
-
-            using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(baseUrl + "/stemmer"))
-            {
-                stem.Method = Devmasters.Net.Web.MethodEnum.POST;
-                stem.Tries = 3;
-                stem.TimeInMsBetweenTries = 5000;
-                stem.Timeout = 45000;
-                stem.ContentType = "application/json; charset=utf-8";
-                stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(this, settings);
-                Devmasters.Net.Web.TextContentResult stems = null;
-                try
-                {
-                    stems = stem.GetContent();
-
-                }
-                catch (Exception e)
-                {
-                    Util.Consts.Logger.Error("Classification Stemmer API ", e);
-                    throw;
-                }
-                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(baseUrl + "/classifier"))
-                {
-                    classif.Method = Devmasters.Net.Web.MethodEnum.POST;
-                    classif.Tries = 3;
-                    classif.TimeInMsBetweenTries = 5000;
-                    classif.Timeout = 180000;
-                    classif.ContentType = "application/json; charset=utf-8";
-                    classif.RequestParams.RawContent = stems.Text;
-                    Devmasters.Net.Web.TextContentResult classifier = null;
-                    try
-                    {
-                        classifier = classif.GetContent();
-                    }
-                    catch (Exception e)
-                    {
-                        Util.Consts.Logger.Error("Classification Classifier API ", e);
-                        throw;
-                    }
-
-                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(baseUrl + "/finalizer"))
-                    {
-                        fin.Method = Devmasters.Net.Web.MethodEnum.POST;
-                        fin.Tries = 3;
-                        fin.TimeInMsBetweenTries = 5000;
-                        fin.Timeout = 30000;
-                        fin.ContentType = "application/json; charset=utf-8";
-                        fin.RequestParams.RawContent = classifier.Text;
-                        Devmasters.Net.Web.TextContentResult res = null;
-                        try
-                        {
-                            res = fin.GetContent();
-                        }
-                        catch (Exception e)
-                        {
-                            Util.Consts.Logger.Error("Classification finalizer API ", e);
-                            throw;
-                        }
-
-
-                        var jsonData = Newtonsoft.Json.Linq.JArray.Parse(res.Text);
-
-                        for (int i = 0; i < jsonData.Count; i++)
-                        {
-                            string key = jsonData[i][0].Value<string>().Replace("-", "_");
-                            decimal prob = jsonData[i][1].Value<decimal>();
-                            if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
-                            {
-                                    if (!data.ContainsKey(typ))
-                                       data.Add(typ, prob);
-                                else if (typ == SClassification.ClassificationsTypes.OSTATNI)
-                                    Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
-
-
-                            }
-                            else
-                            {
-                                Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
-                                data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
-                            }
-                        }
-
-                    }
-                }
-            }
-            return data;
-        }
-
-
-
-
 
         private Issues.Issue[] issues = new Lib.Issues.Issue[] { };
         public Issues.Issue[] Issues

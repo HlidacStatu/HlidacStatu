@@ -187,7 +187,7 @@ order by type";
 </div>
 <hr />
 
-<h3>Pomalé OCR Minion</h3>
+<h3>Pomalé OCR Minion - seznam "nejpomalejších"</h3>
 <div class="row">
     <div class="col-xs-12 col-md-6">
         <p>
@@ -204,7 +204,7 @@ order by type";
                 </tr>
             </thead>
             <tbody>
-                @foreach (var s in slowServers.Where(m => m.server.Contains("@")).OrderByDescending(o => o.order).Take(40))
+                @foreach (var s in slowServers.Where(m => m.server.Contains("@") && m.numSlow > 0).OrderByDescending(o => o.order).Take(40))
                 {
                     <tr>
                         <td>@HlidacStatu.Util.RenderData.EmailAnonymizer(s.server)</td>

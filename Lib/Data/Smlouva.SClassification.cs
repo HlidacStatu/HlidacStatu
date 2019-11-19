@@ -1,4 +1,7 @@
 ﻿using Devmasters.Core;
+using HlidacStatu.Util.Cache;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +36,17 @@ namespace HlidacStatu.Lib.Data
             public enum ClassificationsTypes
             {
 
-     
+
                 [NiceDisplayName("Ostatní")]
-                OSTATNI=0,
+                OSTATNI = 0,
 
                 [NiceDisplayName("IT")]
                 it_generic = 10000,
 
                 [NiceDisplayName("IT HW")]
-                it_hw=10001,
+                it_hw = 10001,
                 [NiceDisplayName("IT SW")]
-                it_sw=10002,
+                it_sw = 10002,
                 [NiceDisplayName("Informační systémy a servery")]
                 it_servery = 10003,
                 [NiceDisplayName("Opravy a údržba osobních počítačů")]
@@ -145,8 +148,10 @@ namespace HlidacStatu.Lib.Data
                 zdrav_kosmetika = 10503,
                 [NiceDisplayName("Opravy a údržba zdravotnických přístrojů")]
                 zdrav_opravy = 10504,
-                [NiceDisplayName("Zdravotnický materiál")] //TODO zdroje
-                zdrav_material = 10503,
+                [NiceDisplayName("Zdravotnický materiál")]
+                zdrav_material = 10505,
+                [NiceDisplayName("Zdravotnický hygienický materiál")]
+                zdrav_hygiena = 10506,
 
                 [NiceDisplayName("Voda a potraviny")]
                 jidlo_generic = 10600,
@@ -244,12 +249,14 @@ namespace HlidacStatu.Lib.Data
                 finance_ucetni = 11402,
                 [NiceDisplayName("Podnikatelské a manažerské poradenství a související služby")]
                 finance_poradenstvi = 11403,
+                [NiceDisplayName("Dotace")]
+                finance_dotace = 11404,
 
                 legal_generic = 11500,
                 [NiceDisplayName("Realitní služby")]
                 legal_reality = 11501,
                 [NiceDisplayName("Právní služby")]
-                legal_pravni =  11502,
+                legal_pravni = 11502,
                 [NiceDisplayName("Nájemní smlouvy")]
                 legal_najem = 11503,
                 [NiceDisplayName("Pronájem pozemků")]
@@ -302,15 +309,168 @@ namespace HlidacStatu.Lib.Data
             {
                 if (this.Types != null)
                 {
-                    return $"Types:{Types.Select(m=>m.ClassifType().ToString() + " ("+ m.ClassifProbability.ToString("P2") + ")").Aggregate((f,s)=>f+"; "+s)}"
+                    return $"Types:{Types.Select(m => m.ClassifType().ToString() + " (" + m.ClassifProbability.ToString("P2") + ")").Aggregate((f, s) => f + "; " + s)}"
                         + $" updated:{LastUpdate.ToString()}";
                 }
                 else
                 {
-                    return  $"Types:snull updated:{LastUpdate.ToString()}";
+                    return $"Types:snull updated:{LastUpdate.ToString()}";
                 }
                 //return base.ToString();
             }
+
+
+
+            private static string classificationBaseUrl()
+            {
+                string[] baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url")
+                    .Split(',',';');
+                //Dictionary<string, DateTime> liveEndpoints = new Dictionary<string, DateTime>();
+
+                return baseUrl[Util.Consts.Rnd.Next(baseUrl.Length)];
+            
+            }
+
+            private static volatile FileCacheManager stemCacheManager
+                = FileCacheManager.GetSafeInstance("SmlouvyStems",
+                    smlouvaKeyId => getRawStemsFromServer(smlouvaKeyId),
+                    TimeSpan.FromDays(365*10)); //10 years
+
+            private static byte[] getRawStemsFromServer(KeyAndId smlouvaKeyId)
+            {
+                Smlouva s = Smlouva.Load(smlouvaKeyId.ValueForData);
+
+                if (s == null)
+                    return null;
+
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
+
+
+                using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/stemmer"))
+                {
+                    stem.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    stem.Tries = 3;
+                    stem.TimeInMsBetweenTries = 5000;
+                    stem.Timeout = 1000*60*30; //30min
+                    stem.ContentType = "application/json; charset=utf-8";
+                    stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(s, settings);
+                    Devmasters.Net.Web.BinaryContentResult stems = null;
+                    try
+                    {
+                        Util.Consts.Logger.Debug("Getting stems from " + stem.Url);
+
+                        stems = stem.GetBinary();
+                        return stems.Binary;
+                    }
+                    catch (Exception e)
+                    {
+                        Util.Consts.Logger.Error("Classification Stemmer API error " + stem.Url, e);
+                        throw;
+                    }
+                }
+            }
+
+            public static string GetRawStems(Smlouva s, bool rewriteStems = false)
+            {
+                if (s == null)
+                    return null;
+                var key = new KeyAndId() { ValueForData = s.Id, CacheNameOnDisk = $"stem_smlouva_{s.Id}" };
+                if (rewriteStems)
+                    stemCacheManager.Delete(key);
+                var data = stemCacheManager.Get(key);
+                if (data == null)
+                    return null;
+
+                return System.Text.Encoding.UTF8.GetString(data);
+
+            }
+
+            public static Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassificationFromServer(Smlouva s, bool rewriteStems = false)
+            {
+                Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
+
+
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
+
+                var stems = GetRawStems(s, rewriteStems);
+                if (string.IsNullOrEmpty(stems))
+                {
+                    return data;
+                }
+                    
+
+                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/classifier"))
+                {
+                    classif.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    classif.Tries = 3;
+                    classif.TimeInMsBetweenTries = 5000;
+                    classif.Timeout = 180000;
+                    classif.ContentType = "application/json; charset=utf-8";
+                    classif.RequestParams.RawContent = stems;
+                    Devmasters.Net.Web.TextContentResult classifier = null;
+                    try
+                    {
+                        Util.Consts.Logger.Debug("Getting classification from " + classif.Url);
+                        classifier = classif.GetContent();
+                    }
+                    catch (Exception e)
+                    {
+                        Util.Consts.Logger.Error("Classification Classifier API " + classif.Url, e);
+                        throw;
+                    }
+
+                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/finalizer"))
+                    {
+                        fin.Method = Devmasters.Net.Web.MethodEnum.POST;
+                        fin.Tries = 3;
+                        fin.TimeInMsBetweenTries = 5000;
+                        fin.Timeout = 30000;
+                        fin.ContentType = "application/json; charset=utf-8";
+                        fin.RequestParams.RawContent = classifier.Text;
+                        Devmasters.Net.Web.TextContentResult res = null;
+                        try
+                        {
+                            Util.Consts.Logger.Debug("Getting classification finalizer from " + classif.Url);
+                            res = fin.GetContent();
+                        }
+                        catch (Exception e)
+                        {
+                            Util.Consts.Logger.Error("Classification finalizer API " + classif.Url, e);
+                            throw;
+                        }
+
+
+                        var jsonData = Newtonsoft.Json.Linq.JArray.Parse(res.Text);
+
+                        for (int i = 0; i < jsonData.Count; i++)
+                        {
+                            string key = jsonData[i][0].Value<string>().Replace("-", "_");
+                            decimal prob = jsonData[i][1].Value<decimal>();
+                            if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
+                            {
+                                if (!data.ContainsKey(typ))
+                                    data.Add(typ, prob);
+                                else if (typ == SClassification.ClassificationsTypes.OSTATNI)
+                                    Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
+
+
+                            }
+                            else
+                            {
+                                Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
+                                data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                            }
+                        }
+
+                    }
+
+                }
+                return data;
+            }
+
+
 
         }
     }
