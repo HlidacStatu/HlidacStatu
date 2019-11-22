@@ -65,13 +65,16 @@
     </table>
 }
 
-@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })
+@Html.Action("CachedAction_Child_2H", new { model = Model, NameOfView = "Detail_Child", auth = this.User.Identity.IsAuthenticated, key = Model.Id })
+
+@*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })*@
 
 
 
 @section onlyembed
 {
-    @Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child_embed" })
+    @Html.Action("CachedAction_Child_2H", new { model = Model, NameOfView = "Detail_Child_embed", auth = this.User.Identity.IsAuthenticated, key = Model.Id })
+    @*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child_embed" })*@
 
 }
 

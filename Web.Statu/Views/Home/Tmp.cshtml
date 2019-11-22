@@ -5,8 +5,12 @@
 
 }
 
+<h2>Current time: @(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff"))</h2>
+
+@Html.Action("CachedAction_Child_debug", new { model = "", NameOfView = "tmp_child", key = "1", auth = this.User.Identity.IsAuthenticated })
+
 <div class="row">
-    
+
     <div class="col-xs-3 ">
         <div class="low-box">
             <p>malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
@@ -19,68 +23,68 @@
 
 
 <div class="row">
-         <div class="col-xs-12 verticaltab-container">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 verticaltab-menu">
-              <div class="list-group">
+    <div class="col-xs-12 verticaltab-container">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 verticaltab-menu">
+            <div class="list-group">
                 <a href="#" class="list-group-item active">
-                  Flight
+                    Flight
                 </a>
                 <a href="#" class="list-group-item">
-                  Train
+                    Train
                 </a>
                 <a href="#" class="list-group-item">
-                  Hotel
+                    Hotel
                 </a>
                 <a href="#" class="list-group-item">
-                  Restaurant
+                    Restaurant
                 </a>
                 <a href="#" class="list-group-item ">
-                  Credit Card
+                    Credit Card
                 </a>
-              </div>
-            </div>
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 verticaltab">
-                <!-- flight section -->
-                <div class="verticaltab-content active">
-                    <center>
-                      <h1 class="glyphicon glyphicon-plane" style="font-size:14em;color:#55518a"></h1>
-                      <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
-                      <h3 style="margin-top: 0;color:#55518a">Flight Reservation</h3>
-                    </center>
-                </div>
-                <!-- train section -->
-                <div class="verticaltab-content">
-                    <center>
-                        <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#55518a"></h1>
-                        <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
-                        <h3 style="margin-top: 0;color:#55518a">Train Reservation</h3>
-                    </center>
-                </div>
-    
-                <!-- hotel search -->
-                <div class="verticaltab-content">
-                    <center>
-                      <h1 class="glyphicon glyphicon-home" style="font-size:12em;color:#55518a"></h1>
-                      <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
-                      <h3 style="margin-top: 0;color:#55518a">Hotel Directory</h3>
-                    </center>
-                </div>
-                <div class="verticaltab-content">
-                    <center>
-                      <h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#55518a"></h1>
-                      <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
-                      <h3 style="margin-top: 0;color:#55518a">Restaurant Diirectory</h3>
-                    </center>
-                </div>
-                <div class="verticaltab-content">
-                    <center>
-                      <h1 class="glyphicon glyphicon-credit-card" style="font-size:12em;color:#55518a"></h1>
-                      <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
-                      <h3 style="margin-top: 0;color:#55518a">Credit Card</h3>
-                    </center>
-                </div>
             </div>
         </div>
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 verticaltab">
+            <!-- flight section -->
+            <div class="verticaltab-content active">
+                <center>
+                    <h1 class="glyphicon glyphicon-plane" style="font-size:14em;color:#55518a"></h1>
+                    <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
+                    <h3 style="margin-top: 0;color:#55518a">Flight Reservation</h3>
+                </center>
+            </div>
+            <!-- train section -->
+            <div class="verticaltab-content">
+                <center>
+                    <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#55518a"></h1>
+                    <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
+                    <h3 style="margin-top: 0;color:#55518a">Train Reservation</h3>
+                </center>
+            </div>
+
+            <!-- hotel search -->
+            <div class="verticaltab-content">
+                <center>
+                    <h1 class="glyphicon glyphicon-home" style="font-size:12em;color:#55518a"></h1>
+                    <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
+                    <h3 style="margin-top: 0;color:#55518a">Hotel Directory</h3>
+                </center>
+            </div>
+            <div class="verticaltab-content">
+                <center>
+                    <h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#55518a"></h1>
+                    <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
+                    <h3 style="margin-top: 0;color:#55518a">Restaurant Diirectory</h3>
+                </center>
+            </div>
+            <div class="verticaltab-content">
+                <center>
+                    <h1 class="glyphicon glyphicon-credit-card" style="font-size:12em;color:#55518a"></h1>
+                    <h2 style="margin-top: 0;color:#55518a">Cooming Soon</h2>
+                    <h3 style="margin-top: 0;color:#55518a">Credit Card</h3>
+                </center>
+            </div>
+        </div>
+    </div>
 </div>
 
 

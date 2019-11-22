@@ -121,6 +121,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Lib.Db.Insolven
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsolvenceExport", "..\PrivateInternals\InsolvenceExport\InsolvenceExport.csproj", "{66EC3823-25A4-406F-A1FC-A6BF1938DE38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web2.Ocr", "..\PrivateInternals\OCR\Web2.Ocr\Web2.Ocr.csproj", "{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -921,6 +923,30 @@ Global
 		{66EC3823-25A4-406F-A1FC-A6BF1938DE38}.x86Only|x64.Build.0 = Release|Any CPU
 		{66EC3823-25A4-406F-A1FC-A6BF1938DE38}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{66EC3823-25A4-406F-A1FC-A6BF1938DE38}.x86Only|x86.Build.0 = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|x64.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Debug|x86.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|x64.ActiveCfg = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|x64.Build.0 = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|x86.ActiveCfg = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Release|x86.Build.0 = Release|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|x64.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|x64.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.Stage|x86.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|Any CPU.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|x64.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|x64.Build.0 = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|x86.ActiveCfg = Debug|Any CPU
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA}.x86Only|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -944,10 +970,11 @@ Global
 		{21B99C1E-4883-499D-9AF9-221F672B36DC} = {0A162B8A-5F41-4543-88E0-D739A012D9CE}
 		{C52D0051-0BD8-49AC-9D33-A68D44EEECCB} = {F0B0A6EA-FAB7-4F57-9C96-C13E4B1F3812}
 		{8B58868A-10B5-436F-90F2-FC9C0D458C76} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
+		{0B494B71-B135-4DED-98F7-FE00CF8CFDCA} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

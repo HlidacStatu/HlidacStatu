@@ -1365,6 +1365,7 @@
     <Content Include="Views\Data\_SearchForm.cshtml" />
     <Content Include="Views\Home\Subjekt_Zahranicni.cshtml" />
     <Content Include="Views\ApiV1\OCRStat.cshtml" />
+    <Content Include="Views\Home\Tmp_child.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

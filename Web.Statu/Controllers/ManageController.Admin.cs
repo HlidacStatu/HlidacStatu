@@ -50,15 +50,15 @@ namespace HlidacStatu.Web.Controllers
             {
                 HlidacStatu.Plugin.Enhancers.ManualChanges mch = new Plugin.Enhancers.ManualChanges();
 
-                var subjList = s.Prijemce.ToList();
-                subjList.Insert(0, s.Platce);
+                var allSubjList = s.Prijemce.ToList();
+                allSubjList.Insert(0, s.Platce);
 
-                var platce = subjList[Convert.ToInt32(form["platce"])];
+                var platce = allSubjList[Convert.ToInt32(form["platce"])];
                 List<Smlouva.Subjekt> prijemci = new List<Smlouva.Subjekt>();
                 var iprijemci = form["prijemce"].Split(',').Select(m => Convert.ToInt32(m));
                 foreach (var i in iprijemci)
                 {
-                    prijemci.Add(subjList[i]);
+                    prijemci.Add(allSubjList[i]);
                 }
 
                 mch.UpdateSmluvniStrany(ref s, platce, prijemci.ToArray());

@@ -160,7 +160,6 @@ namespace HlidacStatu.Web.Controllers
             return View("Porovnat");
         }
 
-        [OutputCache(VaryByParam = "*", Duration = 60 * 1)]
 
         public ActionResult Tmp()
         {
@@ -168,7 +167,7 @@ namespace HlidacStatu.Web.Controllers
             int b = 2;
             //int c = (a / (b - 2));
             //Console.Write(c);
-            return View("Bot");
+            return View();
         }
 
         public ActionResult Index()

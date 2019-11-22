@@ -60,7 +60,7 @@
 
     @Util.AddVisitImg("/subjekt/" + Model.ICO)
 
-    @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Profile", firma = Model.firma })
+    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Profile", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
 
     <div style="height:34px"></div>
 
@@ -68,24 +68,31 @@
     {
         @*@Html.Partial("Subjekt_Vztahy", Model.firma)*@
 
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+
+        @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
+            @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })*@
 
     }
     else
     {
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
+        @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
+            @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })*@
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
     }
 
     <hr class="morespace" />
     @if (Request.QueryString["verze"] == "b1")
     {
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat2", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+        @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })*@
     }
     else
     {
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })
+        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+        @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })*@
     }
 </div>
 
