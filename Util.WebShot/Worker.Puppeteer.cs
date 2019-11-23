@@ -1,5 +1,4 @@
-﻿using HlidacStatu.OCRService;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace HlidacStatu.Util.WebShot

@@ -782,7 +782,7 @@
       <Name>Lib.Data.External</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.OCR.Api.Client\Lib.OCR.Api.Client.csproj">
-      <Project>{7B8622C4-0878-4E70-AE38-45797F2BC45F}</Project>
+      <Project>{7609680c-3c9d-4735-8709-e64f7116ab70}</Project>
       <Name>Lib.OCR.Api.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugin.TransparetniUcty\Plugin.TransparetniUcty.csproj">

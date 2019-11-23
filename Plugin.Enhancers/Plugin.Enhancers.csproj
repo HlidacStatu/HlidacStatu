@@ -192,7 +192,7 @@
       <Name>GhostscriptSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.OCR.Api.Client\Lib.OCR.Api.Client.csproj">
-      <Project>{7b8622c4-0878-4e70-ae38-45797f2bc45f}</Project>
+      <Project>{7609680c-3c9d-4735-8709-e64f7116ab70}</Project>
       <Name>Lib.OCR.Api.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib\Lib.csproj">
