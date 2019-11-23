@@ -8,7 +8,7 @@
     try
     {
         sml = HlidacStatu.Lib.Data.Smlouva.Load(Model.Item1);
-        classif = sml?.GetClassification();
+        classif = HlidacStatu.Lib.Data.Smlouva.SClassification.GetClassificationFromServer(sml);
 
     }
     catch (Exception e)
