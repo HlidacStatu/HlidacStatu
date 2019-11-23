@@ -449,9 +449,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 &&
                 objDyn.id == null)
                 throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetItemNoSetID);
+            else
+                id = objDyn.Id == null ? (string)objDyn.id : (string)objDyn.Id;
 
             objDyn.DbCreated = DateTime.UtcNow;
             objDyn.DbCreatedBy = createdBy;
+
+            
 
             //check special HsProcessType
             var jobj = (Newtonsoft.Json.Linq.JObject)objDyn;
