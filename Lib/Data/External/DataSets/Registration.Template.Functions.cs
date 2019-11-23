@@ -65,6 +65,23 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     }
                 }
 
+                public static string fn_RenderPersonNoLink(string osobaId, string jmeno = "", string prijmeni= "", string rokNarozeni = "")
+                {
+                    if (!string.IsNullOrEmpty(osobaId))
+                    {
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(osobaId);
+                        if (o != null)
+                            return $"<span>{o.FullNameWithYear(false)}</span>";
+                    }
+
+                    var narozeni = "";
+                    if (!string.IsNullOrEmpty(rokNarozeni))
+                        narozeni = $"(* {rokNarozeni})";
+                    if (!string.IsNullOrEmpty(jmeno) || !string.IsNullOrEmpty(prijmeni))
+                        return $"<span>{jmeno} {prijmeni} {narozeni}</span>";
+                    else
+                        return "";
+                }
 
                 public static string fn_RenderPersonWithLink(string osobaId, string jmeno, string prijmeni, string rokNarozeni = "")
                 {

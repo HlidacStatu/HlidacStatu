@@ -538,7 +538,7 @@ namespace HlidacStatu.Web.Controllers
                             if (destType == typeof(string))
                                 value = svalue;
                             else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                                value = Util.ParseTools.ToDate(svalue);
+                                value = Util.ParseTools.ToDateTime(svalue);
                             else if (destType == typeof(decimal) || destType == typeof(decimal?))
                             {
                                 value = Util.ParseTools.ToDecimal(svalue);

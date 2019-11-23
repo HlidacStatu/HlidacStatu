@@ -249,8 +249,12 @@ namespace HlidacStatu.Util
                     if (combinations == null)
                     {
                         List<string> cc = new List<string>();
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.ff");
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffK");
                         cc.Add("yyyy-MM-ddTHH:mm:ss.fff");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.fff");
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.fffK");
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffff");
+                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffffK");
                         foreach (var d in dateFormats)
                             foreach (var t in timeFormats)
                                 cc.Add((d + " " + t).Trim());
