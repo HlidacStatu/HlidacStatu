@@ -7,7 +7,9 @@
 @{
     Layout = null;
 
-    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.param1
+        );
 
 }
 <div class="onlyembed">
