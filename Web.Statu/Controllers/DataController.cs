@@ -180,8 +180,8 @@ namespace HlidacStatu.Web.Controllers
                     var oo = orderlines[i].Split('|');
                     if (oo.Length == 2)
                     {
-                        orderList[i, 0] = oo[0];
-                        orderList[i, 1] = oo[1];
+                        orderList[i, 0] = oo[0].Replace("\r","").Replace("\n","").Replace("\t", "").Trim();
+                        orderList[i, 1] = oo[1].Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
                     }
                 }
             }

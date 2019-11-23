@@ -38,7 +38,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public Template detailTemplate { get; set; }
 
         public const string DbCreatedLabel = "Datumu importu do db";
-        public string[,] orderList { get; set; } = new string[,] { { DbCreatedLabel , "DbCreated" } };
+        
+        string[,] _orderList = new string[,] { { DbCreatedLabel, "DbCreated" } };
+        public string[,] orderList { 
+            get { return _orderList; }
+            set {
+                string[,] tmp = value;
+                for (int i = 0; i < tmp.GetLength(0); i++)
+                {
+                    tmp[i, 0] = tmp[i,0].Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
+                    tmp[i, 1] = tmp[i,1].Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
+                }
+                _orderList = tmp;
+            }
+        }
+        //.Replace("\r","").Replace("\n","").Replace("\t", "").Trim()    
+            
 
         public void NormalizeShortName()
         {
