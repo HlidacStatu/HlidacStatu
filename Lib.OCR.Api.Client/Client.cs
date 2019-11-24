@@ -425,7 +425,7 @@ namespace HlidacStatu.Lib.OCR.Api
                 }
                 catch (System.Net.WebException ex)
                 {
-                    throw new ApiException("WaitingForResultAsync web exc", ex);
+                    throw new ApiException("WaitingForResult  web exc", ex);
                 }
                 TaskStatus status = Newtonsoft.Json.JsonConvert.DeserializeObject<TaskStatus>(data);
                 if (status.Status == TaskStatus.CurrentStatus.NotFound)
