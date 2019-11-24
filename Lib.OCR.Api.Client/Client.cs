@@ -89,7 +89,8 @@ namespace HlidacStatu.Lib.OCR.Api
             string taskId = null;
 
             Api.CallbackData callBackData = null; //temporaty disable callBack
-
+            byte[] resbyte;
+            string res="";
             try
             {
                 if (string.IsNullOrEmpty(origFilename))
@@ -119,8 +120,8 @@ namespace HlidacStatu.Lib.OCR.Api
                         + "&callbackData=" + System.Net.WebUtility.UrlEncode(callBackDataString);
 
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
-                    var resbyte = await wc.DownloadDataTaskAsync(fullUrl);
-                    var res = System.Text.Encoding.UTF8.GetString(resbyte);
+                    resbyte = await wc.DownloadDataTaskAsync(fullUrl);
+                    res = System.Text.Encoding.UTF8.GetString(resbyte);
                     Newtonsoft.Json.Linq.JToken json = Newtonsoft.Json.Linq.JToken.Parse(res);
 
                     if (json["taskid"] != null)
@@ -144,12 +145,12 @@ namespace HlidacStatu.Lib.OCR.Api
             }
             catch (System.Net.WebException e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
             catch (Exception e)
             {
-                logger.Error($"exception API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Error($"exception API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw new ApiException("exception API TextFromFile  ", e);
             }
             finally
@@ -211,6 +212,8 @@ namespace HlidacStatu.Lib.OCR.Api
 
             string fullUrl = null;
             string taskId = null;
+            byte[] resbyte;
+            string res = "";
             try
             {
                 if (string.IsNullOrEmpty(origFilename))
@@ -240,8 +243,8 @@ namespace HlidacStatu.Lib.OCR.Api
                         + "&callbackData=" + System.Net.WebUtility.UrlEncode(callBackDataString);
 
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
-                    var resbyte = wc.DownloadData(fullUrl);
-                    var res = System.Text.Encoding.UTF8.GetString(resbyte);
+                    resbyte = wc.DownloadData(fullUrl);
+                    res = System.Text.Encoding.UTF8.GetString(resbyte);
                     Newtonsoft.Json.Linq.JToken json = Newtonsoft.Json.Linq.JToken.Parse(res);
 
                     if (json["taskid"] != null)
@@ -265,12 +268,12 @@ namespace HlidacStatu.Lib.OCR.Api
             }
             catch (System.Net.WebException e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse:{res} \n" + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
             catch (Exception e)
             {
-                logger.Error($"exception API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Error($"exception API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw new ApiException("exception API TextFromFile  ", e);
             }
             finally
@@ -290,6 +293,8 @@ namespace HlidacStatu.Lib.OCR.Api
                 callBackDataString = Newtonsoft.Json.JsonConvert.SerializeObject(callBackData);
 
             var fullUrl = "";
+            byte[] resbyte;
+            string res = "";
             try
             {
                 using (WebOcr wc = new WebOcr())
@@ -306,10 +311,10 @@ namespace HlidacStatu.Lib.OCR.Api
 
                     logger.Debug("Uploading file for OCR " + "addTask.ashx?" + param);
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
-                    var resbyte = wc.UploadFile(fullUrl, "POST", fileOnDisk);
+                    resbyte = wc.UploadFile(fullUrl, "POST", fileOnDisk);
                     logger.Debug("Uploaded file for OCR " + "addTask.ashx?" + param);
 
-                    var res = System.Text.Encoding.UTF8.GetString(resbyte);
+                    res = System.Text.Encoding.UTF8.GetString(resbyte);
                     Newtonsoft.Json.Linq.JToken json = Newtonsoft.Json.Linq.JToken.Parse(res);
 
                     if (json["taskid"] != null)
@@ -326,12 +331,12 @@ namespace HlidacStatu.Lib.OCR.Api
             }
             catch (System.Net.WebException e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
             catch (Exception e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n" + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw;
             }
         }
@@ -347,6 +352,8 @@ namespace HlidacStatu.Lib.OCR.Api
                 callBackDataString = Newtonsoft.Json.JsonConvert.SerializeObject(callBackData);
 
             var fullUrl = "";
+            byte[] resbyte;
+            string res = "";
             try
             {
                 using (WebOcr wc = new WebOcr())
@@ -361,9 +368,9 @@ namespace HlidacStatu.Lib.OCR.Api
                         + "&callbackData=" + System.Net.WebUtility.UrlEncode(callBackDataString);
 
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
-                    var resbyte = await wc.UploadFileTaskAsync(fullUrl, "POST", fileOnDisk);
+                    resbyte = await wc.UploadFileTaskAsync(fullUrl, "POST", fileOnDisk);
 
-                    var res = System.Text.Encoding.UTF8.GetString(resbyte);
+                    res = System.Text.Encoding.UTF8.GetString(resbyte);
                     Newtonsoft.Json.Linq.JToken json = Newtonsoft.Json.Linq.JToken.Parse(res);
 
                     if (json["taskid"] != null)
@@ -379,12 +386,12 @@ namespace HlidacStatu.Lib.OCR.Api
             }
             catch (System.Net.WebException e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n " + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw new ApiException("called ext API ", e);
             }
             catch (Exception e)
             {
-                logger.Debug($"called ext API TextFromFile {fullUrl}.\n" + ApiUrl, e);
+                logger.Debug($"called ext API TextFromFile {fullUrl}.\nResponse: {res}\n" + ApiUrl, e);
                 throw;
             }
         }
