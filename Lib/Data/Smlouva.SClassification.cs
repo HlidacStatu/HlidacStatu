@@ -162,11 +162,17 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Bezpečnostní a ochranné vybavení a údržba")]
                 bezpecnost_generic = 10700,
-                bezpecnost = 10701,
+                [NiceDisplayName("Kamerové systémy")]
+                bezpecnost_kamery = 10701,
+                [NiceDisplayName("Hasičské vybavení")] 
+                bezpecnost_hasici = 10702,
+                [NiceDisplayName("Zbraně")]
+                bezpecnost_zbrane = 10703,
+
                 //bezpecnost;bezpecnost-generic;Bezpečnost generická;35;506;5155;519
                 //bezpecnost; bezpecnost; Bezpečnostní a ochranné vybavení a údržba;35;506;5155;519
 
-                //
+            //
 
 
                 [NiceDisplayName("Přírodní zdroje")]
@@ -223,6 +229,8 @@ namespace HlidacStatu.Lib.Data
                 remeslo_textil = 11202,
                 [NiceDisplayName("Hudební nástroje")]
                 remeslo_hudba = 11203,
+                [NiceDisplayName("Sport a sportoviště")]
+                remeslo_sport = 11204,
 
                 [NiceDisplayName("Sociální služby")]
                 social_generic = 11300,
@@ -252,6 +260,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Dotace")]
                 finance_dotace = 11404,
 
+                [NiceDisplayName("Právní a realitní služby")]
                 legal_generic = 11500,
                 [NiceDisplayName("Realitní služby")]
                 legal_reality = 11501,
@@ -280,8 +289,10 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
                 marketing_generic = 11800,
+                [NiceDisplayName("Marketing")]
                 marketing = 11801,
 
+                [NiceDisplayName("Jiné služby")]
                 jine_generic = 11900,
                 [NiceDisplayName("Pohostinství a ubytovací služby a maloobchodní služby")]
                 jine_pohostinstvi = 11901,
