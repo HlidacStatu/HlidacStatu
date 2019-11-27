@@ -2,6 +2,7 @@
 using HlidacStatu.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -47,6 +48,57 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.ApiResponseError = res;
                 return View(newReg);
             }
+        }
+        [HttpGet]
+        public ActionResult CreateFromBackup()
+        {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (Request.IsAuthenticated == false)
+            {
+
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateFromBackup(FormCollection form, int step, HttpPostedFileBase file)
+        {
+            var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+            if (Request.IsAuthenticated == false)
+            {
+
+                return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
+            }
+
+            string json = "";
+
+            if (file != null && file.InputStream != null && file.InputStream.CanRead)
+            {
+                using (StreamReader reader = new StreamReader(file.InputStream))
+                {
+                    json = reader.ReadToEnd();
+                }
+            }
+            Registration reg = null;
+            try
+            {
+                 reg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(json);
+            }
+            catch  { }
+            if (reg == null)
+                ViewBag.ApiResponseError = ApiResponseStatus.Error(500, "Nekorektní záloha datasetu", "Nekorektní záloha datasetu");
+
+            if (reg != null)
+            {
+                var ds = DataSet.CachedDatasets.Get(reg.datasetId);
+                if (ds != null)
+                {
+                    ViewBag.ExistsDS = ds.Registration();
+                }
+            }
+
+            return View("CreateFromBackup"+step, reg);
         }
 
         [HttpGet]

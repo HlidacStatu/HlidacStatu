@@ -89,6 +89,9 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
+
+        
+
         public ActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -213,11 +216,12 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction("index");
 
+
             DataSet datasource = null;
             try
             {
                 datasource = DataSet.CachedDatasets.Get(id);
-                if (model == null)
+                if (datasource == null)
                     return RedirectToAction("index", new { id = id });
 
                 model = datasource.SearchDataRaw(model.Q, model.Page, model.PageSize, model.Order);

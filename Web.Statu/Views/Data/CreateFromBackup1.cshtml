@@ -1,0 +1,66 @@
+﻿@model Registration
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Přidání datasetu ze zálohy parametrů datasetu";
+    ViewBag.SubTitle = "Postup pro netechnické uživatele";
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    Registration existReg = ViewBag.ExistsDS as Registration;
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Databáze</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        @if (existReg != null)
+        {
+            <h2>Problém.</h2>
+            <p class="bg-danger">
+                Dataset <b>@(existReg.name)</b> už existuje. Pokud chcete obnovit nastavení tohoto datasetu ze zálohy, musíte <a href="/data/delete/@existReg.id">existující dataset smazat</a>.
+            </p>
+        }
+        else
+        {
+            var res = DataSet.Api.Create(Model, Request?.RequestContext?.HttpContext?.User?.Identity?.Name);
+
+            <p class="bg-success">
+                Dataset <b>@(Model.name)</b> byl vytvořen.  <a href="/data/manage/@Model.id">Pokračujte zde</a>.
+            </p>
+
+
+        }
+    </div>
+</div>

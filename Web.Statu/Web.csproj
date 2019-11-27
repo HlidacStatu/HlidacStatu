@@ -1370,6 +1370,8 @@
     <Content Include="Views\ApiV1\OCRStat.cshtml" />
     <Content Include="Views\Home\Tmp_child.cshtml" />
     <Content Include="Views\ApiV1\ModalClassification.cshtml" />
+    <Content Include="Views\Data\CreateFromBackup.cshtml" />
+    <Content Include="Views\Data\CreateFromBackup1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
