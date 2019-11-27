@@ -525,7 +525,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        // search all people by neme, surname and dob
+        // search all people by name, surname and dob
         public static IEnumerable<Osoba> FindAll(string jmeno, string prijmeni, string rokNarozeni)
         {
             if (string.IsNullOrWhiteSpace(jmeno)
