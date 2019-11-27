@@ -164,15 +164,17 @@ namespace HlidacStatu.Lib.Data
                 bezpecnost_generic = 10700,
                 [NiceDisplayName("Kamerové systémy")]
                 bezpecnost_kamery = 10701,
-                [NiceDisplayName("Hasičské vybavení")] 
+                [NiceDisplayName("Hasičské vybavení, požární ochrana")] 
                 bezpecnost_hasici = 10702,
                 [NiceDisplayName("Zbraně")]
                 bezpecnost_zbrane = 10703,
+                [NiceDisplayName("Ostraha objektů")]
+                bezpecnost_ostraha = 10704,
 
                 //bezpecnost;bezpecnost-generic;Bezpečnost generická;35;506;5155;519
                 //bezpecnost; bezpecnost; Bezpečnostní a ochranné vybavení a údržba;35;506;5155;519
 
-            //
+                //
 
 
                 [NiceDisplayName("Přírodní zdroje")]
@@ -218,8 +220,6 @@ namespace HlidacStatu.Lib.Data
                 kancelar_cisteni = 11105,
                 [NiceDisplayName("Nábor zaměstnanců")]
                 kancelar_nabor = 11106,
-                [NiceDisplayName("Vyhledávací a bezpečnostní služby")]
-                kancelar_bezpecnost = 11107,
 
                 [NiceDisplayName("Řemesla")]
                 remeslo_generic = 11200,
@@ -246,8 +246,7 @@ namespace HlidacStatu.Lib.Data
                 social_kultura = 11305,
                 [NiceDisplayName("Knihovny, archivy, muzea a jiné")]
                 social_knihovny = 11306,
-                [NiceDisplayName("Sportovní služby")]
-                social_sport = 11307,
+
 
                 [NiceDisplayName("Finance")]
                 finance_generic = 11400,
