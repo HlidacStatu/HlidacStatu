@@ -1,12 +1,6 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
-using HlidacStatu.Lib.Data.External.DataSets;
 using HlidacStatu.Util;
 using HlidacStatu.Lib.Data;
-using System;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Text;
 using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
@@ -15,7 +9,42 @@ namespace HlidacStatu.Web.Controllers
 {
     public partial class ApiV1Controller : Controllers.GenericAuthController
     {
-        
+
+        public ActionResult NasiPolitici_Find(string query)
+        {
+            if (!Framework.ApiAuth.IsApiAuth(this,
+                parameters: new Framework.ApiCall.CallParameter[] {
+                    new Framework.ApiCall.CallParameter("query", query),
+                })
+                .Authentificated)
+            {
+                //Response.StatusCode = 401;
+                return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var osoby = Osoba.GetPolitikByNameFtx(query, 1000)
+                    .Where(m => m.Status == 3) // politik
+                    .Select(m => new
+                    {
+                        id = m.NameId,
+                        jmeno = m.Jmeno,
+                        prijmeni = m.Prijmeni,
+                        narozeni = m.Narozeni?.ToString("yyyy") ?? "",
+                        photo = m.GetPhotoUrl(false),
+                        description = InfoFact.RenderInfoFacts(
+                            m.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(), 
+                            4, 
+                            true, 
+                            true, 
+                            "", 
+                            "<p>{0}</p>")
+                    });
+
+                return Json(osoby, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         public ActionResult NasiPolitici_GetData(string id)
         {
@@ -57,6 +86,22 @@ namespace HlidacStatu.Web.Controllers
                 var funkceOsoba = o.Description(true,
                         m => types.Contains(m.Type),
                         20);
+
+                var roleOsoba = o.Events(m => types.Contains(m.Type))
+                    .Select(e => new { 
+                        role = e.AddInfo,
+                        //hodnota = e.AddInfoNum,
+                        datumOd = e.DatumOd,
+                        datumDo = e.DatumDo,
+                        //note = e.Note,
+                        organizace = e.Organizace,
+                        //title = e.Title,
+                        //zdroj = e.Zdroj,
+                        //eventId = e.pk,
+                        //typeid = e.Type,
+                        //type = e.TypeName
+                    })
+                    .ToArray();
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
                 //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
@@ -104,6 +149,7 @@ namespace HlidacStatu.Web.Controllers
                     photo = photo,
                     popis = statDescription,
                     funkce = funkceOsoba,
+                    role = roleOsoba,
                     osoba_v_InsR_dluznik = oinsDluznik.Total,
                     osoba_v_InsR_veritel = oinsVeritel.Total,
                     osoba_v_InsR_spravce = oinsSpravce.Total,
