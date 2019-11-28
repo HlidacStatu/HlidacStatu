@@ -28,9 +28,9 @@ namespace HlidacStatu.Web.Controllers
                     .Select(m => new
                     {
                         id = m.NameId,
-                        jmeno = m.Jmeno,
-                        prijmeni = m.Prijmeni,
-                        narozeni = m.Narozeni?.ToString("yyyy") ?? "",
+                        name = m.Jmeno,
+                        surname = m.Prijmeni,
+                        birthYear = m.Narozeni?.ToString("yyyy") ?? "",
                         photo = m.GetPhotoUrl(false),
                         description = InfoFact.RenderInfoFacts(
                             m.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(), 
@@ -44,7 +44,6 @@ namespace HlidacStatu.Web.Controllers
                 return Json(osoby, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         public ActionResult NasiPolitici_GetData(string id)
         {
@@ -74,7 +73,12 @@ namespace HlidacStatu.Web.Controllers
                 var statDescription =
                     HlidacStatu.Util.InfoFact.RenderInfoFacts(
                         o.InfoFacts().Where(i => i.Level != HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
-                            , 4, true, true, "", "<p>{0}</p>");
+                            , 4, true, true, "", "{0}");
+
+                var angazovanost =
+                    o.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Text
+                    ?? o.InfoFacts().First().Text;
+
 
                 int[] types = {
                     (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
@@ -90,16 +94,9 @@ namespace HlidacStatu.Web.Controllers
                 var roleOsoba = o.Events(m => types.Contains(m.Type))
                     .Select(e => new { 
                         role = e.AddInfo,
-                        //hodnota = e.AddInfoNum,
-                        datumOd = e.DatumOd,
-                        datumDo = e.DatumDo,
-                        //note = e.Note,
-                        organizace = e.Organizace,
-                        //title = e.Title,
-                        //zdroj = e.Zdroj,
-                        //eventId = e.pk,
-                        //typeid = e.Type,
-                        //type = e.TypeName
+                        dateFrom = e.DatumOd,
+                        dateTo = e.DatumDo,
+                        organisation = e.Organizace
                     })
                     .ToArray();
 
@@ -132,35 +129,52 @@ namespace HlidacStatu.Web.Controllers
                 var sponzorstvi = o.Events(m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor)
                     .Select(m => new
                                 {
-                                    strana = m.Organizace,
-                                    hodnotaDaru = m.AddInfoNum,
-                                    rok = m.DatumOd?.Year,
-                                    zdroj = m.Zdroj
+                                    party = m.Organizace,
+                                    donatedAmount = m.AddInfoNum,
+                                    year = m.DatumOd?.Year,
+                                    source = m.Zdroj
                                 }
                                 ).ToArray();
+
+                var insPerson = new
+                {
+                    debtorCount = oinsDluznik.Total,
+                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=dluznici.osobaId:{o.NameId}",
+                    creditorCount = oinsVeritel.Total,
+                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=veritele.osobaId:{o.NameId}",
+                    bailiffCount = oinsSpravce.Total,
+                    bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=spravci.osobaId:{o.NameId}"
+                };
+
+                var insCompany = new
+                {
+                    debtorCount = insDluznik.Total,
+                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaiddluznik:{o.NameId}",
+                    creditorCount = insVeritel.Total,
+                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidveritel:{o.NameId}",
+                    bailiffCount = insSpravce.Total,
+                    bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidspravce:{o.NameId}"
+                };
 
                 var result = new
                 {
                     id = o.NameId,
-                    titulPred = o.TitulPred,
-                    titulPo = o.TitulPo,
-                    jmeno = o.Jmeno,
-                    prijmeni = o.Prijmeni,
-                    narozeni = o.Narozeni,
-                    umrti = o.Umrti,
+                    namePrefix = o.TitulPred,
+                    nameSuffix = o.TitulPo,
+                    name = o.Jmeno,
+                    surname = o.Prijmeni,
+                    birthDate = o.Narozeni,
+                    deathDate = o.Umrti,
                     status = o.StatusOsoby().ToString(),
                     photo = photo,
-                    popis = statDescription,
-                    funkce = funkceOsoba,
-                    role = roleOsoba,
-                    osoba_v_InsR_dluznik = oinsDluznik.Total,
-                    osoba_v_InsR_veritel = oinsVeritel.Total,
-                    osoba_v_InsR_spravce = oinsSpravce.Total,
-                    firmy_osoby_v_InsR_dluznik = insDluznik.Total,
-                    firmy_osoby_v_InsR_veritel = insVeritel.Total,
-                    firmy_osoby_v_InsR_spravce = insSpravce.Total,
-                    zdroj = o.GetUrl(false),
-                    sponzoring = sponzorstvi
+                    description = statDescription,
+                    companyConnection = angazovanost,
+                    //funkce = funkceOsoba,
+                    roles = roleOsoba,
+                    insolvencyPerson = insPerson,
+                    insolvencyCompany = insCompany,
+                    source = o.GetUrl(false),
+                    sponsor = sponzorstvi
                 };
 
                 return Json(result, JsonRequestBehavior.AllowGet);
