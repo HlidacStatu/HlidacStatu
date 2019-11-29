@@ -704,7 +704,7 @@ else
             SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
         );
     }
-    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO);
+    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO,true);
     var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries, 1, 5);
     if (dsSearch.IsValid && dsSearch.Total > 0)
     {

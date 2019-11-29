@@ -14,11 +14,11 @@ namespace HlidacStatu.Lang.CS
 
         public static string[] Stems(string text)
         {
-            HttpClientHandler httpClientHandler = new HttpClientHandler()
-            {
-                Proxy = new WebProxy(string.Format("{0}:{1}", "127.0.0.1", 8888), false)
-            };
-            var wc = new System.Net.Http.HttpClient(httpClientHandler);
+            //HttpClientHandler httpClientHandler = new HttpClientHandler()
+            //{
+            //    Proxy = new WebProxy(string.Format("{0}:{1}", "127.0.0.1", 8888), false)
+            //};
+            var wc = new System.Net.Http.HttpClient();
             try
             {
 
@@ -29,7 +29,7 @@ namespace HlidacStatu.Lang.CS
             }
             catch (Exception e)
             {
-                return new string[] { };
+                throw;
             }
             finally
             {
