@@ -45,6 +45,8 @@ namespace HlidacStatu.Lib.Data
             Politik = 3,
         }
 
+        
+
         public bool IsValid()
         {
             return !string.IsNullOrEmpty(this.Jmeno) && !string.IsNullOrEmpty(this.Prijmeni) && this.InternalId > 0;
@@ -561,15 +563,16 @@ namespace HlidacStatu.Lib.Data
         {
             string nquery = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno.NormalizeToPureTextLower());
 
-            var res = Lib.StaticData.Politici.Get()
+            var res = Lib.StaticData.PolitickyAktivni.Get()
            .Where(m => m != null)
            .Where(m =>
-               m.PrijmeniAscii.StartsWith(nquery, StringComparison.CurrentCultureIgnoreCase)
-               || m.JmenoAscii.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase)
-               || (m.JmenoAscii + " " + m.PrijmeniAscii).StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase)
-               || (m.PrijmeniAscii + " " + m.JmenoAscii).StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase)
+               m.PrijmeniAscii?.StartsWith(nquery, StringComparison.CurrentCultureIgnoreCase) == true
+               || m.JmenoAscii?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+               || (m.JmenoAscii + " " + m.PrijmeniAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+               || (m.PrijmeniAscii + " " + m.JmenoAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                )
-           .OrderBy(m => m.Prijmeni)
+           .OrderByDescending(m=>m.Status)
+           .ThenBy(m => m.Prijmeni)
            .Take(maxNumOfResults);
             return res;
         }
@@ -730,6 +733,21 @@ namespace HlidacStatu.Lib.Data
             }
             return null;
         }
+        public string PohlaviCalculated()
+        {
+            var sex = new Lang.CS.Vokativ(this.FullName()).Sex;
+            switch (sex)
+            {
+                case Lang.CS.Vokativ.SexEnum.Woman:
+                    return "f";
+                case Lang.CS.Vokativ.SexEnum.Man:
+                    return "m";
+                case Lang.CS.Vokativ.SexEnum.Unknown:
+                default:
+                    return "";
+            }
+        }
+
         public Osoba Save(params OsobaExternalId[] externalIds)
         {
 
@@ -745,10 +763,15 @@ namespace HlidacStatu.Lib.Data
                     this.NameId = GetUniqueNamedId();
                 }
 
-                db.Osoba.Attach(this);
-
                 this.LastUpdate = DateTime.Now;
 
+                if (this.Pohlavi != "f" || this.Pohlavi != "m")
+                {
+                    var sex = PohlaviCalculated();
+
+                }
+
+                db.Osoba.Attach(this);
 
 
                 if (this.InternalId == 0)
