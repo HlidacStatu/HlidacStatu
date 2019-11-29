@@ -296,7 +296,7 @@
                                 bool first = true;
                                 foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[ss.ico])
                                 {
-                                    HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.Politici
+                                    HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.PolitickyAktivni
                                         .Get()
                                         .Where(m => m.InternalId == pId)
                                         .FirstOrDefault();

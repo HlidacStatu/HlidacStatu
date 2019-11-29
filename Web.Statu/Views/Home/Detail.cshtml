@@ -47,7 +47,7 @@
                 <td>
                     @foreach (var cl in Model.Classification.Types)
                     {
-                        <div>@(cl.ClassifType().ToNiceDisplayName()) - @(cl.ClassifProbability)</div>
+                        <div>@(cl.ClassifTypeName()) - @(cl.ClassifProbability)</div>
                     }
                 </td>
             </tr>

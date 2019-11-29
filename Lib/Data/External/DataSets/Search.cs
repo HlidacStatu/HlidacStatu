@@ -9,19 +9,24 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     public static class Search
     {
 
-        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query, string attrNameModif="")
+        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query, bool addKeyword, string attrNameModif="")
         {
             var props = ds.GetMappingList(mappingProperty, attrNameModif).ToArray();
+            if (addKeyword)
+                for (int i = 0; i < props.Length; i++)
+                {
+                    props[i] += ".keyword";
+                }
             var qSearch = SearchDataQuery(props, query);
             return qSearch;
         }
 
-        public static Dictionary<DataSet, string> GetSpecificQueriesForDatasets(string mappingProperty, string query)
+        public static Dictionary<DataSet, string> GetSpecificQueriesForDatasets(string mappingProperty, string query, bool addKeyword)
         {
             Dictionary<DataSet, string> queries = new Dictionary<DataSet, string>();
             foreach (var ds in DataSetDB.ProductionDataSets.Get())
             {
-                var qSearch = GetSpecificQueriesForDataset(ds, mappingProperty, query);
+                var qSearch = GetSpecificQueriesForDataset(ds, mappingProperty, query,addKeyword);
                 if (!string.IsNullOrEmpty(qSearch))
                 {
                     queries.Add(ds, qSearch);
@@ -219,13 +224,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static QueryContainer GetSimpleQuery(DataSet ds, string query)
         {
 
-            var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "${q}");
+            var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "${q}",false);
             var osobaIdQuerypathToIco = HlidacStatu.Lib.Data.External.DataSets.Search
-                            .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}")
+                            .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}",true)
                             + " OR ( " + simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${v} )";
 
             var osobaIdQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search
-                .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}");
+                .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true);
 
             var osobaQP = "";
             if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
@@ -236,7 +241,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 osobaQP = osobaIdQuerypathToIco;
 
             Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
-                    new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico"){ 
+                    new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
+                    { 
                         AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}" 
                     },
                     new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),

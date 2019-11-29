@@ -269,7 +269,7 @@
         {
             foreach (var cl in rec.Classification.Types.OrderByDescending(m=>m.ClassifProbability))
             {
-            <div style=""><b>@(cl.ClassifType().ToNiceDisplayName())</b>&nbsp;-&nbsp;@Html.Raw(cl.ClassifProbability.ToString("P4").Replace(" ","&nbsp;"))</div>
+            <div style=""><b>@(cl.ClassifTypeName())</b>&nbsp;-&nbsp;@Html.Raw(cl.ClassifProbability.ToString("P4").Replace(" ","&nbsp;"))</div>
             }
         }
     </td>

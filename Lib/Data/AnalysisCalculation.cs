@@ -336,7 +336,7 @@ namespace HlidacStatu.Lib.Data
             Dictionary<string, List<int>> pol_SVazbami = new Dictionary<string, List<int>>();
             Dictionary<string, List<int>> pol_SVazbami_StatniFirmy = new Dictionary<string, List<int>>();
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(StaticData.Politici.Get(),
+            Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(StaticData.PolitickyAktivni.Get(),
             (p) =>
             {
 

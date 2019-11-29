@@ -663,7 +663,7 @@ else
                     <td>
                         @foreach (var p in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
                                 .SoukromeFirmy[Model.ICO]
-                                .Select(pid => HlidacStatu.Lib.StaticData.Politici.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+                                .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
                                 .Where(p => p != null)
                                 .OrderBy(p => p.Prijmeni)
                                 )

@@ -31,7 +31,7 @@
         @while (csv.Read())
         {
 
-            if (HlidacStatu.Lib.StaticData.Politici.Get().Any(m => m.Jmeno == csv.GetField<string>(1).Trim() && m.Prijmeni == csv.GetField<string>(2).Trim()))
+            if (HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Any(m => m.Jmeno == csv.GetField<string>(1).Trim() && m.Prijmeni == csv.GetField<string>(2).Trim()))
             {
             }
             else

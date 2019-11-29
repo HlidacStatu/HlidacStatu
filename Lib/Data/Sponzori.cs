@@ -335,7 +335,7 @@ namespace HlidacStatu.Lib.Data
                         .ToArray();
 
                 return ids
-                    .Join(StaticData.Politici.Get(), i => i, p => p.InternalId, (i, p) => p)
+                    .Join(StaticData.PolitickyAktivni.Get(), i => i, p => p.InternalId, (i, p) => p)
                     .ToDictionary(k => k.InternalId, o => o);
             }
         }

@@ -31,6 +31,23 @@ namespace HlidacStatu.Lib.Data
                 public decimal ClassifProbability { get; set; }
 
                 public ClassificationsTypes ClassifType() { return (ClassificationsTypes)TypeValue; }
+                public string ClassifTypeName() {
+                    ClassificationsTypes t;
+                    if (Enum.TryParse(TypeValue.ToString(), out t))
+                    { 
+                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                        {
+                            Util.Consts.Logger.Warning("Missing Classification value" + TypeValue);
+                            return "(neznámý)";
+                        }
+                        return t.ToNiceDisplayName();
+                    }
+                    else
+                    {
+                        Util.Consts.Logger.Warning("Missing Classification value" + TypeValue);
+                        return "(neznámý)";
+                    }
+                }
             }
             [ShowNiceDisplayName()]
             public enum ClassificationsTypes

@@ -92,8 +92,8 @@
     <Reference Include="Enyim.Caching, Version=2.9.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Enyim.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.16\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.17.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.17\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.AWT.WinForms, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.AWT.WinForms.dll</HintPath>
@@ -777,6 +777,10 @@
     <ProjectReference Include="..\HlidacStatu.Lib.Db.Insolvence\HlidacStatu.Lib.Db.Insolvence.csproj">
       <Project>{18cdeb72-04c2-45f2-9bd4-b1676aa0ca07}</Project>
       <Name>HlidacStatu.Lib.Db.Insolvence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lang\Lang.csproj">
+      <Project>{d787acca-0e9d-45e7-a98b-87acfe7af249}</Project>
+      <Name>Lang</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>

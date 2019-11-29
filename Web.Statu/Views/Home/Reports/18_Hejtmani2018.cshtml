@@ -18,7 +18,7 @@
     var allNames = StaticData.HejtmaniOd2016;
 
     List<HlidacStatu.Lib.Data.Osoba> showList = null;
-    showList = HlidacStatu.Lib.StaticData.Politici.Get()
+    showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
         .Where(p => allNames.Contains(p.NameId))
         .OrderBy(m => m.Prijmeni)
         .ThenBy(m => m.Jmeno)

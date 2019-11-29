@@ -134,7 +134,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     foreach (var d in Dluznici)
                     {
 
-                        if (StaticData.Politici.Get().Any(m =>
+                        if (StaticData.PolitickyAktivni.Get().Any(m =>
                             m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
                             && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
                             && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue

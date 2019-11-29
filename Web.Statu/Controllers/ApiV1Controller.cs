@@ -527,7 +527,7 @@ namespace HlidacStatu.Web.Controllers
         //    string nquery = q.NormalizeToPureTextLower();
 
 
-        //    res = HlidacStatu.Lib.StaticData.Politici.Get()
+        //    res = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
         //        .Where(m => m.Prijmeni.StartsWith(q) || m.Jmeno.StartsWith(q))
         //        .OrderBy(m => m.Prijmeni)
         //        .Take(15)

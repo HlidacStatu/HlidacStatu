@@ -139,7 +139,7 @@ namespace HlidacStatu.Web.Controllers
                 return new Lib.Data.Osoba[] { };
             }
 
-            var found = HlidacStatu.Lib.StaticData.Politici.Get()
+            var found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                         .Where(o =>
                             string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
                             && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
@@ -155,7 +155,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
                 string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
-                found = HlidacStatu.Lib.StaticData.Politici.Get()
+                found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                             .Where(o =>
                                 string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
                                 && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)
@@ -183,7 +183,7 @@ namespace HlidacStatu.Web.Controllers
                 return new Lib.Data.Osoba[] { };
             }
 
-            var found = HlidacStatu.Lib.StaticData.Politici.Get()
+            var found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                         .Where(o =>
                             string.Equals(o.Jmeno, jmeno, StringComparison.OrdinalIgnoreCase)
                             && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
@@ -194,7 +194,7 @@ namespace HlidacStatu.Web.Controllers
 
             string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
             string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
-            found = HlidacStatu.Lib.StaticData.Politici.Get()
+            found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                         .Where(o =>
                             string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
                             && string.Equals(o.PrijmeniAscii, prijmeniasc, StringComparison.OrdinalIgnoreCase)

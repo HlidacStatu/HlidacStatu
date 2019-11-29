@@ -23,7 +23,7 @@
         prefix = Request.QueryString["prefix"].ToString().ToUpper();
         string prefixascii = Devmasters.Core.TextUtil.RemoveDiacritics(prefix).ToLower();
 
-        showList = HlidacStatu.Lib.StaticData.Politici.Get()
+        showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
             .Where(p => p.Prijmeni.ToUpper().StartsWith(prefix))
             .OrderBy(m => m.Prijmeni)
             .ThenBy(m => m.Jmeno)

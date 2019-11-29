@@ -65,7 +65,7 @@
 };
 
     List<HlidacStatu.Lib.Data.Osoba> showList = null;
-    showList = HlidacStatu.Lib.StaticData.Politici.Get()
+    showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
         .Where(p => vlada2013.Contains(p.NameId))
         .OrderBy(m => m.Prijmeni)
         .ThenBy(m => m.Jmeno)
@@ -135,7 +135,7 @@ return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
     ReportDataSource vlada2017tbl = new ReportDataSource(columns);
 
 
-    foreach (var p in HlidacStatu.Lib.StaticData.Politici.Get()
+    foreach (var p in HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
         .Where(p => vlada2013.Contains(p.NameId))
         .OrderBy(m => m.Prijmeni)
         .ThenBy(m => m.Jmeno))
@@ -144,7 +144,7 @@ return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
         vlada2013tbl.AddRow(p);
     }
 
-    foreach (var p in HlidacStatu.Lib.StaticData.Politici.Get()
+    foreach (var p in HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
         .Where(p => vlada2017.Contains(p.NameId))
         .OrderBy(m => m.Prijmeni)
         .ThenBy(m => m.Jmeno))

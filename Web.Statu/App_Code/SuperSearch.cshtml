@@ -122,7 +122,7 @@ else
                                     prefix = Request.QueryString["prefix"].ToString().ToUpper();
                                 }
                             }
-                            @foreach (var prf in HlidacStatu.Lib.StaticData.Politici.Get().Select(m => m.Prijmeni.First().ToString().ToUpper()).Distinct().Concat(new string[] { "CH" }).OrderBy(m => m))
+                            @foreach (var prf in HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Select(m => m.Prijmeni.First().ToString().ToUpper()).Distinct().Concat(new string[] { "CH" }).OrderBy(m => m))
                             {
                                 <span style="padding-left:5px;">
                                     @if (prf == prefix)

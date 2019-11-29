@@ -78,7 +78,7 @@
         .Take(100)
         .Select(kv => new
         {
-            politik = HlidacStatu.Lib.StaticData.Politici
+            politik = HlidacStatu.Lib.StaticData.PolitickyAktivni
                                     .Get()
                                     .Where(m => m.InternalId == kv.Key)
                                     .FirstOrDefault(),

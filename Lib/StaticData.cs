@@ -79,6 +79,7 @@ namespace HlidacStatu.Lib
 
         //public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, QueryStatistic.StatData>> FirmyStatsCache = null;
 
+        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> PolitickyAktivni = null;
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> Politici = null;
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Vsechny = null;
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Nedavne = null;
@@ -239,8 +240,8 @@ namespace HlidacStatu.Lib
                 //        );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Politici");
-                Politici = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
-                        TimeSpan.FromHours(36), (obj) =>
+                PolitickyAktivni = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
+                        TimeSpan.FromHours(36), "politickyAktivni", (obj) =>
                         {
                             List<Osoba> osoby = null;
 
@@ -257,6 +258,24 @@ namespace HlidacStatu.Lib
 
                         }
                     );
+                Politici = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
+                        TimeSpan.FromHours(36),"politiciOnly", (obj) =>
+                        {
+                            List<Osoba> osoby = null;
+
+                            using (Lib.Data.DbEntities db = new DbEntities())
+                            {
+                                osoby = db.Osoba
+                                    .AsNoTracking()
+                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.Politik )
+                                    .ToList();
+                                //return osoby;
+                                return osoby;
+
+                            }
+
+                        }
+                    );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
                 Insolvence_firem_politiku_Cache = new Devmasters.Cache.V20.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]>(
@@ -264,7 +283,7 @@ namespace HlidacStatu.Lib
                                  {
                                      var ret = new List<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>>();
                                      var lockObj = new object();
-                                     Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(Politici.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik).Distinct(),
+                                     Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(PolitickyAktivni.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik).Distinct(),
                                          (o) =>
                                          {
                                              var icos = o.AktualniVazby(Data.Relation.AktualnostType.Nedavny)
@@ -370,7 +389,7 @@ namespace HlidacStatu.Lib
                     );
 
                 //if (!System.Diagnostics.Debugger.IsAttached)
-                Politici.Get(); //force to load
+                PolitickyAktivni.Get(); //force to load
                 SponzorujiciFirmy_Vsechny.Get(); //force to load
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - DarujmeStats");

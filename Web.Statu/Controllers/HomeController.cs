@@ -984,7 +984,7 @@ text zpravy: {txt}";
         {
             return RedirectPermanent(Url.Action("Osoby", new { prefix = prefix }));
 
-            //List<Lib.Data.Osoba> model = HlidacStatu.Lib.StaticData.Politici.Get();
+            //List<Lib.Data.Osoba> model = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get();
             //return View(model);
 
         }
@@ -1016,7 +1016,7 @@ text zpravy: {txt}";
                     return NotFound("/Politici", "Pokračovat na seznamu politiků");
             }
 
-            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.StaticData.Politici.Get().Where(m => m.NameId == Id).FirstOrDefault();
+            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.NameId == Id).FirstOrDefault();
 
             if (aktualnost.HasValue == false)
                 aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;

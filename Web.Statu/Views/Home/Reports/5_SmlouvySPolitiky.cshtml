@@ -54,7 +54,7 @@
             {
                 List<HlidacStatu.Lib.Data.Osoba> persons = new List<HlidacStatu.Lib.Data.Osoba>();
                 persons = vazbyNaPolitiky.SoukromeFirmy[ss.ico]
-                            .Select(pid => HlidacStatu.Lib.StaticData.Politici
+                            .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni
                                     .Get()
                                     .Where(m => m.InternalId == pid)
                                     .FirstOrDefault())
