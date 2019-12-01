@@ -167,7 +167,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             {
                 if (mappingType == null || p.GetType() == mappingType)
                 {
-                    if (specName == null || p.Name.Name == specName)
+                    if (specName == null || p.Name.Name.ToLower() == specName.ToLower())
                         _props.Add(prefix + attrNameModif + p.Name.Name + attrNameModif);
                 }
 
