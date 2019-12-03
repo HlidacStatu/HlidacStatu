@@ -1,0 +1,4 @@
+# Email
+Contact: podpora@hlidacstatu.cz
+
+Preferred-Languages: cs, en 

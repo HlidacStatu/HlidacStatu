@@ -228,7 +228,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PrivateInternals\OCRService\OCRService.csproj">
+    <ProjectReference Include="..\..\PrivateInternals\OCR\OCRService\OCRService.csproj">
       <Project>{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}</Project>
       <Name>OCRService</Name>
     </ProjectReference>

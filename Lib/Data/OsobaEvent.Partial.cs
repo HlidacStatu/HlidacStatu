@@ -177,7 +177,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static OsobaEvent Update(OsobaEvent osobaEvent, string user)
+        public static OsobaEvent CreateOrUpdate(OsobaEvent osobaEvent, string user)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
@@ -186,6 +186,20 @@ namespace HlidacStatu.Lib.Data
                 {
                     osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
                     osobaEvent.Created = DateTime.Now;
+
+                    // check if event exists so we are not creating duplicities...
+                    var oe = db.OsobaEvent
+                        .Where(ev =>
+                            ev.OsobaId == osobaEvent.OsobaId
+                            && ev.Title == osobaEvent.Title
+                            && ev.DatumOd == osobaEvent.DatumOd
+                            && ev.Type == osobaEvent.Type
+                            && ev.Organizace == osobaEvent.Organizace)
+                        .FirstOrDefault();
+
+                    if (oe != null)
+                        return oe;
+
                     db.OsobaEvent.Add(osobaEvent);
                     db.SaveChanges();
                     Audit.Add(Audit.Operations.Update, user, osobaEvent, null);

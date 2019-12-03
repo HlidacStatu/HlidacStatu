@@ -98,7 +98,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                var result = OsobaEvent.Update(osobaEvent, this.User.Identity.Name);
+                var result = OsobaEvent.CreateOrUpdate(osobaEvent, this.User.Identity.Name);
                 return Json(new { Success = true });
             }
 
