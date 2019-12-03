@@ -11,17 +11,41 @@
         {
             <h3>Import politiku (tab delimited)</h3>
             <p>
-<pre>
+                <pre>
 1 radek = 1 politik
 oddelovac = tabelator
-poradi sloupcu:
+Řádek musí vždy obsahovat 13 sloupců
 
-    <b>jmeno \t prijmeni \t datum narozeni</b> \t titul_pred_jmenem \t titul_po_jmene \t popisek \t PersonStatus \t zdroj \t moreInfoUrl 
+pořadí sloupců:
+    <b>Full name \t Jméno \t Příjmení</b> \t Titul před \t Titul za \t <b>Datum narození</b> \t Status osoby \t Politická Strana \t Datum vstupu do strany \t Událost - Organizace \t Událost - Role \t Událost - Datum vzniku \t Událost - typ
+Povinné položky jsou:
+    varianta a) jmeno, prijmeni, narozeni
+    varianta b) fullname, narozeni
 
-format datumu: d.m.yyyy - 27.3.1955             
-prvni 3 sloupce jsou povinne.   
+formát datumu je vždy: d.m.yyyy - 27.3.1955
+Pokud není status osoby vyplněn, je automaticky nastaveno 3 - Politik
+Status osoby může nabývat stavů:
+    0 = Nepolitická osoba
+    1 = Bývalý politik
+    2 = Osoba s vazbami na politiky
+    3 = Politik
 
-popisek - je nepovinny, nemusi existovat
+
+Chcete-li přidat událost, je nutné mít vyplněné sloupce:
+    Událost - Organizace, Událost - Role, Událost - typ
+
+Událost - typ může nabývat následujících stavů:
+    0 = Speciální
+    1 = Volená funkce
+    2 = Soukromá pracovní
+    3 = Sponzor
+    4 = Osobní
+    6 = Veřejná správa pracovní
+    7 = Politická
+    9 = Politická pracovní
+    10 = Veřejná správa jiné
+    11 = Jiné
+
 </pre>
                 <div class="alert-danger">Nedávej sem více než 200 osob (řádků) najednou. Mohlo by to selhat. Nevadí, když sem vložíš někoho duplikátně.</div>
             </p>

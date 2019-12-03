@@ -361,24 +361,92 @@ namespace HlidacStatu.Web.Controllers
             foreach (var line in tabdelimited.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 string[] cols = line.Split(new string[] { "\t","|" }, StringSplitOptions.None);
-                if (cols.Count() < 3)
+
+                // Vždy musí být řádek o 13 sloupcích. Povinné položky jsou:
+                // varianta a) jmeno, prijmeni, narozeni
+                // varianta b) fullname, narozeni
+
+                if (cols.Count() != 13)
                     continue;
-                string jmeno = cols[0];
-                string prijmeni = cols[1];
-                string titulPred = "", titulPo = "";
+                string fullName = cols[0];
+                string jmeno = cols[1];
+                string prijmeni = cols[2];
+                string titulPred = cols[3];
+                string titulPo = cols[4];
+                DateTime? narozeni = ParseTools.ToDate(cols[5]);
 
-                string narozeni = cols[2];
+                Osoba.StatusOsobyEnum status = GetStatusFromText(cols[6]);
 
+                string clenstviStrana = cols[7];
+                DateTime? clenstviVznik = ParseTools.ToDate(cols[8]);
 
-                if (cols.Count() > 3)
-                    titulPred = cols[3];
-                if (cols.Count() > 4)
-                    titulPo = cols[4];
-                //TODO
+                string eventOrganizace = cols[9];
+                string eventRole = cols[10];
+                DateTime? eventVznik = ParseTools.ToDate(cols[11]);
+                string eventTyp = cols[12];
 
+                // set person from fulltext when not properly defined
+                if (string.IsNullOrWhiteSpace(jmeno) || string.IsNullOrWhiteSpace(prijmeni))
+                {
+                    if (string.IsNullOrWhiteSpace(fullName))
+                        continue;
 
-                HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.Data.Osoba.GetOrCreateNew(titulPred, titulPo, jmeno, prijmeni, narozeni, Osoba.StatusOsobyEnum.NeniPolitik,
+                    var osoba = Lib.Validators.OsobaInText(fullName);
+
+                    if (osoba is null)
+                        continue;
+                    if (string.IsNullOrWhiteSpace(jmeno))
+                        jmeno = osoba.Jmeno;
+                    if (string.IsNullOrWhiteSpace(prijmeni))
+                        prijmeni = osoba.Prijmeni;
+                    if (string.IsNullOrWhiteSpace(titulPred))
+                        titulPred = osoba.TitulPred;
+                    if (string.IsNullOrWhiteSpace(titulPo))
+                        titulPo = osoba.TitulPo;
+                }
+
+                // when there is no narozeni Date, then we are not going to save person...
+                if (!narozeni.HasValue)
+                    continue;
+
+                Osoba p = Osoba.GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, narozeni, Osoba.StatusOsobyEnum.NeniPolitik,
                     this.User.Identity.Name);
+
+                if (!string.IsNullOrWhiteSpace(clenstviStrana))
+                {
+                    OsobaEvent clenStrany = new OsobaEvent
+                    {
+                        OsobaId = p.InternalId,
+                        DatumOd = clenstviVznik,
+                        Type = 7,
+                        AddInfo = "člen",
+                        Organizace = clenstviStrana,
+                        Title = $"člen v {clenstviStrana}"
+                    };
+
+                    OsobaEvent.CreateOrUpdate(clenStrany, this.User.Identity.Name);
+                }
+
+
+                if (int.TryParse(eventTyp, out int typ)
+                    && !string.IsNullOrWhiteSpace(eventRole)
+                    && !string.IsNullOrWhiteSpace(eventOrganizace))
+                {
+                    OsobaEvent dalsiEvent = new OsobaEvent
+                    {
+                        OsobaId = p.InternalId,
+                        DatumOd = eventVznik,
+                        Type = typ,
+                        AddInfo = eventRole,
+                        Organizace = eventOrganizace,
+                        Title = $"{eventRole} v {eventOrganizace}"
+                    };
+
+                    OsobaEvent.CreateOrUpdate(dalsiEvent, this.User.Identity.Name);
+                }
+
+                
+
 
                 //Guid? foundId;
                 //if (Osoba.GetByName(p.Jmeno, p.Prijmeni, p.Narozeni.Value) == null)
@@ -404,6 +472,27 @@ namespace HlidacStatu.Web.Controllers
             }
             return View(newIds);
 
+        }
+
+        /// <summary>
+        /// Assigns StatusOsoby based on text. 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>Returns StatusOsobyEnum.Politik if string is empty or invalid (not a number)</returns>
+        private Osoba.StatusOsobyEnum GetStatusFromText(string text)
+        {
+            Osoba.StatusOsobyEnum statusOsoby = Osoba.StatusOsobyEnum.Politik;
+
+            try
+            {
+                if (int.TryParse(text, out int statx))
+                {
+                    statusOsoby = (Osoba.StatusOsobyEnum)statx;
+                }
+            }
+            catch {}
+
+            return statusOsoby;
         }
 
         [Authorize(Roles = "canEditData")]
