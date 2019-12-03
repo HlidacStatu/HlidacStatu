@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="CS\Stem.cs" />
     <Compile Include="CS\Stemmer.cs" />
-    <Compile Include="CS\Stemmer2.cs" />
+    <Compile Include="CS\Politici.cs" />
     <Compile Include="CS\Vokativ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -80,6 +80,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <Content Include="politiciStem.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Hunspellx64.dll">
