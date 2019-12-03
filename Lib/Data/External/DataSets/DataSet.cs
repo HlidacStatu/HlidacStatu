@@ -99,6 +99,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
         }
 
+        public Nest.ElasticClient ESClient { get { return client; } }
+
         IEnumerable<Nest.CorePropertyBase> _mapping = null;
         protected IEnumerable<Nest.CorePropertyBase> GetElasticMapping()
         {

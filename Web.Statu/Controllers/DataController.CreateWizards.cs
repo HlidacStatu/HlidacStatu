@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public partial class DataController : Controller
+    public partial class DataController : GenericAuthController
     {
         public ActionResult CreateAdv()
         {
