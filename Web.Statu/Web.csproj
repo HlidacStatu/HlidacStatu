@@ -1373,6 +1373,7 @@
     <Content Include="Views\Data\CreateFromBackup.cshtml" />
     <Content Include="Views\Data\CreateFromBackup1.cshtml" />
     <Content Include="Views\Data\Promo\front_vyjadreni-politiku.cshtml" />
+    <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

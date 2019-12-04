@@ -223,6 +223,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         //static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
         public static QueryContainer GetSimpleQuery(DataSet ds, string query)
         {
+            var idQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "id", "${q}", false);
 
             var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "${q}",false);
             var osobaIdQuerypathToIco = HlidacStatu.Lib.Data.External.DataSets.Search
@@ -241,6 +242,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 osobaQP = osobaIdQuerypathToIco;
 
             Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+                    new Lib.Search.Rule("id:",idQuerypath ),
                     new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
                     { 
                         AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}" 
