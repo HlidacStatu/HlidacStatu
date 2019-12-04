@@ -588,7 +588,7 @@ select {
 
     .table-new th:last-child, .table-new td:last-child {
         padding-right: 0;
-        border-bottom:none;
+        border-bottom: none;
     }
 
 .table-new .cell-red {
@@ -2572,6 +2572,7 @@ a.form-search__hint:active:focus {
         border: 0;
         border-bottom: 1px solid #ddd;
     }
+
     .table.table-bordered > tbody > tr > td {
         line-height: 17px;
         color: #333333;
@@ -2581,9 +2582,9 @@ a.form-search__hint:active:focus {
         border: 1px solid #ddd;
     }
 
-        .table > tbody > tr > td .fa-bookmark-o {
-            font-size: 20px;
-        }
+    .table > tbody > tr > td .fa-bookmark-o {
+        font-size: 20px;
+    }
 
     .table > thead > tr > td a {
         color: #4570E3;
@@ -2592,10 +2593,11 @@ a.form-search__hint:active:focus {
     .table.solid {
         border-top: 1px solid #ddd;
     }
-    .table.solid > tbody > tr > td {
-        background: #F9F9F9;
-        border-bottom: none;
-    }
+
+        .table.solid > tbody > tr > td {
+            background: #F9F9F9;
+            border-bottom: none;
+        }
 
 .small-link {
     font-size: 12px;
@@ -2888,4 +2890,13 @@ a.form-search__hint:active:focus {
 
     .box-cta__list {
         margin-bottom: 50px;
+    }
+
+
+    #data-detail-content pre {
+        white-space: pre-wrap !important;
+        font-size: 90%;
+        background: none;
+        line-height: 1.6em;
+        word-break: break-word
     }
