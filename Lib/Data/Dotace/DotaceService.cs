@@ -27,32 +27,5 @@ namespace HlidacStatu.Lib.Data.Dotace
             }
         }
 
-        public bool BulkSave(List<Dotace> dotace)
-        {
-            try
-            {
-                // pro debug toho, co se bude posílat na server slouží zakomentovaný řádek níže
-                //var response = System.Text.Encoding.UTF8.GetString(_esClient.IndexMany(dotace).ApiCall.RequestBodyInBytes);
-                var response = _esClient.IndexMany(dotace);
-                if( response.IsValid && response.Errors)
-                {
-                    var errors = response.ItemsWithErrors.Select(it => $"DotaceService.BulkSave error - failedId: {it.Id}, reason: {it.Error.Reason}" ).ToArray();
-                    
-                    foreach(string error in errors)
-                    {
-                        HlidacStatu.Util.Consts.Logger.Warning(error);
-                    }
-                }
-
-                return response.IsValid;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-
-        }
-
     }
 }

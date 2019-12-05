@@ -9,7 +9,7 @@ namespace HlidacStatu.Lib.ES
     public class DotaceSearchResult : SearchDataResult<Dotace>
     {
         public DotaceSearchResult()
-            : base(getVZOrderList)
+            : base(getOrderList)
         {
         }
 
@@ -39,7 +39,7 @@ namespace HlidacStatu.Lib.ES
         public bool ShowWatchdog { get; set; } = true;
 
 
-        protected static Func<List<System.Web.Mvc.SelectListItem>> getVZOrderList = () =>
+        protected static Func<List<System.Web.Mvc.SelectListItem>> getOrderList = () =>
         {
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
@@ -52,6 +52,28 @@ namespace HlidacStatu.Lib.ES
                 .ToList();
         };
 
+        public static string GetSearchUrl(string pageUrl, string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null)
+        {
+
+            string ret = string.Format("{0}{1}",
+                pageUrl,
+               GetSearchUrlQueryString(Q, order, page));
+
+            return ret;
+        }
+
+
+        public static string GetSearchUrlQueryString(string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null)
+        {
+            string ret = string.Format("?Q={0}",
+               System.Web.HttpUtility.UrlEncode(Q));
+            if (order.HasValue)
+                ret = ret + "&order=" + ((int)order.Value).ToString();
+            if (page.HasValue)
+                ret = ret + "&page=" + page.Value.ToString();
+            return ret;
+        }
+
 
         [Devmasters.Core.ShowNiceDisplayName()]
         public enum DotaceOrderResult
@@ -61,22 +83,28 @@ namespace HlidacStatu.Lib.ES
             Relevance = 0,
 
             [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("nové první")]
+            [Devmasters.Core.NiceDisplayName("podle data podpisu od nejnovějších")]
             DateAddedDesc = 1,
 
-            [Devmasters.Core.NiceDisplayName("nové poslední")]
+            [Devmasters.Core.NiceDisplayName("podle data podpisu od nejstarších")]
             [Devmasters.Core.SortValue(2)]
             DateAddedAsc = 2,
 
-
             [Devmasters.Core.SortValue(3)]
-            [Devmasters.Core.NiceDisplayName("naposled změněné první")]
+            [Devmasters.Core.NiceDisplayName("podle částky od největší")]
             LatestUpdateDesc = 3,
 
             [Devmasters.Core.SortValue(4)]
-            [Devmasters.Core.NiceDisplayName("naposled změněné poslední")]
+            [Devmasters.Core.NiceDisplayName("podle částky od nejmenší")]
             LatestUpdateAsc = 4,
 
+            [Devmasters.Core.SortValue(5)]
+            [Devmasters.Core.NiceDisplayName("podle IČO od největšího")]
+            ICODesc = 5,
+
+            [Devmasters.Core.SortValue(6)]
+            [Devmasters.Core.NiceDisplayName("podle IČO od nejmenšího")]
+            ICOAsc = 6,
 
             [Devmasters.Core.Disabled]
             FastestForScroll = 666
