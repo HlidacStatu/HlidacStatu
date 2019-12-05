@@ -5,6 +5,16 @@
 @using System.Linq;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Util;
+
+<script>
+    function changeOrder(sel) {
+        var value = sel.value;
+        window.location.href = '@Html.Raw(HlidacStatu.Lib.ES.DotaceSearchResult.GetSearchUrl(
+        this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
+        , Model.Q))&order=' + value;
+    }
+</script>
+
 @if (Model?.Result?.IsValid == false || Model.Result == null)
 {
     <div class="row">
@@ -36,13 +46,19 @@ else
     {
         <hr />
 
-        
+
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <h2 class="text-nowrap">
-                    @(PluralForm.Get((int)Model.Result.Total, "Nalezena {0} dotace;Nalezeny {0} dotace;Nalezeno {0} dotací")) 
+                    @(PluralForm.Get((int)Model.Result.Total, "Nalezena {0} dotace;Nalezeny {0} dotace;Nalezeno {0} dotací"))
                     v celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.Result.Aggregations.Sum("souhrn").Value).
                 </h2>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 pull-right">
+                @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control small pull-right", @id = "orderList", @onchange = "changeOrder(this);" })
             </div>
         </div>
 
