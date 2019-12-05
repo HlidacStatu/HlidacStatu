@@ -37,7 +37,7 @@
 else
 {
     <ul class="list-group">
-        @foreach (var osoba in Model)
+        @foreach (var osoba in Model.OrderByDescending(o=>o.Status).ThenByDescending(o=>o.Narozeni ?? new DateTime(1970,1,1)))
         {
             <li class="list-group-item d-flex flex-row">
 
@@ -73,6 +73,7 @@ else
                 </div>
 
                 <div class="row col-sm-7 col-md-7">
+                    <b>@osoba.NameId</b>
                     @if (osoba.Events().Count() > 0)
                     {
                         <div class="col">
