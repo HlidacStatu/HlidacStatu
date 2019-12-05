@@ -39,7 +39,7 @@ namespace HlidacStatu.Lib.Data
     public class OsobaEventMetadata
     {
 
-        [Required(ErrorMessage ="Prosím, vyplňte titulek.")]
+        //[Required(ErrorMessage ="Prosím, vyplňte titulek.")]
         [Display(Name = "Titulek")]
         public string Title { get; set; }
 

@@ -107,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Dumps", "") }).Authentificated)
             {
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(GetDumps()), "application/json");
+                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(GetDumps(),Newtonsoft.Json.Formatting.Indented), "application/json");
             }
             else
                 return new HttpStatusCodeResult(401);
@@ -192,18 +192,21 @@ namespace HlidacStatu.Web.Controllers
             foreach (var fi in new System.IO.DirectoryInfo(Lib.StaticData.Dumps_Path).GetFiles("*.zip"))
             {
                 var fn = fi.Name;
-                DateTime? date = Util.ParseTools.ToDateTimeFromCode(Util.ParseTools.GetRegexGroupValue(fn, @"(?<type>\w*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip", "date"));
-                string datatype = Util.ParseTools.GetRegexGroupValue(fn, @"(?<type>\w*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip", "type");
-
+                var regexStr = @"((?<type>(\w*))? \.)? (?<name>(\w|-)*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip";
+                DateTime? date = Util.ParseTools.ToDateTimeFromCode(Util.ParseTools.GetRegexGroupValue(fn, regexStr, "date"));
+                string name = Util.ParseTools.GetRegexGroupValue(fn, regexStr, "name");
+                string dtype = Util.ParseTools.GetRegexGroupValue(fn, regexStr, "type");
+                if (!string.IsNullOrEmpty(dtype))
+                    name = dtype + "." + name;
                 data.Add(
                     new DumpInfoModel()
                     {
-                        url = baseUrl + $"dump?datatype={datatype}&date={date?.ToString("yyyy-MM-dd") ?? ""}" ,
+                        url = baseUrl + $"dump?datatype={name}&date={date?.ToString("yyyy-MM-dd") ?? ""}" ,
                         created = fi.LastWriteTimeUtc,
                         date = date,
                         fulldump = date.HasValue == false,
                         size = fi.Length,
-                        dataType = datatype
+                        dataType = name
                     }
                     ); ;
             }
@@ -226,6 +229,7 @@ namespace HlidacStatu.Web.Controllers
                 DateTime? specificDate = ParseTools.ToDateTime(date, "yyyy-MM-dd");
                 string onlyfile = $"{datatype}.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
                 string fn = HlidacStatu.Lib.StaticData.Dumps_Path + $"{onlyfile}" + ".zip";
+
                 if (System.IO.File.Exists(fn))
                 {
                     long FileL = (new FileInfo(fn)).Length;
@@ -269,7 +273,10 @@ namespace HlidacStatu.Web.Controllers
                     //return File(fn, "application/zip");
                 }
                 else
+                {
+                    Util.Consts.Logger.Error("API DUMP : not found file " + fn);
                     return new HttpStatusCodeResult(404);
+                }
             }
             else
                 return new HttpStatusCodeResult(401);
