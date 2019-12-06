@@ -877,17 +877,19 @@ namespace HlidacStatu.Lib.Data
         {
             if (local)
             {
-                if (HasPhoto())
-                    return "/Photo/" + this.NameId;
-                else
-                    return "/Content/Img/personNoPhoto.png";
+                return "/Photo/" + this.NameId;
+                //if (HasPhoto())
+                //    return "/Photo/" + this.NameId;
+                //else
+                //    return "/Content/Img/personNoPhoto.png";
             }
             else
             {
-                if (HasPhoto())
-                    return "https://www.hlidacstatu.cz/Photo/" + this.NameId;
-                else
-                    return "https://www.hlidacstatu.cz/Content/Img/personNoPhoto.png";
+                return "https://www.hlidacstatu.cz/Photo/" + this.NameId;
+                //if (HasPhoto())
+                //    return "https://www.hlidacstatu.cz/Photo/" + this.NameId;
+                //else
+                //    return "https://www.hlidacstatu.cz/Content/Img/personNoPhoto.png";
             }
         }
         public OsobaEvent AddDescription(string text, string strana, string zdroj, string user, bool deletePrevious = false)

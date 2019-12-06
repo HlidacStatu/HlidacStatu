@@ -89,7 +89,10 @@ namespace HlidacStatu.Web.Controllers
                 return File(HlidacStatu.Lib.Init.WebAppRoot + @"Content\Img\personNoPhoto.png", "image/png");
             else
             {
-                return File(o.GetPhotoPath(), "image/jpg");
+                if (o.HasPhoto())
+                    return File(o.GetPhotoPath(), "image/jpg");
+                else
+                    return File(HlidacStatu.Lib.Init.WebAppRoot + @"Content\Img\personNoPhoto.png", "image/png");
             }
 
         }
