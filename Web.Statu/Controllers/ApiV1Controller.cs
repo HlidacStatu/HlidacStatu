@@ -252,8 +252,10 @@ namespace HlidacStatu.Web.Controllers
 
                         Response.Flush();
                     }
-                    //Response.Close();
-                    Response.End();
+                        //Response.Close();
+                        Response.Flush();
+                        System.Threading.Thread.Sleep(1000);
+                        //Response.End();
                     }
                     catch (System.Web.HttpException wex)
                     {
@@ -269,7 +271,7 @@ namespace HlidacStatu.Web.Controllers
 
                         throw;
                     }
-                    return new HttpStatusCodeResult(200); ;
+                    return new EmptyResult();
                     //return File(fn, "application/zip");
                 }
                 else
