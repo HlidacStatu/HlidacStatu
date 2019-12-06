@@ -237,10 +237,23 @@ namespace HlidacStatu.Web.Controllers
                     Response.Clear();
                     Response.ContentType = "application/octet-stream";
                     Response.AddHeader("content-disposition", "attachment; filename=" + System.IO.Path.GetFileName(fn));
-                    Response.AddHeader("Content-Length", FileL.ToString());
+                    //Response.AddHeader("Content-Length", FileL.ToString());
                     try
                     {
 
+                    using (FileStream FS = System.IO.File.OpenRead(fn))
+                    {
+                        int bytesRead = 0;
+                        while ((bytesRead = FS.Read(bytes, 0, bytes.Length)) > 0)
+                        {
+                            Response.OutputStream.Write(bytes, 0, bytesRead);
+                            Response.Flush();
+                        };
+
+                        Response.Flush();
+                    }
+                    //Response.Close();
+                    Response.End();
                     }
                     catch (System.Web.HttpException wex)
                     {
@@ -256,20 +269,7 @@ namespace HlidacStatu.Web.Controllers
 
                         throw;
                     }
-                    using (FileStream FS = System.IO.File.OpenRead(fn))
-                    {
-                        int bytesRead = 0;
-                        while ((bytesRead = FS.Read(bytes, 0, bytes.Length)) > 0)
-                        {
-                            Response.OutputStream.Write(bytes, 0, bytesRead);
-                            Response.Flush();
-                        };
-
-                        Response.Flush();
-                    }
-                    //Response.Close();
-                    Response.End();
-                    return null;
+                    return new HttpStatusCodeResult(200); ;
                     //return File(fn, "application/zip");
                 }
                 else
