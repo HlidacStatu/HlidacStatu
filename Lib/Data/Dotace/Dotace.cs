@@ -112,7 +112,11 @@ namespace HlidacStatu.Lib.Data.Dotace
         public float DotaceCelkem { get; set; }
         [Nest.Number]
         public float PujckaCelkem { get; set; }
-        
+
+        // link to the original data
+        [Nest.Keyword]
+        public string Source { get; set; }
+
         public string GetNazevDotace()
         {
             if (!string.IsNullOrWhiteSpace(ProjektNazev))
