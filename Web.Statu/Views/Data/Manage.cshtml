@@ -10,7 +10,7 @@
     ViewBag.Title = "Správa databází";
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
 
-    bool isNoFlatDS = !Model?.GetDataset()?.IsFlatStructure() == true;
+    bool isFlatDS = (Model?.GetDataset()?.IsFlatStructure()) == true;
 }
 
 
@@ -27,17 +27,18 @@
     </ol>
 }
 
-<div class="row">
-    <div class="col-xs-12">
-        <a href="/data/Index/@Model.datasetId" class="btn btn-primary" style="margin-left:10px"><i class="far fa-info-circle"></i> Hledání v databázi, procházení dat a informace o datech</a>
-
-    </div>
-</div>
 
 @if (Model != null
     && (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email) || email == Model.createdBy)
 )
 {
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="/data/Index/@Model.datasetId" class="btn btn-primary" style="margin-left:10px"><i class="far fa-info-circle"></i> Hledání v databázi, procházení dat a informace o datech</a>
+
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xs-12">
             <h3>Správa datasetu <b>@Model.datasetId</b></h3>
@@ -67,13 +68,13 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-4">
-            <a @Util.IfExists(isNoFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ")
+            <a @Util.IfExists(!isFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ")
                class="btn btn-success"
                href="/data/importdata/@Model.id"><i class="far fa-file-import"></i>Importovat data</a>
             <p class="text-info">
                 Importovat data z CSV souboru do datasetu.
             </p>
-            @if (isNoFlatDS)
+            @if (!isFlatDS)
             {
                 <p class="text-warning">
                     Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
@@ -98,6 +99,7 @@
     </div>
     <hr />
 }
+
 <div class="row">
 
     <div class="col-xs-12">
