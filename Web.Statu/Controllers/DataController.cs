@@ -17,7 +17,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
                 return RedirectToAction("index","Data",new {id="" });
 
-            return View("Dataset", ds);
+            return View("DatasetHomepage", ds);
         }
 
         public ActionResult TechnickeInfo(string id)

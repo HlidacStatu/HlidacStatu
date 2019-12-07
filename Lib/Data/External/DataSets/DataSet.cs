@@ -1,4 +1,5 @@
 ﻿using Elasticsearch.Net;
+using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 using Nest;
 using Newtonsoft.Json.Linq;
@@ -12,6 +13,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 {
 
     public partial class DataSet
+        : Bookmark.IBookmarkable, HlidacStatu.Util.ISocialInfo
     {
         public static volatile MemoryCacheManager<DataSet, string> CachedDatasets
                 = MemoryCacheManager<DataSet, string>.GetSafeInstance("Datasets",
@@ -70,7 +72,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else
             {
                 Lib.ES.Manager.CreateIndex(client);
-                DataSetDB.Instance.AddData(reg,user);
+                DataSetDB.Instance.AddData(reg, user);
             }
 
 
@@ -142,10 +144,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             return Search.SearchData(this, queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
         }
-        public virtual DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null, 
+        public virtual DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false)
         {
-            return Search.SearchDataRaw(this, queryString, page, pageSize, sort,excludeBigProperties, withHighlighting);
+            return Search.SearchDataRaw(this, queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
         }
         public IEnumerable<string> GetMappingList(string specificMapName = null, string attrNameModif = "")
         {
@@ -211,14 +213,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             { "DbCreatedBy", typeof(string) }
         };
 
-    public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
+        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
         {
             var properties = GetPropertyNameTypeFromSchema("");
             if (addDefaultDatasetProperties)
             {
                 foreach (var pp in DefaultDatasetProperties)
                     if (!properties.ContainsKey(pp.Key))
-                        properties.Add(pp.Key,pp.Value);
+                        properties.Add(pp.Key, pp.Value);
             }
             return properties;
         }
@@ -457,7 +459,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             objDyn.DbCreated = DateTime.UtcNow;
             objDyn.DbCreatedBy = createdBy;
 
-            
+
 
             //check special HsProcessType
             var jobj = (Newtonsoft.Json.Linq.JObject)objDyn;
@@ -685,5 +687,94 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return id;
         }
 
+        public string GetUrl(bool local = true)
+        {
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
+
+            string url = "/data/Index/" + this.DatasetId;
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
+            if (local == false)
+                url = "https://www.hlidacstatu.cz" + url;
+
+            return url;
+        }
+        public string BookmarkName()
+        {
+            return this.Registration().name;
+        }
+
+        public string ToAuditJson()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+
+        public string ToAuditObjectTypeName()
+        {
+            return "Dataset";
+        }
+
+        public string ToAuditObjectId()
+        {
+            return this.DatasetId;
+        }
+
+        public string SocialInfoTitle()
+        {
+            return Devmasters.Core.TextUtil.ShortenText(this.Registration().name, 70);
+        }
+
+        public string SocialInfoSubTitle()
+        {
+            return "";
+        }
+
+        public string SocialInfoBody()
+        {
+            return HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 1, true);
+        }
+
+        public string SocialInfoFooter()
+        {
+            return "Údaje k " + DateTime.Now.ToString("d. M. yyyy");
+        }
+
+        public string SocialInfoImageUrl()
+        {
+            return "";
+        }
+
+        InfoFact[] _infofacts = null;
+        object lockInfoObj = new object();
+        public InfoFact[] InfoFacts()
+        {
+            lock (lockInfoObj)
+            {
+                if (_infofacts == null)
+                {
+                    List<InfoFact> f = new List<InfoFact>();
+
+                    var sCreated = HlidacStatu.Lib.RenderTools.DateDiffShort_7pad(this.Registration().created, DateTime.Now, "Databáze byla založena před {0}.", "");
+                    var first = this.SearchData("*", 1, 1, "DbCreated");
+                    var total = (int)first.Total;
+                    var last = this.SearchData("*", 1, 1, "DbCreated desc");
+                    var minMax = Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
+                        "Obsahuje <b>jeden záznam</b>", "Obsahuje <b>{0} záznamy</b>", "Obsahuje <b>{0} záznamů</b>")
+                        + ", nejstarší byl vložen <b>"
+                        + (Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                        + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                        + "</b>.";
+                    var stat = sCreated + " " + minMax;
+                    f.Add(new InfoFact(stat, InfoFact.ImportanceLevel.Stat));
+                    _infofacts = f.ToArray();
+                }
+            }
+            return _infofacts;
+        }
     }
 }

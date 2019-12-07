@@ -1287,7 +1287,7 @@
     <Content Include="Views\Data\_data_noTemplate.cshtml" />
     <Content Include="Views\Data\_data_detail_properties.cshtml" />
     <Content Include="Views\Data\_data_hledat_properties.cshtml" />
-    <Content Include="Views\Data\Dataset.cshtml" />
+    <Content Include="Views\Data\DatasetHomepage.cshtml" />
     <Content Include="Views\Data\_new.cshtml" />
     <Content Include="Views\Manage\Zalozky.cshtml" />
     <Content Include="Views\VZ\TextDokumentu.cshtml" />

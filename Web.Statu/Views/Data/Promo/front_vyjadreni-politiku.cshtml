@@ -19,7 +19,7 @@
                 .Field("osobaid.keyword")
                 .Aggregations(aa => aa
                     .Stats("stat", ss => ss.
-                         Field("created")
+                         Field("datum")
                     )
                 )
             )
@@ -36,7 +36,7 @@
                 .Field("server.keyword")
                 .Aggregations(aa => aa
                     .Stats("stat", ss => ss.
-                         Field("created")
+                         Field("datum")
                     )
                 )
             )

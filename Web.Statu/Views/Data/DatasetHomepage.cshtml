@@ -1,0 +1,97 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSet
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Util;
+
+
+@{
+    var reg = Model.Registration();
+
+    ViewBag.Title = "Databáze " + Model.Registration().name;
+    ViewBag.SubTitle = "Podrobné informace";
+
+    ViewBag.SocialShareTitle = "Databáze " + Model.Registration().name + " na hlidacstatu.cz";
+    ViewBag.SocialShareText = Model.InfoFacts().RenderInfoFacts(2, true, true);
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/dataset?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.DatasetId;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                + "<meta property=\"og:image:height\" content=\"1080\" />"
+                + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                ;
+
+
+    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+
+    bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+        || email == Model.Registration().createdBy
+        );
+
+    var promoRoot = HlidacStatu.Lib.StaticData.Web_Root + "\\Views\\Data\\Promo\\";
+    string promoViewFileName = promoRoot + $"front_{reg.datasetId}.cshtml";
+    bool showPromo = System.IO.File.Exists(promoViewFileName);
+
+    string promoViewName = $"~/Views/Data/Promo/front_{reg.datasetId}.cshtml";
+
+
+}
+@section scripts
+{
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Další databáze</a></li>
+        <li class="active">@reg.name</li>
+        <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
+    </ol>
+}
+<div id="data-detail-content">
+    <div class="row">
+        <div class="col-xs-12">
+            @if (showPromo)
+            {
+                @Html.Action("CachedAction_Child_20min", new { model = (object)reg.datasetId, NameOfView = promoViewName, key = promoViewFileName })
+
+                <h3>Hledání</h3>
+                @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
+            }
+            else
+            {
+
+                <p class="lead">@reg.description</p>
+            }
+            <p>@Html.Raw(Model.InfoFacts().RenderInfoFacts(1, true, true, html: true))</p>
+            @if (Model.Registration().betaversion)
+            {
+                <p class="bg-warning" style="padding:15px;"><b>Pozor!</b> Tato databáze zatím pracuje v testovací režimu. Může být nefunkční, obsahovat zkušební, neúplná či testovací data</p>
+            }
+            <hr />
+            @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
+
+
+
+            @Util.FeedbackModal("Poslat autorovi zprávu", null, "btn btn-primary btn-sm", null,
+                new string[]{ "Chyba","Chci upozornit na chybu",
+            "Stiznost","Chci si stěžovat",
+            "Pochvala","Chci vás pochválit",
+            "NabidkaPomoci","Nabízím vám pomoc",
+            "Jiné","Jiné",
+            }, true, "dataset|" + @Model.DatasetId)
+
+            <a href="/data/TechnickeInfo/@Model.DatasetId" class="btn btn-default btn-sm">Technické detaily</a>
+            @if (showEditBtn)
+            {
+                <a href="/data/Manage/@Model.DatasetId" class="btn btn-info btn-sm" style="margin-left:10px"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
+            }
+
+        </div>
+            </div>
+
+        </div>
+
+@Html.Partial("_new")

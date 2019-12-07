@@ -25,16 +25,20 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Databáze</a></li>
+        <li><a href="/data">Další databáze</a></li>
         <li class="active">@ViewBag.SubTitle</li>
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
 
 <div class="bs-callout bs-callout-primary">
-    <h4>Databáze</h4>
+    <h4>Další databáze na Hlídači státu</h4>
     <div>
-        Na této stránce je přehled databází, které jsou na Hlídač Státu nahrány pomocí <a href="/api">našeho API</a>. Data sem může zdarma nahrát každý registrovaný uživatel Hlídače státu, a zpřístupnit je tak všem
+        Na této stránce je přehled databází, které na Hlídači státu zpracováváme sami, anebo s pomocí našich pomocníků a komunity kolem Hlídače.
+    </div>
+    <div>
+        Data sem může zdarma nahrát každý registrovaný uživatel Hlídače státu, velmi snadno je propojit s ostatními databázemi Hlídače a zpřístupnit je tak všem.
+        Data jsou na Hlídač státu nahrány pomocí <a href="/api">našeho API</a> nebo přímo z webu tlačítkem. <a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a>
     </div>
     <div>
         Pokud máte tip na zajímavý zdroj dat, <a onclick="return trackOutLink(this,'data');" href="https://platforma.hlidacstatu.cz/t/datove-zdroje-vhodne-pro-zpracovani-tipy-a-napady/320" target="_blank">podělte se s ostatními</a>.
@@ -58,7 +62,7 @@
     <div class="col-xs-12">
         <div class="panel panel-warning">
             <div class="panel-heading">
-                <h3 class="panel-title">Datasety v testovacím provozu</h3>
+                <h3 class="panel-title">Databáze v testovacím provozu</h3>
             </div>
             <div class="panel-body">
                 Mohou být nefunkční, obsahovat zkušební, neúplná či testovací data.
@@ -111,23 +115,13 @@ try
                         }
                     </p>
                     <div>
-                        <form method="get" action="/data/Hledat/@dsContent.DatasetId" class="form-inline ">
-                            <div class="form-group form-group">
-                                <input type="text" class="form-control" id="q" name="q" placeholder="hledaný text">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Prohledat</button>
-                        </form>
-                    </div>
-                    <div>
-                        <a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default" title="Vypsat nejnovější data"><i class="far fa-list"></i> Poslední</a>
+                        @*<a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default" title="Vypsat nejnovější data"><i class="far fa-list"></i> Poslední</a>*@
+
+                        <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px"><i class="far fa-info-circle"></i> Hledání v databázi a informace o db</a>
+
                         @if (showEditBtn)
                         {
-                            <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-default" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
-                            <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px"><i class="far fa-info-circle"></i></a>
-                        }
-                        else
-                        {
-                            <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px"><i class="far fa-info-circle"></i>Více info</a>
+                            <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-info" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
                         }
                     </div>
                 </div>

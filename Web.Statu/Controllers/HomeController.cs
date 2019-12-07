@@ -1351,6 +1351,15 @@ text zpravy: {txt}";
                 }
 
             }
+            else if (id?.ToLower() == "dataset")
+            {
+                Lib.Data.External.DataSets.DataSet s = Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(v);
+                if (s != null)
+                {
+                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
+                }
+
+            }
             else if (id?.ToLower() == "quote")
             {
                 url = mainUrl + "/imagebannercore/quote"

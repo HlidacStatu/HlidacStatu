@@ -26,7 +26,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Databáze</a></li>
+        <li><a href="/data">Další databáze</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -57,7 +57,7 @@
             var res = DataSet.Api.Create(Model, Request?.RequestContext?.HttpContext?.User?.Identity?.Name);
 
             <p class="bg-success">
-                Dataset <b>@(Model.name)</b> byl vytvořen.  <a href="/data/manage/@Model.id">Pokračujte zde</a>.
+                Dataset <b>@(Model.name)</b> byl vytvořen. <a href="/data/manage/@Model.id">Pokračujte zde</a>.
             </p>
 
 

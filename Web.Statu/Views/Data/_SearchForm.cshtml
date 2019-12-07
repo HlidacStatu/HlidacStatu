@@ -2,26 +2,27 @@
 
 
 
-<div class="form-search">
-    <label class="sr-only" for="I">Hledat v @Model.DataSet.Registration().name</label>
+    <div class="form-search">
+        <label class="sr-only" for="I">Hledat v @Model.DataSet.Registration().name</label>
 
-    <form method="get" action="/data/Hledat/@Model.DataSet.DatasetId" class="form-search__input-wrapper" role="form">
-        <input class="form-search__input" id="Q" name="Q" placeholder="hledaný výraz ..."
-               style="max-width: none;" type="text" value="@Model.RenderQuery()">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-xs-12">
+                <h4>Hledat v databázi <span class="text-info">@Model.DataSet.Registration().name</span></h4>
+                <form method="get" action="/data/Hledat/@Model.DataSet.DatasetId" class="form-search__input-wrapper" role="form">
+                    <input class="form-search__input" id="Q" name="Q" placeholder="hledaný výraz ..."
+                           style="max-width: none;" type="text" value="@Model.RenderQuery()">
 
-        <button class="form-search__btn" type="submit">Hledat pouze v @(Devmasters.Core.TextUtil.ShortenText(@Model.DataSet.Registration().name,40))</button>
-    </form>
-    <div class="row">
-        <div class="col-sm-10 col-xs-12">
+                    <button class="form-search__btn" type="submit">Hledat pouze v @(Devmasters.Core.TextUtil.ShortenText(@Model.DataSet.Registration().name, 40))</button>
+                </form>
+            </div>
+            <div class="col-sm-2 col-sm-offset-9 col-xs-12 ">
+                <p>
+                    <a class="form-search__hint pull-right" href="/napoveda">
+                        Jak vyhledávat?
+                    </a>
+                </p>
+            </div>
         </div>
-        <div class="col-sm-2 col-xs-12">
-            <p>
-                <a class="form-search__hint pull-right" href="/napoveda">
-                    Jak vyhledávat?
-                </a>
-            </p>
-        </div>
+
+        <div class="clearfix" style="padding-bottom:20px;"></div>
     </div>
-
-    <div class="clearfix" style="padding-bottom:20px;"></div>
-</div>

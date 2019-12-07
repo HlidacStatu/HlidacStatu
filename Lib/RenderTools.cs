@@ -215,6 +215,59 @@ namespace HlidacStatu.Lib
 
         }
 
+
+        public static string DateDiffShort_7pad(DateTime first, DateTime sec, string beforeTemplate, string afterTemplate)
+        {
+            if (first < DateTime.MinValue)
+                first = DateTime.MinValue;
+            if (sec < DateTime.MinValue)
+                sec = DateTime.MinValue;
+            if (first > DateTime.MaxValue)
+                first = DateTime.MaxValue;
+            if (sec > DateTime.MaxValue)
+                sec = DateTime.MaxValue;
+
+            bool after = first > sec;
+            Devmasters.Core.DateTimeSpan dateDiff = Devmasters.Core.DateTimeSpan.CompareDates(first, sec);
+            if (after)
+            {
+                string txtDiff = string.Empty;
+                if (dateDiff.Years > 0)
+                {
+                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Years, "roce;{0} letech;{0} letech");
+                }
+                else if (dateDiff.Months > 3)
+                {
+                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Months, "měsíci;{0} měsících;{0} měsících");
+                }
+                else
+                {
+                    txtDiff = Devmasters.Core.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinách", "jednom dni", "{0} dnech", "{0} dny", "{0} dnů");
+                }
+
+                return string.Format(afterTemplate, txtDiff);
+            }
+            else
+            {
+                string txtDiff = string.Empty;
+                if (dateDiff.Years > 0)
+                {
+                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Years, "rokem;{0} roky;{0} roky");
+                }
+                else if (dateDiff.Months > 3)
+                {
+                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Months, "měsícem;{0} měsíci;{0} měsíci");
+                }
+                else
+                {
+                    txtDiff = Devmasters.Core.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinami", "dnem", "{0} dny", "{0} dny");
+                }
+
+                return string.Format(beforeTemplate, txtDiff);
+            }
+
+        }
+
         public static IEnumerable<string> DetectAndParseFacesIntoFiles(string imageFile, int minSize, int marginInPercent)
         {
             return DetectAndParseFacesIntoFiles(System.IO.File.ReadAllBytes(imageFile), minSize, marginInPercent);

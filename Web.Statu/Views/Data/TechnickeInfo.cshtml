@@ -36,7 +36,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Databáze</a></li>
+        <li><a href="/data">Další databáze</a></li>
         <li><a href="@Model.DatasetUrl()">@reg.name</a></li>
         <li class="active">Technické informace</li>
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
@@ -120,7 +120,7 @@
                     <td style="vertical-align:bottom;">
                         @if (showEditBtn)
                         {
-                        <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
+                        <a href="/data/Manage/@Model.DatasetId" class="btn btn-info btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
                         }
                     </td>
                 </tr>
@@ -182,7 +182,7 @@
                     <td>
                         @if (showEditBtn)
                         {
-                            <a href="/data/Manage/@Model.DatasetId" class="btn btn-warning btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
+                            <a href="/data/Manage/@Model.DatasetId" class="btn btn-info btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
                         }
                     </td>
                 </tr>

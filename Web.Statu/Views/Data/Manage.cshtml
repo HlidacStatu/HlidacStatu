@@ -18,7 +18,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="/data">Databáze</a></li>
+        <li><a href="/data">Další databáze</a></li>
         @if (Model != null)
         {
             <li><a href="@Model.GetDataset().DatasetUrl()">@Model.name</a></li>
@@ -27,7 +27,12 @@
     </ol>
 }
 
+<div class="row">
+    <div class="col-xs-12">
+        <a href="/data/Index/@Model.datasetId" class="btn btn-primary" style="margin-left:10px"><i class="far fa-info-circle"></i> Hledání v databázi, procházení dat a informace o datech</a>
 
+    </div>
+</div>
 
 @if (Model != null
     && (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email) || email == Model.createdBy)
@@ -78,7 +83,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-4">
-            <a href="/data/backup/@Model.id" class="btn btn-warning"><i class="far fa-file-download"></i> Zálohovat nastavení datasetu</a>
+            <a href="/data/backup/@Model.id" class="btn btn-info"><i class="far fa-file-download"></i> Zálohovat nastavení datasetu</a>
             <p class="text-info">
                 Stáhnutí zálohy nastavení datasetu. <span class="text-danger">POZOR! záloha obsahuje pouze parametry datasetu, nikoliv data. Data můžete stáhnout přes API</span>
             </p>
