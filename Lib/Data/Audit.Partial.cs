@@ -37,9 +37,9 @@ namespace HlidacStatu.Lib.Data
         public static Audit Add<T>(Operations operation, string user, string ipAddress, T newObj, T prevObj)
             where T : IAuditable
         {
-            Add(operation, user, ipAddress, 
+            return Add(operation, user, ipAddress, 
                 newObj?.ToAuditObjectId(), newObj?.ToAuditObjectTypeName(),
-                newObj.ToAuditJson(), prevObj.ToAuditJson()
+                newObj?.ToAuditJson(), prevObj?.ToAuditJson()
                 );
             using (DbEntities db = new DbEntities())
             {
@@ -71,8 +71,8 @@ namespace HlidacStatu.Lib.Data
                 a.operation = operation.ToString();
                 a.IP = ipAddress;
                 a.userId = user ?? "";
-                a.valueBefore = prevObjSer;
-                a.valueAfter = newObjSer;
+                a.valueBefore = prevObjSer; 
+                a.valueAfter = newObjSer ?? "";
                 db.Audit.Add(a);
                 db.SaveChanges();
                 return a;
