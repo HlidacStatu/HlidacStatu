@@ -342,6 +342,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 }
                 catch (Exception e)
                 {
+                    Audit.Add(Audit.Operations.Search, "", "", "VerejnaZakazka", "error", search.Q, null);
                     if (res != null && res.ServerError != null)
                         Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
                             + search.OrigQuery + "   query:"
@@ -353,6 +354,8 @@ namespace HlidacStatu.Lib.Data.VZ
                     throw;
                 }
                 sw.Stop();
+
+                Audit.Add(Audit.Operations.Search, "", "", "VerejnaZakazka", res.IsValid ? "valid" : "invalid", search.Q, null);
 
                 if (res.IsValid == false && logError)
                     Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
@@ -414,7 +417,9 @@ namespace HlidacStatu.Lib.Data.VZ
                         );
                 if (res.IsValid == false)
                     Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res);
-                
+
+                //Audit.Add(Audit.Operations.Search, "", "", "VerejnaZakazka", res.IsValid ? "valid" : "invalid", query., null);
+
                 return res;
 
             }
@@ -453,7 +458,9 @@ namespace HlidacStatu.Lib.Data.VZ
                 int page = search.Page - 1;
                 if (page < 0)
                     page = 0;
-                res = client
+                try
+                {
+                    res = client
                         .Search<HlidacStatu.Lib.Data.VZ.VerejnaZakazka>(a => a
                             .Size(search.PageSize)
                             .From(search.PageSize * page)
@@ -466,6 +473,25 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                             .Aggregations(aggrFunc)
                             );
+                }
+                catch (Exception e)
+                {
+                    Audit.Add(Audit.Operations.Search, "", "", "VerejnaZakazka", "error", search.Q, null);
+                    if (res != null && res.ServerError != null)
+                    {
+                        HlidacStatu.Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
+                            + search.OrigQuery + "   query:"
+                            + search.Q
+                            + "\n\n res:" + search.Result.ToString()
+                            , ex: e);
+                    }
+                    else
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("", e);
+                    }
+                    throw;
+                }
+                Audit.Add(Audit.Operations.Search, "", "", "VerejnaZakazka", res.IsValid ? "valid" : "invalid", search.Q, null);
 
 
                 search.IsValid = res.IsValid;

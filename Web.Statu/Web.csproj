@@ -1319,7 +1319,7 @@
     <Content Include="Views\Insolvence\_OddilDokumenty.cshtml" />
     <Content Include="Views\Insolvence\TextDokumentu.cshtml" />
     <Content Include="Views\Home\Analyza.cshtml" />
-    <Content Include="Views\Home\Detail_Child.cshtml" />
+    <Content Include="Views\Home\Detail_Child_vazby.cshtml" />
     <Content Include="Views\Home\Detail_Child_embed.cshtml" />
     <Content Include="Views\Home\OsobaProfil_Embed.cshtml" />
     <Content Include="Views\Home\Report_Child.cshtml" />

@@ -9,7 +9,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     public static class Search
     {
 
-        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query, bool addKeyword, string attrNameModif="")
+        public static string GetSpecificQueriesForDataset(DataSet ds, string mappingProperty, string query, bool addKeyword, string attrNameModif = "")
         {
             var props = ds.GetMappingList(mappingProperty, attrNameModif).ToArray();
             if (addKeyword)
@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             Dictionary<DataSet, string> queries = new Dictionary<DataSet, string>();
             foreach (var ds in DataSetDB.ProductionDataSets.Get())
             {
-                var qSearch = GetSpecificQueriesForDataset(ds, mappingProperty, query,addKeyword);
+                var qSearch = GetSpecificQueriesForDataset(ds, mappingProperty, query, addKeyword);
                 if (!string.IsNullOrEmpty(qSearch))
                 {
                     queries.Add(ds, qSearch);
@@ -89,7 +89,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Total = res.Total,
                     Result = res.Hits
                             .Select(m => m.Source.ToString())
-                            .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),                    
+                            .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),
 
                     Page = page,
                     PageSize = pageSize,
@@ -114,7 +114,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
         {
             var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
-            var res = _searchData(ds, query , page, pageSize, sort, excludeBigProperties, withHighlighting);
+            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting);
             if (!res.IsValid)
             {
                 throw DataSetException.GetExc(ds.DatasetId,
@@ -214,6 +214,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .Sort(ss => sortD)
                     .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(withHighlighting))
             );
+            Audit.Add(Audit.Operations.Search, "", "", "Dataset."+ds.DatasetId, res.IsValid ? "valid" : "invalid", queryString, null);
 
             return res;
         }
@@ -223,15 +224,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         //static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
         public static QueryContainer GetSimpleQuery(DataSet ds, string query)
         {
-            var idQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "id", "${q}", false);
+            var idQuerypath = GetSpecificQueriesForDataset(ds, "id", "${q}", false);
 
-            var icoQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDataset(ds, "ICO", "${q}",false);
-            var osobaIdQuerypathToIco = HlidacStatu.Lib.Data.External.DataSets.Search
-                            .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}",true)
+            var icoQuerypath = GetSpecificQueriesForDataset(ds, "ICO", "${q}", false);
+            var osobaIdQuerypathToIco = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true)
                             + " OR ( " + simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${v} )";
 
-            var osobaIdQuerypath = HlidacStatu.Lib.Data.External.DataSets.Search
-                .GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true);
+            var osobaIdQuerypath = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true);
 
             var osobaQP = "";
             if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
@@ -241,19 +240,45 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
                 osobaQP = osobaIdQuerypathToIco;
 
-            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
+            List<Lib.Search.Rule> rules = new List<Lib.Search.Rule> {
                     new Lib.Search.Rule("id:",idQuerypath ),
                     new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
-                    { 
-                        AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}" 
+                    {
+                        AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}"
                     },
                     new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),
                     new Lib.Search.Rule("ico:",icoQuerypath ),
                     new Lib.Search.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
                 };
 
+            // add searched prefixes
+            string[] existingPrefixes = rules.
+                Select(m => HlidacStatu.Util.ParseTools
+                            .GetRegexGroupValue(m.LookFor, "^(?<pref>[a-zA-Z.-]*:)", "pref")
+                            .ToLower()
+                )
+                .Where(m => !string.IsNullOrEmpty(m))
+                .ToArray();
+            var textParts = HlidacStatu.Lib.Search.SplittedQuery.SplitQueryToParts(query, '\"');
+            string[] foundPrefixes = textParts
+                .Where(m => m.Item2 == false)
+                .SelectMany(m => (HlidacStatu.Util.ParseTools
+                                .GetRegexGroupValues(m.Item1, @"(^|\s|[(]) (?<pref>[a-zA-Z.-]*:)", "pref")
+                                ?? new string[] { "" })
+                )
+                .Where(m => !string.IsNullOrEmpty(m))
+                .Where(m => !existingPrefixes.Contains(m))
+                .ToArray();
 
-            var qc = Lib.Search.Tools.GetSimpleQuery<object>(query, rules);
+            foreach (var fPref in foundPrefixes)
+            {
+                var pref = fPref.Substring(0, fPref.Length - 1);
+                var prefPath = $"( {GetSpecificQueriesForDataset(ds, pref, "${q}", false)} OR {GetSpecificQueriesForDataset(ds, pref, "${q}", true)})";
+                rules.Add(new Lib.Search.Rule(fPref, prefPath));
+            }
+
+
+            var qc = Lib.Search.Tools.GetSimpleQuery<object>(query, rules.ToArray());
 
             return qc;
         }

@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         public QueryContainer GetSimpleQuery(DotaceSearchResult searchdata)
         {
             var query = searchdata.Q;
-            
+
             //fix field prefixes
             //ds: -> 
             Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
@@ -75,7 +75,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             bool withHighlighting = false,
             AggregationContainerDescriptor<Dotace> anyAggregation = null)
         {
-            
+
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
 
             var sw = new StopWatchEx();
@@ -99,6 +99,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             }
             catch (Exception e)
             {
+                Audit.Add(Audit.Operations.Search, "", "", "Dotace", "error", search.Q, null);
                 if (res != null && res.ServerError != null)
                 {
                     Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
@@ -114,6 +115,8 @@ namespace HlidacStatu.Lib.Data.Dotace
                 throw;
             }
             sw.Stop();
+
+            Audit.Add(Audit.Operations.Search, "", "", "Dotace", res.IsValid ? "valid" : "invalid", search.Q, null);
 
             if (res.IsValid == false)
             {

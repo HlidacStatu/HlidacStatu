@@ -155,8 +155,8 @@ namespace HlidacStatu.Lib.Data
             totalsw.Start();
 
             ParallelOptions po = new ParallelOptions();
-            po.MaxDegreeOfParallelism = 20;
-            //po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
+            //po.MaxDegreeOfParallelism = 20;
+            po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
 
             Parallel.Invoke(po,               
                 () =>

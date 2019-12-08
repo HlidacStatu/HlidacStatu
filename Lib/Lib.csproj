@@ -638,6 +638,7 @@
     <Compile Include="ES\Manager.cs" />
     <Compile Include="Search\Rule.cs" />
     <Compile Include="Search\SearchDataResult.cs" />
+    <Compile Include="Search\SplittedQuery.cs" />
     <Compile Include="Search\Tools.cs" />
     <Compile Include="Search\VerejnaZakazkaSearchResult.cs" />
     <Compile Include="Search\SmlouvaSearchResult.cs" />

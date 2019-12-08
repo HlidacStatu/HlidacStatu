@@ -202,7 +202,6 @@ namespace HlidacStatu.Lib.ES
                         ESTraceLogger.Debug($"{call.HttpMethod}\t{call.Uri}\t");
                     }
 
-
                 })
                 ;
 

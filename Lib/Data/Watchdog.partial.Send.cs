@@ -19,38 +19,38 @@ namespace HlidacStatu.Lib.Data
                 insolvence,
                 global
             }
-            public static void SendWatchDogs(WatchdogTypeForSend? type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null)
+            public static void SendWatchDogs(WatchdogTypeForSend? type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug = false)
             {
-                SendWatchDogs(type?.ToString(), ids, userid, date, specificemail, forceSend, predicate);
+                SendWatchDogs(type?.ToString(), ids, userid, date, specificemail, forceSend, predicate,debug);
             }
-            public static void SendWatchDogs(string type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null)
+            public static void SendWatchDogs(string type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug = false)
             {
                 if (!string.IsNullOrEmpty(type))
                 {
                     type = type.ToLower();
                     if (type == WatchdogTypeForSend.smlouvy.ToString())
                     {
-                        _SendWatchDogs(typeof(Smlouva).Name, ids, userid, date, specificemail, forceSend, predicate);
+                        _SendWatchDogs(typeof(Smlouva).Name, ids, userid, date, specificemail, forceSend, predicate,debug);
                         return;
                     }
                     else if (type == WatchdogTypeForSend.zakazky.ToString())
                     {
-                        _SendWatchDogs(typeof(VZ.VerejnaZakazka).Name, ids, userid, date, specificemail, forceSend, predicate);
+                        _SendWatchDogs(typeof(VZ.VerejnaZakazka).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
                         return;
                     }
                     else if (type == WatchdogTypeForSend.insolvence.ToString())
                     {
-                        _SendWatchDogs(typeof(Insolvence.Rizeni).Name, ids, userid, date, specificemail, forceSend, predicate);
+                        _SendWatchDogs(typeof(Insolvence.Rizeni).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
                         return;
                     }
                     else if (type == WatchdogTypeForSend.dataset.ToString())
                     {
-                        _SendWatchDogs(typeof(DataSet).Name, ids, userid, date, specificemail, forceSend, predicate);
+                        _SendWatchDogs(typeof(DataSet).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
                         return;
                     }
                     else if (type == WatchdogTypeForSend.global.ToString())
                     {
-                        _SendWatchDogs(WatchDog.AllDbDataType, ids, userid, date, specificemail, forceSend, predicate);
+                        _SendWatchDogs(WatchDog.AllDbDataType, ids, userid, date, specificemail, forceSend, predicate, debug);
                         return;
                     }
                     else
@@ -60,13 +60,13 @@ namespace HlidacStatu.Lib.Data
                     }
                 }
 
-                _SendWatchDogs("", ids, userid, date, specificemail, forceSend, predicate);
+                _SendWatchDogs("", ids, userid, date, specificemail, forceSend, predicate, debug);
                 //SendVerejneZakazkyWatchDogs(ids, userid, date, specificemail, forceSend);
                 //SendDatasetWatchDogs(ids, userid, date, specificemail, forceSend);
             }
 
 
-            private static void _SendWatchDogs(string datatype, string[] ids, string userid, string date, string specificemail, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null)
+            private static void _SendWatchDogs(string datatype, string[] ids, string userid, string date, string specificemail, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug=false)
             {
                 HlidacStatu.Util.Consts.Logger.Info("Starting SendWatchDogs type:" + datatype);
 
@@ -132,7 +132,7 @@ namespace HlidacStatu.Lib.Data
                             {
                                 try
                                 {
-                                    notifResult = notifResult | _processIndividualWD(wdb, date, null, specificemail, forceSend);
+                                    notifResult = notifResult | _processIndividualWD(wdb, date, null, specificemail, forceSend,debug);
 
 
                                 }
@@ -179,7 +179,7 @@ namespace HlidacStatu.Lib.Data
             }
 
             private static bool _processIndividualWD(WatchDogProcessor wd2, string date, string order,
-                string specificemail, bool forceSend)
+                string specificemail, bool forceSend, bool debug = false)
             {
                 HlidacStatu.Util.Consts.Logger.Debug($"Processing specific watchdog ({wd2.OrigWD.dataType}) id {wd2.OrigWD.Id}, date {date?.ToString() ?? "current"}");
                 WatchDogProcessor.Result res = null;
@@ -188,10 +188,27 @@ namespace HlidacStatu.Lib.Data
                     if (!string.IsNullOrWhiteSpace(date))
                     {
                         res = wd2.DoSearch(date, order);
+                        if (debug)
+                        {
+                            System.IO.File.AppendAllText(
+                                @"c:\!\wd.debug.txt",
+                                $"{wd2.OrigWD.Id}\t{res.Total}\t{res.IsValid}\t{res.RawQuery}\n"
+                                );
+                            return false;
+                        }
+
                     }
-                    else if (wd2.ReadyToRun() || forceSend)
+                    else if (wd2.ReadyToRun() || forceSend || debug)
                     {
                         res = wd2.DoSearch(order);
+                        if (debug)
+                        {
+                            System.IO.File.AppendAllText(
+                                @"c:\!\wd.debug.txt",
+                                $"{wd2.OrigWD.Id}\t{res.Total}\t{res.IsValid}\t{res.RawQuery}\n"
+                                );
+                            return false;
+                        }
                     }
                 }
                 catch (Exception e)

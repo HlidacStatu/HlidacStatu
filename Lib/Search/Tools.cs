@@ -39,7 +39,6 @@ namespace HlidacStatu.Lib.Search
                         );
             return hh;
         }
-
         public static string FixInvalidQuery(string query, string[] shortcuts, string[] operators)
         {
             if (string.IsNullOrEmpty(query))
@@ -87,31 +86,8 @@ namespace HlidacStatu.Lib.Search
             {
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
-
+            var textParts = Search.SplittedQuery.SplitQueryToParts(newquery, '\"');
             //make operator UpperCase and space around '(' and ')'
-            //split newquery into part based on ", skip "xyz" parts
-            //string , bool = true ...> part withint ""
-            List<Tuple<string, bool>> textParts = new List<Tuple<string, bool>>();
-            int[] found = CharacterPositionsInString(newquery, '\"');
-            if (found.Length > 0 && found.Length % 2 == 0)
-            {
-                int start = 0;
-                bool withIn = false;
-                foreach (var idx in found)
-                {
-                    int startIdx = start;
-                    int endIdx = idx;
-                    textParts.Add(new Tuple<string, bool>(newquery.Substring(startIdx, endIdx - startIdx), withIn));
-                    start = endIdx;
-                    withIn = !withIn;
-                }
-                if (start < newquery.Length)
-                    textParts.Add(new Tuple<string, bool>(newquery.Substring(start), withIn));
-            }
-            else
-            {
-                textParts.Add(new Tuple<string, bool>(newquery, false));
-            }
             if (textParts.Count > 0)
             {
                 string fixedOperator = "";
@@ -159,23 +135,6 @@ namespace HlidacStatu.Lib.Search
             else
                 return query;
         }
-        public static int[] CharacterPositionsInString(string text, char lookingFor)
-        {
-            if (string.IsNullOrEmpty(text))
-                return new int[] { };
-
-            char[] textarray = text.ToCharArray();
-            List<int> found = new List<int>();
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (textarray[i].Equals(lookingFor))
-                {
-                    found.Add(i);
-                }
-            }
-            return found.ToArray();
-        }
-
 
         public static bool ValidateQuery<T>(Nest.ElasticClient client, QueryContainer qc)
        where T : class
@@ -222,10 +181,18 @@ namespace HlidacStatu.Lib.Search
         }
 
 
-        public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules)
+        public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules, bool newSQ = false)
                         where T : class
         {
-            string modifiedQ = GetSimpleQueryCore<T>(query, rules);
+            string tmp1 = GetSimpleQueryCore<T>(query, rules);
+            string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+
+            string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            //GetSimpleQueryCore<T>(query, rules);
+            //GetSimpleQueryCore1<T>(Search.SplittedQuery.SplitQuery(query), rules);
+
+            //newSQ ? GetSimpleQueryCore2<T>( Search.SplittedQuery.SplitQuery(query), rules) : 
+            //GetSimpleQueryCore<T>(query, rules);
 
             QueryContainer qc = null;
             if (modifiedQ == null)
@@ -244,7 +211,318 @@ namespace HlidacStatu.Lib.Search
             return qc;
         }
 
-        public static string GetSimpleQueryCore<T>(string query, Rule[] rules)
+        private static string GetSimpleQueryCore2<T>(Search.SplittedQuery sq, Rule[] rules)
+                where T : class
+        {
+            if (sq == null)
+                return null;
+            else if (string.IsNullOrEmpty(sq.FullQuery) || sq.FullQuery == "*")
+                return "";
+
+            string regexPrefix = @"(^|\s|[(])";
+            string regexTemplate = "{0}(?<q>(-|\\w)*)\\s*";
+
+            string newQ = ""; //FixInvalidQuery(query) ?? "";
+            //check invalid query ( tag: missing value)
+
+            foreach (var part in sq.Parts)
+            {
+                string partQ = "";
+                for (int i = 0; i < rules.Length; i++)
+                {
+                    //convert old rules with regex 
+                    string[] lookParts = rules[i].LookFor.Split(':');
+                    string lookForPrefix = lookParts[0] + ":";
+                    string lookForValue = lookParts.Length == 1 ? "" : string.Join(":", lookParts.Skip(1));
+                    string lookForFull = rules[i].LookFor;
+
+                    string replaceWith = rules[i].ReplaceWith;
+                    bool doFullReplace = rules[i].FullReplace;
+
+                    if (part.ExactValue == false
+                        && part.Prefix != null
+                        && part.Prefix.Equals(lookForPrefix, StringComparison.InvariantCultureIgnoreCase)
+                        && (string.IsNullOrWhiteSpace(lookForValue) || Regex.IsMatch(part.Value,lookForValue, regexQueryOption))
+                        )
+                    {
+
+
+                        MatchEvaluator ruleEvalMatch = (m) =>
+                        {
+                            var s = m.Value;
+                            if (string.IsNullOrEmpty(s))
+                                return string.Empty;
+                            var newVal = replaceWith;
+                            if (newVal.Contains("${q}"))
+                            {
+                                var capt = m.Groups["q"].Captures;
+                                var captVal = "";
+                                foreach (Capture c in capt)
+                                    if (c.Value.Length > captVal.Length)
+                                        captVal = c.Value;
+
+                                newVal = newVal.Replace("${q}", captVal);
+                            }
+                            if (s.StartsWith("("))
+                                return " (" + newVal;
+                            else
+                                return " " + newVal;
+                        };
+
+                        if (doFullReplace
+                            && !string.IsNullOrEmpty(replaceWith)
+                            && (
+                                lookForPrefix.Contains("holding:")
+                                //RS
+                                || lookForPrefix.Contains("holdingprijemce:")
+                                || lookForPrefix.Contains("holdingplatce:")
+                                //insolvence
+                                || lookForPrefix.Contains("holdingdluznik:")
+                                || lookForPrefix.Contains("holdingveritel:")
+                                || lookForPrefix.Contains("holdingspravce:")
+                                //VZ
+                                || lookForPrefix.Contains("holdingdodavatel:")
+                                || lookForPrefix.Contains("holdingzadavatel:")
+                            )
+                            )
+                        {
+                            //list of ICO connected to this holding
+                            string holdingIco = part.Value;
+                            HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+                            Data.Firma f = Data.Firmy.Get(holdingIco);
+                            if (f != null && f.Valid)
+                            {
+                                var icos = new string[] { f.ICO }
+                                    .Union(
+                                        f.AktualniVazby(aktualnost)
+                                        .Select(s => s.To.Id)
+                                    )
+                                    .Distinct();
+                                string icosQuery = "";
+                                var icosPresLidi = f.AktualniVazby(aktualnost)
+                                        .Where(o => o.To.Type == Data.Graph.Node.NodeType.Person)
+                                        .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
+                                        .Where(o => o != null)
+                                        .SelectMany(o => o.AktualniVazby(aktualnost))
+                                        .Select(v => v.To.Id)
+                                        .Distinct();
+                                icos = icos.Union(icosPresLidi).Distinct();
+
+                                var templ = $" ( {replaceWith}:{{0}} ) ";
+                                if (replaceWith.Contains("${q}"))
+                                    templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
+
+                                if (icos != null && icos.Count() > 0)
+                                {
+                                    icosQuery = " ( " + icos
+                                        .Select(t => string.Format(templ, t))
+                                        .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
+                                }
+                                else
+                                {
+                                    icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
+                                }
+                                if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                                {
+                                    if (rules[i].AddLastCondition.Contains("${q}"))
+                                    {
+                                        rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
+                                    }
+
+                                    icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                    rules[i].AddLastCondition = null; //done, don't do it anywhere
+                                }
+
+                                partQ = $" ({icosQuery})";
+                                break;
+                            }
+                        } //do regex replace
+                        else if (doFullReplace
+                                    && !string.IsNullOrEmpty(replaceWith)
+                                    && (
+                                        lookForPrefix.Contains("osobaid:")
+                                        || lookForPrefix.Contains("osobaiddluznik:")
+                                        || lookForPrefix.Contains("osobaidveritel:")
+                                        || lookForPrefix.Contains("osobaidspravce:")
+                                        || lookForPrefix.Contains("osobaidzadavatel:")
+                                        || lookForPrefix.Contains("osobaiddodavatel:")
+                                        )
+                            )//(replaceWith.Contains("${ico}"))
+                        {
+                            //list of ICO connected to this person
+                            string nameId = part.Value;
+                            Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
+                            string icosQuery = "";
+
+                            //string icoprefix = replaceWith;
+                            var templ = $" ( {replaceWith}:{{0}} ) ";
+                            if (replaceWith.Contains("${q}"))
+                                templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
+
+
+
+                            if (p != null)
+                            {
+                                var icos = p
+                                            .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
+                                            .Where(w => !string.IsNullOrEmpty(w.To.Id))
+                                            //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                            .Select(w => w.To.Id)
+                                            .Distinct().ToArray();
+
+
+                                if (icos != null && icos.Length > 0)
+                                {
+                                    icosQuery = " ( " + icos
+                                        .Select(t => string.Format(templ, t))
+                                        .Aggregate((f, s) => f + " OR " + s) + " ) ";
+                                }
+                                else
+                                {
+                                    icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
+                                }
+                                if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                                {
+                                    if (rules[i].AddLastCondition.Contains("${q}"))
+                                    {
+                                        rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
+                                    }
+
+                                    icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+
+                                    rules[i].AddLastCondition = null; //done, don't do it anywhere
+                                }
+                                partQ =" (" + icosQuery + ") ";
+                                break;
+                            }
+                            else
+                            {
+                                partQ =  " (" + string.Format(templ, "noOne") + ") ";
+                                break;
+                            }
+                        }
+
+                        //VZ
+                        else if (doFullReplace && replaceWith.Contains("${oblast}"))
+                        {
+                            string cpv = "";
+                            if (replaceWith.Contains("${oblast}"))
+                            {
+                                var oblastVal = part.Value;
+                                var cpvs = Lib.Data.VZ.VerejnaZakazka.Searching.CPVOblastToCPV(oblastVal);
+                                if (cpvs != null)
+                                {
+                                    var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
+                                    partQ = " " + q_cpv;
+                                    break;
+                                }
+                            }
+                        }
+                        //VZs
+                        else if (doFullReplace && replaceWith.Contains("${cpv}"))
+                        {
+                            string cpv = "";
+                            //Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
+                            //string cpv = "";
+                            //if (m.Success)
+                            //    cpv = m.Groups["q"].Value;
+                            cpv = part.Value;
+                            lookForPrefix = @"cpv:(?<q>(-|,|\d)*)\s*";
+                            if (!string.IsNullOrEmpty(cpv))
+                            {
+                                string[] cpvs = cpv.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                                string q_cpv = "";
+                                if (cpvs.Length > 0)
+                                    q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
+
+                                partQ = " (" + q_cpv + ") ";
+                                break;
+                            }
+                            else
+                            {
+                                partQ = " ";
+                                break;
+                            }
+                        }
+                        //VZ
+                        else if (doFullReplace && replaceWith.Contains("${form}"))
+                        {
+                            string form = part.Value;
+
+                            if (!string.IsNullOrEmpty(form))
+                            {
+                                string[] forms = form.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                                string q_form = "";
+                                if (forms.Length > 0)
+                                    q_form = "formulare.druh:(" + forms.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
+
+                                partQ = " (" + q_form + ") ";
+                                break;
+                            }
+                            else
+                            {
+                                partQ = " ";
+                                break;
+                            }
+                        }
+
+                        else if (replaceWith.Contains("${q}"))
+                        {
+                            partQ = " " + replaceWith.Replace("${q}", part.Value);
+                            break;
+                            //modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
+                        } //do regex replace
+
+                        else if (doFullReplace && lookForPrefix.Contains("chyby:"))
+                        {
+                            string levelVal = part.Value;
+                            string levelQ = "";
+                            if (levelVal == "fatal" || levelVal == "zasadni")
+                                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Fatal);
+                            else if (levelVal == "major" || levelVal == "vazne")
+                                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Major);
+
+                            if (!string.IsNullOrEmpty(levelQ))
+                            {
+                                partQ = " " + levelQ;
+                                break;
+                                //modifiedQ = Regex.Replace(modifiedQ, @"chyby:(\w*)", levelQ, regexQueryOption);
+                            }
+
+                        }
+                        else if (!string.IsNullOrEmpty(replaceWith))
+                        {
+                            partQ = " " + Regex.Replace(part.ToQueryString, lookForFull, ruleEvalMatch, regexQueryOption); // replaceWith.Replace("${q}", part.Value);
+                            //partQ = partQ + " " + replaceWith + part.Value;
+                            break;
+                            //modifiedQ = Regex.Replace(modifiedQ, lookFor, evalMatch, regexQueryOption);
+                        }
+
+                        if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
+                        {
+                            if (rules[i].AddLastCondition.Contains("${q}"))
+                            {
+                                rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
+                            }
+                            partQ = ModifyQueryOR(partQ, rules[i].AddLastCondition);
+                            break;
+                            //modifiedQ = ModifyQueryOR(modifiedQ, rules[i].AddLastCondition);
+                        }
+                    }
+                    else
+                    {
+                        partQ = part.ToQueryString;
+                    }
+                } //for rules
+                newQ = newQ + " " + partQ;
+            }//for parts
+
+            return newQ;
+        }
+
+
+        private static string GetSimpleQueryCore<T>(string query, Rule[] rules)
             where T : class
         {
             query = query?.Trim();

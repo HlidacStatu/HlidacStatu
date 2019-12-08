@@ -140,6 +140,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             }
             catch (Exception e)
             {
+                Audit.Add(Audit.Operations.Search, "", "", "Insolvence", "error", search.Q, null);
                 if (res != null && res.ServerError != null)
                 {
                     Manager.LogQueryError<Rizeni>(res, "Exception, Orig query:"
@@ -155,6 +156,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 throw;
             }
             sw.Stop();
+            Audit.Add(Audit.Operations.Search, "", "", "Insolvence", res.IsValid ? "valid" : "invalid", search.Q, null);
 
             if (res.IsValid == false)
             {

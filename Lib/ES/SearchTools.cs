@@ -211,10 +211,9 @@ namespace HlidacStatu.Lib.ES
                 Order = ((int)order).ToString()
             };
 
-            ISearchResponse<Lib.Data.Smlouva> res =
-                
-                _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam,
+            ISearchResponse<Lib.Data.Smlouva> res =_coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam,
                 includeNeplatne, logError, withHighlighting);
+
 
             if (res.IsValid == false && logError)
                 Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res, query.ToString());
@@ -275,6 +274,8 @@ namespace HlidacStatu.Lib.ES
             ISearchResponse<Lib.Data.Smlouva> res =
                 _coreSearch(GetSimpleQuery(query), page, pageSize, order, anyAggregation, platnyZaznam,
                 includeNeplatne, logError, withHighlighting);
+
+            Data.Audit.Add(Data.Audit.Operations.Search, "", "", "Smlouva", res.IsValid ? "valid" : "invalid", query, null);
 
             if (res.IsValid == false && logError)
                 Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res, query);
@@ -341,6 +342,7 @@ namespace HlidacStatu.Lib.ES
             }
             catch (Exception e)
             {
+
                 if (res != null && res.ServerError != null)
                     Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res);
                 else
