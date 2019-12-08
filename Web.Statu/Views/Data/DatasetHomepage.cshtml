@@ -57,8 +57,6 @@
             {
                 @Html.Action("CachedAction_Child_20min", new { model = (object)reg.datasetId, NameOfView = promoViewName, key = promoViewFileName })
 
-                <h3>Hledání</h3>
-                @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
             }
             else
             {

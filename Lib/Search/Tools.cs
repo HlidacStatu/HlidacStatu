@@ -185,10 +185,10 @@ namespace HlidacStatu.Lib.Search
                         where T : class
         {
             //string tmp1 = GetSimpleQueryCore<T>(query, rules);
-            string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            //string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
 
-            string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
-            //string modifiedQ = GetSimpleQueryCore<T>(query, rules);
+            //string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            string modifiedQ = GetSimpleQueryCore<T>(query, rules);
 
             //newSQ ? GetSimpleQueryCore2<T>( Search.SplittedQuery.SplitQuery(query), rules) : 
             //GetSimpleQueryCore<T>(query, rules);
