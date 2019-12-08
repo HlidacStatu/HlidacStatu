@@ -33,6 +33,15 @@ namespace HlidacStatu.Web.Controllers
 			}
             model.LimitedView = IsLimitedView();
 			var res = Insolvence.SimpleSearch(model);
+
+			Lib.Data.Audit.Add(
+				Lib.Data.Audit.Operations.UserSearch
+				, this.User?.Identity?.Name
+				, this.Request.UserHostAddress
+				, "Insolvence"
+				, res.IsValid ? "valid" : "invalid"
+				, res.Q, res.OrigQuery);
+				
 			return View(res);
 		}
 

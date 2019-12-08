@@ -26,7 +26,8 @@ namespace HlidacStatu.Lib.Data
             Other,
             InvalidAccess,
             Call,
-            Search
+            Search,
+            UserSearch
         }
         public static Audit Add<T>(Operations operation, string user, T newObj, T prevObj)
             where T : IAuditable

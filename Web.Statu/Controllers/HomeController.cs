@@ -1105,6 +1105,14 @@ text zpravy: {txt}";
                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK)),
                 logError: false);
 
+            Lib.Data.Audit.Add(
+                    Lib.Data.Audit.Operations.UserSearch
+                    , this.User?.Identity?.Name
+                    , this.Request.UserHostAddress
+                    , "Smlouva"
+                    , sres.IsValid ? "valid" : "invalid"
+                    , sres.Q, sres.OrigQuery);
+
             if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
             {
                 HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledat", this.HttpContext);
@@ -1122,6 +1130,14 @@ text zpravy: {txt}";
                 showBeta = true;
 
             var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, 5, showBeta);
+            Lib.Data.Audit.Add(
+                    Lib.Data.Audit.Operations.UserSearch
+                    , this.User?.Identity?.Name
+                    , this.Request.UserHostAddress
+                    , "General"
+                    , res.IsValid ? "valid" : "invalid"
+                    , q,null);
+
             if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
             {

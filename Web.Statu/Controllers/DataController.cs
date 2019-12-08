@@ -225,6 +225,13 @@ namespace HlidacStatu.Web.Controllers
                     return RedirectToAction("index", new { id = id });
 
                 model = datasource.SearchDataRaw(model.Q, model.Page, model.PageSize, model.Order);
+                Lib.Data.Audit.Add(
+                    Lib.Data.Audit.Operations.UserSearch
+                    , this.User?.Identity?.Name
+                    , this.Request.UserHostAddress
+                    , "Dataset." + datasource.DatasetId
+                    , model.IsValid ? "valid" : "invalid"
+                    , model.Q, model.OrigQuery);
 
                 return View(model);
             }

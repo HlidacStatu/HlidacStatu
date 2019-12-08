@@ -32,6 +32,16 @@ namespace HlidacStatu.Web.Controllers
 
 
             var res = _dotaceService.SimpleSearch(model, anyAggregation:aggs);
+
+            Lib.Data.Audit.Add(
+                Lib.Data.Audit.Operations.UserSearch
+                , this.User?.Identity?.Name
+                , this.Request.UserHostAddress
+                , "Dotace"
+                , res.IsValid ? "valid" : "invalid"
+                , res.Q, res.OrigQuery);
+
+
             return View(res);
         }
 

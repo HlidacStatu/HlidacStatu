@@ -185,11 +185,10 @@ namespace HlidacStatu.Lib.Search
                         where T : class
         {
             //string tmp1 = GetSimpleQueryCore<T>(query, rules);
-            //string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
 
-            string modifiedQ = GetSimpleQueryCore<T>(query, rules);
-            //GetSimpleQueryCore<T>(query, rules);
-            //GetSimpleQueryCore1<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            //string modifiedQ = GetSimpleQueryCore<T>(query, rules);
 
             //newSQ ? GetSimpleQueryCore2<T>( Search.SplittedQuery.SplitQuery(query), rules) : 
             //GetSimpleQueryCore<T>(query, rules);
@@ -386,12 +385,14 @@ namespace HlidacStatu.Lib.Search
                                 {
                                     if (rules[i].AddLastCondition.Contains("${q}"))
                                     {
-                                        rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
+                                        icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition.Replace("${q}", part.Value));
+                                    }
+                                    else
+                                    {
+                                        icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
                                     }
 
-                                    icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
-
-                                    rules[i].AddLastCondition = null; //done, don't do it anywhere
+                                    //rules[i].AddLastCondition = null; //done, don't do it anywhere
                                 }
                                 partQ =" (" + icosQuery + ") ";
                                 break;

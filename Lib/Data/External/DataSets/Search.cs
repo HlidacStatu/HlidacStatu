@@ -227,24 +227,24 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var idQuerypath = GetSpecificQueriesForDataset(ds, "id", "${q}", false);
 
             var icoQuerypath = GetSpecificQueriesForDataset(ds, "ICO", "${q}", false);
-            var osobaIdQuerypathToIco = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true)
-                            + " OR ( " + simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${v} )";
+            //var osobaIdQuerypathToIco = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true)
+            //                + " OR ( " + simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${v} )";
 
             var osobaIdQuerypath = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true);
 
-            var osobaQP = "";
-            if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
-                osobaQP = $"({icoQuerypath} OR {osobaIdQuerypathToIco})";
-            else if (!string.IsNullOrEmpty(icoQuerypath))
-                osobaQP = icoQuerypath;
-            else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
-                osobaQP = osobaIdQuerypathToIco;
+            //var osobaQP = "";
+            //if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
+            //    osobaQP = $"({icoQuerypath} OR {osobaIdQuerypathToIco})";
+            //else if (!string.IsNullOrEmpty(icoQuerypath))
+            //    osobaQP = icoQuerypath;
+            //else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
+            //    osobaQP = osobaIdQuerypathToIco;
 
             List<Lib.Search.Rule> rules = new List<Lib.Search.Rule> {
                     new Lib.Search.Rule("id:",idQuerypath ),
                     new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
                     {
-                        AddLastCondition = simpleQueryOsobaPrefix + "osobaid" + simpleQueryOsobaPrefix + ":${q}"
+                        AddLastCondition = osobaIdQuerypath
                     },
                     new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),
                     new Lib.Search.Rule("ico:",icoQuerypath ),

@@ -80,6 +80,14 @@ namespace HlidacStatu.Web.Controllers
                 cpvs = cpv.Split(',');
             }
             var res= VerejnaZakazka.Searching.SimpleSearch(model);
+            Lib.Data.Audit.Add(
+                    Lib.Data.Audit.Operations.UserSearch
+                    , this.User?.Identity?.Name
+                    , this.Request.UserHostAddress
+                    , "VerejnaZakazka"
+                    , res.IsValid ? "valid" : "invalid"
+                    , res.Q, res.OrigQuery);
+
             return View(res);
         }
 
