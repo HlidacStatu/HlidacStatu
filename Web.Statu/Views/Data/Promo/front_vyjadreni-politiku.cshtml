@@ -111,7 +111,7 @@
                     <span>, </span>
                 }
                 <span>
-                    <a href="/data/Hledat/vyjadreni-politiku?order=created%20desc&q=osobaid%3A@(o.NameId)">@Html.Raw(o.FullName(html: true))</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@Html.Raw(o.FullName(html: true))</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
                 </span>
             }
         }

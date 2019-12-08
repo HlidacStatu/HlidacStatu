@@ -184,10 +184,10 @@ namespace HlidacStatu.Lib.Search
         public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules, bool newSQ = false)
                         where T : class
         {
-            string tmp1 = GetSimpleQueryCore<T>(query, rules);
-            string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            //string tmp1 = GetSimpleQueryCore<T>(query, rules);
+            //string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
 
-            string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
+            string modifiedQ = GetSimpleQueryCore<T>(query, rules);
             //GetSimpleQueryCore<T>(query, rules);
             //GetSimpleQueryCore1<T>(Search.SplittedQuery.SplitQuery(query), rules);
 
