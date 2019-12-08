@@ -1,0 +1,188 @@
+﻿@model HlidacStatu.Lib.Data.Smlouva
+@using Devmasters.Core
+@using HlidacStatu.Lib
+
+@{
+    Layout = null;
+
+
+    bool angPolitiku = false;
+    bool isSponzorStrany = false;
+    if (Model.Prijemce != null)
+    {
+        angPolitiku = Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce })
+            .Where(m => !string.IsNullOrEmpty(m.ico))
+            .Any(m => HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(m.ico));
+        isSponzorStrany = Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce })
+            .Where(m => !string.IsNullOrEmpty(m.ico))
+            .Any(m => HlidacStatu.Lib.Data.Firmy.Get(m.ico).Valid && HlidacStatu.Lib.Data.Firmy.Get(m.ico).IsSponzor());
+    }
+
+
+}
+@section scripts
+{
+}
+
+@section breadcrumb
+{
+}
+
+
+
+            @if (Model.OtherVersions().Length > 0)
+            {
+                <tr>
+                    <td>
+                        <h4>Provázané smlouvy</h4>
+                    </td>
+                    <td>
+                        <div>
+                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.OtherVersions().Length, "jednu provázanou smlouvu", "{0} provázané smlouvy", "{0} provázaných smluv")):
+                            <ul>
+                                @foreach (var os in Model.OtherVersions())
+                                {
+                                    <li><a href="/Detail/@os.Id">Verze @os.Id; zveřejněna @os.casZverejneni.ToString("dd.MM.yyyy HH.mm"); @(os.platnyZaznam ? "platná" : "zneplatněna")</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <span class="text-muted small">Toto je seznam smluv, které jsou zneplatněnými verzemi této smlouvy anebo jsou velmi podobné této smlouvě a je vysoká pravděpodobnost, že se jedná zneplatněné verze smlouvy, které nejsou správně označeny jako provázané.</span>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.PodobneSmlouvy().Length > 0)
+            {
+                <tr>
+                    <td>
+                        Podobné smlouvy
+                    </td>
+                    <td>
+                        <div>
+                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.PodobneSmlouvy().Length, "jednu podobnou smlouvu", "{0} podobné smlouvy", "{0} podobných smluv")):
+                            <ul>
+                                @foreach (var os in Model.PodobneSmlouvy())
+                                {
+                                    <li><a href="/Detail/@os.Id">Zveřejněna @os.casZverejneni.ToString("dd.MM.yyyy HH.mm"); částka @HlidacStatu.Util.RenderData.NicePrice(os.CalculatedPriceWithVATinCZK) s DPH; @(os.platnyZaznam ? "platná" : "zneplatněna")</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <span class="text-muted small">Toto je seznam smluv, které jsou velmi podobné této smlouvě, mají stejné smluvní strany a předmět smlouvy.</span>
+                    </td>
+                </tr>
+            }
+
+
+
+            @if (angPolitiku)
+            {
+                <tr>
+                    <td>
+                        Angažovanost politicky aktivních osob v soukromé firmě u této smlouvy
+                    </td>
+                    <td>
+
+                        @foreach (var ss in Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce }))
+                        {
+                            if (!string.IsNullOrEmpty(ss.ico) && HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(ss.ico))
+                            {
+                                bool first = true;
+                                foreach (var pId in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[ss.ico])
+                                {
+                                    HlidacStatu.Lib.Data.Osoba p = HlidacStatu.Lib.StaticData.PolitickyAktivni
+                                        .Get()
+                                        .Where(m => m.InternalId == pId)
+                                        .FirstOrDefault();
+
+                                    if (first)
+                                    {
+                                        first = false;
+                                        <h3>@ss.nazev </h3>
+                                        <p>
+                                            <a href="/subjekt/@ss.ico">Další smlouvy firmy</a>
+                                        </p>
+                                    }
+                                    if (p != null)
+                                    {
+                                        <p>
+                                            <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
+                                            <div style="padding-left:20px;">
+                                                @Util.RenderVazby(p.VazbyProICO(ss.ico))
+                                            </div>
+                                        </p>
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    </td>
+                </tr>
+            }
+            @if (isSponzorStrany)
+            {
+                <tr>
+                    <td>
+                        Sponzoring politických stran
+                    </td>
+                    <td>
+
+                        @foreach (var subj in Model.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { Model.Platce }))
+                        {
+                            var firma = HlidacStatu.Lib.Data.Firmy.Get(subj.ico);
+                            if (firma.Valid && firma.IsSponzor() && firma.JsemSoukromaFirma())
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">@firma.Jmeno</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        @Html.Raw(firma.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+                                    </div>
+                                </div>
+                            }
+
+                        }
+
+                    </td>
+                </tr>
+            }
+
+
+
+@section footerscripts
+{
+    <style>
+        /* Popover */
+        /* Popover Header */
+        .popover-title {
+            background-color: #fcf8e3;
+        }
+        /* Popover Body */
+        .popover-content {
+            font-size: 80%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        SocialShareKit.init({
+            url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))',
+            twitter: {
+                via: 'HlidacSmluv'
+            }
+        }
+        );
+        $(document).ready(function () {
+            $("a[data-link='kopie']").popover({
+                placement: 'top',
+                trigger: "hover",
+                title: "Upozornění",
+                content: "Jedná se o naši kopii zveřejněné smlouvy. Nemusí se jedna o stejný, správný či úplný dokument."
+            });
+        });
+    </script>
+}
+
+
+
