@@ -922,6 +922,7 @@ namespace HlidacStatu.Lib.Data
         {
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Člen strany {0}", strana), "", OsobaEvent.Types.Politicka);
             oe.Organizace = ParseTools.NormalizaceStranaShortName(strana);
+            oe.AddInfo = "člen strany";
             oe.Zdroj = zdroj;
             oe.DatumOd = new DateTime(rokOd, 1, 1, 0, 0, 0, DateTimeKind.Local);
             oe.DatumDo = rokDo == null ? (DateTime?)null : new DateTime(rokDo.Value, 12, 31, 0, 0, 0, DateTimeKind.Local);
