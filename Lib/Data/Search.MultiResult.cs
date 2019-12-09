@@ -76,13 +76,13 @@ namespace HlidacStatu.Lib.Data
             {
                 get
                 {
-                    return this.Smlouvy.IsValid
-                        && this.VZ.IsValid
-                        && this.Osoby.IsValid
-                        && this.Transakce.IsValid
-                        && this.Firmy.IsValid
-                        && this.Datasets.IsValid
-						//&& this.Insolvence.IsValid
+                    return (this.Smlouvy?.IsValid ?? false)
+                        && (this.VZ?.IsValid ?? false)
+                        && (this.Osoby?.IsValid ?? false)
+                        && (this.Transakce?.IsValid ?? false)
+                        && (this.Firmy?.IsValid ?? false)
+                        && (this.Datasets?.IsValid ?? false)
+						&& (this.Insolvence?.IsValid ?? false)
                         ;
                 }
             }
