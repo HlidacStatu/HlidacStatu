@@ -18,7 +18,7 @@
             /* header */
             b = document.createElement("SPAN");
             b.innerHTML = "<strong>&uarr;</strong>,<strong>&darr;</strong> - pohyb v nápovědě. ";
-            b.innerHTML += "<strong>Enter</strong>,<strong>Tab</strong> - vložit. ";
+            b.innerHTML += "<strong>Tab</strong> - vložit. ";
             b.innerHTML += "<strong>Esc</strong> - skrýt nápovědu.";
             a.appendChild(b);
 
@@ -66,7 +66,7 @@
             //currentFocus--;
             /*and and make the current item more visible:*/
             closeAllLists();
-        } else if (e.keyCode == 13 || e.keyCode == 9) {
+        } else if (e.keyCode == 9) {
             /*If the ENTER or TAB key is pressed, prevent the form from being submitted,*/
             e.preventDefault();
             if (currentFocus > -1) {
