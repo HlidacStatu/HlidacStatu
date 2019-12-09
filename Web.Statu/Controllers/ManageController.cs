@@ -409,7 +409,7 @@ namespace HlidacStatu.Web.Controllers
                 if (!narozeni.HasValue)
                     continue;
 
-                Osoba p = Osoba.GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, narozeni, Osoba.StatusOsobyEnum.NeniPolitik,
+                Osoba p = Osoba.GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, narozeni, status,
                     this.User.Identity.Name);
 
                 if (!string.IsNullOrWhiteSpace(clenstviStrana))
