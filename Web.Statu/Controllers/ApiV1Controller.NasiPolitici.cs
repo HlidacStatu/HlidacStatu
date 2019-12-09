@@ -38,7 +38,7 @@ namespace HlidacStatu.Web.Controllers
                             true, 
                             true, 
                             "", 
-                            "<p>{0}</p>")
+                            "{0}")
                     });
 
                 return Json(osoby, JsonRequestBehavior.AllowGet);
