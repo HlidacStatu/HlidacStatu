@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Search
 {
+    [Obsolete]
     public class Rule
     {
         public Rule(string lookFor, string replaceWith, bool fullReplace = true)

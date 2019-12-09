@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Search
             {
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
-            var textParts = Search.SplittedQuery.SplitQueryToParts(newquery, '\"');
+            var textParts = Search.SplittingQuery.SplitQueryToParts(newquery, '\"');
             //make operator UpperCase and space around '(' and ')'
             if (textParts.Count > 0)
             {
@@ -210,7 +210,7 @@ namespace HlidacStatu.Lib.Search
             return qc;
         }
 
-        private static string GetSimpleQueryCore2<T>(Search.SplittedQuery sq, Rule[] rules)
+        private static string GetSimpleQueryCore2<T>(Search.SplittingQuery sq, Rule[] rules)
                 where T : class
         {
             if (sq == null)
@@ -285,57 +285,6 @@ namespace HlidacStatu.Lib.Search
                             )
                             )
                         {
-                            //list of ICO connected to this holding
-                            string holdingIco = part.Value;
-                            HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-                            Data.Firma f = Data.Firmy.Get(holdingIco);
-                            if (f != null && f.Valid)
-                            {
-                                var icos = new string[] { f.ICO }
-                                    .Union(
-                                        f.AktualniVazby(aktualnost)
-                                        .Select(s => s.To.Id)
-                                    )
-                                    .Distinct();
-                                string icosQuery = "";
-                                var icosPresLidi = f.AktualniVazby(aktualnost)
-                                        .Where(o => o.To.Type == Data.Graph.Node.NodeType.Person)
-                                        .Select(o => Data.Osoby.GetById.Get(Convert.ToInt32(o.To.Id)))
-                                        .Where(o => o != null)
-                                        .SelectMany(o => o.AktualniVazby(aktualnost))
-                                        .Select(v => v.To.Id)
-                                        .Distinct();
-                                icos = icos.Union(icosPresLidi).Distinct();
-
-                                var templ = $" ( {replaceWith}:{{0}} ) ";
-                                if (replaceWith.Contains("${q}"))
-                                    templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
-
-                                if (icos != null && icos.Count() > 0)
-                                {
-                                    icosQuery = " ( " + icos
-                                        .Select(t => string.Format(templ, t))
-                                        .Aggregate((fi, s) => fi + " OR " + s) + " ) ";
-                                }
-                                else
-                                {
-                                    icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
-                                }
-                                if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
-                                {
-                                    if (rules[i].AddLastCondition.Contains("${q}"))
-                                    {
-                                        rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
-                                    }
-
-                                    icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
-
-                                    rules[i].AddLastCondition = null; //done, don't do it anywhere
-                                }
-
-                                partQ = $" ({icosQuery})";
-                                break;
-                            }
                         } //do regex replace
                         else if (doFullReplace
                                     && !string.IsNullOrEmpty(replaceWith)
@@ -349,147 +298,29 @@ namespace HlidacStatu.Lib.Search
                                         )
                             )//(replaceWith.Contains("${ico}"))
                         {
-                            //list of ICO connected to this person
-                            string nameId = part.Value;
-                            Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
-                            string icosQuery = "";
-
-                            //string icoprefix = replaceWith;
-                            var templ = $" ( {replaceWith}:{{0}} ) ";
-                            if (replaceWith.Contains("${q}"))
-                                templ = $" ( {replaceWith.Replace("${q}", "{0}")} )";
 
 
-
-                            if (p != null)
-                            {
-                                var icos = p
-                                            .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                            .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                            //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                            .Select(w => w.To.Id)
-                                            .Distinct().ToArray();
-
-
-                                if (icos != null && icos.Length > 0)
-                                {
-                                    icosQuery = " ( " + icos
-                                        .Select(t => string.Format(templ, t))
-                                        .Aggregate((f, s) => f + " OR " + s) + " ) ";
-                                }
-                                else
-                                {
-                                    icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
-                                }
-                                if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
-                                {
-                                    if (rules[i].AddLastCondition.Contains("${q}"))
-                                    {
-                                        icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition.Replace("${q}", part.Value));
-                                    }
-                                    else
-                                    {
-                                        icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
-                                    }
-
-                                    //rules[i].AddLastCondition = null; //done, don't do it anywhere
-                                }
-                                partQ =" (" + icosQuery + ") ";
-                                break;
-                            }
-                            else
-                            {
-                                partQ =  " (" + string.Format(templ, "noOne") + ") ";
-                                break;
-                            }
                         }
 
                         //VZ
                         else if (doFullReplace && replaceWith.Contains("${oblast}"))
                         {
-                            string cpv = "";
-                            if (replaceWith.Contains("${oblast}"))
-                            {
-                                var oblastVal = part.Value;
-                                var cpvs = Lib.Data.VZ.VerejnaZakazka.Searching.CPVOblastToCPV(oblastVal);
-                                if (cpvs != null)
-                                {
-                                    var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-                                    partQ = " " + q_cpv;
-                                    break;
-                                }
-                            }
                         }
                         //VZs
                         else if (doFullReplace && replaceWith.Contains("${cpv}"))
                         {
-                            string cpv = "";
-                            //Match m = Regex.Match(modifiedQ, lookFor, regexQueryOption);
-                            //string cpv = "";
-                            //if (m.Success)
-                            //    cpv = m.Groups["q"].Value;
-                            cpv = part.Value;
-                            lookForPrefix = @"cpv:(?<q>(-|,|\d)*)\s*";
-                            if (!string.IsNullOrEmpty(cpv))
-                            {
-                                string[] cpvs = cpv.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                string q_cpv = "";
-                                if (cpvs.Length > 0)
-                                    q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-
-                                partQ = " (" + q_cpv + ") ";
-                                break;
-                            }
-                            else
-                            {
-                                partQ = " ";
-                                break;
-                            }
                         }
                         //VZ
                         else if (doFullReplace && replaceWith.Contains("${form}"))
                         {
-                            string form = part.Value;
-
-                            if (!string.IsNullOrEmpty(form))
-                            {
-                                string[] forms = form.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
-                                string q_form = "";
-                                if (forms.Length > 0)
-                                    q_form = "formulare.druh:(" + forms.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-
-                                partQ = " (" + q_form + ") ";
-                                break;
-                            }
-                            else
-                            {
-                                partQ = " ";
-                                break;
-                            }
                         }
 
                         else if (replaceWith.Contains("${q}"))
                         {
-                            partQ = " " + replaceWith.Replace("${q}", part.Value);
-                            break;
-                            //modifiedQ = Regex.Replace(modifiedQ, string.Format(regexTemplate, lookFor), evalMatch, regexQueryOption);
                         } //do regex replace
 
                         else if (doFullReplace && lookForPrefix.Contains("chyby:"))
                         {
-                            string levelVal = part.Value;
-                            string levelQ = "";
-                            if (levelVal == "fatal" || levelVal == "zasadni")
-                                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Fatal);
-                            else if (levelVal == "major" || levelVal == "vazne")
-                                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Major);
-
-                            if (!string.IsNullOrEmpty(levelQ))
-                            {
-                                partQ = " " + levelQ;
-                                break;
-                                //modifiedQ = Regex.Replace(modifiedQ, @"chyby:(\w*)", levelQ, regexQueryOption);
-                            }
 
                         }
                         else if (!string.IsNullOrEmpty(replaceWith))

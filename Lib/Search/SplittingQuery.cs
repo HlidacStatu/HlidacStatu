@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Search
 {
-    public class SplittedQuery
+    public class SplittingQuery
     {
         public class Part
         {
@@ -26,13 +26,17 @@ namespace HlidacStatu.Lib.Search
                 }
             }
         }
-        public static SplittedQuery SplitQuery(string query)
+        public static SplittingQuery SplitQuery(string query)
         {
-            return new SplittedQuery(query);
+            return new SplittingQuery(query);
         }
-        private SplittedQuery(string query)
+        private SplittingQuery(string query)
         {
             _parts = Split(query);
+        }
+        public SplittingQuery(Part[] parts)
+        {
+            _parts = parts;
         }
 
         string _fullQuery = null;

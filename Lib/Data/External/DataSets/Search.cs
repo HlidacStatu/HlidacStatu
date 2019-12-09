@@ -259,7 +259,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 )
                 .Where(m => !string.IsNullOrEmpty(m))
                 .ToArray();
-            var textParts = HlidacStatu.Lib.Search.SplittedQuery.SplitQueryToParts(query, '\"');
+            var textParts = HlidacStatu.Lib.Search.SplittingQuery.SplitQueryToParts(query, '\"');
             string[] foundPrefixes = textParts
                 .Where(m => m.Item2 == false)
                 .SelectMany(m => (HlidacStatu.Util.ParseTools
