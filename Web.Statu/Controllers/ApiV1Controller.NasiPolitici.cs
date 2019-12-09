@@ -33,12 +33,18 @@ namespace HlidacStatu.Web.Controllers
                         birthYear = m.Narozeni?.ToString("yyyy") ?? "",
                         photo = m.GetPhotoUrl(false),
                         description = InfoFact.RenderInfoFacts(
-                            m.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(), 
-                            4, 
-                            true, 
-                            true, 
-                            "", 
-                            "{0}")
+                            m.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
+                            4,
+                            true,
+                            true,
+                            "",
+                            "{0}"),
+                        currentParty = m.Events(ev =>
+                                ev.Type == (int)OsobaEvent.Types.Politicka
+                                && ev.AddInfo == "člen strany")
+                            .OrderByDescending(ev => ev.DatumOd)
+                            .Select(ev => ev.Organizace)
+                            .FirstOrDefault()
                     });
 
                 return Json(osoby, JsonRequestBehavior.AllowGet);
@@ -73,11 +79,12 @@ namespace HlidacStatu.Web.Controllers
                 var statDescription =
                     HlidacStatu.Util.InfoFact.RenderInfoFacts(
                         o.InfoFacts().Where(i => i.Level != HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
-                            , 4, true, true, "", "{0}");
+                        , 4, true, true, "", "{0}");
 
                 var angazovanost =
-                    o.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Text
-                    ?? o.InfoFacts().First().Text;
+                    HlidacStatu.Util.InfoFact.RenderInfoFacts(
+                        o.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
+                        , 4, true, true, "", "{0}");
 
 
                 int[] types = {
@@ -156,6 +163,13 @@ namespace HlidacStatu.Web.Controllers
                     bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidspravce:{o.NameId}"
                 };
 
+                string politickaStrana = o.Events(ev =>
+                                ev.Type == (int)OsobaEvent.Types.Politicka
+                                && ev.AddInfo == "člen strany")
+                            .OrderByDescending(ev => ev.DatumOd)
+                            .Select(ev => ev.Organizace)
+                            .FirstOrDefault();
+
                 var result = new
                 {
                     id = o.NameId,
@@ -174,7 +188,8 @@ namespace HlidacStatu.Web.Controllers
                     insolvencyPerson = insPerson,
                     insolvencyCompany = insCompany,
                     source = o.GetUrl(false),
-                    sponsor = sponzorstvi
+                    sponsor = sponzorstvi,
+                    currentParty = politickaStrana
                 };
 
                 return Json(result, JsonRequestBehavior.AllowGet);
