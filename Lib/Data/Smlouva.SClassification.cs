@@ -469,12 +469,13 @@ namespace HlidacStatu.Lib.Data
                         }
 
 
-                        var jsonData = Newtonsoft.Json.Linq.JArray.Parse(res.Text);
+                        var jsonData = Newtonsoft.Json.Linq.JObject.Parse(res.Text);
 
-                        for (int i = 0; i < jsonData.Count; i++)
+                        foreach (JProperty item in jsonData.Children())
                         {
-                            string key = jsonData[i][0].Value<string>().Replace("-", "_");
-                            decimal prob = jsonData[i][1].Value<decimal>();
+
+                            string key = item.Name.Replace("-", "_");// jsonData[i][0].Value<string>().Replace("-", "_");
+                            decimal prob = HlidacStatu.Util.ParseTools.ToDecimal(item.Value.ToString()) ?? 0;
                             if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
                             {
                                 if (!data.ContainsKey(typ))
