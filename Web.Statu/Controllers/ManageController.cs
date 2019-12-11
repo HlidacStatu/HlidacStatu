@@ -419,7 +419,7 @@ namespace HlidacStatu.Web.Controllers
                         OsobaId = p.InternalId,
                         DatumOd = clenstviVznik,
                         Type = 7,
-                        AddInfo = "člen",
+                        AddInfo = "člen strany",
                         Organizace = clenstviStrana,
                         Title = $"člen v {clenstviStrana}"
                     };
