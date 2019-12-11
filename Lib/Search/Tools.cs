@@ -210,7 +210,7 @@ namespace HlidacStatu.Lib.Search
             return qc;
         }
 
-        private static string GetSimpleQueryCore2<T>(Search.SplittingQuery sq, Rule[] rules)
+        private static string ___GetSimpleQueryCore2<T>(Search.SplittingQuery sq, Rule[] rules)
                 where T : class
         {
             if (sq == null)

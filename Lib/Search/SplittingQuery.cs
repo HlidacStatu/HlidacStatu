@@ -34,11 +34,16 @@ namespace HlidacStatu.Lib.Search
         {
             _parts = Split(query);
         }
+        public SplittingQuery()
+            : this(new Part[] { })
+        {
+        }
         public SplittingQuery(Part[] parts)
         {
-            _parts = parts;
+            _parts = parts ?? new Part[] { };
         }
 
+        public 
         string _fullQuery = null;
         public string FullQuery
         {
@@ -62,6 +67,28 @@ namespace HlidacStatu.Lib.Search
         }
         Part[] _parts = null;
         public Part[] Parts { get { return _parts; } }
+
+        public void AddParts(Part[] parts)
+        {
+            var p = new List<Part>(_parts);
+            p.AddRange(parts);
+            _parts = p.ToArray();
+        }
+        public void InsertParts(int index, Part[] parts)
+        {
+            var p = new List<Part>(_parts);
+            p.InsertRange(index,parts);
+            _parts = p.ToArray();
+        }
+        public void ReplaceWith(int index, Part[] parts)
+        {
+            
+            var p = new List<Part>(_parts);
+            p.RemoveAt(index);
+            p.InsertRange(index, parts);
+            _parts = p.ToArray();
+        }
+
 
         private Part[] Split(string query)
         {

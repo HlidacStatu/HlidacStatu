@@ -218,11 +218,14 @@ namespace HlidacStatu.Lib.Data
                         sw.Start();
 
                         if (!string.IsNullOrEmpty(query) && query.Length > 2)
+                        {
+
                             res.Osoby = new GeneralResult<Osoba>(
                                 HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query, 100)
                                 .OrderBy(m => m.Prijmeni)
                                 .ThenBy(m => m.Jmeno)
                                 );
+                        }
                         else
                             res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
                         sw.Stop();

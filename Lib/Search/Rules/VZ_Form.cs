@@ -27,14 +27,14 @@ namespace HlidacStatu.Lib.Search.Rules
                     if (forms.Length > 0)
                         q_form = "formulare.druh:(" + forms.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
 
-                    return new RuleResult(SplittingQuery.SplitQuery($" ( {q_form} ) "), this.StopFurtherProcessing);
+                    return new RuleResult(SplittingQuery.SplitQuery($" ( {q_form} ) "), this.NextStep);
                 }
                 else
                     return null;
             }
 
 
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;
         }
 
     }

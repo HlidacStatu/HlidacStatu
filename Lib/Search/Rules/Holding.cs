@@ -75,11 +75,11 @@ namespace HlidacStatu.Lib.Search.Rules
                         icosQuery = Search.Tools.ModifyQueryOR(icosQuery, condition);
                     }
 
-                    return new RuleResult(SplittingQuery.SplitQuery("{icosQuery}"), this.StopFurtherProcessing);
+                    return new RuleResult(SplittingQuery.SplitQuery("{icosQuery}"), this.NextStep);
                 }
             }
 
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;
         }
 
     }

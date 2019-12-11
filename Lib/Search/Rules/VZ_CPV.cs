@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib.Search.Rules
                     if (cpvs.Length > 0)
                         q_cpv = " ( " + cpvs.Select(s => "cpv:" + s + "*").Aggregate((f, s) => f + " OR " + s) + " ) ";
 
-                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.StopFurtherProcessing);
+                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.NextStep);
                 }
                 else
 
@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Search.Rules
             }
 
 
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;// new RuleResult(part, this.NextStep);
         }
 
     }

@@ -27,10 +27,10 @@ namespace HlidacStatu.Lib.Search.Rules
 
             if (!string.IsNullOrEmpty(levelQ))
             {
-                return new RuleResult(SplittingQuery.SplitQuery($" {levelQ} "), this.StopFurtherProcessing);
+                return new RuleResult(SplittingQuery.SplitQuery($" {levelQ} "), this.NextStep);
             }
             else
-                return new RuleResult(part, this.StopFurtherProcessing);
+                return null;//new RuleResult(part, this.NextStep);
         }
 
     }

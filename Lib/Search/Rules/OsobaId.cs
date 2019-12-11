@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Search.Rules
@@ -18,15 +19,15 @@ namespace HlidacStatu.Lib.Search.Rules
         {
             if (
                 !string.IsNullOrEmpty(this.ReplaceWith)
-            && (
-                part.Prefix.Contains("osobaid:")
-                || part.Prefix.Contains("osobaiddluznik:")
-                || part.Prefix.Contains("osobaidveritel:")
-                || part.Prefix.Contains("osobaidspravce:")
-                || part.Prefix.Contains("osobaidzadavatel:")
-                || part.Prefix.Contains("osobaiddodavatel:")
-                )
-
+                && (
+                    part.Prefix.Contains("osobaid:")
+                    || part.Prefix.Contains("osobaiddluznik:")
+                    || part.Prefix.Contains("osobaidveritel:")
+                    || part.Prefix.Contains("osobaidspravce:")
+                    || part.Prefix.Contains("osobaidzadavatel:")
+                    || part.Prefix.Contains("osobaiddodavatel:")
+                    )
+                && (Regex.IsMatch(part.Value, @"(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?))", HlidacStatu.Util.Consts.DefaultRegexQueryOption))
             )
             {
                 //list of ICO connected to this person
@@ -71,12 +72,11 @@ namespace HlidacStatu.Lib.Search.Rules
 
                         //this.AddLastCondition = null; //done, don't do it anywhere
                     }
-                    return new RuleResult(SplittingQuery.SplitQuery("{icosQuery}"), this.StopFurtherProcessing);
+                    return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
                 }
             }
 
-
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;
         }
 
     }

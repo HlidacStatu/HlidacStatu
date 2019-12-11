@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Search.Rules
         RuleResult Process(SplittingQuery.Part queryPart);
 
         string ReplaceWith { get; set; }
-        bool StopFurtherProcessing { get; set; } 
+        NextStepEnum NextStep { get; set; } 
         string AddLastCondition { get; set; } 
 
     }

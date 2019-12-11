@@ -24,12 +24,12 @@ namespace HlidacStatu.Lib.Search.Rules
                 if (cpvs != null)
                 {
                     var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.StopFurtherProcessing);
+                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.NextStep);
                 }
             }
 
 
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;
         }
 
     }

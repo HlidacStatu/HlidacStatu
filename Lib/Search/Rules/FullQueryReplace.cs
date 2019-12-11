@@ -53,11 +53,11 @@ namespace HlidacStatu.Lib.Search.Rules
                 )
             {
                 string rq = Regex.Replace(part.ToQueryString, this.ReplaceWith, ruleEvalMatch, HlidacStatu.Util.Consts.DefaultRegexQueryOption);
-                return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.StopFurtherProcessing);
+                return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.NextStep);
 
             }
 
-            return new RuleResult(part, this.StopFurtherProcessing);
+            return null;
         }
 
     }

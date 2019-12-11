@@ -8,24 +8,29 @@ namespace HlidacStatu.Lib.Search.Rules
 {
     public class RuleResult
     {
-        public RuleResult(SplittingQuery sq, bool stopFurther = false)
+        public RuleResult()
+        {
+            this.Query = new SplittingQuery();
+            this.NextStep = NextStepEnum.Process;
+        }
+        public RuleResult(SplittingQuery sq, NextStepEnum nextStep)
         {
             this.Query = sq;
-            this.StopFurther = stopFurther;
+            this.NextStep = nextStep;
         }
 
-        public RuleResult(SplittingQuery.Part queryPart, bool stopFurther = false)
+        public RuleResult(SplittingQuery.Part queryPart, NextStepEnum nextStep)
         {
             this.Query = new SplittingQuery(new[] { queryPart });
-            this.StopFurther = stopFurther;
+            this.NextStep = nextStep;
         }
-        public RuleResult(SplittingQuery.Part[] queryParts, bool stopFurther = false)
+        public RuleResult(SplittingQuery.Part[] queryParts, NextStepEnum nextStep)
         {
             this.Query = new SplittingQuery(queryParts);
-            this.StopFurther = stopFurther;
+            this.NextStep = nextStep;
         }
 
-        public SplittingQuery Query { get; protected set; }
-        public bool StopFurther { get; protected set; } = false;
+        public SplittingQuery Query { get; set; }
+        public NextStepEnum NextStep { get; set; }
     }
 }
