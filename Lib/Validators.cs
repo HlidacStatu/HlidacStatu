@@ -38,8 +38,9 @@ namespace HlidacStatu.Lib
 
             string normalizedText = Devmasters.Core.TextUtil
                                         .ReplaceDuplicates(Regex.Replace(text, @"[,;\[\]:]", " "), ' ');
+            // Zakomentováno 12.12.2019 - při nahrávání dotací byl problém se jménem Ĺudovit
             //fix errors Ĺ => Í,ĺ => í 
-            normalizedText = normalizedText.Replace((char)314, (char)237).Replace((char)313, (char)205);
+            //normalizedText = normalizedText.Replace((char)314, (char)237).Replace((char)313, (char)205);
 
             //remove tituly
             var titulyPo = Osoba.TitulyPo.Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();

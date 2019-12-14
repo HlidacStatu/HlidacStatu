@@ -385,20 +385,7 @@
 
     @RenderSection("footerscripts", required: false)
 
-    <script src="/Scripts/searchhelper/searchhelper.js"></script>
-    <script>
-
-        var searchFields = [
-            { "value": "ico:", "description": "Vyhledávání podle IČO", "rule": { "regexp": /(^| +AND +| +OR +)$/, "result": true } },
-            { "value": "osobaid:", "description": "Vyhledávání podle id osoby", "rule": { "regexp": /(^| +AND +| +OR +)$/, "result": true } },
-            { "value": "holding:", "description": "Vyhledávání podle IČO holdingu", "rule": { "regexp": /(^| +AND +| +OR +)$/, "result": true } },
-            { "value": "AND ", "description": "Spojení dvou výroků - oba výroky musí být platné", "rule": { "regexp": /(^|[^ ]| +AND +| +OR +)$/, "result": false } },
-            { "value": "OR ", "description": "Spojení dvou výroků - jeden z výroků musí být platný", "rule": { "regexp": /(^|[^ ]| +AND +| +OR +)$/, "result": false } },
-            { "value": " ", "description": "Je potřeba udělat mezeru mezi pravidly", "rule": { "regexp": /[^ ]$/, "result": true } }
-        ]
-        searchhelper(document.getElementById("Q"), searchFields);
-    </script>
-
+    
     <div id="dar-footer-msg">
         @*<div id="ad2" style="display:none;">
                 <div class="fund-list" style="display: block;">

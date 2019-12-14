@@ -53,8 +53,7 @@ namespace HlidacStatu.Web
                       "~/Content/bootstrap.css",
                       "~/Content/globalsite.v1.7.css",
                        "~/content/social-share-kit.css",
-                      "~/Content/new.css",
-                      "~/Scripts/searchhelper/searchhelper.css"
+                      "~/Content/new.css"
                       ));
             
         }

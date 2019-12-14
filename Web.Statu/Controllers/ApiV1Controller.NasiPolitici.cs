@@ -4,6 +4,7 @@ using HlidacStatu.Lib.Data;
 using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -47,7 +48,8 @@ namespace HlidacStatu.Web.Controllers
                             .FirstOrDefault()
                     });
 
-                return Json(osoby, JsonRequestBehavior.AllowGet);
+
+                return Content(JsonConvert.SerializeObject(osoby),"application/json");
             }
         }
 
@@ -192,7 +194,8 @@ namespace HlidacStatu.Web.Controllers
                     currentParty = politickaStrana
                 };
 
-                return Json(result, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(result), "application/json");
+                // return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
 
