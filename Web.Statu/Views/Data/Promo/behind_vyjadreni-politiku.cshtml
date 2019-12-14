@@ -1,0 +1,160 @@
+﻿@model object
+@using Nest;
+@using System.Linq;
+@using Devmasters.Core;
+
+@{
+    Layout = null;
+
+    HlidacStatu.Lib.Data.External.DataSets.DataSet ds =
+        HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get((string)Model);
+    var reg = ds.Registration();
+
+    var politiciVds = ds.ESClient.Search<object>(s => s
+        .MatchAll()
+        .Size(0)
+        .Type("data")
+        .Aggregations(a => a
+            .Terms("osoby", m => m
+                .Size(100)
+                .Field("osobaid.keyword")
+                .Aggregations(aa => aa
+                    .Stats("stat", ss => ss.
+                         Field("datum")
+                    )
+                )
+            )
+
+        )
+    );
+    var serveryVds = ds.ESClient.Search<object>(s => s
+        .MatchAll()
+        .Size(0)
+        .Type("data")
+        .Aggregations(a => a
+            .Terms("servery", m => m
+                .Size(100)
+                .Field("server.keyword")
+                .Aggregations(aa => aa
+                    .Stats("stat", ss => ss.
+                         Field("datum")
+                    )
+                )
+            )
+        )
+    );
+
+
+    Dictionary<string, Nest.StatsAggregate> politici = ((BucketAggregate)politiciVds.Aggregations["osoby"]).Items
+                    .Select(m => new
+                    {
+                        key = ((Nest.KeyedBucket<object>)m).Key.ToString(),
+                        num = (Nest.StatsAggregate)(((Nest.KeyedBucket<object>)m).Values.First())
+                    })
+                    .ToDictionary(k => k.key, v => v.num);
+
+    Dictionary<string, Nest.StatsAggregate> servery = ((BucketAggregate)serveryVds.Aggregations["servery"]).Items
+                .Select(m => new
+                {
+                    key = ((Nest.KeyedBucket<object>)m).Key.ToString(),
+                    num = (Nest.StatsAggregate)(((Nest.KeyedBucket<object>)m).Values.First())
+                })
+                .ToDictionary(k => k.key, v => v.num);
+
+}
+<p>
+    Komentáře a vyjádření politiků na sociálních sítích a dalších zdrojích.
+
+    Vzniklo za pomoci skvělého
+    <a href="https://www.apify.com" target="_blank" onclick="return trackOutLink(this,'vyroky-politiku');">
+        <img src="~/Content/Img/apify-logo.png" style="height:40px;width:auto" />
+    </a>. Díky <i class="fas fa-heart" style="font-size:20px;color:red"></i>
+</p>
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+
+        <h4>
+            V této databázi evidujeme vyjádření ze serverů
+            @{ var first = true; }
+            @foreach (var kv in servery)
+            {
+                string cas = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
+                    + "-" + Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
+
+                if (first == true)
+                {
+                    first = false;
+                }
+                else
+                {
+                    <span>, </span>
+                }
+                <span>
+                    <a href="/data/Hledat/vyjadreni-politiku?q=server%3A@(kv.Key)"><b>@(kv.Key)</b></a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                </span>
+            }
+        </h4>
+        <h4>Sledujeme vyjádření těchto politiků</h4>
+        <div class="row">
+            @{
+                first = true;
+                var oPolitici = new Dictionary<HlidacStatu.Lib.Data.Osoba, StatsAggregate>();
+                oPolitici = politici
+                    .Select(m => new { o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(m.Key), s = m.Value })
+                    .Where(m => m.o != null)
+                    .ToDictionary(k => k.o, v => v.s);
+            }
+            @foreach (var chunk in oPolitici
+                .OrderBy(m => m.Key.Prijmeni).ThenBy(m => m.Key.Jmeno)
+                .Chunk((politici.Count() / 3) + 1))
+            {
+                char firstChar = ' ';
+                <div class="col-xs-6 col-sm-4">
+
+                    @foreach (var kv in chunk)
+                    {
+                        string cas = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
+                        + "-" + Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
+                        var o = kv.Key;
+                        var fchar = o.Prijmeni.First();
+                        if (o.Prijmeni.ToLower().StartsWith("ch"))
+                        {
+                            fchar = HlidacStatu.Util.Consts.Ch;
+                        }
+                        if (fchar != firstChar)
+                        {
+                            firstChar = fchar;
+                            <div class="col-xs-12" style="padding-top:5px;"></div>
+                            <div class="col-xs-2">
+                                <div style="text-align:right;font-weight:bolder;font-size:2em;margin-top:-5px">@HlidacStatu.Util.RenderData.RenderCharWithCH(fchar)</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-2"></div>
+                        }
+                        <div class="col-xs-10">
+
+                            @if (first == true)
+                            {
+                                first = false;
+                                <div>
+                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1, " + cas + ")", "&nbsp;({0}, " + cas + ")", "&nbsp;({0:### ###}, " + cas + ")"))
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <hr />
+    </div>
+</div>

@@ -29,10 +29,13 @@
         );
 
     var promoRoot = HlidacStatu.Lib.StaticData.Web_Root + "\\Views\\Data\\Promo\\";
-    string promoViewFileName = promoRoot + $"front_{reg.datasetId}.cshtml";
-    bool showPromo = System.IO.File.Exists(promoViewFileName);
+    string frontPromoViewFileName = promoRoot + $"front_{reg.datasetId}.cshtml";
+    bool showFrontPromo = System.IO.File.Exists(frontPromoViewFileName);
+    string frontPromoViewName = $"~/Views/Data/Promo/front_{reg.datasetId}.cshtml";
 
-    string promoViewName = $"~/Views/Data/Promo/front_{reg.datasetId}.cshtml";
+    string behindPromoViewFileName = promoRoot + $"behind_{reg.datasetId}.cshtml";
+    bool showBehindPromo = System.IO.File.Exists(behindPromoViewFileName);
+    string behindPromoViewName = $"~/Views/Data/Promo/behind_{reg.datasetId}.cshtml";
 
 
 }
@@ -53,15 +56,15 @@
 <div id="data-detail-content">
     <div class="row">
         <div class="col-xs-12">
-            @if (showPromo)
+            @if (showFrontPromo)
             {
-                @Html.Action("CachedAction_Child_20min", new { model = (object)reg.datasetId, NameOfView = promoViewName, key = promoViewFileName })
+                @Html.Action("CachedAction_Child_20min", new { model = (object)reg.datasetId, NameOfView = frontPromoViewName, key = frontPromoViewFileName })
 
             }
-            else
-            {
 
-                <p class="lead">@reg.description</p>
+            @if (showFrontPromo == false && showBehindPromo == false)
+            {
+            <p class="lead">@reg.description</p>
             }
             <p>@Html.Raw(Model.InfoFacts().RenderInfoFacts(1, true, true, html: true))</p>
             @if (Model.Registration().betaversion)
@@ -72,6 +75,11 @@
             @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
 
 
+            @if (showBehindPromo)
+            {
+                @Html.Action("CachedAction_Child_20min", new { model = (object)reg.datasetId, NameOfView = behindPromoViewName, key = behindPromoViewFileName })
+
+            }
 
             @Util.FeedbackModal("Poslat autorovi zprávu", null, "btn btn-primary btn-sm", null,
                 new string[]{ "Chyba","Chci upozornit na chybu",

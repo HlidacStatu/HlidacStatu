@@ -16,17 +16,20 @@ namespace HlidacStatu.Lib.Search.Rules
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
-            if (part.Prefix.Contains("holding:")
+            if (part == null)
+                return null;
+
+            if (part.Prefix == "holding:"
                 //RS
-                || part.Prefix.Contains("holdingprijemce:")
-                || part.Prefix.Contains("holdingplatce:")
+                || part.Prefix == "holdingprijemce:"
+                || part.Prefix == "holdingplatce:"
                 //insolvence
-                || part.Prefix.Contains("holdingdluznik:")
-                || part.Prefix.Contains("holdingveritel:")
-                || part.Prefix.Contains("holdingspravce:")
+                || part.Prefix == "holdingdluznik:"
+                || part.Prefix == "holdingveritel:"
+                || part.Prefix == "holdingspravce:"
                 //VZ
-                || part.Prefix.Contains("holdingdodavatel:")
-                || part.Prefix.Contains("holdingzadavatel:")
+                || part.Prefix == "holdingdodavatel:"
+                || part.Prefix == "holdingzadavatel:"
             )
             {
                 //list of ICO connected to this holding

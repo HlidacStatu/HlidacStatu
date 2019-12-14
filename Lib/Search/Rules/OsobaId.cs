@@ -17,15 +17,17 @@ namespace HlidacStatu.Lib.Search.Rules
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
+            if (part == null)
+                return null;
             if (
                 !string.IsNullOrEmpty(this.ReplaceWith)
                 && (
-                    part.Prefix.Contains("osobaid:")
-                    || part.Prefix.Contains("osobaiddluznik:")
-                    || part.Prefix.Contains("osobaidveritel:")
-                    || part.Prefix.Contains("osobaidspravce:")
-                    || part.Prefix.Contains("osobaidzadavatel:")
-                    || part.Prefix.Contains("osobaiddodavatel:")
+                    part.Prefix == "osobaid:"
+                    || part.Prefix == "osobaiddluznik:"
+                    || part.Prefix == "osobaidveritel:"
+                    || part.Prefix == "osobaidspravce:"
+                    || part.Prefix == "osobaidzadavatel:"
+                    || part.Prefix == "osobaiddodavatel:"
                     )
                 && (Regex.IsMatch(part.Value, @"(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?))", HlidacStatu.Util.Consts.DefaultRegexQueryOption))
             )

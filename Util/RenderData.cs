@@ -20,6 +20,15 @@ namespace HlidacStatu.Util
             {"starostové a nezávislí","STAN" },
         };
 
+        public static string RenderCharWithCH(char c)
+        {
+            if (c == Consts.Ch)
+                return "Ch";
+            else
+                return c.ToString();
+        }
+
+
         public static string EmailAnonymizer(string email)
         {
             //todo more validations

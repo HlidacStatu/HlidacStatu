@@ -60,8 +60,8 @@
     <Reference Include="Devmasters.Cache, Version=1.472.4.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.4\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.5\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Imaging, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Imaging.1.472.1.1\lib\net40\Devmasters.Imaging.dll</HintPath>
@@ -1378,7 +1378,7 @@
     <Content Include="Views\ApiV1\ModalClassification.cshtml" />
     <Content Include="Views\Data\CreateFromBackup.cshtml" />
     <Content Include="Views\Data\CreateFromBackup1.cshtml" />
-    <Content Include="Views\Data\Promo\front_vyjadreni-politiku.cshtml" />
+    <Content Include="Views\Data\Promo\behind_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
   </ItemGroup>
   <ItemGroup>

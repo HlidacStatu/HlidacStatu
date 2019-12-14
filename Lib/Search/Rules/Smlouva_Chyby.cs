@@ -9,28 +9,29 @@ namespace HlidacStatu.Lib.Search.Rules
     public class Smlouva_Chyby
         : RuleBase
     {
-        public Smlouva_Chyby(string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
-            : base(replaceWith, stopFurtherProcessing, addLastCondition)
+        public Smlouva_Chyby(bool stopFurtherProcessing = false, string addLastCondition = "")
+            : base("", stopFurtherProcessing, addLastCondition)
         { }
 
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
+            if (part == null)
+                return null;
 
-            string levelVal = part.Value;
-            string levelQ = "";
-            if (levelVal == "fatal" || levelVal == "zasadni")
-                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Fatal);
-            else if (levelVal == "major" || levelVal == "vazne")
-                levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Major);
-
-
-            if (!string.IsNullOrEmpty(levelQ))
+            if (part.Prefix == "chyby:")
             {
+                string levelVal = part.Value;
+                string levelQ = "";
+                if (levelVal == "fatal" || levelVal == "zasadni")
+                    levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Fatal);
+                else if (levelVal == "major" || levelVal == "vazne")
+                    levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Major);
+
+
                 return new RuleResult(SplittingQuery.SplitQuery($" {levelQ} "), this.NextStep);
             }
-            else
-                return null;//new RuleResult(part, this.NextStep);
+            return null;//new RuleResult(part, this.NextStep);
         }
 
     }

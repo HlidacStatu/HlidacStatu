@@ -10,6 +10,8 @@ namespace HlidacStatu.Util
     public static class Consts
     {
 
+        public static char Ch = 'Ȼ';
+
         public static Devmasters.Core.Batch.MultiOutputWriter outputWriter =
             new Devmasters.Core.Batch.MultiOutputWriter(
                 Devmasters.Core.Batch.Manager.DefaultOutputWriter,

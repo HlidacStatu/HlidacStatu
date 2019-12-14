@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Search.Rules
 {
-    public class SimpleValueReplace
+    public class TransformPrefixWithValue
         : RuleBase
     {
 
         string _valueConstrain = "";
         string _prefix = "";
-        public SimpleValueReplace(string prefix, string replaceWith, string valueConstrain, bool stopFurtherProcessing = false, string addLastCondition = "")
+        public TransformPrefixWithValue(string prefix, string replaceWith, string valueConstrain, bool stopFurtherProcessing = false, string addLastCondition = "")
             : base(replaceWith, stopFurtherProcessing, addLastCondition)
         {
             this._valueConstrain = valueConstrain;
@@ -23,6 +23,9 @@ namespace HlidacStatu.Lib.Search.Rules
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
+            if (part == null)
+                return null;
+
             if (this.ReplaceWith.Contains("${q}")
                 && _prefix == part.Prefix
                 && (

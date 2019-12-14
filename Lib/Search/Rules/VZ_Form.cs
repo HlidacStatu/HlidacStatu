@@ -9,14 +9,17 @@ namespace HlidacStatu.Lib.Search.Rules
     public class VZ_Form
         : RuleBase
     {
-        public VZ_Form(string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
-            : base(replaceWith, stopFurtherProcessing, addLastCondition)
+        public VZ_Form( bool stopFurtherProcessing = false, string addLastCondition = "")
+            : base("", stopFurtherProcessing, addLastCondition)
         { }
 
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
-            if (this.ReplaceWith.Contains("${form}"))
+            if (part == null)
+                return null;
+
+            if (part.Prefix == "form:")
             {
                 string form = part.Value;
 
@@ -29,8 +32,6 @@ namespace HlidacStatu.Lib.Search.Rules
 
                     return new RuleResult(SplittingQuery.SplitQuery($" ( {q_form} ) "), this.NextStep);
                 }
-                else
-                    return null;
             }
 
 

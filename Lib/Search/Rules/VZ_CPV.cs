@@ -9,14 +9,17 @@ namespace HlidacStatu.Lib.Search.Rules
     public class VZ_CPV
         : RuleBase
     {
-        public VZ_CPV(string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
-            : base(replaceWith, stopFurtherProcessing, addLastCondition)
+        public VZ_CPV(bool stopFurtherProcessing = false, string addLastCondition = "")
+            : base("", stopFurtherProcessing, addLastCondition)
         { }
 
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
-            if (this.ReplaceWith.Contains("${cpv}"))
+            if (part == null)
+                return null;
+
+            if (part.Prefix == "cpv:")
             {
 
                 string cpv = "";
@@ -34,9 +37,6 @@ namespace HlidacStatu.Lib.Search.Rules
 
                     return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.NextStep);
                 }
-                else
-
-                    return null;
             }
 
 

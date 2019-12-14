@@ -10,8 +10,8 @@ namespace HlidacStatu.Lib.Search
     {
         public class Part
         {
-            public string Prefix { get; set; }
-            public string Value { get; set; }
+            public string Prefix { get; set; } = "";
+            public string Value { get; set; } = "";
 
             public bool ExactValue { get; set; } = false;
 
@@ -117,7 +117,7 @@ namespace HlidacStatu.Lib.Search
                     }
                     else if (i > 0 && fixTxts[i - 1].Item1.EndsWith(":"))
                     {
-                        tmpParts[tmpParts.Count - 1].Prefix = tmpParts[tmpParts.Count - 1].Prefix;
+                        tmpParts[tmpParts.Count - 1].Prefix = tmpParts[tmpParts.Count - 1].Prefix.ToLower();
                         tmpParts[tmpParts.Count - 1].Value = fixTxts[i].Item1;
                     }
                     else
@@ -142,7 +142,7 @@ namespace HlidacStatu.Lib.Search
                             tmpParts.Add(new Part()
                             {
                                 ExactValue = false,
-                                Prefix = prefix,
+                                Prefix = prefix.ToLower(),
                                 Value = mt.Replace(prefix, "")
                             }
                             );
@@ -177,7 +177,7 @@ namespace HlidacStatu.Lib.Search
                             {
                                 parts.Add(new Part()
                                 {
-                                    Prefix = p.Prefix,
+                                    Prefix = p.Prefix.ToLower(),
                                     ExactValue = p.ExactValue,
                                     Value = tmpParts.Skip(pi).Take(pj - pi+1).Select(m => m.Value).Aggregate((f, s) => f + " " + s)
                                 });
@@ -189,7 +189,7 @@ namespace HlidacStatu.Lib.Search
                         //no end found
                         parts.Add(new Part()
                         {
-                            Prefix = p.Prefix,
+                            Prefix = p.Prefix.ToLower(),
                             ExactValue = p.ExactValue,
                             Value = tmpParts.Skip(pi).Take(tmpParts.Count - pi + 1).Select(m => m.Value).Aggregate((f, s) => f + " " + s)
                         });

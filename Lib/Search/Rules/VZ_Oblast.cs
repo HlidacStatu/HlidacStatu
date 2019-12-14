@@ -9,14 +9,17 @@ namespace HlidacStatu.Lib.Search.Rules
     public class VZ_Oblast
         : RuleBase
     {
-        public VZ_Oblast(string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
-            : base(replaceWith, stopFurtherProcessing, addLastCondition)
+        public VZ_Oblast(bool stopFurtherProcessing = false, string addLastCondition = "")
+            : base("", stopFurtherProcessing, addLastCondition)
         { }
 
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
-            if (this.ReplaceWith.Contains("${oblast}"))
+            if (part == null)
+                return null;
+
+            if (part.Prefix == "oblast:")
             {
                 string cpv = "";
                 var oblastVal = part.Value;
