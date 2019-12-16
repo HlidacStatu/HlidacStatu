@@ -275,9 +275,9 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
                     new TransformPrefix("zverejneno:","datumUverejneni:", "[<>]?[{\\[]+" ),
-                    new TransformPrefix("zverejneno:","datumUverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("zverejneno:","datumUverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
                     new TransformPrefix("podepsano:","datumUzavreniSmlouvy:", "[<>]?[{\\[]+" ),
-                    new TransformPrefix("podepsano:","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("podepsano:","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]", "\\d+" ),
 
                     new TransformPrefix("text:","prilohy.plainTextContent:"  ,null),
 

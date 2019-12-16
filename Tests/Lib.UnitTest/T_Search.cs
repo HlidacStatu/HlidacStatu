@@ -119,10 +119,10 @@ namespace HlidacStatu.Lib.Tests
                new TransformPrefix("cena:","calculatedPriceWithVATinCZK:",null ),
                new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
                new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
-               new TransformPrefix("zverejneno:","casZverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+               new TransformPrefixWithValue("zverejneno:","casZverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
                new TransformPrefix("podepsano:","datumUzavreni:[", "[<>]?[{\\[]+" ),
-               new TransformPrefix("podepsano:)","datumUzavreni:${q}", "[<>]?[{\\[]+" ),
-               new TransformPrefix("podepsano:","datumUzavreni:[${q} TO ${q}||+1d]", "\\d+"  ),
+               new TransformPrefixWithValue("podepsano:","datumUzavreni:${q}", "[<>]?[{\\[]+" ),
+               new TransformPrefixWithValue("podepsano:","datumUzavreni:[${q} TO ${q}||+1d]", "\\d+"  ),
                new TransformPrefix("schvalil:","schvalil:",null ),
                new TransformPrefix("textsmlouvy:","prilohy.plainTextContent:",null ),
                new Smlouva_Chyby(),
@@ -150,6 +150,11 @@ namespace HlidacStatu.Lib.Tests
 
             Assert.AreEqual<string>("( prijemce.ico:27233545 OR platce.ico:27233545 ) calculatedPriceWithVATinCZK:>2000 NEN",
                 Search.SimpleQueryCreator.GetSimpleQuery("ico:27233545 cena:>2000 NEN", rules).FullQuery());
+
+
+            Assert.AreEqual<string>("podepsano:2019-01-01",
+                Search.SimpleQueryCreator.GetSimpleQuery("podepsano:2019-01-01", rules).FullQuery());
+
 
         }
 
