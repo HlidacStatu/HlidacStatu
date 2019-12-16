@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HlidacStatu.Util;
 
 namespace HlidacStatu.Lib.Search
 {
     public class SplittingQuery
     {
+        [DebuggerDisplay("{ToQueryString}")]
         public class Part
         {
             public string Prefix { get; set; } = "";
@@ -43,26 +46,20 @@ namespace HlidacStatu.Lib.Search
             _parts = parts ?? new Part[] { };
         }
 
-        public 
-        string _fullQuery = null;
-        public string FullQuery
+        
+        public string FullQuery()
         {
-            get
+            if (_parts.Length == 0)
             {
-                if (_fullQuery == null)
-                {
-                    if (_parts.Length == 0)
-                    {
-                        _fullQuery = "";
-                    }
-                    else
-                    {
-                        _fullQuery = _parts
-                            .Select(m => m.ToQueryString)
-                            .Aggregate((f, s) => f + " " + s);
-                    }
-                }
-                return _fullQuery;
+                return "";
+            }
+            else
+            {
+                return _parts
+                    .Select(m => m.ToQueryString.Trim())
+                    .Where(m => m.Length > 0)
+                    .Aggregate((f, s) => f + " " + s)
+                    .Trim();
             }
         }
         Part[] _parts = null;
@@ -77,12 +74,12 @@ namespace HlidacStatu.Lib.Search
         public void InsertParts(int index, Part[] parts)
         {
             var p = new List<Part>(_parts);
-            p.InsertRange(index,parts);
+            p.InsertRange(index, parts);
             _parts = p.ToArray();
         }
         public void ReplaceWith(int index, Part[] parts)
         {
-            
+
             var p = new List<Part>(_parts);
             p.RemoveAt(index);
             p.InsertRange(index, parts);
@@ -104,6 +101,7 @@ namespace HlidacStatu.Lib.Search
             //spojit a rozdelit podle mezer
             for (int i = 0; i < fixTxts.Count; i++)
             {
+                //fixed string
                 if (fixTxts[i].Item2)
                 {
                     if (i == 0)
@@ -117,7 +115,7 @@ namespace HlidacStatu.Lib.Search
                     }
                     else if (i > 0 && fixTxts[i - 1].Item1.EndsWith(":"))
                     {
-                        tmpParts[tmpParts.Count - 1].Prefix = tmpParts[tmpParts.Count - 1].Prefix.ToLower();
+                        tmpParts[tmpParts.Count - 1].Prefix = tmpParts[tmpParts.Count - 1].Prefix;
                         tmpParts[tmpParts.Count - 1].Value = fixTxts[i].Item1;
                     }
                     else
@@ -132,7 +130,11 @@ namespace HlidacStatu.Lib.Search
                 }
                 else
                 {
-                    string[] mezery = fixTxts[i].Item1.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    //string[] mezery = fixTxts[i].Item1.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string tPart = fixTxts[i].Item1;
+                    tPart = tPart.Replace("(", " ( ").Replace(")", " ) ")
+                        .Replace(": (",":(");//fix mezera za :
+                    string[] mezery = tPart.Split(new char[] { ' '});
 
                     foreach (var mt in mezery)
                     {
@@ -142,7 +144,7 @@ namespace HlidacStatu.Lib.Search
                             tmpParts.Add(new Part()
                             {
                                 ExactValue = false,
-                                Prefix = prefix.ToLower(),
+                                Prefix = prefix,
                                 Value = mt.Replace(prefix, "")
                             }
                             );
@@ -167,7 +169,7 @@ namespace HlidacStatu.Lib.Search
                 {
                     if (!string.IsNullOrEmpty(p.Prefix) && (p.Value.StartsWith("{") || p.Value.StartsWith("[")))
                     {
-                        //looking until end to the next with ] }
+                        //looking until end to the next with ] } and join it together
                         for (int pj = pi + 1; pj < tmpParts.Count; pj++)
                         {
 
@@ -177,11 +179,11 @@ namespace HlidacStatu.Lib.Search
                             {
                                 parts.Add(new Part()
                                 {
-                                    Prefix = p.Prefix.ToLower(),
+                                    Prefix = p.Prefix,
                                     ExactValue = p.ExactValue,
-                                    Value = tmpParts.Skip(pi).Take(pj - pi+1).Select(m => m.Value).Aggregate((f, s) => f + " " + s)
+                                    Value = tmpParts.Skip(pi).Take(pj - pi + 1).Select(m => m.Value).Aggregate((f, s) => f + " " + s)
                                 });
-                                pi = pj ;
+                                pi = pj;
                                 goto NextPart;
                             }
 
@@ -189,7 +191,7 @@ namespace HlidacStatu.Lib.Search
                         //no end found
                         parts.Add(new Part()
                         {
-                            Prefix = p.Prefix.ToLower(),
+                            Prefix = p.Prefix,
                             ExactValue = p.ExactValue,
                             Value = tmpParts.Skip(pi).Take(tmpParts.Count - pi + 1).Select(m => m.Value).Aggregate((f, s) => f + " " + s)
                         });
@@ -205,7 +207,7 @@ namespace HlidacStatu.Lib.Search
             }
 
 
-            return parts.ToArray();
+            return parts.Where(m=>m.ToQueryString.Length>0).ToArray();
         }
 
 

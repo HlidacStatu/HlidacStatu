@@ -25,6 +25,7 @@ namespace HlidacStatu.Lib.Search.Rules
             this.AddLastCondition = addLastCondition;
         }
 
+        public abstract string[] Prefixes { get; }
 
         public string ReplaceWith { get; set; }
 
@@ -42,7 +43,7 @@ namespace HlidacStatu.Lib.Search.Rules
                 {
                     rq = this.AddLastCondition.Replace("${q}", queryPart.Value);
                 }
-                rq = Tools.ModifyQueryOR(res.Query.FullQuery, rq);
+                rq = Tools.ModifyQueryOR(res.Query.FullQuery(), rq);
                 return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.NextStep);
             }
             return res;

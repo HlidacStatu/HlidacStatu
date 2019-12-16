@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Search.Rules
 {
-    public class TransformPrefixSimple
+    public class TransformPrefix
         : TransformPrefixWithValue
     {
 
-        public TransformPrefixSimple(string prefix, string newPrefix, string valueConstrain, bool stopFurtherProcessing = false, string addLastCondition = "")
+        public TransformPrefix(string prefix, string newPrefix, string valueConstrain, bool stopFurtherProcessing = false, string addLastCondition = "")
             : base(prefix, $"{newPrefix}${{q}}",valueConstrain,stopFurtherProcessing, addLastCondition)
         {
         }
+
 
     }
 }

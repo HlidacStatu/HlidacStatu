@@ -1,5 +1,6 @@
 ﻿using Devmasters.Core;
 using HlidacStatu.Lib.ES;
+using HlidacStatu.Lib.Search.Rules;
 using Nest;
 using System;
 using System.Linq;
@@ -83,13 +84,52 @@ namespace HlidacStatu.Lib.Data.Insolvence
                    new Lib.Search.Rule("oddil:","dokumenty.oddil:" ),
             };
 
+            IRule[] irules = new IRule[] {
+                    new OsobaId("osobaid:","ico:" ),
+                    new OsobaId("osobaiddluznik:","icodluznik:" ),
+                    new OsobaId("osobaidveritel:","icoicoveritel:" ),
+                    new OsobaId("osobaidspravce:","icospravce:" ),
+
+                    new Holding("holding:","ico:" ),
+                    new Holding("holdindluznik:","icoplatce:" ),
+                    new Holding("holdingveritel:","icoveritel:" ),
+                    new Holding("holdingspravce:","icospravce:" ),
+
+                    new TransformPrefixWithValue("ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) ",null ),
+                    new TransformPrefixWithValue("jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})",null ),
+
+                    new TransformPrefix("icodluznik:","dluznici.iCO:",null ),
+                    new TransformPrefix("icoveritel:","veritele.iCO:",null ),
+                    new TransformPrefix("icospravce:","spravci.iCO:" ,null),
+                    new TransformPrefix("jmenodluznik:","dluznici.plneJmeno:",null ),
+                    new TransformPrefix("jmenoveritel:","veritele.plneJmeno:" ,null),
+                    new TransformPrefix("jmenospravce:","spravci.plneJmeno:" ,null),
+                    new TransformPrefix("spisovaznacka:","spisovaZnacka:" ,null),
+                    new TransformPrefix("id:","spisovaZnacka:" ,null),
+                
+                    new TransformPrefix("zmeneno:","posledniZmena:", "[<>]?[{\\[]+" ),
+                    new TransformPrefix("zmeneno:","posledniZmena:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefix("zahajeno:","datumZalozeni:", "[<>]?[{\\[]+" ),
+                    new TransformPrefix("zahajeno:","datumZalozeni:[${q} TO ${q}||+1d]", "\\d+" ),
+
+                    new TransformPrefix("stav:","stav:"  ,null),
+                    new TransformPrefix("text:","dokumenty.plainText:"  ,null),
+                    new TransformPrefix("texttypdokumentu:","dokumenty.popis:" ,null ),
+                    new TransformPrefix("typdokumentu:","dokumenty.typUdalosti:"  ,null),
+                    new TransformPrefix("oddil:","dokumenty.oddil:"  ,null),
+
+
+            };
+
+
             string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
                 modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
-            var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
+            //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
+            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(query, irules);
 
             return qc;
 

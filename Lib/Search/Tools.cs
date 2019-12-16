@@ -14,9 +14,7 @@ namespace HlidacStatu.Lib.Search
         static string regexInvalidQueryTemplate = @"(^|\s|[(])(?<q>$operator$\s{1} (?<v>(\w{1,})) )($|\s|[)])";
         static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
 
-        public static string[] defaultQueryOperators = new string[] {
-            "AND","OR"
-        };
+        public static readonly string[] DefaultQueryOperators = new string[] {"AND","OR"};
 
 
         public static HighlightDescriptor<T> GetHighlight<T>(bool enable)
@@ -39,8 +37,15 @@ namespace HlidacStatu.Lib.Search
                         );
             return hh;
         }
-        public static string FixInvalidQuery(string query, string[] shortcuts, string[] operators)
+        public static string FixInvalidQuery(string query, Rules.IRule[] rules, string[] operators = null)
         {
+            return FixInvalidQuery(query, rules.SelectMany(m => m.Prefixes).ToArray(), operators);
+        }
+        public static string FixInvalidQuery(string query, string[] shortcuts, string[] operators = null)
+        {
+            if (operators == null)
+                operators = DefaultQueryOperators;
+
             if (string.IsNullOrEmpty(query))
                 return query;
 
@@ -180,7 +185,7 @@ namespace HlidacStatu.Lib.Search
 
         }
 
-
+        [Obsolete()]
         public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules, bool newSQ = false)
                         where T : class
         {
@@ -215,7 +220,7 @@ namespace HlidacStatu.Lib.Search
         {
             if (sq == null)
                 return null;
-            else if (string.IsNullOrEmpty(sq.FullQuery) || sq.FullQuery == "*")
+            else if (string.IsNullOrEmpty(sq.FullQuery()) || sq.FullQuery() == "*")
                 return "";
 
             string regexPrefix = @"(^|\s|[(])";
@@ -241,7 +246,7 @@ namespace HlidacStatu.Lib.Search
                     if (part.ExactValue == false
                         && part.Prefix != null
                         && part.Prefix.Equals(lookForPrefix, StringComparison.InvariantCultureIgnoreCase)
-                        && (string.IsNullOrWhiteSpace(lookForValue) || Regex.IsMatch(part.Value,lookForValue, regexQueryOption))
+                        && (string.IsNullOrWhiteSpace(lookForValue) || Regex.IsMatch(part.Value, lookForValue, regexQueryOption))
                         )
                     {
 

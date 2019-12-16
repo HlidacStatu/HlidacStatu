@@ -9,27 +9,47 @@ namespace HlidacStatu.Lib.Search.Rules
     public class Holding
         : RuleBase
     {
-        public Holding(string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
+        string _specificPrefix = null;
+        public Holding(string specificPrefix, string replaceWith, bool stopFurtherProcessing = false, string addLastCondition = "")
             : base(replaceWith, stopFurtherProcessing, addLastCondition)
-        { }
+        {
+            _specificPrefix = specificPrefix;
+        }
 
+        public override string[] Prefixes { 
+            get {
+                if (!string.IsNullOrEmpty(_specificPrefix))
+                    return new string[] { _specificPrefix };
+                else
+                    return new string[] { "holding:", 
+                        "holdingprijemce:", "holdingplatce:",
+                        "holdingdluznik:", "holdingveritel:", "holdingspravce:",
+                        "holdingdodavatel:", "holdingzadavatel:"};
+            }
+        }
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (part.Prefix == "holding:"
-                //RS
-                || part.Prefix == "holdingprijemce:"
-                || part.Prefix == "holdingplatce:"
-                //insolvence
-                || part.Prefix == "holdingdluznik:"
-                || part.Prefix == "holdingveritel:"
-                || part.Prefix == "holdingspravce:"
-                //VZ
-                || part.Prefix == "holdingdodavatel:"
-                || part.Prefix == "holdingzadavatel:"
+            if (
+                (!string.IsNullOrWhiteSpace(_specificPrefix) && part.Prefix.Equals(_specificPrefix, StringComparison.InvariantCultureIgnoreCase))
+                ||
+                (string.IsNullOrWhiteSpace(_specificPrefix) &&
+                    (part.Prefix.Equals("holding:", StringComparison.InvariantCultureIgnoreCase)
+                    //RS
+                    || part.Prefix.Equals("holdingprijemce:", StringComparison.InvariantCultureIgnoreCase)
+                    || part.Prefix.Equals("holdingplatce:", StringComparison.InvariantCultureIgnoreCase)
+                    //insolvence
+                    || part.Prefix.Equals("holdingdluznik:", StringComparison.InvariantCultureIgnoreCase)
+                    || part.Prefix.Equals("holdingveritel:", StringComparison.InvariantCultureIgnoreCase)
+                    || part.Prefix.Equals("holdingspravce:", StringComparison.InvariantCultureIgnoreCase)
+                    //VZ
+                    || part.Prefix.Equals("holdingdodavatel:", StringComparison.InvariantCultureIgnoreCase)
+                    || part.Prefix.Equals("holdingzadavatel:", StringComparison.InvariantCultureIgnoreCase)
+                )
+                )
             )
             {
                 //list of ICO connected to this holding
@@ -54,7 +74,7 @@ namespace HlidacStatu.Lib.Search.Rules
                             .Distinct();
                     icos = icos.Union(icosPresLidi).Distinct();
 
-                    var templ = $" ( {this.ReplaceWith}:{{0}} ) ";
+                    var templ = $" ( {this.ReplaceWith}{{0}} ) ";
                     if (this.ReplaceWith.Contains("${q}"))
                         templ = $" ( {this.ReplaceWith.Replace("${q}", "{0}")} )";
 
@@ -78,7 +98,7 @@ namespace HlidacStatu.Lib.Search.Rules
                         icosQuery = Search.Tools.ModifyQueryOR(icosQuery, condition);
                     }
 
-                    return new RuleResult(SplittingQuery.SplitQuery("{icosQuery}"), this.NextStep);
+                    return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
                 }
             }
 

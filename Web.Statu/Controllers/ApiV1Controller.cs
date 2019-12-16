@@ -702,8 +702,9 @@ namespace HlidacStatu.Web.Controllers
             page = page ?? 1;
             order = order ?? 0;
             HlidacStatu.Lib.ES.SmlouvaSearchResult res = null;
+            var apires = Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("query", query), new Framework.ApiCall.CallParameter("page", page?.ToString()), new Framework.ApiCall.CallParameter("order", order?.ToString()) });
 
-            if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("query", query), new Framework.ApiCall.CallParameter("page", page?.ToString()), new Framework.ApiCall.CallParameter("order", order?.ToString()) }).Authentificated)
+            if (apires.Authentificated)
             {
                 if (string.IsNullOrWhiteSpace(query))
                     return View("Error404");
@@ -736,7 +737,7 @@ namespace HlidacStatu.Web.Controllers
                 {
 
                     var filtered = res.Result.Hits
-                                    .Select(m => HlidacStatu.Lib.Data.Smlouva.PrepareForDump(m.Source))
+                                    .Select(m => new Newtonsoft.Json.Linq.JRaw( HlidacStatu.Lib.Data.Smlouva.ExportToJson(m.Source,false, apires.ApiCall.UserRoles.Contains("Admin"))))
                                     .ToArray();
 
                     return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = res.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
@@ -751,7 +752,8 @@ namespace HlidacStatu.Web.Controllers
         }
         public ActionResult Detail(string Id)
         {
-            if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Detail", Id) }).Authentificated)
+            var apires = Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Detail", Id) });
+            if (apires.Authentificated)
             {
                 if (string.IsNullOrWhiteSpace(Id))
                     return View("Error404");
@@ -761,12 +763,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return View("Error404");
                 }
-                model = Smlouva.PrepareForDump(model);
+                var smodel = Smlouva.ExportToJson(model, !string.IsNullOrWhiteSpace(Request.QueryString["nice"]), apires.ApiCall.UserRoles.Contains("Admin") );
 
-                if (Request.QueryString["nice"] != null && (Request.QueryString["nice"].ToLower() == "true" || Request.QueryString["nice"] == "1"))
-                    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.Indented), "application/json");
-                else
-                    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None), "application/json");
+                return Content(smodel, "application/json");
             }
             else
             {

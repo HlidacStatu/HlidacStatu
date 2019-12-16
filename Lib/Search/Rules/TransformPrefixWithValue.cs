@@ -21,16 +21,24 @@ namespace HlidacStatu.Lib.Search.Rules
         }
 
 
+        public override string[] Prefixes
+        {
+            get
+            {
+                return new string[] { _prefix };
+            }
+        }
+
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (this.ReplaceWith.Contains("${q}")
-                && _prefix == part.Prefix
+            if (//this.ReplaceWith.Contains("${q}") &&
+                part.Prefix.Equals(_prefix, StringComparison.InvariantCultureIgnoreCase)
                 && (
                     string.IsNullOrWhiteSpace(_valueConstrain) 
-                    || Regex.IsMatch(part.Value, part.ToQueryString, HlidacStatu.Util.Consts.DefaultRegexQueryOption)
+                    || Regex.IsMatch(part.Value, _valueConstrain, HlidacStatu.Util.Consts.DefaultRegexQueryOption)
                     )
                 )
             {

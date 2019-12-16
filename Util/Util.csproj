@@ -124,6 +124,7 @@
     <Compile Include="PluralWords.cs" />
     <Compile Include="ProcessExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringTools.cs" />
     <Compile Include="UtilDateConverter.cs" />
     <Compile Include="SingletonManager.cs" />
     <Compile Include="XPath.cs" />

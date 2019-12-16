@@ -13,13 +13,20 @@ namespace HlidacStatu.Lib.Search.Rules
             : base("", stopFurtherProcessing, addLastCondition)
         { }
 
+        public override string[] Prefixes
+        {
+            get
+            {
+                return new string[] { "cpv:" };
+            }
+        }
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (part.Prefix == "cpv:")
+            if (part.Prefix.Equals("cpv:", StringComparison.InvariantCultureIgnoreCase))
             {
 
                 string cpv = "";
@@ -32,10 +39,22 @@ namespace HlidacStatu.Lib.Search.Rules
                 {
                     string[] cpvs = cpv.Split(new char[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
                     string q_cpv = "";
-                    if (cpvs.Length > 0)
-                        q_cpv = " ( " + cpvs.Select(s => "cpv:" + s + "*").Aggregate((f, s) => f + " OR " + s) + " ) ";
 
-                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.NextStep);
+                    if (cpvs.Length == 0)
+                    {
+                        return null;
+                    }
+                    if (cpvs.Length == 1)
+                    {
+                        if (cpvs[0].EndsWith("*"))
+                            return null;
+                        else
+                            q_cpv = " cPV:" + cpvs[0] + "* ";
+                    }
+                    else if (cpvs.Length > 1)
+                        q_cpv = " ( " + cpvs.Select(s => "cPV:" + s + "*").Aggregate((f, s) => f + " OR " + s) + " ) ";
+                    
+                    return new RuleResult(SplittingQuery.SplitQuery($" {q_cpv} "), this.NextStep);
                 }
             }
 

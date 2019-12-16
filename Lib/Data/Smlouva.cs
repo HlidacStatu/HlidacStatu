@@ -1006,8 +1006,10 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static Smlouva PrepareForDump(Smlouva s)
+        public static string ExportToJson(Smlouva s, bool formatted = false, bool allData = false)
         {
+            if (s == null)
+                return null;
 
             if (s.znepristupnenaSmlouva() && s.Prilohy != null)
             {
@@ -1017,21 +1019,32 @@ namespace HlidacStatu.Lib.Data
                     p.odkaz = "";
                 }
             }
-
-            if (s.Prilohy != null)
+            if (allData == false)
             {
-                foreach (var p in s.Prilohy)
+                if (s.Prilohy != null)
                 {
-                    p.DatlClassification = null;
-                    p.FileMetadata = null;
+                    foreach (var p in s.Prilohy)
+                    {
+                        p.DatlClassification = null;
+                        p.FileMetadata = null;
+                    }
                 }
+                s.Classification = null;
+                s.SVazbouNaPolitiky = null;
+                s.SVazbouNaPolitikyAktualni = null;
+                s.SVazbouNaPolitikyNedavne = null;
             }
-            s.Classification = null;
-            s.SVazbouNaPolitiky = null;
-            s.SVazbouNaPolitikyAktualni = null;
-            s.SVazbouNaPolitikyNedavne = null;
+            var ret = Newtonsoft.Json.JsonConvert.SerializeObject(s,
+                new JsonSerializerSettings()
+                {
+                    Formatting = formatted ? Formatting.Indented : Formatting.None,
+                    NullValueHandling = NullValueHandling.Ignore,         
+                    ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
+                }
 
-            return s;
+                );
+
+            return ret;
         }
 
         public static IEnumerable<string> AllIdsFromDB()

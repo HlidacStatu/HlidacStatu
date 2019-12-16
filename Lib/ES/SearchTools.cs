@@ -1,4 +1,5 @@
 ﻿using Devmasters.Core.Batch;
+using HlidacStatu.Lib.Search.Rules;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 using Nest;
@@ -121,7 +122,7 @@ namespace HlidacStatu.Lib.ES
 
         public static string FixInvalidQuery(string query)
         {
-            return Lib.Search.Tools.FixInvalidQuery(query, queryShorcuts, Lib.Search.Tools.defaultQueryOperators);
+            return Lib.Search.Tools.FixInvalidQuery(query, queryShorcuts, Lib.Search.Tools.DefaultQueryOperators);
         }
 
         public static string ToElasticDate(DateTime date)
@@ -180,8 +181,46 @@ namespace HlidacStatu.Lib.ES
 
             };
 
-            var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
+            IRule[] irules = new IRule[] {
+               new OsobaId("osobaid","ico:" ),
+               new Holding("holdingprijemce:","icoprijemce:" ),
+               new Holding("holdingplatce:","icoplatce:" ),
+               new Holding("holdingdodavatel:","icoprijemce:" ),
+               new Holding("holdingzadavatel:","icoplatce:" ),
+               new Holding(null,"ico:" ),
 
+               new TransformPrefixWithValue("ds:","(prijemce.datovaSchranka:${q} OR platce.datovaSchranka:${q}) ",null ),
+               new TransformPrefix("dsprijemce:","prijemce.datovaSchranka:",null  ),
+               new TransformPrefix("dsplatce:","platce.datovaSchranka:",null  ),
+               new TransformPrefixWithValue("ico:","(prijemce.ico:${q} OR platce.ico:${q}) ",null ),
+               new TransformPrefix("icoprijemce:","prijemce.ico:",null ),
+               new TransformPrefix("icoplatce:","platce.ico:",null ),
+               new TransformPrefix("jmenoprijemce:","prijemce.nazev:",null ),
+               new TransformPrefix("jmenoplatce:","platce.nazev:",null ),
+               new TransformPrefix("id:","id:",null ),
+               new TransformPrefix("idverze:","id:",null ),
+               new TransformPrefix("idsmlouvy:","identifikator.idSmlouvy:",null ),
+               new TransformPrefix("predmet:","predmet:",null ),
+               new TransformPrefix("cislosmlouvy:","cisloSmlouvy:",null ),
+               new TransformPrefix("mena:","ciziMena.mena:",null ),
+               new TransformPrefix("cenasdph:","hodnotaVcetneDph:",null ),
+               new TransformPrefix("cenabezdph:","hodnotaBezDph:",null ),
+               new TransformPrefix("cena:","calculatedPriceWithVATinCZK:",null ),
+               new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
+               new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
+               new TransformPrefix("zverejneno:","casZverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+               new TransformPrefix("podepsano:","datumUzavreni:[", "[<>]?[{\\[]+" ),
+               new TransformPrefix("podepsano:)","datumUzavreni:${q}", "[<>]?[{\\[]+" ),
+               new TransformPrefix("podepsano:","datumUzavreni:[${q} TO ${q}||+1d]", "\\d+"  ),
+               new TransformPrefix("schvalil:","schvalil:",null ),
+               new TransformPrefix("textsmlouvy:","prilohy.plainTextContent:",null ),
+               new Smlouva_Chyby(),
+
+            };
+
+
+            //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
+            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Smlouva>(query, irules); 
             return qc;
         }
 

@@ -13,13 +13,20 @@ namespace HlidacStatu.Lib.Search.Rules
             : base("", stopFurtherProcessing, addLastCondition)
         { }
 
+        public override string[] Prefixes
+        {
+            get
+            {
+                return new string[] { "chyby:"};
+            }
+        }
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (part.Prefix == "chyby:")
+            if (part.Prefix.Equals("chyby:", StringComparison.InvariantCultureIgnoreCase))
             {
                 string levelVal = part.Value;
                 string levelQ = "";

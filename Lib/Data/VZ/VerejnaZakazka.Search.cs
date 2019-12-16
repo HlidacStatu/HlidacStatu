@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using HlidacStatu.Lib.Search.Rules;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 using HtmlAgilityPack;
@@ -202,7 +203,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
                    new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
                    new Lib.Search.Rule(@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
-                   new Lib.Search.Rule(@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icozadavatel" ),
+                   new Lib.Search.Rule(@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
 
                    new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ","ico" ),
                    new Lib.Search.Rule(@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" ),
@@ -237,6 +238,52 @@ namespace HlidacStatu.Lib.Data.VZ
                    new Lib.Search.Rule("text:","prilohy.plainTextContent:" ),
                 };
 
+                IRule[] irules = new IRule[] {
+                    new OsobaId("osobaid:","ico:" ),
+                    new OsobaId("osobaiddodavatel:","icododavatel:" ),
+                    new OsobaId("osobaidzadavatel:","icozadavatel:" ),
+
+                    new Holding("holding:","ico:" ),
+                    new Holding("holdingdodavatel:","icododavatel:" ),
+                    new Holding("holdingzadavatel:","icozadavatel:" ),
+                    new Holding("holdingprijemce:","icododavatel:" ),
+                    new Holding("holdingplatce:","icozadavatel:" ),
+
+                    new VZ_CPV(),
+                    new VZ_Oblast(),
+                    new VZ_Form(),
+
+                    new TransformPrefixWithValue("zahajeny:","stavVZ:<=100","1" ),
+
+
+                    new TransformPrefixWithValue("ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) ",null ),
+                    new TransformPrefix("icododavatel:","dodavatele.iCO:",null ),
+                    new TransformPrefix("icoprijemce:","dodavatele.iCO:",null ),
+                    new TransformPrefix("icozadavatel:","zadavatel.iCO:",null ),
+                    new TransformPrefix("icoplatce:","zadavatel.iCO:",null ),
+                    new TransformPrefix("jmenoprijemce:","dodavatele.jmeno:",null ),
+                    new TransformPrefix("jmenoplatce:","zadavatel.jmeno:",null ),
+                    new TransformPrefix("id:","id:",null ),
+
+                    new TransformPrefixWithValue("popis:","(nazevZakazky:${q} OR popisZakazky:${q})  ",null ),
+
+                    new TransformPrefixWithValue("cena:","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) ","<=\\d" ),
+                    new TransformPrefixWithValue("cena:","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) ",">=\\d" ),
+                    new TransformPrefixWithValue("cena:","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) ","<\\d" ),
+                    new TransformPrefixWithValue("cena:","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) ",">\\d" ),
+                    new TransformPrefixWithValue("cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) ",null ),
+
+
+                    new TransformPrefix("zverejneno:","datumUverejneni:", "[<>]?[{\\[]+" ),
+                    new TransformPrefix("zverejneno:","datumUverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefix("podepsano:","datumUzavreniSmlouvy:", "[<>]?[{\\[]+" ),
+                    new TransformPrefix("podepsano:","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]", "\\d+" ),
+
+                    new TransformPrefix("text:","prilohy.plainTextContent:"  ,null),
+
+
+            };
+
                 var query = searchdata.Q?.Trim();
                 string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                 //check invalid query ( tag: missing value)
@@ -253,7 +300,8 @@ namespace HlidacStatu.Lib.Data.VZ
                 }
 
 
-                var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, rules); ;
+                //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, rules); ;
+                var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(query, irules);
 
                 return qc;
 

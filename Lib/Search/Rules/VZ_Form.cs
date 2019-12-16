@@ -13,13 +13,21 @@ namespace HlidacStatu.Lib.Search.Rules
             : base("", stopFurtherProcessing, addLastCondition)
         { }
 
+        public override string[] Prefixes
+        {
+            get
+            {
+                return new string[] { "form:" };
+            }
+        }
+
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (part.Prefix == "form:")
+            if (part.Prefix.Equals("form:", StringComparison.InvariantCultureIgnoreCase))
             {
                 string form = part.Value;
 

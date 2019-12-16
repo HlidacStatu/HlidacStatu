@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using HlidacStatu.Lib.Search.Rules;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -251,21 +252,23 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     new Lib.Search.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
                 };
 
+            List<IRule>irules = new List<IRule> {
+               new TransformPrefix("id:",idQuerypath+ ":",null ),
+               new OsobaId("osobaid:","ico:" ),
+               new Holding(null,icoQuerypath+ ":" ),
+
+               new TransformPrefix("ico:",icoQuerypath+ ":",null ),
+            };
+
+
             // add searched prefixes
-            string[] existingPrefixes = rules.
-                Select(m => HlidacStatu.Util.ParseTools
-                            .GetRegexGroupValue(m.LookFor, "^(?<pref>[a-zA-Z.-]*:)", "pref")
-                            .ToLower()
-                )
+            string[] existingPrefixes = irules.
+                SelectMany(m => m.Prefixes)
                 .Where(m => !string.IsNullOrEmpty(m))
                 .ToArray();
-            var textParts = HlidacStatu.Lib.Search.SplittingQuery.SplitQueryToParts(query, '\"');
-            string[] foundPrefixes = textParts
-                .Where(m => m.Item2 == false)
-                .SelectMany(m => (HlidacStatu.Util.ParseTools
-                                .GetRegexGroupValues(m.Item1, @"(^|\s|[(]) (?<pref>[a-zA-Z.-]*:)", "pref")
-                                ?? new string[] { "" })
-                )
+
+            var qp = HlidacStatu.Lib.Search.SplittingQuery.SplitQuery(query);
+            string[] foundPrefixes = qp.Parts.Select(m=>m.Prefix)
                 .Where(m => !string.IsNullOrEmpty(m))
                 .Where(m => !existingPrefixes.Contains(m))
                 .ToArray();
@@ -287,12 +290,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     && string.IsNullOrWhiteSpace(qpref))
                     prefPath = $" {qpref_keyw} ";
 
-                if (!string.IsNullOrWhiteSpace( prefPath))
-                    rules.Add(new Lib.Search.Rule(fPref, prefPath));
+                if (!string.IsNullOrWhiteSpace(prefPath))
+                {
+                    //rules.Add(new Lib.Search.Rule(fPref, prefPath));
+                    irules.Add(new TransformPrefixWithValue(fPref, prefPath, null));
+                }
             }
 
 
-            var qc = Lib.Search.Tools.GetSimpleQuery<object>(query, rules.ToArray());
+            //var qc = Lib.Search.Tools.GetSimpleQuery<object>(query, rules.ToArray());
+
+            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<object>(query, irules.ToArray());
 
             return qc;
         }

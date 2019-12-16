@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nest;
 
 namespace HlidacStatu.Lib.Search
 {
     public static class SimpleQueryCreator
     {
-        public static string GetSimpleQuery(string query, Lib.Search.Rules.IRule[] rules)
+        public static SplittingQuery GetSimpleQuery(string query, Lib.Search.Rules.IRule[] rules)
         {
-            return GetSimpleQuery(SplittingQuery.SplitQuery(query), rules);
+            var fixedQuery = Tools.FixInvalidQuery(query,rules) ?? "";
+            return GetSimpleQuery(SplittingQuery.SplitQuery(fixedQuery), rules);
         }
 
 
-        public static string GetSimpleQuery(Search.SplittingQuery sq, Lib.Search.Rules.IRule[] rules)
+        public static SplittingQuery GetSimpleQuery(Search.SplittingQuery sq, Lib.Search.Rules.IRule[] rules)
         {
             SplittingQuery finalSq = new SplittingQuery();
 
@@ -29,7 +31,7 @@ namespace HlidacStatu.Lib.Search
                 List<Rules.RuleResult> qpResults = null;
                 foreach (var rule in rules)
                 {
-                    qToProcess = qToProcess ?? sq.Parts;
+                    qToProcess = qToProcess ?? new SplittingQuery.Part[] { sq.Parts[qi] };
                     qpResults = new List<Rules.RuleResult>();
                     foreach (var qp in qToProcess)
                     {
@@ -44,6 +46,7 @@ namespace HlidacStatu.Lib.Search
 
                     qToProcess = qpResults
                         .SelectMany(m => m.Query.Parts)
+                        .Where(m=>m.ToQueryString.Length > 0)
                         .ToArray();
 
                 } //rules
@@ -57,7 +60,31 @@ namespace HlidacStatu.Lib.Search
                 finalSq.AddParts(qp.Value.Query.Parts);
             }
 
-            return finalSq.FullQuery;
+            return finalSq;
         }
+
+
+        public static QueryContainer GetSimpleQuery<T>(string query, Rules.IRule[] rules)
+            where T : class
+        {
+            string modifiedQ = GetSimpleQuery(query, rules).FullQuery();
+
+            QueryContainer qc = null;
+            if (modifiedQ == null)
+                qc = new QueryContainerDescriptor<T>().MatchNone();
+            else if (string.IsNullOrEmpty(modifiedQ) || modifiedQ == "*")
+                qc = new QueryContainerDescriptor<T>().MatchAll();
+            else
+            {
+                modifiedQ = modifiedQ.Replace(" | ", " OR ").Trim();
+                qc = new QueryContainerDescriptor<T>()
+                    .QueryString(qs => qs
+                        .Query(modifiedQ)
+                        .DefaultOperator(Operator.And)
+                    );
+            }
+            return qc;
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Devmasters.Core;
 using HlidacStatu.Lib.ES;
+using HlidacStatu.Lib.Search.Rules;
 using Nest;
 using System;
 
@@ -45,13 +46,31 @@ namespace HlidacStatu.Lib.Data.Dotace
                    new Lib.Search.Rule("id:","idDotace:"),
             };
 
+            IRule[] irules = new IRule[] {
+               new OsobaId("osobaid:","ico:" ),
+               //new Holding("holdingprijemce:","prijemceIco:" ),
+               //new Holding("holdingplatce:","icoplatce:" ),
+               //new Holding("holdingdodavatel:","icoprijemce:" ),
+               //new Holding("holdingzadavatel:","icoplatce:" ),
+               new Holding(null,"ico:" ),
+
+               new TransformPrefix("ico:","prijemceIco:",null ),
+               new TransformPrefix("jmeno:","prijemceJmenoPrijemce:",null ),
+               new TransformPrefixWithValue("ucel:","(obdobiDotaceTitulNazev:${q} OR obdobiUcelZnakNazev:${q}) ",null ),
+               new TransformPrefix("projekt:","dotaceProjektNazev:",null ),
+               new TransformPrefix("id:","idDotace:",null ),
+
+            };
+
+
             string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
                 modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
-            var qc = Lib.Search.Tools.GetSimpleQuery<Dotace>(modifiedQ, rules); ;
+            //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
+            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
 
             return qc;
 

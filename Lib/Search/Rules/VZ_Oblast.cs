@@ -13,21 +13,30 @@ namespace HlidacStatu.Lib.Search.Rules
             : base("", stopFurtherProcessing, addLastCondition)
         { }
 
+        public override string[] Prefixes
+        {
+            get
+            {
+                return new string[] { "oblast:" };
+            }
+        }
+
 
         protected override RuleResult processQueryPart(SplittingQuery.Part part)
         {
             if (part == null)
                 return null;
 
-            if (part.Prefix == "oblast:")
+            if (part.Prefix.Equals("oblast:", StringComparison.InvariantCultureIgnoreCase))
             {
                 string cpv = "";
                 var oblastVal = part.Value;
                 var cpvs = Lib.Data.VZ.VerejnaZakazka.Searching.CPVOblastToCPV(oblastVal);
                 if (cpvs != null)
                 {
-                    var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
-                    return new RuleResult(SplittingQuery.SplitQuery("{q_cpv}"), this.NextStep);
+                    //var q_cpv = "cPV:(" + cpvs.Select(s => s + "*").Aggregate((f, s) => f + " OR " + s) + ")";
+                    var q_cpv = " ( " + cpvs.Select(s => "cPV:" + s + "*").Aggregate((f, s) => f + " OR " + s) + " ) ";
+                    return new RuleResult(SplittingQuery.SplitQuery($" {q_cpv} "), this.NextStep);
                 }
             }
 
