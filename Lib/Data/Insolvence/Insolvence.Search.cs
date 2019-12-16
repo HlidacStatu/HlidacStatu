@@ -108,9 +108,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     new TransformPrefix("id:","spisovaZnacka:" ,null),
                 
                     new TransformPrefix("zmeneno:","posledniZmena:", "[<>]?[{\\[]+" ),
-                    new TransformPrefix("zmeneno:","posledniZmena:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("zmeneno:","posledniZmena:[${q} TO ${q}||+1d]", "\\d+" ),
                     new TransformPrefix("zahajeno:","datumZalozeni:", "[<>]?[{\\[]+" ),
-                    new TransformPrefix("zahajeno:","datumZalozeni:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("zahajeno:","datumZalozeni:[${q} TO ${q}||+1d]", "\\d+" ),
 
                     new TransformPrefix("stav:","stav:"  ,null),
                     new TransformPrefix("text:","dokumenty.plainText:"  ,null),
