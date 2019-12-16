@@ -30,8 +30,13 @@
         </tr>
         <tr>
             <th>IČO</th>
-            <td><a href="/dotace/hledat?q=ico:@Model.PrijemceIco" title="Vyhledat všechny dotace pro tento subjekt">@Model.PrijemceIco</a></td>
-        </tr>
+            <td>
+                @if (Model.PrijemceIco != "00000000")
+                {
+                    <a href="/dotace/hledat?q=ico:@Model.PrijemceIco" title="Vyhledat všechny dotace pro tento subjekt">@Model.PrijemceIco</a>
+                }
+            </td>
+            </tr>
         <tr>
             <th>Kód projektu</th>
             <td>@Model.ProjektKod</td>
@@ -57,22 +62,6 @@
                     <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
                 }
             </td>
-        </tr>
-        <tr>
-            <th>Kód operačního programu</th>
-            <td>@Model.OperacniProgramKod</td>
-        </tr>
-        <tr>
-            <th>Název operačního programu</th>
-            <td>@Model.OperacniProgramNazev</td>
-        </tr>
-        <tr>
-            <th>Kód grantového schematu</th>
-            <td>@Model.GrantoveSchemaKod</td>
-        </tr>
-        <tr>
-            <th>Název grantového schematu</th>
-            <td>@Model.GrantoveSchemaNazev</td>
         </tr>
         <tr>
             <th>Zdroj</th>
