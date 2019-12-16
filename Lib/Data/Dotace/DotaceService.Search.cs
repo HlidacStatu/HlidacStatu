@@ -18,10 +18,10 @@ namespace HlidacStatu.Lib.Data.Dotace
         static string[] queryShorcuts = new string[] {
                 "ico:",
                 "jmeno:",
-                "ucel:",
                 "projekt:",
-                "osobaid:","holding:",
-                "id:"
+                "castka:",
+                "osobaid:","holding:"
+                //"id:"
             };
         static string[] queryOperators = new string[] { "AND", "OR" };
 
@@ -41,9 +41,9 @@ namespace HlidacStatu.Lib.Data.Dotace
                    new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
                    new Lib.Search.Rule(@"ico:","prijemceIco:"),
                    new Lib.Search.Rule("jmeno:","prijemceJmenoPrijemce:"),
-                   new Lib.Search.Rule("ucel:","(obdobiDotaceTitulNazev:${q} OR obdobiUcelZnakNazev:${q}) "),
-                   new Lib.Search.Rule("projekt:","dotaceProjektNazev:"),
-                   new Lib.Search.Rule("id:","idDotace:"),
+                   new Lib.Search.Rule("projekt:","projektNazev:"),
+                   new Lib.Search.Rule("castka:","dotaceCelkem:"),
+                   //new Lib.Search.Rule("id:","idDotace:"),
             };
 
             IRule[] irules = new IRule[] {
@@ -56,9 +56,9 @@ namespace HlidacStatu.Lib.Data.Dotace
 
                new TransformPrefix("ico:","prijemceIco:",null ),
                new TransformPrefix("jmeno:","prijemceJmenoPrijemce:",null ),
-               new TransformPrefixWithValue("ucel:","(obdobiDotaceTitulNazev:${q} OR obdobiUcelZnakNazev:${q}) ",null ),
-               new TransformPrefix("projekt:","dotaceProjektNazev:",null ),
-               new TransformPrefix("id:","idDotace:",null ),
+               new TransformPrefix("projekt:","projektNazev:",null ),
+               new TransformPrefix("castka:","dotaceCelkem:",null ),
+               //new TransformPrefix("id:","idDotace:",null ),
 
             };
 

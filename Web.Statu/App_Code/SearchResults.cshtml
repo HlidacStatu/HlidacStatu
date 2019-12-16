@@ -546,7 +546,10 @@
         @item.PrijemceJmenoPrijemce
     </td>
     <td>
-        <a href="/subjekt/@item.PrijemceIco" title="Informace o subjektu">@item.PrijemceIco</a>
+        @if(item.PrijemceIco != "00000000")
+        { 
+            <a href="/subjekt/@item.PrijemceIco" title="Informace o subjektu">@item.PrijemceIco</a>
+        }
 </td>
     <td>
         @item.GetNazevDotace()
@@ -563,7 +566,7 @@
             <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem) je půjčka</p>
         }
     </td>
-    <td>
+    <td class="text-nowrap">
         <a href="detail?idDotace=@item.IdDotace">Detail</a> | 
         <a href="@item.Source">Zdroj</a>
     </td>
