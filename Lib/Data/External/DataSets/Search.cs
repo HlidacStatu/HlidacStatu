@@ -254,7 +254,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             List<IRule>irules = new List<IRule> {
                new TransformPrefixWithValue("id:",idQuerypath,null ),
-               new OsobaId("osobaid:","ico:" ),
+               new OsobaId("osobaid:",icoQuerypath ),
                new Holding(null,icoQuerypath ),
 
                new TransformPrefixWithValue("ico:",icoQuerypath,null ),

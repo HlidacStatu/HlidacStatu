@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Search.Rules
             if (part == null)
                 return null;
             if (
-                !string.IsNullOrEmpty(this.ReplaceWith)
+                !string.IsNullOrWhiteSpace(this.ReplaceWith)
                 && (
                     (!string.IsNullOrWhiteSpace(_specificPrefix) && part.Prefix.Equals(_specificPrefix, StringComparison.InvariantCultureIgnoreCase))
                     ||
