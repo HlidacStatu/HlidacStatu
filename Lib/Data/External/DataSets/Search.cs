@@ -207,7 +207,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             var res = client
                 .Search<object>(s => s
-                    .Type("data")
                     .Size(pageSize)
                     .Source(ss => ss.Excludes(ex => ex.Fields(maps)))
                     .From(page * pageSize)
