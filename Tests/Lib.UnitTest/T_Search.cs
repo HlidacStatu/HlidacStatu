@@ -152,7 +152,7 @@ namespace HlidacStatu.Lib.Tests
                 Search.SimpleQueryCreator.GetSimpleQuery("ico:27233545 cena:>2000 NEN", rules).FullQuery());
 
 
-            Assert.AreEqual<string>("podepsano:2019-01-01",
+            Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d]",
                 Search.SimpleQueryCreator.GetSimpleQuery("podepsano:2019-01-01", rules).FullQuery());
 
 
