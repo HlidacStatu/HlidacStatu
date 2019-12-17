@@ -5,6 +5,7 @@
 @using System.Linq;
 @using Devmasters.Core;
 @using HlidacStatu.Util;
+@using HlidacStatu.Web.Framework;
 
 
 @{
@@ -64,7 +65,7 @@
 
             @if (showFrontPromo == false && showBehindPromo == false)
             {
-                <p class="lead">@reg.description</p>
+                <p class="lead">@Html.Raw(Devmasters.Core.TextUtil.FormatPlainTextForArticle(reg.description))</p>
             }
             <p>@Html.Raw(Model.InfoFacts().RenderInfoFacts(1, true, true, html: true))</p>
             @if (Model.Registration().betaversion)
@@ -74,8 +75,57 @@
             <hr />
             @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
 
-            <a target="_blank" href="/data/Hledat/@Model.DatasetId?q=*&order=DbCreated+desc" class="btn btn-primary">Vypsat poslední záznamy</a>
 
+            @{
+                        HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult data = null;
+                        try
+                        {
+                            //new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { Q="*", Page=1, PageSize = 5, Order = "DbCreated Desc" });
+                            data = Model.SearchDataRaw("*", 1, 5, "DbCreated desc");
+
+                            if (Model.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
+                            {
+                                var results = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+                                results.Total = data.Total;
+                                results.Page = data.Page;
+                                results.Q = data.Q;
+                                results.Result = data.Result
+                                    .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
+                                    .ToArray();
+
+                                var html = Model.Registration().searchResultTemplate.Render(Model, results, data.Q);
+                                @Html.Raw("<h4>Poslední záznamy v databázi</h4><p>" + html + "</p>")
+                            }
+                            else
+                            {
+                                Html.RenderAction("HledatProperties_CustomdataTemplate", data);
+                            }
+
+                    <div class="text-center">
+                        <ul class="pagination pagination-lg">
+                            <li>
+                                @Html.CurrentLink("Další záznamy »", data.ToRouteValues(1))
+                            </li>
+                        </ul>
+                    </div>
+                }
+                catch (Exception e)
+                {
+                    var msg = e?.InnerException?.Message ?? "Interní chyba";
+                msg = HlidacStatu.Util.ParseTools.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
+
+                    @Html.Raw($"<h2>Chyba v template - zpráva pro autora této databáze</h2><pre>{msg}</pre>")
+                    HlidacStatu.Util.Consts.Logger.Warning("HledatBody_CustomdataTemplate", e);
+
+                    if (msg != "Interní chyba")
+                    {
+                        Model.SendErrorMsgToAuthor(this.Request.Url.AbsoluteUri, msg);
+                }
+            }
+
+
+            }
+            <hr />
 
             @if (showBehindPromo)
             {
@@ -98,8 +148,8 @@
             }
 
         </div>
-            </div>
+    </div>
 
-        </div>
+</div>
 
 @Html.Partial("_new")

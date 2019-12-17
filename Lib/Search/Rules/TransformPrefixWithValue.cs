@@ -34,8 +34,8 @@ namespace HlidacStatu.Lib.Search.Rules
             if (part == null)
                 return null;
 
-            if (string.IsNullOrWhiteSpace(part.Value))
-                return new RuleResult(SplittingQuery.SplitQuery(" "), this.NextStep);
+            if (string.IsNullOrWhiteSpace(this.ReplaceWith))
+                return null; // new RuleResult(SplittingQuery.SplitQuery(" "), this.NextStep);
 
             if (//this.ReplaceWith.Contains("${q}") &&
                 part.Prefix.Equals(_prefix, StringComparison.InvariantCultureIgnoreCase)
