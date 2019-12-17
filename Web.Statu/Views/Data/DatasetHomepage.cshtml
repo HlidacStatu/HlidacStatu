@@ -64,7 +64,7 @@
 
             @if (showFrontPromo == false && showBehindPromo == false)
             {
-            <p class="lead">@reg.description</p>
+                <p class="lead">@reg.description</p>
             }
             <p>@Html.Raw(Model.InfoFacts().RenderInfoFacts(1, true, true, html: true))</p>
             @if (Model.Registration().betaversion)
@@ -73,6 +73,8 @@
             }
             <hr />
             @Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
+
+            <a target="_blank" href="/data/Hledat/@Model.DatasetId?q=*&order=DbCreated+desc" class="btn btn-primary">Vypsat poslední záznamy</a>
 
 
             @if (showBehindPromo)
