@@ -3,6 +3,7 @@ using HlidacStatu.Lib.ES;
 using HlidacStatu.Web.Models;
 using System.Web.Mvc;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -69,7 +70,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1,0, true);
                 if (findRizeni.Total > 0)
-                    ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlights;
+                    ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlight; //todo: ES7 check it
             }
             ViewBag.showHighliting = showHighliting;
             return View(model);
@@ -93,13 +94,13 @@ namespace HlidacStatu.Web.Controllers
             if (IsLimitedView() && data.Rizeni.OnRadar == false)
                 return RedirectToAction("PristupOmezen", new { id = data.Rizeni.UrlId() });
 
-            Nest.HighlightFieldDictionary highlighting = null;
+            IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlighting = null;
             if (showHighliting)
             {
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 0, true);
                 if (findRizeni.Total > 0)
                 {
-                    highlighting = findRizeni.Result.Hits.First().Highlights;
+                    highlighting = findRizeni.Result.Hits.First().Highlight;  //todo: ES7 check it
                 }
             }
 

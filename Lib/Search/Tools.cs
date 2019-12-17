@@ -176,6 +176,7 @@ namespace HlidacStatu.Lib.Search
         }
         public static IValidateQueryResponse ValidateSpecificQueryRaw(Nest.ElasticClient client, QueryContainer qc, string type)
         {
+            var a = Nest.ValidateQueryRequest();
 
             return client
                 .ValidateQuery<object>(v => v

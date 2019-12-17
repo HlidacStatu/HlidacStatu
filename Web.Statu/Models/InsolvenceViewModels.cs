@@ -40,7 +40,7 @@ namespace HlidacStatu.Web.Models
 	{
 		public string Oddil { get; set; }
 		public Dokument[] Dokumenty { get; set; }
-        public Nest.HighlightFieldDictionary HighlightingData{ get; set; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> HighlightingData { get; set; } //todo: ES7 check
     }
 
 	public class SoudViewModel
@@ -58,7 +58,7 @@ namespace HlidacStatu.Web.Models
 		public string SpisovaZnacka { get; set; }
 		public string UrlId { get; set; }
 		public Dokument[] Dokumenty { get; set; }
-        public Nest.HighlightFieldDictionary HighlightingData { get; set; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> HighlightingData { get; set; }
 
         public DokumentyViewModel()
 		{

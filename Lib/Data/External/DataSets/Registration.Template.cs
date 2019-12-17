@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
 
             public string Render(DataSet ds, string sModel, string qs = "",
-                Nest.HighlightFieldDictionary highlightingData = null)
+                IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null)
             {
                 dynamic model = Newtonsoft.Json.Linq.JObject.Parse(sModel);
                 return Render(ds, model, qs, highlightingData);
@@ -68,8 +68,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return new List<string>();
             }
 
-            public string Render(DataSet ds, dynamic dmodel, string qs = "", 
-                Nest.HighlightFieldDictionary highlightingData = null)
+            public string Render(DataSet ds, dynamic dmodel, string qs = "",
+                IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null)
             {
 
                 string template = GetTemplateHeader(ds.DatasetId,qs) + this.body;

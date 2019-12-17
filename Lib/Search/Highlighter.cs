@@ -1,20 +1,20 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HlidacStatu.Lib.Search
 {
 
     public class Highlighter
     {
-        public static bool HasHighlightedContent(Nest.HighlightFieldDictionary highlights, string path, string content, string highlightPartDelimiter = " ..... ")
+        public static bool HasHighlightedContent(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string content, string highlightPartDelimiter = " ..... ")
         {
 
-            highlights = highlights ?? new Nest.HighlightFieldDictionary();
-            string result = "";
+            highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
             foreach (var hlk in highlights.Where(k => k.Key == path))
             {
-                foreach (var txt in hlk.Value.Highlights)
+                foreach (var txt in hlk.Value) //todo: ES7 check
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
 
                     if (content?.Contains(stxt) == true)
                     {
@@ -25,20 +25,20 @@ namespace HlidacStatu.Lib.Search
             return false;
         }
 
-        public static string HighlightFullContent(Nest.HighlightFieldDictionary highlights, string path, string content)
+        public static string HighlightFullContent(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string content)
         {
             if (string.IsNullOrEmpty(content))
                 return string.Empty;
 
-            highlights = highlights ?? new Nest.HighlightFieldDictionary();
+            highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
 
             string hContent = content;
 
             foreach (var hlk in highlights.Where(k => k.Key == path))
             {
-                foreach (var txt in hlk.Value.Highlights)
+                foreach (var txt in hlk.Value)
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
 
                     hContent = hContent.Replace(stxt, txt); //orig text replace with text with highl tags
 
@@ -47,15 +47,15 @@ namespace HlidacStatu.Lib.Search
             return hContent;
         }
 
-        public static string HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string content, string highlightPartDelimiter = " ..... ")
+        public static string HighlightContent(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string content, string highlightPartDelimiter = " ..... ")
         {
-            highlights = highlights ?? new Nest.HighlightFieldDictionary();
+            highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
             string result = "";
             foreach (var hlk in highlights.Where(k => k.Key == path))
             {
-                foreach (var txt in hlk.Value.Highlights)
+                foreach (var txt in hlk.Value)
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
 
                     if (content?.Contains(stxt) == true)
                     {
@@ -76,13 +76,11 @@ namespace HlidacStatu.Lib.Search
                 return result;
         }
 
-        public static string HighlightContentIntoHtmlBlock(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare,
+        public static string HighlightContentIntoHtmlBlock(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string contentToCompare,
         string foundContentFormat = null, string noHLContent = "", string prefix = "",
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
         {
-
-
-            highlights = highlights ?? new Nest.HighlightFieldDictionary();
+            highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
             //foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
 
             string result = HlidacStatu.Lib.Search.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);

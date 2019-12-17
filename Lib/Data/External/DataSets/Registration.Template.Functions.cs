@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Scriban.Runtime;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HlidacStatu.Lib.Data.External.DataSets
@@ -17,7 +18,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return fn_LinkTextDocumentWithHighlighting(value, datasetId, dataId, linkText);
                 }
                 public static string fn_LinkTextDocumentWithHighlighting(dynamic value, string datasetId, string dataId, string linkText = "",
-                    Nest.HighlightFieldDictionary highlightingData = null, string highlPrefix = "", string highlPostfix = "")
+                    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null, string highlPrefix = "", string highlPostfix = "")
                 {
 
                     if (value == null)
@@ -249,7 +250,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     //return s;
                 }
 
-                public static string fn_HighlightText(Nest.HighlightFieldDictionary highlightingData, dynamic text, string attrPath)
+                public static string fn_HighlightText(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData, dynamic text, string attrPath)
                 {
                     var s = fn_FixPlainText(text);
 
