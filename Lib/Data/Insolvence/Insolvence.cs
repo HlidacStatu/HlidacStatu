@@ -217,10 +217,11 @@ MORATORIUM =
 
             try
             {
+                
                 var rizeni = includeDocumentsPlainText
                     ? client.Get<Rizeni>(spisovaZnacka)
                     : client.Get<Rizeni>(spisovaZnacka, s => s
-                            .SourceExclude("dokumenty.plainText")
+                            .SourceExcludes("dokumenty.plainText") //todo: es7 check
                             //.SourceExclude("")
                             );
 
