@@ -71,7 +71,7 @@ namespace HlidacStatu.Lib.ES
                 return;
             if (idxType.Value == IndexType.DataSource)
                 return;
-            var ret = client.IndexExists(client.ConnectionSettings.DefaultIndex);
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex);
             if (ret.Exists == false)
                 CreateIndex(client, idxType.Value);
 
@@ -347,17 +347,16 @@ namespace HlidacStatu.Lib.ES
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
-            Nest.ICreateIndexResponse res = null;
-            res = client
-                .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+            var res = client.Indices
+                .Create(client.ConnectionSettings.DefaultIndex, i => i  //todo: es7 check
                     .InitializeUsing(idxSt)
-                    .Mappings(m => m.Map("data", mm => mm
-                         .Properties(ps => ps
-                             .Date(psn => psn.Name("DbCreated"))
-                             .Keyword(psn => psn.Name("DbCreatedBy"))
-                             )
+                    .Map(mm => mm
+                    .Properties(ps => ps
+                        .Date(psn => psn.Name("DbCreated"))
+                        .Keyword(psn => psn.Name("DbCreatedBy"))
                         )
                     )
+                    
                 );
 
         }
@@ -394,106 +393,72 @@ namespace HlidacStatu.Lib.ES
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
-            Nest.ICreateIndexResponse res = null;
+            CreateIndexResponse res = null;
             switch (idxTyp)
             {
-                //case IndexType.VerejneZakazkyRaw2006:
-                //    res = client
-                //       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
-                //           .InitializeUsing(idxSt)
-                //           .Mappings(m => m
-                //               .Map<Lib.Data.VZ.VerejnaZakazka.ImportXMLpre2016.VerejnaZakazka2006>(map => map.AutoMap().DateDetection(false))
-                //               .Map<Lib.Data.VZ.VerejnaZakazka.ImportXMLpre2016.CastiVerejneZakazky2006>(map => map.AutoMap().DateDetection(false))
-                //               )
-                //       );
-                //    break;
-
                 case IndexType.VerejneZakazky:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               .Map<Lib.Data.VZ.VerejnaZakazka>(map => map.AutoMap().DateDetection(false))
-                               .Map<Lib.Data.VZ.ProfilZadavatele>(map => map.AutoMap().DateDetection(false))
-                               )
+                           .Map<Lib.Data.VZ.VerejnaZakazka>(map => map.AutoMap().DateDetection(false))
+                           .Map<Lib.Data.VZ.ProfilZadavatele>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
 
                 case IndexType.Insolvence:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               .Map<Lib.Data.Insolvence.Rizeni>(map => map.AutoMap().DateDetection(false))
-                               )
+                           .Map<Lib.Data.Insolvence.Rizeni>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Dotace:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               .Map<Lib.Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
-                               )
+                           .Map<Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
 
                 case IndexType.Smlouvy:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               //.Map("_default_", mm => mm.TtlField(ttl => ttl.Enable(false)))
-                               .Map<Lib.Data.Smlouva>(map => map
-                                  //.TtlField(ttl => ttl.Enable(false))
-                                  .AutoMap()
-                                  .DateDetection(false)
-                                   )
-                               //.Map<Person>(map => map.AutoMap(maxRecursion: 1))
-                               //.Map<VerejnaZakazka>(map => map.AutoMap(maxRecursion: 1).DateDetection(false))
-                               )
+                           .Map<Lib.Data.Smlouva>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Firmy:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                                .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
-                               )
+                           .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.Ucty:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
                                .Map<Lib.Data.TransparentniUcty.BankovniUcet>(map => map.AutoMap(maxRecursion: 1))
                                .Map<Lib.Data.TransparentniUcty.BankovniPolozka>(map => map.AutoMap(maxRecursion: 1))
-                            )
                        );
                     break;
                 case IndexType.Logs:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               .Map<Lib.Data.Logs.ProfilZadavateleDownload>(map => map.AutoMap(maxRecursion: 1))
-                               )
+                           .Map<Lib.Data.Logs.ProfilZadavateleDownload>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.VerejneZakazkyNaProfiluRaw:
-                    res = client
-                       .CreateIndex(client.ConnectionSettings.DefaultIndex, i => i
-                           .InitializeUsing(idxSt)
-                           .Mappings(m => m
-                               .Map<Lib.Data.External.ProfilZadavatelu.ZakazkaRaw>(map => map
-                                        .Properties(p => p
-                                            .Keyword(k => k.Name(n => n.ZakazkaId))
-                                            .Keyword(k => k.Name(n => n.Profil))
-                                            .Date(k => k.Name(n => n.LastUpdate))
-                                    )
-                               )
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                            .InitializeUsing(idxSt)
+                            .Map<Lib.Data.External.ProfilZadavatelu.ZakazkaRaw>(map => map
+                                    .Properties(p => p
+                                        .Keyword(k => k.Name(n => n.ZakazkaId))
+                                        .Keyword(k => k.Name(n => n.Profil))
+                                        .Date(k => k.Name(n => n.LastUpdate))
+                                )
                             )
                        );
                     break;

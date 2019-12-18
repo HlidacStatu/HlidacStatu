@@ -64,7 +64,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
             }
 
-            var ret = client.IndexExists(client.ConnectionSettings.DefaultIndex);
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
             if (ret.Exists)
             {
                 throw new DataSetException(reg.datasetId, ApiResponseStatus.DatasetRegistered);
@@ -91,7 +91,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             this.client = Lib.ES.Manager.GetESClient(datasetId, idxType: ES.Manager.IndexType.DataSource);
 
 
-            var ret = client.IndexExists(client.ConnectionSettings.DefaultIndex);
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
             if (ret.Exists == false)
             {
                 if (fireException)
@@ -108,18 +108,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             if (_mapping == null)
             {
-                var getIndexResponse = this.client.GetIndex(this.client.ConnectionSettings.DefaultIndex);
+                var getIndexResponse = this.client.Indices.Get(this.client.ConnectionSettings.DefaultIndex); //todo: es7 check
                 IIndexState remote = getIndexResponse.Indices[this.client.ConnectionSettings.DefaultIndex];
-                var dataMapping = remote.Mappings
-                    .Where(m => m.Key.Name == "data")
-                    .FirstOrDefault(); //type data
-                if (dataMapping.Value.Properties == null)
+                var dataMapping = remote?.Mappings?.Properties;
+                if (dataMapping == null)
                     return new Nest.CorePropertyBase[] { };
-                _mapping = dataMapping
-                    .Value
-                    .Properties
-                    .Select(m => (Nest.CorePropertyBase)m.Value)
-                    ;
+                _mapping = dataMapping.Select(m => (Nest.CorePropertyBase)m.Value);
             }
             return _mapping;
         }
@@ -579,7 +573,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             string updatedData = Newtonsoft.Json.JsonConvert.SerializeObject(objDyn);
             PostData pd = PostData.String(updatedData);
 
-            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, "data", id, pd);
+            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); //todo: es7 check
 
             if (tres.Success)
             {
@@ -640,7 +634,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool ItemExists(string Id)
         {
             //GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.Exists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, "data", Id);
+            var res = this.client.LowLevel.DocumentExists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, Id); //todo: es7 check
             return res.Exists;
         }
         public dynamic GetDataObj(string Id)
@@ -656,7 +650,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public string GetData(string Id)
         {
-            GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
+            GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
             var res = this.client.Get<object>(req);
             if (res.Found)
                 return res.Source.ToString();
@@ -667,7 +661,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool DeleteData(string Id)
         {
             //DeleteRequest req = new DeleteRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, "data", Id);
+            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, Id); //todo: es7 check
             return res.Success;
         }
 
