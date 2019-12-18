@@ -57,7 +57,7 @@
 }
 
 
-@helper HighlightContent(Nest.HighlightFieldDictionary highlights, string path, string contentToCompare,
+@helper HighlightContent(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string contentToCompare,
         string foundContentFormat = null, string noHLContent = "", string prefix = "",
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
