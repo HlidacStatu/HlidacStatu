@@ -415,7 +415,7 @@ namespace HlidacStatu.Lib.Data
         {
             get
             {
-                return this.identifikator.idVerze;
+                return this.identifikator?.idVerze;  //todo: es7 __ ?. __ added, because identifikator was null
             }
         }
 
@@ -859,7 +859,7 @@ namespace HlidacStatu.Lib.Data
 
         public bool IsPartOfRegistrSmluv()
         {
-            if (this.Id.StartsWith("pre"))
+            if (this.Id != null && this.Id.StartsWith("pre")) //todo: es7 __this.Id != null && __ added
                 return false;
             else
                 return true;
