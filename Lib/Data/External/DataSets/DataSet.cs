@@ -653,7 +653,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
             var res = this.client.Get<object>(req);
             if (res.Found)
-                return res.Source.ToString();
+                return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); //todo: es7 check
             else
                 return (string)null;
         }
