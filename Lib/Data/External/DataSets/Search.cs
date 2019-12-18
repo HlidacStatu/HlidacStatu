@@ -131,7 +131,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Q = queryString,
                     IsValid = true,
                     Total = res.Total,
-                    Result = res.Hits.Select(m => new Tuple<string, string>(m.Id, m.Source.ToString())),
+                    Result = res.Hits.Select(m => new Tuple<string, string>(m.Id, Newtonsoft.Json.JsonConvert.SerializeObject(m.Source))),
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
