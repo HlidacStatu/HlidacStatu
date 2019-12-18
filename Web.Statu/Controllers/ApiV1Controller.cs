@@ -509,12 +509,12 @@ namespace HlidacStatu.Web.Controllers
         }
         public ActionResult Status()
         {
-            IClusterHealthResponse res = null;
+            ClusterHealthResponse res = null;
             int num = 0;
             string status = "unknown";
             try
             {
-                res = HlidacStatu.Lib.ES.Manager.GetESClient().ClusterHealth();
+                res = HlidacStatu.Lib.ES.Manager.GetESClient().Cluster.Health(); //todo: es7 check
                 num = res?.NumberOfNodes ?? 0;
                 status = res?.Status.ToString() ?? "unknown";
             }

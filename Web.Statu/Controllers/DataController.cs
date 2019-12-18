@@ -275,7 +275,7 @@ namespace HlidacStatu.Web.Controllers
                     var findSm = ds.SearchDataRaw($"_id:\"{dataid}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
                         null, withHighlighting: true);
                     if (findSm.Total > 0)
-                        ViewBag.Highlighting = findSm.ElasticResultsRaw.Hits.First().Highlights;
+                        ViewBag.Highlighting = findSm.ElasticResultsRaw.Hits.First().Highlight; //todo: es7 check
 
                 }
 

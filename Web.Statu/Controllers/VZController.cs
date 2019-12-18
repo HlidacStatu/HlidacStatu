@@ -50,7 +50,7 @@ namespace HlidacStatu.Web.Controllers
                     new string[] { }, 1, 1,
                     (int)Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
                 if (findSm.Total > 0)
-                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlights;
+                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlight;  //todo: es7 check
 
             }
 
