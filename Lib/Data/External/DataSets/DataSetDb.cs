@@ -53,7 +53,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (client == null)
             {
                 this.client = Lib.ES.Manager.GetESClient(DataSourcesDbName, idxType: ES.Manager.IndexType.DataSource);
-                var ret = client.IndexExists(client.ConnectionSettings.DefaultIndex);
+                var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
                 if (!ret.Exists)
                 {
                     Newtonsoft.Json.Schema.Generation.JSchemaGenerator jsonG = new Newtonsoft.Json.Schema.Generation.JSchemaGenerator();
@@ -68,7 +68,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     //add record
                     Elasticsearch.Net.PostData pd = Elasticsearch.Net.PostData.String(Newtonsoft.Json.JsonConvert.SerializeObject(reg));
 
-                    var tres = client.LowLevel.Index<Elasticsearch.Net.StringResponse>(client.ConnectionSettings.DefaultIndex, "data", DataSourcesDbName, pd);
+                    var tres = client.LowLevel.Index<Elasticsearch.Net.StringResponse>(client.ConnectionSettings.DefaultIndex, DataSourcesDbName, pd);
                     if (tres.Success == false)
                         throw new ApplicationException(tres.DebugInformation);
                 }
@@ -176,7 +176,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var res = this.DeleteData(datasetId);
             var idxClient = Lib.ES.Manager.GetESClient(datasetId, idxType: ES.Manager.IndexType.DataSource);
 
-            var delRes = idxClient.DeleteIndex(idxClient.ConnectionSettings.DefaultIndex);
+            var delRes = idxClient.Indices.Delete(idxClient.ConnectionSettings.DefaultIndex);
             DataSet.CachedDatasets.Delete(datasetId);
             return res && delRes.IsValid;
         }
