@@ -6,15 +6,15 @@
 @using Devmasters.Core;
 
 @{
-        var reg = Model.Registration();
+    var reg = Model.Registration();
 
-        ViewBag.Title = "Datový zdroj " + Model.Registration().name;
-        ViewBag.SubTitle = "Podrobné informace";
+    ViewBag.Title = "Datový zdroj " + Model.Registration().name;
+    ViewBag.SubTitle = "Podrobné informace";
 
-        var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains( email)
-            || email == Model.Registration().createdBy
-            );
+    var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
+    bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+        || email == Model.Registration().createdBy
+        );
 
 }
 @section scripts
@@ -73,7 +73,7 @@
                     <td>
                         <p>
                             Datový zdroj @Devmasters.Core.Lang.Plural.GetWithZero((int)Model.SearchData("", 1, 0).Total
-,"neobsahuje žádný záznam","obsahuje jeden záznam", "obsahuje {0} záznamy","obsahuje {0} záznamů")
+, "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů")
                         </p>
                         @if (first.Total > 0)
                         {
@@ -91,13 +91,13 @@
                 <tr>
                     <td>Kontaktovat autora</td>
                     <td>
-                        @Util.FeedbackModal("Poslat autorovi zprávu", null,null,null,
-                            new string[]{ "Chyba","Chci upozornit na chybu",
+                        @Util.FeedbackModal("Poslat autorovi zprávu", null, null, null,
+         new string[]{ "Chyba","Chci upozornit na chybu",
                         "Stiznost","Chci si stěžovat",
                         "Pochvala","Chci vás pochválit",
                         "NabidkaPomoci","Nabízím vám pomoc",
                         "Jiné","Jiné",
-                        }, true,"dataset|" + @Model.DatasetId)
+     }, true, "dataset|" + @Model.DatasetId)
 
 
                     </td>
@@ -120,13 +120,19 @@
                     <td style="vertical-align:bottom;">
                         @if (showEditBtn)
                         {
-                        <a href="/data/Manage/@Model.DatasetId" class="btn btn-info btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
+                            <a href="/data/Manage/@Model.DatasetId" class="btn btn-info btn-sm"><i class="far fa-edit"></i> Editovat nastavení datasetu</a>
                         }
                     </td>
                 </tr>
                 <tr>
                     <td>Zdroj dat</td>
                     <td><a href="@reg.origUrl">@reg.origUrl</a></td>
+                </tr>
+                <tr>
+                    <td>Stáhnutí celé databáze</td>
+                    <td>Pro stažení použijte naše API. 
+                    <br/><br/>
+                    Pokud jste zalogováni, můžete použít i tento odkaz: <a href="https://www.hlidacstatu.cz/api/v1/dump?datatype=dataset.@(Model.DatasetId)">https://www.hlidacstatu.cz/api/v1/dump?datatype=dataset.@(Model.DatasetId)</a></td>
                 </tr>
                 <tr>
                     <td>Zdrojový kód parseru dat</td>
