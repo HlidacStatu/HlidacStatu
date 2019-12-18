@@ -89,7 +89,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     IsValid = true,
                     Total = res.Total,
                     Result = res.Hits
-                            .Select(m => m.Source.ToString())
+                            .Select(m => Newtonsoft.Json.JsonConvert.SerializeObject(m.Source))
                             .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),
 
                     Page = page,
