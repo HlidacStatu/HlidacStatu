@@ -57,7 +57,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             {
                 if (_numOfTrans < 0)
                 {
-                    var countRes = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                    var countRes = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                        .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                            .Size(0)
                            .Query(q => q.Term(t => t.Field(f => f.CisloUctu).Value(this.Id)))
@@ -111,14 +111,14 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public void Save(ElasticClient client = null)
         {
-            var es = client ?? ES.Manager.GetESClient_Ucty();
+            var es = client ?? ES.Manager.GetESClient_BankovniUcty();
 
             es.IndexDocument<BankovniUcet>(this);
         }
 
         public static BankovniUcet Get(string cislo)
         {
-            var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+            var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty()
                 .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(m => m
                     .Query(qq => qq
                         .Term(t => t.Field(ff => ff.CisloUctu).Value(cislo))
@@ -138,7 +138,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
             Func<int, int, Nest.ISearchResponse<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>> searchFunc = (size, page) =>
             {
-                return HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                return HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                             .Size(size)
                             .From(page * size)
@@ -150,7 +150,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             List<BankovniPolozka> transactionIds = new List<BankovniPolozka>();
 
             HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
-                HlidacStatu.Lib.ES.Manager.GetESClient_Ucty(),
+                HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                 searchFunc,
                 (p, o) =>
                 {
@@ -166,7 +166,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 ok = ok && t.Delete(user);
             }
 
-            ok = ok && ES.Manager.GetESClient_Ucty().Delete<BankovniUcet>(bu.Id).IsValid;
+            ok = ok && ES.Manager.GetESClient_BankovniUcty().Delete<BankovniUcet>(bu.Id).IsValid;
             return ok;
         }
 

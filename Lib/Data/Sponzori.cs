@@ -283,7 +283,7 @@ namespace HlidacStatu.Lib.Data
                 if (!string.IsNullOrEmpty(fe.Zdroj) && fe.Zdroj.ToLower().StartsWith("https://www.hlidacstatu.cz/ucty/transakce/"))
                 {
                     //https://www.hlidacstatu.cz/ucty/transakce/7CCEEC74486A0B58A13DE15369B3CE74
-                    var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                    var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Get<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(fe.Zdroj.ToLower().Replace("https://www.hlidacstatu.cz/ucty/transakce/", ""));
                     if (res.Found)
                     {
@@ -308,7 +308,7 @@ namespace HlidacStatu.Lib.Data
                 if (!string.IsNullOrEmpty(oe.Zdroj) && oe.Zdroj.ToLower().StartsWith("https://www.hlidacstatu.cz/ucty/transakce/"))
                 {
                     //https://www.hlidacstatu.cz/ucty/transakce/7CCEEC74486A0B58A13DE15369B3CE74
-                    var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                    var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Get<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(oe.Zdroj.Substring("https://www.hlidacstatu.cz/ucty/transakce/".Length));
                     if (res.Found)
                     {

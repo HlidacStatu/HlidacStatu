@@ -621,7 +621,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("TransparentniUctyExport", "") }).Authentificated)
             {
-                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty()
                     .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(m => m
                         .Query(q => q.MatchAll())
                         .Size(1000)
@@ -650,7 +650,7 @@ namespace HlidacStatu.Web.Controllers
                 if (string.IsNullOrEmpty(id))
                     return View("Error404");
 
-                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty()
                     .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(m => m
                         .Query(q => q
                             .Term(t => t.Field(ff => ff.CisloUctu).Value(id))
@@ -665,7 +665,7 @@ namespace HlidacStatu.Web.Controllers
                 List<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka> polozky = new List<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>();
                 Func<int, int, Nest.ISearchResponse<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>> searchFunc = (size, page) =>
                 {
-                    return HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                    return HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                             .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                                 .Size(size)
                                 .From(page * size)
@@ -675,7 +675,7 @@ namespace HlidacStatu.Web.Controllers
                 };
 
                 HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
-                    HlidacStatu.Lib.ES.Manager.GetESClient_Ucty(),
+                    HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                     searchFunc,
                     (p, o) =>
                     {
@@ -942,7 +942,7 @@ namespace HlidacStatu.Web.Controllers
                         }, null,
                     null, new Devmasters.Core.Batch.ActionProgressWriter(1f).Write,
                     false,
-                    elasticClient: HlidacStatu.Lib.ES.Manager.GetESClient_Ucty(),
+                    elasticClient: HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                     blockSize: 50)
                     ;
 

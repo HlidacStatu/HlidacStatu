@@ -31,7 +31,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Transakce(string id)
         {
-            var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+            var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                 .Get<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(id);
             if (res.Found == false)
                 return View("Error404");
@@ -48,7 +48,7 @@ namespace HlidacStatu.Web.Controllers
                 return RedirectToActionPermanent("Strany", "Sponzori");
 
 
-            var es = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty();
+            //var es = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty();
             List<string> typy = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
                             .GetAll()
                             .Select(m => m.TypSubjektu.ToLower())
@@ -99,7 +99,7 @@ namespace HlidacStatu.Web.Controllers
 
             Func<int, int, Nest.ISearchResponse<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>> searchFunc = (size, page) =>
             {
-                return HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                return HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                             .Size(size)
                             .From(page * size)
@@ -109,7 +109,7 @@ namespace HlidacStatu.Web.Controllers
             };
 
             HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
-                HlidacStatu.Lib.ES.Manager.GetESClient_Ucty(),
+                HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                 searchFunc,
                 (p, o) =>
                 {

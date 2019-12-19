@@ -254,7 +254,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         {
             if (string.IsNullOrEmpty(this.Id))
                 InitId();
-            var es = client ?? ES.Manager.GetESClient_Ucty();
+            var es = client ?? ES.Manager.GetESClient_BankovniPolozky();
             var res = es
                     .DocumentExists<BankovniPolozka>(this.Id);
             return !res.Exists;
@@ -281,7 +281,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 }
                 db.SaveChanges();
             }
-            var ret = ES.Manager.GetESClient_Ucty().Delete<BankovniPolozka>(this.Id);
+            var ret = ES.Manager.GetESClient_BankovniPolozky().Delete<BankovniPolozka>(this.Id);
             return ret.Result == Result.Deleted;
         }
 
@@ -289,7 +289,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         {
             if (updateId || string.IsNullOrEmpty(this.Id))
                 InitId();
-            var es = client ?? ES.Manager.GetESClient_Ucty();
+            var es = client ?? ES.Manager.GetESClient_BankovniPolozky();
 
             var prev = BankovniPolozka.Get(this.Id);
 
@@ -300,7 +300,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public static BankovniPolozka Get(string transactionId)
         {
-            var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+            var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                 .Get<BankovniPolozka>(transactionId);
             //.Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(m => m
             //    .Query(qq => qq

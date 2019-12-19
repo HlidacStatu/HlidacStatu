@@ -57,7 +57,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             Func<int, int, ISearchResponse<BankovniUcet>> searchFunc = 
                 (size, page) =>
                 {
-                    return ES.Manager.GetESClient_Ucty().Search<BankovniUcet>(a => a
+                    return ES.Manager.GetESClient_BankovniUcty().Search<BankovniUcet>(a => a
                                 .Source(ss => ss.ExcludeAll())
                                 //.Fields(f => f.Field("Id"))
                                 .Size(size)
@@ -67,7 +67,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 };
 
             HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(
-                ES.Manager.GetESClient_Ucty(), searchFunc,
+                ES.Manager.GetESClient_BankovniUcty(), searchFunc,
                 (p, o) =>
                 {
                     bu.Add(BankovniUcty.Get(p.Id));
@@ -124,7 +124,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
             if (bu != null)
             {
-                res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                                         .Search<BankovniPolozka>(a => a
                                             .Size(500)
                                             .Aggregations(aggrFunc)
@@ -141,7 +141,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             }
             else
             {
-                res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                             .Size(500)
                             .Aggregations(aggrFunc)
