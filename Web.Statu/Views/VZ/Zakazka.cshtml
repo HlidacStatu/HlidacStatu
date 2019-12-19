@@ -25,7 +25,7 @@
     string bookmarkId = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(Model);
     bool bookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(Model, User?.Identity?.Name);
 
-    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
+    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
 
 }
 

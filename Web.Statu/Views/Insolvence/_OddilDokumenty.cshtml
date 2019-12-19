@@ -3,7 +3,7 @@
 
 @{
     var tableId = $"documents-{Model.Oddil}";
-    Nest.HighlightFieldDictionary highlightingData = Model.HighlightingData;
+    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = Model.HighlightingData;
 
 }
 

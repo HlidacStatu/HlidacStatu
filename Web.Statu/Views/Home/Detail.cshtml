@@ -23,7 +23,7 @@
 
     bool znepristupnena = Model.znepristupnenaSmlouva();
 
-    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
+    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
 
 
 }

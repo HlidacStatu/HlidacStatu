@@ -14,7 +14,7 @@
     ViewBag.Title = Model.Dataset.Registration().name;
     ViewBag.SubTitle = itemId ;
 
-    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
+    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
 
 }
 @section scripts

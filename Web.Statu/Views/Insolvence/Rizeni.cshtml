@@ -18,7 +18,7 @@
     var veritele = Model.Rizeni.Veritele.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
     var spravci = Model.Rizeni.Spravci.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
 
-    Nest.HighlightFieldDictionary highlightingData = ViewBag.Highlighting as Nest.HighlightFieldDictionary;
+    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
     bool highlighting = highlightingData?.Keys?.Contains("dokumenty.plainText") == true;
 
 
