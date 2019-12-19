@@ -22,7 +22,7 @@
 
 
     var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("issues.issueTypeId:100", 1, 0,
-        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, platnyZaznam: 1);
+        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, platnyZaznam: true);
 
     ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
         {

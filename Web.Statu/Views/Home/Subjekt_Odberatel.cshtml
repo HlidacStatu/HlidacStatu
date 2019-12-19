@@ -34,7 +34,7 @@
 
     var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPlatce:" + ico, 1, 0,
         HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
-        anyAggregation: aggs, platnyZaznam: 1);
+        anyAggregation: aggs, platnyZaznam: true);
 
     ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
    {

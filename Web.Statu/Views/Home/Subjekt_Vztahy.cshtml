@@ -34,7 +34,7 @@
 
     var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + ico, 1, 0,
         HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
-        anyAggregation: aggs, platnyZaznam: 1);
+        anyAggregation: aggs, platnyZaznam: true);
 
 
     Dictionary<string, HlidacStatu.Lib.Analysis.SubjectWithSubjectStatistic> topPartnersIcos = null;

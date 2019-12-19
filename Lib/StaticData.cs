@@ -434,13 +434,13 @@ namespace HlidacStatu.Lib
                             try
                             {
 
-                                var res = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: 1, anyAggregation:
+                                var res = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: true, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
                                     )
                                     );
-                                var resNepl = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: 0, anyAggregation:
+                                var resNepl = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: false, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)

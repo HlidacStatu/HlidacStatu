@@ -495,7 +495,7 @@ namespace HlidacStatu.Lib.Data
 
                     var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + firma.ico, 1, 0,
                         HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
-                        anyAggregation: aggs, platnyZaznam: 1);
+                        anyAggregation: aggs, platnyZaznam: true);
 
 
                     var objednatele = new List<Analysis.BasicData<string>>();

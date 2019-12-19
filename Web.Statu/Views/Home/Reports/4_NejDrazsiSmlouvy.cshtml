@@ -13,7 +13,7 @@
     var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString);
 
     model = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("*", model.Page,
-100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: 1);
+100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: true);
 
     model.Chyby = true;
 }

@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Data
                     1, 50, ES.SearchTools.OrderResult.DateAddedDesc, null
                     );
                 var resNeplatne = ES.SearchTools.SimpleSearch("identifikator.idSmlouvy:" + this.identifikator.idSmlouvy,
-                    1, 50, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: 0
+                    1, 50, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: false
                     );
 
                 if (res.IsValid == false)
@@ -152,7 +152,7 @@ namespace HlidacStatu.Lib.Data
                     );
                 var resN = ES.SearchTools.RawSearch(
                     new QueryContainerDescriptor<Lib.Data.Smlouva>().Bool(b => b.Must(query)),
-                        1, numOfResults, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: 0
+                        1, numOfResults, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: false
                     );
 
                 if (res.IsValid == false)

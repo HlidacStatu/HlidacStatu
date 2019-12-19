@@ -709,7 +709,7 @@ namespace HlidacStatu.Web.Controllers
                 if (string.IsNullOrWhiteSpace(query))
                     return View("Error404");
 
-                int? platnyzaznam = null; //1 - nic defaultne
+                bool? platnyzaznam = null; //1 - nic defaultne
                 if (
                     System.Text.RegularExpressions.Regex.IsMatch(query.ToLower(), "(^|\\s)id:")
                     ||
@@ -786,7 +786,7 @@ namespace HlidacStatu.Web.Controllers
                     pageSize = 500;
 
                 var items = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("NOT(_exists_:prilohy.datlClassification)", 0, pageSize,
-                    HlidacStatu.Lib.ES.SearchTools.OrderResult.DateAddedDesc, platnyZaznam: 1);
+                    HlidacStatu.Lib.ES.SearchTools.OrderResult.DateAddedDesc, platnyZaznam: true);
 
                 if (!items.IsValid)
                 {

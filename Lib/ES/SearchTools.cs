@@ -235,7 +235,7 @@ namespace HlidacStatu.Lib.ES
 
         public static SmlouvaSearchResult Search(QueryContainer query, int page, int pageSize, OrderResult order,
     AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
+    bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
     bool withHighlighting = false)
         {
 
@@ -266,7 +266,7 @@ namespace HlidacStatu.Lib.ES
 
         public static SmlouvaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order,
     AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-    int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
+    bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
     bool withHighlighting = false)
         {
 
@@ -305,7 +305,7 @@ namespace HlidacStatu.Lib.ES
             }
 
             if (platnyZaznam.HasValue)
-                query = Lib.Search.Tools.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value);
+                query = Lib.Search.Tools.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value.ToString().ToLower());
 
 
             ISearchResponse<Lib.Data.Smlouva> res =
@@ -331,7 +331,7 @@ namespace HlidacStatu.Lib.ES
         private static ISearchResponse<Lib.Data.Smlouva> _coreSearch(QueryContainer query, int page, int pageSize,
             OrderResult order,
             AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
-            int? platnyZaznam = null, bool includeNeplatne = false, bool logError = true,
+            bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true,
             bool withHighlighting = false)
         {
             page = page - 1;
@@ -355,7 +355,7 @@ namespace HlidacStatu.Lib.ES
             try
             {
                 var client = Lib.ES.Manager.GetESClient();
-                if (platnyZaznam == 0)
+                if (platnyZaznam.HasValue && platnyZaznam == false)
                     client = Lib.ES.Manager.GetESClient_Sneplatne();
                 Indices indexes = client.ConnectionSettings.DefaultIndex;
                 if (includeNeplatne)
@@ -395,13 +395,13 @@ namespace HlidacStatu.Lib.ES
 
 
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(string jsonQuery, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, int? platnyZaznam = null, bool includeNeplatne = false
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, bool includeNeplatne = false
             )
         {
             return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne);
         }
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(Nest.QueryContainer query, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, int? platnyZaznam = null, bool includeNeplatne = false,
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, bool includeNeplatne = false,
             bool withHighlighting = false
             )
         {
@@ -696,7 +696,7 @@ namespace HlidacStatu.Lib.ES
 
         public static SmlouvaSearchResult CachedSimpleSearch(TimeSpan expiration,
             string query, int page, int pageSize, OrderResult order,
-            int? platnyZaznam = null, bool includeNeplatne = false,
+            bool? platnyZaznam = null, bool includeNeplatne = false,
             bool logError = true, bool fixQuery = true
             )
         {
@@ -732,7 +732,7 @@ namespace HlidacStatu.Lib.ES
             public OrderResult order;
 
             public AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null;
-            public int? platnyZaznam = null;
+            public bool? platnyZaznam = null;
             public bool includeNeplatne = false;
             public bool logError = true;
             public bool fixQuery = true;
