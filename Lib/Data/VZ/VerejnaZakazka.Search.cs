@@ -301,7 +301,8 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
                 //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, rules); ;
-                var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(query, irules);
+                //var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(query, irules);
+                var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, irules);
 
                 return qc;
 
