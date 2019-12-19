@@ -13,7 +13,6 @@
     var politiciVds = ds.ESClient.Search<object>(s => s
         .MatchAll()
         .Size(0)
-        .Type("data")
         .Aggregations(a => a
             .Terms("osoby", m => m
                 .Size(100)
@@ -30,7 +29,6 @@
     var serveryVds = ds.ESClient.Search<object>(s => s
         .MatchAll()
         .Size(0)
-        .Type("data")
         .Aggregations(a => a
             .Terms("servery", m => m
                 .Size(100)
