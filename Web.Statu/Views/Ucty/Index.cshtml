@@ -130,7 +130,7 @@
         <div class="col-sm-4 col-xs-12">
             <h3>Nejvyšší transakce za poslední měsíc</h3>
             @{
-                var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                         .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                             .Size(25)
                             .From(0)
