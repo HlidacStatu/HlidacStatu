@@ -125,12 +125,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     );
             }
 
-            var arr = res.Hits.ToArray();
-            for (int i = 0; i < res.Hits.Count; i++)
-            {
-                var of1 = Newtonsoft.Json.JsonConvert.SerializeObject(arr[i].Source);
-            }
-
             if (res.Total > 0)
                 return new DataSearchRawResult()
                 {

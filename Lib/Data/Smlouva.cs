@@ -419,7 +419,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public tIdentifikator identifikator;
+        public tIdentifikator identifikator;// { get; set; }
 
         [Nest.Keyword]
         public string odkaz { get; set; }

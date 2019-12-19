@@ -393,7 +393,7 @@
                 <div class="block-table">
                     @{
 
-                        var res = HlidacStatu.Lib.ES.Manager.GetESClient_Ucty()
+                        var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
                                 .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
                                     .Size(6)
                                     .From(0)
