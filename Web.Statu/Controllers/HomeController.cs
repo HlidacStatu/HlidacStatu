@@ -1317,7 +1317,12 @@ text zpravy: {txt}";
         public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1200x628")
         {
             string mainUrl = this.Request.Url.Scheme + "://" + this.Request.Url.Host;
+            if (System.Diagnostics.Debugger.IsAttached)
+                mainUrl = "https://www.hlidacstatu.cz";
 
+#if (DEBUG)
+            mainUrl = "https://www.hlidacstatu.cz";
+#endif
             //twitter Recommended size: 1024 x 512 pixels
             //fb Recommended size: 1200 pixels by 630 pixels
 

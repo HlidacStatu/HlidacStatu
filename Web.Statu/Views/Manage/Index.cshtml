@@ -29,7 +29,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" >Jak přidat nového hlídače</h4>
+                                <h4 class="modal-title">Jak přidat nového hlídače</h4>
                             </div>
                             <div class="modal-body">
                                 <p><code>Hlídač nových smluv</code> nebo <code>Hlídač veřejných zakázek</code> je jednoduše vyhledávací dotaz, který se spustí vždy po vložení nových smluv.</p>
@@ -68,15 +68,19 @@
 
     </dl>
     <hr />
-    <dl>
-        <dt>Pro adminy</dt>
-        <dd>
-            @if (this.User.IsInRole("canEditData"))
-            {
+    @if (this.User.IsInRole("canEditData"))
+    {
+        <h3>Pro Adminy</h3>
+        <dl>
+            <dd>
                 <dl>
                     <dt>Klasifikace smluv</dt>
-                    <dd><form action="showclassification" method="get"><input type="text" id="id" name="id" value="" placeholder="ID smlouvy" >
-                        <input type="submit" value="Ukaz" /></form></dd>
+                    <dd>
+                        <form action="showclassification" method="get">
+                            <input type="text" id="id" name="id" value="" placeholder="ID smlouvy">
+                            <input type="submit" value="Ukaz" />
+                        </form>
+                    </dd>
                 </dl>
                 <dl>
                     <dt>Reviews:</dt>
@@ -139,170 +143,119 @@
                     <dd>
                         <a href="/manage/debug">debug</a>
                     </dd>
-                    <dt><h2>Social Image</h2></dt>
-                    <dd></dd>
-                    <dt><h3>Custom quote</h3></dt>
-                    <dd>
+                </dl>
+                <h2>Social Image</h2>
+
+                <h3>Subjekt</h3>
+                @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
+                <form action="/socialbanner/subjekt" method="get" class="form">
+                    <div class="row">
+
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group-sm">
+                                <label for="v">ICO</label>
+                                <input type="text" class="form-control--240" name="v" placeholder="ico">
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group-sm">
+                                <label for="img">pomer stran</label>
+                                <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+                <h3>osoba</h3>
+                <form action="/socialbanner/osoba" method="get" class="form">
+                    <div class="row">
+
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group-sm">
+                                <label for="v">Osoba NameId</label>
+                                <input type="text" class="form-control--240" name="v" placeholder="osoba nameId">
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group-sm">
+                                <label for="img">pomer stran</label>
+                                <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
+
+
+                <hr />
+                <h3>Custom quote</h3>
+                <div class="row">
+                    <div class="col-xs-6">
 
                         <h4>uvozovky: „ … “ </h4>
+                        <h4>&lt;b&gt;<b style="color:#E0A514">tučně oranžová</b>&lt;/b&gt; &nbsp; &lt;i&gt;<i>tučně</i>&lt;/i&gt;</h4>
                         @*/SocialBanner?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
-                        <form action="/socialbanner/quote" method="get" class="form-horizontal" target="_blank">
+                    <form id="customQuoteForm" action="/socialbanner/quote" method="get" class="form-horizontal" onsubmit="updateImg(); return false;">
 
-                            <div class="form-group-sm">
-                                <label for="jmeno" class="col-sm-2 control-label">Titulek (nepovinne)</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control--240" name="t" placeholder="titulek">
-                                </div>
+                        <div class="form-group-sm">
+                            <label for="jmeno" class="col-xs-2 control-label">Titulek (nepovinne)</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control--240" name="t" placeholder="titulek">
                             </div>
-                            <div class="form-group-sm">
-                                <label for="prijmeni" class="col-sm-2 control-label">body</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control--240" name="b" placeholder="text">
-                                </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group-sm">
+                            <label for="prijmeni" class="col-xs-2 control-label">body</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control--240" name="b" placeholder="text">
                             </div>
-                            <div class="form-group-sm">
-                                <label for="prijmeni" class="col-sm-2 control-label">footer</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control--240" name="f" placeholder="text">
-                                </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group-sm">
+                            <label for="prijmeni" class="col-xs-2 control-label">footer</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control--240" name="f" placeholder="text">
                             </div>
-                            <div class="form-group-sm">
-                                <label for="jmeno" class="col-sm-2 control-label">sub footer</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control--240" name="st" placeholder="titulek">
-                                </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group-sm">
+                            <label for="jmeno" class="col-xs-2 control-label">sub footer</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control--240" name="st" placeholder="titulek">
                             </div>
-                            <div class="form-group-sm">
-                                <label for="img" class="col-sm-2 control-label">img</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control--240" name="img" placeholder="img url">
-                                </div>
+                        </div>
+                        <div class="form-group-sm">
+                            <label for="img" class="col-xs-2 control-label">img</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control--240" name="img" placeholder="img url">
                             </div>
-                            <div class="form-group-sm">
-                                <label for="img" class="col-sm-2 control-label">pomer stran</label>
-                                <div class="col-sm-10" style="border-bottom: 1px solid gray;">
-                                    <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
-                                    <button type="submit" class="btn btn-default btn-sm">Generuj</button>
-                                </div>
+                        </div>
+                        <div class="form-group-sm">
+                            <label for="img" class="col-xs-2 control-label">pomer stran</label>
+                            <div class="col-xs-10" style="border-bottom: 1px solid gray;">
+                                <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                <button type="submit" class="btn btn-default btn-sm">Generuj</button>
                             </div>
-                        </form>
-                    </dd>
-
-                    <dt>
-                        <h3>Subjekt</h3>
-                    </dt>
-                    <dd>
-                        @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
-                        <form action="/socialbanner/subjekt" method="get" class="form">
-                            <div class="row">
-
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group-sm">
-                                        <label for="v">ICO</label>
-                                        <input type="text" class="form-control--240" name="v" placeholder="ico">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group-sm">
-                                        <label for="img">pomer stran</label>
-                                        <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
-                                        <button type="submit" class="btn btn-default btn-sm">Generuj</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-
-                    </dd>
-                    <dt><h3>osoba</h3></dt>
-                    <dd>
-                        @*/SocialBanner/subjekt?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
-                        <form action="/socialbanner/osoba" method="get" class="form">
-                            <div class="row">
-
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group-sm">
-                                        <label for="v">Osoba NameId</label>
-                                        <input type="text" class="form-control--240" name="v" placeholder="osoba nameId">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group-sm">
-                                        <label for="img">pomer stran</label>
-                                        <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
-                                        <button type="submit" class="btn btn-default btn-sm">Generuj</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-
-                    </dd>
+                        </div>
+                    </form>
+                        <script>
+                            function updateImg() {
+                                var targetUrl = "/socialbanner/quote?" + $("#customQuoteForm").serialize();
+                                $("#quotepreview").attr("src", targetUrl);
+                            }
+                        </script>
+                    </div>
+                    <div class="col-xs-6">
+                        <img id="quotepreview" style="width:100%;height:auto;border:1px solid red;" src="" />
+                    </div>
+                </div>
 
 
-                </dl>
-            }
-
-        </dd>
-    </dl>
-    @*
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-
-             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-
-             Uncomment the following block after you have set up two-factor authentication
-
-                <dt>Phone Number:</dt>
-                <dd>
-                    @(Model.PhoneNumber ?? "None")
-                    @if (Model.PhoneNumber != null)
-                    {
-                        <br />
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                        }
-                    }
-                    else
-                    {
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                    }
-                </dd>
-
-            <dt>Two-Factor Authentication:</dt>
-            <dd>
-                <p>
-                    There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication.
-                </p>
-                @if (Model.TwoFactor)
-                    {
-                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Enabled
-                            <input type="submit" value="Disable" class="btn btn-link" />
-                            </text>
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Disabled
-                            <input type="submit" value="Enable" class="btn btn-link" />
-                            </text>
-                        }
-                    }
-            </dd>*@
-
+            </dd>
+        </dl>
+    }
 </div>
