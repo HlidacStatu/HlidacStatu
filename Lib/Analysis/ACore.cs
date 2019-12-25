@@ -75,7 +75,8 @@ namespace HlidacStatu.Lib.Analysis
 
 
             var client = HlidacStatu.Lib.ES.Manager.GetESClient();
-            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs);
+            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, 0, 0, 
+                HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, true, exactNumOfResults: true);
             if (res.IsValid == false)
             {
                 return BasicDataPerYear.Empty();
@@ -140,7 +141,8 @@ namespace HlidacStatu.Lib.Analysis
                 result.Add(year, RatingData.Empty());
             }
 
-            var bezCenyStat = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("issues.issueTypeId:100 " + query, 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggY);
+            var bezCenyStat = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("issues.issueTypeId:100 " + query, 1, 0, 
+                HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggY, exactNumOfResults:true);
             if (bezCenyStat.IsValid)
                 foreach (Nest.DateHistogramBucket val in ((BucketAggregate)bezCenyStat.ElasticResults.Aggregations["x-agg"]).Items)
                 {
@@ -150,8 +152,10 @@ namespace HlidacStatu.Lib.Analysis
                     }
                 }
 
-            var bezSmluvniStr = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(issues.issueTypeId:18 OR issues.issueTypeId:12) AND " + query, 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggYSum);
+            var bezSmluvniStr = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(issues.issueTypeId:18 OR issues.issueTypeId:12) AND " + query, 1, 0, 
+                HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggYSum, exactNumOfResults: true);
             if (bezSmluvniStr.IsValid)
+
                 foreach (Nest.DateHistogramBucket val in ((BucketAggregate)bezSmluvniStr.ElasticResults.Aggregations["x-agg"]).Items)
                 {
                     if (result.ContainsKey(val.Date.Year))
@@ -202,7 +206,8 @@ namespace HlidacStatu.Lib.Analysis
                 result.Add(year, BasicData.Empty());
             }
 
-            var bezCenyStat = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("issues.issueTypeId:100 " + query, 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggY);
+            var bezCenyStat = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("issues.issueTypeId:100 " + query, 1, 0, 
+                HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggY, exactNumOfResults: true);
             foreach (Nest.DateHistogramBucket val in ((BucketAggregate)bezCenyStat.ElasticResults.Aggregations["x-agg"]).Items)
             {
                 if (result.ContainsKey(val.Date.Year))

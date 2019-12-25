@@ -50,6 +50,8 @@ namespace HlidacStatu.Lib.ES
             }
         }
 
+        public bool ExactNumOfResults { get; set; } = false;
+
         public List<System.Web.Mvc.SelectListItem> OrderList { get; set; } = null;
         public Func<T, string> AdditionalRender = null;
 

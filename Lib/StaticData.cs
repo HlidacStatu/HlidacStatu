@@ -438,13 +438,13 @@ namespace HlidacStatu.Lib
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
-                                    )
+                                    ), exactNumOfResults:true
                                     );
                                 var resNepl = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: false, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
-                                    )
+                                    ), exactNumOfResults: true
                                     );
 
                                 long platnych = res.Total;
@@ -458,7 +458,7 @@ namespace HlidacStatu.Lib
                                 pol.Add(celkemKc);
                                 return pol;
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
                                 pol.Add(0);
                                 pol.Add(0);

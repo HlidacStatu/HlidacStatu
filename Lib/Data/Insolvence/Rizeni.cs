@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Data.Entity.Infrastructure;
 using static Devmasters.Core.DateTimeUtil;
 using HlidacStatu.Lib.Db.Insolvence;
+using Nest;
 
 namespace HlidacStatu.Lib.Data.Insolvence
 {
@@ -575,13 +576,15 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         }
 
-        public void Save()
+        public void Save(ElasticClient client = null)
         {
             if (this.IsFullRecord == false)
                 throw new ApplicationException("Cannot save partial Insolvence document");
 
+            if (client == null)
+                client = ES.Manager.GetESClient_Insolvence();
             this.PrepareForSave();
-            var res = ES.Manager.GetESClient_Insolvence().Index<Rizeni>(this, o => o.Id(this.SpisovaZnacka.ToString())); //druhy parametr musi byt pole, ktere je unikatni
+            var res = client.Index<Rizeni>(this, o => o.Id(this.SpisovaZnacka.ToString())); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 throw new ApplicationException(res.ServerError?.ToString());

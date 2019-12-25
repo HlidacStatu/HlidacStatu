@@ -267,7 +267,7 @@ namespace HlidacStatu.Lib.ES
         public static SmlouvaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order,
     AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
     bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
-    bool withHighlighting = false)
+    bool withHighlighting = false, bool exactNumOfResults = false)
         {
 
             var result = new SmlouvaSearchResult()
@@ -310,7 +310,7 @@ namespace HlidacStatu.Lib.ES
 
             ISearchResponse<Lib.Data.Smlouva> res =
                 _coreSearch(GetSimpleQuery(query), page, pageSize, order, anyAggregation, platnyZaznam,
-                includeNeplatne, logError, withHighlighting);
+                includeNeplatne, logError, withHighlighting, exactNumOfResults);
 
             Data.Audit.Add(Data.Audit.Operations.Search, "", "", "Smlouva", res.IsValid ? "valid" : "invalid", query, null);
 
@@ -320,8 +320,15 @@ namespace HlidacStatu.Lib.ES
             sw.Stop();
 
             result.ElapsedTime = sw.Elapsed;
+            try
+            {
+                result.Total = res?.Total ?? 0;
 
-            result.Total = res?.Total ?? 0;
+            }
+            catch (Exception)
+            {
+                result.Total = 0;
+            }
             result.IsValid = res?.IsValid ?? false;
             result.ElasticResults = res;
             return result;
@@ -332,7 +339,7 @@ namespace HlidacStatu.Lib.ES
             OrderResult order,
             AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
             bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true,
-            bool withHighlighting = false)
+            bool withHighlighting = false, bool exactNumOfResults = false)
         {
             page = page - 1;
             if (page < 0)
@@ -373,6 +380,7 @@ namespace HlidacStatu.Lib.ES
                         .Sort(ss => GetSort(order))
                         .Aggregations(aggrFunc)
                         .Highlight(h => Lib.Search.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
+                        .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
 
                 );
 
@@ -395,17 +403,20 @@ namespace HlidacStatu.Lib.ES
 
 
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(string jsonQuery, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, bool includeNeplatne = false
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, 
+            bool includeNeplatne = false, bool exactNumOfResults = false
             )
         {
-            return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne);
+            return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne, 
+                exactNumOfResults: exactNumOfResults);
         }
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(Nest.QueryContainer query, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, bool includeNeplatne = false,
-            bool withHighlighting = false
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, 
+            bool includeNeplatne = false,
+            bool withHighlighting = false, bool exactNumOfResults = false
             )
         {
-            var res = _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam: platnyZaznam, includeNeplatne: includeNeplatne, logError: true, withHighlighting: withHighlighting);
+            var res = _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam: platnyZaznam, includeNeplatne: includeNeplatne, logError: true, withHighlighting: withHighlighting, exactNumOfResults: exactNumOfResults);
             return res;
 
         }

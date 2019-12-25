@@ -233,12 +233,12 @@
 
                     Celkem <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                              new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0 }).Total
+                              new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total
                         )
                     </strong> zakázek,
                     <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                                          new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0 }).Total)
+                                          new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total)
                     </strong> letos.
                 </p>
             </div>
@@ -257,7 +257,8 @@
                                 Q = "zverejneno:[" + DateTime.Now.Date.AddMonths(-3).ToString("yyyy-MM-dd") + " TO *]",
                                 Oblast = obl.Value,
                                 Page = 0,
-                                PageSize = 0
+                                PageSize = 0,
+                                ExactNumOfResults=true
                             }).Total;
                         topVZ.Add(
                             new Tuple<string, string, long>(

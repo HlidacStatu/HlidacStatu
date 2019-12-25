@@ -6,7 +6,7 @@ using Devmasters.Core;
 
 namespace HlidacStatu.Util
 {
-    public static class RenderData
+    public static partial class RenderData
     {
 
         public static string[,] NazvyStranŹkratky = {
@@ -28,6 +28,22 @@ namespace HlidacStatu.Util
                 return c.ToString();
         }
 
+        public static string NumberOfResults(long value)
+        {
+            return NiceNumber(value);
+        }
+
+        public static string NumberOfResults(Nest.TotalHits hits)
+        {
+            if (hits == null)
+                return "0";
+            if (hits.Relation == Nest.TotalHitsRelation.EqualTo)
+                return NumberOfResults(hits.Value);
+            else if (hits.Relation == Nest.TotalHitsRelation.GreaterThanOrEqualTo)
+                return "více než " + NiceNumber(hits.Value);
+            else 
+                return NiceNumber(hits.Value);
+        }
 
         public static string EmailAnonymizer(string email)
         {
