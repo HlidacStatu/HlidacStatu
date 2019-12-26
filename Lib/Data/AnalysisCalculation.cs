@@ -495,7 +495,7 @@ namespace HlidacStatu.Lib.Data
 
                     var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + firma.ico, 1, 0,
                         HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
-                        anyAggregation: aggs, platnyZaznam: true);
+                        anyAggregation: aggs, platnyZaznam: true, exactNumOfResults:true);
 
 
                     var objednatele = new List<Analysis.BasicData<string>>();
@@ -595,7 +595,7 @@ namespace HlidacStatu.Lib.Data
                     else
                     {
 
-                        var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs);
+                        var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, exactNumOfResults: true);
                         if (res.Result.Aggregations.Count > 0)
                         {
                             var epoch = ((Nest.ValueAggregate)res.Result.Aggregations.First().Value).Value;

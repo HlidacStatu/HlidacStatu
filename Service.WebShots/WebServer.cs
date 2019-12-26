@@ -39,7 +39,7 @@ namespace HlidacStatu.Service.WebShots
                 //if (data == null)
                 //    HlidacStatu.Util.WebShot.Url2PngSingle_Chrome.Screenshot(url);
 
-                Program.logger.Debug($"return {data.Length} bytes |  png?url={url}");
+                Program.logger.Debug($"return {data?.Length ?? 0} bytes |  png?url={url}");
 
                 return new ByteArrayResponse(data ?? new byte[] { }, "image/png");
                 

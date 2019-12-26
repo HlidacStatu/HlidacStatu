@@ -46,7 +46,7 @@ namespace HlidacStatu.Web.Framework.Report
             //var res = HlidacStatu.Lib.ES.SearchTools.RawSearch(
             //    "{\"query_string\": { \"query\": \"-id:pre* AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO "+ HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}\" } }"
             //        , 1, 0, anyAggregation: aggs);
-            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs);
+            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
 
             ReportDataSource rds = new ReportDataSource(new ReportDataSource.Column[]
                 {
@@ -120,7 +120,7 @@ namespace HlidacStatu.Web.Framework.Report
                 new ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); } },
             });
 
-            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs);
+            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
 
             foreach (Nest.DateHistogramBucket val in
                     ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
@@ -260,7 +260,7 @@ namespace HlidacStatu.Web.Framework.Report
                 );
 
             //var res = HlidacStatu.Lib.ES.SearchTools.RawSearch("{\"query_string\": { \"query\": \"-id:pre*\" } }", 1, 0, anyAggregation: aggs);
-            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(" + query + ") AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs);
+            var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(" + query + ") AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
 
             ReportDataSource rds = new ReportDataSource(new ReportDataSource.Column[]
                 {

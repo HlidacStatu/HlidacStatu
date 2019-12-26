@@ -729,7 +729,7 @@ namespace HlidacStatu.Lib.ES
         {
             var q = Newtonsoft.Json.JsonConvert.DeserializeObject<FullSearchQuery>(jsonFullSearchQuery);
             var ret = SimpleSearch(
-                q.query, q.page, q.pageSize, q.order, q.anyAggregation, q.platnyZaznam, q.includeNeplatne, q.logError, q.fixQuery
+                q.query, q.page, q.pageSize, q.order, q.anyAggregation, q.platnyZaznam, q.includeNeplatne, q.logError, q.fixQuery, exactNumOfResults: q.exactNumOfResults
                 );
             //remove debug & more
             return ret;
@@ -747,6 +747,7 @@ namespace HlidacStatu.Lib.ES
             public bool includeNeplatne = false;
             public bool logError = true;
             public bool fixQuery = true;
+            public bool exactNumOfResults = false;
         }
 
     }

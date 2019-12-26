@@ -269,7 +269,7 @@
 
             if (insRes.IsValid && insRes.Total > 0)
             {
-                tabs.Add($"V insolvenčním rejstříku ({Util.PocetVysledku(insRes.Total)})");
+                tabs.Add($"V insolvenčním rejstříku ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(insRes.Total)})");
                 results.Add(
                     SearchResults.InsolvenceTableResult(this.User, this.Request, 5, insRes).ToHtmlString()
                 );
@@ -277,7 +277,7 @@
 
             if (resVZ.IsValid && resVZ.Total > 0)
             {
-                tabs.Add($"Účast ve veřejných zakázkách ({Util.PocetVysledku(resVZ.Total)})");
+                tabs.Add($"Účast ve veřejných zakázkách ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(resVZ.Total)})");
                 results.Add(
                     SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
                 );
@@ -295,7 +295,7 @@
                 numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
             }
             tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
-                .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})")
+                .Select(m => $"{m.DataSet.Registration().name}&nbsp;({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(m.Total)})")
                 );
             foreach (var rds in dsSearch.Results
                .Where(m => m.Total > 0)

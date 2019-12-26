@@ -157,7 +157,7 @@ else if (Model.HasResults == false)
 <div class="row">
     <div class="col-xs-12">
         <div class="new-p new-p--big" style="margin-top: 10px;">
-            Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @Util.NalezenoPocetVysledku(Model.Total).
+            Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @HlidacStatu.Util.RenderData.Vysledky.NalezenoPocetVysledku(Model.Total).
         </div>
     </div>
 </div>
@@ -168,32 +168,32 @@ else if (Model.HasResults == false)
         <div class="searching__counters">
             @if (Model.HasSmlouvy)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", Model.Smlouvy.ToRouteValues(1))">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", Model.Smlouvy.ToRouteValues(1))">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasVZ)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "VZ",Model.VZ.ToRouteValues(1))">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "VZ",Model.VZ.ToRouteValues(1))">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.Insolvence.HasResult)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Insolvence.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.Result.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasOsoby)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Osoby.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
             }
 
             @if (Model.HasTransakce)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Transakce.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span></a></div>
             }
             @if (Model.HasFirmy)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Firmy.Total + (Model.Firmy.Total == HlidacStatu.Lib.Data.Search.FirmyLimit ? "+" : ""))</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
             }
             @if (Model.Datasets.HasResult)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#datasets">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.NumberOfResults(Model.Datasets.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#datasets">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
             }
         </div>
     </div>
@@ -217,7 +217,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené smlouvy
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Smlouvy.Result.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.Total)</span>
                 </div>
                 <div class="table-new searching__watcher__table">
                     @if (Model.Smlouvy.Result.Aggregations != null && Model.Smlouvy.Result.Aggregations.ContainsKey("sumKc"))
@@ -300,7 +300,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené insolvence
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Insolvence.Result.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.Result.Total)</span>
                 </div>
                 <div class="table-new searching__watcher__table">
 
@@ -371,7 +371,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené firmy
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Firmy.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span>
                 </div>
             </div>
         </div>
@@ -425,7 +425,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené transakce na transparetních účtech politických stran
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Transakce.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span>
                 </div>
             </div>
         </div>
@@ -483,7 +483,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Údaje jsme našli i v dalších databázích
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Datasets.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span>
                 </div>
             </div>
         </div>
@@ -492,7 +492,7 @@ else if (Model.HasResults == false)
     <div class="row">
         @{
             var tabs = Model.Datasets.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
-                    .Select(m => $"{m.DataSet.Registration().name}&nbsp;({Util.PocetVysledku(m.Total)})");
+                    .Select(m => $"{m.DataSet.Registration().name}&nbsp;({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(m.Total)})");
             List<string> results = new List<string>();
 
             foreach (var rds in Model.Datasets.Results
@@ -568,7 +568,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené osoby
                     </h2>
-                    <span>@Util.PocetVysledku(Model.Osoby.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span>
                 </div>
             </div>
         </div>
@@ -724,7 +724,7 @@ else if (Model.HasResults == false)
                     <h2 class="new-title">
                         Nalezené veřejné zakázky
                     </h2>
-                    <span>@Util.PocetVysledku(Model.VZ.Total)</span>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Total)</span>
                 </div>
             </div>
         </div>

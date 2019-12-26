@@ -33,18 +33,6 @@ namespace HlidacStatu.Util
             return NiceNumber(value);
         }
 
-        public static string NumberOfResults(Nest.TotalHits hits)
-        {
-            if (hits == null)
-                return "0";
-            if (hits.Relation == Nest.TotalHitsRelation.EqualTo)
-                return NumberOfResults(hits.Value);
-            else if (hits.Relation == Nest.TotalHitsRelation.GreaterThanOrEqualTo)
-                return "více než " + NiceNumber(hits.Value);
-            else 
-                return NiceNumber(hits.Value);
-        }
-
         public static string EmailAnonymizer(string email)
         {
             //todo more validations

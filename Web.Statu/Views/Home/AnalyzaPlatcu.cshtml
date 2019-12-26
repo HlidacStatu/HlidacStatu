@@ -296,7 +296,7 @@
                     {
                         <div class="searching__counter">
                             <a class="link--blue link--big" href="@Html.Raw(rds.DataSet.DatasetSearchUrl(Model.Query, true))">
-                                @rds.DataSet.Registration().name <span class="new-p">@Util.PocetVysledku(rds.Total)</span>
+                                @rds.DataSet.Registration().name <span class="new-p">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(rds.Total)</span>
                             </a>
                         </div>
                     }
