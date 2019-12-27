@@ -186,19 +186,15 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 }
 @helper FirmaMoreInfoLinks(string ico, string linkTemplate = null, string textTemplate = null)
 {
-    var merkIco = HlidacStatu.Util.ParseTools.IcoToMerkIco(ico);
+var merkIco = HlidacStatu.Util.ParseTools.IcoToMerkIco(ico);
 
-    string firmoLink = string.Format("http://www.firmo.cz/cs/osoba/{0}?apc=4801", ico);
-    string merkLink = "https://www.merk.cz/";
-    string linkT = "<a href='{0}' onclick=\"return trackOutLink(this,'Detail');\">&nbsp;<img height='27' src='/Content/Img/{1}' /></a>";
-    string textT = "více na {0}";
+string firmoLink = string.Format("http://www.firmo.cz/cs/osoba/{0}?apc=4801", ico);
+string merkLink = "https://www.merk.cz/";
+string linkT = "<a href='{0}' onclick=\"return trackOutLink(this,'Detail');\">&nbsp;<img height='18' src='/Content/Img/{1}' /></a>";
+string textT = ""; //"více na {0}";
 
     <span class="firmy-more-links">
-        @Html.Raw(string.Format(textT,
-                                                     //string.Format(linkT, firmoLink, "firmo-logo.png"),
-                                                     string.Format(linkT, merkLink, "merk-logo.svg")
-                                                )
-                                     )
+        @Html.Raw(string.Format(textT,string.Format(linkT, merkLink, "merk-logo.svg")))
     </span>
 }
 @helper RenderSearchLinkBetweenSubjects(string platceIco, string prijemceIco)
@@ -213,15 +209,11 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 {
     if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(prijemceIco))
     {
-        @Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>Smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceIco, prefix ?? "", postfix ?? ""))
-
-
+        @Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>Další smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceIco, prefix ?? "", postfix ?? ""))
     }
     else if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(prijemceName))
     {
-        @Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20jmenoPrijemce:\"{1}\"'>Smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceName, prefix ?? "", postfix ?? ""))
-
-
+        @Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20jmenoPrijemce:\"{1}\"'>Další smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceName, prefix ?? "", postfix ?? ""))
     }
 
 
