@@ -39,9 +39,6 @@
 
 @Html.Partial("_SearchForm", Model)
 
-
-<hr style="margin-top: 35px;padding-bottom:15px;" />
-
 @if (Model.Q != null && Model.DataSet.Registration().searchResultTemplate?.IsFullTemplate() == true)
 {
     @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), datasetId: Model.DataSet.DatasetId)
@@ -73,9 +70,10 @@
     return;
 }
 
+<hr style="margin-top: 35px;padding-bottom:15px;" />
+<h2>@(HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.ElasticResultsRaw.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)) na výraz <span class="emphasized">@Model.Q</span>.</h2>
 <div class="row">
     <div class="col-xs-12 col-sm-6">
-        <h2>Nalezeno @Model.Total výsledků</h2>
     </div>
     <div class="col-xs-12 col-sm-6">
         Třídit výsledky podle :
