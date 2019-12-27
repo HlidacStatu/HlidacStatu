@@ -218,7 +218,7 @@ namespace HlidacStatu.Lib.ES
 
 
             //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
-            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Smlouva>(query, irules); 
+            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Smlouva>(query, irules);
             return qc;
         }
 
@@ -248,7 +248,7 @@ namespace HlidacStatu.Lib.ES
                 Order = ((int)order).ToString()
             };
 
-            ISearchResponse<Lib.Data.Smlouva> res =_coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam,
+            ISearchResponse<Lib.Data.Smlouva> res = _coreSearch(query, page, pageSize, order, anyAggregation, platnyZaznam,
                 includeNeplatne, logError, withHighlighting);
 
 
@@ -381,9 +381,22 @@ namespace HlidacStatu.Lib.ES
                         .Aggregations(aggrFunc)
                         .Highlight(h => Lib.Search.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
                         .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
-
                 );
-
+                if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                {
+                    res = client
+                        .Search<Lib.Data.Smlouva>(s => s
+                            .Index(indexes)
+                            .Size(pageSize)
+                            .From(page * pageSize)
+                            .Query(q => query)
+                            .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
+                            .Sort(ss => GetSort(order))
+                            .Aggregations(aggrFunc)
+                            .Highlight(h => Lib.Search.Tools.GetHighlight<Data.Smlouva>(false))
+                            .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+                    );
+                }
             }
             catch (Exception e)
             {
@@ -403,15 +416,15 @@ namespace HlidacStatu.Lib.ES
 
 
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(string jsonQuery, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, 
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null,
             bool includeNeplatne = false, bool exactNumOfResults = false
             )
         {
-            return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne, 
+            return RawSearch(GetRawQuery(jsonQuery), page, pageSize, order, anyAggregation, platnyZaznam, includeNeplatne,
                 exactNumOfResults: exactNumOfResults);
         }
         public static Nest.ISearchResponse<Lib.Data.Smlouva> RawSearch(Nest.QueryContainer query, int page, int pageSize, OrderResult order = OrderResult.Relevance,
-            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null, 
+            AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null, bool? platnyZaznam = null,
             bool includeNeplatne = false,
             bool withHighlighting = false, bool exactNumOfResults = false
             )

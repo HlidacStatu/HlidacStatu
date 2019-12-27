@@ -179,7 +179,23 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
-            }
+                if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                {
+                    res = client
+                        .Search<Rizeni>(s => s
+                        .Size(search.PageSize)
+                        .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
+                        .From(page * search.PageSize)
+                        .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
+                        .Query(q => GetSimpleQuery(search))
+                        //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
+                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                        .Highlight(h => Lib.Search.Tools.GetHighlight<Rizeni>(false))
+                        .Aggregations(aggr => anyAggregation)
+                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                );
+                }
+                }
             catch (Exception e)
             {
                 Audit.Add(Audit.Operations.Search, "", "", "Insolvence", "error", search.Q, null);

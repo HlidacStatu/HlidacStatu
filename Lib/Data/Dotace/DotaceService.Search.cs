@@ -117,6 +117,21 @@ namespace HlidacStatu.Lib.Data.Dotace
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
+                if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                {
+                    res = _esClient
+                            .Search<Dotace>(s => s
+                            .Size(search.PageSize)
+                            .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
+                            .From(page * search.PageSize)
+                            .Query(q => GetSimpleQuery(search))
+                            .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                            .Highlight(h => Lib.Search.Tools.GetHighlight<Dotace>(false))
+                            .Aggregations(aggr => anyAggregation)
+                            .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                    );
+                }
+
             }
             catch (Exception e)
             {

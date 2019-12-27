@@ -214,6 +214,22 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .Sort(ss => sortD)
                     .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(withHighlighting))
             );
+
+            //fix Highlighting for large texts
+            if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+            {
+                res = client
+                    .Search<object>(s => s
+                        .Size(pageSize)
+                        .Source(ss => ss.Excludes(ex => ex.Fields(maps)))
+                        .From(page * pageSize)
+                        .Query(q => qc)
+                        .Sort(ss => sortD)
+                        .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(false))
+                );
+
+            }
+
             Audit.Add(Audit.Operations.Search, "", "", "Dataset."+ds.DatasetId, res.IsValid ? "valid" : "invalid", queryString, null);
 
             return res;

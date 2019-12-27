@@ -310,7 +310,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
             public static ES.VerejnaZakazkaSearchData SimpleSearch(string query, string[] cpv,
-                int page, int pageSize, int order, bool Zahajeny = false, bool withHighlighting = false, 
+                int page, int pageSize, int order, bool Zahajeny = false, bool withHighlighting = false,
                 bool exactNumOfResults = false)
             {
                 return SimpleSearch(
@@ -334,7 +334,7 @@ namespace HlidacStatu.Lib.Data.VZ
             public static ES.VerejnaZakazkaSearchData SimpleSearch(
                 ES.VerejnaZakazkaSearchData search,
                 AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null,
-                bool logError = true, bool fixQuery = true, ElasticClient client = null, 
+                bool logError = true, bool fixQuery = true, ElasticClient client = null,
                 bool withHighlighting = false)
             {
 
@@ -383,15 +383,28 @@ namespace HlidacStatu.Lib.Data.VZ
                     res = client
                         .Search<VerejnaZakazka>(s => s
                             .Size(search.PageSize)
-                            .Source(so=>so.Excludes(ex=>ex.Field("dokumenty.plainText")))
+                            .Source(so => so.Excludes(ex => ex.Field("dokumenty.plainText")))
                             .From(page * search.PageSize)
                             .Query(q => GetSimpleQuery(search))
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                             .Aggregations(aggrFunc)
-                            .Highlight(h =>Lib.Search.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
-                            .TrackTotalHits(search.ExactNumOfResults? true : (bool?)null)
+                            .Highlight(h => Lib.Search.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
+                            .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                     );
-
+                    if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                    {
+                        res = client
+                            .Search<VerejnaZakazka>(s => s
+                                .Size(search.PageSize)
+                                .Source(so => so.Excludes(ex => ex.Field("dokumenty.plainText")))
+                                .From(page * search.PageSize)
+                                .Query(q => GetSimpleQuery(search))
+                                .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                                .Aggregations(aggrFunc)
+                                .Highlight(h => Lib.Search.Tools.GetHighlight<VerejnaZakazka>(false))
+                                .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                        );
+                    }
                 }
                 catch (Exception e)
                 {
@@ -625,7 +638,8 @@ namespace HlidacStatu.Lib.Data.VZ
                 return SimpleSearch(query.search, query.anyAggregation, query.logError, query.fixQuery, query.client);
             }
 
-            private class FullSearchQuery {
+            private class FullSearchQuery
+            {
                 public ES.VerejnaZakazkaSearchData search;
                 public AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null;
                 public bool logError = true;
