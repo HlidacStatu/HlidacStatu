@@ -95,17 +95,25 @@ namespace HlidacStatu.Lib.Data.VZ
 
         public static ProfilZadavatele[] GetByIco(string ico, ElasticClient client = null)
         {
+            try
+            {
+                var f = (client ?? ES.Manager.GetESClient_VZ())
+                    .Search<ProfilZadavatele>(s => s
+                        .Query(q => q
+                            .Term(t => t.Field(ff => ff.Zadavatel.ICO).Value(ico))
+                        )
+                    );
+                if (f.IsValid)
+                    return f.Hits.Select(m => m.Source).ToArray();
+                else
+                    return new ProfilZadavatele[] { };
 
-            var f = (client ?? ES.Manager.GetESClient_VZ())
-                .Search<ProfilZadavatele>(s => s
-                    .Query(q => q
-                        .Term(t => t.Field(ff => ff.Zadavatel.ICO).Value(ico))
-                    )
-                );
-            if (f.IsValid)
-                return f.Hits.Select(m=>m.Source).ToArray();
-            else
+            }
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Error("ERROR ProfilZadavatele.GetByIco for ICO " + ico, e);
                 return new ProfilZadavatele[] { };
+            }
         }
 
         public static ProfilZadavatele GetByRawId(string datasetname, string profileId, ElasticClient client = null)
