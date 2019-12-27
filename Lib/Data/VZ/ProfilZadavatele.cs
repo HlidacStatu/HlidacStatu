@@ -56,7 +56,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 && !string.IsNullOrEmpty(this.Url)
                 )
             {
-                var es = (client ?? ES.Manager.GetESClient_VZ())
+                var es = (client ?? ES.Manager.GetESClient_ProfilZadavatele())
                     .IndexDocument<ProfilZadavatele>(this);
 
             }
@@ -65,7 +65,7 @@ namespace HlidacStatu.Lib.Data.VZ
         public static ProfilZadavatele GetByUrl(string url, ElasticClient client = null)
         {
 
-            var f = (client ?? ES.Manager.GetESClient_VZ())
+            var f = (client ?? ES.Manager.GetESClient_ProfilZadavatele())
                 .Search<ProfilZadavatele>(s => s
                     .Query(q => q
                         .Term(t => t.Field(ff => ff.Url).Value(url))
@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Data.VZ
         {
             if (string.IsNullOrEmpty(profileId))
                 return null;
-            var f = (client ?? ES.Manager.GetESClient_VZ())
+            var f = (client ?? ES.Manager.GetESClient_ProfilZadavatele())
                 .Get<ProfilZadavatele>(profileId);
             if (f.Found)
                 return f.Source;
@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data.VZ
         {
             try
             {
-                var f = (client ?? ES.Manager.GetESClient_VZ())
+                var f = (client ?? ES.Manager.GetESClient_ProfilZadavatele())
                     .Search<ProfilZadavatele>(s => s
                         .Query(q => q
                             .Term(t => t.Field(ff => ff.Zadavatel.ICO).Value(ico))

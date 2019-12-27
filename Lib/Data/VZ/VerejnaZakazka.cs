@@ -601,16 +601,25 @@ namespace HlidacStatu.Lib.Data.VZ
 
         public void Save(ElasticClient client = null, DateTime? posledniZmena = null)
         {
-            if (string.IsNullOrEmpty(this.Id))
-                InitId();
-            SetStavZakazky();
-            this.LastUpdated = DateTime.Now;
-            if (posledniZmena.HasValue)
-                this.PosledniZmena = posledniZmena;
-            else
-                this.PosledniZmena = GetPosledniZmena();
-            var es = client ?? ES.Manager.GetESClient_VZ();
-            es.IndexDocument<VerejnaZakazka>(this);
+            try
+            {
+                if (string.IsNullOrEmpty(this.Id))
+                    InitId();
+                SetStavZakazky();
+                this.LastUpdated = DateTime.Now;
+                if (posledniZmena.HasValue)
+                    this.PosledniZmena = posledniZmena;
+                else
+                    this.PosledniZmena = GetPosledniZmena();
+                var es = client ?? ES.Manager.GetESClient_VZ();
+                es.IndexDocument<VerejnaZakazka>(this);
+
+            }
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Error("VZ ERROR Save ID " + this.Id, e);
+                HlidacStatu.Util.Consts.Logger.Info("VZ ERROR Save ID \nContent:\n\n" + Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented));
+            }
         }
 
         public static VerejnaZakazka LoadFromES(string id, ElasticClient client = null)
