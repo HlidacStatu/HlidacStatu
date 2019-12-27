@@ -8,6 +8,35 @@ namespace HlidacStatu.Util
 {
     public static partial class RenderData
     {
+        public enum CapitalizationStyle
+        { 
+            AllUpperCap,
+            EveryWordUpperCap,
+            FirstLetterUpperCap,
+            AllLowerCap,
+            NoChange,
+        }
+
+        public static string Capitalize(string s, CapitalizationStyle style)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return s;
+
+            switch (style)
+            {
+                case CapitalizationStyle.AllUpperCap:
+                    return s.ToUpperInvariant();
+                case CapitalizationStyle.EveryWordUpperCap:
+                    return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());                    
+                case CapitalizationStyle.FirstLetterUpperCap:
+                    return s.First().ToString().ToUpper() + s.Substring(1); ;
+                case CapitalizationStyle.AllLowerCap:
+                    return s.ToLowerInvariant();
+                case CapitalizationStyle.NoChange:
+                default:
+                    return s;
+            }
+        }
 
         public static string[,] NazvyStranŹkratky = {
             {"strana zelených","SZ"},

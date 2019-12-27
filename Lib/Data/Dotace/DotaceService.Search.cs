@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
             bool withHighlighting = false,
             bool limitedView = false,
-            AggregationContainerDescriptor<Dotace> anyAggregation = null)
+            AggregationContainerDescriptor<Dotace> anyAggregation = null, bool exactNumOfResults = false)
         {
             return SimpleSearch(new DotaceSearchResult()
             {
@@ -87,7 +87,8 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Page = page,
                 PageSize = pagesize,
                 LimitedView = limitedView,
-                Order = order.ToString()
+                Order = order.ToString(),
+                ExactNumOfResults = exactNumOfResults
             }, withHighlighting, anyAggregation); ;
         }
         public DotaceSearchResult SimpleSearch(DotaceSearchResult search,
@@ -114,6 +115,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                         .Highlight(h => Lib.Search.Tools.GetHighlight<Dotace>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
+                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
             }
             catch (Exception e)

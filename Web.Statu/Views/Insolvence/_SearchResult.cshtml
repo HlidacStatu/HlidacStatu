@@ -40,7 +40,8 @@ else
 
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <h2>Nalezeno @(PluralForm.Get((int)Model.Result.Total, "{0} insolvenční řízení;{0} insolvenční řízení;{0} insolvenčních řízení")).</h2>
+                <h3>@HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Result.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap) na výraz <span class="emphasized">@Model.Q</span></h3>
+
             </div>
         </div>
 

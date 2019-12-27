@@ -81,7 +81,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 
 <div class="row">
     <div class="col-xs-12 col-sm-6">
-        <div class="">@HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Total) na výraz <span class="emphasized">@Model.Q</span></div>
+        <h4>@HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Result.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap) na výraz <span class="emphasized">@Model.Q</span></h4>
         @if (Model?.Result?.Aggregations != null && Model?.Result?.Aggregations?.ContainsKey("sumKc") == true)
         {
             double? sum = ((Nest.ValueAggregate)Model?.Result?.Aggregations["sumKc"])?.Value;

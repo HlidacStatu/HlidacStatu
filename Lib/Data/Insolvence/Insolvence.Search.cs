@@ -139,7 +139,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
         public static InsolvenceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
             bool withHighlighting = false,
             bool limitedView = true,
-            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
+            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null, bool exactNumOfResults = false)
         {
             return SimpleSearch(new InsolvenceSearchResult()
             {
@@ -147,12 +147,13 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 Page = page,
                 PageSize = pagesize,
                 LimitedView = limitedView,
-                Order = order.ToString()
+                Order = order.ToString(),
+                ExactNumOfResults = exactNumOfResults
             }, withHighlighting, anyAggregation); ;
         }
         public static InsolvenceSearchResult SimpleSearch(InsolvenceSearchResult search,
             bool withHighlighting = false,
-            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null)
+            AggregationContainerDescriptor<Lib.Data.Insolvence.Rizeni> anyAggregation = null, bool exactNumOfResults = false)
         {
             var client = Manager.GetESClient_Insolvence();
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
@@ -176,6 +177,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                         .Highlight(h => Lib.Search.Tools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
+                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
             }
             catch (Exception e)

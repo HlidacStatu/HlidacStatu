@@ -161,6 +161,7 @@ namespace HlidacStatu.Lib.ES
                 {
                     //if (idxType.HasValue == false)
                     //    idxType = GetIndexTypeForDefaultIndexName(indexName);
+                    
                     var _client = new ElasticClient(sett);
                     InitElasticSearchIndex(_client, idxType);
 
@@ -200,7 +201,19 @@ namespace HlidacStatu.Lib.ES
         {
 
             string esUrl = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
-            var settings = new ConnectionSettings(new Uri(esUrl))
+
+            //var singlePool = new Elasticsearch.Net.SingleNodeConnectionPool(new Uri(esUrl));
+            var pool = new Elasticsearch.Net.StaticConnectionPool(esUrl
+                .Split(';')
+                .Where(m => !string.IsNullOrWhiteSpace(m))
+                .Select(u => new Uri(u))
+                );
+
+            //var pool = new Elasticsearch.Net.SniffingConnectionPool(esUrl
+            //    .Split(';')
+            //    .Where(m=>!string.IsNullOrWhiteSpace(m))
+            //    .Select(u => new Uri(u)));
+            var settings = new ConnectionSettings(pool)
                 .DefaultIndex(indexName)
                 .DisableAutomaticProxyDetection(false)
                 .RequestTimeout(TimeSpan.FromMilliseconds(timeOut))

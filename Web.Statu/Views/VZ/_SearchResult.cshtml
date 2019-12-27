@@ -44,7 +44,7 @@ else
 
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <h2>Nalezeno @(HlidacStatu.Util.PluralForm.Get((int)Model.Result.Total, "{0} zakázka;{0} zakázky;{0} zakázek")).</h2>
+                <h4>@(HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Result.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap) ) na výraz <span class="emphasized">@Model.Q</span>.</h4>
                 @*@if (Model.Result.Aggregations != null && Model.Result.Aggregations.ContainsKey("sumKc"))
                     {
                         double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;

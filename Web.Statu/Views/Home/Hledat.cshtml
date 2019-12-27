@@ -168,11 +168,11 @@ else if (Model.HasResults == false)
         <div class="searching__counters">
             @if (Model.HasSmlouvy)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", Model.Smlouvy.ToRouteValues(1))">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#smlouvy">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasVZ)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "VZ",Model.VZ.ToRouteValues(1))">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.Insolvence.HasResult)
             {
@@ -180,12 +180,12 @@ else if (Model.HasResults == false)
             }
             @if (Model.HasOsoby)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#osoby">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
             }
 
             @if (Model.HasTransakce)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#ucty">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span></a></div>
             }
             @if (Model.HasFirmy)
             {
@@ -193,7 +193,7 @@ else if (Model.HasResults == false)
             }
             @if (Model.Datasets.HasResult)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#datasets">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#databaze">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
             }
         </div>
     </div>
@@ -209,7 +209,7 @@ else if (Model.HasResults == false)
 {
     Devmasters.Core.StopWatchEx sw = new StopWatchEx();
     sw.Start();
-    <div class="row">
+    <div id="smlouvy" class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -292,7 +292,7 @@ else if (Model.HasResults == false)
 {
     Devmasters.Core.StopWatchEx sw = new StopWatchEx();
     sw.Start();
-    <div class="row">
+    <div class="row" id="insolvence">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -363,7 +363,7 @@ else if (Model.HasResults == false)
     Devmasters.Core.StopWatchEx sw = new StopWatchEx();
     sw.Start();
 
-    <div class="row">
+    <div class="row" id="firmy">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -417,7 +417,7 @@ else if (Model.HasResults == false)
     Devmasters.Core.StopWatchEx sw = new StopWatchEx();
     sw.Start();
 
-    <div class="row">
+    <div class="row" id="ucty">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -475,7 +475,7 @@ else if (Model.HasResults == false)
     Devmasters.Core.StopWatchEx sw = new StopWatchEx();
     sw.Start();
 
-    <div id="datasets" class="row">
+    <div id="databaze" class="row">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -560,7 +560,7 @@ else if (Model.HasResults == false)
                         && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
                    5);
 
-    <div class="row">
+    <div class="row" id="osoby">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
@@ -716,7 +716,7 @@ else if (Model.HasResults == false)
     }
 
 
-    <div class="row">
+    <div class="row" id="verejnezakazky">
         <div class="col-xs-12">
             <div class="searching__watcher">
                 <div class="watcher__title">
