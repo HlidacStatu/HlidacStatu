@@ -22,12 +22,71 @@ namespace HlidacStatu.Lib.Search
             {
                 get
                 {
+                    return ExportPartAsQuery(true);
+                }
+            }
+
+            public string ExportPartAsQuery(bool encode = true)
+            {
+                //force not to encode
+                encode = false;
+                if (encode)
+                    return EncodePart();
+                else
+                {
                     if (ExactValue)
                         return Value;
                     else
                         return (Prefix ?? "") + Value;
                 }
             }
+
+
+            static string[] reservedAll = new string[] { "&&", "||", "+", "-", "=", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", "\\", "/" };
+
+
+            static char[] formulaStart = new char[] { '>', '<', '(', '{', '[' };
+            static char[] formulaEnd = new char[] { ')', '}', ']' };
+            static char[] ignored = new char[] { '>', '<' };
+            public string EncodePart()
+            {
+                if (this.ExactValue)
+                    return Value;
+                if (string.IsNullOrWhiteSpace(Value))
+                    return Value;
+
+                //The reserved characters are:  + - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /
+                // https://www.elastic.co/guide/en/elasticsearch/reference/7.5/query-dsl-query-string-query.html
+                //< and > can’t be escaped at all. The only way to prevent them from attempting to create a range query is to remove them from the query string entirely.
+
+                if (string.IsNullOrWhiteSpace(Prefix))
+                {
+                    var val = Value.Trim();
+                    if (reservedAll.Contains(val))
+                        return val;
+                    else
+                        return string.Join("", 
+                            Value.Select(c => ignored.Contains(c) ? "" :  (reservedAll.Contains(c.ToString()) ? @"\" + c.ToString() : c.ToString()))
+                            );
+                }
+                else
+                {//there is prefix, check []{}()- 
+                    var val = Value.Trim();
+                    if (formulaStart.Contains(val.First())
+                        && formulaEnd.Contains(val.Last())
+                        )
+                        return (Prefix ?? "") + Value; //no change
+                    else
+                    {
+                        return (Prefix ?? "") 
+                            + string.Join("",
+                                Value.Select(c => ignored.Contains(c) ? "" : (reservedAll.Contains(c.ToString()) ? @"\" + c.ToString() : c.ToString()))
+                                );
+                    }
+                }
+
+            }
+
         }
         public static SplittingQuery SplitQuery(string query)
         {
@@ -46,8 +105,8 @@ namespace HlidacStatu.Lib.Search
             _parts = parts ?? new Part[] { };
         }
 
-        
-        public string FullQuery()
+
+        public string FullQuery(bool encode = true)
         {
             if (_parts.Length == 0)
             {
@@ -133,8 +192,8 @@ namespace HlidacStatu.Lib.Search
                     //string[] mezery = fixTxts[i].Item1.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     string tPart = fixTxts[i].Item1;
                     tPart = tPart.Replace("(", " ( ").Replace(")", " ) ")
-                        .Replace(": (",":(");//fix mezera za :
-                    string[] mezery = tPart.Split(new char[] { ' '});
+                        .Replace(": (", ":(");//fix mezera za :
+                    string[] mezery = tPart.Split(new char[] { ' ' });
 
                     foreach (var mt in mezery)
                     {
@@ -207,7 +266,7 @@ namespace HlidacStatu.Lib.Search
             }
 
 
-            return parts.Where(m=>m.ToQueryString.Length>0).ToArray();
+            return parts.Where(m => m.ToQueryString.Length > 0).ToArray();
         }
 
 

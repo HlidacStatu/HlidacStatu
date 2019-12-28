@@ -122,10 +122,10 @@ namespace HlidacStatu.Lib.Search
             //
             // but support regex name:/joh?n(ath[oa]n)/
             //
-            if (newquery.Contains("/")) //&& regFindRegex.Match(query).Success == false)
-            {
-                newquery = newquery.Replace("/", "\\/");
-            }
+            //if (newquery.Contains("/")) //&& regFindRegex.Match(query).Success == false)
+            //{
+            //    newquery = newquery.Replace("/", "\\/");
+            //}
 
             //fix with small "to" in zverejneno:[2018-12-13 to *]
             var dateintervalRegex = @"(podepsano|zverejneno):({|\[)\d{4}\-\d{2}\-\d{2}(?<to> \s*to\s*)(\d{4}-\d{2}-\d{2}|\*)(}|\])";

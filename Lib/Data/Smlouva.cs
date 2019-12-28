@@ -1080,6 +1080,7 @@ namespace HlidacStatu.Lib.Data
                     return true;
                 client = ES.Manager.GetESClient_Sneplatne();
                 res = client.DocumentExists<Lib.Data.Smlouva>(id);
+                return res.Exists;
                 if (res.IsValid)
                     return res.Exists;
                 else
