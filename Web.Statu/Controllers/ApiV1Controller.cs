@@ -540,7 +540,7 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.Error = e;
             }
 
-            return Content(string.Format("{0}-{1}\n\n" + nodes, num, status));
+            return Content(string.Format("{0}-{1}\n\n" + nodes, num, status), "text/plain");
         }
 
 
