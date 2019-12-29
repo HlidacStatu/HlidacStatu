@@ -178,7 +178,7 @@
             || email == ds.createdBy
             );
         long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
-        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
+        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
         if (showEditBtn == false && recordNum < 5)
         {
             return; //don't show empty or near to empty datasets, which are not "my".
