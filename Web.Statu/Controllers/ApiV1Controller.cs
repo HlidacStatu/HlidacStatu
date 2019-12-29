@@ -512,11 +512,27 @@ namespace HlidacStatu.Web.Controllers
             ClusterHealthResponse res = null;
             int num = 0;
             string status = "unknown";
+            string nodes = "-------------------------\n";
             try
             {
                 res = HlidacStatu.Lib.ES.Manager.GetESClient().Cluster.Health(); //todo: es7 check
                 num = res?.NumberOfNodes ?? 0;
                 status = res?.Status.ToString() ?? "unknown";
+
+                //GET /_cat/nodes?v&h=m,name,ip,u&s=name
+                var catr = Lib.ES.Manager.GetESClient()
+                     .LowLevel.Cat.Nodes<Elasticsearch.Net.StringResponse>(
+                             new Elasticsearch.Net.Specification.CatApi.CatNodesRequestParameters()
+                             {
+                                 Headers = new[] { "m", "name", "ip", "u" },
+                                 SortByColumns = new[] { "name" },
+                                 Verbose = true
+                             }
+                     ).Body
+                     ?.Replace("10.10.", "");
+                     
+                     ;
+                nodes = nodes + catr;
             }
             catch (Exception e)
             {
@@ -524,7 +540,7 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.Error = e;
             }
 
-            return Content(string.Format("{0}-{1}", num, status));
+            return Content(string.Format("{0}-{1}\n\n" + nodes, num, status));
         }
 
 
