@@ -47,13 +47,19 @@
 </div>
 
 <div class="row">
-    @foreach (var ds in datasets.Where(m => m.betaversion == false))
+    @if (!string.IsNullOrWhiteSpace(Request.QueryString["beta"]))
     {
-        count++;
-        @RenderDataset(ds, email, count, "success")
+        @RenderDatasets2(datasets.Where(m => m.betaversion == false), email)
+    }
+    else
+    {
+        foreach (var ds in datasets.Where(m => m.betaversion == false))
+        {
+            count++;
+            @RenderDataset(ds, email, count, "success")
 
-    }  @*foreach*@
-
+        } @*foreach*@
+    }
 </div>
 
 <hr />
@@ -70,11 +76,19 @@
         </div>
 
     </div>
-    @{count = 0; }
-    @foreach (var ds in datasets.Where(m => m.betaversion == true))
+    @if (!string.IsNullOrWhiteSpace(Request.QueryString["beta"]))
     {
-        count++;
-        @RenderDataset(ds, email, count, "default")
+        <div style="padding-top:15px;"></div>
+        @RenderDatasets2(datasets.Where(m => m.betaversion == true), email)
+    }
+    else
+    {
+        count = 0; 
+        foreach (var ds in datasets.Where(m => m.betaversion == true))
+        {
+            count++;
+            @RenderDataset(ds, email, count, "default")
+        }
     }
 </div>
 
@@ -83,17 +97,17 @@
 
 @helper RenderDataset(HlidacStatu.Lib.Data.External.DataSets.Registration ds, string email, int count, string style)
 {
-try
-{
-    var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-    bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-        || email == ds.createdBy
-        );
-    long  recordNum = dsContent.SearchData("", 1, 0).Total;
-    if (showEditBtn == false && recordNum < 5)
+    try
     {
+        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
+        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+            || email == ds.createdBy
+            );
+        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
+        if (showEditBtn == false && recordNum < 5)
+        {
             return; //don't show empty or near to empty datasets, which are not "my".
-    }
+        }
 
         <div class="col-xs-12 col-sm-6">
             <div class="panel panel-@style">
@@ -132,6 +146,67 @@ try
         {
             <div class="clearfix"></div>
         }
+    }
+    catch (Exception)
+    {
+
+    }
+
+}
+
+
+@helper RenderDatasets2(IEnumerable<HlidacStatu.Lib.Data.External.DataSets.Registration> dss, string email)
+{
+    int count = 0;
+    <table class="table table-hover">
+        <tbody>
+            @foreach (var ds in dss)
+            {
+                count++;
+                @RenderDataset2(ds, email, count, "default")
+            }
+        </tbody>
+    </table>
+}
+
+@helper RenderDataset2(HlidacStatu.Lib.Data.External.DataSets.Registration ds, string email, int count, string style)
+{
+    try
+    {
+        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
+        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
+            || email == ds.createdBy
+            );
+        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
+        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
+        if (showEditBtn == false && recordNum < 5)
+        {
+            return; //don't show empty or near to empty datasets, which are not "my".
+        }
+
+        <tr>
+            <td style="font-weight:bold;font-size:16px;line-height:19px;">
+                <a href="/data/Index/@dsContent.DatasetId"><b>@ds.name</b></a>
+            </td>
+            <td style="text-align:right">
+                <b>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(recordNum, true))</b>&nbsp;záznamů
+                @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)recordNumWeek,"","<br/>jeden&nbsp;nový","<br/>{0}&nbsp;nové","<br/>{0:### ### ###}&nbsp;nových"))
+            </td>
+
+            <td>
+                @if (!string.IsNullOrEmpty(ds.description))
+                {
+                    @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
+                }
+            </td>
+
+            <td>
+                @if (showEditBtn)
+                {
+                    <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-info btn-sm" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
+                }
+            </td>
+        </tr>
     }
     catch (Exception)
     {

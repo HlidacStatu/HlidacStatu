@@ -183,9 +183,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
 
         public override DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null,
-            bool excludeBigProperties = true, bool withHighlighting = false)
+            bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
-            var resData = base.SearchData(queryString, page, pageSize, sort, excludeBigProperties, withHighlighting);
+            var resData = base.SearchData(queryString, page, pageSize, sort, excludeBigProperties, withHighlighting, exactNumOfResults);
             if (resData == null || resData?.Result == null)
                 return resData;
 
@@ -195,10 +195,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         }
         public override DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null,
-            bool excludeBigProperties = true, bool withHighlighting = false)
+            bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
             var resData = base.SearchDataRaw($"NOT(id:{DataSourcesDbName}) AND ({queryString})", page, pageSize,
-                sort, excludeBigProperties, withHighlighting);
+                sort, excludeBigProperties, withHighlighting, exactNumOfResults);
             //var resData = base.SearchDataRaw($"({queryString})", page, pageSize, sort);
             if (resData == null || resData?.Result == null)
                 return resData;

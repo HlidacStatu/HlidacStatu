@@ -61,14 +61,16 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Aggregate((f, s) => f + " OR " + s);
             return $"( {q} )";
         }
-        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
+        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, 
+            string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
+            bool exactNumOfResults = false)
         {
             Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
 
             sw.Start();
             var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
 
-            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting);
+            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting, exactNumOfResults);
 
             sw.Stop();
             if (!res.IsValid)
@@ -112,10 +114,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 };
         }
-        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
+        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, 
+            string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
+            bool exactNumOfResults = false)
         {
             var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
-            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting);
+            var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting, exactNumOfResults);
             if (!res.IsValid)
             {
                 throw DataSetException.GetExc(ds.DatasetId,
@@ -153,7 +157,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 };
         }
 
-        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, bool excludeBigProperties = true, bool withHighlighting = false)
+        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, 
+            bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
             SortDescriptor<object> sortD = new SortDescriptor<object>();
             if (sort == "0")
@@ -213,7 +218,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .Query(q => qc)
                     .Sort(ss => sortD)
                     .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(withHighlighting))
-            );
+                    .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+           );
 
             //fix Highlighting for large texts
             if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
@@ -226,6 +232,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         .Query(q => qc)
                         .Sort(ss => sortD)
                         .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(false))
+                        .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
                 );
 
             }
