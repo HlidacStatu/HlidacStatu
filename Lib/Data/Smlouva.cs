@@ -1038,7 +1038,7 @@ namespace HlidacStatu.Lib.Data
                 new JsonSerializerSettings()
                 {
                     Formatting = formatted ? Formatting.Indented : Formatting.None,
-                    NullValueHandling = NullValueHandling.Ignore,         
+                    //NullValueHandling = NullValueHandling.Ignore,         
                     ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
                 }
 
@@ -1052,7 +1052,7 @@ namespace HlidacStatu.Lib.Data
             return AllIdsFromDB(null);
         }
         public static IEnumerable<string> AllIdsFromDB(bool? deleted)
-        {
+        {`
             List<string> ids = null;
             using (Lib.Data.DbEntities db = new DbEntities())
             {
