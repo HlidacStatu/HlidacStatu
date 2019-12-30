@@ -416,7 +416,8 @@ namespace HlidacStatu.Lib.Data
             public static Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassificationFromServer(Smlouva s, bool rewriteStems = false)
             {
                 Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
-
+                if (s.Prilohy.All(m => m.EnoughExtractedText) == false)
+                    return null;
 
                 var settings = new JsonSerializerSettings();
                 settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();

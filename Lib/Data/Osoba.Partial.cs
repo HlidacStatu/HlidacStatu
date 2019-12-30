@@ -43,9 +43,11 @@ namespace HlidacStatu.Lib.Data
             VazbyNaPolitiky = 2,
             [NiceDisplayName("Politik")]
             Politik = 3,
+            [NiceDisplayName("Sponzor polit.strany")]
+            Sponzor = 4,
         }
 
-        
+
 
         public bool IsValid()
         {

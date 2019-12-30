@@ -1428,11 +1428,20 @@ text zpravy: {txt}";
 
                 if (!string.IsNullOrEmpty(url))
                 {
-                    string webShotServiceUrl = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url");
-                    if (string.IsNullOrEmpty(webShotServiceUrl))
-                        webShotServiceUrl = "http://127.0.0.1:9090";
+                    string[] webShotServiceUrls = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url")
+                        ?.Split(';')
+                        ?.Where(m=>!string.IsNullOrEmpty(m))
+                        ?.ToArray();
 
-                    string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
+                    if (webShotServiceUrls==null || webShotServiceUrls?.Length == null || webShotServiceUrls?.Length == 0)
+                        webShotServiceUrls = new [] {"http://127.0.0.1:9090"};
+
+                    var webShotServiceUrl = webShotServiceUrls[HlidacStatu.Util.Consts.Rnd.Next(webShotServiceUrls.Length)];
+
+                    //string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
+                    string scr = webShotServiceUrl + "/screenshot?vp_width=1920&vp_height=1080&url=" 
+                        + System.Net.WebUtility.UrlEncode(url);
+
                     data = Framework.RemoteUrlFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
                     {
                         ValueForData = scr,
