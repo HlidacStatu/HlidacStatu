@@ -44,7 +44,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     " qs = \"" + System.Net.WebUtility.UrlEncode(qs) + "\""
                     + "\n"
                     + "func fn_DatasetItemUrl" + "\n"
-                    + $"    ret ('/data/Detail/{datasetId}/' + $0 + '?qs=' + qs )"
+                    + $"    ret ('https://www.hlidacstatu.cz/data/Detail/{datasetId}/' + $0 + '?qs=' + qs )"
                     + "\n"
                     + "end}}"
                     + "\n"

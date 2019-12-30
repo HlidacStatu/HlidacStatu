@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                         prefix: highlPrefix, postfix: highlPostfix);
                                 }
 
-                                string result = $"<a href=\"/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
+                                string result = $"<a href=\"https://www.hlidacstatu.cz/data/DetailText/{datasetId}/{dataId}?p={jobj.Path}\"><b>{linkText}</b></a> (zde <a target=\"_blank\" href=\"{uri.AbsoluteUri}\">originál ke stažení</a>)";
                                 if (!string.IsNullOrEmpty(HLresult))
                                     result = result + "<br/>" + HLresult;
                                 return result;
