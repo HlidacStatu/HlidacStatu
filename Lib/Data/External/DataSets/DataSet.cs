@@ -781,7 +781,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     List<InfoFact> f = new List<InfoFact>();
 
                     var sCreated = HlidacStatu.Lib.RenderTools.DateDiffShort_7pad(this.Registration().created, DateTime.Now, "Databáze byla založena před {0}.", "");
-                    var first = this.SearchData("*", 1, 1, "DbCreated");
+                    var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults:true);
                     var total = (int)first.Total;
                     var last = this.SearchData("*", 1, 1, "DbCreated desc");
                     var minMax = Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
