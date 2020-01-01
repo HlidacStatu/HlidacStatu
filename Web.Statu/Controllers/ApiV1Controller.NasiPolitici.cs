@@ -110,23 +110,23 @@ namespace HlidacStatu.Web.Controllers
                     .ToArray();
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
-                //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+                //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
                 //query: dluznici.osobaId:{o.NameId}
-                var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 //query: veritele.osobaId:{o.NameId}
-                var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 //query: spravci.osobaId:{o.NameId}
-                var oinsSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "spravci"), 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "spravci"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
 
                 Dictionary<string, long> oinsolv = new Dictionary<string, long>();
                 oinsolv.Add("dluznici|dlužník|dlužníka|dlužníkem", oinsDluznik.Total);
                 oinsolv.Add("veritele|věřitel|věřitele|veřitelem", oinsVeritel.Total);
                 oinsolv.Add("spravci|insolvenční správce|insolvenčního správce|insolvenčním správcem", oinsSpravce.Total);
 
-                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + o.NameId, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
-                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + o.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
 
                 Dictionary<string, long> insolv = new Dictionary<string, long>();
                 insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);

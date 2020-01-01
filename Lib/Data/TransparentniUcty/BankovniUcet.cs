@@ -149,7 +149,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
             List<BankovniPolozka> transactionIds = new List<BankovniPolozka>();
 
-            HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
+            Searching.Tools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
                 HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                 searchFunc,
                 (p, o) =>

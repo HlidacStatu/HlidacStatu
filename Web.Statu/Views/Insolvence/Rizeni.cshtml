@@ -36,7 +36,7 @@
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 
-@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.InsolvenceSearchResult())
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.Searching.InsolvenceSearchResult())
 
 
 <h2>
@@ -252,7 +252,7 @@ else
                     }
                     else
                     {
-                        docs.Add(doc, HlidacStatu.Lib.Search.Highlighter.HasHighlightedContent(highlightingData, "dokumenty.plainText", doc.PlainText) ? "1" : "0");
+                        docs.Add(doc, HlidacStatu.Lib.Searching.Highlighter.HasHighlightedContent(highlightingData, "dokumenty.plainText", doc.PlainText) ? "1" : "0");
                     }
                 }
 

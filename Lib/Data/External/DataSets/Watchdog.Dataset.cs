@@ -136,7 +136,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         protected override WatchDogProcessor.Result DoFinalSearch(string query, DateTime fromDate, DateTime toDate, string order)
         {
-            query += " AND DbCreated:" + string.Format("{{{0} TO {1}]", ES.SearchTools.ToElasticDate(fromDate), ES.SearchTools.ToElasticDate(toDate));
+            query += " AND DbCreated:" + string.Format("{{{0} TO {1}]", Searching.Tools.ToElasticDate(fromDate), Searching.Tools.ToElasticDate(toDate));
 
             DataSearchResult res = this.DataSet.SearchData(query, 1, 50, order);
 
@@ -146,10 +146,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         protected override DateTime? GetLatestRec(DateTime toDate)
         {
-            var query = "DbCreated:" + string.Format("[* TO {0}]", ES.SearchTools.ToElasticDate(toDate));
+            var query = "DbCreated:" + string.Format("[* TO {0}]", Searching.Tools.ToElasticDate(toDate));
 
             DataSearchResult res = this.DataSet.SearchData(query, 1, 1, "DbCreated desc");
-            //var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, (int)ES.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate);
+            //var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, (int)Searching.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate);
 
             if (res.IsValid == false)
                 return null;

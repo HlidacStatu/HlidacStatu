@@ -792,8 +792,8 @@ namespace HlidacStatu.Lib.Data
                                 );
                         }
 
-                        long numFatalIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{this.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, exactNumOfResults: true).Total;
-                        long numVazneIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{this.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, exactNumOfResults: true).Total;
+                        long numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Total;
+                        long numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Total;
 
                         if (numFatalIssue > 0)
                         {

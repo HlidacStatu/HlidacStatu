@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HlidacStatu.Util;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.Searching
 {
     public class SplittingQuery
     {

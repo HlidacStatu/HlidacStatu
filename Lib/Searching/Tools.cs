@@ -6,8 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Nest;
+using Devmasters.Core.Batch;
+using System.Threading;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.Searching
 {
     public static class Tools
     {
@@ -91,7 +93,7 @@ namespace HlidacStatu.Lib.Search
             {
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
-            var textParts = Search.SplittingQuery.SplitQueryToParts(newquery, '\"');
+            var textParts = Searching.SplittingQuery.SplitQueryToParts(newquery, '\"');
             //make operator UpperCase and space around '(' and ')'
             if (textParts.Count > 0)
             {
@@ -154,7 +156,7 @@ namespace HlidacStatu.Lib.Search
         public static ValidateQueryResponse ValidateQueryRaw(string query)
         {
             return ValidateSpecificQueryRaw<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(),
-                ES.SearchTools.GetSimpleQuery(ES.SearchTools.FixInvalidQuery(query)));
+                Data.Smlouva.Search.GetSimpleQuery(query));
         }
 
 
@@ -168,180 +170,6 @@ namespace HlidacStatu.Lib.Search
 
             return res;
         }
-
-        [Obsolete()]
-        public static QueryContainer GetSimpleQuery<T>(string query, Rule[] rules, bool newSQ = false)
-                        where T : class
-        {
-            //string tmp1 = GetSimpleQueryCore<T>(query, rules);
-            //string tmp2 = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
-
-            //string modifiedQ = GetSimpleQueryCore2<T>(Search.SplittedQuery.SplitQuery(query), rules);
-            string modifiedQ = GetSimpleQueryCore<T>(query, rules);
-
-            //newSQ ? GetSimpleQueryCore2<T>( Search.SplittedQuery.SplitQuery(query), rules) : 
-            //GetSimpleQueryCore<T>(query, rules);
-
-            QueryContainer qc = null;
-            if (modifiedQ == null)
-                qc = new QueryContainerDescriptor<T>().MatchNone();
-            else if (string.IsNullOrEmpty(modifiedQ) || modifiedQ == "*")
-                qc = new QueryContainerDescriptor<T>().MatchAll();
-            else
-            {
-                modifiedQ = modifiedQ.Replace(" | ", " OR ").Trim();
-                qc = new QueryContainerDescriptor<T>()
-                    .QueryString(qs => qs
-                        .Query(modifiedQ)
-                        .DefaultOperator(Operator.And)
-                    );
-            }
-            return qc;
-        }
-
-        private static string ___GetSimpleQueryCore2<T>(Search.SplittingQuery sq, Rule[] rules)
-                where T : class
-        {
-            if (sq == null)
-                return null;
-            else if (string.IsNullOrEmpty(sq.FullQuery()) || sq.FullQuery() == "*")
-                return "";
-
-            string regexPrefix = @"(^|\s|[(])";
-            string regexTemplate = "{0}(?<q>(-|\\w)*)\\s*";
-
-            string newQ = ""; //FixInvalidQuery(query) ?? "";
-            //check invalid query ( tag: missing value)
-
-            foreach (var part in sq.Parts)
-            {
-                string partQ = "";
-                for (int i = 0; i < rules.Length; i++)
-                {
-                    //convert old rules with regex 
-                    string[] lookParts = rules[i].LookFor.Split(':');
-                    string lookForPrefix = lookParts[0] + ":";
-                    string lookForValue = lookParts.Length == 1 ? "" : string.Join(":", lookParts.Skip(1));
-                    string lookForFull = rules[i].LookFor;
-
-                    string replaceWith = rules[i].ReplaceWith;
-                    bool doFullReplace = rules[i].FullReplace;
-
-                    if (part.ExactValue == false
-                        && part.Prefix != null
-                        && part.Prefix.Equals(lookForPrefix, StringComparison.InvariantCultureIgnoreCase)
-                        && (string.IsNullOrWhiteSpace(lookForValue) || Regex.IsMatch(part.Value, lookForValue, regexQueryOption))
-                        )
-                    {
-
-
-                        MatchEvaluator ruleEvalMatch = (m) =>
-                        {
-                            var s = m.Value;
-                            if (string.IsNullOrEmpty(s))
-                                return string.Empty;
-                            var newVal = replaceWith;
-                            if (newVal.Contains("${q}"))
-                            {
-                                var capt = m.Groups["q"].Captures;
-                                var captVal = "";
-                                foreach (Capture c in capt)
-                                    if (c.Value.Length > captVal.Length)
-                                        captVal = c.Value;
-
-                                newVal = newVal.Replace("${q}", captVal);
-                            }
-                            if (s.StartsWith("("))
-                                return " (" + newVal;
-                            else
-                                return " " + newVal;
-                        };
-
-                        if (doFullReplace
-                            && !string.IsNullOrEmpty(replaceWith)
-                            && (
-                                lookForPrefix.Contains("holding:")
-                                //RS
-                                || lookForPrefix.Contains("holdingprijemce:")
-                                || lookForPrefix.Contains("holdingplatce:")
-                                //insolvence
-                                || lookForPrefix.Contains("holdingdluznik:")
-                                || lookForPrefix.Contains("holdingveritel:")
-                                || lookForPrefix.Contains("holdingspravce:")
-                                //VZ
-                                || lookForPrefix.Contains("holdingdodavatel:")
-                                || lookForPrefix.Contains("holdingzadavatel:")
-                            )
-                            )
-                        {
-                        } //do regex replace
-                        else if (doFullReplace
-                                    && !string.IsNullOrEmpty(replaceWith)
-                                    && (
-                                        lookForPrefix.Contains("osobaid:")
-                                        || lookForPrefix.Contains("osobaiddluznik:")
-                                        || lookForPrefix.Contains("osobaidveritel:")
-                                        || lookForPrefix.Contains("osobaidspravce:")
-                                        || lookForPrefix.Contains("osobaidzadavatel:")
-                                        || lookForPrefix.Contains("osobaiddodavatel:")
-                                        )
-                            )//(replaceWith.Contains("${ico}"))
-                        {
-
-
-                        }
-
-                        //VZ
-                        else if (doFullReplace && replaceWith.Contains("${oblast}"))
-                        {
-                        }
-                        //VZs
-                        else if (doFullReplace && replaceWith.Contains("${cpv}"))
-                        {
-                        }
-                        //VZ
-                        else if (doFullReplace && replaceWith.Contains("${form}"))
-                        {
-                        }
-
-                        else if (replaceWith.Contains("${q}"))
-                        {
-                        } //do regex replace
-
-                        else if (doFullReplace && lookForPrefix.Contains("chyby:"))
-                        {
-
-                        }
-                        else if (!string.IsNullOrEmpty(replaceWith))
-                        {
-                            partQ = " " + Regex.Replace(part.ToQueryString, lookForFull, ruleEvalMatch, regexQueryOption); // replaceWith.Replace("${q}", part.Value);
-                            //partQ = partQ + " " + replaceWith + part.Value;
-                            break;
-                            //modifiedQ = Regex.Replace(modifiedQ, lookFor, evalMatch, regexQueryOption);
-                        }
-
-                        if (!string.IsNullOrEmpty(rules[i].AddLastCondition))
-                        {
-                            if (rules[i].AddLastCondition.Contains("${q}"))
-                            {
-                                rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", part.Value);
-                            }
-                            partQ = ModifyQueryOR(partQ, rules[i].AddLastCondition);
-                            break;
-                            //modifiedQ = ModifyQueryOR(modifiedQ, rules[i].AddLastCondition);
-                        }
-                    }
-                    else
-                    {
-                        partQ = part.ToQueryString;
-                    }
-                } //for rules
-                newQ = newQ + " " + partQ;
-            }//for parts
-
-            return newQ;
-        }
-
 
         private static string GetSimpleQueryCore<T>(string query, Rule[] rules)
             where T : class
@@ -641,6 +469,253 @@ namespace HlidacStatu.Lib.Search
                 return anotherCondition;
             else
                 return string.Format("( {0} ) OR ( {1} ) ", origQuery, anotherCondition);
+        }
+
+
+
+
+
+        static string ScrollLifeTime = "15m";
+        public static void DoActionForAll<T>(
+            System.Func<IHit<T>, object, ActionOutputData> action,
+            object actionParameters,
+            System.Action<string> logOutputFunc,
+            System.Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc,
+            bool parallel,
+            int blockSize = 500, int? maxDegreeOfParallelism = null,
+            bool IdOnly = false,
+            ElasticClient elasticClient = null,
+            string query = null,
+            Indices indexes = null, string prefix = ""
+
+            )
+            where T : class
+        {
+            var client = elasticClient ?? Lib.ES.Manager.GetESClient();
+
+            Func<int, int, ISearchResponse<T>> searchFunc = null;
+            if (IdOnly)
+                searchFunc = (size, page) =>
+                {
+                    return client.Search<T>(a => a
+                                .Index(indexes ?? client.ConnectionSettings.DefaultIndex)
+                                .Source(ss => ss.ExcludeAll())
+                                //.Fields(f => f.Field("Id"))
+                                .Size(size)
+                                .From(page * size)
+                                .Query(q => q.MatchAll())
+                                .Scroll(ScrollLifeTime)
+                                );
+                };
+            else
+                searchFunc = (size, page) =>
+                {
+                    return client.Search<T>(a => a
+                            .Index(indexes ?? client.ConnectionSettings.DefaultIndex)
+                            .Size(size)
+                            .From(page * size)
+                            .Query(q => q.MatchAll())
+                            .Scroll(ScrollLifeTime)
+                        );
+                };
+
+            DoActionForQuery<T>(client,
+                    searchFunc,
+                    action, actionParameters,
+                    logOutputFunc,
+                    progressOutputFunc,
+                    parallel,
+                    blockSize, maxDegreeOfParallelism, prefix
+                    );
+
+        }
+
+        public static void DoActionForQuery<T>(ElasticClient client,
+            Func<int, int, ISearchResponse<T>> searchFunc,
+            System.Func<IHit<T>, object, Devmasters.Core.Batch.ActionOutputData> action, object actionParameters,
+            System.Action<string> logOutputFunc,
+            System.Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc,
+            bool parallel,
+            int blockSize = 500, int? maxDegreeOfParallelism = null, string prefix = ""
+            )
+            where T : class
+        {
+            DateTime started = DateTime.Now;
+            long total = 0;
+            int currIteration = 0;
+
+            int processedCount = 0;
+            ISearchResponse<T> result = default(ISearchResponse<T>);
+            //var total = NoveInzeraty.Lib.Data.Smlouva.Search.NumberOfDocs(null, null);
+            string scrollId = null;
+
+            //create scroll search context
+            bool firstResult = true;
+
+            if (maxDegreeOfParallelism <= 1)
+                parallel = false;
+            try
+            {
+                result = searchFunc(blockSize, currIteration);
+                if (result.IsValid == false)
+                    Lib.ES.Manager.LogQueryError<T>(result);
+            }
+            catch (Exception e1)
+            {
+                System.Threading.Thread.Sleep(10000);
+                try
+                {
+                    result = searchFunc(blockSize, currIteration);
+
+                }
+                catch (Exception e2)
+                {
+                    System.Threading.Thread.Sleep(20000);
+                    try
+                    {
+                        result = searchFunc(blockSize, currIteration);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("Cannot read data from Elastic, skipping iteration" + currIteration, ex);
+                        return;
+                    }
+                }
+            }
+            scrollId = result.ScrollId;
+
+            do
+            {
+                DateTime iterationStart = DateTime.Now;
+                if (firstResult)
+                {
+                    firstResult = false;
+                }
+                else
+                {
+                    result = client.Scroll<T>(ScrollLifeTime, scrollId);
+                    scrollId = result.ScrollId;
+                }
+                currIteration++;
+
+                if (result.Hits.Count() == 0)
+                    break;
+                total = result.Total;
+
+
+                bool canceled = false;
+
+                if (parallel)
+                {
+
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    try
+                    {
+                        ParallelOptions pOptions = new ParallelOptions();
+                        if (maxDegreeOfParallelism.HasValue)
+                            pOptions.MaxDegreeOfParallelism = maxDegreeOfParallelism.Value;
+                        pOptions.CancellationToken = cts.Token;
+                        Parallel.ForEach(result.Hits, (hit) =>
+                        {
+                            if (action != null)
+                            {
+                                ActionOutputData cancel = null;
+                                try
+                                {
+                                    cancel = action(hit, actionParameters);
+                                    System.Threading.Interlocked.Increment(ref processedCount);
+                                    if (logOutputFunc != null && !string.IsNullOrEmpty(cancel.Log))
+                                        logOutputFunc(cancel.Log);
+
+                                    if (cancel.CancelRunning)
+                                        cts.Cancel();
+                                }
+                                catch (Exception e)
+                                {
+                                    HlidacStatu.Util.Consts.Logger.Error("DoActionForAll action error", e);
+                                    cts.Cancel();
+                                }
+
+                            }
+                            if (progressOutputFunc != null)
+                            {
+
+                                ActionProgressData apd = new ActionProgressData(total, processedCount, started, prefix);
+                                progressOutputFunc(apd);
+                            }
+                        });
+                    }
+                    catch (OperationCanceledException e)
+                    {
+                        //Catestrophic Failure
+                        canceled = true;
+                    }
+
+
+                }
+                else
+                    foreach (var hit in result.Hits)
+                    {
+                        if (action != null)
+                        {
+                            ActionOutputData cancel = action(hit, actionParameters);
+                            System.Threading.Interlocked.Increment(ref processedCount);
+                            if (logOutputFunc != null && !string.IsNullOrEmpty(cancel.Log))
+                                logOutputFunc(cancel.Log);
+
+                            if (cancel.CancelRunning)
+                            {
+                                canceled = true;
+                                break;
+                            }
+                        }
+                        if (progressOutputFunc != null)
+                        {
+                            ActionProgressData apd = new ActionProgressData(total, processedCount, started, prefix);
+                            progressOutputFunc(apd);
+                        }
+                    }
+
+
+                if (canceled)
+                    break;
+            } while (result.Hits.Count() > 0);
+
+            if (logOutputFunc != null)
+                logOutputFunc("Done");
+
+        }
+
+
+        public static QueryContainer GetRawQuery(string jsonQuery)
+        {
+            QueryContainer qc = null;
+            if (string.IsNullOrEmpty(jsonQuery))
+                qc = new QueryContainerDescriptor<Lib.Data.Smlouva>().MatchAll();
+            else
+            {
+                qc = new QueryContainerDescriptor<Lib.Data.Smlouva>().Raw(jsonQuery);
+            }
+
+            return qc;
+
+        }
+
+
+
+        public static string ToElasticDate(DateTime date)
+        {
+            switch (date.Kind)
+            {
+                case DateTimeKind.Unspecified:
+                case DateTimeKind.Local:
+                    return date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                case DateTimeKind.Utc:
+                    return date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                default:
+                    return date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            }
         }
 
     }

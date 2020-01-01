@@ -1,6 +1,7 @@
 ﻿using Devmasters.Core;
 using HlidacStatu.Lib.ES;
-using HlidacStatu.Lib.Search.Rules;
+using HlidacStatu.Lib.Searching;
+using HlidacStatu.Lib.Searching.Rules;
 using Nest;
 using System;
 using System.Linq;
@@ -50,38 +51,38 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
             //fix field prefixes
             //ds: -> 
-            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
-                   new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
-                   new Lib.Search.Rule(@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" ),
-                   new Lib.Search.Rule(@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" ),
-                   new Lib.Search.Rule(@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" ),
+            Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
+                   new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
+                   new Lib.Searching.Rule(@"osobaiddluznik:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icodluznik" ),
+                   new Lib.Searching.Rule(@"osobaidveritel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icoveritel" ),
+                   new Lib.Searching.Rule(@"osobaidspravce:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icospravce" ),
 
-                   new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" ),
-                   new Lib.Search.Rule(@"holdindluznik:(?<q>(\d{1,8})) (\s|$){1,}","icodluznik" ),
-                   new Lib.Search.Rule(@"holdingveritel:(?<q>(\d{1,8})) (\s|$){1,}","icoveritel" ),
-                   new Lib.Search.Rule(@"holdingspravce:(?<q>(\d{1,8})) (\s|$){1,}","icospravce" ),
+                   new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico" ),
+                   new Lib.Searching.Rule(@"holdindluznik:(?<q>(\d{1,8})) (\s|$){1,}","icodluznik" ),
+                   new Lib.Searching.Rule(@"holdingveritel:(?<q>(\d{1,8})) (\s|$){1,}","icoveritel" ),
+                   new Lib.Searching.Rule(@"holdingspravce:(?<q>(\d{1,8})) (\s|$){1,}","icospravce" ),
 
-                   new Lib.Search.Rule("ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " ),
-                   new Lib.Search.Rule("icodluznik:","dluznici.iCO:" ),
-                   new Lib.Search.Rule("icoveritel:","veritele.iCO:" ),
-                   new Lib.Search.Rule("icospravce:","spravci.iCO:" ),
-                   new Lib.Search.Rule("jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" ),
-                   new Lib.Search.Rule("jmenodluznik:","dluznici.plneJmeno:" ),
-                   new Lib.Search.Rule("jmenoveritel:","veritele.plneJmeno:" ),
-                   new Lib.Search.Rule("jmenospravce:","spravci.plneJmeno:" ),
-                   new Lib.Search.Rule("spisovaznacka:","spisovaZnacka:" ),
-                   new Lib.Search.Rule("id:","spisovaZnacka:" ),
-                   new Lib.Search.Rule("zmeneno:\\[","posledniZmena:[" ),
-                   new Lib.Search.Rule("zmeneno:(?=[<>])","posledniZmena:${q}" ),
-                   new Lib.Search.Rule("zmeneno:(?=\\d)","posledniZmena:[${q} TO ${q}||+1d]" ),
-                   new Lib.Search.Rule("zahajeno:\\[","datumZalozeni:[" ),
-                   new Lib.Search.Rule("zahajeno:(?=[<>])","datumZalozeni:${q}" ),
-                   new Lib.Search.Rule("zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" ),
-                   new Lib.Search.Rule("stav:","stav:" ),
-                   new Lib.Search.Rule("text:","dokumenty.plainText:" ),
-                   new Lib.Search.Rule("texttypdokumentu:","dokumenty.popis:" ),
-                   new Lib.Search.Rule("typdokumentu:","dokumenty.typUdalosti:" ),
-                   new Lib.Search.Rule("oddil:","dokumenty.oddil:" ),
+                   new Lib.Searching.Rule("ico:","(dluznici.iCO:${q} OR veritele.iCO:${q} OR spravci.iCO:${q}) " ),
+                   new Lib.Searching.Rule("icodluznik:","dluznici.iCO:" ),
+                   new Lib.Searching.Rule("icoveritel:","veritele.iCO:" ),
+                   new Lib.Searching.Rule("icospravce:","spravci.iCO:" ),
+                   new Lib.Searching.Rule("jmeno:","(dluznici.plneJmeno:${q} OR veritele.plneJmeno:${q} OR spravci.plneJmeno:${q})" ),
+                   new Lib.Searching.Rule("jmenodluznik:","dluznici.plneJmeno:" ),
+                   new Lib.Searching.Rule("jmenoveritel:","veritele.plneJmeno:" ),
+                   new Lib.Searching.Rule("jmenospravce:","spravci.plneJmeno:" ),
+                   new Lib.Searching.Rule("spisovaznacka:","spisovaZnacka:" ),
+                   new Lib.Searching.Rule("id:","spisovaZnacka:" ),
+                   new Lib.Searching.Rule("zmeneno:\\[","posledniZmena:[" ),
+                   new Lib.Searching.Rule("zmeneno:(?=[<>])","posledniZmena:${q}" ),
+                   new Lib.Searching.Rule("zmeneno:(?=\\d)","posledniZmena:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("zahajeno:\\[","datumZalozeni:[" ),
+                   new Lib.Searching.Rule("zahajeno:(?=[<>])","datumZalozeni:${q}" ),
+                   new Lib.Searching.Rule("zahajeno:(?=\\d)","datumZalozeni:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("stav:","stav:" ),
+                   new Lib.Searching.Rule("text:","dokumenty.plainText:" ),
+                   new Lib.Searching.Rule("texttypdokumentu:","dokumenty.popis:" ),
+                   new Lib.Searching.Rule("typdokumentu:","dokumenty.typUdalosti:" ),
+                   new Lib.Searching.Rule("oddil:","dokumenty.oddil:" ),
             };
 
             IRule[] irules = new IRule[] {
@@ -126,10 +127,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
-                modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
+                modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
-            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(query, irules);
+            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(query, irules);
 
             return qc;
 
@@ -161,7 +162,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             var sw = new StopWatchEx();
             sw.Start();
             search.OrigQuery = search.Q;
-            search.Q = Lib.Search.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
+            search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
             ISearchResponse<Rizeni> res = null;
             try
@@ -175,7 +176,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Query(q => GetSimpleQuery(search))
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                        .Highlight(h => Lib.Search.Tools.GetHighlight<Rizeni>(withHighlighting))
+                        .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
@@ -190,7 +191,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Query(q => GetSimpleQuery(search))
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                        .Highlight(h => Lib.Search.Tools.GetHighlight<Rizeni>(false))
+                        .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(false))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
@@ -234,27 +235,27 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public static SortDescriptor<Data.Insolvence.Rizeni> GetSort(int iorder)
         {
-            ES.InsolvenceSearchResult.InsolvenceOrderResult order = (ES.InsolvenceSearchResult.InsolvenceOrderResult)iorder;
+            Searching.InsolvenceSearchResult.InsolvenceOrderResult order = (Searching.InsolvenceSearchResult.InsolvenceOrderResult)iorder;
 
             SortDescriptor<Data.Insolvence.Rizeni> s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(f => f.Field("_score").Descending());
             switch (order)
             {
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedDesc:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedDesc:
                     s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.DatumZalozeni).Descending());
                     break;
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedAsc:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.DateAddedAsc:
                     s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.DatumZalozeni).Ascending());
                     break;
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc:
                     s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending());
                     break;
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateAsc:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateAsc:
                     s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Ascending());
                     break;
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll:
                     s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(f => f.Field("_doc"));
                     break;
-                case ES.InsolvenceSearchResult.InsolvenceOrderResult.Relevance:
+                case Searching.InsolvenceSearchResult.InsolvenceOrderResult.Relevance:
                 default:
                     break;
             }

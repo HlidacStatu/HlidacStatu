@@ -58,11 +58,11 @@ namespace HlidacStatu.Lib.Data
             var result = new List<Smlouva>();
             if (_otherVersions == null)
             {
-                var res = ES.SearchTools.SimpleSearch("identifikator.idSmlouvy:" + this.identifikator.idSmlouvy,
-                    1, 50, ES.SearchTools.OrderResult.DateAddedDesc, null
+                var res = Search.SimpleSearch("identifikator.idSmlouvy:" + this.identifikator.idSmlouvy,
+                    1, 50, Search.OrderResult.DateAddedDesc, null
                     );
-                var resNeplatne = ES.SearchTools.SimpleSearch("identifikator.idSmlouvy:" + this.identifikator.idSmlouvy,
-                    1, 50, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: false
+                var resNeplatne = Search.SimpleSearch("identifikator.idSmlouvy:" + this.identifikator.idSmlouvy,
+                    1, 50, Search.OrderResult.DateAddedDesc, null, platnyZaznam: false
                     );
 
                 if (res.IsValid == false)
@@ -146,13 +146,13 @@ namespace HlidacStatu.Lib.Data
                 tryNum--;
 
                 var tmpResult = new List<Smlouva>();
-                var res = ES.SearchTools.RawSearch(
+                var res = Search.RawSearch(
                     new QueryContainerDescriptor<Lib.Data.Smlouva>().Bool(b => b.Must(query)),
-                        1, numOfResults, ES.SearchTools.OrderResult.DateAddedDesc, null
+                        1, numOfResults, Search.OrderResult.DateAddedDesc, null
                     );
-                var resN = ES.SearchTools.RawSearch(
+                var resN = Search.RawSearch(
                     new QueryContainerDescriptor<Lib.Data.Smlouva>().Bool(b => b.Must(query)),
-                        1, numOfResults, ES.SearchTools.OrderResult.DateAddedDesc, null, platnyZaznam: false
+                        1, numOfResults, Search.OrderResult.DateAddedDesc, null, platnyZaznam: false
                     );
 
                 if (res.IsValid == false)
@@ -1052,7 +1052,7 @@ namespace HlidacStatu.Lib.Data
             return AllIdsFromDB(null);
         }
         public static IEnumerable<string> AllIdsFromDB(bool? deleted)
-        {`
+        {
             List<string> ids = null;
             using (Lib.Data.DbEntities db = new DbEntities())
             {
@@ -1172,7 +1172,7 @@ namespace HlidacStatu.Lib.Data
                 };
 
 
-            Lib.ES.SearchTools.DoActionForQuery<Smlouva>(client,
+            Searching.Tools.DoActionForQuery<Smlouva>(client,
             searchFunc, (hit, param) =>
             {
                 ids.Add(hit.Id);

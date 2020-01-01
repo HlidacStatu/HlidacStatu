@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HlidacStatu.Lib.Searching;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -12,14 +13,14 @@ namespace HlidacStatu.Lib.Data
             public System.TimeSpan TotalSearchTime { get; set; } = System.TimeSpan.Zero;
             public System.TimeSpan AddOsobyTime { get; set; } = System.TimeSpan.Zero;
             public string Query { get; set; }
-            public Lib.ES.SmlouvaSearchResult Smlouvy { get; set; } = null;
-            public Lib.ES.VerejnaZakazkaSearchData VZ { get; set; } = null;
+            public Lib.Searching.SmlouvaSearchResult Smlouvy { get; set; } = null;
+            public Lib.Searching.VerejnaZakazkaSearchData VZ { get; set; } = null;
             public GeneralResult<Osoba> Osoby { get; set; } = null;
             public bool OsobaFtx = false;
             public GeneralResult<TransparentniUcty.BankovniPolozka> Transakce { get; set; } = null;
             public GeneralResult<string> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
-			public ES.InsolvenceSearchResult Insolvence { get; set; } = null;
+			public InsolvenceSearchResult Insolvence { get; set; } = null;
 
             public bool HasSmlouvy { get { return (Smlouvy != null && Smlouvy.HasResult); } }
             public bool HasVZ { get { return (VZ != null && VZ.HasResult); } }
@@ -142,9 +143,9 @@ namespace HlidacStatu.Lib.Data
             if (string.IsNullOrEmpty(query))
                 return res;
 
-            if (!Lib.Search.Tools.ValidateQuery(query))
+            if (!Lib.Searching.Tools.ValidateQuery(query))
             {
-                res.Smlouvy = new ES.SmlouvaSearchResult();
+                res.Smlouvy = new Searching.SmlouvaSearchResult();
                 res.Smlouvy.Q = query;
                 res.Smlouvy.IsValid = false;
                 
@@ -166,7 +167,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         apmtran.CaptureSpan("Smlouvy", "search", () =>
                         {
-                            res.Smlouvy = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, 1, 20, ES.SearchTools.OrderResult.Relevance,
+                            res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, 20, Smlouva.Search.OrderResult.Relevance,
                                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
                                 );
                         });
@@ -202,7 +203,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, (int)ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
+                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, (int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
                     }
                     catch (System.Exception e)
                     {
@@ -267,10 +268,10 @@ namespace HlidacStatu.Lib.Data
 				{
 					try
 					{
-                        var iqu = new ES.InsolvenceSearchResult { Q = query, PageSize = 5 };
+                        var iqu = new Searching.InsolvenceSearchResult { Q = query, PageSize = 5 };
                         res.Insolvence = iqu;
                         //if (showBeta)
-                        res.Insolvence = Insolvence.Insolvence.SimpleSearch(new ES.InsolvenceSearchResult { Q = query, PageSize = 5 });
+                        res.Insolvence = Insolvence.Insolvence.SimpleSearch(new Searching.InsolvenceSearchResult { Q = query, PageSize = 5 });
 
                     }
                     catch (System.Exception e)

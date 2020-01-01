@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.Search.Rules
+namespace HlidacStatu.Lib.Searching.Rules
 {
     public class Holding
         : RuleBase
@@ -95,7 +95,7 @@ namespace HlidacStatu.Lib.Search.Rules
                         {
                             condition = condition.Replace("${q}", part.Value);
                         }
-                        icosQuery = Search.Tools.ModifyQueryOR(icosQuery, condition);
+                        icosQuery = Searching.Tools.ModifyQueryOR(icosQuery, condition);
                     }
 
                     return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);

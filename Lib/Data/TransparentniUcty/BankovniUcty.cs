@@ -66,7 +66,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                                 );
                 };
 
-            HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(
+            Searching.Tools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(
                 ES.Manager.GetESClient_BankovniUcty(), searchFunc,
                 (p, o) =>
                 {

@@ -17,11 +17,11 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
-        public ActionResult Hledat(DotaceSearchResult model)
+        public ActionResult Hledat(Lib.Searching.DotaceSearchResult model)
         {
             if (model == null || ModelState.IsValid == false)
             {
-                return View(new DotaceSearchResult());
+                return View(new Lib.Searching.DotaceSearchResult());
             }
 
             var aggs = new Nest.AggregationContainerDescriptor<Dotace>()

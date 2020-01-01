@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using HlidacStatu.Lib.Searching;
 
 namespace HlidacStatu.Lib.Data.External.DataSets
 {
@@ -13,7 +14,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
         }
 
-        public DataSearchResult(NameValueCollection queryString, SearchTools.OrderResult defaultOrder = SearchTools.OrderResult.Relevance)
+        public DataSearchResult(NameValueCollection queryString, Smlouva.Search.OrderResult defaultOrder = Smlouva.Search.OrderResult.Relevance)
             : base(queryString, defaultOrder)
         {
         }
@@ -31,7 +32,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
         }
 
-        public DataSearchRawResult(NameValueCollection queryString, SearchTools.OrderResult defaultOrder = SearchTools.OrderResult.Relevance)
+        public DataSearchRawResult(NameValueCollection queryString, Smlouva.Search.OrderResult defaultOrder = Smlouva.Search.OrderResult.Relevance)
             : base(queryString, defaultOrder)
         {
         }
@@ -108,14 +109,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 });
             }
             return list;
-                //Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.ES.SearchTools.OrderResult)).Select(
+                //Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
                 //    m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                 //    ).ToList();
         }
 
 
         public DataSearchResultBase(System.Collections.Specialized.NameValueCollection queryString,
-            Lib.ES.SearchTools.OrderResult defaultOrder = Lib.ES.SearchTools.OrderResult.Relevance)
+            Lib.Data.Smlouva.Search.OrderResult defaultOrder = Lib.Data.Smlouva.Search.OrderResult.Relevance)
                 : base(getSmlouvyOrderList)
         {
             int page = 1;
@@ -151,7 +152,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        public static string GetSearchUrl(string pageUrl, string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null)
+        public static string GetSearchUrl(string pageUrl, string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null)
         {
 
             string ret = string.Format("{0}{1}",
@@ -162,7 +163,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        public static string GetSearchUrlQueryString(string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null)
+        public static string GetSearchUrlQueryString(string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null)
         {
 
             string ret = string.Format("?Q={0}",

@@ -5,7 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using HlidacStatu.Lib.Search.Rules;
+using HlidacStatu.Lib.Searching;
+using HlidacStatu.Lib.Searching.Rules;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 using HtmlAgilityPack;
@@ -197,45 +198,45 @@ namespace HlidacStatu.Lib.Data.VZ
         };
 
 
-            public static QueryContainer GetSimpleQuery(ES.VerejnaZakazkaSearchData searchdata)
+            public static QueryContainer GetSimpleQuery(VerejnaZakazkaSearchData searchdata)
             {
 
-                Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
-                   new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
-                   new Lib.Search.Rule(@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
-                   new Lib.Search.Rule(@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
+                Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
+                   new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico" ),
+                   new Lib.Searching.Rule(@"osobaiddodavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
+                   new Lib.Searching.Rule(@"osobaidzadavatel:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","icododavatel" ),
 
-                   new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ","ico" ),
-                   new Lib.Search.Rule(@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" ),
-                   new Lib.Search.Rule(@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" ),
-                   new Lib.Search.Rule(@"holdingprijemce:(?<q>(\d{1,8})) ","icododavatel" ),
-                   new Lib.Search.Rule(@"holdingplatce:(?<q>(\d{1,8})) ","icozadavatel" ),
+                   new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) ","ico" ),
+                   new Lib.Searching.Rule(@"holdingdodavatel:(?<q>(\d{1,8})) ","icododavatel" ),
+                   new Lib.Searching.Rule(@"holdingzadavatel:(?<q>(\d{1,8})) ","icozadavatel" ),
+                   new Lib.Searching.Rule(@"holdingprijemce:(?<q>(\d{1,8})) ","icododavatel" ),
+                   new Lib.Searching.Rule(@"holdingplatce:(?<q>(\d{1,8})) ","icozadavatel" ),
 
-                   new Lib.Search.Rule("cpv:","${cpv}" ),
-                   new Lib.Search.Rule("oblast:","${oblast}" ),
-                   new Lib.Search.Rule("form:","${form}" ),
-                   new Lib.Search.Rule("zahajeny:1","stavVZ:<=100" ),
-                   new Lib.Search.Rule("ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " ),
-                   new Lib.Search.Rule("icododavatel:","dodavatele.iCO:" ),
-                   new Lib.Search.Rule("icoprijemce:","dodavatele.iCO:" ),
-                   new Lib.Search.Rule("icozadavatel:","zadavatel.iCO:" ),
-                   new Lib.Search.Rule("icoplatce:","zadavatel.iCO:" ),
-                   new Lib.Search.Rule("jmenoprijemce:","dodavatele.jmeno:" ),
-                   new Lib.Search.Rule("jmenoplatce:","zadavatel.jmeno:" ),
-                   new Lib.Search.Rule("id:","id:" ),
-                   new Lib.Search.Rule("popis:","(nazevZakazky:${q} OR popisZakazky:${q}) " ),
-                   new Lib.Search.Rule("cena:<=","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) " ),
-                   new Lib.Search.Rule("cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " ),
-                   new Lib.Search.Rule("cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " ),
-                   new Lib.Search.Rule("cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " ),
-                   new Lib.Search.Rule("cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " ),
-                   new Lib.Search.Rule("zverejneno:\\[","datumUverejneni:[" ),
-                   new Lib.Search.Rule("zverejneno:(?=[<>])","datumUverejneni:${q}" ),
-                   new Lib.Search.Rule("zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" ),
-                   new Lib.Search.Rule("podepsano:\\[","datumUzavreniSmlouvy:[" ),
-                   new Lib.Search.Rule("podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" ),
-                   new Lib.Search.Rule("podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" ),
-                   new Lib.Search.Rule("text:","prilohy.plainTextContent:" ),
+                   new Lib.Searching.Rule("cpv:","${cpv}" ),
+                   new Lib.Searching.Rule("oblast:","${oblast}" ),
+                   new Lib.Searching.Rule("form:","${form}" ),
+                   new Lib.Searching.Rule("zahajeny:1","stavVZ:<=100" ),
+                   new Lib.Searching.Rule("ico:","(zadavatel.iCO:${q} OR dodavatele.iCO:${q}) " ),
+                   new Lib.Searching.Rule("icododavatel:","dodavatele.iCO:" ),
+                   new Lib.Searching.Rule("icoprijemce:","dodavatele.iCO:" ),
+                   new Lib.Searching.Rule("icozadavatel:","zadavatel.iCO:" ),
+                   new Lib.Searching.Rule("icoplatce:","zadavatel.iCO:" ),
+                   new Lib.Searching.Rule("jmenoprijemce:","dodavatele.jmeno:" ),
+                   new Lib.Searching.Rule("jmenoplatce:","zadavatel.jmeno:" ),
+                   new Lib.Searching.Rule("id:","id:" ),
+                   new Lib.Searching.Rule("popis:","(nazevZakazky:${q} OR popisZakazky:${q}) " ),
+                   new Lib.Searching.Rule("cena:<=","(konecnaHodnotaBezDPH:<=${q} OR odhadovanaHodnotaBezDPH:<=${q}) " ),
+                   new Lib.Searching.Rule("cena:>=","(konecnaHodnotaBezDPH:>=${q} OR odhadovanaHodnotaBezDPH:>=${q}) " ),
+                   new Lib.Searching.Rule("cena:<","(konecnaHodnotaBezDPH:<${q} OR odhadovanaHodnotaBezDPH:<${q}) " ),
+                   new Lib.Searching.Rule("cena:>","(konecnaHodnotaBezDPH:>${q} OR odhadovanaHodnotaBezDPH:>${q}) " ),
+                   new Lib.Searching.Rule("cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " ),
+                   new Lib.Searching.Rule("zverejneno:\\[","datumUverejneni:[" ),
+                   new Lib.Searching.Rule("zverejneno:(?=[<>])","datumUverejneni:${q}" ),
+                   new Lib.Searching.Rule("zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("podepsano:\\[","datumUzavreniSmlouvy:[" ),
+                   new Lib.Searching.Rule("podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" ),
+                   new Lib.Searching.Rule("podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("text:","prilohy.plainTextContent:" ),
                 };
 
                 IRule[] irules = new IRule[] {
@@ -290,31 +291,31 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
                 if (searchdata.Zahajeny)
-                    modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "zahajeny:1");
+                    modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "zahajeny:1");
 
                 if (!string.IsNullOrWhiteSpace(searchdata.Oblast))
                 {
                     var oblValue = NormalizeOblastValue(searchdata.Oblast);
                     if (!string.IsNullOrEmpty(oblValue))
-                        modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "oblast:" + oblValue);
+                        modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "oblast:" + oblValue);
                 }
 
 
                 //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, rules); ;
                 //var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(query, irules);
-                var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, irules);
+                var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.VZ.VerejnaZakazka>(modifiedQ, irules);
 
                 return qc;
 
             }
 
 
-            public static ES.VerejnaZakazkaSearchData SimpleSearch(string query, string[] cpv,
+            public static VerejnaZakazkaSearchData SimpleSearch(string query, string[] cpv,
                 int page, int pageSize, int order, bool Zahajeny = false, bool withHighlighting = false,
                 bool exactNumOfResults = false)
             {
                 return SimpleSearch(
-                    new ES.VerejnaZakazkaSearchData()
+                    new VerejnaZakazkaSearchData()
                     {
                         Q = query,
                         OrigQuery = query,
@@ -331,8 +332,8 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
 
-            public static ES.VerejnaZakazkaSearchData SimpleSearch(
-                ES.VerejnaZakazkaSearchData search,
+            public static VerejnaZakazkaSearchData SimpleSearch(
+                VerejnaZakazkaSearchData search,
                 AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null,
                 bool logError = true, bool fixQuery = true, ElasticClient client = null,
                 bool withHighlighting = false)
@@ -364,7 +365,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 if (fixQuery)
                 {
                     search.OrigQuery = query;
-                    query = Lib.Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators);
+                    query = Lib.Searching.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators);
                 }
                 if (logError && search.Q != search.OrigQuery)
                 {
@@ -388,7 +389,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Query(q => GetSimpleQuery(search))
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                             .Aggregations(aggrFunc)
-                            .Highlight(h => Lib.Search.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
+                            .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
                             .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                     );
                     if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
@@ -401,7 +402,7 @@ namespace HlidacStatu.Lib.Data.VZ
                                 .Query(q => GetSimpleQuery(search))
                                 .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                                 .Aggregations(aggrFunc)
-                                .Highlight(h => Lib.Search.Tools.GetHighlight<VerejnaZakazka>(false))
+                                .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(false))
                                 .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                         );
                     }
@@ -439,7 +440,7 @@ namespace HlidacStatu.Lib.Data.VZ
             }
 
 
-            public static Nest.ISearchResponse<VerejnaZakazka> RawSearch(string jsonQuery, int page, int pageSize, ES.VerejnaZakazkaSearchData.VZOrderResult order = ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance,
+            public static Nest.ISearchResponse<VerejnaZakazka> RawSearch(string jsonQuery, int page, int pageSize,VerejnaZakazkaSearchData.VZOrderResult order = VerejnaZakazkaSearchData.VZOrderResult.Relevance,
                 AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null
                 )
             {
@@ -447,7 +448,7 @@ namespace HlidacStatu.Lib.Data.VZ
             }
 
 
-            public static Nest.ISearchResponse<VerejnaZakazka> RawSearch(Nest.QueryContainer query, int page, int pageSize, ES.VerejnaZakazkaSearchData.VZOrderResult order = ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance,
+            public static Nest.ISearchResponse<VerejnaZakazka> RawSearch(Nest.QueryContainer query, int page, int pageSize, VerejnaZakazkaSearchData.VZOrderResult order = VerejnaZakazkaSearchData.VZOrderResult.Relevance,
                 AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null
                 )
             {
@@ -491,8 +492,8 @@ namespace HlidacStatu.Lib.Data.VZ
             }
 
 
-            public static ES.VerejnaZakazkaSearchData _Search(
-            ES.VerejnaZakazkaSearchData search,
+            public static VerejnaZakazkaSearchData _Search(
+            VerejnaZakazkaSearchData search,
             AggregationContainerDescriptor<VerejnaZakazka> anyAggregation, ElasticClient client)
             {
                 if (string.IsNullOrEmpty(search.Q) && (search.CPV == null || search.CPV.Length == 0))
@@ -570,45 +571,45 @@ namespace HlidacStatu.Lib.Data.VZ
 
             public static SortDescriptor<Data.VZ.VerejnaZakazka> GetSort(int iorder)
             {
-                ES.VerejnaZakazkaSearchData.VZOrderResult order = (ES.VerejnaZakazkaSearchData.VZOrderResult)iorder;
+                VerejnaZakazkaSearchData.VZOrderResult order = (VerejnaZakazkaSearchData.VZOrderResult)iorder;
 
                 SortDescriptor<Data.VZ.VerejnaZakazka> s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("_score").Descending());
                 switch (order)
                 {
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.DatumUverejneni).Descending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.DateAddedAsc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.DateAddedAsc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.DatumUverejneni).Ascending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.DateSignedDesc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.DateSignedDesc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.DatumUzavreniSmlouvy).Descending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.DateSignedAsc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.DateSignedAsc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.DatumUzavreniSmlouvy).Ascending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.PriceAsc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.PriceAsc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.KonecnaHodnotaBezDPH).Ascending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.PriceDesc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.PriceDesc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(m => m.Field(f => f.KonecnaHodnotaBezDPH).Descending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.FastestForScroll:
+                    case VerejnaZakazkaSearchData.VZOrderResult.FastestForScroll:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("_doc"));
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.CustomerAsc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.CustomerAsc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field(ff => ff.Zadavatel.Jmeno).Ascending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.ContractorAsc:
+                    case VerejnaZakazkaSearchData.VZOrderResult.ContractorAsc:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("dodavatele.jmeno").Ascending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate:
+                    case VerejnaZakazkaSearchData.VZOrderResult.LastUpdate:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("lastUpdated").Descending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.PosledniZmena:
+                    case VerejnaZakazkaSearchData.VZOrderResult.PosledniZmena:
                         s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("posledniZmena").Descending());
                         break;
-                    case ES.VerejnaZakazkaSearchData.VZOrderResult.Relevance:
+                    case VerejnaZakazkaSearchData.VZOrderResult.Relevance:
                     default:
                         break;
                 }
@@ -617,10 +618,10 @@ namespace HlidacStatu.Lib.Data.VZ
 
             }
 
-            public static MemoryCacheManager<ES.VerejnaZakazkaSearchData, string>
-                cachedSearches = new MemoryCacheManager<ES.VerejnaZakazkaSearchData, string>("VZsearch", cachedFuncSimpleSearch, TimeSpan.FromHours(24));
+            public static MemoryCacheManager<VerejnaZakazkaSearchData, string>
+                cachedSearches = new MemoryCacheManager<VerejnaZakazkaSearchData, string>("VZsearch", cachedFuncSimpleSearch, TimeSpan.FromHours(24));
 
-            public static ES.VerejnaZakazkaSearchData CachedSimpleSearch(TimeSpan expiration, ES.VerejnaZakazkaSearchData search,
+            public static VerejnaZakazkaSearchData CachedSimpleSearch(TimeSpan expiration, VerejnaZakazkaSearchData search,
                 bool logError = true, bool fixQuery = true, ElasticClient client = null, bool exactNumOfResults = false)
             {
                 FullSearchQuery q = new FullSearchQuery()
@@ -632,7 +633,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 };
                 return cachedSearches.Get(Newtonsoft.Json.JsonConvert.SerializeObject(q), expiration);
             }
-            private static ES.VerejnaZakazkaSearchData cachedFuncSimpleSearch(string jsonFullSearchQuery)
+            private static VerejnaZakazkaSearchData cachedFuncSimpleSearch(string jsonFullSearchQuery)
             {
                 var query = Newtonsoft.Json.JsonConvert.DeserializeObject<FullSearchQuery>(jsonFullSearchQuery);
                 return SimpleSearch(query.search, query.anyAggregation, query.logError, query.fixQuery, query.client);
@@ -640,7 +641,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
             private class FullSearchQuery
             {
-                public ES.VerejnaZakazkaSearchData search;
+                public VerejnaZakazkaSearchData search;
                 public AggregationContainerDescriptor<VerejnaZakazka> anyAggregation = null;
                 public bool logError = true;
                 public bool fixQuery = true;

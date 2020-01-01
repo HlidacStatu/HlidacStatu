@@ -233,12 +233,12 @@
 
                     Celkem <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                              new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total
+                              new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total
                         )
                     </strong> zakázek,
                     <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                                          new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total)
+                                          new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total)
                     </strong> letos.
                 </p>
             </div>
@@ -252,7 +252,7 @@
                     foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
                     {
                         var num3M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+                            new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()
                             {
                                 Q = "zverejneno:[" + DateTime.Now.Date.AddMonths(-3).ToString("yyyy-MM-dd") + " TO *]",
                                 Oblast = obl.Value,

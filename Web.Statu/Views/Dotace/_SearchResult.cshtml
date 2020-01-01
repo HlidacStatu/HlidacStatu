@@ -1,4 +1,4 @@
-﻿@model HlidacStatu.Lib.ES.DotaceSearchResult
+﻿@model HlidacStatu.Lib.Searching.DotaceSearchResult
 @using HlidacStatu.Lib
 @using Devmasters.Core
 @using HlidacStatu.Web.Framework;
@@ -9,7 +9,7 @@
 <script>
     function changeOrder(sel) {
         var value = sel.value;
-        window.location.href = '@Html.Raw(HlidacStatu.Lib.ES.DotaceSearchResult.GetSearchUrl(
+        window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.DotaceSearchResult.GetSearchUrl(
         this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
         , Model.Q))&order=' + value;
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.Searching
 {
     public class Query
     {

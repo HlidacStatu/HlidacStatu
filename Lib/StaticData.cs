@@ -293,7 +293,7 @@ namespace HlidacStatu.Lib
                                              if (icos.Count() > 0)
                                              {
                                                  var res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 100,
-                                                        (int)Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
+                                                        (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
                                                         limitedView: false);
                                                  if (res.IsValid && res.Total > 0)
                                                  {
@@ -434,13 +434,13 @@ namespace HlidacStatu.Lib
                             try
                             {
 
-                                var res = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: true, anyAggregation:
+                                var res = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch("", 1, 0, platnyZaznam: true, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
                                     ), exactNumOfResults:true
                                     );
-                                var resNepl = HlidacStatu.Lib.ES.SearchTools.RawSearch("", 1, 0, platnyZaznam: false, anyAggregation:
+                                var resNepl = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch("", 1, 0, platnyZaznam: false, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)

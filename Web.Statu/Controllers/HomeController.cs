@@ -1077,8 +1077,8 @@ text zpravy: {txt}";
             }
             if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
             {
-                var findSm = Lib.ES.SearchTools.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
-                    Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
+                var findSm = Lib.Data.Smlouva.Search.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
+                    Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, withHighlighting: true);
                 if (findSm.Total > 0)
                     ViewBag.Highlighting = findSm.Result.Hits.First().Highlight;
 
@@ -1086,21 +1086,21 @@ text zpravy: {txt}";
             return View(model);
         }
 
-        public ActionResult HledatOld(HlidacStatu.Lib.ES.SmlouvaSearchResult model)
+        public ActionResult HledatOld(Lib.Searching.SmlouvaSearchResult model)
         {
             return HledatSmlouvy(model);
         }
 
-        public ActionResult HledatSmlouvy(HlidacStatu.Lib.ES.SmlouvaSearchResult model)
+        public ActionResult HledatSmlouvy(Lib.Searching.SmlouvaSearchResult model)
         {
             if (model == null || ModelState.IsValid == false)
-                return View(new HlidacStatu.Lib.ES.SmlouvaSearchResult());
+                return View(new Lib.Searching.SmlouvaSearchResult());
 
 
 
-            var sres = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(model.Q, model.Page,
-                HlidacStatu.Lib.ES.SearchTools.DefaultPageSize,
-                (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)),
+            var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(model.Q, model.Page,
+                HlidacStatu.Lib.Data.Smlouva.Search.DefaultPageSize,
+                (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(model.Order)),
                 includeNeplatne: model.IncludeNeplatne,
                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK)),
                 logError: false);
@@ -1237,7 +1237,7 @@ text zpravy: {txt}";
                 string[] icos = StaticData.MinisterstvaCache.Get().Select(s => s.ICO).ToArray();
 
                 var vz = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                    new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+                    new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()
                     {
                         Q = icos.Select(i => "ico:" + i).Aggregate((f, s) => f + " OR " + s),
                         Page = 0,

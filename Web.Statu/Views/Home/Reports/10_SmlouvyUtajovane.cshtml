@@ -10,10 +10,10 @@
 
 @{
 
-    var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.ES.SearchTools.OrderResult.DateAddedDesc);
+    var model = new HlidacStatu.Lib.Searching.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.DateAddedDesc);
     model.Q = "(issues.issueTypeId:18 OR issues.issueTypeId:12)";
-    model = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(model.Q, model.Page,
-100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: true);
+    model = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(model.Q, model.Page,
+100, (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(model.Order)), platnyZaznam: true);
 
     //model.Chyby = true;
 }

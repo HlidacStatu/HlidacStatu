@@ -1,6 +1,6 @@
 ﻿using Devmasters.Core;
-using HlidacStatu.Lib.ES;
-using HlidacStatu.Lib.Search.Rules;
+using HlidacStatu.Lib.Searching;
+using HlidacStatu.Lib.Searching.Rules;
 using Nest;
 using System;
 
@@ -36,13 +36,13 @@ namespace HlidacStatu.Lib.Data.Dotace
 
             //fix field prefixes
             //ds: -> 
-            Lib.Search.Rule[] rules = new Lib.Search.Rule[] {
-                   new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico"),
-                   new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
-                   new Lib.Search.Rule(@"ico:","prijemceIco:"),
-                   new Lib.Search.Rule("jmeno:","prijemceJmenoPrijemce:"),
-                   new Lib.Search.Rule("projekt:","projektNazev:"),
-                   new Lib.Search.Rule("castka:","dotaceCelkem:"),
+            Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
+                   new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico"),
+                   new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
+                   new Lib.Searching.Rule(@"ico:","prijemceIco:"),
+                   new Lib.Searching.Rule("jmeno:","prijemceJmenoPrijemce:"),
+                   new Lib.Searching.Rule("projekt:","projektNazev:"),
+                   new Lib.Searching.Rule("castka:","dotaceCelkem:"),
                    //new Lib.Search.Rule("id:","idDotace:"),
             };
 
@@ -67,10 +67,10 @@ namespace HlidacStatu.Lib.Data.Dotace
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
-                modifiedQ = Lib.Search.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
+                modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
-            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
+            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
 
             return qc;
 
@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             var sw = new StopWatchEx();
             sw.Start();
             search.OrigQuery = search.Q;
-            search.Q = Lib.Search.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
+            search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
 
             ISearchResponse<Dotace> res = null;
             try
@@ -113,7 +113,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                         .From(page * search.PageSize)
                         .Query(q => GetSimpleQuery(search))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                        .Highlight(h => Lib.Search.Tools.GetHighlight<Dotace>(withHighlighting))
+                        .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                 );
@@ -126,7 +126,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                             .From(page * search.PageSize)
                             .Query(q => GetSimpleQuery(search))
                             .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
-                            .Highlight(h => Lib.Search.Tools.GetHighlight<Dotace>(false))
+                            .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(false))
                             .Aggregations(aggr => anyAggregation)
                             .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                     );
@@ -138,7 +138,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Audit.Add(Audit.Operations.Search, "", "", "Dotace", "error", search.Q, null);
                 if (res != null && res.ServerError != null)
                 {
-                    Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
+                    ES.Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
                         + search.OrigQuery + "   query:"
                         + search.Q
                         + "\n\n res:" + search.Result.ToString()
@@ -156,7 +156,7 @@ namespace HlidacStatu.Lib.Data.Dotace
 
             if (res.IsValid == false)
             {
-                Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
+                ES.Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
                     + search.OrigQuery + "   query:"
                     + search.Q
                     + "\n\n res:" + search.Result?.ToString()

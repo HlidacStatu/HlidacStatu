@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.ES
+namespace HlidacStatu.Lib.Searching
 {
     public class SearchDataResult<T> : Lib.Data.Search.ISearchResult, ISocialInfo
         where T : class 
     {
         public virtual int DefaultPageSize() { return 40; }
-        public virtual int MaxResultWindow() { return  Lib.ES.SearchTools.MaxResultWindow; }
+        public virtual int MaxResultWindow() { return  Lib.Data.Smlouva.Search.MaxResultWindow; }
 
 
 
@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.ES
         protected static Func<List<System.Web.Mvc.SelectListItem>> getSmlouvyOrderList = () =>
         {
             return
-                Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.ES.SearchTools.OrderResult)).Select(
+                Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
                     m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     ).ToList();
         };

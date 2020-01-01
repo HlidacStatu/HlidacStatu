@@ -83,10 +83,10 @@ namespace HlidacStatu.Web.Controllers
             }
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(q) || string.IsNullOrEmpty(h))
                 return File(System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici"), "text/plain", "export.txt");
-            if (id == "smlouvy" && HlidacStatu.Lib.ES.SearchTools.IsQueryHashCorrect(id, q, h))
+            if (id == "smlouvy" && HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h))
             {
-                var sres = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(q, 0, num,
-              (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Util.ParseTools.ToInt(o) ?? 0),
+                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, num,
+              (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Util.ParseTools.ToInt(o) ?? 0),
               logError: false);
 
                 if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
@@ -120,7 +120,7 @@ namespace HlidacStatu.Web.Controllers
 
                 }
             }
-            else if (id == "zakazky" && HlidacStatu.Lib.ES.SearchTools.IsQueryHashCorrect(id, q, h))
+            else if (id == "zakazky" && HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h))
             {
 
                 string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');

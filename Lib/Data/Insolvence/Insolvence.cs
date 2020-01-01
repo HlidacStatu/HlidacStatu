@@ -1,5 +1,6 @@
 ﻿using Devmasters.Core;
 using HlidacStatu.Lib.ES;
+using HlidacStatu.Lib.Searching;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -351,7 +352,7 @@ MORATORIUM =
             };
 
             List<string> ids = new List<string>();
-            Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Insolvence.Rizeni>(Lib.ES.Manager.GetESClient_Insolvence(),
+            Searching.Tools.DoActionForQuery<Lib.Data.Insolvence.Rizeni>(Lib.ES.Manager.GetESClient_Insolvence(),
                         searchFunc, (hit, param) =>
                         {
                             ids.Add(hit.Id);

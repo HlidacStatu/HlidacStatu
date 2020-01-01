@@ -11,7 +11,7 @@
 
 @{
     DateTime dataForDate = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("*", 1, 1,
-            (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
+            (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc,
             limitedView: false)
         .ElasticResults.Hits.First().Source.PosledniZmena;
 

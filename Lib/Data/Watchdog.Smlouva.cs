@@ -68,9 +68,9 @@ namespace HlidacStatu.Lib.Data
         }
         protected override WatchDogProcessor.Result DoFinalSearch(string query, DateTime fromDate, DateTime toDate, string order = null)
         {
-            query += " AND zverejneno:" + string.Format("[{0} TO {1}]", ES.SearchTools.ToElasticDate(fromDate), ES.SearchTools.ToElasticDate(toDate)); //AND platnyZaznam:1
-            var res = Lib.ES.SearchTools.SimpleSearch(query, 0, 50, 
-                (ES.SearchTools.OrderResult)Convert.ToInt32(order ?? "4")
+            query += " AND zverejneno:" + string.Format("[{0} TO {1}]", Searching.Tools.ToElasticDate(fromDate), Searching.Tools.ToElasticDate(toDate)); //AND platnyZaznam:1
+            var res = Lib.Data.Smlouva.Search.SimpleSearch(query, 0, 50, 
+                (Smlouva.Search.OrderResult)Convert.ToInt32(order ?? "4")
                 );
             return new WatchDogProcessor.Result(res.ElasticResults.Hits.Select(m => (dynamic)m.Source), res.Total, 
                 query, fromDate, toDate, res.IsValid, 
@@ -87,8 +87,8 @@ namespace HlidacStatu.Lib.Data
 
         protected override DateTime? GetLatestRec(DateTime toDate)
         {
-            var query = "zverejneno:" + string.Format("[* TO {0}]", ES.SearchTools.ToElasticDate(toDate));
-            var res = Lib.ES.SearchTools.SimpleSearch(query, 0, 1, ES.SearchTools.OrderResult.DateAddedDesc);
+            var query = "zverejneno:" + string.Format("[* TO {0}]", Searching.Tools.ToElasticDate(toDate));
+            var res = Lib.Data.Smlouva.Search.SimpleSearch(query, 0, 1, Smlouva.Search.OrderResult.DateAddedDesc);
 
             if (res.IsValid == false)
                 return null;

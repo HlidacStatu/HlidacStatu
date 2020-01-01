@@ -1,4 +1,4 @@
-﻿@model HlidacStatu.Lib.ES.SmlouvaSearchResult
+﻿@model HlidacStatu.Lib.Searching.SmlouvaSearchResult
 @using HlidacStatu.Web
 @using HlidacStatu.Lib
 @using Devmasters.Core
@@ -19,16 +19,16 @@
 
     function changeOrder(sel) {
         var value = sel.value;
-        window.location.href = '@Html.Raw(HlidacStatu.Lib.ES.SmlouvaSearchResult.GetSearchUrl(
+        window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.SmlouvaSearchResult.GetSearchUrl(
         this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
         , Model.Q, chyby: Model.Chyby))&order=' + value;
     }
 
     function changeChyby(sel) {
         var value = sel.value;
-        window.location.href = '@Html.Raw(HlidacStatu.Lib.ES.SmlouvaSearchResult.GetSearchUrl(
+        window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.SmlouvaSearchResult.GetSearchUrl(
 this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
-, Model.Q, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(Model.Order))))&chyby=' + value;
+, Model.Q, (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(Model.Order))))&chyby=' + value;
     }
 
 </script>

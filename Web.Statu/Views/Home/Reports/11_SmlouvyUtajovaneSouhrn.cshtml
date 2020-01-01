@@ -21,8 +21,8 @@
 
 
 
-    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("(issues.issueTypeId:18 OR issues.issueTypeId:12)", 1, 0,
-        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, platnyZaznam: true);
+    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("(issues.issueTypeId:18 OR issues.issueTypeId:12)", 1, 0,
+        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggs, platnyZaznam: true);
 
     ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
         {

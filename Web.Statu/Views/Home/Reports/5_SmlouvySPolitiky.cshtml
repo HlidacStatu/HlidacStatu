@@ -64,8 +64,8 @@
 
                 foreach (var p in persons)
                 {
-            //doby angazovanosti politika v ICO
-            HlidacStatu.Lib.Data.Relation.AktualnostType akt = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny;
+                    //doby angazovanosti politika v ICO
+                    HlidacStatu.Lib.Data.Relation.AktualnostType akt = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny;
                     List<string> dates = new List<string>();
                     foreach (var v in p.VazbyProICO(ss.ico))
                     {
@@ -138,10 +138,10 @@
     };
 
 
-    var model = new HlidacStatu.Lib.ES.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.ES.SearchTools.OrderResult.PriceDesc);
+    var model = new HlidacStatu.Lib.Searching.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.PriceDesc);
 
-    model.Result = HlidacStatu.Lib.ES.SearchTools.RawSearch(qc, model.Page,
-        100, (HlidacStatu.Lib.ES.SearchTools.OrderResult)(Convert.ToInt32(model.Order)));
+    model.Result = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch(qc, model.Page,
+        100, (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(model.Order)));
 
     model.Chyby = false;
     model.AdditionalRender = renderPolitiky;

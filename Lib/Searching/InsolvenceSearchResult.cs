@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HlidacStatu.Lib.ES
+namespace HlidacStatu.Lib.Searching
 {
 	public class InsolvenceSearchResult : SearchDataResult<Data.Insolvence.Rizeni>
 	{

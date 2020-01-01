@@ -114,7 +114,7 @@ namespace HlidacStatu.Lib.Data
 
 
             HlidacStatu.Util.Consts.Logger.Debug($"Processing specific watchdog id {this.OrigWD.Id} ({this.OrigWD.dataType}) SEARCHING, date {fromDate}-{toDate}");
-            var res = DoFinalSearch(query, fromDate.Value, toDate.Value, order); //Lib.ES.SearchTools.SimpleSearch(query, 0, 50, order);
+            var res = DoFinalSearch(query, fromDate.Value, toDate.Value, order); //Lib.Data.Smlouva.Search.SimpleSearch(query, 0, 50, order);
             HlidacStatu.Util.Consts.Logger.Debug($"Processing specific watchdog id {this.OrigWD.Id} ({this.OrigWD.dataType}) FOUND, date {fromDate}-{toDate}, found {res.Total} records");
             return res;
 

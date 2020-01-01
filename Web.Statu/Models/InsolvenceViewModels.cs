@@ -11,13 +11,13 @@ namespace HlidacStatu.Web.Models
 
 	public class InsolvenceIndexViewModel
 	{
-		public InsolvenceSearchResult NoveFirmyVInsolvenci { get; set; }
-		public InsolvenceSearchResult NoveOsobyVInsolvenci { get; set; }
+		public Lib.Searching.InsolvenceSearchResult NoveFirmyVInsolvenci { get; set; }
+		public Lib.Searching.InsolvenceSearchResult NoveOsobyVInsolvenci { get; set; }
 
 		public InsolvenceIndexViewModel()
 		{
-			NoveFirmyVInsolvenci = new InsolvenceSearchResult();
-			NoveOsobyVInsolvenci = new InsolvenceSearchResult();
+			NoveFirmyVInsolvenci = new Lib.Searching.InsolvenceSearchResult();
+			NoveOsobyVInsolvenci = new Lib.Searching.InsolvenceSearchResult();
 		}
 	}
 

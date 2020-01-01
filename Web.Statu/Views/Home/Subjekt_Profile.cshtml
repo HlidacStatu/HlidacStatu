@@ -14,10 +14,10 @@
     Layout = null;
 
 
-    var resMinDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 1, HlidacStatu.Lib.ES.SearchTools.OrderResult.DateSignedAsc, platnyZaznam: true);
+    var resMinDate = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + Model.ICO, 1, 1, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.DateSignedAsc, platnyZaznam: true);
 
-    var minMaxDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 0,
-        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, platnyZaznam: true,
+    var minMaxDate = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + Model.ICO, 1, 0,
+        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, platnyZaznam: true,
         anyAggregation:
         new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
             .Min("min", m => m
@@ -155,8 +155,8 @@ else
                 </td>
             </tr>
             @{
-                var numFatalIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
-                var numVazneIssue = HlidacStatu.Lib.ES.SearchTools.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
+                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
+                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
             }
             <tr>
                 <th>Obsah stránky</th>
@@ -536,10 +536,10 @@ else
                 }
             }
             @{
-                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
-                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.ES.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
 
                 Dictionary<string, long> insolv = new Dictionary<string, long>();
                 insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);

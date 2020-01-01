@@ -46,9 +46,9 @@ namespace HlidacStatu.Lib.Data
 
         protected override WatchDogProcessor.Result DoFinalSearch(string query, DateTime fromDate, DateTime toDate, string order=null)
         {
-            query += " AND lastUpdated:" + string.Format("[{0} TO {1}]", ES.SearchTools.ToElasticDate(fromDate), ES.SearchTools.ToElasticDate(toDate)); //AND platnyZaznam:1
+            query += " AND lastUpdated:" + string.Format("[{0} TO {1}]", Searching.Tools.ToElasticDate(fromDate), Searching.Tools.ToElasticDate(toDate)); //AND platnyZaznam:1
             var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 50, 
-                order == null ? (int)ES.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc : Convert.ToInt32(order ), 
+                order == null ? (int)Searching.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc : Convert.ToInt32(order ), 
                 this.OrigWD.FocusId == 1);
 
             return new WatchDogProcessor.Result(res.ElasticResults.Hits.Select(m => (dynamic)m.Source), res.Total, 
@@ -58,8 +58,8 @@ namespace HlidacStatu.Lib.Data
 
         protected override DateTime? GetLatestRec(DateTime toDate)
         {
-            var query = "lastUpdated:" + string.Format("[* TO {0}]", ES.SearchTools.ToElasticDate(toDate));
-            var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, (int)ES.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate);
+            var query = "lastUpdated:" + string.Format("[* TO {0}]", Searching.Tools.ToElasticDate(toDate));
+            var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, (int)Searching.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate);
 
             if (res.IsValid == false)
                 return null;

@@ -1,4 +1,4 @@
-﻿@model HlidacStatu.Lib.ES.VerejnaZakazkaSearchData
+﻿@model HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
@@ -14,7 +14,7 @@
 
     Model.Q = "";
     Model.CPV = new string[] { "72", "64216", "791211", "48", "50312" };
-    Model.Order = ((int)HlidacStatu.Lib.ES.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc).ToString();
+    Model.Order = ((int)HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc).ToString();
     Model.PageSize = 50;
 
 

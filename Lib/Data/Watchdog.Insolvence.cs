@@ -54,9 +54,9 @@ namespace HlidacStatu.Lib.Data
 
         protected override WatchDogProcessor.Result DoFinalSearch(string query, DateTime fromDate, DateTime toDate, string order=null)
         {
-            query += " AND posledniZmena:" + string.Format("[{0} TO {1}]", ES.SearchTools.ToElasticDate(fromDate), ES.SearchTools.ToElasticDate(toDate)); //AND platnyZaznam:1
+            query += " AND posledniZmena:" + string.Format("[{0} TO {1}]", Searching.Tools.ToElasticDate(fromDate), Searching.Tools.ToElasticDate(toDate)); //AND platnyZaznam:1
             var res = Lib.Data.Insolvence.Insolvence.SimpleSearch(query, 0, 50, 
-                order == null ? (int)ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc : Convert.ToInt32(order ),
+                order == null ? (int)Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc : Convert.ToInt32(order ),
                 false, isLimited);
 
             return new WatchDogProcessor.Result(res.ElasticResults.Hits.Select(m => (dynamic)m.Source), res.Total, 
@@ -66,8 +66,8 @@ namespace HlidacStatu.Lib.Data
 
         protected override DateTime? GetLatestRec(DateTime toDate)
         {
-            var query = "posledniZmena:" + string.Format("[* TO {0}]", ES.SearchTools.ToElasticDate(toDate));
-            var res = Lib.Data.Insolvence.Insolvence.SimpleSearch(query, 0, 1, (int)ES.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, 
+            var query = "posledniZmena:" + string.Format("[* TO {0}]", Searching.Tools.ToElasticDate(toDate));
+            var res = Lib.Data.Insolvence.Insolvence.SimpleSearch(query, 0, 1, (int)Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, 
                 false, isLimited);
 
             if (res.IsValid == false)

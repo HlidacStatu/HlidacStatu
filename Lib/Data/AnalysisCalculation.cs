@@ -83,13 +83,13 @@ namespace HlidacStatu.Lib.Data
                             .Size(size)
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
-                            .Query(q => Lib.ES.SearchTools.GetSimpleQuery("ico:" + ico + sdate))
+                            .Query(q => Lib.Data.Smlouva.Search.GetSimpleQuery("ico:" + ico + sdate))
                             .Scroll("5m")
                             );
             };
 
             List<Smlouva> smlouvy = new List<Smlouva>();
-            Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
+            Lib.Searching.Tools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
                   (hit, o) =>
                   {
                       smlouvy.Add(hit.Source);
@@ -240,7 +240,7 @@ namespace HlidacStatu.Lib.Data
             Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>> uradyStatni = new Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>();
             Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>> uradySoukr = new Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>();
             object lockObj = new object();
-            Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
+            Lib.Searching.Tools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
                   (hit, param) =>
                   {
                       Lib.Data.Smlouva s = hit.Source;
@@ -429,7 +429,7 @@ namespace HlidacStatu.Lib.Data
 
 
             List<string> smlouvyIds = new List<string>();
-            Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
+            Searching.Tools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(), searchFunc,
                   (hit, param) =>
                   {
 
@@ -493,8 +493,8 @@ namespace HlidacStatu.Lib.Data
                             )
                         );
 
-                    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + firma.ico, 1, 0,
-                        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
+                    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("icoPrijemce:" + firma.ico, 1, 0,
+                        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll,
                         anyAggregation: aggs, platnyZaznam: true, exactNumOfResults:true);
 
 
@@ -595,7 +595,7 @@ namespace HlidacStatu.Lib.Data
                     else
                     {
 
-                        var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggs, exactNumOfResults: true);
+                        var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggs, exactNumOfResults: true);
                         if (res.Result.Aggregations.Count > 0)
                         {
                             var epoch = ((Nest.ValueAggregate)res.Result.Aggregations.First().Value).Value;

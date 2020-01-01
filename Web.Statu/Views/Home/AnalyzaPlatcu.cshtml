@@ -41,7 +41,7 @@
             )
         );
 
-    var resPerIco = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, aggsPerIco);
+    var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
 
     Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> platci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
 

@@ -26,10 +26,10 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
-        public ActionResult IT(HlidacStatu.Lib.ES.VerejnaZakazkaSearchData model)
+        public ActionResult IT(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData model)
         {
             if (model == null)
-                return View(new HlidacStatu.Lib.ES.SmlouvaSearchResult());
+                return View(new Lib.Searching.SmlouvaSearchResult());
             else
             return View(model);
         }
@@ -48,7 +48,7 @@ namespace HlidacStatu.Web.Controllers
                 var findSm = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(
                     $"_id:\"{vz.Id}\" AND ({this.Request.QueryString["qs"]})", 
                     new string[] { }, 1, 1,
-                    (int)Lib.ES.SearchTools.OrderResult.FastestForScroll, withHighlighting: true);
+                    (int)Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, withHighlighting: true);
                 if (findSm.Total > 0)
                     ViewBag.Highlighting = findSm.Result.Hits.First().Highlight;  //todo: es7 check
 
@@ -69,10 +69,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        public ActionResult Hledat(HlidacStatu.Lib.ES.VerejnaZakazkaSearchData model, string cpv)
+        public ActionResult Hledat(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData model, string cpv)
         {
             if (model == null || ModelState.IsValid == false)
-                return View(new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData());
+                return View(new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData());
 
             string[] cpvs = null;
             if (!string.IsNullOrEmpty(cpv))

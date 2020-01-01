@@ -17,7 +17,7 @@
 }
 
 @helper InsolvenceTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
-            int maxItems, HlidacStatu.Lib.ES.InsolvenceSearchResult result)
+            int maxItems, HlidacStatu.Lib.Searching.InsolvenceSearchResult result)
 {
     <div class="table-new searching__watcher__table">
         <table class="table table-hover">
@@ -179,7 +179,7 @@
     </tr>
 }
 
-@helper SmlouvyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Smlouva rec, HlidacStatu.Lib.ES.SmlouvaSearchResult Model, bool small = false)
+@helper SmlouvyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Smlouva rec, HlidacStatu.Lib.Searching.SmlouvaSearchResult Model, bool small = false)
 {
     var confLevel = rec.GetConfidenceLevel();
     string bgLevel = "", iconLevel = "";
@@ -321,7 +321,7 @@
 }
 
 @helper VZTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
-            int maxItems, HlidacStatu.Lib.ES.VerejnaZakazkaSearchData result, bool skipBookmark = false)
+            int maxItems, HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData result, bool skipBookmark = false)
 {
     <div class="table-new searching__watcher__table">
         @if (result.Total > maxItems)

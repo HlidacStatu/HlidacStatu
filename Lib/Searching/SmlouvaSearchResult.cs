@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.ES
+namespace HlidacStatu.Lib.Searching
 {
     public class SmlouvaSearchResult
         : SearchDataResult<HlidacStatu.Lib.Data.Smlouva>
@@ -33,7 +33,7 @@ namespace HlidacStatu.Lib.ES
         { }
 
 
-        public SmlouvaSearchResult(System.Collections.Specialized.NameValueCollection queryString, Lib.ES.SearchTools.OrderResult defaultOrder = Lib.ES.SearchTools.OrderResult.ConfidenceDesc)
+        public SmlouvaSearchResult(System.Collections.Specialized.NameValueCollection queryString, Lib.Data.Smlouva.Search.OrderResult defaultOrder = Lib.Data.Smlouva.Search.OrderResult.ConfidenceDesc)
                 : base(getSmlouvyOrderList)
         {
             int page = 1;
@@ -74,7 +74,7 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        public static string GetSearchUrl(string pageUrl, string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null, bool chyby = false)
+        public static string GetSearchUrl(string pageUrl, string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool chyby = false)
         {
 
             string ret = string.Format("{0}{1}",
@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        public static string GetSearchUrlQueryString(string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null, bool chyby = false)
+        public static string GetSearchUrlQueryString(string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool chyby = false)
         {
 
             string ret = string.Format("?Q={0}",

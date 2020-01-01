@@ -60,7 +60,7 @@ namespace HlidacStatu.Lib.Data
                 if (string.IsNullOrEmpty(query))
                     return res;
 
-                if (!Lib.Search.Tools.ValidateQuery(query))
+                if (!Lib.Searching.Tools.ValidateQuery(query))
                 {                    
                     res.Exceptions.Add(new System.Exception($"Invalid Query: {query}"));
                     return res;

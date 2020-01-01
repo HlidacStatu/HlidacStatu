@@ -690,7 +690,7 @@ namespace HlidacStatu.Web.Controllers
                                 );
                 };
 
-                HlidacStatu.Lib.ES.SearchTools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
+                Lib.Searching.Tools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
                     HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
                     searchFunc,
                     (p, o) =>
@@ -717,7 +717,7 @@ namespace HlidacStatu.Web.Controllers
         {
             page = page ?? 1;
             order = order ?? 0;
-            HlidacStatu.Lib.ES.SmlouvaSearchResult res = null;
+            Lib.Searching.SmlouvaSearchResult res = null;
             var apires = Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("query", query), new Framework.ApiCall.CallParameter("page", page?.ToString()), new Framework.ApiCall.CallParameter("order", order?.ToString()) });
 
             if (apires.Authentificated)
@@ -737,9 +737,9 @@ namespace HlidacStatu.Web.Controllers
                     )
                     platnyzaznam = null;
 
-                res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch(query, page.Value,
-                    HlidacStatu.Lib.ES.SearchTools.DefaultPageSize,
-                    (HlidacStatu.Lib.ES.SearchTools.OrderResult)order.Value,
+                res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, page.Value,
+                    HlidacStatu.Lib.Data.Smlouva.Search.DefaultPageSize,
+                    (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)order.Value,
                     platnyZaznam: platnyzaznam);
 
 
@@ -801,8 +801,8 @@ namespace HlidacStatu.Web.Controllers
                 if (pageSize > 500)
                     pageSize = 500;
 
-                var items = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("NOT(_exists_:prilohy.datlClassification)", 0, pageSize,
-                    HlidacStatu.Lib.ES.SearchTools.OrderResult.DateAddedDesc, platnyZaznam: true);
+                var items = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("NOT(_exists_:prilohy.datlClassification)", 0, pageSize,
+                    HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.DateAddedDesc, platnyZaznam: true);
 
                 if (!items.IsValid)
                 {
@@ -903,7 +903,7 @@ namespace HlidacStatu.Web.Controllers
                 if (login == "jskuhrovec@gmail.com" || login == "titl.vitezslav@gmail.com" || login == "michal@michalblaha.cz")
                 {
 
-                    HlidacStatu.Lib.ES.SearchTools.DoActionForAll<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
+                    Lib.Searching.Tools.DoActionForAll<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
                         (t, obj) =>
                         {
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.Search.Rules
+namespace HlidacStatu.Lib.Searching.Rules
 {
     public class TransformPrefix
         : TransformPrefixWithValue

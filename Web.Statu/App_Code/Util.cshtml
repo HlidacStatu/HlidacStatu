@@ -61,7 +61,7 @@
         string foundContentFormat = null, string noHLContent = "", string prefix = "",
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
-    @Html.Raw(HlidacStatu.Lib.Search.Highlighter.HighlightContentIntoHtmlBlock(
+    @Html.Raw(HlidacStatu.Lib.Searching.Highlighter.HighlightContentIntoHtmlBlock(
             highlights, path, contentToCompare,
             foundContentFormat, noHLContent, prefix,
             postfix, highlightPartDelimiter, icon)
@@ -1108,15 +1108,15 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                         <p>
                             <a role="button" class="btn btn-primary btn-sm" target="_blank"
                                onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
-                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.ES.SearchTools.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
+                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
                                 Export do Excelu
                             </a>
                             @*<a role="button" class="btn btn-default btn-sm" target="_blank"
-                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.ES.SearchTools.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
+                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
                                     Do Numbers
                                 </a>
                                 <a role="button" class="btn btn-default btn-sm" target="_blank"
-                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.ES.SearchTools.QueryHash(typ,q))&o=@(order)&ct=txt&@(moreParams)">
+                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=txt&@(moreParams)">
                                     Do text.souboru
                                 </a>*@
                         </p>

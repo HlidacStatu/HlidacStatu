@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Nest;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.Searching
 {
     public static class SimpleQueryCreator
     {
-        public static SplittingQuery GetSimpleQuery(string query, Lib.Search.Rules.IRule[] rules)
+        public static SplittingQuery GetSimpleQuery(string query, Lib.Searching.Rules.IRule[] rules)
         {
             var fixedQuery = Tools.FixInvalidQuery(query,rules) ?? "";
             return GetSimpleQuery(SplittingQuery.SplitQuery(fixedQuery), rules);
         }
 
 
-        public static SplittingQuery GetSimpleQuery(Search.SplittingQuery sq, Lib.Search.Rules.IRule[] rules)
+        public static SplittingQuery GetSimpleQuery(Searching.SplittingQuery sq, Lib.Searching.Rules.IRule[] rules)
         {
             SplittingQuery finalSq = new SplittingQuery();
 

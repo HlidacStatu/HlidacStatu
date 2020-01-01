@@ -19,7 +19,7 @@
     <tbody>
         @foreach (var item in Model.Dokumenty.OrderByDescending(d => d.DatumVlozeni))
         {
-            string hlres = HlidacStatu.Lib.Search.Highlighter.HighlightContent(highlightingData, "dokumenty.plainText", item.PlainText);
+            string hlres = HlidacStatu.Lib.Searching.Highlighter.HighlightContent(highlightingData, "dokumenty.plainText", item.PlainText);
 
         <tr>
             <td>

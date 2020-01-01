@@ -25,7 +25,7 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
             if (onlyWithErr == false) //vsechny profily
             {
                 Console.WriteLine("Reading profily zadavatelu");
-                Lib.ES.SearchTools.DoActionForAll<VZ.ProfilZadavatele>(
+                Lib.Searching.Tools.DoActionForAll<VZ.ProfilZadavatele>(
                     (pz, obj) =>
                     {
                         profily2.Add(pz.Source);
@@ -54,7 +54,7 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
                                 .Scroll("2m")
                                 );
                 };
-                Lib.ES.SearchTools.DoActionForQuery<Lib.Data.Logs.ProfilZadavateleDownload>(Lib.ES.Manager.GetESClient_Logs(), searchFunc,
+                Searching.Tools.DoActionForQuery<Lib.Data.Logs.ProfilZadavateleDownload>(Lib.ES.Manager.GetESClient_Logs(), searchFunc,
                     (pzd, obj) =>
                     {
                         var profileId = pzd.Source.ProfileId;

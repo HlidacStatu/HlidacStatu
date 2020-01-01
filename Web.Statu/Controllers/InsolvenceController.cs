@@ -26,11 +26,11 @@ namespace HlidacStatu.Web.Controllers
 			return View(model);
 		}
 
-		public ActionResult Hledat(InsolvenceSearchResult model)
+		public ActionResult Hledat(Lib.Searching.InsolvenceSearchResult model)
 		{
 			if (model == null || ModelState.IsValid == false)
 			{
-				return View(new InsolvenceSearchResult());
+				return View(new Lib.Searching.InsolvenceSearchResult());
 			}
             model.LimitedView = IsLimitedView();
 			var res = Insolvence.SimpleSearch(model);

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace HlidacStatu.Lib.Search
+namespace HlidacStatu.Lib.Searching
 {
 
     public class Highlighter
@@ -83,7 +83,7 @@ namespace HlidacStatu.Lib.Search
             highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
             //foundContentFormat = foundContentFormat ?? "<span class='highlighting'>{0}</span>";
 
-            string result = HlidacStatu.Lib.Search.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
+            string result = HlidacStatu.Lib.Searching.Highlighter.HighlightContent(highlights, path, contentToCompare, highlightPartDelimiter);
             if (string.IsNullOrEmpty(result))
             {
                 return noHLContent;

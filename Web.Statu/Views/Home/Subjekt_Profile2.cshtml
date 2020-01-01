@@ -13,10 +13,10 @@
 @{
 
 
-    var resMinDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 1, HlidacStatu.Lib.ES.SearchTools.OrderResult.DateSignedAsc, platnyZaznam: true);
+    var resMinDate = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + Model.ICO, 1, 1, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.DateSignedAsc, platnyZaznam: true);
 
-    var minMaxDate = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("ico:" + Model.ICO, 1, 0,
-        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll, platnyZaznam: true,
+    var minMaxDate = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + Model.ICO, 1, 0,
+        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, platnyZaznam: true,
         anyAggregation:
         new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
             .Min("min", m => m

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HlidacStatu.Lib.ES
+namespace HlidacStatu.Lib.Searching
 {
     public class VerejnaZakazkaSearchData
         : SearchDataResult<HlidacStatu.Lib.Data.VZ.VerejnaZakazka>
@@ -183,7 +183,7 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        public static string GetSearchUrl(string pageUrl, string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
+        public static string GetSearchUrl(string pageUrl, string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
         {
 
             string ret = string.Format("{0}{1}",
@@ -194,7 +194,7 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        public static string GetSearchUrlQueryString(string Q, Lib.ES.SearchTools.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
+        public static string GetSearchUrlQueryString(string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
         {
 
             string ret = string.Format("?Q={0}",

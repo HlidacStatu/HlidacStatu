@@ -32,8 +32,8 @@
             )
         );
 
-    var res = HlidacStatu.Lib.ES.SearchTools.SimpleSearch("icoPrijemce:" + ico, 1, 0,
-        HlidacStatu.Lib.ES.SearchTools.OrderResult.FastestForScroll,
+    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("icoPrijemce:" + ico, 1, 0,
+        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll,
         anyAggregation: aggs, platnyZaznam: true);
 
     ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]

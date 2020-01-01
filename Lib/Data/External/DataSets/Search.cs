@@ -1,4 +1,4 @@
-﻿using HlidacStatu.Lib.Search.Rules;
+﻿using HlidacStatu.Lib.Searching.Rules;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
 
             sw.Start();
-            var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
+            var query = Lib.Searching.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
 
             var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting, exactNumOfResults);
 
@@ -118,7 +118,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
             bool exactNumOfResults = false)
         {
-            var query = Lib.Search.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
+            var query = Lib.Searching.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);
             var res = _searchData(ds, query, page, pageSize, sort, excludeBigProperties, withHighlighting, exactNumOfResults);
             if (!res.IsValid)
             {
@@ -200,9 +200,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             page = page - 1;
             if (page < 0)
                 page = 0;
-            if (page * pageSize > Lib.ES.SearchTools.MaxResultWindow)
+            if (page * pageSize > Lib.Data.Smlouva.Search.MaxResultWindow)
             {
-                page = (Lib.ES.SearchTools.MaxResultWindow / pageSize) - 1;
+                page = (Lib.Data.Smlouva.Search.MaxResultWindow / pageSize) - 1;
             }
 
             //exclude big properties from result
@@ -217,7 +217,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .From(page * pageSize)
                     .Query(q => qc)
                     .Sort(ss => sortD)
-                    .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(withHighlighting))
+                    .Highlight(h => Lib.Searching.Tools.GetHighlight<Object>(withHighlighting))
                     .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
            );
 
@@ -231,7 +231,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         .From(page * pageSize)
                         .Query(q => qc)
                         .Sort(ss => sortD)
-                        .Highlight(h => Lib.Search.Tools.GetHighlight<Object>(false))
+                        .Highlight(h => Lib.Searching.Tools.GetHighlight<Object>(false))
                         .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
                 );
 
@@ -263,15 +263,15 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             //else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
             //    osobaQP = osobaIdQuerypathToIco;
 
-            List<Lib.Search.Rule> rules = new List<Lib.Search.Rule> {
-                    new Lib.Search.Rule("id:",idQuerypath ),
-                    new Lib.Search.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
+            List<Lib.Searching.Rule> rules = new List<Lib.Searching.Rule> {
+                    new Lib.Searching.Rule("id:",idQuerypath ),
+                    new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", "ico")
                     {
                         AddLastCondition = osobaIdQuerypath
                     },
-                    new Lib.Search.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),
-                    new Lib.Search.Rule("ico:",icoQuerypath ),
-                    new Lib.Search.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
+                    new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) ",icoQuerypath ),
+                    new Lib.Searching.Rule("ico:",icoQuerypath ),
+                    new Lib.Searching.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
                 };
 
             List<IRule>irules = new List<IRule> {
@@ -289,7 +289,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Where(m => !string.IsNullOrEmpty(m))
                 .ToArray();
 
-            var qp = HlidacStatu.Lib.Search.SplittingQuery.SplitQuery(query);
+            var qp = HlidacStatu.Lib.Searching.SplittingQuery.SplitQuery(query);
             string[] foundPrefixes = qp.Parts.Select(m=>m.Prefix)
                 .Where(m => !string.IsNullOrEmpty(m))
                 .Where(m => !existingPrefixes.Contains(m))
@@ -322,7 +322,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             //var qc = Lib.Search.Tools.GetSimpleQuery<object>(query, rules.ToArray());
 
-            var qc = Lib.Search.SimpleQueryCreator.GetSimpleQuery<object>(query, irules.ToArray());
+            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<object>(query, irules.ToArray());
 
             return qc;
         }

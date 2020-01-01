@@ -17,7 +17,7 @@
         <li class="active">Hlídač Veřejných zakázek</li>
     </ol>
 }
-@Html.Partial("_SearchForm", new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData())
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData())
 
 
 <hr />
@@ -26,7 +26,7 @@
     @foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
     {
         var numAll = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()
             {
         //Q = "zverejneno:=>" + DateTime.Now.Date.AddMonths(-3).ToString("yyyy-MM-dd")
         Q = "*",
@@ -36,7 +36,7 @@
             }
             ).Total;
         var num1M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()
             {
                 Q = "zverejneno:[" + DateTime.Now.Date.AddMonths(-1).ToString("yyyy-MM-dd") + " TO *]",
         //Q = "*",
@@ -46,7 +46,7 @@
             }
             ).Total;
         var num1W = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-            new HlidacStatu.Lib.ES.VerejnaZakazkaSearchData()
+            new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()
             {
                 Q = "zverejneno:[" + DateTime.Now.Date.AddDays(-8).ToString("yyyy-MM-dd") + " TO *]",
         //Q = "*",
