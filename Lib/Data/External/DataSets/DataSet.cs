@@ -746,6 +746,30 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return "";
         }
 
+        //var last = this.SearchData("*", 1, 1, "DbCreated desc");
+        long _numberOfRecords = -1;
+        public long NumberOfRecords()
+        {
+            if (_numberOfRecords == -1)
+            {
+                var last = this.SearchData("*", 1, 1, "DbCreated desc", exactNumOfResults:true);
+                _numberOfRecords = last.Total;
+                _lastRecordUpdated = last.Result.FirstOrDefault()?.DbCreated ?? DateTime.Now.AddYears(-10);
+            }
+            return _numberOfRecords;
+        }
+        DateTime _lastRecordUpdated = DateTime.MinValue;
+        public DateTime LastRecordUpdated()
+        {
+            if (_lastRecordUpdated == DateTime.MinValue)
+            {
+                var last = this.SearchData("*", 1, 1, "DbCreated desc", exactNumOfResults: true);
+                _numberOfRecords = last.Total;
+                _lastRecordUpdated = last.Result.FirstOrDefault()?.DbCreated ?? DateTime.Now.AddYears(-10);
+            }
+            return _lastRecordUpdated;
+        }
+
         InfoFact[] _infofacts = null;
         object lockInfoObj = new object();
         public InfoFact[] InfoFacts()

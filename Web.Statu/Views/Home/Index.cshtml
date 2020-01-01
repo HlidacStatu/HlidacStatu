@@ -83,11 +83,67 @@
 }
 
 <div class="watcher-blocks">
-    <div class="watcher-blocks__title">
-        Prohlédněte si a hledejte v konkrétních oblastech hlídače státu
-    </div>
 
     <div class="watcher-blocks__wrapper">
+
+        <!-- block 1 -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Další databáze
+                </h2>
+            </div>
+            <div class="block-col ">
+                <p>
+                    Na Hlídači máme mnoho databází od nás i od komunity.</p>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Nejzajímavější databáze
+                </div>
+                <div class="block-tags">
+                    <a href="/data/Index/veklep" class="tag">
+                        Elektronická knihovna legislativního procesu
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("veklep").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/vyjadreni-politiku" class="tag">
+                        Vyjádření politiků na <i class="fab fa-facebook-square"></i> a <i class="fab fa-twitter-square"></i>
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("vyjadreni-politiku").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/stenozaznamy-psp" class="tag">
+                        Proslovy poslanců v Poslanecké sněmovně od 2008
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("stenozaznamy-psp").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/ministry-invoices" class="tag">
+                        Faktury ministerstev za poslední roky
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("ministry-invoices").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/rozhodnuti-uohs" class="tag">
+                        Rozhodnutí ÚOHS
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rozhodnuti-uohs").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/rejstriktrestupravnickychosob" class="tag">
+                        Rejstřík trestů právnických osob
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rejstriktrestupravnickychosob").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/stav-mostu" class="tag">
+                        Stav Mostů v ČR
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("stav-mostu").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/narodni-investicni-plan" class="tag">
+                        Národní investiční plán 2019
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("narodni-investicni-plan").NumberOfRecords()))
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/data" class="btn btn-default btn-default-new">Ukázat další databáze</a>
+            </div>
+        </div>
 
         <!-- block 1 -->
         <div class="watcher-block">
@@ -233,12 +289,12 @@
 
                     Celkem <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                              new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total
+                              new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total
                         )
                     </strong> zakázek,
                     <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                                          new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults=true }).Total)
+                                          new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total)
                     </strong> letos.
                 </p>
             </div>
@@ -258,7 +314,7 @@
                                 Oblast = obl.Value,
                                 Page = 0,
                                 PageSize = 0,
-                                ExactNumOfResults=true
+                                ExactNumOfResults = true
                             }).Total;
                         topVZ.Add(
                             new Tuple<string, string, long>(
@@ -358,82 +414,83 @@
         </div>
 
 
-
-        <!-- block  transp.ucty -->
-        <div class="watcher-block">
-            <div class="watcher__title">
-                <img src="/Content/img/icon-finance.svg">
-                <h2 class="new-title">
-                    Hlídač polit. financí
-                </h2>
-            </div>
-
-            <div class="block-col ">
-                <p>
-                    Informace o příjmech a výdajích z transparentních účtů politických stran, hnutí a osobností
-                </p>
-            </div>
-
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Transparetní účty stran
+        @if (false)
+        {
+            <!-- block  transp.ucty -->
+            <div class="watcher-block">
+                <div class="watcher__title">
+                    <img src="/Content/img/icon-finance.svg">
+                    <h2 class="new-title">
+                        Hlídač polit. financí
+                    </h2>
                 </div>
-                <div class="block-tags">
-                    @foreach (var strana in topStrany)
-                    {
-                        <a class="tag" href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(strana)#sponzori">@strana</a>
-                    }
-                </div>
-                <a href="/ucty/subjektyTypu?id=Politick%C3%A1+strana" class="link">Další subjekty</a>
-            </div>
 
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Nejvyšší transakce za poslední měsíc
+                <div class="block-col ">
+                    <p>
+                        Informace o příjmech a výdajích z transparentních účtů politických stran, hnutí a osobností
+                    </p>
                 </div>
-                <div class="block-table">
-                    @{
 
-                        var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
-                                .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
-                                    .Size(6)
-                                    .From(0)
-                                    .Query(q => q
-                                        .DateRange(dr => dr.GreaterThan("now-1M/d").Field(f => f.Datum))
-                                        )
-                                    .Sort(s => s.Descending(ss => ss.Castka))
-                                    );
-                    }
-                    @foreach (var item in res.Hits)
-                    {
-                        try
+                <div class="block-col block-part">
+                    <div class="block-subtitle">
+                        Transparetní účty stran
+                    </div>
+                    <div class="block-tags">
+                        @foreach (var strana in topStrany)
                         {
-                            <div class="table-row">
-                            <div class="table-col">
-                                <a href='@item.Source.GetUrl(true)'>
-                                    @Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(item.Source.Castka, html: true))
-                                </a>
-                            </div>
-                            <div class="table-col">
-                                pro <a href="@item.Source.BU.GetSubjektUrl(true)">@item.Source.BU.Subjekt</a>
-                            </div>
-                        </div>
+                            <a class="tag" href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(strana)#sponzori">@strana</a>
                         }
-                        catch (Exception e)
-                        {
-                            HlidacStatu.Util.Consts.Logger.Error("HP", e);
-                        }
-                    }
+                    </div>
+                    <a href="/ucty/subjektyTypu?id=Politick%C3%A1+strana" class="link">Další subjekty</a>
                 </div>
-                <a href="/ucty" class="link">Další transakce</a>
+
+                <div class="block-col block-part">
+                    <div class="block-subtitle">
+                        Nejvyšší transakce za poslední měsíc
+                    </div>
+                    <div class="block-table">
+                        @{
+
+                            var res = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
+                                    .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
+                                        .Size(6)
+                                        .From(0)
+                                        .Query(q => q
+                                            .DateRange(dr => dr.GreaterThan("now-1M/d").Field(f => f.Datum))
+                                            )
+                                        .Sort(s => s.Descending(ss => ss.Castka))
+                                        );
+                        }
+                        @foreach (var item in res.Hits)
+                        {
+                            try
+                            {
+                                <div class="table-row">
+                                    <div class="table-col">
+                                        <a href='@item.Source.GetUrl(true)'>
+                                            @Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(item.Source.Castka, html: true))
+                                        </a>
+                                    </div>
+                                    <div class="table-col">
+                                        pro <a href="@item.Source.BU.GetSubjektUrl(true)">@item.Source.BU.Subjekt</a>
+                                    </div>
+                                </div>
+                            }
+                            catch (Exception e)
+                            {
+                                HlidacStatu.Util.Consts.Logger.Error("HP", e);
+                            }
+                        }
+                    </div>
+                    <a href="/ucty" class="link">Další transakce</a>
+                </div>
+
+                <div class="block-button-wrapper">
+                    <a href="/ucty" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
+                </div>
             </div>
 
-            <div class="block-button-wrapper">
-                <a href="/ucty" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
-            </div>
-        </div>
-
-
+        }
 
         <!-- block  weby -->
         <div class="watcher-block">
@@ -534,34 +591,34 @@
                     <ul class="block-status-list">
 
                         @{
-							var webIds = ZabTools.Weby("0").Select(w => w.hostid).ToArray(); //ustredni
-							var sslWebs = ZabTools.SslStatuses()
-								?.Where(m => webIds.Contains(m.Host.hostid))
-								?.Where(m => m.Status() >= SSLLabsGrades.B)
-								?.OrderByDescending(m => m.Status())
-								?.Take(15)
-								?.ToArray()
-								?.OrderBy(o => Guid.NewGuid())
-								?.Take(5)
-								?.ToArray() ?? new ZabHostSslStatus[0];
+                            var webIds = ZabTools.Weby("0").Select(w => w.hostid).ToArray(); //ustredni
+                            var sslWebs = ZabTools.SslStatuses()
+                                ?.Where(m => webIds.Contains(m.Host.hostid))
+                                ?.Where(m => m.Status() >= SSLLabsGrades.B)
+                                ?.OrderByDescending(m => m.Status())
+                                ?.Take(15)
+                                ?.ToArray()
+                                ?.OrderBy(o => Guid.NewGuid())
+                                ?.Take(5)
+                                ?.ToArray() ?? new ZabHostSslStatus[0];
 
 
-							if (sslWebs.Count() < 6)
-							{
-								webIds = ZabTools.Weby("ustredni").Select(w => w.hostid).ToArray(); //ustredni
-								sslWebs = sslWebs.Concat(ZabTools.SslStatuses()
-											?.Where(m => webIds.Contains(m.Host.hostid))
-											?.Where(m => m.Status() >= SSLLabsGrades.B)
-											?.OrderByDescending(m => m.Status())
-											?.Take(10)
-											?.ToArray()
-											?.OrderBy(o => Guid.NewGuid())
-											?.Take(5)
-											?.ToArray() ?? new ZabHostSslStatus[0]
-										)
-										.ToArray();
-							}
-							dynamicLength = 9m;
+                            if (sslWebs.Count() < 6)
+                            {
+                                webIds = ZabTools.Weby("ustredni").Select(w => w.hostid).ToArray(); //ustredni
+                                sslWebs = sslWebs.Concat(ZabTools.SslStatuses()
+                                            ?.Where(m => webIds.Contains(m.Host.hostid))
+                                            ?.Where(m => m.Status() >= SSLLabsGrades.B)
+                                            ?.OrderByDescending(m => m.Status())
+                                            ?.Take(10)
+                                            ?.ToArray()
+                                            ?.OrderBy(o => Guid.NewGuid())
+                                            ?.Take(5)
+                                            ?.ToArray() ?? new ZabHostSslStatus[0]
+                                        )
+                                        .ToArray();
+                            }
+                            dynamicLength = 9m;
                         }
                         @foreach (var item in sslWebs.OrderByDescending(o => o.Status()).Take(5))
                         {
