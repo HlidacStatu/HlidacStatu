@@ -71,6 +71,7 @@ namespace HlidacStatu.Lib.Data
         public string[] DatovaSchranka { get; set; } = new string[] { };
         public DateTime? Datum_Zapisu_OR { get; set; }
         public int? Stav_subjektu { get; set; }
+        public int? Status { get; set; }
 
         public string KrajId { get; set; }
         public string OkresId { get; set; }
@@ -226,7 +227,7 @@ namespace HlidacStatu.Lib.Data
 
             this.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.Jmeno);
 
-            string sql = @"exec Firma_Save @ICO,@DIC,@Datum_zapisu_OR,@Stav_subjektu,@Jmeno,@Jmenoascii,@Kod_PF,@Source, @Popis, @VersionUpdate, @krajId, @okresId  ";
+            string sql = @"exec Firma_Save @ICO,@DIC,@Datum_zapisu_OR,@Stav_subjektu,@Jmeno,@Jmenoascii,@Kod_PF,@Source, @Popis, @VersionUpdate, @krajId, @okresId, @status  ";
             string sqlNACE = @"INSERT into firma_NACE(ico, nace) values(@ico,@nace)";
             string sqlDS = @"INSERT into firma_DS(ico, DatovaSchranka) values(@ico,@DatovaSchranka)";
 
@@ -249,6 +250,7 @@ namespace HlidacStatu.Lib.Data
                         new System.Data.SqlClient.SqlParameter("VersionUpdate", this.VersionUpdate),
                         new System.Data.SqlClient.SqlParameter("KrajId", this.KrajId),
                         new System.Data.SqlClient.SqlParameter("OkresId", this.OkresId),
+                        new System.Data.SqlClient.SqlParameter("Status", this.Status),
                         });
 
 
