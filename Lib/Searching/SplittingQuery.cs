@@ -29,26 +29,28 @@ namespace HlidacStatu.Lib.Searching
             public string ExportPartAsQuery(bool encode = true)
             {
                 //force not to encode
-                encode = false;
-                if (encode)
-                    return EncodePart();
+                // encode = false;
+                if (ExactValue)
+                    return Value;
                 else
                 {
-                    if (ExactValue)
-                        return Value;
+                    if (encode)
+                        return (Prefix ?? "") + EncodedValue();
                     else
+                    {
                         return (Prefix ?? "") + Value;
+                    }
                 }
             }
 
 
-            static string[] reservedAll = new string[] { "&&", "||", "+", "-", "=", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", "\\", "/" };
+            static char[] reservedAll = new char[] { '+', '-', '=', '!', '(', ')', '{', '}', '[', ']', '^', '\'', '~', '*', '?', ':', '\\', '/' };
 
 
             static char[] formulaStart = new char[] { '>', '<', '(', '{', '[' };
             static char[] formulaEnd = new char[] { ')', '}', ']' };
             static char[] ignored = new char[] { '>', '<' };
-            public string EncodePart()
+            public string EncodedValue()
             {
                 if (this.ExactValue)
                     return Value;
@@ -59,32 +61,46 @@ namespace HlidacStatu.Lib.Searching
                 // https://www.elastic.co/guide/en/elasticsearch/reference/7.5/query-dsl-query-string-query.html
                 //< and > can’t be escaped at all. The only way to prevent them from attempting to create a range query is to remove them from the query string entirely.
 
-                if (string.IsNullOrWhiteSpace(Prefix))
+
+                var val = Value.Trim();
+                List<char> sout = new List<char>();
+                if (formulaStart.Contains(val[0]) && formulaEnd.Contains(val[val.Length - 1]))
+                    return val;
+
+                for (int i = 0; i < val.Length; i++)
                 {
-                    var val = Value.Trim();
-                    if (reservedAll.Contains(val))
-                        return val;
-                    else
-                        return string.Join("", 
-                            Value.Select(c => ignored.Contains(c) ? "" :  (reservedAll.Contains(c.ToString()) ? @"\" + c.ToString() : c.ToString()))
-                            );
-                }
-                else
-                {//there is prefix, check []{}()- 
-                    var val = Value.Trim();
-                    if (formulaStart.Contains(val.First())
-                        && formulaEnd.Contains(val.Last())
-                        )
-                        return (Prefix ?? "") + Value; //no change
-                    else
+                    if (string.IsNullOrWhiteSpace(Prefix) && i == 0 && formulaStart.Contains(val[i]))
                     {
-                        return (Prefix ?? "") 
-                            + string.Join("",
-                                Value.Select(c => ignored.Contains(c) ? "" : (reservedAll.Contains(c.ToString()) ? @"\" + c.ToString() : c.ToString()))
-                                );
+                        sout.Add(val[i]);
+                        continue;
                     }
+                    if (string.IsNullOrWhiteSpace(Prefix) && i == 0 && val.Length > 1 && formulaStart.Contains(val[i]) && val[i + 1] == '=')
+                    {
+                        sout.Add(val[i]);
+                        sout.Add(val[i + 1]);
+                        i = i + 1;
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Prefix) && i == val.Length - 1 && formulaEnd.Contains(val[i]))
+                    {
+                        sout.Add(val[i]);
+                        continue;
+                    }
+
+                    if (( i>0 ) && ignored.Contains(val[i]))
+                        continue;
+
+                    if ((i > 0 || i < val.Length - 1) && reservedAll.Contains(val[i]))
+                    {
+                        sout.Add('\\');
+                        sout.Add(val[i]);
+                    }
+                    else
+                        sout.Add(val[i]);
                 }
 
+                return String.Join("", sout);
             }
 
         }

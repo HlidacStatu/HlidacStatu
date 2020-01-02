@@ -72,6 +72,34 @@ namespace HlidacStatu.Lib.Data
         public DateTime? Datum_Zapisu_OR { get; set; }
         public int? Stav_subjektu { get; set; }
         public int? Status { get; set; }
+        public string StatusFull(bool shortText = false)
+        {
+            switch (this.Status)
+            {
+                case 1:
+                    return shortText ? "" : "";
+                //Subjekt bez omezení v činnosti
+                case 2:
+                    return shortText ? "Subjekt v likvidaci" : "v likvidaci";
+                case 3:
+                    return shortText ? "Subjekt v insolvenčním řízení" : "v insolvenci";
+                case 4:
+                    return shortText ? "Subjekt v likvidaci a v insolvenčním řízení" : "v likvidaci";
+                case 5:
+                    return shortText ? "Subjekt v nucené správě" : "v nucené správě";
+                case 6:
+                    return shortText ? "Zaniklý subjekt" : "zaniklý subjekt";
+                case 7:
+                    return shortText ? "Subjekt s pozastavenou, přerušenou činností" : "pozastavená činností";
+                case 8:
+                    return shortText ? "Dosud nezahájil činnost" : "nezahájená činnost";
+
+                default:
+                    return "";
+                    break;
+            }
+
+        }
 
         public string KrajId { get; set; }
         public string OkresId { get; set; }

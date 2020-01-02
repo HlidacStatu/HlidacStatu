@@ -151,6 +151,9 @@ namespace HlidacStatu.Lib.Tests
             Assert.AreEqual<string>("( prijemce.ico:27233545 OR platce.ico:27233545 ) calculatedPriceWithVATinCZK:>2000 NEN",
                 Searching.SimpleQueryCreator.GetSimpleQuery("ico:27233545 cena:>2000 NEN", rules).FullQuery());
 
+            Assert.AreEqual<string>("( ( ( prijemce.ico:04711157 OR platce.ico:04711157 ) ) OR ( ( prijemce.ico:02795281 OR platce.ico:02795281 ) ) OR ( ( prijemce.ico:04156528 OR platce.ico:04156528 ) ) OR ( ( prijemce.ico:25854631 OR platce.ico:25854631 ) ) OR ( ( prijemce.ico:27233545 OR platce.ico:27233545 ) ) OR ( ( prijemce.ico:28275918 OR platce.ico:28275918 ) ) OR ( ( prijemce.ico:29010969 OR platce.ico:29010969 ) ) OR ( ( prijemce.ico:08178607 OR platce.ico:08178607 ) ) OR ( ( prijemce.ico:05965527 OR platce.ico:05965527 ) ) OR ( ( prijemce.ico:27169685 OR platce.ico:27169685 ) ) OR ( ( prijemce.ico:04096908 OR platce.ico:04096908 ) ) ) AND casZverejneni:[2012-12-01 TO 2019-12-10] 2229001\\/0710",
+                Searching.SimpleQueryCreator.GetSimpleQuery("osobaid:michal-blaha-2 AND zverejneno:[2012-12-01 TO 2019-12-10] 2229001/0710", rules).FullQuery());
+
 
             Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d]",
                 Searching.SimpleQueryCreator.GetSimpleQuery("podepsano:2019-01-01", rules).FullQuery());

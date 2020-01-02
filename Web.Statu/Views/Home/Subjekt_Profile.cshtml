@@ -56,22 +56,17 @@
 
 }
 
-
-<h2 id="_top">
-    @Util.AddBookmark(this.User, Model)
-    @Model.Jmeno
-</h2>
 @if (Model.JsemOVM())
 {
-    <h4>Úřad - orgán veřejné moci</h4>
+    <h4>Úřad - orgán veřejné moci  <span class="text-muted">@Model.StatusFull()</span></h4>
 }
 else if (Model.JsemStatniFirma())
 {
-    <h4>firma (spolu)vlastněná státem či samosprávou</h4>
+    <h4>firma (spolu)vlastněná státem či samosprávou <span class="text-muted">@Model.StatusFull()</span></h4>
 }
 else
 {
-    <h4>soukromá firma</h4>
+    <h4>soukromá firma <span class="text-muted">@Model.StatusFull()</span></h4>
 }
 @if (Model.Jmeno == Model.ICO)
 {

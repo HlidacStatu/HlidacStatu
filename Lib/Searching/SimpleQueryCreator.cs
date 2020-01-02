@@ -12,7 +12,8 @@ namespace HlidacStatu.Lib.Searching
         public static SplittingQuery GetSimpleQuery(string query, Lib.Searching.Rules.IRule[] rules)
         {
             var fixedQuery = Tools.FixInvalidQuery(query,rules) ?? "";
-            return GetSimpleQuery(SplittingQuery.SplitQuery(fixedQuery), rules);
+            var sq = SplittingQuery.SplitQuery(fixedQuery);
+            return GetSimpleQuery(sq, rules);
         }
 
 
@@ -67,7 +68,8 @@ namespace HlidacStatu.Lib.Searching
         public static QueryContainer GetSimpleQuery<T>(string query, Rules.IRule[] rules)
             where T : class
         {
-            string modifiedQ = GetSimpleQuery(query, rules).FullQuery();
+            var sq = GetSimpleQuery(query, rules);
+            string modifiedQ = sq.FullQuery();
 
             QueryContainer qc = null;
             if (modifiedQ == null)

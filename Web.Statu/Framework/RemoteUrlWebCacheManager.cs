@@ -24,7 +24,7 @@ namespace HlidacStatu.Web.Framework
             {
                 using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(ki.ValueForData))
                 {
-                    net.Timeout = 5000;
+                    net.Timeout = 7000;
                     net.IgnoreHttpErrors = true;
                     data = net.GetBinary().Binary;
                 }
