@@ -213,6 +213,7 @@ namespace HlidacStatu.Lib.Data.External
             f.DIC = (string)PersistLib.IsNull(dr["dic"], string.Empty);
             f.Datum_Zapisu_OR = (DateTime?)PersistLib.IsNull(dr["datum_zapisu_or"], null);
             f.Stav_subjektu = Convert.ToInt32(PersistLib.IsNull(dr["Stav_subjektu"], 1));
+            f.Status = Convert.ToInt32(PersistLib.IsNull(dr["Status"], 1));
             f.Jmeno = (string)PersistLib.IsNull(dr["jmeno"], string.Empty);
             f.JmenoAscii = (string)PersistLib.IsNull(dr["jmenoascii"], string.Empty);
             f.Kod_PF = (int?)PersistLib.IsNull(dr["Kod_PF"], null);
