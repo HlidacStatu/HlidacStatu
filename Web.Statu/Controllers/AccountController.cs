@@ -1,15 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+﻿using HlidacStatu.Mailerlite;
+using HlidacStatu.Web.Framework;
+using HlidacStatu.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using HlidacStatu.Web.Models;
-using HlidacStatu.Web.Framework;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -34,7 +33,7 @@ namespace HlidacStatu.Web.Controllers
 
 
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -46,9 +45,9 @@ namespace HlidacStatu.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -137,7 +136,7 @@ namespace HlidacStatu.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -177,10 +176,10 @@ namespace HlidacStatu.Web.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     HlidacStatu.Lib.Data.AspNetUserToken.CreateNew(user); //create token
-                    
+
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -189,8 +188,8 @@ namespace HlidacStatu.Web.Controllers
 
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     //create email
-                    var email =  HlidacStatu.Lib.Emails.EmailMsg.CreateEmailMsgFromPostalTemplate("Register");
-                    email.Model.CallbackUrl = callbackUrl ;
+                    var email = HlidacStatu.Lib.Emails.EmailMsg.CreateEmailMsgFromPostalTemplate("Register");
+                    email.Model.CallbackUrl = callbackUrl;
                     email.To = user.Email;
                     email.SendMe();
 
@@ -214,12 +213,40 @@ namespace HlidacStatu.Web.Controllers
             }
 
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+
+            // add to MailerLite subscribers
+            if (result.Succeeded)
+            {
+                string email = "";
+                try
+                {
+                    string apiKey = Devmasters.Core.Util.Config.GetConfigValue("MailerliteApiKey");
+                    string groupId = Devmasters.Core.Util.Config.GetConfigValue("MailerliteGroupId");
+                    if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(groupId))
+                    {
+                        email = UserManager.FindById(userId).Email;
+                        MailerApi mailerlite = new MailerApi(apiKey);
+                    
+                        #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        // fire and forget
+                        mailerlite.AddSubscriberToGroup(email, groupId);
+                        #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Util.Consts.Logger.Error($"ConfirmEmail: Error when adding subscriber to mailerlite. Email [{email}]", ex);
+
+                }
+            }
+
             if (result.Succeeded && System.Web.HttpContext.Current.User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(nextUrl))
             {
                 return Redirect(nextUrl);
             }
             else
-                {
+            {
                 if (result.Succeeded)
                 {
                     return View("ConfirmEmail");
@@ -277,7 +304,7 @@ namespace HlidacStatu.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null ) //|| !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null) //|| !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -288,7 +315,7 @@ namespace HlidacStatu.Web.Controllers
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 //create email
-                var email =  HlidacStatu.Lib.Emails.EmailMsg.CreateEmailMsgFromPostalTemplate("ResetPassword");
+                var email = HlidacStatu.Lib.Emails.EmailMsg.CreateEmailMsgFromPostalTemplate("ResetPassword");
                 email.Model.CallbackUrl = callbackUrl;
                 email.To = user.Email;
                 email.SendMe();

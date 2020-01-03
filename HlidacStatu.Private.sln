@@ -125,6 +125,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lang", "Lang\Lang.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DownloaderTool", "DownloaderTool", "{89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mailerlite", "Mailerlite\Mailerlite.csproj", "{849D13C0-732A-4933-BFA3-28D5C783D514}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -945,6 +947,30 @@ Global
 		{D787ACCA-0E9D-45E7-A98B-87ACFE7AF249}.x86Only|x64.Build.0 = Release|Any CPU
 		{D787ACCA-0E9D-45E7-A98B-87ACFE7AF249}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{D787ACCA-0E9D-45E7-A98B-87ACFE7AF249}.x86Only|x86.Build.0 = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|x64.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Debug|x86.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|x64.ActiveCfg = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|x64.Build.0 = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|x86.ActiveCfg = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Release|x86.Build.0 = Release|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|x64.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|x64.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.Stage|x86.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|Any CPU.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|x64.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|x64.Build.0 = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|x86.ActiveCfg = Debug|Any CPU
+		{849D13C0-732A-4933-BFA3-28D5C783D514}.x86Only|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -973,8 +999,8 @@ Global
 		{D787ACCA-0E9D-45E7-A98B-87ACFE7AF249} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

@@ -1423,6 +1423,10 @@
       <Project>{40133098-338c-4a5b-bfaa-69a748d73a87}</Project>
       <Name>Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mailerlite\Mailerlite.csproj">
+      <Project>{849d13c0-732a-4933-bfa3-28d5c783d514}</Project>
+      <Name>Mailerlite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugin.Enhancers\Plugin.Enhancers.csproj">
       <Project>{af654e2b-6add-46e5-bc27-9fd76d7e0a38}</Project>
       <Name>Plugin.Enhancers</Name>
