@@ -568,7 +568,7 @@ namespace HlidacStatu.Lib.Data
             var res = Lib.StaticData.PolitickyAktivni.Get()
            .Where(m => m != null)
            .Where(m =>
-               m.PrijmeniAscii?.StartsWith(nquery, StringComparison.CurrentCultureIgnoreCase) == true
+               m.PrijmeniAscii?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                || m.JmenoAscii?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                || (m.JmenoAscii + " " + m.PrijmeniAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                || (m.PrijmeniAscii + " " + m.JmenoAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
