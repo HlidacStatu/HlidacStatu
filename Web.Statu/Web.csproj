@@ -1425,7 +1425,7 @@
       <Name>Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mailerlite\Mailerlite.csproj">
-      <Project>{849d13c0-732a-4933-bfa3-28d5c783d514}</Project>
+      <Project>{a14b6807-a7e8-4ec8-861f-bcc799d90b95}</Project>
       <Name>Mailerlite</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugin.Enhancers\Plugin.Enhancers.csproj">

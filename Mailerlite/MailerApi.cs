@@ -19,7 +19,7 @@ namespace HlidacStatu.Mailerlite
 
         public async Task AddSubscriberToGroup(string email, string groupId)
         {
-            
+
             string json = $"{{\"email\":\"{email}\"}}";
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
