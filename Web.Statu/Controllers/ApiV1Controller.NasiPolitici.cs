@@ -10,13 +10,21 @@ namespace HlidacStatu.Web.Controllers
 {
     public partial class ApiV1Controller : Controllers.GenericAuthController
     {
-
-        public ActionResult NasiPolitici_Find(string query)
+        class FindPersonDTO
         {
-            if (!Framework.ApiAuth.IsApiAuth(this,
-                parameters: new Framework.ApiCall.CallParameter[] {
-                    new Framework.ApiCall.CallParameter("query", query),
-                })
+            public string NameId { get; set; }
+            public string Jmeno { get; set; }
+            public string Prijmeni { get; set; }
+            public string JmenoAscii { get; set; }
+            public string PrijmeniAscii { get; set; }
+            public int? RokNarozeni { get; set; }
+            public string Aktpolstr { get; set; }
+            public int? Pocet { get; set; }
+        }
+
+        public ActionResult NasiPolitici_GetList()
+        {
+            if (!Framework.ApiAuth.IsApiAuth(this)
                 .Authentificated)
             {
                 //Response.StatusCode = 401;
@@ -24,32 +32,36 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                var osoby = Osoba.GetPolitikByNameFtx(query, 1000)
-                    .Where(m => m.Status == 3) // politik
-                    .Select(m => new
-                    {
-                        id = m.NameId,
-                        name = m.Jmeno,
-                        surname = m.Prijmeni,
-                        birthYear = m.Narozeni?.ToString("yyyy") ?? "",
-                        photo = m.GetPhotoUrl(false),
-                        description = InfoFact.RenderInfoFacts(
-                            m.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
-                            4,
-                            true,
-                            true,
-                            "",
-                            "{0}"),
-                        currentParty = m.Events(ev =>
-                                ev.Type == (int)OsobaEvent.Types.Politicka
-                                && ev.AddInfo == "člen strany")
-                            .OrderByDescending(ev => ev.DatumOd)
-                            .Select(ev => ev.Organizace)
-                            .FirstOrDefault()
-                    });
+                using (var db = new HlidacStatu.Lib.Data.DbEntities())
+                {
+                    string sql = @"
+                        select distinct os.NameId, os.Jmeno, os.Prijmeni
+                             , os.JmenoAscii, os.PrijmeniAscii, year(os.Narozeni) RokNarozeni
+	                         , FIRST_VALUE(oes.organizace) OVER(partition by oes.osobaid order by oes.datumod desc) Aktpolstr
+	                         , oec.pocet
+                          from Osoba os
+                          left join OsobaEvent oes on os.InternalId = oes.OsobaId and oes.AddInfo = N'člen strany' and oes.Type = 7
+                          left join (select COUNT(pk) pocet, OsobaId from OsobaEvent group by osobaid) oec on oec.OsobaId = os.InternalId
+                         where os.Status = 3";
 
+                    var result = db.Database.SqlQuery<FindPersonDTO>(sql)
+                        .Select( r => new
+                        {
+                            id = r.NameId,
+                            name = r.Jmeno,
+                            surname = r.Prijmeni,
+                            asciiName = r.JmenoAscii,
+                            asciiSurname = r.PrijmeniAscii,
+                            birthYear = r.RokNarozeni,
+                            currentParty = r.Aktpolstr,
+                            eventCount = r.Pocet
+                        });
 
-                return Content(JsonConvert.SerializeObject(osoby),"application/json");
+                    string osoby = JsonConvert.SerializeObject(result);
+
+                    return Content(osoby, "application/json");
+                }
+
             }
         }
 
