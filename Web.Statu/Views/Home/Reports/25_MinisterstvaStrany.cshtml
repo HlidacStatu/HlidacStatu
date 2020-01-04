@@ -173,8 +173,7 @@
 {
 
     <div class="jumbotron">
-        <h2 style="padding-bottom:10px;font-weight:bold" class="text-center">Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>
-        <h2 style="padding-bottom:40px;" class="text-center">Které strany a hnutí v ČR dominují?</h2>
+        <h1 style="padding-bottom:40px;" class="text-center">Které strany a hnutí v ČR dominují?</h1>
         @{
             List<string> _texts = new List<string>();
             foreach (var obdobikv in obdobi.Reverse())
@@ -224,14 +223,14 @@
         <p></p>
     </div>
 
-    <meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + _texts.Aggregate((f,s)=> f + "<br/><br/>" + s))" />
+    <meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + _texts.Take(4).Aggregate((f,s)=> f + "<br/><br/>" + s))" />
     <meta property="og:hlidac_footer" content="podrobné analýzy najdete v článku" />
     <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
 
 
     <div class="bs-callout bs-callout-primary">
-        <h4>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
+        <h4>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
         <h4>Které strany jsou tradiční a které se jimi stávají?</h4>
         <div>
             Na této stránce je pracujeme s počtem dní, které jednotlivé strany řídili. Počítáme jak nejdelší nepřerušené období řízení rezortů, tak celkový počet dní.
@@ -392,16 +391,16 @@
             ministrTopTxt.Append($"<b>{topStranaNaMinTopList[i].strana}</b>");
             if (i == 0)
             {
-                ministrTopTxt.Append(" nejdéle působila ");
+                ministrTopTxt.Append(" dominovala ");
             }
             ministrTopTxt.Append($" na <b>{Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")}</b>");
             ministrTopTxt.Append($" ({(topStranaNaMinTopList[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s))})");
         }
     }
 
-    @Html.Raw(ministrTopTxt);
+    @Html.Raw(ministrTopTxt.ToString());
 </p>
-<meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + topTxt + "<br /><br />" + ministrTopTxt)" />
+<meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + topTxt + "<br /><br />" + Devmasters.Core.TextUtil.ShortenText(ministrTopTxt.ToString(),170,"..."))" />
 <meta property="og:hlidac_footer" content="Analýza působení stran od @startDate.ToString("d. M. yyyy")" />
 <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
@@ -656,7 +655,7 @@
 
 
 <div class="bs-callout bs-callout-primary">
-    <h4>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
+    <h4>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
     <h4>Které strany jsou tradiční a které se jimi stávají?</h4>
     <div>
         Na této stránce je pracujeme s počtem dní, které jednotlivé strany řídili. Počítáme jak nejdelší nepřerušené období řízení rezortů, tak celkový počet dní.
