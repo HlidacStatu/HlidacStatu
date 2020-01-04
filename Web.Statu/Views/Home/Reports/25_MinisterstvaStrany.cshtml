@@ -320,7 +320,8 @@
     @Html.Raw(ministrTopTxt);
 </p>
 <meta property="og:hlidac_html" content="@Html.Encode(topTxt + "<br /><br />" + ministrTopTxt)" />
-<meta property="og:hlidac_footer" content="údaje k @DateTime.Now.ToString("d. M. yyyy")" />
+<meta property="og:hlidac_footer" content="Analýza působení stran od @startDate.ToString("d. M. yyyy")" />
+<meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
 <p>
     <div id="chart_resorty"></div>
@@ -458,7 +459,7 @@
 </script>
 
 <hr />
-<h2>Podrobné informace pro období od @startDate.ToString("d.M.yyyy")</h2>
+<h1>Podrobné informace <small>pro období od @startDate.ToString("d.M.yyyy")</small></h1>
 <h2 style="padding-top:20px;">
     Nejdelší politické zodpovědnosti stran za vedení státu
 </h2>
