@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Searching
 
 
             static char[] formulaStart = new char[] { '>', '<', '(', '{', '[' };
-            static char[] formulaEnd = new char[] { ')', '}', ']' };
+            static char[] formulaEnd = new char[] { ')', '}', ']', '*' };
             static char[] ignored = new char[] { '>', '<' };
             public string EncodedValue()
             {
@@ -65,6 +65,9 @@ namespace HlidacStatu.Lib.Searching
                 var val = Value.Trim();
                 List<char> sout = new List<char>();
                 if (formulaStart.Contains(val[0]) && formulaEnd.Contains(val[val.Length - 1]))
+                    return val;
+
+                if (val.EndsWith("*"))
                     return val;
 
                 for (int i = 0; i < val.Length; i++)
