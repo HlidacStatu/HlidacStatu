@@ -319,7 +319,7 @@
 
     @Html.Raw(ministrTopTxt);
 </p>
-<meta property="og:hlidac_html" content="@Html.Encode(topTxt + " " + ministrTopTxt)" />
+<meta property="og:hlidac_html" content="@Html.Encode(topTxt + "<br /><br />" + ministrTopTxt)" />
 <meta property="og:hlidac_footer" content="údaje k @DateTime.Now.ToString("d. M. yyyy")" />
 
 <p>
