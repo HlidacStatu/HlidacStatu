@@ -38,7 +38,7 @@
         public int Days { get { return (int)(this.Konec - this.Zacatek).TotalDays; } }
     }
 
-    public List<odpovednost> DelkyVladnuti(List<ministr> data, string resort = null)
+    public List<odpovednost> DelkyVladnuti(IEnumerable<ministr> data, string resort = null)
     {
         var allO = new List<odpovednost>();
         odpovednost o = null;
@@ -103,23 +103,31 @@
 @{
     var ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("ministri");
 
-    DateTime startDate = new DateTime(2002, 7, 15); //15. července 2002
-    if (Request.QueryString["obdobi"] == "1998")
+    Dictionary<int, Tuple<DateTime, string>> obdobi = new Dictionary<int, Tuple<DateTime, string>>()
+{
+        {1998, new Tuple<DateTime,string>(new DateTime(1998, 7, 22),"Zemanova vláda")},
+        {2002, new Tuple<DateTime,string>(new DateTime(2002, 7, 15),"Špidlova vláda")},
+        {2006, new Tuple<DateTime,string>(new DateTime(2006, 10, 4), "První Topolánkova vláda")},
+        {2010, new Tuple<DateTime,string>(new DateTime(2010, 7, 13), "Nečasova vláda")},
+        {2014, new Tuple<DateTime,string>(new DateTime(2014,1,17),"Sobotkova vláda" )},
+        {2017, new Tuple<DateTime,string>(new DateTime(2017,12,6),"Babišova vláda" )},
+    };
+
+    DateTime startDate = DateTime.MinValue;
+    string startVladaDesc = "";
+    int iobdobi;
+    if (int.TryParse(Request.QueryString["obdobi"], out iobdobi))
     {
-        startDate = new DateTime(1998, 7, 22); //22. července 1998	zeman
-    }
-    if (Request.QueryString["obdobi"] == "2006")
-    {
-        startDate = new DateTime(2006, 10, 4); //4. září 2006	Topolanek I.
-    }
-    if (Request.QueryString["obdobi"] == "2010")
-    {
-        startDate = new DateTime(2010, 7, 13); //13. července 2010	Nečas
+        if (obdobi.ContainsKey(iobdobi))
+        {
+            startDate = obdobi[iobdobi].Item1;
+            startVladaDesc = obdobi[iobdobi].Item2;
+        }
     }
 
     string[] ignore = new string[] { "Předseda vlády", "Místopředseda", "Ministr bez portfeje" };
 
-    List<ministr> ministri = ds.SearchData("*", 1, 1000)
+    List<ministr> ministriAll = ds.SearchData("*", 1, 1000)
                                 .Result.Select(m =>
                                     new ministr()
                                     {
@@ -133,6 +141,9 @@
                                         Konec = ((DateTime?)m.konec) ?? DateTime.Now
                                     }
                                 )
+                                .ToList();
+
+    List<ministr> ministri = ministriAll
                                 .Where(m => m.Zacatek >= startDate)
                                 .ToList();
 
@@ -156,64 +167,135 @@
 
     List<odpovednost> vladnutiAll = new List<odpovednost>(resorty.SelectMany(v => DelkyVladnuti(ministri, v)));
 
-    string selectedStrana = Request.QueryString["strana"];
+}
+
+@if (startDate == DateTime.MinValue)
+{
+
+    <div class="jumbotron">
+        <h1 style="padding-bottom:+0px;">Jak dlouho nám kdo vládne?</h1>
+        <h2 style="padding-bottom:40px;" class="text-center">Která strany a hnutí v ČR dominují?</h2>
+        @{
+            List<string> _texts = new List<string>();
+            foreach (var obdobikv in obdobi.Reverse())
+            {
+                List<string> _resorty = ministriAll
+                                    .Where(m => m.Zacatek >= obdobi[obdobikv.Key].Item1)
+                                    .GroupBy(k => k.Resort)
+                                    .OrderByDescending(o => o.Count())
+                                    .Select(m => m.Key)
+                                    .Where(m => !ignore.Contains(m))
+                                    .OrderBy(m => m)
+                                    .ToList();
+                List<odpovednost> _vladnuticelkem = new List<odpovednost>(resorty.SelectMany(v => DelkyVladnuti(ministri.Where(m => m.Zacatek >= obdobi[obdobikv.Key].Item1), v)));
+
+                var _topStrany = _vladnuticelkem
+                        .GroupBy(m => m.Strana)
+                        .Select(m => new { strana = m.Key, sum = (decimal)m.Sum(s => s.Days) })
+                        .OrderByDescending(o => o.sum)
+                        .ToArray();
+                decimal _sumAll = _topStrany.Sum(s => s.sum);
+                string _topTxt = "";
+                if (_topStrany.Length == 1)
+                {
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}).";
+                    _texts.Add(_topTxt);
+                }
+                else if (_topStrany.Length == 2)
+                {
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))})"
+                   + $" a <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})";
+                    _texts.Add(_topTxt);
+                }
+                else
+                {
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}),"
+                   + $" <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})"
+                   + $" a <b>{_topStrany[2].strana}</b> ({((_topStrany[2].sum / _sumAll).ToString("P2"))}).";
+                    _texts.Add(_topTxt);
+                }
+
+                <p>
+                    @Html.Raw(_topTxt) <a class="btn btn-primary btn-sm" href="/report/25?obdobi=@obdobi[obdobikv.Key].Item1.ToString("yyyy")" role="button">Ukázat analýzu od @obdobi[obdobikv.Key].Item1.ToString("yyyy")</a>
+                </p>
+            }
+
+        }
+        <p></p>
+    </div>
+
+    <meta property="og:hlidac_html" content="@Html.Encode(_texts.Aggregate((f,s)=> f + "<br/><br/>" + s))" />
+    <meta property="og:hlidac_footer" content="Roky jsme zvolili podle volebních období" />
+    <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
+
+
+
+    <div class="bs-callout bs-callout-primary">
+        <h4>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
+        <h4>Které strany jsou tradiční a které se jimi stávají?</h4>
+        <div>
+            Na této stránce je pracujeme s počtem dní, které jednotlivé strany řídili. Počítáme jak nejdelší nepřerušené období řízení rezortů, tak celkový počet dní.
+        </div>
+        <div>
+            Přes odkazy níže můžete změnit začátek počítaného období či si vypsat report pouze pro některou ze stran.
+        </div>
+        <div>
+            Zdrojem dat je <a onclick="return trackOutLink(this,'report25');" href="https://cs.wikipedia.org/wiki/Seznam_ministrů_České_republiky" target="_blank">
+                seznam ministrů vlád ČR z Wikipedie
+            </a>, který jsme vyčistily a znormalizovali pomocí OpenRefine. Zdrojová, pročištěná a znormalizovaná data <a href="/data/index/ministri">najdete v databázích Hlídače</a>.
+            <br />
+            Názvy resortů jsme sjednotili či jednodušili tehdy, pokud politická pozice odpovídala za obdobné oblasti, jen se trochu lišil.
+
+        </div>
+    </div>
+
+    return;
 }
 
 
-
 <div class="row">
-    <div class="col-xs-3 col-sm-2" style="font-weight:bold;font-size:130%">Zobrazit statistiky</div>
+    <div class="col-xs-3 col-sm-2" style="font-weight:bold;font-size:130%">Zobrazit analýzu pro období </div>
     <div class="col-xs-9 col-sm-10">
-        @if (startDate.Year == 1998)
+        @foreach (var obdobikv in obdobi.Reverse())
         {
-            <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> od voleb 1998 (Zemanova vláda)</span>
-        }
-        else
-        {
-            <a href="?obdobi=1998&strana=@selectedStrana"><i class="far fa-angle-double-right"></i> od voleb 1998 (Zemanova vláda)</a>
-        }
-        <br />
-        @if (startDate.Year == 2002)
-        {
-            <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> od voleb 2002 (Špidlova vláda)</span>
-        }
-        else
-        {
-            <a href="?obdobi=2002&strana=@selectedStrana"><i class="far fa-angle-double-right"></i> od voleb 2002 (Špidlova vláda)</a>
-        }
-        <br />
-        @if (startDate.Year == 2006)
-        {
-            <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> od voleb 2006 (první Topolánkova vláda)</span>
-        }
-        else
-        {
-            <a href="?obdobi=2006&strana=@selectedStrana"><i class="far fa-angle-double-right"></i> od voleb 2006 (první Topolánkova vláda)</a>
-        }
-        <br />
-        @if (startDate.Year == 2010)
-        {
-            <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> od voleb 2010 (Nečasova vláda)</span>
-        }
-        else
-        {
-            <a href="?obdobi=2010&strana=@selectedStrana"><i class="far fa-angle-double-right"></i> od voleb 2010 (Nečasova vláda)</a>
+            if (startDate.Year == obdobikv.Key)
+            {
+                <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> od voleb @obdobikv.Key (@obdobikv.Value.Item2)</span>
+            }
+            else
+            {
+                <a href="?obdobi=@obdobikv.Key"><i class="far fa-angle-double-right"></i> od voleb @obdobikv.Key (@obdobikv.Value.Item2)</a>
+            }
+            <br />
+
         }
     </div>
 </div>
 
 @{
     var topStrany = vladnutiAll
-                .Where(m => m.Strana == selectedStrana || string.IsNullOrWhiteSpace(selectedStrana))
                 .GroupBy(m => m.Strana)
                 .Select(m => new { strana = m.Key, sum = (decimal)m.Sum(s => s.Days) })
                 .OrderByDescending(o => o.sum)
                 .ToArray();
     decimal sumAll = topStrany.Sum(s => s.sum);
 
-    string topTxt = $"Od {startDate.ToString("d.M.yyyy")} se na vládě nejvíce podílela <b>{topStrany[0].strana}</b> ({((topStrany[0].sum / sumAll).ToString("P2"))}), následovaná"
-    + $" <b>{topStrany[1].strana}</b> ({((topStrany[1].sum / sumAll).ToString("P2"))})"
-    + $"a <b>{topStrany[2].strana}</b> ({((topStrany[2].sum / sumAll).ToString("P2"))}).";
+    string topTxt = "";
+    if (topStrany.Length == 1)
+    {
+        topTxt = $"Od {startDate.ToString("d.M.yyyy")} se na vládě nejvíce podílela <b>{topStrany[0].strana}</b> ({((topStrany[0].sum / sumAll).ToString("P2"))}).";
+    }
+    else if (topStrany.Length == 2)
+    {
+        topTxt = $"Od {startDate.ToString("d.M.yyyy")} se na vládě nejvíce podílela <b>{topStrany[0].strana}</b> ({((topStrany[0].sum / sumAll).ToString("P2"))})"
+                + $" a <b>{topStrany[1].strana}</b> ({((topStrany[1].sum / sumAll).ToString("P2"))}).";
+    }
+    else
+    {
+        topTxt = $"Od {startDate.ToString("d.M.yyyy")} se na vládě nejvíce podílela <b>{topStrany[0].strana}</b> ({((topStrany[0].sum / sumAll).ToString("P2"))}), následovaná"
+                + $" <b>{topStrany[1].strana}</b> ({((topStrany[1].sum / sumAll).ToString("P2"))})"
+                + $"a <b>{topStrany[2].strana}</b> ({((topStrany[2].sum / sumAll).ToString("P2"))}).";
+    }
 }
 <h1 class="text-center center-block">Od @startDate.ToString("d. M. yyyy")</h1>
 <p class="lead">
@@ -296,7 +378,7 @@
              .ToArray();
         var ministrTopTxt = new System.Text.StringBuilder($"Od {startDate.ToString("d.M.yyyy")} ");
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < Math.Min(3, topStranaNaMinTopList.Length); i++)
         {
 
             if (i == 1)
@@ -385,7 +467,7 @@
              .ThenByDescending(o => o.totaldays)
              .ToArray();
     }
-    @for (int i = 0; i < 3; i++)
+    @for (int i = 0; i < Math.Min(3, topStranaNaMinTopList2.Length); i++)
     {
 
         if (i == 1)
@@ -466,7 +548,6 @@
 
 <div class="row">
     @foreach (var stranaG in vladnutiAll
-        .Where(m => m.Strana == selectedStrana || string.IsNullOrWhiteSpace(selectedStrana))
         .GroupBy(m => m.Strana)
         .OrderByDescending(o => o.Sum(c => c.Days)).Take(6))
     {
@@ -528,14 +609,6 @@
     {
         count++;
         var vladnuti = DelkyVladnuti(ministri, resort);
-        if (!string.IsNullOrEmpty(selectedStrana))
-        {
-            if (!vladnuti.Any(m => m.Strana == selectedStrana))
-            {
-                continue;
-            }
-
-        }
         <div class="col-xs-6 col-sm-4" style="border-right: 1px #ddd solid;">
             <h3>@resort</h3>
             <ol>
@@ -553,7 +626,7 @@
                         }
                     </li>
                 }
-                @if (!string.IsNullOrEmpty(selectedStrana) && !vladnuti.Take(3).Any(m => m.Strana == selectedStrana))
+                @*@if (!string.IsNullOrEmpty(selectedStrana) && !vladnuti.Take(3).Any(m => m.Strana == selectedStrana))
                 {
                     var vl = vladnuti.Where(m => m.Strana == selectedStrana).First();
                     var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
@@ -568,7 +641,7 @@
                         }
                     </li>
 
-                }
+                }*@
             </ol>
         </div>
         if (count % 3 == 0)
