@@ -210,12 +210,14 @@
                 .OrderByDescending(o => o.sum)
                 .ToArray();
     decimal sumAll = topStrany.Sum(s => s.sum);
+
+    string topTxt = $"Od {startDate.ToString("d.M.yyyy")} se na vládě nejvíce podílela <b>{topStrany[0].strana}</b> ({((topStrany[0].sum / sumAll).ToString("P2"))}), následovaná"
+    + $" <b>{topStrany[1].strana}</b> ({((topStrany[1].sum / sumAll).ToString("P2"))})"
+    + $"a <b>{topStrany[2].strana}</b> ({((topStrany[2].sum / sumAll).ToString("P2"))}).";
 }
 <h1 class="text-center center-block">Od @startDate.ToString("d. M. yyyy")</h1>
 <p class="lead">
-    Od @startDate.ToString("d. M. yyyy") se na vládě nejvíce podílela <b>@topStrany[0].strana</b> (@((topStrany[0].sum / sumAll).ToString("P2"))), následovaná
-    <b>@topStrany[1].strana</b> (@((topStrany[1].sum / sumAll).ToString("P2")))
-    a <b>@topStrany[2].strana</b> (@((topStrany[2].sum / sumAll).ToString("P2"))).
+    @Html.Raw(topTxt)
 </p>
 <p>
     <div id="chart_topStrany"></div>
@@ -285,7 +287,6 @@
 
 <h2 style="padding-top:20px;">Nejdelší doba působení na ministerstvech <small>od @startDate.ToString("d.M.yyyy")</small></h2>
 <p class="lead">
-    Od @startDate.ToString("d.M.yyyy")
     @{
         var topStranaNaMinTopList = topStranaNaMin
              .GroupBy(g => g.Value.First().Strana)
@@ -293,30 +294,34 @@
              .OrderByDescending(o => o.pocetMin)
              .ThenByDescending(o => o.totaldays)
              .ToArray();
-    }
-    @for (int i = 0; i < 3; i++)
-    {
+        var ministrTopTxt = new System.Text.StringBuilder($"Od {startDate.ToString("d.M.yyyy")} ");
 
-        if (i == 1)
+        for (int i = 0; i < 3; i++)
         {
-            <span>, následovaná </span>
-        }
-        else if (i == 2)
-        {
-            <span> a </span>
-        }
-        <span>
-            <b>@topStranaNaMinTopList[i].strana</b>
-            @if (i == 0)
+
+            if (i == 1)
             {
-                <span>nejdéle působila </span>
+                ministrTopTxt.Append(", následovaná ");
             }
-            na
-            <b>@Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")</b>
-            (@(topStranaNaMinTopList[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s)))
-        </span>
+            else if (i == 2)
+            {
+                ministrTopTxt.Append(" a ");
+            }
+            ministrTopTxt.Append($"<b>{topStranaNaMinTopList[i].strana}</b>");
+            if (i == 0)
+            {
+                ministrTopTxt.Append(" nejdéle působila ");
+            }
+            ministrTopTxt.Append($" na <b>{Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")}</b>");
+            ministrTopTxt.Append($" ({(topStranaNaMinTopList[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s))})");
+        }
     }
+
+    @Html.Raw(ministrTopTxt);
 </p>
+<meta property="og:hlidac_html" content="@Html.Encode(topTxt + " " + ministrTopTxt)" />
+<meta property="og:hlidac_footer" content="údaje k @DateTime.Now.ToString("d. M. yyyy")" />
+
 <p>
     <div id="chart_resorty"></div>
 </p>

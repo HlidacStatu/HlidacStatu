@@ -109,6 +109,13 @@ XINTEXT (0->0.7mld),
         case 25:
             ViewBag.Title = "Které politické strany mají největší odpovědnost za vedení ČR?";
             ViewBag.SubTitle = "";
+            ViewBag.SocialShareTitle = "Které politické strany mají největší odpovědnost za řízení ČR?";
+            ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/page?d={DateTime.Now.ToString("d.M.yy")}&v=" + Url.Encode("https://www.hlidacstatu.cz/report/25");
+            ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                    + "<meta property=\"og:image:height\" content=\"1080\" />"
+                    + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                    ;
+
             break;
         default:
             break;
