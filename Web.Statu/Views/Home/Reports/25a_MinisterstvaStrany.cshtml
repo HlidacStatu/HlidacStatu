@@ -147,10 +147,10 @@
 
     List<string> strany = ministri
                             .GroupBy(k => k.Strana)
-                            .OrderBy(o => o.Key)
+                            .OrderByDescending(o => o.Count())
                             .Select(m => m.Key)
                             .ToList();
-    string[] colors = new[] { "#050F57", "#ED561B", "#F1CE46", "#a0a0a0", "#d0d0d0", "#1A428F", "#75B259", "#DA3732", "#054E0C", "#060606" };
+
 
     int count = 0;
 
@@ -158,7 +158,24 @@
 
     string selectedStrana = Request.QueryString["strana"];
 }
+<div class="bs-callout bs-callout-primary">
+    <h4>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
+    <h4>Které strany jsou tradiční a které se jimi stávají?</h4>
+    <div>
+        Na této stránce je pracujeme s počtem dní, které jednotlivé strany řídili. Počítáme jak nejdelší nepřerušené období řízení rezortů, tak celkový počet dní.
+    </div>
+    <div>
+        Přes odkazy níže můžete změnit začátek počítaného období či si vypsat report pouze pro některou ze stran.
+    </div>
+    <div>
+        Zdrojem dat je <a onclick="return trackOutLink(this,'report25');" href="https://cs.wikipedia.org/wiki/Seznam_ministrů_České_republiky" target="_blank">
+            seznam ministrů vlád ČR z Wikipedie
+        </a>, který jsme vyčistily a znormalizovali pomocí OpenRefine. Zdrojová, pročištěná a znormalizovaná data <a href="/data/index/ministri">najdete v databázích Hlídače</a>.
+        <br />
+        Názvy resortů jsme sjednotili či jednodušili tehdy, pokud politická pozice odpovídala za obdobné oblasti, jen se trochu lišil.
 
+    </div>
+</div>
 
 
 <div class="row">
@@ -201,128 +218,34 @@
         }
     </div>
 </div>
+<div class="row">
 
-@{
-    var topStrany = vladnutiAll
-                .Where(m => m.Strana == selectedStrana || string.IsNullOrWhiteSpace(selectedStrana))
-                .GroupBy(m => m.Strana)
-                .Select(m => new { strana = m.Key, sum = (decimal)m.Sum(s => s.Days) })
-                .OrderByDescending(o => o.sum)
-                .ToArray();
-    decimal sumAll = topStrany.Sum(s => s.sum);
-}
-<h1 class="text-center center-block">Od @startDate.ToString("d. M. yyyy")</h1>
-<p class="lead">
-    Nejvíce se na vládě podílela <b>@topStrany[0].strana</b> (@((topStrany[0].sum / sumAll).ToString("P2"))), následovaná
-    <b>@topStrany[1].strana</b> (@((topStrany[1].sum / sumAll).ToString("P2")))
-    a <b>@topStrany[2].strana</b> (@((topStrany[2].sum / sumAll).ToString("P2"))).
-</p>
-<p>
-    <div id="chart_topStrany"></div>
-    <script>
-        Highcharts.chart('chart_topStrany', {
-            colors: ['#050F57','#ED561B','#F1CE46','#a0a0a0','#d0d0d0' ,'#1A428F','#75B259','#DA3732','#054E0C','#060606'],
-            series: [{
-                type: 'treemap',
-                colorByPoint: true,
-                layoutAlgorithm: 'squarified',
-                data: @Html.Raw(
-                    Newtonsoft.Json.JsonConvert.SerializeObject(topStrany.Select((m) => new {
-                        name = m.strana, 
-                        value = m.sum, 
-                        color=colors[strany.FindIndex(fi=>fi == m.strana)],
-                        description = $"{m.strana} zodpovídala za vládní posty celkem {m.sum.ToString("### ###").Trim()} dní",
-                        dataLabels = new { enabled=true, format="{point.name} <br/> {point.value} dní", style = new { fontSize="15px;" } }
-                    }), Newtonsoft.Json.Formatting.Indented)
-                   )
-            }],
-            title: {
-                text: 'Highcharts Treemap'
-            }
-        });
-    </script>
-</p>
-
-
-
-@{
-    var ministerstva = resorty
-            .Where(m => m.StartsWith("Ministerstv"))
-            .OrderBy(o => o)
-            .ToArray();
-
-    Dictionary<string, int[]> stranaNaMin = new Dictionary<string, int[]>();
-    for (int i = 0; i < ministerstva.Count(); i++)
-    {
-        var vladnuti = DelkyVladnuti(ministri, ministerstva[i])
-            .GroupBy(m => m.Strana)
-            .Select(m => new { strana = m.Key, total = m.Sum(s => s.Days) })
-            .OrderByDescending(o=>o.total)
-            .Take(1);
-
-        foreach (var vl in vladnuti)
+    <div class="col-xs-3 col-sm-2">Omezit zobrazení pro </div>
+    <div class="col-xs-9 col-sm-10">
+        @if (string.IsNullOrEmpty(selectedStrana))
         {
-            if (stranaNaMin.ContainsKey(vl.strana))
+            <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> všechny strany</span>
+        }
+        else
+        {
+            <a href="?obdobi=@Request["obdobi"]&strana="><i class="far fa-angle-double-right"></i> všechny strany</a>
+        }
+        @foreach (var str in strany.OrderBy(o => o))
+        {
+            if (selectedStrana == str)
             {
-                stranaNaMin[vl.strana][i] = vl.total;
+                <span style="font-weight:bold;color:red"><i class="far fa-angle-double-right"></i> @str</span>
             }
             else
             {
-                stranaNaMin.Add(vl.strana, new int[ministerstva.Count()]);
-                stranaNaMin[vl.strana][i] = vl.total;
+                <a href="?obdobi=@Request["obdobi"]&strana=@str"><i class="far fa-angle-double-right"></i> @str</a>
             }
+
         }
-    }
-
-   // var resortyTop = 
-
-}
-
-
-<h2 style="padding-top:20px;">Nejdelší doba působení na ministerstvech <small>od @startDate.ToString("d.M.yyyy")</small></h2>
-<p>
-    <div id="chart_resorty"></div>
-</p>
-
-<script>
-    Highcharts.chart('chart_resorty', {
-    colors: ['#ED561B','#050F57','#F1CE46','#a0a0a0','#d0d0d0' ,'#1A428F','#75B259','#DA3732','#054E0C','#060606'],
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: null
-    },
-    xAxis: {
-        categories: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ministerstva))
-    },
-    yAxis: {
-        min: 0,
-        max: 4000,
-        minorTickInterval: "auto",
-        title: {
-            text: 'Doba působení strany na resortu'
-        }
-    },
-    tooltip: {
-        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> dní',
-        shared: false
-    },
-    plotOptions: {
-        column: {
-            stacking: 'normal'
-        }
-    },
-    series: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
-         stranaNaMin.Select(m => new { 
-             name = m.Key, 
-             data = m.Value, 
-             color=colors[strany.FindIndex(fi=>fi == m.Key)],
-            dataLabels = new { enabled=true, format="{series.name}", rotation=0, style = new { fontSize="12px;" } }
-         })
-        ))
-});
-</script>
+    </div>
+</div>
+<hr />
+<h2 style="padding-top:20px;">Celkový čas vládnutí jednotlivých stran <small>od @startDate.ToString("d.M.yyyy")</small></h2>
 
 <div class="row">
     @foreach (var stranaG in vladnutiAll
@@ -438,26 +361,6 @@
 
 </div>
 
-
-
-<div class="bs-callout bs-callout-primary">
-    <h4>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h4>
-    <h4>Které strany jsou tradiční a které se jimi stávají?</h4>
-    <div>
-        Na této stránce je pracujeme s počtem dní, které jednotlivé strany řídili. Počítáme jak nejdelší nepřerušené období řízení rezortů, tak celkový počet dní.
-    </div>
-    <div>
-        Přes odkazy níže můžete změnit začátek počítaného období či si vypsat report pouze pro některou ze stran.
-    </div>
-    <div>
-        Zdrojem dat je <a onclick="return trackOutLink(this,'report25');" href="https://cs.wikipedia.org/wiki/Seznam_ministrů_České_republiky" target="_blank">
-            seznam ministrů vlád ČR z Wikipedie
-        </a>, který jsme vyčistily a znormalizovali pomocí OpenRefine. Zdrojová, pročištěná a znormalizovaná data <a href="/data/index/ministri">najdete v databázích Hlídače</a>.
-        <br />
-        Názvy resortů jsme sjednotili či jednodušili tehdy, pokud politická pozice odpovídala za obdobné oblasti, jen se trochu lišil.
-
-    </div>
-</div>
 
 
 

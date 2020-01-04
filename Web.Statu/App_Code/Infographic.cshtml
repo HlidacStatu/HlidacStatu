@@ -1,0 +1,50 @@
+﻿@using System.Web.Mvc;
+@using System.Web.Mvc;
+@using System.Linq;
+@using Microsoft.AspNet.Identity;
+@using System.Reflection;
+
+@functions
+{
+    private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper UrlH
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+
+    private static Uri CurrPageUrl
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Request.Url;
+            //return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+    private static string CurrPageUrlPath
+    {
+        get
+        {
+            return "/" + CurrPageUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        }
+    }
+
+
+    private static WebViewPage CurrPage
+    {
+        get { return (WebViewPage)CurrentPage; }
+    }
+}
+
+@helper IfExists(bool showExists, string exists, string ifEmpty = "")
+{
+
+
+}
+
