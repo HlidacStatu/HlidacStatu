@@ -173,8 +173,8 @@
 {
 
     <div class="jumbotron">
-        <h1 style="padding-bottom:+0px;">Jak dlouho nám kdo vládne?</h1>
-        <h2 style="padding-bottom:40px;" class="text-center">Která strany a hnutí v ČR dominují?</h2>
+        <h2 style="padding-bottom:10px;font-weight:bold" class="text-center">Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>
+        <h2 style="padding-bottom:40px;" class="text-center">Které strany a hnutí v ČR dominují?</h2>
         @{
             List<string> _texts = new List<string>();
             foreach (var obdobikv in obdobi.Reverse())
@@ -198,18 +198,18 @@
                 string _topTxt = "";
                 if (_topStrany.Length == 1)
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}).";
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}).";
                     _texts.Add(_topTxt);
                 }
                 else if (_topStrany.Length == 2)
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))})"
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))})"
                    + $" a <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})";
                     _texts.Add(_topTxt);
                 }
                 else
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}),"
+                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}),"
                    + $" <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})"
                    + $" a <b>{_topStrany[2].strana}</b> ({((_topStrany[2].sum / _sumAll).ToString("P2"))}).";
                     _texts.Add(_topTxt);
@@ -224,8 +224,8 @@
         <p></p>
     </div>
 
-    <meta property="og:hlidac_html" content="@Html.Encode(_texts.Aggregate((f,s)=> f + "<br/><br/>" + s))" />
-    <meta property="og:hlidac_footer" content="Roky jsme zvolili podle volebních období" />
+    <meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + _texts.Aggregate((f,s)=> f + "<br/><br/>" + s))" />
+    <meta property="og:hlidac_footer" content="podrobné analýzy najdete v článku" />
     <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
 
@@ -401,7 +401,7 @@
 
     @Html.Raw(ministrTopTxt);
 </p>
-<meta property="og:hlidac_html" content="@Html.Encode(topTxt + "<br /><br />" + ministrTopTxt)" />
+<meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak dlouho zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + topTxt + "<br /><br />" + ministrTopTxt)" />
 <meta property="og:hlidac_footer" content="Analýza působení stran od @startDate.ToString("d. M. yyyy")" />
 <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
@@ -627,21 +627,21 @@
                     </li>
                 }
                 @*@if (!string.IsNullOrEmpty(selectedStrana) && !vladnuti.Take(3).Any(m => m.Strana == selectedStrana))
-                {
-                    var vl = vladnuti.Where(m => m.Strana == selectedStrana).First();
-                    var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
-                    <li>
-                        <b>@vl.Strana</b> na <b>@vl.Resort</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
-                        <br />nepřetržitě @HlidacStatu.Util.RenderData.NiceNumber(vl.Days) dní
-                        @if (vl.Days < celkemD)
-                        {
-                            <div>
-                                celkem @HlidacStatu.Util.RenderData.NiceNumber(celkemD) dní
-                            </div>
-                        }
-                    </li>
+                    {
+                        var vl = vladnuti.Where(m => m.Strana == selectedStrana).First();
+                        var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
+                        <li>
+                            <b>@vl.Strana</b> na <b>@vl.Resort</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
+                            <br />nepřetržitě @HlidacStatu.Util.RenderData.NiceNumber(vl.Days) dní
+                            @if (vl.Days < celkemD)
+                            {
+                                <div>
+                                    celkem @HlidacStatu.Util.RenderData.NiceNumber(celkemD) dní
+                                </div>
+                            }
+                        </li>
 
-                }*@
+                    }*@
             </ol>
         </div>
         if (count % 3 == 0)
