@@ -45,8 +45,6 @@ namespace HlidacStatu.Lib.Searching
 
 
             static char[] reservedAll = new char[] { '+', '-', '=', '!', '(', ')', '{', '}', '[', ']', '^', '\'', '~', '*', '?', ':', '\\', '/' };
-
-
             static char[] formulaStart = new char[] { '>', '<', '(', '{', '[' };
             static char[] formulaEnd = new char[] { ')', '}', ']', '*' };
             static char[] ignored = new char[] { '>', '<' };
