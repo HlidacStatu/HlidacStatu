@@ -162,7 +162,7 @@
 
 
 <div class="row">
-    <div class="col-xs-3 col-sm-2">Zobrazit statistiky</div>
+    <div class="col-xs-3 col-sm-2" style="font-weight:bold;font-size:130%">Zobrazit statistiky</div>
     <div class="col-xs-9 col-sm-10">
         @if (startDate.Year == 1998)
         {
@@ -213,7 +213,7 @@
 }
 <h1 class="text-center center-block">Od @startDate.ToString("d. M. yyyy")</h1>
 <p class="lead">
-    Nejvíce se na vládě podílela <b>@topStrany[0].strana</b> (@((topStrany[0].sum / sumAll).ToString("P2"))), následovaná
+    Od @startDate.ToString("d. M. yyyy") se na vládě nejvíce podílela <b>@topStrany[0].strana</b> (@((topStrany[0].sum / sumAll).ToString("P2"))), následovaná
     <b>@topStrany[1].strana</b> (@((topStrany[1].sum / sumAll).ToString("P2")))
     a <b>@topStrany[2].strana</b> (@((topStrany[2].sum / sumAll).ToString("P2"))).
 </p>
@@ -228,8 +228,8 @@
                 layoutAlgorithm: 'squarified',
                 data: @Html.Raw(
                     Newtonsoft.Json.JsonConvert.SerializeObject(topStrany.Select((m) => new {
-                        name = m.strana, 
-                        value = m.sum, 
+                        name = m.strana,
+                        value = m.sum,
                         color=colors[strany.FindIndex(fi=>fi == m.strana)],
                         description = $"{m.strana} zodpovídala za vládní posty celkem {m.sum.ToString("### ###").Trim()} dní",
                         dataLabels = new { enabled=true, format="{point.name} <br/> {point.value} dní", style = new { fontSize="15px;" } }
@@ -237,7 +237,7 @@
                    )
             }],
             title: {
-                text: 'Highcharts Treemap'
+                text: 'Podíl politických stran na řízení ministerstev České republiky'
             }
         });
     </script>
@@ -251,35 +251,72 @@
             .OrderBy(o => o)
             .ToArray();
 
-    Dictionary<string, int[]> stranaNaMin = new Dictionary<string, int[]>();
+    Dictionary<string, int[]> stranNaMiny = new Dictionary<string, int[]>();
+    Dictionary<string, odpovednost[]> topStranaNaMin = new Dictionary<string, odpovednost[]>();
+
     for (int i = 0; i < ministerstva.Count(); i++)
     {
-        var vladnuti = DelkyVladnuti(ministri, ministerstva[i])
+        var vladnutiRaw = DelkyVladnuti(ministri, ministerstva[i]);
+        var vladnuti = vladnutiRaw
             .GroupBy(m => m.Strana)
             .Select(m => new { strana = m.Key, total = m.Sum(s => s.Days) })
-            .OrderByDescending(o=>o.total)
-            .Take(1);
+            .OrderByDescending(o => o.total);
+
+        topStranaNaMin.Add(ministerstva[i], vladnutiRaw.Where(m => m.Strana == vladnuti.First().strana).ToArray());
 
         foreach (var vl in vladnuti)
         {
-            if (stranaNaMin.ContainsKey(vl.strana))
+            if (stranNaMiny.ContainsKey(vl.strana))
             {
-                stranaNaMin[vl.strana][i] = vl.total;
+                stranNaMiny[vl.strana][i] = vl.total;
             }
             else
             {
-                stranaNaMin.Add(vl.strana, new int[ministerstva.Count()]);
-                stranaNaMin[vl.strana][i] = vl.total;
+                stranNaMiny.Add(vl.strana, new int[ministerstva.Count()]);
+                stranNaMiny[vl.strana][i] = vl.total;
             }
         }
     }
 
-   // var resortyTop = 
+    // var resortyTop =
 
 }
 
 
 <h2 style="padding-top:20px;">Nejdelší doba působení na ministerstvech <small>od @startDate.ToString("d.M.yyyy")</small></h2>
+<p class="lead">
+    Od @startDate.ToString("d.M.yyyy")
+    @{
+        var topStranaNaMinTopList = topStranaNaMin
+             .GroupBy(g => g.Value.First().Strana)
+             .Select(m => new { strana = m.Key, pocetMin = m.Count(), totaldays = m.Sum(s => s.Value.Sum(ss => ss.Days)), ministerstva = m.Select(s => s.Value.First().Resort) })
+             .OrderByDescending(o => o.pocetMin)
+             .ThenByDescending(o => o.totaldays)
+             .ToArray();
+    }
+    @for (int i = 0; i < 3; i++)
+    {
+
+        if (i == 1)
+        {
+            <span>, následovaná </span>
+        }
+        else if (i == 2)
+        {
+            <span> a </span>
+        }
+        <span>
+            <b>@topStranaNaMinTopList[i].strana</b>
+            @if (i == 0)
+            {
+                <span>nejdéle působila </span>
+            }
+            na
+            <b>@Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")</b>
+            (@(topStranaNaMinTopList[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s)))
+        </span>
+    }
+</p>
 <p>
     <div id="chart_resorty"></div>
 </p>
@@ -288,20 +325,20 @@
     Highcharts.chart('chart_resorty', {
     colors: ['#ED561B','#050F57','#F1CE46','#a0a0a0','#d0d0d0' ,'#1A428F','#75B259','#DA3732','#054E0C','#060606'],
     chart: {
-        type: 'column'
+        type: 'bar'
     },
     title: {
-        text: null
+        text: "Strana, která nejvíce dní působila na resortu od @startDate.ToString("d.M.yyyy")"
     },
     xAxis: {
         categories: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ministerstva))
     },
     yAxis: {
         min: 0,
-        max: 4000,
+        max: @((topStranaNaMin.Max(m=>m.Value.Sum(s=>s.Days))/1000+1)*1000 ),
         minorTickInterval: "auto",
         title: {
-            text: 'Doba působení strany na resortu'
+            text: ''
         }
     },
     tooltip: {
@@ -313,16 +350,113 @@
             stacking: 'normal'
         }
     },
-    series: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
-         stranaNaMin.Select(m => new { 
-             name = m.Key, 
-             data = m.Value, 
-             color=colors[strany.FindIndex(fi=>fi == m.Key)],
-            dataLabels = new { enabled=true, format="{series.name}", rotation=0, style = new { fontSize="12px;" } }
-         })
-        ))
+    series: [{
+        name: "Doba působení na resortu ",
+        data : @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                    topStranaNaMin.OrderBy(o=>o.Key).Select((m,i) => new {
+                        x = i,
+                        y = m.Value.Sum(s=>s.Days),
+                        color=colors[strany.FindIndex(fi=>fi == m.Value.First().Strana)],
+                        dataLabels = new { enabled=true, format=$"{m.Value.First().Strana}" }
+
+                    })
+                ))
+
+        }]
+
 });
 </script>
+
+<hr />
+
+<p class="lead">
+    Od @startDate.ToString("d.M.yyyy")
+    @{
+        var topStranaNaMinTopList2 = topStranaNaMin
+             .GroupBy(g => g.Value.First().Strana)
+             .Select(m => new { strana = m.Key, pocetMin = m.Count(), totaldays = m.Max(s => s.Value.Max(ss => ss.Days)), ministerstva = m.Select(s => s.Value.First().Resort) })
+             .OrderByDescending(o => o.pocetMin)
+             .ThenByDescending(o => o.totaldays)
+             .ToArray();
+    }
+    @for (int i = 0; i < 3; i++)
+    {
+
+        if (i == 1)
+        {
+            <span>, následovaná </span>
+        }
+        else if (i == 2)
+        {
+            <span> a </span>
+        }
+        <span>
+            <b>@topStranaNaMinTopList2[i].strana</b>
+            @if (i == 0)
+            {
+                <span>nejdéle bez přestávky zodpovídala </span>
+            }
+            za
+            <b>@Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList2[i].pocetMin, "jedno ministerstvo", "{0} resorty", "{0} resortů")</b>
+            (@(topStranaNaMinTopList2[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s)))
+        </span>
+    }
+</p>
+
+<p>
+    <div id="chart_resorty_neprerus"></div>
+</p>
+
+<script>
+    Highcharts.chart('chart_resorty_neprerus', {
+    colors: ['#ED561B','#050F57','#F1CE46','#a0a0a0','#d0d0d0' ,'#1A428F','#75B259','#DA3732','#054E0C','#060606'],
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: "Strana, která nejdéle působila na resortu bez přerušení od @startDate.ToString("d.M.yyyy")"
+    },
+    xAxis: {
+        categories: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ministerstva))
+    },
+    yAxis: {
+        min: 0,
+        max: @((topStranaNaMin.Max(m=>m.Value.Sum(s=>s.Days))/1000+1)*1000 ),
+        minorTickInterval: "auto",
+        title: {
+            text: ''
+        }
+    },
+    tooltip: {
+        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> dní',
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal'
+        }
+    },
+    series: [{
+        name: "Doba nepřerušeného působení na resortu ",
+        data : @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                    topStranaNaMin.OrderBy(o=>o.Key).Select((m,i) => new {
+                        x = i,
+                        y = m.Value.First().Days,
+                        color=colors[strany.FindIndex(fi=>fi == m.Value.First().Strana)],
+                        dataLabels = new { enabled=true, format=$"{m.Value.First().Strana}"}
+                    })
+                ))
+
+        }]
+
+});
+</script>
+
+<hr />
+<h2>Podrobné informace pro období od @startDate.ToString("d.M.yyyy")</h2>
+<h2 style="padding-top:20px;">
+    Nejdelší politické zodpovědnosti stran za vedení státu
+</h2>
 
 <div class="row">
     @foreach (var stranaG in vladnutiAll
@@ -333,7 +467,7 @@
         count++;
         var strana = stranaG.Key;
         var stranaAllDays = vladnutiAll.Where(m => m.Strana == strana).Sum(m => m.Days);
-        <div class="col-xs-6 col-sm-4">
+        <div class="col-xs-6 col-sm-4" style="border-right: 1px #ddd solid;">
             <h3>@strana</h3>
             <p>
                 Celkem u moci na všech resortech dohromady
@@ -370,13 +504,14 @@
         if (count % 3 == 0)
         {
             <div class="clearfix"></div>
+            <hr style="border:1px #d0d0d0 dashed" />
         }
     }
 
 
 </div>
 
-<hr />
+
 <h2 style="padding-top:20px;">Nejdelší politická zodpovědnost stran za jednotlivé resorty <small>od @startDate.ToString("d.M.yyyy")</small></h2>
 
 <div class="row">
@@ -395,7 +530,7 @@
             }
 
         }
-        <div class="col-xs-6 col-sm-4">
+        <div class="col-xs-6 col-sm-4" style="border-right: 1px #ddd solid;">
             <h3>@resort</h3>
             <ol>
                 @foreach (var vl in vladnuti.Take(3))
@@ -433,6 +568,7 @@
         if (count % 3 == 0)
         {
             <div class="clearfix"></div>
+            <hr style="border:1px #d0d0d0 dashed" />
         }
     }
 
