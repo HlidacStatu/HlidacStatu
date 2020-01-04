@@ -1455,6 +1455,15 @@ text zpravy: {txt}";
                     string scr = webShotServiceUrl + "/screenshot?vp_width=1920&vp_height=1080&url=" 
                         + System.Net.WebUtility.UrlEncode(url);
 
+                    if (Request.QueryString["refresh"] == "1")
+                    {
+                        Framework.RemoteUrlFromWebCache.Manager.Delete(new Util.Cache.KeyAndId()
+                        {
+                            ValueForData = scr,
+                            CacheNameOnDisk = (id?.ToLower() ?? "null") + "-" + rat + "-" + v
+                        });
+                    }
+
                     data = Framework.RemoteUrlFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
                     {
                         ValueForData = scr,
