@@ -6,7 +6,7 @@
 @using System.Web.Mvc
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
-
+@using HlidacStatu.Util
 @using Devmasters.Core
 @using System.Data
 @using System.Data.SqlClient
@@ -176,6 +176,7 @@
         <h1 style="padding-bottom:40px;" class="text-center">Které strany a hnutí v ČR dominují?</h1>
         @{
             List<string> _texts = new List<string>();
+            bool first = true;
             foreach (var obdobikv in obdobi.Reverse())
             {
                 List<string> _resorty = ministriAll
@@ -194,25 +195,31 @@
                         .OrderByDescending(o => o.sum)
                         .ToArray();
                 decimal _sumAll = _topStrany.Sum(s => s.sum);
-                string _topTxt = "";
+                string _topTxt = ""; //$"Které strany mají od voleb největší podíl na řízení státu?<br/><br/> ";
                 if (_topStrany.Length == 1)
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}).";
+                    _topTxt = $"Od <b>{obdobi[obdobikv.Key].Item1.ToString("yyyy")}</b> má úplnou zodpovědnost za stát <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}).";
                     _texts.Add(_topTxt);
                 }
                 else if (_topStrany.Length == 2)
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))})"
-                   + $" a <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})";
+                    _topTxt = $"Od <b>{obdobi[obdobikv.Key].Item1.ToString("yyyy")}</b> "
+                        + $" {(first ? "mají největší podíl na řízení státu" : RenderData.Random("nejvíce","do dneška nejvíce","mají hlavní podíl","mají největší podíl"))}"
+                        + $" <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))})"
+                        + $" a <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})";
                     _texts.Add(_topTxt);
                 }
                 else
                 {
-                    _topTxt = $"Od voleb {obdobi[obdobikv.Key].Item1.ToString("yyyy")} do dneška nejvíce  <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}),"
-                   + $" <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})"
-                   + $" a <b>{_topStrany[2].strana}</b> ({((_topStrany[2].sum / _sumAll).ToString("P2"))}).";
+                    _topTxt = $"Od <b>{obdobi[obdobikv.Key].Item1.ToString("yyyy")}</b> "
+                        + $"{(first ? "mají největší podíl na řízení státu" : RenderData.Random("nejvíce","do dneška nejvíce","mají hlavní podíl","mají největší podíl"))} "
+                        + $" <b>{_topStrany[0].strana}</b> ({((_topStrany[0].sum / _sumAll).ToString("P2"))}),"
+                        + $" <b>{_topStrany[1].strana}</b> ({((_topStrany[1].sum / _sumAll).ToString("P2"))})"
+                        + $" a <b>{_topStrany[2].strana}</b> ({((_topStrany[2].sum / _sumAll).ToString("P2"))}).";
                     _texts.Add(_topTxt);
                 }
+                first = false;
+
 
                 <p>
                     @Html.Raw(_topTxt) <a class="btn btn-primary btn-sm" href="/report/25?obdobi=@obdobi[obdobikv.Key].Item1.ToString("yyyy")" role="button">Ukázat analýzu od @obdobi[obdobikv.Key].Item1.ToString("yyyy")</a>
@@ -220,7 +227,7 @@
             }
 
         }
-        <p></p>
+        <p><a class="btn btn-success btn-sm" href="/report/25" role="button">Ukázat přehled za různá období</a></p>
     </div>
 
     <meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + _texts.Take(4).Aggregate((f,s)=> f + "<br/><br/>" + s))" />
