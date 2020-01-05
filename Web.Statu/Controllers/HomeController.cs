@@ -923,6 +923,7 @@ text zpravy: {txt}";
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
                     result = db.OsobaEvent
+                        .Where(Lib.Data.Osoba._sponzoringLimitsPredicate)
                         .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.Organizace == strana && m.DatumOd.HasValue && m.DatumOd.Value.Year == rok)
                         .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
                         .ToArray()

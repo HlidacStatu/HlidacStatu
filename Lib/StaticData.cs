@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -247,10 +248,15 @@ namespace HlidacStatu.Lib
 
                             using (Lib.Data.DbEntities db = new DbEntities())
                             {
-                                osoby = db.Osoba
-                                    .AsNoTracking()
-                                    .Where(m => m.Status > 0)
-                                    .ToList();
+                                var osobyQ = db.Osoba
+                                    .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
+                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
+                                    .AsNoTracking();
+                                osoby = osobyQ.ToList();
+                                osoby.AddRange(db.Osoba
+                                                .AsNoTracking()
+                                                .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.Politik)
+                                    );
                                 //return osoby;
                                 return osoby;
 

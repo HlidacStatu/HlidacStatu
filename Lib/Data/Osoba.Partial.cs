@@ -91,6 +91,21 @@ namespace HlidacStatu.Lib.Data
         {
             return Events(m => true);
         }
+
+        private static DateTime minBigSponzoringDate = new DateTime(DateTime.Now.Year - 10, 1, 1);
+        private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
+        private static decimal smallSponzoringThreshold = 10000;
+
+        public static Expression<Func<OsobaEvent, bool>> _sponzoringLimitsPredicate = m=>
+                             (m.Type != (int)OsobaEvent.Types.Sponzor
+                                ||
+                                (m.Type == (int)OsobaEvent.Types.Sponzor
+                                && (
+                                    (m.AddInfoNum >= smallSponzoringThreshold && m.DatumOd >= minBigSponzoringDate)
+                                    || (m.AddInfoNum < smallSponzoringThreshold && m.DatumOd >= minSmallSponzoringDate)
+                                    )
+                                )
+                            );
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             List<OsobaEvent> events = new List<OsobaEvent>();
@@ -101,6 +116,7 @@ namespace HlidacStatu.Lib.Data
                 events.AddRange(db.OsobaEvent
                     .AsNoTracking()
                     .Where(m => m.OsobaId == this.InternalId)
+                    .Where(_sponzoringLimitsPredicate)
                     .Where(predicate)
                     .ToArray())
                     ;

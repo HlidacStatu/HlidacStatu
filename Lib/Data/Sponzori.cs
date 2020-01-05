@@ -212,6 +212,7 @@ namespace HlidacStatu.Lib.Data
                     using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                     {
                         var res = db.OsobaEvent
+                            .Where(Osoba._sponzoringLimitsPredicate)
                             .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor)
                             .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
                             .OrderByDescending(o => o.oe.AddInfoNum)
@@ -330,6 +331,7 @@ namespace HlidacStatu.Lib.Data
             using (DbEntities db = new Data.DbEntities())
             {
                 var ids = db.OsobaEvent
+                        .Where(Osoba._sponzoringLimitsPredicate)
                         .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor).Distinct().Select(m => m.OsobaId)
                         .Distinct()
                         .ToArray();
