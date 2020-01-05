@@ -17,6 +17,19 @@ namespace HlidacStatu.Util
             NoChange,
         }
 
+        public static string Random(params string[] texts)
+        {
+            if (texts == null)
+                return string.Empty;
+            else if (texts.Length == 0)
+                return string.Empty;
+            else if (texts.Length == 1)
+                return texts[0];
+            else
+            {
+                return texts[Util.Consts.Rnd.Next(texts.Length)];
+            }
+        }
         public static string Capitalize(string s, CapitalizationStyle style)
         {
             if (string.IsNullOrWhiteSpace(s))
