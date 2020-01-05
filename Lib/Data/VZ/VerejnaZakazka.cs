@@ -617,7 +617,7 @@ namespace HlidacStatu.Lib.Data.VZ
             }
             catch (Exception e)
             {
-                HlidacStatu.Util.Consts.Logger.Error($"VZ ERROR Save ID:{this.Id} Size:{Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented).Length}", e);
+                HlidacStatu.Util.Consts.Logger.Error($"VZ ERROR Save ID:{this.Id} Size:{Newtonsoft.Json.JsonConvert.SerializeObject(this).Length}", e);
             }
         }
 
