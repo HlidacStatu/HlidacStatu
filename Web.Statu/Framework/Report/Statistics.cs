@@ -173,8 +173,8 @@ namespace HlidacStatu.Web.Framework.Report
                     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
                 },
                 new ReportDataSource.Column() { Name="Počet smluv",
-                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.NiceNumber((long)s, html:true); },
-                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double?)s)??0); }
+                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Util.ParseTools.ToDecimal((string)s)??0, html:true); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(HlidacStatu.Util.ParseTools.ToDecimal((string)s)??0); }
 
                 },
             }
