@@ -174,7 +174,7 @@ namespace HlidacStatu.Lib.Data
                 },
                 showProgress ? Devmasters.Core.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
                 showProgress ? new Devmasters.Core.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
-                !System.Diagnostics.Debugger.IsAttached);
+                !System.Diagnostics.Debugger.IsAttached, maxDegreeOfParallelism:5);
 
             VazbyFiremNaUradyStat ret = new VazbyFiremNaUradyStat();
             ret.StatniFirmy = uradyData
