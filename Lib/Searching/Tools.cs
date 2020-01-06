@@ -475,7 +475,7 @@ namespace HlidacStatu.Lib.Searching
 
 
 
-        static string ScrollLifeTime = "15m";
+        static string ScrollLifeTime = "2m";
         public static void DoActionForAll<T>(
             System.Func<IHit<T>, object, ActionOutputData> action,
             object actionParameters,
