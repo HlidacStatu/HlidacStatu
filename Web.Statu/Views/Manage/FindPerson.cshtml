@@ -2,6 +2,10 @@
 @using Devmasters.Core
 @{
     ViewBag.Title = "FindPerson";
+
+    bool extendSearch = (Request.Params["extendSearch"] == null) ? false : true;
+
+    string checkedattr = (extendSearch) ? "checked=\"checked\"" : "";
 }
 
 <h2>FindPerson</h2>
@@ -13,12 +17,12 @@
                 <input type="text" class="form-control" id="jmeno" name="jmeno" placeholder="Jmeno" value="@(Request.Params["jmeno"])">
             </div>
             <div class="form-group">
-                <label for="prijmeni">Prijmeni</label>
-                <input type="text" class="form-control" id="prijmeni" name="prijmeni" placeholder="Prijmeni" value="@(Request.Params["prijmeni"])">
-            </div>
-            <div class="form-group">
                 <label for="narozeni">Rok narození</label>
                 <input type="text" class="form-control" id="narozeni" name="narozeni" placeholder="Rok narozeni" value="@(Request.Params["narozeni"])">
+            </div>
+            <div class="form-group">
+                <label for="prijmeni">Rozšířit hledání</label>
+                <input type="checkbox" class="form-control" id="extendSearch" name="extendSearch" placeholder="extendSearch" @checkedattr value="true">
             </div>
             <button type="submit" class="btn btn-primary">Hledej</button>
 

@@ -546,35 +546,50 @@ namespace HlidacStatu.Lib.Data
         }
 
         // search all people by name, surname and dob
-        public static IEnumerable<Osoba> FindAll(string jmeno, string prijmeni, string rokNarozeni)
+        public static IEnumerable<Osoba> FindAll(string name, string birthYear, bool extendedSearch = true)
         {
-            if (string.IsNullOrWhiteSpace(jmeno)
-                && string.IsNullOrWhiteSpace(prijmeni)
-                && string.IsNullOrWhiteSpace(rokNarozeni))
+            if (string.IsNullOrWhiteSpace(name)
+                && string.IsNullOrWhiteSpace(birthYear))
             {
                 return new Osoba[0];
             }
 
-            jmeno = jmeno?.Trim();
-            prijmeni = prijmeni?.Trim();
-            rokNarozeni = rokNarozeni?.Trim();
+            string nquery = Devmasters.Core.TextUtil.RemoveDiacritics(name.NormalizeToPureTextLower());
+            birthYear = birthYear?.Trim();
+            bool isValidYear = int.TryParse(birthYear, out int validYear);
             // diakritika, velikost
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
+
+            if (extendedSearch)
             {
-                if (int.TryParse(rokNarozeni, out int dob))
-                    return db.Osoba.AsNoTracking()
-                    .Where(m =>
-                        m.Jmeno.Contains(jmeno)
-                        && m.Prijmeni.Contains(prijmeni)
-                        && m.Narozeni.Value.Year == dob
-                    ).ToArray();
-                else
+                using (Lib.Data.DbEntities db = new Data.DbEntities())
+                {
                     return db.Osoba.AsNoTracking()
                         .Where(m =>
-                            m.Jmeno.Contains(jmeno)
-                            && m.Prijmeni.Contains(prijmeni)
-                        ).ToArray();
+                            (
+                                m.PrijmeniAscii.StartsWith(nquery) == true
+                               || m.JmenoAscii.StartsWith(nquery) == true
+                               || (m.JmenoAscii + " " + m.PrijmeniAscii).StartsWith(nquery) == true
+                               || (m.PrijmeniAscii + " " + m.JmenoAscii).StartsWith(nquery) == true
+                            )
+                            && (!isValidYear || m.Narozeni.Value.Year == validYear)
+                        ).Take(200).ToArray();
+                }
             }
+            else
+            {
+                return Lib.StaticData.Politici.Get()
+                    .Where(m =>
+                       (
+                           m.PrijmeniAscii.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+                          || m.JmenoAscii.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+                          || (m.JmenoAscii + " " + m.PrijmeniAscii).StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+                          || (m.PrijmeniAscii + " " + m.JmenoAscii).StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
+                       )
+                       && (!isValidYear || m.Narozeni.Value.Year == validYear)
+                    )
+                    .Take(200);
+            }
+            
         }
 
         public static IEnumerable<Osoba> GetPolitikByNameFtx(string jmeno, int maxNumOfResults = 1500)

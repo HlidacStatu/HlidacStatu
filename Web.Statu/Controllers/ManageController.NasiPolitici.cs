@@ -14,10 +14,10 @@ namespace HlidacStatu.Web.Controllers
 
         // find people
         [Authorize(Roles = "NasiPoliticiAdmin")]
-        public ActionResult FindPerson(string jmeno, string prijmeni, string narozeni)
+        public ActionResult FindPerson(string jmeno, string narozeni, bool? extendSearch)
         {
             // šlo by urychlit pomocí full text searche
-            var osoby = Osoba.FindAll(jmeno, prijmeni, narozeni);
+            var osoby = Osoba.FindAll(jmeno, narozeni, extendSearch.GetValueOrDefault(false));
 
             return View(osoby);
         }
