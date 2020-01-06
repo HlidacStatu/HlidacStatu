@@ -32,7 +32,8 @@
         Q = "*",
                 Oblast = obl.Value,
                 Page = 0,
-                PageSize = 0
+                PageSize = 0,
+                ExactNumOfResults=true
             }
             ).Total;
         var num1M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
@@ -42,7 +43,8 @@
         //Q = "*",
         Oblast = obl.Value,
                 Page = 0,
-                PageSize = 0
+                PageSize = 0,
+                ExactNumOfResults=true
             }
             ).Total;
         var num1W = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
@@ -52,7 +54,9 @@
         //Q = "*",
         Oblast = obl.Value,
                 Page = 0,
-                PageSize = 0
+                PageSize = 0,
+                ExactNumOfResults=true
+
             }
             ).Total;
         <div class="col-xs-6 col-sm-4" style="padding:5px">
