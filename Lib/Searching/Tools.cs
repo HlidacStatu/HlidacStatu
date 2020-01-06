@@ -681,6 +681,7 @@ namespace HlidacStatu.Lib.Searching
                 if (canceled)
                     break;
             } while (result.Hits.Count() > 0);
+            client.ClearScroll(c => c.ScrollId(scrollId));
 
             if (logOutputFunc != null)
                 logOutputFunc("Done");

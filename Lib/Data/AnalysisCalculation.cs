@@ -84,7 +84,7 @@ namespace HlidacStatu.Lib.Data
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
                             .Query(q => Lib.Data.Smlouva.Search.GetSimpleQuery("ico:" + ico + sdate))
-                            .Scroll("5m")
+                            .Scroll("1m")
                             );
             };
 
@@ -230,7 +230,7 @@ namespace HlidacStatu.Lib.Data
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
                             .Query(q => qc)
-                            .Scroll("5m")
+                            .Scroll("1m")
                             );
             };
 
@@ -423,7 +423,7 @@ namespace HlidacStatu.Lib.Data
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
                             .Query(q => q.MatchAll())
-                            .Scroll("5m")
+                            .Scroll("1m")
                             );
             };
 

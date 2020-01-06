@@ -1167,7 +1167,7 @@ namespace HlidacStatu.Lib.Data
                                 .From(page * size)
                                 .Source(ss => ss.ExcludeAll())
                                 .Query(q => q.Term(t => t.Field(f => f.platnyZaznam).Value(deleted ? false : true)))
-                                .Scroll("10m")
+                                .Scroll("1m")
                                 );
                 };
 

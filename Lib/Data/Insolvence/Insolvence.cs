@@ -347,7 +347,7 @@ MORATORIUM =
                            .Source(ss1 => ss1.ExcludeAll())
                            .From(page * size)
                            .Query(q => q.MatchAll())
-                           .Scroll("10m")
+                           .Scroll("1m")
                             );
             };
 
