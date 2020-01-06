@@ -172,7 +172,11 @@ namespace HlidacStatu.Web.Framework.Report
                                         },
                     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
                 },
-                new ReportDataSource.Column() { Name="Počet smluv"},
+                new ReportDataSource.Column() { Name="Počet smluv",
+                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.NiceNumber((long)s, html:true); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double?)s)??0); }
+
+                },
             }
                 );
 
@@ -222,9 +226,12 @@ namespace HlidacStatu.Web.Framework.Report
                                         },
                     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
                 },
-                new ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); } },
+                new ReportDataSource.Column() { Name="Součet cen", 
+                    HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double?)s)??0); }
+                },
             }
-                );
+                ); ; ;
             foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Aggregations["perPrice"]).Items)
             {
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get((string)val.Key);
