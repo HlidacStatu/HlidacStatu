@@ -27,6 +27,14 @@ namespace HlidacStatu.Web.Controllers
             UserManager = userManager;
             SignInManager = signInManager;
         }
+
+        public Microsoft.AspNet.Identity.EntityFramework.IdentityUser AuthUser()
+        {
+
+            Microsoft.AspNet.Identity.EntityFramework.IdentityUser user = UserManager.FindByEmail(this.User.Identity.Name);
+            return user;
+        }
+
         public ApplicationUserManager UserManager
         {
             get

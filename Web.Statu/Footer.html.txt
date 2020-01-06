@@ -36,12 +36,15 @@
 <div class="footer">
     <div class="footer__content">
         <div class="footer__content__col">
-            <a href="https://www.hlidacstatu.cz/texty/vize">Vize hlídače státu</a>
+            <a href="https://www.hlidacstatu.cz/texty/o-serveru">O nás</a>
+            <a href="https://www.hlidacstatu.cz/texty/vize">Naše vize</a>
+            <a href="https://www.hlidacstatu.cz/texty/kodex">Náš kodex</a>
             <a href="https://www.hlidacstatu.cz/texty/o-registru">O registru smluv</a>
             <a href="https://www.hlidacstatu.cz/texty/kontakt">Kontakt</a>
         </div>
         <div class="footer__content__gap"></div>
         <div class="footer__content__col">
+            <a href="https://www.hlidacstatu.cz/texty/team">Team</a>
             <a href="https://www.darujme.cz/projekt/1200384">Finanční podpora</a>
             <a href="https://www.hlidacstatu.cz/api">API a opendata pro vývojáře</a>
             <a href="https://www.hlidacstatu.cz/texty/provoznipodminky/">Podmínky užívání a ochrana soukromí</a>

@@ -495,16 +495,25 @@ text zpravy: {txt}";
                     return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
                 else if (this.User?.Identity?.IsAuthenticated == false) //neni zalogovany
                     return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                else if (this.AuthUser()?.EmailConfirmed == false)
+                {
+                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                }
                 else
                 {
                     if (priloha.LimitedAccessSecret(this.User.Identity.GetUserName()) != secret)
                         return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
                 }
             }
-
-            return File(HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha),
-                string.IsNullOrWhiteSpace(priloha.ContentType) ? "application/octet-stream" : priloha.ContentType,
-                string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? "priloha" : priloha.nazevSouboru);
+            var fn = HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha);
+            if (HlidacStatu.Lib.OCR.DocTools.HasPDFHeader(fn))
+            {
+                return File(fn, "application/pdf",string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? $"{model.Id}_smlouva.pdf" : priloha.nazevSouboru);
+            }
+            else
+                return File(fn,
+                    string.IsNullOrWhiteSpace(priloha.ContentType) ? "application/octet-stream" : priloha.ContentType,
+                    string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? "priloha" : priloha.nazevSouboru);
 
         }
 
