@@ -382,8 +382,17 @@ namespace HlidacStatu.Lib.Data
             {
                 shortestGraph = new Graph.Shortest.EdgePath(this.Vazby());
             }
-            return shortestGraph.ShortestTo(ico, overlapDateFrom, overlapDateTo)
-                .ToArray();
+            try
+            {
+                return shortestGraph.ShortestTo(ico, overlapDateFrom, overlapDateTo)
+                    .ToArray();
+
+            }
+            catch (Exception e)
+            {
+                Util.Consts.Logger.Error("Vazby ERROR for " + this.NameId, e);
+                return ret.ToArray();
+            }
         }
         public long VazbyProICOCalls()
         {

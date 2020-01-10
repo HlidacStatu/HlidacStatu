@@ -76,7 +76,10 @@
                             prev = n;
                         }
                         else
-                            throw new ApplicationException("missing edge " + prev?.UniqId + " -> " + n?.UniqId);
+                        {
+                            Util.Consts.Logger.Error("missing edge " + prev?.UniqId + " -> " + n?.UniqId);
+                            //return edges;
+                        }
                     }
                     return edges;
                 }
