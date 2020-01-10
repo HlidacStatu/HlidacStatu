@@ -110,6 +110,10 @@
 
                         }
                     }
+                    @*else if (Model.spadaPodRS == false || Model.PravniRamec == HlidacStatu.Lib.Data.Smlouva.PravniRamce.MimoRS)
+                    {
+                        <div class="alert alert-info">Tato smlouva nespadá pod zákon o registru smluv a byla zveřejněna dobrovolně.</div>
+                    }*@
                     else
                     {
                         if (Model.Issues.Any(m => m.Importance == HlidacStatu.Lib.Issues.ImportanceLevel.Fatal))
