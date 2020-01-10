@@ -45,6 +45,8 @@ namespace HlidacStatu.Lib.Searching
 
 
             static char[] reservedAll = new char[] { '+', '-', '=', '!', '(', ')', '{', '}', '[', ']', '^', '\'', '~', '*', '?', ':', '\\', '/' };
+            static char[] skipIfPrefix = new char[] { '-', '*', '?'};
+
             static char[] formulaStart = new char[] { '>', '<', '(', '{', '[' };
             static char[] formulaEnd = new char[] { ')', '}', ']', '*' };
             static char[] ignored = new char[] { '>', '<' };
@@ -70,6 +72,12 @@ namespace HlidacStatu.Lib.Searching
 
                 for (int i = 0; i < val.Length; i++)
                 {
+                    if (!string.IsNullOrEmpty(Prefix) && skipIfPrefix.Contains(val[i]))
+                    {
+                        sout.Add(val[i]);
+                        continue;
+                    }
+
                     if (string.IsNullOrWhiteSpace(Prefix) && i == 0 && formulaStart.Contains(val[i]))
                     {
                         sout.Add(val[i]);

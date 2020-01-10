@@ -46,6 +46,22 @@ namespace HlidacStatu.Lib.Searching.Rules
                 rq = Tools.ModifyQueryOR(res.Query.FullQuery(), rq);
                 return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.NextStep);
             }
+            //check & process AddLastCondition
+            if (!string.IsNullOrEmpty(this.AddLastCondition))
+            {
+                if (this.AddLastCondition.Contains("${q}"))
+                {
+                    var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", part.Value));
+                    return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                }
+                else
+                {
+                    var q = Tools.ModifyQueryOR("", this.AddLastCondition);
+                    return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                }
+                //this.AddLastCondition = null; //done, don't do it anywhere
+            }
+
             return res;
         }
         protected abstract RuleResult processQueryPart(SplittingQuery.Part queryPart);
