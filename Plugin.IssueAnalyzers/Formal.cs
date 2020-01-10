@@ -36,6 +36,8 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
         public IEnumerable<Issue> FindIssues(Lib.Data.Smlouva item)
         {
             List<Issue> issues = new List<Issue>();
+
+
             if (item.Prijemce == null || item.Prijemce.Count() == 0)
             {
                 issues.Add(new Issue(this, (int)IssueType.IssueTypes.Neuveden_dodavatel, "Neuveden dodavatel", "Žádný dodavatel u smlouvy"));
@@ -51,7 +53,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 issues.Add(new Issue(this, (int)IssueType.IssueTypes.Neplatny_datum_uzavreni_smlouvy, "Neplatný datum uzavření smlouvy", "Údaj o datumu uzavření smlouvy obsahuje nesmyslný datum. Zápis nesplňuje zákonou podmínku platnosti."));
             }
 
-            if (item.datumUzavreni > DateTime.Now)
+            if (item.spadaPodRS && item.datumUzavreni > DateTime.Now)
             {
                 issues.Add(
                     new Issue(this, (int)IssueType.IssueTypes.Neplatny_datum_uzavreni_smlouvy, "Neplatný datum uzavření smlouvy", "Údaj o datumu uzavření smlouvy obsahuje budoucí datum. Zápis nesplňuje zákonou podmínku platnosti.")
@@ -68,7 +70,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                     prvniZverejneni = newMin;
             }
 
-            if (item.PravniRamec == Lib.Data.Smlouva.PravniRamce.Od072017 &&
+            if (item.spadaPodRS && item.PravniRamec == Lib.Data.Smlouva.PravniRamce.Od072017 &&
                  (prvniZverejneni - item.datumUzavreni).TotalDays > 31 &&
                  (item.datumUzavreni.AddMonths(3).AddDays(1) > prvniZverejneni)
                 )
@@ -78,7 +80,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                     );
             }
 
-            if (item.PravniRamec == Lib.Data.Smlouva.PravniRamce.Od072017 &&
+            if (item.spadaPodRS && item.PravniRamec == Lib.Data.Smlouva.PravniRamce.Od072017 &&
                  (item.datumUzavreni.AddMonths(3).AddDays(1) <= prvniZverejneni)
                 )
             {

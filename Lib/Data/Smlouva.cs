@@ -458,7 +458,8 @@ namespace HlidacStatu.Lib.Data
         //public tSmlouva smlouva;
 
         /// <remarks/>
-        public bool platnyZaznam;
+        public bool platnyZaznam { get; set; }
+        public bool spadaPodRS { get; set; } = true;
 
         [Nest.Boolean()]
         public bool? SVazbouNaPolitiky { get; set; } = false;

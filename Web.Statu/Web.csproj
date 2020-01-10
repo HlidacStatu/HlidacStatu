@@ -1422,6 +1422,10 @@
       <Project>{68bd6a30-cb86-42e1-945d-f14dfc4f9439}</Project>
       <Name>Lib.Data.VZ.Import</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lib.OCR.Api.Client\Lib.OCR.Api.Client.csproj">
+      <Project>{7609680c-3c9d-4735-8709-e64f7116ab70}</Project>
+      <Name>Lib.OCR.Api.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lib\Lib.csproj">
       <Project>{40133098-338c-4a5b-bfaa-69a748d73a87}</Project>
       <Name>Lib</Name>

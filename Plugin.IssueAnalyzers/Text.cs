@@ -31,6 +31,8 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
         public IEnumerable<Issue> FindIssues(Lib.Data.Smlouva item)
         {
             List<Issue> issues = new List<Issue>();
+            if (item.spadaPodRS == false)
+                return issues;
 
             if (item.Prilohy != null && item.Prilohy.Count() > 0)
             {
