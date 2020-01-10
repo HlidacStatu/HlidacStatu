@@ -222,7 +222,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
            );
 
             //fix Highlighting for large texts
-            if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+            if (res.IsValid 
+                && withHighlighting 
+                && res.Shards != null 
+                && res.Shards.Failed > 0) //if some error, do it again without highlighting
             {
                 res = client
                     .Search<object>(s => s

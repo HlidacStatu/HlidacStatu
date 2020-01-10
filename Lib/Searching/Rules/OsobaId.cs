@@ -35,12 +35,13 @@ namespace HlidacStatu.Lib.Searching.Rules
         {
             if (part == null)
                 return null;
+
+
             if (
-                !string.IsNullOrWhiteSpace(this.ReplaceWith)
-                && (
+                (
                     (!string.IsNullOrWhiteSpace(_specificPrefix) && part.Prefix.Equals(_specificPrefix, StringComparison.InvariantCultureIgnoreCase))
                     ||
-                    ( part.Prefix.Equals("osobaid:", StringComparison.InvariantCultureIgnoreCase)
+                    (part.Prefix.Equals("osobaid:", StringComparison.InvariantCultureIgnoreCase)
                     || part.Prefix.Equals("osobaidprijemce:", StringComparison.InvariantCultureIgnoreCase)
                     || part.Prefix.Equals("osobaidplatce:", StringComparison.InvariantCultureIgnoreCase)
 
@@ -55,66 +56,67 @@ namespace HlidacStatu.Lib.Searching.Rules
                 && (Regex.IsMatch(part.Value, @"(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?))", HlidacStatu.Util.Consts.DefaultRegexQueryOption))
             )
             {
-                //list of ICO connected to this person
-                string nameId = part.Value;
-                Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
-                string icosQuery = "";
-
-                //string icoprefix = replaceWith;
-                var templ = $" ( {ReplaceWith}{{0}} ) ";
-                if (ReplaceWith.Contains("${q}"))
-                    templ = $" ( {ReplaceWith.Replace("${q}", "{0}")} )";
-                if (p != null)
+                if (!string.IsNullOrWhiteSpace(this.ReplaceWith))
                 {
-                    var icos = p
-                                .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
-                                .Where(w => !string.IsNullOrEmpty(w.To.Id))
-                                //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
-                                .Select(w => w.To.Id)
-                                .Distinct().ToArray();
+                    //list of ICO connected to this person
+                    string nameId = part.Value;
+                    Data.Osoba p = Data.Osoby.GetByNameId.Get(nameId);
+                    string icosQuery = "";
+
+                    //string icoprefix = replaceWith;
+                    var templ = $" ( {ReplaceWith}{{0}} ) ";
+                    if (ReplaceWith.Contains("${q}"))
+                        templ = $" ( {ReplaceWith.Replace("${q}", "{0}")} )";
+                    if (p != null)
+                    {
+                        var icos = p
+                                    .AktualniVazby(Data.Relation.AktualnostType.Nedavny)
+                                    .Where(w => !string.IsNullOrEmpty(w.To.Id))
+                                    //.Where(w => Analysis.ACore.GetBasicStatisticForICO(w.To.Id).Summary.Pocet > 0)
+                                    .Select(w => w.To.Id)
+                                    .Distinct().ToArray();
 
 
-                    if (icos != null && icos.Length > 0)
-                    {
-                        icosQuery = " ( " + icos
-                            .Select(t => string.Format(templ, t))
-                            .Aggregate((f, s) => f + " OR " + s) + " ) ";
-                    }
-                    else
-                    {
-                        icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
-                    }
-                    if (!string.IsNullOrEmpty(this.AddLastCondition))
-                    {
-                        if (this.AddLastCondition.Contains("${q}"))
+                        if (icos != null && icos.Length > 0)
                         {
-                            icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition.Replace("${q}", part.Value));
+                            icosQuery = " ( " + icos
+                                .Select(t => string.Format(templ, t))
+                                .Aggregate((f, s) => f + " OR " + s) + " ) ";
                         }
                         else
                         {
-                            icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition);
+                            icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
                         }
+                        if (!string.IsNullOrEmpty(this.AddLastCondition))
+                        {
+                            if (this.AddLastCondition.Contains("${q}"))
+                            {
+                                icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition.Replace("${q}", part.Value));
+                            }
+                            else
+                            {
+                                icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition);
+                            }
 
-                        //this.AddLastCondition = null; //done, don't do it anywhere
+                            //this.AddLastCondition = null; //done, don't do it anywhere
+                        }
+                        return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
                     }
-                    return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
+                } // if (!string.IsNullOrWhiteSpace(this.ReplaceWith))
+                else if (!string.IsNullOrWhiteSpace(this.AddLastCondition))
+                {
+                    if (this.AddLastCondition.Contains("${q}"))
+                    {
+                        var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", part.Value));
+                        return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                    }
+                    else
+                    {
+                        var q = Tools.ModifyQueryOR("", this.AddLastCondition);
+                        return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                    }
                 }
-            }
 
-            //check & process AddLastCondition
-            if (!string.IsNullOrEmpty(this.AddLastCondition))
-            {
-                if (this.AddLastCondition.Contains("${q}"))
-                {
-                    var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", part.Value));
-                    return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
-                }
-                else
-                {
-                    var q = Tools.ModifyQueryOR("", this.AddLastCondition);
-                    return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
-                }
-                //this.AddLastCondition = null; //done, don't do it anywhere
             }
             return null;
         }
