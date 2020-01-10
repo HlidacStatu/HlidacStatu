@@ -146,7 +146,10 @@ namespace HlidacStatu.Util
             { "sz","Strana zelených" },
             { "zeleni","Strana zelených" },
             { "strana zelenych","Strana zelených" },
+            
             {"starostove a nezávisli","STAN" },
+            {"starostové a nezávisli","STAN" },
+
             {"top09","TOP 09" },
             {"pirati","Česká pirátská strana" },
             {"ceska strana socialne demokraticka","ČSSD" },
@@ -154,13 +157,15 @@ namespace HlidacStatu.Util
             {"ano2011","ANO 2011" },
             {"ano","ANO 2011" },
             {"hnuti ano","ANO 2011" },
+            {"ANO 2011, o.s.","ANO 2011" },
 
             {"obcanska demokraticka strana","ODS" },
 
             {"spo","Strana Práv Občanů" },
 
-            { "spd","Svoboda a přímá demokracie T.Okamura" },
-            {"svoboda a prima demokracie*","Svoboda a přímá demokracie T.Okamura" },
+            {"Svoboda a přímá demokracie", "SPD" },
+            { "spd","SPD" },
+            {"svoboda a prima demokracie*","SPD" },
 
             {"strana svobodnych obcanu","Svobodní" },
             {"usvit - narodni koalice","Úsvit" },
