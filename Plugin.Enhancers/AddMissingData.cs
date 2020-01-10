@@ -150,12 +150,22 @@ namespace HlidacStatu.Plugin.Enhancers
             }
             if (string.IsNullOrEmpty(subj.nazev) && !string.IsNullOrEmpty(subj.ico))
             {
-                //dopln chybejici jmeno a adresu
+                //dopln chybejici jmeno 
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromIco(subj.ico, true);
                 if (Firma.IsValid(f))
                 {
                     subj.nazev = f.Jmeno;
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněn Název subjektu", "", path + ".nazev", "", f.ICO, this));
+                }
+            }
+            if (string.IsNullOrEmpty(subj.adresa) && !string.IsNullOrEmpty(subj.ico))
+            {
+                //dopln chybejici jmeno 
+                var fm = HlidacStatu.Lib.Data.External.Merk.FromIcoFull(subj.ico);
+                if (fm != null)
+                {
+                    subj.adresa = fm.address.street + " " + fm.address.number + ", " + fm.address.municipality;
+                    _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna adresa subjektu", "", path + ".nazev", "", subj.ico, this));
                 }
             }
 
