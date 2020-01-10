@@ -51,7 +51,7 @@ namespace HlidacStatu.Lib.Searching.Rules
             {
                 if (this.AddLastCondition.Contains("${q}"))
                 {
-                    var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", part.Value));
+                    var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", queryPart.Value));
                     return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
                 }
                 else
