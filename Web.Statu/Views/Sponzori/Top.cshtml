@@ -20,9 +20,9 @@
     ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/quote?d={DateTime.Now.ToString("d.M.yy")}"
             + "&t=" + System.Net.WebUtility.UrlEncode(ViewBag.SocialShareTitle)
             + "&b=" + System.Net.WebUtility.UrlEncode(ViewBag.SocialShareText)
-            + topOsoba != null ? "&f=" + System.Net.WebUtility.UrlEncode(topOsoba.FullNameWithYear() + " " + HlidacStatu.Util.RenderData.ShortNicePrice(ViewBag.TopOsobaAmount)) : ""
+            + ((topOsoba != null) ? ("&f=" + System.Net.WebUtility.UrlEncode(topOsoba.FullNameWithYear() + " " + HlidacStatu.Util.RenderData.ShortNicePrice(ViewBag.TopOsobaAmount))) : "")
             + "&st=" + System.Net.WebUtility.UrlEncode("k " + DateTime.Now.Date.ToString("dd.MM.yyyy"))
-            + topOsoba != null ? "&img=" + System.Net.WebUtility.UrlEncode(topOsoba.GetPhotoUrl()) : ""
+            + ((topOsoba != null) ? ("&img=" + System.Net.WebUtility.UrlEncode(topOsoba.GetPhotoUrl())) : "" )
             + "&rat=16x9"
             ;
     ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
