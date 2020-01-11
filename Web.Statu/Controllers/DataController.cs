@@ -272,10 +272,19 @@ namespace HlidacStatu.Web.Controllers
 
                 if (!string.IsNullOrEmpty(this.Request.QueryString["qs"]))
                 {
-                    var findSm = ds.SearchDataRaw($"_id:\"{dataid}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
-                        null, withHighlighting: true);
-                    if (findSm.Total > 0)
-                        ViewBag.Highlighting = findSm.ElasticResultsRaw.Hits.First().Highlight; 
+                    try
+                    {
+                        var findSm = ds.SearchDataRaw($"_id:\"{dataid}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
+                            null, withHighlighting: true);
+                        if (findSm.Total > 0)
+                            ViewBag.Highlighting = findSm.ElasticResultsRaw.Hits.First().Highlight;
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        Util.Consts.Logger.Error("Dataset Detail Highligting query error ", e);
+                    }
 
                 }
 
