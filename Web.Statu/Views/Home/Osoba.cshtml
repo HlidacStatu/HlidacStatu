@@ -5,7 +5,6 @@
 @using HlidacStatu.Util;
 
 @{
-    ViewBag.Title = "" + Model.FullNameWithYear();
 
     ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
     ViewBag.SocialShareText = Model.FullName() + ": " + Model.InfoFacts().RenderInfoFacts(2, true, true);
@@ -22,6 +21,17 @@
     ViewBag.HideTitle = true;
 
     bool noIndex = HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower());
+
+    //TODO better analysis based on records in other dbs
+    bool noReasonToShow =
+        Model.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
+        && ostat.ToBasicData().Pocet == 0
+        && Model.IsSponzor() == false
+        ;
+
+
+    ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear());
+
 
 }
 
@@ -55,21 +65,103 @@
 
 @Util.AddVisitImg("/osoba/" + Model.NameId)
 
-@*@Html.Action("Osoba_child", new { model = Model, auth = this.User.Identity.IsAuthenticated, aktualnost = aktualnost, NameOfView = "OsobaProfil" }) //+ (string.IsNullOrEmpty(Request.QueryString["beta"]) ? "" : "2")*@
-@Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", key = Model.NameId, param1 = aktualnost.ToString() })
-
-<div style="margin-top:40px"></div>
-
-@if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
+@if (noReasonToShow)
 {
-    @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", key = Model.NameId, param1 = aktualnost.ToString() })
-}
 
+    <div class="container">
+        <div class="row shadowbox">
+            <h1 class="new-title text-left" style="margin-top: 10px;">
+                @Model.FullName()
+            </h1>
+            <hr />
+            <div class="col-sm-4 col-md-3">
+                <div class="person-profile-thumb">
+                    <div class="photo">
+                        <a href="@Model.GetUrl(false)">
+                            <div class="profile-picture" style="background-image: url('@Model.GetPhotoUrl(true)')"></div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="section-title link--blue" href="/">
+                            @Model.FullName()
+                        </a>
+                        <div class="new-p new-p--gray new-p--small">
+                            @Model.StatusOsoby().ToNiceDisplayName()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8 col-md-9">
+                @{
+                    int[] types = {
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
+                    };
+                    var funkceOsoba = Model.Description(true,
+                           m => types.Contains(m.Type),
+                           20);
+
+                }
+                <div class="row">
+                    @if (!string.IsNullOrWhiteSpace(funkceOsoba))
+                    {
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="search-result-label">
+                                Funkce
+                            </div>
+                            <div class="new-p">
+                                @Util.LowBox(80, funkceOsoba)
+                            </div>
+                        </div>
+                    }
+                    @if (Model.Sponzoring().Count() > 0)
+                    {
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="search-result-label">
+                                Podpora politických stran
+                            </div>
+                            <div class="new-p">
+                                @Util.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+                            </div>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="new-p">
+                    Tato osoba nemá žádné vztahy se státem ani s politickými stranami, proto o ni nezobrazujeme více detailů.
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+
+}
+else
+
+{
+    @*@Html.Action("Osoba_child", new { model = Model, auth = this.User.Identity.IsAuthenticated, aktualnost = aktualnost, NameOfView = "OsobaProfil" }) //+ (string.IsNullOrEmpty(Request.QueryString["beta"]) ? "" : "2")*@
+    @Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", key = Model.NameId, param1 = aktualnost.ToString() })
+
+    <div style="margin-top:40px"></div>
+
+    if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
+    {
+        @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", key = Model.NameId, param1 = aktualnost.ToString() })
+    }
+    @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+}
 
 @Util.FeedbackModal("Poslat opravu či připomínku")
 
 
-@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
 
 
 
