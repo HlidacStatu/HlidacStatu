@@ -306,7 +306,7 @@ namespace HlidacStatu.Lib.Data
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
                             .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
                     );
-                    if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                    if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                     {
                         res = client
                             .Search<Lib.Data.Smlouva>(s => s

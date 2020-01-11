@@ -222,8 +222,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
            );
 
             //fix Highlighting for large texts
-            if (res.IsValid 
-                && withHighlighting 
+            if (withHighlighting 
                 && res.Shards != null 
                 && res.Shards.Failed > 0) //if some error, do it again without highlighting
             {

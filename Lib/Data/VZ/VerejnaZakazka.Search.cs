@@ -392,7 +392,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
                             .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
                     );
-                    if (withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
+                    if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                     {
                         res = client
                             .Search<VerejnaZakazka>(s => s
