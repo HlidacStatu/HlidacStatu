@@ -13,16 +13,18 @@ namespace HlidacStatu.Lib.Searching.Rules
             this.Query = new SplittingQuery();
             this.NextStep = NextStepEnum.Process;
         }
-        public RuleResult(SplittingQuery sq, NextStepEnum nextStep)
+        public RuleResult(SplittingQuery sq, NextStepEnum nextStep, bool lastConditionAdded = false)
         {
             this.Query = sq;
             this.NextStep = nextStep;
+            this.LastConditionAdded = lastConditionAdded;
         }
 
-        public RuleResult(SplittingQuery.Part queryPart, NextStepEnum nextStep)
+        public RuleResult(SplittingQuery.Part queryPart, NextStepEnum nextStep, bool lastConditionAdded = false)
         {
             this.Query = new SplittingQuery(new[] { queryPart });
             this.NextStep = nextStep;
+            this.LastConditionAdded = lastConditionAdded;
         }
         public RuleResult(SplittingQuery.Part[] queryParts, NextStepEnum nextStep)
         {
@@ -32,5 +34,6 @@ namespace HlidacStatu.Lib.Searching.Rules
 
         public SplittingQuery Query { get; set; }
         public NextStepEnum NextStep { get; set; }
+        public bool LastConditionAdded { get; set; } = false;
     }
 }

@@ -461,14 +461,30 @@ namespace HlidacStatu.Lib.Searching
             if (string.IsNullOrEmpty(origQuery))
                 return anotherCondition;
             else
-                return string.Format("( {0} ) AND ( {1} ) ", origQuery, anotherCondition);
+            {
+                var s1 = origQuery.Trim();
+                var s2 = anotherCondition.Trim();
+                if (!s1.StartsWith("(") && !s1.EndsWith("("))
+                    s1 = $"( {s1} )";
+                if (!s2.StartsWith("(") && !s2.EndsWith("("))
+                    s2 = $"( {s2} )";
+                return string.Format($"(  {s1}  AND  {s2}  )", origQuery, anotherCondition);
+            }
         }
         public static string ModifyQueryOR(string origQuery, string anotherCondition)
         {
             if (string.IsNullOrEmpty(origQuery))
                 return anotherCondition;
             else
-                return string.Format("( {0} ) OR ( {1} ) ", origQuery, anotherCondition);
+            {
+                var s1 = origQuery.Trim();
+                var s2 = anotherCondition.Trim();
+                if (!s1.StartsWith("(") && !s1.EndsWith("("))
+                    s1 = $"( {s1} )";
+                if (!s2.StartsWith("(") && !s2.EndsWith("("))
+                    s2 = $"( {s2} )";
+                return string.Format($"(  {s1}  OR  {s2}  )", origQuery, anotherCondition);
+            }
         }
 
 

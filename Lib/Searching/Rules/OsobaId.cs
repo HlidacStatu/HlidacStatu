@@ -87,6 +87,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                         {
                             icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
                         }
+                        bool lastCondAdded = false;
                         if (!string.IsNullOrEmpty(this.AddLastCondition))
                         {
                             if (this.AddLastCondition.Contains("${q}"))
@@ -97,23 +98,23 @@ namespace HlidacStatu.Lib.Searching.Rules
                             {
                                 icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition);
                             }
-
+                            lastCondAdded = true;
                             //this.AddLastCondition = null; //done, don't do it anywhere
                         }
-                        return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
+                        return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep, lastCondAdded);
                     }
                 } // if (!string.IsNullOrWhiteSpace(this.ReplaceWith))
                 else if (!string.IsNullOrWhiteSpace(this.AddLastCondition))
                 {
                     if (this.AddLastCondition.Contains("${q}"))
                     {
-                        var q = Tools.ModifyQueryOR("", this.AddLastCondition.Replace("${q}", part.Value));
-                        return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                        var q = this.AddLastCondition.Replace("${q}", part.Value);
+                        return new RuleResult(SplittingQuery.SplitQuery(q), this.NextStep,true);
                     }
                     else
                     {
-                        var q = Tools.ModifyQueryOR("", this.AddLastCondition);
-                        return new RuleResult(SplittingQuery.SplitQuery($"{q}"), this.NextStep);
+                        var q = this.AddLastCondition;
+                        return new RuleResult(SplittingQuery.SplitQuery(q), this.NextStep, true);
                     }
                 }
 

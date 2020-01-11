@@ -36,16 +36,19 @@ namespace HlidacStatu.Lib.Searching.Rules
         {
             var res = processQueryPart(queryPart);
 
-            if (res != null && !string.IsNullOrEmpty(this.AddLastCondition))
+            if (res != null && res.LastConditionAdded == false &&  !string.IsNullOrEmpty(this.AddLastCondition))
             {
                 string rq = this.AddLastCondition;
                 if (this.AddLastCondition.Contains("${q}"))
                 {
                     rq = this.AddLastCondition.Replace("${q}", queryPart.Value);
                 }
-                rq = Tools.ModifyQueryOR(res.Query.FullQuery(), rq);
+                if (res != null)
+                    rq = Tools.ModifyQueryOR(res.Query.FullQuery(), rq);
+
                 return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.NextStep);
             }
+
 
 
             return res;

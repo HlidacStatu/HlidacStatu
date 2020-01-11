@@ -88,15 +88,6 @@ namespace HlidacStatu.Lib.Searching.Rules
                     {
                         icosQuery = string.Format(templ, "noOne"); //$" ( {icoprefix}:noOne ) ";
                     }
-                    if (!string.IsNullOrEmpty(this.AddLastCondition))
-                    {
-                        var condition = this.AddLastCondition;
-                        if (this.AddLastCondition.Contains("${q}"))
-                        {
-                            condition = condition.Replace("${q}", part.Value);
-                        }
-                        icosQuery = Searching.Tools.ModifyQueryOR(icosQuery, condition);
-                    }
 
                     return new RuleResult(SplittingQuery.SplitQuery($"{icosQuery}"), this.NextStep);
                 }
