@@ -846,6 +846,10 @@ namespace HlidacStatu.Lib.Data
 
         public string GetUniqueNamedId()
         {
+            if (string.IsNullOrWhiteSpace(this.JmenoAscii) || string.IsNullOrWhiteSpace(this.PrijmeniAscii))
+                return "";
+            if (!char.IsLetter(this.JmenoAscii[0])|| !char.IsLetter(this.PrijmeniAscii[0])) 
+                return "";
 
             string basic = Devmasters.Core.TextUtil.ShortenText(this.JmenoAscii, 23) + "-" + Devmasters.Core.TextUtil.ShortenText(this.PrijmeniAscii, 23).Trim();
             basic = basic.ToLowerInvariant().Replace(" ", "-");
