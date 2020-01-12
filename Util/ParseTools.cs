@@ -231,6 +231,8 @@ namespace HlidacStatu.Util
                 "H:m:s","HH:mm:ss",
                 "H:m","HH:mm",
                 "H: m: s","HH: mm: ss",
+                "H: m: s","HH: mm: ss tt",
+                "h: m: s","HH: mm: ss tt",
                 "H:m:s.f","HH:mm:ss.f",
                 "H:m:s.ff","HH:mm:ss.ff",
                 "H:m:s.fff","HH:mm:ss.fff",
