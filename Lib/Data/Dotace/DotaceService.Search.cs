@@ -39,9 +39,9 @@ namespace HlidacStatu.Lib.Data.Dotace
             Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
                    new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico"),
                    new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
-                   new Lib.Searching.Rule(@"ico:","prijemceIco:"),
-                   new Lib.Searching.Rule("jmeno:","prijemceJmenoPrijemce:"),
-                   new Lib.Searching.Rule("projekt:","projektNazev:"),
+                   new Lib.Searching.Rule(@"ico:","prijemce.ico:"),
+                   new Lib.Searching.Rule("jmeno:","prijemce.jmenoPrijemce:"),
+                   new Lib.Searching.Rule("projekt:","nazevProjektu:"),
                    new Lib.Searching.Rule("castka:","dotaceCelkem:"),
                    //new Lib.Search.Rule("id:","idDotace:"),
             };
@@ -54,9 +54,9 @@ namespace HlidacStatu.Lib.Data.Dotace
                //new Holding("holdingzadavatel:","icoplatce:" ),
                new Holding(null,"ico:" ),
 
-               new TransformPrefix("ico:","prijemceIco:",null ),
-               new TransformPrefix("jmeno:","prijemceJmenoPrijemce:",null ),
-               new TransformPrefix("projekt:","projektNazev:",null ),
+               new TransformPrefix("ico:","prijemce.ico:",null ),
+               new TransformPrefix("jmeno:","prijemce.jmenoPrijemce:",null ),
+               new TransformPrefix("projekt:","nazevProjektu:",null ),
                new TransformPrefix("castka:","dotaceCelkem:",null ),
                //new TransformPrefix("id:","idDotace:",null ),
 
