@@ -461,6 +461,8 @@
     <Compile Include="Data\Dotace\Dotace.cs" />
     <Compile Include="Data\Dotace\DotaceService.cs" />
     <Compile Include="Data\Dotace\DotaceService.Search.cs" />
+    <Compile Include="Data\Dotace\DotacniProgram.cs" />
+    <Compile Include="Data\Dotace\Prijemce.cs" />
     <Compile Include="Data\Dotace\Rozhodnuti.cs" />
     <Compile Include="Data\EventType.cs">
       <DependentUpon>Db.tt</DependentUpon>

@@ -543,19 +543,19 @@
         }
     </td>
     <td class="text-nowrap">
-        @item.PrijemceJmenoPrijemce
+        @item.Prijemce.JmenoPrijemce
     </td>
     <td>
-        @if(item.PrijemceIco != "00000000")
+        @if(item.Prijemce.Ico != "00000000")
         { 
-            <a href="/subjekt/@item.PrijemceIco" title="Informace o subjektu">@item.PrijemceIco</a>
+            <a href="/subjekt/@item.Prijemce.Ico" title="Informace o subjektu">@item.Prijemce.Ico</a>
         }
 </td>
     <td>
         @item.GetNazevDotace()
     </td>
     <td class="text-nowrap">
-        @(item.PodpisDatum?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
+        @(item.DatumPodpisu?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
     </td>
     <td class="text-nowrap text-right">
         @HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem)
@@ -568,7 +568,7 @@
     </td>
     <td class="text-nowrap">
         <a href="detail?idDotace=@item.IdDotace">Detail</a> | 
-        <a href="@item.Source">Zdroj</a>
+        <a href="@item.UrlZdroje">Zdroj</a>
     </td>
 </tr>
 }

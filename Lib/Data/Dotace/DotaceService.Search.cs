@@ -178,10 +178,10 @@ namespace HlidacStatu.Lib.Data.Dotace
             switch (order)
             {
                 case DotaceSearchResult.DotaceOrderResult.DateAddedDesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DatumPodpisu).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.DateAddedAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DatumPodpisu).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.LatestUpdateDesc:
                     s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceCelkem).Descending());
@@ -193,10 +193,10 @@ namespace HlidacStatu.Lib.Data.Dotace
                     s = new SortDescriptor<Dotace>().Field(f => f.Field("_doc"));
                     break;
                 case DotaceSearchResult.DotaceOrderResult.ICODesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PrijemceIco).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.Prijemce.Ico).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.ICOAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PrijemceIco).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.Prijemce.Ico).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.Relevance:
                 default:
