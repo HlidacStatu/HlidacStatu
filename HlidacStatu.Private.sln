@@ -127,6 +127,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DownloaderTool", "Downloade
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mailerlite", "Mailerlite\Mailerlite.csproj", "{A14B6807-A7E8-4EC8-861F-BCC799D90B95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.OCR.TextReadability", "..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj", "{B3F13956-BC92-4B49-A375-1882BDA8878C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -970,6 +972,30 @@ Global
 		{A14B6807-A7E8-4EC8-861F-BCC799D90B95}.x86Only|x64.Build.0 = Release|Any CPU
 		{A14B6807-A7E8-4EC8-861F-BCC799D90B95}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{A14B6807-A7E8-4EC8-861F-BCC799D90B95}.x86Only|x86.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|x64.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Release|x86.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|x64.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|x64.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|x86.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.Stage|x86.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|Any CPU.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|x64.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|x64.Build.0 = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|x86.ActiveCfg = Release|Any CPU
+		{B3F13956-BC92-4B49-A375-1882BDA8878C}.x86Only|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -996,10 +1022,11 @@ Global
 		{7609680C-3C9D-4735-8709-E64F7116AB70} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 		{372FC78E-0B78-414C-A895-59C0CD6BBA7C} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 		{D787ACCA-0E9D-45E7-A98B-87ACFE7AF249} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
+		{B3F13956-BC92-4B49-A375-1882BDA8878C} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

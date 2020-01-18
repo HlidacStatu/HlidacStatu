@@ -68,6 +68,9 @@
     <Reference Include="Devmasters.Render, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Render.1.472.1.1\lib\net40\Devmasters.Render.dll</HintPath>
     </Reference>
+    <Reference Include="Dynamitey, Version=2.0.10.189, Culture=neutral, PublicKeyToken=cbf53ea3aeb972c6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamitey.2.0.10.189\lib\net40\Dynamitey.dll</HintPath>
+    </Reference>
     <Reference Include="Elastic.Apm">
       <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.dll</HintPath>
     </Reference>
@@ -780,6 +783,10 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj">
+      <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
+      <Name>Lib.OCR.TextReadability</Name>
+    </ProjectReference>
     <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
       <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
       <Name>DotNet.Highcharts</Name>

@@ -107,14 +107,6 @@
                                 <input id="Sm" type="number" placeholder="ID verze smlouvy" onchange="$('#linkSm').attr('href','/manage/EditSmlouva?id=' + $('#Sm').val());" />
                                 <a id="linkSm" href="#">Editace záznamu smlouvy</a>
                             </li>
-                            <li>
-                                <input id="Per" type="text" placeholder="ID cloveka" onchange="$('#linkPer').attr('href','/manage/EditOsoba?id=' + $('#Per').val());" />
-                                <a id="linkPer" href="#">Editace záznamu osoby</a>
-                            </li>
-                            <li>
-                                <input id="BU" type="text" placeholder="Cislo uctu" onchange="$('#linkBU').attr('href', '/manage/EditObject?type=bankovniucet&id=' + $('#BU').val());" />
-                                <a id="linkBU" href="/manage/EditObject?type=bankovniucet&id=">Novy/Editace bankovniho uctu</a>
-                            </li>
                         </ul>
                     </dd>
                     <dt>
@@ -211,7 +203,7 @@
                         <div class="form-group-sm">
                             <label for="prijmeni" class="col-xs-2 control-label">body</label>
                             <div class="col-xs-10">
-                                <input type="text" class="form-control--240" name="b" placeholder="text">
+                                <textarea cols="60" rows="10" class="form-control--240" name="b" placeholder="html"></textarea>
                             </div>
                         </div>
                         <div class="clearfix"></div>

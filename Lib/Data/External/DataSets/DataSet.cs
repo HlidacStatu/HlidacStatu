@@ -79,6 +79,84 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return new DataSet(reg.datasetId);
         }
 
+        private IEnumerable<string> _getPreviewTopValueFromItem(Newtonsoft.Json.Linq.JObject item, bool fromAllTopValues = false)
+        {
+            List<string> topTxts = new List<string>();
+            List<string> texts = new List<string>();
+            var props = GetMappingList("ICO");
+            foreach (var prop in props)
+            {
+                var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
+                if (HlidacStatu.Util.DataValidators.CheckCZICO(t))
+                {
+                    Firma f = Firmy.Get(t);
+                    if (f.Valid)
+                    {
+                        topTxts.Add(f.JmenoBezKoncovky() + ":");
+                        if (!fromAllTopValues)
+                            break;
+                    }
+                }
+            }
+
+            props = GetMappingList("Osobaid");
+            foreach (var prop in props)
+            {
+                var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
+                Osoba o = Osoby.GetByNameId.Get(t);
+                if (o != null)
+                {
+                    topTxts.Add(o.FullName() + ": ");
+                    if (!fromAllTopValues)
+                        break;
+
+                }
+            }
+
+            return topTxts;
+        }
+
+        public IEnumerable<string> _getPreviewTextValueFromItem(Newtonsoft.Json.Linq.JObject item)
+        {
+            List<string> topTxts = new List<string>();
+            List<string> texts = new List<string>();
+            var topProps = GetMappingList("ICO")
+                .Union(GetMappingList("Osobaid"));
+
+
+            var textProps = GetTextMappingList().Except(topProps);
+            foreach (var prop in textProps)
+            {
+                //var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
+                var o = item.SelectTokens(prop).FirstOrDefault();
+                string t = "";
+                if (o != null && o.GetType() == typeof(JValue))
+                    t = o.Value<string>() ?? "";
+
+                if (!Uri.TryCreate(t, UriKind.Absolute, out Uri tmp))
+                {
+                    if (HlidacStatu.Lib.OCR.TextReadability.Instance().IsReadableText(t))
+                    {
+                        texts.Add(t);
+                    }
+                }
+            }
+            return texts.OrderByDescending(o => o.Length);
+        }
+
+        public string GetPreviewTextValueFromItem(Newtonsoft.Json.Linq.JObject item, int maxLength = 320, bool useSpecProperties = true, bool useTextProperties = true)
+        {
+            var txts = new List<string>();
+            if (useSpecProperties)
+                txts.AddRange(_getPreviewTopValueFromItem(item));
+            if (useTextProperties)
+                txts.AddRange(_getPreviewTextValueFromItem(item));
+
+            return Devmasters.Core.TextUtil.ShortenText(
+                string.Join(" ", txts)
+                , maxLength
+                ); 
+        }
 
         protected Nest.ElasticClient client = null;
         protected Newtonsoft.Json.Schema.JSchema schema = null;
@@ -134,16 +212,16 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return this.Registration().createdBy.ToLower() == email;
         }
 
-        public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null, 
+        public virtual DataSearchResult SearchData(string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
-            return Search.SearchData(this, queryString, page, pageSize, sort, excludeBigProperties, 
+            return Search.SearchData(this, queryString, page, pageSize, sort, excludeBigProperties,
                 withHighlighting, exactNumOfResults);
         }
         public virtual DataSearchRawResult SearchDataRaw(string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
-            return Search.SearchDataRaw(this, queryString, page, pageSize, sort, excludeBigProperties, 
+            return Search.SearchDataRaw(this, queryString, page, pageSize, sort, excludeBigProperties,
                 withHighlighting, exactNumOfResults);
         }
         public IEnumerable<string> GetMappingList(string specificMapName = null, string attrNameModif = "")
@@ -752,7 +830,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             if (_numberOfRecords == -1)
             {
-                var last = this.SearchData("*", 1, 1, "DbCreated desc", exactNumOfResults:true);
+                var last = this.SearchData("*", 1, 1, "DbCreated desc", exactNumOfResults: true);
                 _numberOfRecords = last.Total;
                 _lastRecordUpdated = last.Result.FirstOrDefault()?.DbCreated ?? DateTime.Now.AddYears(-10);
             }
@@ -781,7 +859,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     List<InfoFact> f = new List<InfoFact>();
 
                     var sCreated = HlidacStatu.Lib.RenderTools.DateDiffShort_7pad(this.Registration().created, DateTime.Now, "Databáze byla založena před {0}.", "");
-                    var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults:true);
+                    var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults: true);
                     var total = (int)first.Total;
                     var last = this.SearchData("*", 1, 1, "DbCreated desc");
                     var minMax = Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",

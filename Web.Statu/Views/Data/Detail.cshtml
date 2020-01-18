@@ -8,11 +8,25 @@
 @{
     var registration = Model.Dataset.Registration();
 
-    dynamic model = Model.Dataset.GetDataObj(Model.Data);
+    Newtonsoft.Json.Linq.JObject jmodel = Model.Dataset.GetDataObj(Model.Data);
+    dynamic model = (dynamic)jmodel;
 
     string itemId = (model.Id ?? model.id) ?? "";
     ViewBag.Title = Model.Dataset.Registration().name;
     ViewBag.SubTitle = itemId ;
+
+
+    ViewBag.SocialShareTitle = $"<b>{ViewBag.Title}</b>";
+    ViewBag.SocialShareText = Model.Dataset.GetPreviewTextValueFromItem(jmodel);
+    ViewBag.SocialShareHtml = Model.Dataset.GetPreviewTextValueFromItem(jmodel);
+    ViewBag.SocialShareHtmlFooter = Model.Dataset.DatasetItemUrl(itemId,false) ;
+    ViewBag.SocialShareHtmlSubFooter = $"<b>Hlídáme je, protože si to zaslouží!</b>";
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/page?d={DateTime.Now.ToString("d.M.yy")}&v=" + Url.Encode(Request.Url.AbsoluteUri);
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+            + "<meta property=\"og:image:height\" content=\"1080\" />"
+            + "<meta property=\"og:image:type\" content=\"image/png\" />"
+            ;
+
 
     IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
 
