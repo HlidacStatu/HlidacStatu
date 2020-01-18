@@ -39,9 +39,9 @@ namespace HlidacStatu.Lib.Data.Dotace
             Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
                    new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico"),
                    new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
-                   new Lib.Searching.Rule(@"ico:","prijemceIco:"),
-                   new Lib.Searching.Rule("jmeno:","prijemceJmenoPrijemce:"),
-                   new Lib.Searching.Rule("projekt:","projektNazev:"),
+                   new Lib.Searching.Rule(@"ico:","prijemce.ico:"),
+                   new Lib.Searching.Rule("jmeno:","prijemce.jmenoPrijemce:"),
+                   new Lib.Searching.Rule("projekt:","nazevProjektu:"),
                    new Lib.Searching.Rule("castka:","dotaceCelkem:"),
                    //new Lib.Search.Rule("id:","idDotace:"),
             };
@@ -54,9 +54,9 @@ namespace HlidacStatu.Lib.Data.Dotace
                //new Holding("holdingzadavatel:","icoplatce:" ),
                new Holding(null,"ico:" ),
 
-               new TransformPrefix("ico:","prijemceIco:",null ),
-               new TransformPrefix("jmeno:","prijemceJmenoPrijemce:",null ),
-               new TransformPrefix("projekt:","projektNazev:",null ),
+               new TransformPrefix("ico:","prijemce.ico:",null ),
+               new TransformPrefix("jmeno:","prijemce.jmenoPrijemce:",null ),
+               new TransformPrefix("projekt:","nazevProjektu:",null ),
                new TransformPrefix("castka:","dotaceCelkem:",null ),
                //new TransformPrefix("id:","idDotace:",null ),
 
@@ -178,10 +178,10 @@ namespace HlidacStatu.Lib.Data.Dotace
             switch (order)
             {
                 case DotaceSearchResult.DotaceOrderResult.DateAddedDesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DatumPodpisu).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.DateAddedAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PodpisDatum).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DatumPodpisu).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.LatestUpdateDesc:
                     s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.DotaceCelkem).Descending());
@@ -193,10 +193,10 @@ namespace HlidacStatu.Lib.Data.Dotace
                     s = new SortDescriptor<Dotace>().Field(f => f.Field("_doc"));
                     break;
                 case DotaceSearchResult.DotaceOrderResult.ICODesc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PrijemceIco).Descending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.Prijemce.Ico).Descending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.ICOAsc:
-                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.PrijemceIco).Ascending());
+                    s = new SortDescriptor<Dotace>().Field(m => m.Field(f => f.Prijemce.Ico).Ascending());
                     break;
                 case DotaceSearchResult.DotaceOrderResult.Relevance:
                 default:

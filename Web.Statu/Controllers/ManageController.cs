@@ -377,7 +377,7 @@ namespace HlidacStatu.Web.Controllers
 
                 Osoba.StatusOsobyEnum status = GetStatusFromText(cols[6]);
 
-                string clenstviStrana = cols[7];
+                string clenstviStrana = ParseTools.NormalizaceStranaShortName(cols[7]);
                 DateTime? clenstviVznik = ParseTools.ToDate(cols[8]);
 
                 string eventOrganizace = cols[9];

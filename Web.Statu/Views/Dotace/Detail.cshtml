@@ -26,32 +26,32 @@
     <tbody>
         <tr>
             <th>Příjemce dotace</th>
-            <td>@Model.PrijemceJmenoPrijemce</td>
+            <td>@Model.Prijemce.JmenoPrijemce</td>
         </tr>
         <tr>
             <th>IČO</th>
             <td>
-                @if (Model.PrijemceIco != "00000000")
+                @if (Model.Prijemce.Ico != "00000000")
                 {
-                    <a href="/dotace/hledat?q=ico:@Model.PrijemceIco" title="Vyhledat všechny dotace pro tento subjekt">@Model.PrijemceIco</a>
+                    <a href="/dotace/hledat?q=ico:@Model.Prijemce.Ico" title="Vyhledat všechny dotace pro tento subjekt">@Model.Prijemce.Ico</a>
                 }
             </td>
             </tr>
         <tr>
             <th>Kód projektu</th>
-            <td>@Model.ProjektKod</td>
+            <td>@Model.KodProjektu</td>
         </tr>
         <tr>
             <th>Identifikátor projektu</th>
-            <td>@Model.ProjektIdentifikator</td>
+            <td>@Model.IdProjektu</td>
         </tr>
         <tr>
             <th>Název projektu</th>
-            <td>@Model.ProjektNazev</td>
+            <td>@Model.NazevProjektu</td>
         </tr>
         <tr>
             <th>Datum podpisu</th>
-            <td>@(Model.PodpisDatum?.ToString("dd.MM.yyyy"))</td>
+            <td>@(Model.DatumPodpisu?.ToString("dd.MM.yyyy"))</td>
         </tr>
         <tr>
             <th>Celková částka</th>
@@ -65,7 +65,7 @@
         </tr>
         <tr>
             <th>Zdroj</th>
-            <td><a href="@Model.Source">@Model.Source</a></td>
+            <td><a href="@Model.UrlZdroje">@Model.UrlZdroje</a></td>
         </tr>
     </tbody>
 </table>
@@ -91,7 +91,7 @@
             {
                 <tr>
                     <td>
-                        @rozhodnuti.RokRozhodnuti
+                        @rozhodnuti.Datum
                     </td>
                     <td class="text-nowrap text-right">
                         @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
@@ -100,19 +100,13 @@
                         @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
                     </td>
                     <td>
-                        @(@rozhodnuti.NavratnostIndikator ? "ano" : "ne")
+                        @(@rozhodnuti.JePujcka ? "ano" : "ne")
                     </td>
                     <td>
-                        @(@rozhodnuti.InvesticeIndikator ? "ano" : "ne")
+                        @rozhodnuti.NazevPoskytovatele
                     </td>
                     <td>
-                        @rozhodnuti.FinancniZdrojNazev
-                    </td>
-                    <td>
-                        @rozhodnuti.DotacePoskytovatelNazev
-                    </td>
-                    <td>
-                        @rozhodnuti.PoskytovatelIco
+                        @rozhodnuti.IcoPoskytovatele
                     </td>
 
                 </tr>
