@@ -86,7 +86,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var props = GetMappingList("ICO");
             foreach (var prop in props)
             {
-                var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
+                var o = item.SelectTokens(prop).FirstOrDefault();
+                string t = "";
+                if (o != null && o.GetType() == typeof(JValue))
+                    t = o.Value<string>() ?? "";
+                //var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
                 if (HlidacStatu.Util.DataValidators.CheckCZICO(t))
                 {
                     Firma f = Firmy.Get(t);
