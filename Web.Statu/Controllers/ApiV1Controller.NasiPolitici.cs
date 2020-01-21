@@ -203,7 +203,8 @@ namespace HlidacStatu.Web.Controllers
                     insolvencyCompany = insCompany,
                     source = o.GetUrl(false),
                     sponsor = sponzorstvi,
-                    currentParty = politickaStrana
+                    currentParty = politickaStrana,
+                    contacts = o.GetSocialContact()
                 };
 
                 return Content(JsonConvert.SerializeObject(result), "application/json");

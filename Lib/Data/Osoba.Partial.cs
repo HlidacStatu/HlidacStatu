@@ -96,7 +96,7 @@ namespace HlidacStatu.Lib.Data
         private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
         private static decimal smallSponzoringThreshold = 10000;
 
-        public static Expression<Func<OsobaEvent, bool>> _sponzoringLimitsPredicate = m=>
+        public static Expression<Func<OsobaEvent, bool>> _sponzoringLimitsPredicate = m =>
                              (m.Type != (int)OsobaEvent.Types.Sponzor
                                 ||
                                 (m.Type == (int)OsobaEvent.Types.Sponzor
@@ -106,6 +106,16 @@ namespace HlidacStatu.Lib.Data
                                     )
                                 )
                             );
+
+        public IEnumerable<SocialContact> GetSocialContact()
+        {
+            return this.Events(oe => oe.Type == (int)OsobaEvent.Types.SocialniSite)
+                .Select(oe => new SocialContact 
+                { 
+                    Service = oe.Organizace, Contact = oe.AddInfo 
+                });
+        }
+
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             List<OsobaEvent> events = new List<OsobaEvent>();
