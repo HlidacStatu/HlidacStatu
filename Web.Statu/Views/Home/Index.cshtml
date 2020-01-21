@@ -150,43 +150,47 @@
             <div class="watcher__title">
                 <img src="/Content/img/icon-contracts.svg">
                 <h2 class="new-title">
-                    Hlídač smluv
+                    Hlídač kauz
                 </h2>
             </div>
-            <div class="block-col ">
-                <p>
-                    Informace o smlouvách a jejich návaznost na stát a firmy
-                    <br>
-                    Celkem <strong>@RenderData.NiceNumber((decimal)platnych)</strong> smluv za <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(celkemKc), html: true))</strong>
-                </p>
-            </div>
-
             <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Hledat v registru smluv
-                </div>
-                <div class="block-tags">
-                    <a href="/porovnat" class="tag">
-                        Porovnání libovolných úřadů <span class="badge badge-warning">Novinka</span>
-                    </a>
-
-                    <a href="/Report/4" class="tag">Nejdražší smlouvy</a>
-                    <a href="/Report/16" class="tag">Zvolení poslanci do parlamentu </a>
-                    <a href="/Report/7" class="tag">Základní statistiky reg.smluv</a>
-                </div>
-            </div>
-
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Aféry a zajímavosti
+                <div class="block-subtitle" style="font-weight:bold;color:red;">
+                    Předražená zakázka na elektronické dálniční známky
                 </div>
                 <div class="block-tags">
                     <span class="tag">
-                        <a href="/hledat?Q=icoPlatce%3A70888337+AND+icoPrijemce%3A41694155+Jižn%C3%AD+Morava">
-                            Logo pro Jihomoravský kraj
+                        <a href="https://www.hlidacstatu.cz/texty/elektronicke-dalnicni-znamky-jsou-drazsi-nez-papirove/">
+                            Elektronické dálniční známky vyjdou dráž než papírové
+                            <span class="glyphicon glyphicon-share"></span>
                         </a>
-                        <a href="https://www.lidovky.cz/domov/nove-logo-jihomoravskeho-kraje-pritahlo-posmech-hodiny-od-vydani-stalo-skoro-2-miliony.A181214_110142_ln_domov_mber" target="_blank"><span class="glyphicon glyphicon-share"></span></a>
                     </span>
+                    <span class="tag">
+                        <a href="https://www.facebook.com/HlidacStatu/photos/a.633591106840230/1224880554377946/">
+                            Lžou premiérovi anebo premiér nám? Je to mediální hra?
+                            <span class="glyphicon glyphicon-share"></span>
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="https://www.facebook.com/HlidacStatu/photos/a.633591106840230/1224879147711420/">
+                            Kdo všechno o zakázce věděl?
+                            <span class="glyphicon glyphicon-share"></span>
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="https://www.hlidacstatu.cz/texty/system-elektronicke-dalnicni-znamky-za-401-milionu-se-zatim-nesmi-realizovat-zrusi-se/">
+                            Systém elektronické dálniční známky za 401 miliónu se zatím nesmí realizovat. Zruší se?
+                            <span class="glyphicon glyphicon-share"></span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Další sledované kauzy
+                </div>
+                <div class="block-tags">
                     <span class="tag">
                         <a href="/Hledat?Q=%22elektronické%20mýto%22">
                             Elektronické mýto
@@ -206,9 +210,6 @@
                 </div>
             </div>
 
-            <div class="block-button-wrapper">
-                <a href="/smlouvy" class="btn btn-default btn-default-new">zobrazit více v Hlídači smluv</a>
-            </div>
         </div>
 
         <!-- block 2 -->
