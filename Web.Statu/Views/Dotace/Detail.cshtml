@@ -26,7 +26,11 @@
     <tbody>
         <tr>
             <th>Příjemce dotace</th>
-            <td>@Model.Prijemce.JmenoPrijemce</td>
+            <td>
+                @(string.IsNullOrWhiteSpace(Model.Prijemce.JmenoPrijemce) ? 
+                    Model.Prijemce.ObchodniJmeno : 
+                    Model.Prijemce.JmenoPrijemce)
+            </td>
         </tr>
         <tr>
             <th>IČO</th>
@@ -76,11 +80,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Rok rozhodnutí</th>
+                <th>Datum rozhodnutí</th>
                 <th>Požadovaná částka</th>
                 <th>Částka rozhodnutá</th>
                 <th>Je půjčkou</th>
-                <th>Je investicí</th>
                 <th>Zdroj financí</th>
                 <th>Poskytovatel financí</th>
                 <th>IČO poskytovatele</th>
@@ -89,27 +92,30 @@
         <tbody>
             @foreach (var rozhodnuti in Model.Rozhodnuti)
             {
-                <tr>
-                    <td>
-                        @rozhodnuti.Datum
-                    </td>
-                    <td class="text-nowrap text-right">
-                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
-                    </td>
-                    <td class="text-nowrap text-right">
-                        @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
-                    </td>
-                    <td>
-                        @(@rozhodnuti.JePujcka ? "ano" : "ne")
-                    </td>
-                    <td>
-                        @rozhodnuti.NazevPoskytovatele
-                    </td>
-                    <td>
-                        @rozhodnuti.IcoPoskytovatele
-                    </td>
+            <tr>
+                <td>
+                    @(rozhodnuti.Datum?.ToString("dd.MM.yyyy"))
+                </td>
+                <td class="text-nowrap text-right">
+                    @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
+                </td>
+                <td class="text-nowrap text-right">
+                    @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
+                </td>
+                <td>
+                    @(@rozhodnuti.JePujcka ? "ano" : "ne")
+                </td>
+                <td>
+                    @(string.IsNullOrWhiteSpace(rozhodnuti.ZdrojFinanci) ? "ČR" : rozhodnuti.ZdrojFinanci)
+                </td>
+                <td>
+                    @rozhodnuti.NazevPoskytovatele
+                </td>
+                <td>
+                    @rozhodnuti.IcoPoskytovatele
+                </td>
 
-                </tr>
+            </tr>
             }
         </tbody>
     </table>

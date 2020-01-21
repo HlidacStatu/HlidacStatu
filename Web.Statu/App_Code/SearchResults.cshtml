@@ -543,7 +543,10 @@
         }
     </td>
     <td class="text-nowrap">
-        @item.Prijemce.JmenoPrijemce
+        
+        @(string.IsNullOrWhiteSpace(item.Prijemce.JmenoPrijemce) ?
+                    item.Prijemce.ObchodniJmeno :
+                    item.Prijemce.JmenoPrijemce)
     </td>
     <td>
         @if(item.Prijemce.Ico != "00000000")
@@ -555,7 +558,7 @@
         @item.GetNazevDotace()
     </td>
     <td class="text-nowrap">
-        @(item.DatumPodpisu?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
+        @(item.DatumPodpisu?.Date.ToString("dd.MM.yyyy") ?? "Neznámé")
     </td>
     <td class="text-nowrap text-right">
         @HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem)
