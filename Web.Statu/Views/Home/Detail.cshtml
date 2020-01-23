@@ -62,16 +62,20 @@
                     }
                 </td>
             </tr>
-            @if (this.User?.IsInRole("canEditData") == true)
-            {
+        </tbody>
+    </table>
+}
+@if (this.User?.IsInRole("canEditData") == true)
+{
+    <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+        <tbody>
 
-                <tr>
-                    <td colspan="2">
-                        <br /><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit smluvni strany</a>
+            <tr>
+                <td colspan="2">
+                    <br /><a href="/manage/zmenasmluvnichstran/@Model.Id" class="btn btn-warning btn-sm" target="_blank">Změnit smluvni strany</a>
 
-                    </td>
-                </tr>
-            }
+                </td>
+            </tr>
         </tbody>
     </table>
 }
@@ -111,9 +115,9 @@
                         }
                     }
                     @*else if (Model.spadaPodRS == false || Model.PravniRamec == HlidacStatu.Lib.Data.Smlouva.PravniRamce.MimoRS)
-                    {
-                        <div class="alert alert-info">Tato smlouva nespadá pod zákon o registru smluv a byla zveřejněna dobrovolně.</div>
-                    }*@
+                        {
+                            <div class="alert alert-info">Tato smlouva nespadá pod zákon o registru smluv a byla zveřejněna dobrovolně.</div>
+                        }*@
                     else
                     {
                         if (Model.Issues.Any(m => m.Importance == HlidacStatu.Lib.Issues.ImportanceLevel.Fatal))
@@ -455,54 +459,55 @@
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
     <p>
         <a href="/subjekt/@subjekt.ico">
-            <b>@subjekt.nazev</b></a>&nbsp;&nbsp;&nbsp;@Util.FirmaMoreInfoLinks(subjekt.ico)
+            <b>@subjekt.nazev</b>
+        </a>&nbsp;&nbsp;&nbsp;@Util.FirmaMoreInfoLinks(subjekt.ico)
 
+        <br />
+        @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+
+        @subjekt.adresa<br />
+        @if (!string.IsNullOrEmpty(subjekt.ico))
+        {
+            <text>
+                ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
+            </text>
+        }
+        @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
+        {
+            <text>
+                &nbsp;dat.schránka @subjekt.datovaSchranka
+            </text>
+        }
+
+
+        @if (typSubjektu == 1)
+        {
+            <text>
+                <br />Plátce peněz
+            </text>
+        }
+        else if (typSubjektu == 2)
+        {
+            <text>
+                <br />Příjemce peněz
+                <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
+            </text>
+        }
+        else if (typSubjektu == 3) //vkladatel do rejstriku
+        {
+            <text>
+            </text>
+        }
+        @if (firma != null && firma.IsNespolehlivyPlatceDPH())
+        {
+            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
+        }
+
+
+        @if (!string.IsNullOrEmpty(subjekt.ico))
+        {
             <br />
-            @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
-
-            @subjekt.adresa<br />
-            @if (!string.IsNullOrEmpty(subjekt.ico))
-            {
-                <text>
-                    ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
-                </text>
-            }
-            @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
-            {
-                <text>
-                    &nbsp;dat.schránka @subjekt.datovaSchranka
-                </text>
-            }
-
-
-            @if (typSubjektu == 1)
-            {
-                <text>
-                    <br />Plátce peněz
-                </text>
-            }
-            else if (typSubjektu == 2)
-            {
-                <text>
-                    <br />Příjemce peněz
-                    <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
-                </text>
-            }
-            else if (typSubjektu == 3) //vkladatel do rejstriku
-            {
-                <text>
-                </text>
-            }
-            @if (firma != null && firma.IsNespolehlivyPlatceDPH())
-            {
-                <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
-            }
-
-
-            @if (!string.IsNullOrEmpty(subjekt.ico))
-            {
-                <br />
-            }
-</p>
+        }
+    </p>
 }
 

@@ -71,16 +71,20 @@
                             if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(f.Item))
                             {
                                 sb.AppendLine("<br/>Osoby:");
-                                var p = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[f.Item]
+                                var ip = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[f.Item]
                                             .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni
                                                 .Get()
                                                 .Where(m => m.InternalId == pid)
                                                 .FirstOrDefault())
                                                 .Where(pol => pol != null)
-                                                .Select(pol => string.Format("<a href='{0}'>{1}</a>", pol.GetUrl(), pol.FullNameWithYear()))
-                                                .Aggregate((fi, se) => fi + ", " + se);
+                                                .Select(pol => string.Format("<a href='{0}'>{1}</a>", pol.GetUrl(), pol.FullNameWithYear()));
 
-                                sb.Append(p + "<br/>&nbsp;");
+                                if (ip.Count() > 0)
+                                {
+                                    var p = ip.Aggregate((fi, se) => fi + ", " + se);
+
+                                    sb.Append(p + "<br/>&nbsp;");
+                                }
                             }
                             else
                             {
