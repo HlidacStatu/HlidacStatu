@@ -106,14 +106,21 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             props = GetMappingList("Osobaid");
             foreach (var prop in props)
             {
-                var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
-                Osoba o = Osoby.GetByNameId.Get(t);
-                if (o != null)
+                var o = item.SelectTokens(prop).FirstOrDefault();
+                string t = "";
+                if (o != null && o.GetType() == typeof(JValue))
+                    t = o.Value<string>() ?? "";
+                //var t = ((string)Dynamitey.Dynamic.InvokeGetChain(item, prop)) ?? "";
+                if (!string.IsNullOrEmpty(t))
                 {
-                    topTxts.Add(o.FullName() + ": ");
-                    if (!fromAllTopValues)
-                        break;
+                    Osoba os = Osoby.GetByNameId.Get(t);
+                    if (os != null)
+                    {
+                        topTxts.Add(os.FullName() + ": ");
+                        if (!fromAllTopValues)
+                            break;
 
+                    }
                 }
             }
 
