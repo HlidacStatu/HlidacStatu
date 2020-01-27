@@ -740,6 +740,24 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         }
 
+        /// <summary>
+        /// Loads data from database.
+        /// </summary>
+        /// <typeparam name="T">class where data is going to be serialized to</typeparam>
+        /// <param name="Id">id field in elastic</param>
+        /// <returns>Object T</returns>
+        public T GetData<T>(string Id) where T: class
+        {
+
+            GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
+            var res = this.client.Get<T>(req);
+            if (res.Found)
+                return res.Source;
+            else
+                return (T)null;
+
+        }
+
         public string GetData(string Id)
         {
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
