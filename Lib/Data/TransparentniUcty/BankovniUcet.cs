@@ -72,9 +72,9 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         */
         public string TypUctu { get; set; }
         
-        public void Save()
+        public void Save(string user)
         {
-            _client.AddData(this, this.Id, "BankovniUcet@hlidacstatu.cz");
+            _client.AddData(this, this.Id, user);
         }
 
         public static BankovniUcet Get(string cislo)
@@ -83,7 +83,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             return bu;
         }
 
-        public static bool DeleteUcet(BankovniUcet bu, string user)
+        public static bool DeleteUcet(BankovniUcet bu)
         {
             return _client.DeleteData(bu.Id);
         }

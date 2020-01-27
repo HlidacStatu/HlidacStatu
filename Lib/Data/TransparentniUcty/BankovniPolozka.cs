@@ -8,6 +8,8 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
     public class BankovniPolozka : IEqualityComparer<BankovniPolozka>,
         Bookmark.IBookmarkable, HlidacStatu.Plugin.TransparetniUcty.IBankovniPolozka
     {
+        private static HlidacStatu.Lib.Data.External.DataSets.DataSet _client =
+            HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("transparentni-ucty-transakce");
 
         public BankovniPolozka() { }
         public BankovniPolozka(HlidacStatu.Plugin.TransparetniUcty.IBankovniPolozka ip)
@@ -28,39 +30,6 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         }
 
-        public class Comment
-        {
-            public enum Types
-            {
-                Obecny = 0,
-                VazbaNaOsobu = 1,
-                VazbaNaFirmu = 2,
-                Problem = 3,
-                Temporary = -1,
-                Analyzed = -2,
-            }
-
-            public int TypeId { get; set; }
-
-            [Nest.Object(Ignore = true)]
-            public Types Type
-            {
-                get { return (Types)this.TypeId; }
-                set { this.TypeId = (int)value; }
-            }
-
-            [Nest.Keyword]
-            public string Author { get; set; }
-
-            [Nest.Text]
-            public string Value { get; set; }
-
-            [Nest.Number]
-            public int ValueInt { get; set; }
-            [Nest.Date]
-            public DateTime Created { get; set; } = DateTime.Now;
-        }
-
         //idu,majitel,nazev,datum,protiucet,popis,valuta,typ,castka,poznamka
         public string Id { get; set; } = null;
 
@@ -78,7 +47,6 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         }
 
         private string _cisloUctu = string.Empty;
-        [Nest.Keyword]
         public string CisloUctu
         {
             get
@@ -90,16 +58,12 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 _cisloUctu = Lib.Data.TransparentniUcty.BankovniUcty.NormalizeCisloUctu(value);
             }
         }
-        [Nest.Date]
         public DateTime Datum { get; set; }
         public string PopisTransakce { get; set; } = "";
         public string NazevProtiuctu { get; set; } = "";
 
-
-
         private string _cisloProtiUctu = string.Empty;
 
-        [Nest.Keyword]
         public string CisloProtiuctu
         {
             get
@@ -114,55 +78,22 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public string ZpravaProPrijemce { get; set; } = "";
 
-        [Nest.Keyword]
         public string VS { get; set; } = "";
-        [Nest.Keyword]
         public string KS { get; set; } = "";
-        [Nest.Keyword]
         public string SS { get; set; } = "";
 
-        [Nest.Number]
         public decimal Castka { get; set; }
 
-        [Nest.Keyword]
         public string AddId { get; set; } = "";
 
-        public Comment[] Comments { get; set; } = new Comment[] { };
-
-        public Comment AddComment(Comment c)
-        {
-            bool removeOld = false;
-            switch (c.Type)
-            {
-                case Comment.Types.VazbaNaOsobu:
-                case Comment.Types.VazbaNaFirmu:
-                case Comment.Types.Analyzed:
-                    removeOld = true;
-                    break;
-            }
-            var comments = this.Comments.ToList();
-            if (removeOld)
-                comments = comments.Where(m => m.TypeId != c.TypeId).ToList();
-
-            comments.Add(c);
-            this.Comments = comments.ToArray();
-            return c;
-        }
-
-        [Nest.Keyword]
         public string ZdrojUrl { get; set; }
 
-
-        BankovniUcet _bu = null;
-        [Nest.Object(Ignore = true)]
-        public BankovniUcet BU
+        private BankovniUcet _bu = null;
+        public BankovniUcet GetBankovniUcet()
         {
-            get
-            {
-                if (_bu == null)
-                    _bu = BankovniUcty.Get(this.CisloUctu);
-                return _bu;
-            }
+            if (_bu == null)
+                _bu = BankovniUcty.Get(this.CisloUctu);
+            return _bu;
         }
 
         public string GetUrl(bool local = true)
@@ -176,13 +107,13 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         }
         public string GetUrl(bool local = true, bool onList = false, string foundWithQuery = "")
         {
-            if (this.BU == null)
+            if (GetBankovniUcet() == null)
                 return "";
             if (onList)
-                return this.BU.GetUrl(local, foundWithQuery) + "#" + this.Id;
+                return GetBankovniUcet().GetUrl(local, foundWithQuery) + "#" + this.Id;
             else
             {
-                string url = "/ucty/transakce/" + System.Net.WebUtility.UrlEncode(this.Id);
+                string url = "/data/Detail/transparentni-ucty-transakce/" + System.Net.WebUtility.UrlEncode(this.Id);
                 if (!string.IsNullOrEmpty(foundWithQuery))
                     url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
 
@@ -223,14 +154,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 && x.ZpravaProPrijemce == y.ZpravaProPrijemce
                 );
         }
-        //public override bool Equals(object obj)
-        //{
-        //    return this.Equals(this,(BankovniPolozka)obj);
-        //}
-        //public override int GetHashCode()
-        //{
-        //    return BankovniPolozka.GetHashCode(this);
-        //}
+        
         public int GetHashCode(BankovniPolozka obj)
         {
             //http://stackoverflow.com/a/4630550
@@ -250,67 +174,32 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 }.GetHashCode();
         }
 
-        public bool IsUnique(ElasticClient client = null)
+        public bool IsUnique()
         {
             if (string.IsNullOrEmpty(this.Id))
                 InitId();
-            var es = client ?? ES.Manager.GetESClient_BankovniPolozky();
-            var res = es
-                    .DocumentExists<BankovniPolozka>(this.Id);
-            return !res.Exists;
 
+            return _client.ItemExists(this.Id);
         }
 
-        public bool Delete(string audituser)
+        public bool Delete()
         {
-            var zdroj = this.GetUrl(local: false);
-            using (DbEntities db = new Data.DbEntities())
-            {
-                var oe = db.OsobaEvent.Where(m => m.Zdroj == zdroj).FirstOrDefault();
-                if (oe != null)
-                {
-                    oe.Delete(audituser, true);
-                }
-                else
-                {
-                    var fe = db.FirmaEvent.Where(m => m.Zdroj == zdroj).FirstOrDefault();
-                    if (fe != null)
-                    {
-                        db.FirmaEvent.Remove(fe);
-                    }
-                }
-                db.SaveChanges();
-            }
-            var ret = ES.Manager.GetESClient_BankovniPolozky().Delete<BankovniPolozka>(this.Id);
-            return ret.Result == Result.Deleted;
+            return _client.DeleteData(this.Id);
         }
 
-        public void Save(string user, ElasticClient client = null, bool updateId = true)
+        public void Save(string user, bool updateId = true)
         {
             if (updateId || string.IsNullOrEmpty(this.Id))
                 InitId();
-            var es = client ?? ES.Manager.GetESClient_BankovniPolozky();
 
-            var prev = BankovniPolozka.Get(this.Id);
-
-            Audit.Add<BankovniPolozka>(Audit.Operations.Update, user, this, prev);
-            es.IndexDocument<BankovniPolozka>(this);
+            _client.AddData(this, this.Id, user);
         }
 
 
         public static BankovniPolozka Get(string transactionId)
         {
-            var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
-                .Get<BankovniPolozka>(transactionId);
-            //.Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(m => m
-            //    .Query(qq => qq
-            //        .Term(t => t.Field(ff => ff.CisloUctu).Value(cislo))
-            //        )
-            //);
-            if (resBU.Found == false)
-                return null;
-            else
-                return resBU.Source;
+            BankovniPolozka bu = _client.GetData<BankovniPolozka>(transactionId);
+            return bu;
 
         }
 
@@ -332,7 +221,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public string BookmarkName()
         {
-            return $"Transakce na účtu {this.BU.CisloUctu} ({this.BU.Subjekt}) z {this.Datum.ToShortDateString()} ve výši {HlidacStatu.Util.RenderData.NicePrice(this.Castka)}";
+            return $"Transakce na účtu {GetBankovniUcet().CisloUctu} ({GetBankovniUcet().Subjekt}) z {this.Datum.ToShortDateString()} ve výši {HlidacStatu.Util.RenderData.NicePrice(this.Castka)}";
         }
     }
 }

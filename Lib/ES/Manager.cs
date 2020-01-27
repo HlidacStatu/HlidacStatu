@@ -20,8 +20,6 @@ namespace HlidacStatu.Lib.ES
         public enum IndexType
         {
             Smlouvy,
-            BankovniUcet,
-            BankovniPolozka,
             Firmy,
             VerejneZakazky,
             ProfilZadavatele,
@@ -38,8 +36,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName = "hlidacsmluv";
         public static string defaultIndexName_Sneplatne = "hlidacsmluvneplatne";
         public static string defaultIndexName_SAll = defaultIndexName + ", " + defaultIndexName_Sneplatne;
-        public static string defaultIndexName_BankovniUcet = "bankovniucet";
-        public static string defaultIndexName_BankovniPolozka = "bankovnipolozka";
+        
         public static string defaultIndexName_VerejneZakazky = "verejnezakazky";
         public static string defaultIndexName_ProfilZadavatele = "profilzadavatele";
         public static string defaultIndexName_VerejneZakazkyRaw2006 = "verejnezakazkyraw2006";
@@ -93,14 +90,6 @@ namespace HlidacStatu.Lib.ES
             return GetESClient(defaultIndexName_Sneplatne, timeOut, connectionLimit);
         }
 
-        public static ElasticClient GetESClient_BankovniUcty(int timeOut = 60000, int connectionLimit = 80)
-        {
-            return GetESClient(defaultIndexName_BankovniUcet, timeOut, connectionLimit, IndexType.BankovniUcet);
-        }
-        public static ElasticClient GetESClient_BankovniPolozky(int timeOut = 60000, int connectionLimit = 80)
-        {
-            return GetESClient(defaultIndexName_BankovniPolozka, timeOut, connectionLimit, IndexType.BankovniPolozka);
-        }
         public static ElasticClient GetESClient_VZ(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_VerejneZakazky, timeOut, connectionLimit, IndexType.VerejneZakazky);
@@ -181,10 +170,6 @@ namespace HlidacStatu.Lib.ES
                 return IndexType.Smlouvy;
             else if (indexName == defaultIndexName_Firmy)
                 return IndexType.Firmy;
-            else if (indexName == defaultIndexName_BankovniUcet)
-                return IndexType.BankovniUcet;
-            else if (indexName == defaultIndexName_BankovniPolozka)
-                return IndexType.BankovniPolozka;
             else if (indexName == defaultIndexName_VerejneZakazky)
                 return IndexType.VerejneZakazky;
             else if (indexName == defaultIndexName_ProfilZadavatele)
@@ -466,20 +451,6 @@ namespace HlidacStatu.Lib.ES
                        .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
                            .InitializeUsing(idxSt)
                            .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
-                       );
-                    break;
-                case IndexType.BankovniUcet:
-                    res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
-                           .InitializeUsing(idxSt)
-                               .Map<Lib.Data.TransparentniUcty.BankovniUcet>(map => map.AutoMap(maxRecursion: 1))
-                       );
-                    break;
-                case IndexType.BankovniPolozka:
-                    res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
-                           .InitializeUsing(idxSt)
-                               .Map<Lib.Data.TransparentniUcty.BankovniPolozka>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.Logs:
