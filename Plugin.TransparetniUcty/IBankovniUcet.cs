@@ -24,8 +24,5 @@ namespace HlidacStatu.Plugin.TransparetniUcty
         //ProvozniUcet = 1,
         //[NiceDisplayName("Volební účet")]
         //VolebniUcet = 2
-        int numTypUctu { get; set; }
-
-
     }
 }

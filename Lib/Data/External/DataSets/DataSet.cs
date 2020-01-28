@@ -758,6 +758,40 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         }
 
+        public IEnumerable<T> GetAllData<T>(string scrollTimeout = "2m", int scrollSize = 1000) where T : class
+        {
+            ISearchResponse<T> initialResponse = this.client.Search<T>
+                (scr => scr.From(0)
+                     .Take(scrollSize)
+                     .MatchAll()
+                     .Scroll(scrollTimeout));
+
+            List<T> results = new List<T>();
+
+            if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
+                throw new Exception(initialResponse.ServerError.Error.Reason);
+
+            if (initialResponse.Documents.Any())
+                results.AddRange(initialResponse.Documents);
+
+            string scrollid = initialResponse.ScrollId;
+            bool isScrollSetHasData = true;
+            while (isScrollSetHasData)
+            {
+                ISearchResponse<T> loopingResponse = client.Scroll<T>(scrollTimeout, scrollid);
+                if (loopingResponse.IsValid)
+                {
+                    results.AddRange(loopingResponse.Documents);
+                    scrollid = loopingResponse.ScrollId;
+                }
+                isScrollSetHasData = loopingResponse.Documents.Any();
+            }
+
+            client.ClearScroll(new ClearScrollRequest(scrollid));
+            return results;
+
+        }
+
         public string GetData(string Id)
         {
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);

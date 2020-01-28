@@ -633,86 +633,6 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        public ActionResult TransparentniUctyExport()
-        {
-            if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("TransparentniUctyExport", "") }).Authentificated)
-            {
-                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty()
-                    .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(m => m
-                        .Query(q => q.MatchAll())
-                        .Size(1000)
-                    );
-
-                if (resBU.Total == 0)
-                    return View("Error404");
-
-
-                var ret = new { upozorneni = "Bez zaruky, zkusebni provoz", transparentniUcty = resBU.Hits.Select(m => m.Source).ToArray() };
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ret), "application/json");
-                //Json(ret, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                Response.StatusCode = 401;
-                return Json(new { error = "Unauthorized" }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public ActionResult UcetExport(string id)
-        {
-            if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("UcetExport", id) }).Authentificated)
-            {
-
-                if (string.IsNullOrEmpty(id))
-                    return View("Error404");
-
-                var resBU = HlidacStatu.Lib.ES.Manager.GetESClient_BankovniUcty()
-                    .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(m => m
-                        .Query(q => q
-                            .Term(t => t.Field(ff => ff.CisloUctu).Value(id))
-                            )
-                    );
-
-                if (resBU.Total == 0)
-                    return View("Error404");
-
-                HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet bu = resBU.Hits.First().Source;
-
-                List<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka> polozky = new List<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>();
-                Func<int, int, Nest.ISearchResponse<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>> searchFunc = (size, page) =>
-                {
-                    return HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky()
-                            .Search<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(a => a
-                                .Size(size)
-                                .From(page * size)
-                                .Query(q => q.Term(t => t.Field(f => f.CisloUctu).Value(id)))
-                                .Scroll("2m")
-                                );
-                };
-
-                Lib.Searching.Tools.DoActionForQuery<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
-                    HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
-                    searchFunc,
-                    (p, o) =>
-                    {
-                        polozky.Add(p.Source);
-                        return new Devmasters.Core.Batch.ActionOutputData();
-                    }, null, null, null, false, blockSize: 500
-
-                    );
-
-
-                var ret = new { upozorneni = "Bez zaruky, zkusebni provoz", bankovniUcet = bu, polozky = polozky };
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ret), "application/json");
-                //Json(ret, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                Response.StatusCode = 401;
-                return Json(new { error = "Unauthorized" }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
         public ActionResult Search(string query, int? page, int? order)
         {
             page = page ?? 1;
@@ -892,84 +812,6 @@ namespace HlidacStatu.Web.Controllers
             public xOsoba FoundPerson { get; set; }
             public xFirma FoundCompany { get; set; }
         }
-        public ActionResult TransparentniUctyFullExport()
-        {
-            string login = "";
-            List<BankovniPolozkaForExport> items = new List<BankovniPolozkaForExport>();
-            if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("TransparentniUctyFullExport", "") }).Authentificated)
-            {
-                if (!string.IsNullOrEmpty(this.User?.Identity?.Name))
-                    login = this.User?.Identity?.Name;
-                if (login == "jskuhrovec@gmail.com" || login == "titl.vitezslav@gmail.com" || login == "michal@michalblaha.cz")
-                {
-
-                    Lib.Searching.Tools.DoActionForAll<HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka>(
-                        (t, obj) =>
-                        {
-
-                            var bp = t.Source;
-
-                            Osoba o = null;
-                            Firma f = null;
-                            if (bp.Comments.Any(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaOsobu))
-                            {
-                                o = Osoby.GetById.Get(
-                                    bp.Comments
-                                    .Where(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaOsobu)
-                                    .First()
-                                    .ValueInt);
-                            }
-                            if (bp.Comments.Any(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaFirmu))
-                            {
-                                f = Firmy.Get(
-                                    bp.Comments
-                                    .Where(m => m.Type == HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka.Comment.Types.VazbaNaFirmu)
-                                    .First()
-                                    .ValueInt);
-                                if (f.Valid == false)
-                                    f = null;
-                            }
-
-
-                            BankovniPolozkaForExport bpe = new Controllers.ApiV1Controller.BankovniPolozkaForExport();
-                            bpe.Transaction = bp;
-                            bpe.Transaction.Comments = null;
-                            if (o != null)
-                                bpe.FoundPerson = new BankovniPolozkaForExport.xOsoba()
-                                {
-                                    Jmeno = o.Jmeno,
-                                    NameId = o.NameId,
-                                    Narozeni = o.Narozeni,
-                                    Prijmeni = o.Prijmeni,
-                                    TitulPred = o.TitulPred,
-                                    TitulPo = o.TitulPo
-                                };
-
-                            if (f != null)
-                                bpe.FoundCompany = new BankovniPolozkaForExport.xFirma()
-                                {
-                                    ICO = f.ICO,
-                                    Jmeno = f.Jmeno
-                                };
-
-                            items.Add(bpe);
-
-                            return new Devmasters.Core.Batch.ActionOutputData();
-                        }, null,
-                    null, new Devmasters.Core.Batch.ActionProgressWriter(1f).Write,
-                    false,
-                    elasticClient: HlidacStatu.Lib.ES.Manager.GetESClient_BankovniPolozky(),
-                    blockSize: 50)
-                    ;
-
-                }
-
-
-            }
-            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(items, Newtonsoft.Json.Formatting.None), "application/json");
-
-        }
-
 
         class osobaResult
         {
@@ -1044,7 +886,6 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-
         public ActionResult OsobaHledat(string jmeno, string prijmeni, string narozen)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
@@ -1070,7 +911,6 @@ namespace HlidacStatu.Web.Controllers
                 return View("Error401");
             }
         }
-
 
         public ActionResult CheckText(string smlouvaid)
         {

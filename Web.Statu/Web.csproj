@@ -397,7 +397,6 @@
     <Compile Include="Controllers\NasiPoliticiController.cs" />
     <Compile Include="Controllers\VZController.cs" />
     <Compile Include="Controllers\WebyController.cs" />
-    <Compile Include="Controllers\UctyController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Framework\ApiAuth.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
@@ -1197,13 +1196,6 @@
     <Content Include="Views\Shared\Error404.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Web.config" />
-    <Content Include="Views\Ucty\Index.cshtml" />
-    <Content Include="Views\Ucty\Ucty.cshtml" />
-    <Content Include="Views\Ucty\Ucet.cshtml" />
-    <Content Include="Views\Ucty\Hledat.cshtml" />
-    <Content Include="Views\Ucty\_SearchForm.cshtml" />
-    <Content Include="Views\Ucty\Transakce.cshtml" />
-    <Content Include="Views\Ucty\SubjektyTypu.cshtml" />
     <Content Include="Views\Weby\Index.cshtml" />
     <Content Include="Views\Weby\Info.cshtml" />
     <Content Include="Views\Weby\JakMerime.cshtml" />
@@ -1216,7 +1208,6 @@
     <Content Include="Views\VZ\IT.cshtml" />
     <Content Include="Views\VZ\_SearchResult.cshtml" />
     <Content Include="Views\VZ\Hledat.cshtml" />
-    <Content Include="Views\Ucty\Prezidenti.cshtml" />
     <Content Include="Views\VZ\_SearchForm.cshtml" />
     <Content Include="Views\Home\Adresar.cshtml" />
     <Content Include="Views\Home\Afery.cshtml" />

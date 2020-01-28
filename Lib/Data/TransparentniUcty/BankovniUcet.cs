@@ -9,16 +9,16 @@ using Devmasters.Core;
 namespace HlidacStatu.Lib.Data.TransparentniUcty
 {
     public class BankovniUcet
-        : Bookmark.IBookmarkable, HlidacStatu.Plugin.TransparetniUcty.IBankovniUcet
+        : Plugin.TransparetniUcty.IBankovniUcet
     {
-        private static HlidacStatu.Lib.Data.External.DataSets.DataSet _client =
-            HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("transparentni-ucty");
+        private static External.DataSets.DataSet _client =
+            External.DataSets.DataSet.CachedDatasets.Get("transparentni-ucty");
 
         public string Id
         {
             get
             {
-                return Devmasters.Core.TextUtil.NormalizeToURL(this.CisloUctu);
+                return TextUtil.NormalizeToURL(this.CisloUctu);
             }
         }
 
@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public static BankovniUcet Get(string cislo)
         {
-            BankovniUcet bu = _client.GetData<BankovniUcet>(Devmasters.Core.TextUtil.NormalizeToURL(cislo));
+            BankovniUcet bu = _client.GetData<BankovniUcet>(TextUtil.NormalizeToURL(cislo));
             return bu;
         }
 
@@ -88,25 +88,48 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             return _client.DeleteData(bu.Id);
         }
 
-        public string ToAuditJson()
+        public static IEnumerable<BankovniUcet> GetAll()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            return _client.GetAllData<BankovniUcet>();
         }
 
-        public string ToAuditObjectTypeName()
+        public static string NormalizeCisloUctu(string s)
         {
-            return "BankovniUcet";
-        }
+            if (string.IsNullOrEmpty(s))
+                return s;
 
-        public string ToAuditObjectId()
-        {
-            return this.Id;
-        }
+            var ucet = System.Text.RegularExpressions.Regex.Replace(s, "[^0-9-/]", "").Trim();
 
+            string prefix = "";
+            string number = "";
+            string bankNumber = "";
 
-        public string BookmarkName()
-        {
-            return $"Bankovní účet {this.CisloUctu} ({this.Subjekt})";
+            string[] partBank = ucet.Split('/');
+            if (partBank.Length == 2)
+                bankNumber = partBank[1];
+
+            string[] partNumber = partBank[0].Split('-');
+            if (partBank[0].StartsWith("-")) //fix pro "minusove" ucty CSSD -9/2010
+            {
+                prefix = "";
+                number = partBank[0];
+            }
+            else if (partNumber.Length == 2)
+            {
+                prefix = partNumber[0];
+                number = partNumber[1];
+            }
+            else
+                number = partNumber[0];
+
+            var prefix1 = prefix.TrimStart('0');
+            var number1 = number.TrimStart('0');
+
+            if (!string.IsNullOrEmpty(prefix1))
+                return prefix1 + "-" + number1 + "/" + bankNumber;
+            else
+                return number1 + "/" + bankNumber;
+
         }
     }
 

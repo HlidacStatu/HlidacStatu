@@ -16,7 +16,6 @@ namespace HlidacStatu.Plugin.TransparetniUcty
         public string Mena { get; set; }
         public int Active { get; set; }
         public DateTime LastSuccessfullParsing { get; set; }
-        public int numTypUctu { get; set; }
     }
     public class SimpleBankovniPolozka : IBankovniPolozka
     {

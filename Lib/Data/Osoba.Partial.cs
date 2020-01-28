@@ -48,7 +48,6 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-
         public bool IsValid()
         {
             return !string.IsNullOrEmpty(this.Jmeno) && !string.IsNullOrEmpty(this.Prijmeni) && this.InternalId > 0;
@@ -215,8 +214,6 @@ namespace HlidacStatu.Lib.Data
                         );
                 }
             }
-
-
         }
 
         public void Delete(string user)
@@ -228,7 +225,7 @@ namespace HlidacStatu.Lib.Data
 
                 foreach (var oe in this.Events())
                 {
-                    oe.Delete(user, false);
+                    oe.Delete(user);
                 }
                 Audit.Add<Osoba>(Audit.Operations.Delete, user, this, null);
                 db.SaveChanges();
@@ -417,14 +414,8 @@ namespace HlidacStatu.Lib.Data
             {
                 try
                 {
-
                     _vazby = Lib.Data.Graph.VsechnyDcerineVazby(this, refresh)
                         .ToArray();
-
-                    //if (string.IsNullOrEmpty(VazbyRaw))
-                    //    VazbyRaw = "[]";
-                    //_vazby = Newtonsoft.Json.JsonConvert.DeserializeObject<Graph.Edge[]>(VazbyRaw);
-
                 }
                 catch (Exception)
                 {
@@ -559,8 +550,6 @@ namespace HlidacStatu.Lib.Data
                             m.Jmeno == jmeno
                             && m.Prijmeni == prijmeni
                         ).ToArray();
-
-
             }
         }
 
@@ -955,7 +944,7 @@ namespace HlidacStatu.Lib.Data
                 var oes = this.Events(m => m.Type == (int)OsobaEvent.Types.Specialni);
                 foreach (var o in oes)
                 {
-                    o.Delete(user, true);
+                    o.Delete(user);
                 }
             }
             OsobaEvent oe = new OsobaEvent(this.InternalId, "", text, OsobaEvent.Types.Specialni);
@@ -1064,49 +1053,6 @@ namespace HlidacStatu.Lib.Data
             oe.Zdroj = zdroj;
             oe.SetYearInterval(rok);
             return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);
-            //return oe;
-
-            /*
-            //check duplicates
-            using (DbEntities db = new Data.DbEntities())
-            {
-                var exists = db.OsobaEvent
-                                .AsNoTracking()
-                                .FirstOrDefault(m =>
-                                        m.OsobaId == this.InternalId
-                                        && m.Type == (int)OsobaEvent.Types.Sponzor
-                                        && m.AddInfo == strana
-                                        && m.AddInfoNum == castka
-                                        && m.DatumOd == new DateTime(rok, 1, 1)
-                                        && m.DatumDo == new DateTime(rok, 12, 31)
-                                        && m.Zdroj == zdroj
-                                );
-                if (exists != null && rewrite)
-                {
-                    db.OsobaEvent.Remove(exists);
-                    Audit.Add<OsobaEvent>(Audit.Operations.Delete, user, exists, null);
-                    db.SaveChanges();
-                    exists = null;
-                }
-                if (exists == null)
-                {
-                    OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Sponzor {0}", strana), "", OsobaEvent.Types.Sponzor);
-                    oe.AddInfoNum = castka;
-                    oe.AddInfo = strana;
-                    oe.Zdroj = zdroj;
-                    oe.SetYearInterval(rok);
-                    db.OsobaEvent.Add(oe);
-                    db.SaveChanges();
-                    Audit.Add(Audit.Operations.Create, user, oe, null);
-                    return oe;
-                }
-                else
-                {
-                    Audit.Add(Audit.Operations.Update, user, exists, null);
-                    return exists;
-                }
-            }
-            */
         }
 
         public static Osoba Get(int Id)
@@ -1114,8 +1060,6 @@ namespace HlidacStatu.Lib.Data
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
                 return db.Osoba.Where(m => m.InternalId == Id).AsNoTracking().FirstOrDefault();
-
-
             }
         }
         public static Osoba GetByExternalID(string exId, OsobaExternalId.Source source)
@@ -1290,8 +1234,6 @@ namespace HlidacStatu.Lib.Data
                     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(this.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
                     if (ostat.BasicStatPerYear.Summary.Pocet > 0)
                     {
-
-
                         if (ostat.BasicStatPerYear[rok].Pocet > 0)
                         {
                             f.Add(new InfoFact(
@@ -1316,7 +1258,6 @@ namespace HlidacStatu.Lib.Data
             }
             return _infofacts;
         }
-
 
         Devmasters.Core.Vokativ _vokativ = null;
 
@@ -1344,7 +1285,6 @@ namespace HlidacStatu.Lib.Data
             return this.GetPhotoUrl();
         }
 
-
         public bool Muz()
         {
             if (_vokativ == null)
@@ -1353,7 +1293,6 @@ namespace HlidacStatu.Lib.Data
             }
             return !(_vokativ.Sex == Vokativ.SexEnum.Woman);
         }
-
 
         public string ToAuditJson()
         {

@@ -118,7 +118,7 @@ namespace HlidacStatu.Web.Controllers
                 return new JsonResult() { Data = "chybí id" };
             }
             OsobaEvent osobaEvent = OsobaEvent.GetById(id ?? 0);
-            osobaEvent.Delete(this.User.Identity.Name, true);
+            osobaEvent.Delete(this.User.Identity.Name);
 
             return Json(new { Success = true });
         }

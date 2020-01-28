@@ -240,30 +240,6 @@ namespace HlidacStatu.Lib.Data
 
 
                 },
-                () =>
-                {
-                    try
-                    {
-                        Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
-                        sw.Start();
-                        var buRes = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(query, null, 20);
-                        if (buRes != null && buRes.IsValid)
-                            res.Transakce = new GeneralResult<TransparentniUcty.BankovniPolozka>(
-                                buRes.Total,
-                                buRes.Hits.Select(m => m.Source),
-                                buRes.IsValid
-                                );
-                        else
-                            res.Transakce = new GeneralResult<TransparentniUcty.BankovniPolozka>(new TransparentniUcty.BankovniPolozka[] { });
-                        sw.Stop();
-                        res.Transakce.ElapsedTime = sw.Elapsed;
-                    }
-                    catch (System.Exception e)
-                    {
-                        HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for bankovni ucty query" + query, e);
-                    }
-
-                },
 				() =>
 				{
 					try

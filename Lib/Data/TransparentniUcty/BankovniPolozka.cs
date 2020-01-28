@@ -5,14 +5,13 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data.TransparentniUcty
 {
-    public class BankovniPolozka : IEqualityComparer<BankovniPolozka>,
-        Bookmark.IBookmarkable, HlidacStatu.Plugin.TransparetniUcty.IBankovniPolozka
+    public class BankovniPolozka : IEqualityComparer<BankovniPolozka>, Plugin.TransparetniUcty.IBankovniPolozka
     {
-        private static HlidacStatu.Lib.Data.External.DataSets.DataSet _client =
-            HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("transparentni-ucty-transakce");
+        private static External.DataSets.DataSet _client =
+            External.DataSets.DataSet.CachedDatasets.Get("transparentni-ucty-transakce");
 
         public BankovniPolozka() { }
-        public BankovniPolozka(HlidacStatu.Plugin.TransparetniUcty.IBankovniPolozka ip)
+        public BankovniPolozka(Plugin.TransparetniUcty.IBankovniPolozka ip)
         {
             this.AddId = ip.AddId;
             this.Castka = ip.Castka;
@@ -36,10 +35,10 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         public void InitId()
         {
             string[] data = new string[] {
-                    this.Castka.ToString(HlidacStatu.Util.Consts.czCulture),
+                    this.Castka.ToString(Util.Consts.czCulture),
                     this.CisloUctu,
                     this.CisloProtiuctu,
-                    this.Datum.ToString("dd.MM.yyyy", HlidacStatu.Util.Consts.czCulture),
+                    this.Datum.ToString("dd.MM.yyyy", Util.Consts.czCulture),
                     this.VS };
 
             this.Id = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(data.Aggregate((f, s) => f + "|" + s));
@@ -55,7 +54,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             }
             set
             {
-                _cisloUctu = Lib.Data.TransparentniUcty.BankovniUcty.NormalizeCisloUctu(value);
+                _cisloUctu = BankovniUcet.NormalizeCisloUctu(value);
             }
         }
         public DateTime Datum { get; set; }
@@ -72,7 +71,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
             }
             set
             {
-                _cisloProtiUctu = Lib.Data.TransparentniUcty.BankovniUcty.NormalizeCisloUctu(value);
+                _cisloProtiUctu = BankovniUcet.NormalizeCisloUctu(value);
             }
         }
 
@@ -92,7 +91,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         public BankovniUcet GetBankovniUcet()
         {
             if (_bu == null)
-                _bu = BankovniUcty.Get(this.CisloUctu);
+                _bu = BankovniUcet.Get(this.CisloUctu);
             return _bu;
         }
 
@@ -200,28 +199,12 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
         {
             BankovniPolozka bu = _client.GetData<BankovniPolozka>(transactionId);
             return bu;
-
         }
 
-        public string ToAuditJson()
+        public static IEnumerable<BankovniPolozka> GetAll()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            return _client.GetAllData<BankovniPolozka>();
         }
 
-        public string ToAuditObjectTypeName()
-        {
-            return "BankovniPolozka";
-        }
-
-        public string ToAuditObjectId()
-        {
-            return this.Id;
-        }
-
-
-        public string BookmarkName()
-        {
-            return $"Transakce na účtu {GetBankovniUcet().CisloUctu} ({GetBankovniUcet().Subjekt}) z {this.Datum.ToShortDateString()} ve výši {HlidacStatu.Util.RenderData.NicePrice(this.Castka)}";
-        }
     }
 }

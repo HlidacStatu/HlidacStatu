@@ -626,10 +626,8 @@
     <Compile Include="Data\OsobaVazby.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\TransparentniUcty\BankovniUcty.cs" />
     <Compile Include="Data\TransparentniUcty\BankovniUcet.cs" />
     <Compile Include="Data\TransparentniUcty\BankovniPolozka.cs" />
-    <Compile Include="Data\TransparentniUcty\Prispevek.cs" />
     <Compile Include="Data\Relation.cs" />
     <Compile Include="Data\SmlouvyId.cs">
       <DependentUpon>Db.tt</DependentUpon>

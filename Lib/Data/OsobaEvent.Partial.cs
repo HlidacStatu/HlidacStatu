@@ -105,30 +105,6 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        // todo: delete
-        // není nejrychlejší
-        //public string SubTypeName
-        //{
-        //    get
-        //    {
-        //        if (this.SubType is null)
-        //            return "";
-        //        using (Lib.Data.DbEntities db = new Data.DbEntities())
-        //        {
-        //            string result = db.EventSubType
-        //            .Where(subType =>
-        //                subType.EventTypeId == this.Type &&
-        //                subType.Id == this.SubType
-        //            )
-        //            .Select(subtype => subtype.NameMale)
-        //            .FirstOrDefault();
-
-        //            return result;
-        //        }
-        //    }
-        //}
-
-
         public static OsobaEvent GetById(int id)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
@@ -177,7 +153,6 @@ namespace HlidacStatu.Lib.Data
                 return result;
             }
         }
-
 
         public static OsobaEvent CreateOrUpdate(OsobaEvent osobaEvent, string user)
         {
@@ -245,7 +220,6 @@ namespace HlidacStatu.Lib.Data
         {
             return (OsobaEvent)this.MemberwiseClone();
         }
-
 
         public string RenderText(string delimeter = "\n")
         {
@@ -375,34 +349,16 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public void Delete(string user, bool skipTransactionDelete)
+        public void Delete(string user)
         {
             if (this.pk > 0)
             {
                 using (DbEntities db = new Data.DbEntities())
                 {
-
-                    if (skipTransactionDelete == false && this.Zdroj?.StartsWith("https://www.hlidacstatu.cz/ucty/transakce/") == true)
-                    {
-                        //delete link in connected transaction
-                        TransparentniUcty.BankovniPolozka bp = TransparentniUcty.BankovniPolozka.Get(this.Zdroj.Replace("https://www.hlidacstatu.cz/ucty/transakce/", ""));
-                        if (bp != null)
-                        {
-                            if (bp.Comments.Length > 0)
-                            {
-                                bp.Comments = new TransparentniUcty.BankovniPolozka.Comment[] { };
-                                bp.Save(user);
-                            }
-                        }
-                    }
                     db.OsobaEvent.Attach(this);
                     db.Entry(this).State = System.Data.Entity.EntityState.Deleted;
                     Audit.Add<OsobaEvent>(Audit.Operations.Delete, user, this, null);
                     db.SaveChanges();
-
-
-
-
                 }
             }
         }
@@ -426,16 +382,6 @@ namespace HlidacStatu.Lib.Data
             return comparer.Compare(a, b);
         }
 
-        // todo: delete
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    if (!EventSubType.IsValidSubtype(this.Type, this.SubType))
-        //    {
-        //        yield return new ValidationResult(
-        //            $"Zvolený podtyp nepatří ke zvolenému typu.",
-        //            new[] { nameof(Type), nameof(SubType) });
-        //    }
-        //}
     }
 }
 
