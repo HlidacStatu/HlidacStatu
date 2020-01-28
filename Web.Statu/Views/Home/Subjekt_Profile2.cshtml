@@ -388,46 +388,6 @@ $"{Model.Jmeno}: {Devmasters.Core.TextUtil.RemoveHTML((string)ViewBag.statDescri
                 }
             }
 
-
-
-            @{
-                var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForFirma(Model.ICO, null, 0);
-                var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(Model.JmenoBezKoncovky(), null, 0);
-                if (numAnalyzed.Total + numByName.Total > 0)
-                {
-                    <tr>
-                        <td>Podpora politických stran</td>
-                        <td>
-                            @if (Model.IsSponzor())
-                            {
-                                <div>@Model.Jmeno je sponzorem politické strany:</div>
-                            }
-                            <ul>
-                                @if (numAnalyzed.Total > 0)
-                                {
-                                    <li>
-                                        Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")</b>
-                                        (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))</b>)
-                                        politickým stranám. <a href="/ucty/hledat?ico=@Model.ICO">Ukázat bankovní transakce s identifikovanými dary</a>
-                                    </li>
-                                }
-                                @if (numByName.Total > 0)
-                                {
-                                    <li>
-                                        Nalezli jsme <b>@HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí") </b>
-                                        (celkem <b>@HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))</b>)
-                                        s politickými stranami se subjektem se stejným jménem <b>@Model.JmenoBezKoncovky()</b>.
-                                        <a href="/ucty/hledat?q=@(System.Net.WebUtility.UrlEncode(Model.JmenoBezKoncovky()))">Ukázat bankovní transakce</a>
-                                        <br /><span class="text-info">Upozornění: Jedná se o transakce ve kterých se vyskytuje subjekt stejného jména. Nemusí jít o stejnou právnickou osobu.</span>
-                                    </li>
-                                }
-                            </ul>
-
-                        </td>
-                    </tr>
-                }
-            }
-
             <tr>
                 <td>Základní dotazy pro tento subjekt</td>
                 <td>

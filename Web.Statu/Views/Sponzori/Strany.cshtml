@@ -17,24 +17,11 @@
             .Get()
             .Select(m => m.Strana)
             .Distinct()
-            .Union(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
-                .GetAll()
-                .Where(m => m.TypSubjektu == "Politická strana")
-                .Select(m=>m.Subjekt)
-                .Distinct()
-                )
             .Where(m=> !HlidacStatu.Lib.Data.Sponsors.VelkeStrany.Contains(m))
             .OrderBy(m=>m)
         )
         .ToArray()
         ;
-
-    var ucty = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
-            .GetAll()
-            .Where(m => m.TypSubjektu == "Politická strana")
-            .GroupBy(g => g.Subjekt, (s, bu) => new { subjekt = s, numUctu = bu.Count(), numTransakci = bu.Sum(b => b.NumOfTransactions()) })
-            .OrderBy(m => m.subjekt);
-
 
 }
 @section scripts
@@ -64,16 +51,6 @@
 
         <div class="col-xs-12 col-sm-6">
             <h3><a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">@strana</a></h3>
-            @if (ucty.Any(m => m.subjekt == strana))
-            {
-                var ucet = ucty.First(m => m.subjekt == strana);
-            <p>
-                Tato strana/hnutí <a href="/ucty/ucty?id=@(System.Net.WebUtility.UrlEncode(strana))">
-                <b>@Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numUctu, "nemá žádný transparetní účet", "má jeden transparetní účet", "má {0} transparetní účty", "má {0} transparetních účtů")</b>
-                </a>
-                @Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numTransakci, "","s jednou transakcí","s {0} transakcemi","s {0} transakcemi").
-            </p>
-            }
             
             <table class="table table-hover table-new table-new--dotted table-striped">
                 <thead>

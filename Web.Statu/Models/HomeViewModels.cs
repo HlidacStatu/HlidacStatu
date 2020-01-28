@@ -107,18 +107,4 @@ namespace HlidacStatu.Web.Models
         public string Vzkaz { get; set; }
     }
 
-
-
-    public class UctySearchResult
-    {
-
-        public HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet BU {get;set;} = null;
-        public HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka[] Polozky { get; set; } = new HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka[] { };
-
-        public string Query { get; set; }
-        public string InternalQuery { get; set; } = null;
-
-    }
-
-
 }

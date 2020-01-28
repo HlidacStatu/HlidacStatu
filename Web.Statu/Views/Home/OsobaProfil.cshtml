@@ -286,14 +286,7 @@
 
             var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
             var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
-            var numAnalyzed = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyForOsoba(Model.InternalId, null, 0);
             var ftxQuery = Model.FullName();
-            var numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-            if (numByName.Total == 0)
-            {
-                ftxQuery = Model.Jmeno + " " + Model.Prijmeni;
-                numByName = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyRaw(ftxQuery, null, 0);
-            }
             tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
                 .Select(m => $"{m.DataSet.Registration().name}&nbsp;({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(m.Total)})")
                 );
@@ -303,29 +296,6 @@
             {
                 results.Add(rds.RenderResultsInHtml(dsQuery));
             }
-
-            if (numAnalyzed.Total + numByName.Total > 0)
-            {
-                if (Model.IsSponzor())
-                {
-                    tabs.Add("Sponzor politických stran");
-                    results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numAnalyzed.Total, "{0} identifikovaný dar; {0} identifikované dary; {0} identifikovaných darů")}</b>"
-                        + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numAnalyzed))}</b>)"
-                        + $"politickým stranám. <a href=\"/ucty/hledat?osobaid={Model.NameId}\">Ukázat bankovní transakce s identifikovanými dary</a>"
-                        );
-                }
-                if (numByName.Total > 0)
-                {
-                    tabs.Add("Bankovní transakce na účtech polit.stran");
-                    results.Add($"Nalezli jsme <b>{HlidacStatu.Util.PluralForm.Get((int)numByName.Total, "{0} bankovní transakci; {0} bankovní transakce; {0} bankovních transakcí")} </b>"
-                + $"(celkem <b>{HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty.SearchPolozkyGetSum(numByName))}</b>)"
-                + $"s politickými stranami s osobou se jménem <b>{Model.FullName()}</b>."
-                + $"<a href=\"/ucty/hledat?q={System.Net.WebUtility.UrlEncode(ftxQuery)}\">Ukázat tyto bankovní transakce</a>"
-                + $"<br /><span class=\"text-info\">Upozornění: Jedná se o transakce ve kterých se vyskytuje osoba stejného jména. Nemusí jít o stejnou osobu.</span>");
-                }
-            }
-
-
 
         }
         <tr>

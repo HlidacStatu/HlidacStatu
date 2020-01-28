@@ -9,13 +9,6 @@
 @{
 
     ViewBag.Title = "Sponzoři " + ViewBag.Strana;
-
-    var ucty = HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcty
-        .GetAll()
-        .Where(m => m.TypSubjektu == "Politická strana")
-        .GroupBy(g => g.Subjekt, (s, bu) => new { subjekt = s, numUctu = bu.Count(), numTransakci = bu.Sum(b => b.NumOfTransactions()) })
-        .OrderBy(m => m.subjekt);
-
 }
 @section scripts
 {
@@ -35,18 +28,6 @@
     </ol>
 }
 
-
-    @if (ucty.Any(m => m.subjekt == ViewBag.Strana))
-    {
-        var ucet = ucty.First(m => m.subjekt == ViewBag.Strana);
-    <p>
-        Tato strana/hnutí <a href="/ucty/ucty?id=@(System.Net.WebUtility.UrlEncode(ViewBag.Strana))">
-            <b>@Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numUctu, "nemá žádný transparetní účet", "má jeden transparetní účet", "má {0} transparetní účty", "má {0} transparetních účtů")</b>
-        </a>
-        @Devmasters.Core.Lang.Plural.GetWithZero((int)ucet.numTransakci, "", "s jednou transakcí", "s {0} transakcemi", "s {0} transakcemi").
-    </p>
-}
- 
     <h2>Přehled darů po letech</h2>
     @Html.Raw( UtilChart.RenderReportTableT<HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear>("", Model, @"{
                  'language': {

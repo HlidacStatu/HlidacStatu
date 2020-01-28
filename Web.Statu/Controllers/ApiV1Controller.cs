@@ -789,30 +789,6 @@ namespace HlidacStatu.Web.Controllers
                 return View("Error401");
         }
 
-
-        private class BankovniPolozkaForExport
-        {
-            public class xOsoba
-            {
-                public string TitulPred { get; set; }
-                public string Jmeno { get; set; }
-                public string Prijmeni { get; set; }
-                public string TitulPo { get; set; }
-                public string NameId { get; set; }
-                public System.DateTime? Narozeni { get; set; }
-            }
-            public class xFirma
-            {
-                public string Jmeno { get; set; }
-                public string ICO { get; set; }
-            }
-
-            public HlidacStatu.Lib.Data.TransparentniUcty.BankovniPolozka Transaction { get; set; }
-
-            public xOsoba FoundPerson { get; set; }
-            public xFirma FoundCompany { get; set; }
-        }
-
         class osobaResult
         {
             public osobaResult(Osoba o)

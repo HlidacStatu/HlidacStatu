@@ -243,49 +243,6 @@ namespace HlidacStatu.Web.Controllers
                 return View("~/Views/Shared/404");
         }
 
-        [Authorize(Roles = "canEditData")]
-        public ActionResult EditObject(string Id, string type)
-        {
-            if (type?.ToLower() == "bankovniucet")
-            {
-                if (string.IsNullOrEmpty(Id))
-                {
-                    ViewBag.objectType = type;
-                    ViewBag.objectId = Id;
-                    return View(new HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet() { CisloUctu = "", Mena = "Kč", Subjekt = "", Url = "" });
-
-                }
-                var item =
-                    HlidacStatu.Lib.ES.Manager.GetESClient().Get<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(Id);
-                if (item.Found)
-                {
-                    ViewBag.objectType = type;
-                    ViewBag.objectId = Id;
-                    return View(item);
-                }
-            }
-            return View("~/Views/Shared/404");
-        }
-
-        [ValidateInput(false)]
-        [Authorize(Roles = "canEditData")]
-        [HttpPost]
-        public ActionResult EditObject(string Id, FormCollection form)
-        {
-            string oldJson = form["oldJson"];
-            string newJson = form["jsonRaw"];
-            string type = form["type"];
-
-            if (type?.ToLower() == "bankovniucet")
-            {
-                HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet obj = Newtonsoft.Json.JsonConvert.DeserializeObject<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(newJson);
-                var ret = HlidacStatu.Lib.ES.Manager.GetESClient().IndexDocument<HlidacStatu.Lib.Data.TransparentniUcty.BankovniUcet>(obj);
-                return Redirect("Index?ret=" + ret.IsValid);
-
-            }
-
-            return Redirect("Index");
-        }
 
         [Authorize(Roles = "canEditData")]
         [HttpPost]
