@@ -196,38 +196,7 @@ else
 
         </div>*@
 
-                <div role="tabpanel" class="tab-pane @t4" id="ucty">
-
-                    <form method="get" action="https://www.hlidacstatu.cz/ucty/hledat" class="form-inline" role="form">
-                        <h3 style="margin:0;padding-top:20px;padding-bottom:20px;">
-                            Prohledávání transakcích na transparentních účtech
-                            @*<small><button type="button" class="btn btn-info btn-link" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button></small>*@
-                        </h3>
-                        <div id="custom-search-input" class="col-xs-12 custom-search-input">
-                            <div class="input-group col-xs-12">
-
-                                <input class="form-control input" id="Q" name="Q" placeholder="Jméno dárce peněz politické straně nebo číslo účtu" style="max-width: none;" type="text" value="@Q">
-
-                                <span class="input-group-btn text-right" style="padding-right:20px;width:1px;">
-                                    <button class="btn btn-default btn" type="submit">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
-                                    @*<button type="button" class="btn btn-info btn-lg" style="left:10px;" data-toggle="modal" data-target="#search-query-help">Nápověda</button>*@
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                    @if (showInfo)
-                    {
-                        <div class='row'>
-                            <p style='margin-top:10px;' class='col-xs-12 text-muted small'>
-                                Prohledáváme transakce na transparentních účtech politických stran a hnutí, politických osob a vybraných organizacích.
-                                Můžete hledat jména firem, jména osob, čísla účtů a podobně.
-                            </p>
-                        </div>
-                    }
-
-                </div>
+                
             </div>
 
             <div>@Html.Raw(AdditionalHtml)</div>

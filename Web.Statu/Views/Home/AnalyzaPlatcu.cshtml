@@ -280,14 +280,6 @@
                         </a>
                     </div>
                 }
-                @if (globalSearch.HasTransakce)
-                {
-                    <div class="searching__counter">
-                        <a class="link--blue link--big" href="/Ucty/Hledat?Q=@Url.Encode(globalSearch.Query)">
-                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.VZ.Total, "jednu bank.transakci", "{0} bank.transakce", "{0} bank.transakcí")
-                        </a>
-                    </div>
-                }
                 @if (globalSearch.Datasets.HasResult)
                 {
                     foreach (var rds in globalSearch.Datasets.Results

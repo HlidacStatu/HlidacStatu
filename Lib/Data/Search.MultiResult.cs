@@ -17,7 +17,6 @@ namespace HlidacStatu.Lib.Data
             public Lib.Searching.VerejnaZakazkaSearchData VZ { get; set; } = null;
             public GeneralResult<Osoba> Osoby { get; set; } = null;
             public bool OsobaFtx = false;
-            public GeneralResult<TransparentniUcty.BankovniPolozka> Transakce { get; set; } = null;
             public GeneralResult<string> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
 			public InsolvenceSearchResult Insolvence { get; set; } = null;
@@ -25,7 +24,6 @@ namespace HlidacStatu.Lib.Data
             public bool HasSmlouvy { get { return (Smlouvy != null && Smlouvy.HasResult); } }
             public bool HasVZ { get { return (VZ != null && VZ.HasResult); } }
             public bool HasOsoby { get { return (Osoby != null && Osoby.HasResult); } }
-            public bool HasTransakce { get { return (Transakce != null && Transakce.HasResult); } }
             public bool HasFirmy { get { return (Firmy != null && Firmy.HasResult); } }
             public bool HasDatasets { get { return (Datasets != null && Datasets.HasResult); } }
 			public bool HasInsolvence { get { return Insolvence != null && Insolvence.HasResult; } }
@@ -39,8 +37,6 @@ namespace HlidacStatu.Lib.Data
                     times.Add("VZ", VZ.ElapsedTime);
                 if (Osoby != null)
                     times.Add("Osoby", Osoby.ElapsedTime);
-                if (Transakce != null)
-                    times.Add("Transakce", Transakce.ElapsedTime);
                 if (Firmy != null)
                     times.Add("Firmy", Firmy.ElapsedTime);
                 if (Firmy != null)
@@ -80,7 +76,6 @@ namespace HlidacStatu.Lib.Data
                     return (this.Smlouvy?.IsValid ?? false)
                         && (this.VZ?.IsValid ?? false)
                         && (this.Osoby?.IsValid ?? false)
-                        && (this.Transakce?.IsValid ?? false)
                         && (this.Firmy?.IsValid ?? false)
                         && (this.Datasets?.IsValid ?? false)
 						&& (this.Insolvence?.IsValid ?? false)
@@ -92,7 +87,7 @@ namespace HlidacStatu.Lib.Data
             {
                 get
                 {
-                    return HasSmlouvy || HasVZ || HasOsoby || HasTransakce || HasFirmy || HasDatasets || HasInsolvence;
+                    return HasSmlouvy || HasVZ || HasOsoby || HasFirmy || HasDatasets || HasInsolvence;
                 }
             }
 
@@ -107,8 +102,6 @@ namespace HlidacStatu.Lib.Data
                         t += VZ.Total;
                     if (HasOsoby)
                         t += Osoby.Total;
-                    if (HasTransakce)
-                        t += Transakce.Total;
                     if (HasFirmy)
                         t += Firmy.Total;
                     if (HasDatasets)

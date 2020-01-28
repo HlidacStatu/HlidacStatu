@@ -182,11 +182,6 @@ else if (Model.HasResults == false)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#osoby">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
             }
-
-            @if (Model.HasTransakce)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#ucty">Politické finance <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span></a></div>
-            }
             @if (Model.HasFirmy)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
@@ -410,65 +405,6 @@ else if (Model.HasResults == false)
     viewRenderTimes.Add("Firmy", sw.Elapsed);
 
 }
-
-
-@if (Model.HasTransakce)
-{
-    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-    sw.Start();
-
-    <div class="row" id="ucty">
-        <div class="col-xs-12">
-            <div class="searching__watcher">
-                <div class="watcher__title">
-                    <img src="/Content/img/icon-person-watcher.svg">
-                    <h2 class="new-title">
-                        Nalezené transakce na transparetních účtech politických stran
-                    </h2>
-                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Transakce.Total)</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" style="">
-
-        <div class="table-new searching__watcher__table">
-            @if (Model.Transakce.Total > numOfUctu)
-            {
-                <h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)numOfUctu, "první transakci", "první {0} transakce", "prvních {0} transakcí"))</h4>
-            }
-
-            <table class="table table-hover">
-                @SearchResults.UcetHeader(null, true)
-                <tbody>
-
-                    @foreach (var item in Model.Transakce.Result.Take(numOfUctu))
-                    {
-                        @SearchResults.UcetRow(this.User, item, true, true)
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    if (Model.Transakce.Total > numOfUctu)
-    {
-        <div style="height: 32px"></div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="text-center">
-                    <a class="btn btn-default btn-default-new" href="/Ucty/Hledat?Q=@Url.Encode(Model.Query)">zobrazit všechny nalezené transakce</a>
-                </div>
-            </div>
-        </div>
-
-    }
-    sw.Stop();
-    viewRenderTimes.Add("Transakce", sw.Elapsed);
-
-
-}
-
 
 @if (Model.HasDatasets)
 {
