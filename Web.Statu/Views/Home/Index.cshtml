@@ -368,23 +368,6 @@
             </div>
 
             <div class="block-col block-part">
-                @{
-                    string[] topStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
-                                                                                "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
-                }
-                <div class="block-subtitle">
-                    Sponzori hlavních politických stran
-                </div>
-                <div class="block-tags">
-                    @foreach (var strana in topStrany)
-                    {
-                        <a class="tag" href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(strana)#sponzori">@strana</a>
-                    }
-                </div>
-                <a href="/ucty/subjektyTypu?id=Politick%C3%A1+strana" class="link">Další subjekty</a>
-            </div>
-
-            <div class="block-col block-part">
                 <div class="block-subtitle">
                     Největší sponzoři za poslední rok
                 </div>
@@ -399,18 +382,18 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro <a href="/ucty/ucty?id=@System.Net.WebUtility.UrlEncode(sponzor.Strana)">@sponzor.Strana</a></div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> pro @sponzor.Strana</div>
                             </div>
                         }
 
                     }
 
                 </div>
-                <a href="/ucty" class="link">Další transakce</a>
+                <a href="/sponzori" class="link">Další transakce</a>
             </div>
 
             <div class="block-button-wrapper">
-                <a href="/ucty" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
+                <a href="/sponzori" class="btn btn-default btn-default-new">zobrazit více v hlídači financí</a>
             </div>
         </div>
 
