@@ -118,6 +118,9 @@ namespace HlidacStatu.Lib
             "ivo-vondrak",
             "adriana-krnacova",
             };
+        public static string[] HejtmaniOd2020 = new string[] {
+            "jiri-behounek","josef-bernard","oldrich-bubenicek","jiri-cunek","zdenek-hrib","jaroslava-pokorna-jermanova","petr-kubis","martin-netolicky","ladislav-oklestek","martin-puta","bohumil-simek","jiri-stepan","ivana-straska","ivo-vondrak"
+        };
         public static string[] Poslanci2017Novacci = new string[] {
 "adam-vojtech-1","alena-gajduskova","antonin-stanek","dan-tok","dana-balcarova-3","daniel-pawlas","dominik-feri","frantisek-elfmark-1",
 "frantisek-kopriva-20","ilona-mauritzova","ivan-bartos","ivan-jac-4","ivana-nevludova","ivo-vondrak-2","jakub-michalek","jan-bauer",
