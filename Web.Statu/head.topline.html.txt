@@ -3,6 +3,7 @@
         <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejné zakázky</a>
         <a href="https://www.hlidacstatu.cz/Insolvence">Insolvences</a>
         <a href="https://www.hlidacstatu.cz/sponzori">Sponzoři</a>
+        <a href="https://www.hlidacstatu.cz/dotace">Dotace</a>
         <a href="https://www.hlidacstatu.cz/StatniWeby">Weby státu</a>
     </li>
 
