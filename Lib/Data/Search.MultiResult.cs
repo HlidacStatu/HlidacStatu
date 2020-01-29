@@ -20,6 +20,7 @@ namespace HlidacStatu.Lib.Data
             public GeneralResult<string> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
 			public InsolvenceSearchResult Insolvence { get; set; } = null;
+            public DotaceSearchResult Dotace { get; set; } = null;
 
             public bool HasSmlouvy { get { return (Smlouvy != null && Smlouvy.HasResult); } }
             public bool HasVZ { get { return (VZ != null && VZ.HasResult); } }
@@ -27,6 +28,7 @@ namespace HlidacStatu.Lib.Data
             public bool HasFirmy { get { return (Firmy != null && Firmy.HasResult); } }
             public bool HasDatasets { get { return (Datasets != null && Datasets.HasResult); } }
 			public bool HasInsolvence { get { return Insolvence != null && Insolvence.HasResult; } }
+            public bool HasDotace { get { return Dotace != null && Dotace.HasResult; } }
 
             public Dictionary<string, System.TimeSpan> SearchTimes()
             {
@@ -50,6 +52,8 @@ namespace HlidacStatu.Lib.Data
                 }
 				if (Insolvence != null)
 					times.Add("Insolvence", Insolvence.ElapsedTime);
+                if (Dotace != null)
+                    times.Add("Dotace", Dotace.ElapsedTime);
                 if (AddOsobyTime.Ticks > 0)
                     times.Add("AddOsobyTime", AddOsobyTime);
 
@@ -79,6 +83,7 @@ namespace HlidacStatu.Lib.Data
                         && (this.Firmy?.IsValid ?? false)
                         && (this.Datasets?.IsValid ?? false)
 						&& (this.Insolvence?.IsValid ?? false)
+                        && (this.Dotace?.IsValid ?? false)
                         ;
                 }
             }
@@ -87,7 +92,7 @@ namespace HlidacStatu.Lib.Data
             {
                 get
                 {
-                    return HasSmlouvy || HasVZ || HasOsoby || HasFirmy || HasDatasets || HasInsolvence;
+                    return HasSmlouvy || HasVZ || HasOsoby || HasFirmy || HasDatasets || HasInsolvence || HasDotace;
                 }
             }
 
@@ -108,6 +113,8 @@ namespace HlidacStatu.Lib.Data
                         t += Datasets.Total;
 					if (HasInsolvence)
 						t += Insolvence.Total;
+                    if (HasDotace)
+                        t += Dotace.Total;
 
                     return t;
                 }
@@ -249,6 +256,23 @@ namespace HlidacStatu.Lib.Data
 					}
 
 				},
+                () =>
+                {
+                    try
+                    {
+                        var dotaceService = new Dotace.DotaceService();
+                        var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = 5 };
+                        res.Dotace = iqu;
+                        //if (showBeta)
+                        res.Dotace = dotaceService.SimpleSearch(new Searching.DotaceSearchResult { Q = query, PageSize = 5 });
+
+                    }
+                    catch (System.Exception e)
+                    {
+                        Util.Consts.Logger.Error("MultiResult GeneralSearch for insolvence query" + query, e);
+                    }
+
+                },
                 () =>
                  {
                      Elastic.Apm.Api.ISpan sp = null;

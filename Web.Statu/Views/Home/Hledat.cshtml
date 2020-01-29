@@ -7,6 +7,7 @@
     int numOfSmluv = 10;
     int numOfOsob = 8;
     int numOfUctu = 5;
+    int numOfDotaci = 7;
     int numOfFirem = 12;
     int numOfVZ = 5;
     int numOfInsolvenci = 5;
@@ -186,6 +187,10 @@ else if (Model.HasResults == false)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
             }
+            @if (Model.HasDotace)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
+            }
             @if (Model.Datasets.HasResult)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#databaze">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
@@ -230,7 +235,7 @@ else if (Model.HasResults == false)
 
                     <table class="table table-hover">
                         <thead>
-                            @SearchResults.SmlouvyHead(this.User,true)
+                            @SearchResults.SmlouvyHead(this.User, true)
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Smlouvy.Result.Hits
@@ -340,6 +345,64 @@ else if (Model.HasResults == false)
 
 }
 
+@*Dotace*@
+
+@if (Model.HasDotace)
+{
+    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+    sw.Start();
+    <div class="row" id="dotace">
+        <div class="col-xs-12">
+            <div class="searching__watcher">
+                <div class="watcher__title">
+                    <img src="/Content/img/icon-person-watcher.svg">
+                    <h2 class="new-title">
+                        Nalezené dotace
+                    </h2>
+                    <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span>
+                </div>
+                <div class="table-new searching__watcher__table">
+
+                    @if (Model.Dotace.Total > numOfDotaci)
+                    {
+                        <h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)numOfDotaci, "první dotaci", "první {0} dotace", "prvních {0} dotací"))</h4>
+                    }
+
+                    <table class="table table-hover">
+                        <thead>
+                            @SearchResults.DotaceHead()
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Dotace.Result.Hits.Take(numOfDotaci))
+                            {
+                                countRendered++;
+                                var dotace = item.Source;
+                                @SearchResults.DotaceRow(User, Request, dotace, Model.Query)
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.Insolvence.Total > numOfInsolvenci)
+    {
+        <div style="height: 32px"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="text-center">
+                    <a class="btn btn-default btn-default-new" href="/Insolvence/Hledat?Q=@Url.Encode(Model.Query)">zobrazit všechny nalezené insolvence (<b>@Model.Insolvence.Total</b>)</a>
+                    @Util.AddWatchDogSmall(this.User, Model.Query, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+
+                </div>
+            </div>
+        </div>
+    }
+
+    sw.Stop();
+    viewRenderTimes.Add("Insolvence", sw.Elapsed);
+
+}
 
 @if (Model.HasOsoby)
 {
@@ -453,8 +516,8 @@ else if (Model.HasResults == false)
 <!--
     viewrendertimes: @Html.Raw(string.Join("\n", viewRenderTimes.Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
 -->
-@{ 
-    var t = Elastic.Apm.Agent.Tracer.StartTransaction("/hledej","render");
+@{
+    var t = Elastic.Apm.Agent.Tracer.StartTransaction("/hledej", "render");
     foreach (var vrt in viewRenderTimes)
     {
         var sp = t.StartSpan(vrt.Key, "render");
