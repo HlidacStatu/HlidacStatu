@@ -73,7 +73,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
 
             if (
                 (!p.EnoughExtractedText || p.PlainTextContentQuality == DataQualityEnum.Estimated)
-                && p.LastUpdate > historyDate
+                && (p.LastUpdate > historyDate )
                 && item.datumUzavreni > datumUzavreni
                 && p.PlainTextContentQuality != DataQualityEnum.Unknown
                 )
