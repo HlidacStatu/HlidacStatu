@@ -293,7 +293,7 @@ namespace HlidacStatu.Lib.Data
                 var cExist = ES.Manager.GetESClient();
                 var s = Load(item.Id, cExist);
                 if (s != null)
-                    Delete();
+                    Delete(item.Id,cExist);
             }
 
             if (res.IsValid)
