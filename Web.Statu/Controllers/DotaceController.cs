@@ -45,13 +45,13 @@ namespace HlidacStatu.Web.Controllers
             return View(res);
         }
 
-        public ActionResult Detail(string idDotace)
+        public ActionResult Detail(string id)
         {
-            if (string.IsNullOrWhiteSpace(idDotace))
+            if (string.IsNullOrWhiteSpace(id))
             {
-                return View();
+                return Redirect("/dotace");
             }
-            var dotace = _dotaceService.Get(idDotace);
+            var dotace = _dotaceService.Get(id);
             return View(dotace);
         }
     }
