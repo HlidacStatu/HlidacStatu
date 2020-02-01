@@ -395,6 +395,7 @@
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\SponzoriController.cs" />
     <Compile Include="Controllers\NasiPoliticiController.cs" />
+    <Compile Include="Controllers\UctyController.cs" />
     <Compile Include="Controllers\VZController.cs" />
     <Compile Include="Controllers\WebyController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
