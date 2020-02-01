@@ -18,7 +18,7 @@ namespace HlidacStatu.Web.Controllers
 #endif
         public ActionResult Index()
         {
-            return View();
+            return RedirectPermanent($"/data/Index/transparentni-ucty");
         }
 
 #if (!DEBUG)
@@ -26,7 +26,9 @@ namespace HlidacStatu.Web.Controllers
 #endif
         public ActionResult Prezidenti()
         {
-            return View();
+            return RedirectPermanent($"/data/Hledat/transparentni-ucty?Q=TypSubjektu%3A%22{System.Net.WebUtility.UrlEncode("Prezidentský kandidát")}%22");
+            
+
         }
 
         public ActionResult Transakce(string id)
