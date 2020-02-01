@@ -12,6 +12,7 @@ namespace HlidacStatu.Web.Controllers
 
 
 
+        // GET: Ucty
 #if (!DEBUG)
         [OutputCache(Duration =60*60*6, VaryByParam ="embed")]
 #endif
