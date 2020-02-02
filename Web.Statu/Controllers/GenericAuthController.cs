@@ -208,6 +208,34 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
+        public ActionResult NotFound(string nextUrl = null, string nextUrlText = null)
+        {
+            ViewBag.NextText = nextUrl;
+            ViewBag.NextUrlText = nextUrlText;
+            Response.StatusCode = 404;
+
+
+            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+                .SetMessage("Url not found")
+                .SetCustomKeyValue("URL", Request.RawUrl)
+                );
+
+            return View("Error404");
+
+        }
+
+
+        protected override void HandleUnknownAction(string actionName)
+        {
+            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+                .SetMessage("Url not found")
+                .SetCustomKeyValue("URL", Request.RawUrl)
+                );
+
+
+            RedirectToAction("Error404").ExecuteResult(this.ControllerContext);
+
+        }
 
 
     }

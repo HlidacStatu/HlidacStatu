@@ -19,8 +19,8 @@
     string url = string.Empty;
 
     if (!string.IsNullOrEmpty(path))
-    {
-        docObj = (JObject)jobj.SelectToken(path);
+    {        
+        docObj =  jobj.SelectToken(path) as JObject;
         found = docObj != null;
     }
     if (found)
