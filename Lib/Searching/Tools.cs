@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Searching
         static string regexInvalidQueryTemplate = @"(^|\s|[(])(?<q>$operator$\s{1} (?<v>(\w{1,})) )($|\s|[)])";
         static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
 
-        public static readonly string[] DefaultQueryOperators = new string[] {"AND","OR"};
+        public static readonly string[] DefaultQueryOperators = new string[] { "AND", "OR" };
 
 
         public static HighlightDescriptor<T> GetHighlight<T>(bool enable)
@@ -510,6 +510,17 @@ namespace HlidacStatu.Lib.Searching
             var client = elasticClient ?? Lib.ES.Manager.GetESClient();
 
             Func<int, int, ISearchResponse<T>> searchFunc = null;
+
+            var qs = new QueryContainerDescriptor<T>().MatchAll();
+            if (!string.IsNullOrEmpty(query))
+            {
+                qs = new QueryContainerDescriptor<T>()
+                        .QueryString(qq => qq
+                            .Query(query)
+                            .DefaultOperator(Operator.And)
+                        );
+            }
+
             if (IdOnly)
                 searchFunc = (size, page) =>
                 {
@@ -519,7 +530,7 @@ namespace HlidacStatu.Lib.Searching
                                 //.Fields(f => f.Field("Id"))
                                 .Size(size)
                                 .From(page * size)
-                                .Query(q => q.MatchAll())
+                                .Query(q => qs)
                                 .Scroll(ScrollLifeTime)
                                 );
                 };
@@ -530,7 +541,7 @@ namespace HlidacStatu.Lib.Searching
                             .Index(indexes ?? client.ConnectionSettings.DefaultIndex)
                             .Size(size)
                             .From(page * size)
-                            .Query(q => q.MatchAll())
+                            .Query(q => qs)
                             .Scroll(ScrollLifeTime)
                         );
                 };
