@@ -521,6 +521,7 @@ namespace HlidacStatu.Lib.Searching
                         );
             }
 
+
             if (IdOnly)
                 searchFunc = (size, page) =>
                 {
