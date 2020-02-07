@@ -28,10 +28,14 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
 
         }
 
+        static DateTime startRS = new DateTime(2016, 7, 1);
         public IEnumerable<Issue> FindIssues(Lib.Data.Smlouva item)
         {
             List<Issue> issues = new List<Issue>();
             if (item.spadaPodRS == false)
+                return issues;
+
+            if (item.datumUzavreni < startRS)
                 return issues;
 
             if (item.Prilohy != null && item.Prilohy.Count() > 0)
