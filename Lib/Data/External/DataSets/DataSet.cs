@@ -166,7 +166,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return Devmasters.Core.TextUtil.ShortenText(
                 string.Join(" ", txts)
                 , maxLength
-                ); 
+                );
         }
 
         protected Nest.ElasticClient client = null;
@@ -746,7 +746,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// <typeparam name="T">class where data is going to be serialized to</typeparam>
         /// <param name="Id">id field in elastic</param>
         /// <returns>Object T</returns>
-        public T GetData<T>(string Id) where T: class
+        public T GetData<T>(string Id) where T : class
         {
 
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
@@ -799,7 +799,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (res.Found)
                 return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); //todo: es7 check
             else
-                return (string)null;
+            {
+                req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
+                res = this.client.Get<object>(req);
+                if (res.Found)
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); //todo: es7 check
+                else
+                    return (string)null;
+            }
         }
 
         public bool DeleteData(string Id)
