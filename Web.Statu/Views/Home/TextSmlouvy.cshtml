@@ -50,9 +50,31 @@
                     return m.Value;
                 }
             });
-
-
     }
+    string zakonRegexStr = @"
+(§ \s{0,3} (?<parag>\d{1,5}[)a-zA-Z]{0,5} ) .{0,20} )?
+
+
+(?<zakon>(\d{1,4}))
+ \s{0,2} / \s{0,2} 
+ (?<rok>((19|20)(\d{2}))) \s* Sb
+";
+    var zakonRegex = new System.Text.RegularExpressions.Regex(zakonRegexStr, HlidacStatu.Util.Consts.DefaultRegexQueryOption );
+    plainText = zakonRegex.Replace(plainText,
+        (m) =>
+        {
+            if (m.Success)
+            {
+                string url = $"https://www.zakonyprolidi.cz/cs/{m.Groups["rok"].Value}-{m.Groups["zakon"].Value}#{m.Groups["parag"].Value}";
+                return $"<a href='{url}' target='_blank'>" + m.Value + "</a>";
+            }
+            else
+            {
+                return m.Value;
+            }
+        });
+
+
 
     if (!string.IsNullOrEmpty(plainText))
     {
@@ -82,41 +104,41 @@
         <li><a href="@Url.Action("Detail","Home", new { id = Model.Id })">@Model.FullTitle()</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
-    }
-    @if (Model.Prilohy != null && Model.Prilohy.Count() > 0)
+}
+@if (Model.Prilohy != null && Model.Prilohy.Count() > 0)
+{
+
+    foreach (var priloha in Model.Prilohy)
     {
-
-        foreach (var priloha in Model.Prilohy)
+        if (priloha.hash.Value == ViewBag.hashValue)
         {
-            if (priloha.hash.Value == ViewBag.hashValue)
-            {
-                found = true;
-                <h3>
-                    @Util.AddBookmark(this.User, Model)
-                    Příloha @priloha.nazevSouboru
-                </h3>
-                <p>
-                    <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
-                    <a href="@priloha.odkaz" target="_blank">originál smlouvy stáhnete odsud</a>
-                </p>
+            found = true;
+            <h3>
+                @Util.AddBookmark(this.User, Model)
+                Příloha @priloha.nazevSouboru
+            </h3>
+            <p>
+                <b>Upozornění</b>: Text přílohy byl získán strojově a nemusí přesně odpovídat originálu. Zejména u strojově nečitelných smluv, kde jsme použili OCR.
+                <a href="@priloha.odkaz" target="_blank">originál smlouvy stáhnete odsud</a>
+            </p>
 
-                <hr />
-                <div class="row">
-                    <div class="col-xs-12">
-                        <pre>
+            <hr />
+            <div class="row">
+                <div class="col-xs-12">
+                    <pre>
                         @Html.Raw(plainText)
                     </pre>
-                    </div>
-
                 </div>
-            }
+
+            </div>
         }
     }
+}
 
-    @if (found == false)
-    {
-        <span class="text-danger">Odkazovaná příloha nebyla nalezena</span>
-    }
+@if (found == false)
+{
+    <span class="text-danger">Odkazovaná příloha nebyla nalezena</span>
+}
 
 
 
