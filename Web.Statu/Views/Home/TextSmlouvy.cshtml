@@ -65,8 +65,13 @@
         {
             if (m.Success)
             {
-                string url = $"https://www.zakonyprolidi.cz/cs/{m.Groups["rok"].Value}-{m.Groups["zakon"].Value}#{m.Groups["parag"].Value}";
-                return $"<a href='{url}' target='_blank'>" + m.Value + "</a>";
+                var parag = m.Groups["parag"]?.Value;
+                if (!string.IsNullOrEmpty(parag))
+                {
+                    parag = "#p" + parag;
+                }
+                string url = $"https://www.zakonyprolidi.cz/cs/{m.Groups["rok"].Value}-{m.Groups["zakon"].Value}{parag}";
+                return $"<a href='{url}'  onclick=\"return trackOutLink(this,'textSmlouvy');\" target='_blank'>" + m.Value + "</a>";
             }
             else
             {
