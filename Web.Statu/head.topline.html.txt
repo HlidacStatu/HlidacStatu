@@ -3,7 +3,6 @@
         <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejné zakázky</a>
         <a href="https://www.hlidacstatu.cz/Insolvence">Insolvences</a>
         <a href="https://www.hlidacstatu.cz/sponzori">Sponzoři</a>
-        <a href="https://www.hlidacstatu.cz/dotace">Dotace</a>
         <a href="https://www.hlidacstatu.cz/StatniWeby">Weby státu</a>
     </li>
 
@@ -12,7 +11,6 @@
     <li class="level2"><a href="https://www.hlidacstatu.cz/data">Další databáze</a></li>
     <li class="level2"><a href="https://www.hlidacstatu.cz/reporty">Analýzy a reporty</a></li>
     <li class="level2"><a href="https://www.hlidacstatu.cz/texty">Komentáře</a></li>
-    <li class="level2"><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
 
     <li class="level2">
         <a href="https://www.darujme.cz/projekt/1200384">Podpořte nás</a>

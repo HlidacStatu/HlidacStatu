@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.ES
 
         public static string defaultIndexName = "hlidacsmluv";
         public static string defaultIndexName_Sneplatne = "hlidacsmluvneplatne";
-        public static string defaultIndexName_SAll = defaultIndexName + ", " + defaultIndexName_Sneplatne;
+        public static string defaultIndexName_SAll = defaultIndexName + "," + defaultIndexName_Sneplatne;
         
         public static string defaultIndexName_VerejneZakazky = "verejnezakazky";
         public static string defaultIndexName_ProfilZadavatele = "profilzadavatele";
@@ -137,7 +137,7 @@ namespace HlidacStatu.Lib.ES
         }
 
         static string dataSourceIndexNamePrefix = "data_";
-        public static ElasticClient GetESClient(string indexName, int timeOut = 60000, int connectionLimit = 80, IndexType? idxType = null)
+        public static ElasticClient GetESClient(string indexName, int timeOut = 60000, int connectionLimit = 80, IndexType? idxType = null, bool init = true)
         {
             lock (_clientLock)
             {
@@ -152,7 +152,8 @@ namespace HlidacStatu.Lib.ES
                     //    idxType = GetIndexTypeForDefaultIndexName(indexName);
                     
                     var _client = new ElasticClient(sett);
-                    InitElasticSearchIndex(_client, idxType);
+                    if (init)
+                        InitElasticSearchIndex(_client, idxType);
 
                     _clients.Add(cnnset, _client);
                 }

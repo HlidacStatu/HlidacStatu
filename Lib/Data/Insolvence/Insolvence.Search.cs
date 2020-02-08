@@ -130,7 +130,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
-            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(query, irules);
+            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, irules);
 
             return qc;
 
@@ -163,7 +163,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
             sw.Start();
             search.OrigQuery = search.Q;
             search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
-
+            var sq = GetSimpleQuery(search);
+            
             ISearchResponse<Rizeni> res = null;
             try
             {
@@ -173,7 +174,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
-                        .Query(q => GetSimpleQuery(search))
+                        .Query(q => sq)
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(withHighlighting))
@@ -188,7 +189,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
-                        .Query(q => GetSimpleQuery(search))
+                        .Query(q => sq)
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
                         .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(false))

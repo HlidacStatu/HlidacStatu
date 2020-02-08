@@ -260,12 +260,14 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        var dotaceService = new Dotace.DotaceService();
-                        var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = 5 };
-                        res.Dotace = iqu;
-                        //if (showBeta)
-                        res.Dotace = dotaceService.SimpleSearch(new Searching.DotaceSearchResult { Q = query, PageSize = 5 });
-
+                        if (showBeta)
+                        {
+                            var dotaceService = new Dotace.DotaceService();
+                            var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = 5 };
+                            res.Dotace = iqu;
+                            //if (showBeta)
+                            res.Dotace = dotaceService.SimpleSearch(new Searching.DotaceSearchResult { Q = query, PageSize = 5 });
+                        }
                     }
                     catch (System.Exception e)
                     {

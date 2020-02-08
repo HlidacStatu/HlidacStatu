@@ -137,11 +137,11 @@ namespace HlidacStatu.Web.Controllers
 
 
             if (string.IsNullOrWhiteSpace(Id))
-                return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+                return NotFound("/", "Pokračovat na titulní straně");
             HlidacStatu.Lib.Data.Firma model = HlidacStatu.Lib.Data.Firmy.Get(Id);
             if (model == null || !Firma.IsValid(model))
             {
-                return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+                return NotFound("/", "Pokračovat na titulní straně");
             }
             else
             {
@@ -719,7 +719,7 @@ namespace HlidacStatu.Web.Controllers
 
             var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(id);
             if (o == null)
-                return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+                return NotFound("/", "Pokračovat na titulní straně");
 
             ViewBag.Phase = "start";
             ViewBag.Osoba = o;
@@ -737,7 +737,7 @@ namespace HlidacStatu.Web.Controllers
 
                 var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(id);
                 if (o == null)
-                    return new HomeController().NotFound("/", "Pokračovat na titulní straně");
+                    return NotFound("/", "Pokračovat na titulní straně");
                 ViewBag.Osoba = o;
 
                 if (form["phase"] == "start") //upload

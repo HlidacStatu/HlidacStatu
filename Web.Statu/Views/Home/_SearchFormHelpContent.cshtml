@@ -14,6 +14,9 @@
             <li role="presentation">
                 <a href="#vz" aria-controls="vz" role="tab" data-toggle="tab">Parametry pro <b>VEŘEJNÉ ZAKÁZKY</b></a>
             </li>
+            <li role="dotace">
+                <a href="#dotace" aria-controls="dotace" role="tab" data-toggle="tab">Parametry pro <b>DOTACE</b></a>
+            </li>
             <li role="presentation">
                 <a href="#insolvence" aria-controls="insolvence" role="tab" data-toggle="tab">Parametry pro <b>INSOLVENCE</b></a>
             </li>
@@ -208,6 +211,107 @@
                     </dd>
                 </dl>
             </div>
+
+            <div role="tabpanel" class="tab-pane" id="dotace">
+
+                <h2>Jak vyhledávat v dotacích</h2>
+                <div>
+                    <dl>
+                        <dt>Hledat všechna zadaná slova v různých tvarech</dt>
+                        <dd>
+                            <kbd>varhany výstavba</kbd> <a class="small"
+                                                           href="/dotace/hledat?Q=varhany+výstavba" target="_blank">
+                                Zkusit <i class="fas fa-external-link-alt"></i>
+                            </a>
+
+                            <br>Hledá dotace obsahující všechna uvedená slova v různých mluvnických tvarech
+                        </dd>
+                        <dt>Hledat přesně slovo nebo sousloví</dt>
+                        <dd>
+                            <kbd>"Stavíme dům"</kbd> <a class="small" href="/dotace/hledat?q=%22Stavíme dům%22"
+                                                        target="_blank"><i class="fas fa-external-link-alt"></i></a>
+
+                            <br>Hledá dotace obsahující uvedená slova či sousloví přesně jak je v uvozovkách
+                        </dd>
+                        <dt>Hledat kterékoliv ze zadaných slov</dt>
+                        <dd>
+                            mezi všechna požadovaná slova vložte operátor OR<br> <kbd>miniaturní OR standardní</kbd> <a class="small"
+                                                                                                                        href="/dotace/hledat?Q=miniaturní+OR+standardní" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+
+                            <br>Hledá dotace obsahující alespoň jedno z uvedených slov
+                        </dd>
+                        <dt>Toto slovo tam být nesmí</dt>
+                        <dd>
+                            Před slova, která nechcete, zadejte znaménko mínus<br><kbd>solární -systémy -systém</kbd> <a class="small"
+                                                                                                                         href="/dotace/hledat?Q=solární+-systémy+-systém" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+
+                            <br>Hledá dotace se slovem solární, kde se zároveň nevyskytují slova "systémy" a "systém"
+
+                        </dd>
+                        <dt>Kombinace výrazů</dt>
+                        <dd>
+                            Všechny výše i níže uvedené výrazy hledání je možné kombinovat logickými operátory <kbd>AND</kbd>
+                            a <kbd>OR</kbd> (velká písmena jsou nutná).
+                            Pokud jsou výrazy odděleny mezerou, je to stejné jako použití operátora <kbd>AND</kbd>.
+                        </dd>
+                        <dt>Logické a rozšiřující operátory</dt>
+                        <dd>
+                            Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br>
+                            Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující
+                            více znaků. Příklad:<kbd>vila tug*</kbd><br>
+                            Příklad: <kbd>ico:00216208 AND penb</kbd>
+                        </dd>
+
+                    </dl>
+                    <h2>Specifické hledání podle konkrétních položek v dotacích</h2>
+
+                    <dl>
+                        <dt>Prohledávat specifické položky v databázích</dt>
+                        <dd>
+                            napište prefix s ":" bez mezery následovaný hledanou hodnotou<br><kbd>ico:44992785</kbd>
+                            hledá smlouvy kde je jednou ze stran Statutární město Brno (ICO 44992785).
+                            <br><br>
+                            Pokud hledaná hodnota obsahuje mezery, musí být v uvozovkách <kbd>jmeno:"Ředitelství silnic a dálnic"</kbd>
+                        </dd>
+                    </dl>
+                    <h2>Podporované prefixy / hledatelné položky v DB</h2>
+                    <dl>
+                        <dt>Fungující v dotacích</dt>
+                        <dd>
+                            <kbd>ico:12345678</kbd> - jedna ze smluvních stran má uvedené IČO<br>
+                            <kbd>osobaid:oznaceni-osoby</kbd> - smlouvy s vazbou na osobu. Oznacení osoby najdete u profilu osoby (např.
+                            andrej-babis)<br>
+                            <kbd>holding:12345678</kbd> - IČO matky holdingu, hledá se pro všechny firmy holdingu<br>
+                            <br>
+                            <br>
+                            <kbd>projekt:"název projektu"</kbd> - dotace se specifickým názvem projektu (např. "TJ Vodní stavby Tábor")<br>
+                            <kbd>jmeno:"jméno příjemce"</kbd> - dotace, kde jméno příjemce odpovídá zadanému výrazu ("Ředitelství silnic a dálnic")<br>
+                            <kbd>castka:&gt;castka</kbd> - dotace s částkou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd>
+                            <kbd>&lt;</kbd><br>
+                        </dd>
+                    </dl>
+                </div>
+
+                <h2>Ukázky možností</h2>
+                <ul>
+                    <li>
+                        Hledání podle IČO - <a href="/dotace/hledat?Q=ico:00190489">Nemocnice pardubice</a>, <a href="/dotace/hledat?Q=ico:70994234">SŽDC</a>
+                    </li>
+                    <li>
+                        Hledání podle příjemce - <a href="/dotace/hledat?Q=jmeno:'Ředitelství silnic a dálnic ČR'">ŘSD</a>, <a href="/dotace/hledat?Q=jmeno:univerzita">Univerzita</a>
+                    </li>
+                    <li>
+                        Hledání podle osoby - <a href="/dotace/hledat?Q=osobaid:andrej-babis">Andrej Babiš</a>, <a href="/dotace/hledat?Q=osobaid:zdenek-bakala-2">Zdeněk Bakala</a>
+                    </li>
+
+                </ul>
+            </div>
+
+
             <div role="tabpanel" class="tab-pane" id="insolvence">
                 <h2>Obecné hledání přes všechny údaje v insolvenci</h2>
                 <dl>

@@ -189,7 +189,7 @@ else if (Model.HasResults == false)
             }
             @if (Model.HasDotace)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#dotace">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
             }
             @if (Model.Datasets.HasResult)
             {
@@ -385,14 +385,14 @@ else if (Model.HasResults == false)
             </div>
         </div>
     </div>
-    if (Model.Insolvence.Total > numOfInsolvenci)
+    if (Model.Dotace.Total > numOfDotaci)
     {
         <div style="height: 32px"></div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="text-center">
-                    <a class="btn btn-default btn-default-new" href="/Insolvence/Hledat?Q=@Url.Encode(Model.Query)">zobrazit všechny nalezené insolvence (<b>@Model.Insolvence.Total</b>)</a>
-                    @Util.AddWatchDogSmall(this.User, Model.Query, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+                    <a class="btn btn-default btn-default-new" href="/Dotace/Hledat?Q=@Url.Encode(Model.Query)">zobrazit všechny nalezené dotace (<b>@Model.Dotace.Total</b>)</a>
+                    @*@Util.AddWatchDogSmall(this.User, Model.Query, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))*@
 
                 </div>
             </div>
@@ -400,7 +400,7 @@ else if (Model.HasResults == false)
     }
 
     sw.Stop();
-    viewRenderTimes.Add("Insolvence", sw.Elapsed);
+    viewRenderTimes.Add("Dotace", sw.Elapsed);
 
 }
 

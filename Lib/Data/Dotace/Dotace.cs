@@ -6,7 +6,7 @@ using System.Linq;
 namespace HlidacStatu.Lib.Data.Dotace
 {
     [ElasticsearchType(IdProperty = nameof(IdDotace))]
-    public partial class Dotace
+    public partial class Dotace : Bookmark.IBookmarkable
     {
         [Nest.Keyword]
         public string IdDotace { get; set; }
@@ -43,7 +43,10 @@ namespace HlidacStatu.Lib.Data.Dotace
 
 
 
-
+        public string BookmarkName()
+        {
+            return this.NazevProjektu;
+        }
 
         public string GetNazevDotace()
         {
@@ -63,6 +66,23 @@ namespace HlidacStatu.Lib.Data.Dotace
             return "";
         }
 
+        public string GetUrl(bool local = true)
+        {
+            return GetUrl(local, string.Empty);
+        }
+
+        public string GetUrl(bool local, string foundWithQuery)
+        {
+            string url = "/Dotace/Detail/" + this.IdDotace;
+            if (!string.IsNullOrEmpty(foundWithQuery))
+                url = url + "?qs=" + System.Net.WebUtility.UrlEncode(foundWithQuery);
+
+            if (local == false)
+                return "https://www.hlidacstatu.cz" + url;
+            else
+                return url;
+        }
+
         public void Save()
         {
             //calculate fields before saving
@@ -73,6 +93,22 @@ namespace HlidacStatu.Lib.Data.Dotace
                 throw new ApplicationException(res.ServerError?.ToString());
             }
         }
+
+        public string ToAuditJson()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+
+        public string ToAuditObjectId()
+        {
+            return this.IdDotace;
+        }
+
+        public string ToAuditObjectTypeName()
+        {
+            return "Dotace";
+        }
+
 
         private void CalculateTotals()
         {

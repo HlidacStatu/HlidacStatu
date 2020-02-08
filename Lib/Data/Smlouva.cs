@@ -223,7 +223,12 @@ namespace HlidacStatu.Lib.Data
 
         public bool SetClassification(bool rewrite = false, bool rewriteStems = false) //true if changed
         {
-            if (rewrite || rewriteStems || this.Classification?.LastUpdate == null)
+            if (rewrite 
+                || rewriteStems 
+                || this.Classification?.LastUpdate == null
+                || (this.Classification?.Types != null && this.Classification.Types.Count() == 0)
+
+                )
             {
                 var types = SClassification.GetClassificationFromServer(this, rewriteStems);
                 if (types == null)
@@ -288,7 +293,7 @@ namespace HlidacStatu.Lib.Data
                 var cExist = ES.Manager.GetESClient();
                 var s = Load(item.Id, cExist);
                 if (s != null)
-                    Delete();
+                    Delete(item.Id,cExist);
             }
 
             if (res.IsValid)
