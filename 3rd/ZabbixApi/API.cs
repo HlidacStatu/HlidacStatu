@@ -19,7 +19,7 @@ namespace ZabbixApi
             auth = null;
         }
 
-        public Zabbix(string user, string password, string zabbixURL) : this(user, password, zabbixURL, false) {}
+        public Zabbix(string user, string password, string zabbixURL) : this(user, password, zabbixURL, false) { }
 
         private string user;
         private string password;
@@ -32,7 +32,7 @@ namespace ZabbixApi
         {
             dynamic userAuth = new ExpandoObject();
             userAuth.user = user;
-            userAuth.password = password;  
+            userAuth.password = password;
             Response zbxResponse = objectResponse("user.login", userAuth);
 
             if (zbxResponse.result != null && zbxResponse.result.GetType().Name == "String")
@@ -46,7 +46,7 @@ namespace ZabbixApi
 
             }
 
-                loggedOn = false;
+            loggedOn = false;
 
         }
 
@@ -82,26 +82,35 @@ namespace ZabbixApi
 
         private string sendRequest(string jsonParams)
         {
-            WebRequest request = WebRequest.Create(zabbixURL);
-            if (basicAuth != null) request.Headers.Add("Authorization", "Basic " + basicAuth);
-            request.ContentType = "application/json-rpc";
-            request.Method = "POST";
-            string jsonResult;
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            try
             {
-                streamWriter.Write(jsonParams);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
 
-            WebResponse response = request.GetResponse();
-            using (var streamReader = new StreamReader(response.GetResponseStream()))
+                WebRequest request = WebRequest.Create(zabbixURL);
+                if (basicAuth != null) request.Headers.Add("Authorization", "Basic " + basicAuth);
+                request.ContentType = "application/json-rpc";
+                request.Method = "POST";
+                string jsonResult;
+
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonParams);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                WebResponse response = request.GetResponse();
+                using (var streamReader = new StreamReader(response.GetResponseStream()))
+                {
+                    jsonResult = streamReader.ReadToEnd();
+                }
+
+                return jsonResult;
+            }
+            catch (System.Exception e)
             {
-                jsonResult = streamReader.ReadToEnd();
-            }
 
-            return jsonResult;
+                throw;
+            }
         }
 
     }
