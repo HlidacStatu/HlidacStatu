@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     List<ZabHostSslStatus> d = null;
                     using (var zr = new ZabbixReader())
                     {
-                        d = zr.GetSsl(25, ZabTools.WebySslItems())
+                        d = zr.GetSsl(24*20, ZabTools.WebySslItems())
                             ?.ToList();
                         HlidacStatu.Util.Consts.Logger.Info("Cache statniweby_ssl_data refreshnuta");
                         return d;
