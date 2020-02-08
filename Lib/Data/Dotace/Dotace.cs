@@ -12,35 +12,36 @@ namespace HlidacStatu.Lib.Data.Dotace
         public string IdDotace { get; set; }
         [Nest.Date]
         public DateTime? DatumPodpisu { get; set; }
+        [Nest.Date]
+        public DateTime? DatumAktualizace { get; set; }
         [Nest.Keyword]
         public string IdProjektu { get; set; }
         [Nest.Keyword]
         public string KodProjektu { get; set; }
         [Nest.Text]
         public string NazevProjektu { get; set; }
-
-        // calculated fields
-        // Celková výše dotace včetně půjčky
-        [Nest.Number]
-        public float DotaceCelkem { get; set; }
-        // Půjčené peníze
-        [Nest.Number]
-        public float PujckaCelkem { get; set; }
-        [Nest.Date]
-        public DateTime? DatumAktualizace { get; set; }
         [Nest.Keyword]
         public string UrlZdroje { get; set; }
         [Nest.Keyword]
         public string NazevZdroje { get; set; }
 
         [Nest.Object]
-        public List<Rozhodnuti> Rozhodnuti { get; set; }
-
-        [Nest.Object]
         public Prijemce Prijemce { get; set; }
 
         [Nest.Object]
-        public DotacniProgram DotacniProgram { get; set; }
+        public DotacniProgram Program { get; set; }
+        // calculated fields
+        // Celková výše dotace včetně půjčky
+        [Nest.Number]
+        public decimal? DotaceCelkem { get; set; }
+        // Půjčené peníze
+        [Nest.Number]
+        public decimal? PujckaCelkem { get; set; }
+
+        [Nest.Object]
+        public List<Rozhodnuti> Rozhodnuti { get; set; }
+
+
 
 
 
@@ -75,11 +76,20 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         private void CalculateTotals()
         {
-            DotaceCelkem = Rozhodnuti
-                .Sum(p => p.CastkaRozhodnuta);
-            PujckaCelkem = Rozhodnuti
-                .Where(p => p.JePujcka)
-                .Sum(p => p.CastkaRozhodnuta);
+            if (Rozhodnuti.Count == 0)
+            {
+                DotaceCelkem = null;
+                PujckaCelkem = null;
+            }
+            else
+            {
+                // we need to refresh values (in case something was changed)
+                Rozhodnuti.ForEach(r => r.RecalculateCerpano());
+
+                DotaceCelkem = Rozhodnuti.Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
+                PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka).Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
+            }
+         
         }
 
     }

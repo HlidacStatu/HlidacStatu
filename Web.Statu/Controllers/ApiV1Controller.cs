@@ -590,8 +590,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [Authorize(Roles = "NasiPoliticiAdmin")]
-        public ActionResult AddInfo(string q, int t)
+        public ActionResult AddInfo(string q, int? t)
         {
+            if (!t.HasValue)
+                return Json("", JsonRequestBehavior.AllowGet);
             List<string> result = new List<string>();
 
             //if (string.IsNullOrEmpty(q) || q.Length <2)
@@ -612,8 +614,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [Authorize(Roles = "NasiPoliticiAdmin")]
-        public ActionResult Organisations(string q, int t)
+        public ActionResult Organisations(string q, int? t)
         {
+            if (!t.HasValue)
+                return Json("", JsonRequestBehavior.AllowGet);
             List<string> result = new List<string>();
 
             //if (string.IsNullOrEmpty(q) || q.Length <2)
