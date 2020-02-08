@@ -17,7 +17,7 @@ namespace HlidacStatu.Web.Controllers
         [ChildActionOnly]
         public ActionResult Report_child(int? id, string q, string page, string order, string chyby, 
             string ShowWatchdog, string IncludeNeplatne, string Zahajeny,string oblast, string cpv, 
-            string obdobi, string strana )
+            string obdobi, string strana, string dodavatelico)
         {
             ViewBag.NameOfView = this.RouteData.Values["nameOfView"];
             return View("Report_child", Util.ParseTools.ToInt(RouteData.Values["id"]?.ToString()) ?? 0);

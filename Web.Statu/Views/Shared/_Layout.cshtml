@@ -176,7 +176,7 @@
 
     </script>
 
-    
+
 </head>
 <body class="new-body">
     <div id="fb-root"></div>
@@ -220,7 +220,7 @@
         }
     }
 
-    <div class="header__navbar">
+    <div class="header__navbar hidden-print">
         <a href="/" class="logo">
             <svg width="46" height="46" viewBox="0 0 46 46">
                 <use xlink:href="/content/defs.svg#logo"></use>
@@ -294,11 +294,13 @@
 
     @if (IsSectionDefined("title"))
     {
-        @RenderSection("title", required: false)
+        <div class="hidden-print">
+            @RenderSection("title", required: false)
+        </div>
     }
     else
     {
-        <div class="header__content header__content--compact">
+        <div class="header__content header__content--compact  hidden-print">
             <!-- desktop menu items only -->
             <div class="navbar__level2">
                 <ul>
@@ -382,7 +384,7 @@
 
     @RenderSection("footerscripts", required: false)
 
-    
+
     <div id="dar-footer-msg">
         @*<div id="ad2" style="display:none;">
                 <div class="fund-list" style="display: block;">
