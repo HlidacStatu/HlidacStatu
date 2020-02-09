@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Number]
         public decimal? CerpanoCelkem { get; set; }
         [Nest.Boolean]
-        public bool JePujcka { get; set; }
+        public bool? JePujcka { get; set; }
         [Nest.Keyword]
         public string IcoPoskytovatele { get; set; }
         [Nest.Text]
@@ -28,7 +28,7 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         public void RecalculateCerpano()
         {
-            if (Cerpani.Count == 0)
+            if (Cerpani is null || Cerpani.Count == 0)
             {
                 CerpanoCelkem = null;
             }

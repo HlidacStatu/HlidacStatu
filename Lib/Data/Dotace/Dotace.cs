@@ -114,7 +114,7 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         private void CalculateTotals()
         {
-            if (Rozhodnuti.Count == 0)
+            if (Rozhodnuti is null || Rozhodnuti.Count == 0)
             {
                 DotaceCelkem = null;
                 PujckaCelkem = null;
@@ -125,7 +125,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Rozhodnuti.ForEach(r => r.RecalculateCerpano());
 
                 DotaceCelkem = Rozhodnuti.Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
-                PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka).Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
+                PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka.HasValue && r.JePujcka.Value).Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
             }
          
         }

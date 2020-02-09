@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Keyword]
         public string Id { get; set; }
         [Nest.Number]
-        public decimal CastkaSpotrebovana { get; set; }
+        public decimal? CastkaSpotrebovana { get; set; }
         [Nest.Number]
         public int? Rok { get; set; }
     }
