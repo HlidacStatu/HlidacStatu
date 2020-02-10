@@ -154,10 +154,11 @@ namespace HlidacStatu.Util
             {"pirati","Česká pirátská strana" },
             {"ceska strana socialne demokraticka","ČSSD" },
 
-            {"ano2011","ANO 2011" },
-            {"ano","ANO 2011" },
-            {"hnuti ano","ANO 2011" },
-            {"ANO 2011, o.s.","ANO 2011" },
+            {"ano2011","ANO" },
+            {"ano","ANO" },
+            {"hnuti ano","ANO" },
+            {"ANO 2011, o.s.","ANO" },
+            {"ANO 2011","ANO" },
 
             {"obcanska demokraticka strana","ODS" },
 
