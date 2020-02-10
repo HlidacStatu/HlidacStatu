@@ -493,7 +493,7 @@ text zpravy: {txt}";
             var fn = HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha);
             if (HlidacStatu.Lib.OCR.DocTools.HasPDFHeader(fn))
             {
-                return File(fn, "application/pdf",string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? $"{model.Id}_smlouva.pdf" : priloha.nazevSouboru);
+                return File(fn, "application/pdf", string.IsNullOrWhiteSpace(priloha.nazevSouboru) ? $"{model.Id}_smlouva.pdf" : priloha.nazevSouboru);
             }
             else
                 return File(fn,
@@ -1131,7 +1131,7 @@ text zpravy: {txt}";
                     , this.Request.UserHostAddress
                     , "General"
                     , res.IsValid ? "valid" : "invalid"
-                    , q,null);
+                    , q, null);
 
             if (System.Diagnostics.Debugger.IsAttached ||
                 Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
@@ -1303,14 +1303,14 @@ text zpravy: {txt}";
                     viewName = "ImageBannerCore16x9_social";
             }
 
-            return View(viewName, new ImageBannerCoreData() { title = title, subtitle = subtitle, body = body, footer = footer, img = img, color = color  });
+            return View(viewName, new ImageBannerCoreData() { title = title, subtitle = subtitle, body = body, footer = footer, img = img, color = color });
         }
 
         //#if (!DEBUG)
         //        [OutputCache(VaryByParam = "id;v;t;st;b;f;img;rat;res;d;embed", Duration = 60 * 60 * 2)]
         //#endif
         [ValidateInput(false)]
-        public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1200x628")
+        public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1200x628", string col = "")
         {
             string mainUrl = this.Request.Url.Scheme + "://" + this.Request.Url.Host;
             if (System.Diagnostics.Debugger.IsAttached)
@@ -1385,6 +1385,7 @@ text zpravy: {txt}";
                     + "&body=" + System.Net.WebUtility.UrlEncode(b)
                     + "&footer=" + System.Net.WebUtility.UrlEncode(f)
                     + "&img=" + System.Net.WebUtility.UrlEncode(img)
+                    + "&color=" + col
                     + "&ratio=" + rat;
                 v = url;
             }
@@ -1402,7 +1403,7 @@ text zpravy: {txt}";
                     socialHtml = System.Net.WebUtility.HtmlDecode(
                         HlidacStatu.Util.ParseTools
                         .GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_html\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
-                        .OrderByDescending(o=>o.Length).FirstOrDefault()
+                        .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                     socialFooter = System.Net.WebUtility.HtmlDecode(
                         HlidacStatu.Util.ParseTools.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_footer\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
@@ -1426,6 +1427,7 @@ text zpravy: {txt}";
                         + "&body=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.HtmlDecode(socialHtml))
                         + "&footer=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.HtmlDecode(socialFooter))
                         + "&img=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.HtmlDecode(socialFooterImg))
+                        + "&color=" + col
                         + "&ratio=" + rat;
             }
 
@@ -1439,16 +1441,16 @@ text zpravy: {txt}";
                 {
                     string[] webShotServiceUrls = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url")
                         ?.Split(';')
-                        ?.Where(m=>!string.IsNullOrEmpty(m))
+                        ?.Where(m => !string.IsNullOrEmpty(m))
                         ?.ToArray();
 
-                    if (webShotServiceUrls==null || webShotServiceUrls?.Length == null || webShotServiceUrls?.Length == 0)
-                        webShotServiceUrls = new [] {"http://127.0.0.1:9090"};
+                    if (webShotServiceUrls == null || webShotServiceUrls?.Length == null || webShotServiceUrls?.Length == 0)
+                        webShotServiceUrls = new[] { "http://127.0.0.1:9090" };
 
                     var webShotServiceUrl = webShotServiceUrls[HlidacStatu.Util.Consts.Rnd.Next(webShotServiceUrls.Length)];
 
                     //string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
-                    string scr = webShotServiceUrl + "/screenshot?vp_width=1920&vp_height=1080&url=" 
+                    string scr = webShotServiceUrl + "/screenshot?vp_width=1920&vp_height=1080&url="
                         + System.Net.WebUtility.UrlEncode(url);
 
                     if (Request.QueryString["refresh"] == "1")
