@@ -6,7 +6,7 @@
     string height = "1080px";
 
     string defaultColor = "blue-dark";
-    string[] colors = new string[] { "blue-dark", "blue-light", "green", "orange","orange-invert", "orange-light", "red-dark" };
+    string[] colors = new string[] { "blue-dark", "blue-light", "green", "orange", "orange-invert", "orange-light", "red-dark" };
     if (!colors.Contains(Model.color))
     {
         Model.color = defaultColor;
@@ -141,22 +141,46 @@
 </head>
 <body style="width:@width;height:@height;background:url(/Content/Img/bublina-banner-16x9-@(Model.color).png) no-repeat;">
 
-
-    <div class="jtextfill" style="position: absolute;top: 165px;left:170px;width: 1570px;height: 530px;
+    @if (!string.IsNullOrEmpty(Model.title))
+    {
+        <div class="jtextfill" style="position: absolute;top: 125px;left:160px;width: 1600px;height: 105px;
 /*background-color:rgba(222,222,222,0.7);*/
 ">
+            <span class="mytxt">
+                    <h2>@Html.Raw(Model.title)</h2>
+                    <hr class="title" />
+            </span>
+        </div>
+        <div class="jtextfill" style="position: absolute;top: 245px;left:160px;width: 1600px;height: 500px;
+/*background-color:rgba(0,222,222,0.7);*/
+">
 
-        <div class="mytxt">
-            @if (!string.IsNullOrEmpty(Model.title))
-            {
-                <h2>@Html.Raw(Model.title)</h2>
-                <hr class="title"/>
-            }
-            @Html.Raw(Model.body)
+            <span class="mytxt">
+                @Html.Raw(Model.body)
+            </span>
+
         </div>
 
-    </div>
+    }
+    else
+    {
 
+
+        <div class="jtextfill" style="position: absolute;top: 125px;left:170px;width: 1570px;height: 600px;
+background-color:rgba(222,222,222,0.7);
+">
+
+            <span class="mytxt">
+                @if (!string.IsNullOrEmpty(Model.title))
+                {
+                    <h2>@Html.Raw(Model.title)</h2>
+                    <hr class="title" />
+                }
+                @Html.Raw(Model.body)
+            </span>
+
+        </div>
+    }
 
     @{
         int footer_left = 290;

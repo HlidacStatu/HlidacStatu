@@ -37,6 +37,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public Template searchResultTemplate { get; set; }
         public Template detailTemplate { get; set; }
 
+        public string defaultOrderBy { get; set; } = null;
+
         public const string DbCreatedLabel = "Datumu importu do db";
         
         string[,] _orderList = new string[,] { { DbCreatedLabel, "DbCreated" } };
