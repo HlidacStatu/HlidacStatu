@@ -460,7 +460,7 @@
         <th>IČO příjemce</th>
         <th>Název projektu</th>
         <th>Datum podpisu</th>
-        <th>Částka</th>
+        <th>Celková částka</th>
         <th></th>
     </tr>
 }
@@ -475,9 +475,9 @@
     </td>
     <td class="text-nowrap">
         
-        @(string.IsNullOrWhiteSpace(item.Prijemce.JmenoPrijemce) ?
+        @(string.IsNullOrWhiteSpace(item.Prijemce.Jmeno) ?
                     item.Prijemce.ObchodniJmeno :
-                    item.Prijemce.JmenoPrijemce)
+                    item.Prijemce.Jmeno)
     </td>
     <td>
         @if(item.Prijemce.Ico != "00000000")

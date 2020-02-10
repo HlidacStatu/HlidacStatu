@@ -28,9 +28,9 @@
         <tr>
             <th>Příjemce dotace</th>
             <td>
-                @(string.IsNullOrWhiteSpace(Model.Prijemce.JmenoPrijemce) ? 
+                @(string.IsNullOrWhiteSpace(Model.Prijemce.Jmeno) ? 
                     Model.Prijemce.ObchodniJmeno : 
-                    Model.Prijemce.JmenoPrijemce)
+                    Model.Prijemce.Jmeno)
             </td>
         </tr>
         <tr>
@@ -81,42 +81,68 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Datum rozhodnutí</th>
+                <th>Rok</th>
                 <th>Požadovaná částka</th>
                 <th>Částka rozhodnutá</th>
                 <th>Je půjčkou</th>
                 <th>Zdroj financí</th>
                 <th>Poskytovatel financí</th>
-                <th>IČO poskytovatele</th>
+                <th>Čerpáno celkem</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var rozhodnuti in Model.Rozhodnuti)
+            @foreach (var rozhodnuti in Model.Rozhodnuti.OrderBy(r => r.Rok))
             {
-            <tr>
-                <td>
-                    @(rozhodnuti.Datum?.ToString("dd.MM.yyyy"))
-                </td>
-                <td class="text-nowrap text-right">
-                    @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaPozadovana)
-                </td>
-                <td class="text-nowrap text-right">
-                    @HlidacStatu.Util.RenderData.NicePrice((decimal)rozhodnuti.CastkaRozhodnuta)
-                </td>
-                <td>
-                    @(@rozhodnuti.JePujcka ? "ano" : "ne")
-                </td>
-                <td>
-                    @(string.IsNullOrWhiteSpace(rozhodnuti.ZdrojFinanci) ? "ČR" : rozhodnuti.ZdrojFinanci)
-                </td>
-                <td>
-                    @rozhodnuti.NazevPoskytovatele
-                </td>
-                <td>
-                    @rozhodnuti.IcoPoskytovatele
-                </td>
+                <tr>
+                    <td>
+                        @rozhodnuti.Rok
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaPozadovana ?? 0)
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaRozhodnuta ?? 0)
+                    </td>
+                    <td>
+                        @(rozhodnuti.JePujcka.HasValue && rozhodnuti.JePujcka.Value ? "ano" : "ne")
+                    </td>
+                    <td>
+                        @(rozhodnuti.ZdrojFinanci)
+                    </td>
+                    <td>
+                        @rozhodnuti.Poskytovatel
+                    </td>
+                    <td class="text-nowrap text-right">
+                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
+                    </td>
 
-            </tr>
+                </tr>
+                if (rozhodnuti?.Cerpani != null)
+                {
+                <tr>
+                    <td>Čerpáno</td>
+                    <td>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Rok</th>
+                                    <th>Částka</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cerpani in rozhodnuti.Cerpani.OrderBy(c=> c.Rok))
+                                {
+                                    <tr>
+                                        <td>@cerpani.Rok</td>
+                                        <td class="text-nowrap text-right">@HlidacStatu.Util.RenderData.NicePrice(cerpani.CastkaSpotrebovana ?? 0)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                }
+
             }
         </tbody>
     </table>
