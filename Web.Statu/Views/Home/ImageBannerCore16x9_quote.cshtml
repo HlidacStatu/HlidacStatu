@@ -4,6 +4,44 @@
     Layout = "";
     string width = "1920px";
     string height = "1080px";
+
+    string defaultColor = "blue-dark";
+    string[] colors = new string[] { "blue-dark", "blue-light", "green", "orange","orange-invert", "orange-light", "red-dark" };
+    if (!colors.Contains(Model.color))
+    {
+        Model.color = defaultColor;
+    }
+    string accentColor = "#F6C074";
+    string textColor = "#FFFFFF";
+
+
+    switch (Model.color)
+    {
+        case "blue-dark":
+        case "green":
+        case "red-dark":
+        case "blue-light":
+            accentColor = "#F6C074";
+            textColor = "#FFFFFF";
+
+            break;
+        case "orange-invert":
+            accentColor = "#000000";
+            textColor = "#FFFFFF";
+            break;
+        case "orange":
+            accentColor = "#FFFFFF";
+            textColor = "#000000";
+            break;
+        case "orange-light":
+            accentColor = "#003688";
+            textColor = "#000000";
+
+            break;
+
+        default:
+            break;
+    }
 }
 
 <!DOCTYPE html>
@@ -12,18 +50,110 @@
     <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
     <script src="~/Scripts/jquery-1.11.3.min.js"></script>
     <script src="~/Scripts/textFit.min.js"></script>
-    <link rel='stylesheet' href='~/Content/socialBanner.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
+    <style>
+
+        body, p, div, span {
+            font-family: 'Cabin', sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0;
+            padding: 0;
+            white-space: nowrap
+        }
+
+        .text-info {
+        }
+
+        .text-warning {
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+
+        p {
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+            li:before {
+                content: "●";
+                display: inline-block;
+                margin-left: 0;
+                width: 1.3em;
+                color: @textColor;
+            }
+
+
+        .mytxt {
+            margin: 0;
+            padding: 0;
+            color: @textColor;
+        }
+
+            .mytxt ul {
+                position: relative;
+                list-style: none;
+                margin-left: 0;
+                padding-left: 1.2em;
+            }
+
+                .mytxt ul li:before {
+                    content: "●";
+                    position: absolute;
+                    left: 0;
+                }
+
+            .mytxt b {
+                font-weight: 700;
+                color: @accentColor;
+            }
+
+            .mytxt strong {
+                font-style: normal;
+                font-weight: 700;
+            }
+
+            .mytxt i {
+                font-style: italic;
+            }
+
+            .mytxt hr.title {
+            border:2px solid @textColor; padding:0;margin:15px 0 20px 0;
+
+            }
+        .picture {
+            width: 110px;
+            height: 110px;
+            background-size: cover;
+            background-position: center center;
+            border-radius: 60px;
+            position: absolute;
+        }
+    </style>
 </head>
-<body style="width:@width;height:@height;background:url(/Content/Img/bublina-banner-16x9.png) no-repeat;">
+<body style="width:@width;height:@height;background:url(/Content/Img/bublina-banner-16x9-@(Model.color).png) no-repeat;">
 
 
     <div class="jtextfill" style="position: absolute;top: 165px;left:170px;width: 1570px;height: 530px;
 /*background-color:rgba(222,222,222,0.7);*/
 ">
 
-        <span class="mytxt">
-            @Html.Raw((string.IsNullOrEmpty(Model.title) ? "" : Model.title + "<br/>") + Model.body)
-        </span>
+        <div class="mytxt">
+            @if (!string.IsNullOrEmpty(Model.title))
+            {
+                <h2>@Html.Raw(Model.title)</h2>
+                <hr class="title"/>
+            }
+            @Html.Raw(Model.body)
+        </div>
 
     </div>
 

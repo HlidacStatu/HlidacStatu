@@ -1277,12 +1277,13 @@ text zpravy: {txt}";
             public string body { get; set; }
             public string footer { get; set; }
             public string img { get; set; }
+            public string color { get; set; }
         }
 
 
         [ValidateInput(false)]
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None, VaryByParam = "embed")]
-        public ActionResult ImageBannerCore(string id, string title, string subtitle, string body, string footer, string img, string ratio = "16x9")
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public ActionResult ImageBannerCore(string id, string title, string subtitle, string body, string footer, string img, string ratio = "16x9", string color = "blue-dark")
         {
             id = id ?? "social";
 
@@ -1302,7 +1303,7 @@ text zpravy: {txt}";
                     viewName = "ImageBannerCore16x9_social";
             }
 
-            return View(viewName, new ImageBannerCoreData() { title = title, subtitle = subtitle, body = body, footer = footer, img = img });
+            return View(viewName, new ImageBannerCoreData() { title = title, subtitle = subtitle, body = body, footer = footer, img = img, color = color  });
         }
 
         //#if (!DEBUG)
