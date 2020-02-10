@@ -27,5 +27,17 @@ namespace HlidacStatu.Lib.Data.Dotace
             }
         }
 
+        /// <summary>
+        /// returns true if some error ocurred
+        /// </summary>
+        /// <param name="dotace"></param>
+        /// <returns></returns>
+        public bool BulkSave(List<Dotace> dotace)
+        {
+            var result = _esClient.IndexMany<Dotace>(dotace);
+
+            return result.Errors;
+        }
+
     }
 }

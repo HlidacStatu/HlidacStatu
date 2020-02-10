@@ -112,7 +112,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         }
 
 
-        private void CalculateTotals()
+        public void CalculateTotals()
         {
             if (Rozhodnuti is null || Rozhodnuti.Count == 0)
             {
