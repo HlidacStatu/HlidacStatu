@@ -15,6 +15,8 @@ namespace DotaceLoader
 
             //string sqlQuery = @"Select * from export.dotacejson;";
 
+            var dotaceService = new DotaceService();
+
             string sqlCursor = @"DECLARE export_cur CURSOR FOR Select * from export.dotacejson;";
             using (var connection = new NpgsqlConnection(connectionString))
             {
@@ -32,6 +34,8 @@ namespace DotaceLoader
                             break;
                         }
 
+                        var dotaceList = new List<Dotace>();
+
                         foreach (var record in dotaceExport)
                         {
                             string constructedId = $"{record.NazevZdroje}-{record.IdDotace}";
@@ -42,7 +46,16 @@ namespace DotaceLoader
                             dotace.Prijemce.Ico = NormalizeIco(dotace.Prijemce.Ico);
                             dotace.Hash = record.Hash;
 
-                            dotace.Save();
+                            dotace.CalculateTotals();
+
+                            dotaceList.Add(dotace);
+                        }
+
+                        bool anyErrorDuringImport = dotaceService.BulkSave(dotaceList);
+
+                        if (anyErrorDuringImport)
+                        {
+                            System.Console.WriteLine($"Error during import.");
                         }
 
                     }
