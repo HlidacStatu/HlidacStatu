@@ -28,9 +28,9 @@
         <tr>
             <th>Příjemce dotace</th>
             <td>
-                @(string.IsNullOrWhiteSpace(Model.Prijemce.Jmeno) ? 
-                    Model.Prijemce.ObchodniJmeno : 
-                    Model.Prijemce.Jmeno)
+                @(string.IsNullOrWhiteSpace(Model.Prijemce.ObchodniJmeno) ?
+                    Model.Prijemce.Jmeno :
+                    Model.Prijemce.ObchodniJmeno)
             </td>
         </tr>
         <tr>
@@ -41,7 +41,19 @@
                     <a href="/dotace/hledat?q=ico:@Model.Prijemce.Ico" title="Vyhledat všechny dotace pro tento subjekt">@Model.Prijemce.Ico</a>
                 }
             </td>
-            </tr>
+        </tr>
+        <tr>
+            <th>Obec příjemce</th>
+            <td>
+                @(Model.Prijemce.Obec)
+            </td>
+        </tr>
+        <tr>
+            <th>Okres příjemce</th>
+            <td>
+                @(Model.Prijemce.Okres)
+            </td>
+        </tr>
         <tr>
             <th>Kód projektu</th>
             <td>@Model.KodProjektu</td>
@@ -53,6 +65,14 @@
         <tr>
             <th>Název projektu</th>
             <td>@Model.NazevProjektu</td>
+        </tr>
+        <tr>
+            <th>Název programu</th>
+            <td>@Model.Program.Nazev</td>
+        </tr>
+        <tr>
+            <th>Kód programu</th>
+            <td>@Model.Program.Kod</td>
         </tr>
         <tr>
             <th>Datum podpisu</th>

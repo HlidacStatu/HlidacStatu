@@ -474,10 +474,9 @@
         }
     </td>
     <td class="text-nowrap">
-        
-        @(string.IsNullOrWhiteSpace(item.Prijemce.Jmeno) ?
-                    item.Prijemce.ObchodniJmeno :
-                    item.Prijemce.Jmeno)
+        @(string.IsNullOrWhiteSpace(item.Prijemce.ObchodniJmeno) ?
+                    item.Prijemce.Jmeno :
+                    item.Prijemce.ObchodniJmeno)
     </td>
     <td>
         @if(item.Prijemce.Ico != "00000000")
