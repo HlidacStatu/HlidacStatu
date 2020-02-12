@@ -77,23 +77,24 @@
 
 
             @{
-                        HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult data = null;
-                        try
-                        {
-                            //new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { Q="*", Page=1, PageSize = 5, Order = "DbCreated Desc" });
-                            data = Model.SearchDataRaw("*", 1, 5, "DbCreated desc");
+                HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult data = null;
+                try
+                {
+                    string order = string.IsNullOrWhiteSpace(Model.Registration().defaultOrderBy) ? "DbCreated desc" : Model.Registration().defaultOrderBy;
+                    //new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { Q="*", Page=1, PageSize = 5, Order = "DbCreated Desc" });
+                    data = Model.SearchDataRaw("*", 1, 5,  order);
 
-                            if (Model.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
-                            {
-                                var results = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
-                                results.Total = data.Total;
-                                results.Page = data.Page;
-                                results.Q = data.Q;
-                                results.Result = data.Result
-                                    .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
-                                    .ToArray();
+                    if (Model.Registration()?.searchResultTemplate?.IsFullTemplate() == true)
+                    {
+                        var results = new HlidacStatu.Lib.Data.External.DataSets.Registration.Template.SearchTemplateResults();
+                        results.Total = data.Total;
+                        results.Page = data.Page;
+                        results.Q = data.Q;
+                        results.Result = data.Result
+                            .Select(s => { dynamic d = Newtonsoft.Json.Linq.JObject.Parse(s.Item2); return d; })
+                            .ToArray();
 
-                                var html = Model.Registration().searchResultTemplate.Render(Model, results, data.Q);
+                        var html = Model.Registration().searchResultTemplate.Render(Model, results, data.Q);
                                 @Html.Raw("<h4>Poslední záznamy v databázi</h4><p>" + html + "</p>")
                             }
                             else

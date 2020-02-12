@@ -169,56 +169,71 @@
 
 
                 <hr />
+                <hr />
                 <h3>Custom quote</h3>
                 <div class="row">
                     <div class="col-xs-6">
-
+                        <h3>Tipy</h3>
                         <h4>uvozovky: „ … “ </h4>
-                        <h4>&lt;b&gt;<b style="color:#E0A514">tučně oranžová</b>&lt;/b&gt; &nbsp; &lt;i&gt;<i>tučně</i>&lt;/i&gt;</h4>
+                        <h4>
+                            &lt;b&gt;<b style="color:#E0A514">tučně barevně zvýrazněný</b>&lt;/b&gt;
+                            <br /> &lt;strong&gt;<b>tučně</b>&lt;/strong&gt;
+                            <br /> &lt;i&gt;<i>kurzívou</i>&lt;/i&gt;
+                        </h4>
+                        <hr style="width:100px" />
                         @*/SocialBanner?title=OSTRAVA+AIRPORT+MULTIMODAL+PARK+s.r.o.&body=%E2%97%8F+V+roce+%3Cb%3E2018%3C%2Fb%3E+uzav%C5%99ela+firma+4+smlouvy+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++20+115+524+K%C4%8D%22%3E20%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.%3Cbr%2F%3E%E2%97%8F+Mezi+lety+%3Cb%3E2017-18%3C%2Fb%3E+do%C5%A1lo+k+%3Cb%3Epoklesu+zak%C3%A1zek+o%26nbsp%3B-87%2C92+%25%3C%2Fb%3E+v%26nbsp%3BK%C4%8D+.%3Cbr%2F%3E%E2%97%8F+V+%3Cb%3E2018+utajila%3C%2Fb%3E+hodnotu+kontraktu+u%26nbsp%3Bjedn%C3%A9+smlouvy%2C+co%C5%BE+je+celkem+%3Cb%3E25%2C00+%25%3C%2Fb%3E+ze+v%C5%A1ech.%3Cbr%2F%3E%E2%97%8F+Od+roku+%3Cb%3E2016%3C%2Fb%3E+uzav%C5%99ela+firma+celkem+7+smluv+v%26nbsp%3Bregistru+smluv+za+%3Cb%3E%3Cspan+title%3D%22+++186+595+262+K%C4%8D%22%3E187%26nbsp%3Bmil.%26nbsp%3BK%C4%8D%3C%2Fspan%3E%3C%2Fb%3E.&footer=Soukrom%C3%A1+firma%2C+%C3%BAdaje+k+1.+1.+2019*@
-                    <form id="customQuoteForm" action="/socialbanner/quote" method="get" class="form-horizontal" onsubmit="updateImg(); return false;">
+                        <form id="customQuoteForm" action="/socialbanner/quote" method="get" class="form-horizontal" onsubmit="updateImg(); return false;">
 
-                        <div class="form-group-sm">
-                            <label for="jmeno" class="col-xs-2 control-label">Titulek (nepovinne)</label>
-                            <div class="col-xs-10">
-                                <input type="text" class="form-control--240" name="t" placeholder="titulek">
+                            <div class="form-group-sm">
+                                <label for="jmeno" class="col-xs-2 control-label">Titulek (nepovinne)</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control--240" name="t" placeholder="titulek">
+                                </div>
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="form-group-sm">
-                            <label for="prijmeni" class="col-xs-2 control-label">body</label>
-                            <div class="col-xs-10">
-                                <textarea cols="60" rows="10" class="form-control--240" name="b" placeholder="html"></textarea>
+                            <div class="clearfix"></div>
+                            <div class="form-group-sm">
+                                <label for="prijmeni" class="col-xs-2 control-label">body</label>
+                                <div class="col-xs-10">
+                                    <textarea cols="60" rows="10" class="form-control--240" name="b" placeholder="html"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="form-group-sm">
-                            <label for="prijmeni" class="col-xs-2 control-label">footer</label>
-                            <div class="col-xs-10">
-                                <input type="text" class="form-control--240" name="f" placeholder="text">
+                            <div class="clearfix"></div>
+                            <div class="form-group-sm">
+                                <label for="prijmeni" class="col-xs-2 control-label">footer</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control--240" name="f" placeholder="text">
+                                </div>
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="form-group-sm">
-                            <label for="jmeno" class="col-xs-2 control-label">sub footer</label>
-                            <div class="col-xs-10">
-                                <input type="text" class="form-control--240" name="st" placeholder="titulek">
+                            <div class="clearfix"></div>
+                            <div class="form-group-sm">
+                                <label for="jmeno" class="col-xs-2 control-label">sub footer</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control--240" name="st" placeholder="titulek">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label for="img" class="col-xs-2 control-label">img</label>
-                            <div class="col-xs-10">
-                                <input type="text" class="form-control--240" name="img" placeholder="img url">
+                            <div class="form-group-sm">
+                                <label for="img" class="col-xs-2 control-label">img</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control--240" name="img" placeholder="img url">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <label for="img" class="col-xs-2 control-label">pomer stran</label>
-                            <div class="col-xs-10" style="border-bottom: 1px solid gray;">
-                                <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
-                                <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                            <div class="form-group-sm">
+                                <label for="img" class="col-xs-2 control-label">pomer stran</label>
+                                <div class="col-xs-10" style="border-bottom: 1px solid gray;">
+                                    <select class="form-control--240" style="width:80px;" name="rat"><option value="16x9">16x9</option><option value="1x1">1x1</option></select>
+                                    <select class="form-control--240" style="width:80px;" name="col">
+                                        <option value="blue-dark">blue-dark</option>
+                                        <option value="blue-light">blue-light</option>
+                                        <option value="green">green</option>
+                                        <option value="orange">orange</option>
+                                        <option value="orange-invert">orange-invert</option>
+                                        <option value="orange-light">orange-light</option>
+                                        <option value="red-dark">red-dark</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-default btn-sm">Generuj</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
                         <script>
                             function updateImg() {
                                 var targetUrl = "/socialbanner/quote?" + $("#customQuoteForm").serialize();
