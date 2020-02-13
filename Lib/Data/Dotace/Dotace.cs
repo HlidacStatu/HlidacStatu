@@ -42,6 +42,8 @@ namespace HlidacStatu.Lib.Data.Dotace
         public List<Rozhodnuti> Rozhodnuti { get; set; }
         [Nest.Keyword]
         public string Hash { get; set; }
+        [Nest.Boolean]
+        public bool JeChyba { get; set; }
 
 
 
