@@ -1128,10 +1128,14 @@ namespace HlidacStatu.Lib.Data
 
                     if (res.Found)
                         return res.Source;
-                    else
+                    else if (res.IsValid)
                     {
                         ES.Manager.ESLogger.Warning("Cannot load Smlouva Id " + idVerze, res.OriginalException);
                         DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
+                    }
+                    else
+                    {
+                        ES.Manager.ESLogger.Error("Cannot load Smlouva Id " + idVerze);
                     }
 
                     return null;
