@@ -249,6 +249,31 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             properties.AddRange(getMappingType("", typeof(Nest.TextProperty), mapping));
             return properties;
         }
+        public IEnumerable<string> GetDatetimeMappingList()
+        {
+            List<string> properties = new List<string>();
+            var mapping = GetElasticMapping();
+            properties.AddRange(getMappingType("", typeof(Nest.DateProperty), mapping));
+            return properties;
+        }
+
+        public bool IsPropertyDatetime(string property)
+        {
+            var props = this.GetMappingList(property);
+            var isDt = true;
+            foreach (var p in props)
+            {
+                isDt = isDt && IsMappedPropertyDatetime(p);
+                if (isDt == false)
+                    return false;
+            }
+            return isDt;
+        }
+        public bool IsMappedPropertyDatetime(string mappedProperty)
+        { 
+            return GetDatetimeMappingList().Contains(mappedProperty);
+        }
+
         protected IEnumerable<string> getMappingType(string prefix, Type mappingType, IEnumerable<Nest.CorePropertyBase> props, string specName = null, string attrNameModif = "")
         {
             List<string> _props = new List<string>();
@@ -932,12 +957,20 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults: true);
                     var total = (int)first.Total;
                     var last = this.SearchData("*", 1, 1, "DbCreated desc");
-                    var minMax = Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
-                        "Obsahuje <b>jeden záznam</b>", "Obsahuje <b>{0} záznamy</b>", "Obsahuje <b>{0} záznamů</b>")
-                        + ", nejstarší byl vložen <b>"
-                        + (Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
-                        + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
-                        + "</b>.";
+                    string minMax = sCreated + " ";
+                    if (total == 0)
+                    {
+                        minMax += "Neobsahuje žádný záznam";
+                    }
+                    else
+                    {
+                        minMax += Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
+                            "Obsahuje <b>jeden záznam</b>", "Obsahuje <b>{0} záznamy</b>", "Obsahuje <b>{0} záznamů</b>")
+                            + ", nejstarší byl vložen <b>"
+                            + (Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + "</b>.";
+                    }
                     var stat = sCreated + " " + minMax;
                     f.Add(new InfoFact(stat, InfoFact.ImportanceLevel.Stat));
                     _infofacts = f.ToArray();

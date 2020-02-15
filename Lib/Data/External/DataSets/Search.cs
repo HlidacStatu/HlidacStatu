@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Aggregate((f, s) => f + " OR " + s);
             return $"( {q} )";
         }
-        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize, 
+        public static DataSearchResult SearchData(DataSet ds, string queryString, int page, int pageSize,
             string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
             bool exactNumOfResults = false)
         {
@@ -114,7 +114,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 };
         }
-        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize, 
+        public static DataSearchRawResult SearchDataRaw(DataSet ds, string queryString, int page, int pageSize,
             string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
             bool exactNumOfResults = false)
         {
@@ -157,7 +157,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 };
         }
 
-        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null, 
+        public static ISearchResponse<object> _searchData(DataSet ds, string queryString, int page, int pageSize, string sort = null,
             bool excludeBigProperties = true, bool withHighlighting = false, bool exactNumOfResults = false)
         {
             SortDescriptor<object> sortD = new SortDescriptor<object>();
@@ -222,8 +222,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
            );
 
             //fix Highlighting for large texts
-            if (withHighlighting 
-                && res.Shards != null 
+            if (withHighlighting
+                && res.Shards != null
                 && res.Shards.Failed > 0) //if some error, do it again without highlighting
             {
                 res = client
@@ -239,7 +239,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             }
 
-            Audit.Add(Audit.Operations.Search, "", "", "Dataset."+ds.DatasetId, res.IsValid ? "valid" : "invalid", queryString, null);
+            Audit.Add(Audit.Operations.Search, "", "", "Dataset." + ds.DatasetId, res.IsValid ? "valid" : "invalid", queryString, null);
 
             return res;
         }
@@ -257,13 +257,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             var osobaIdQuerypath = GetSpecificQueriesForDataset(ds, "OsobaId", "${q}", true);
 
-            //var osobaQP = "";
-            //if (!string.IsNullOrEmpty(icoQuerypath) && !string.IsNullOrEmpty(osobaIdQuerypathToIco))
-            //    osobaQP = $"({icoQuerypath} OR {osobaIdQuerypathToIco})";
-            //else if (!string.IsNullOrEmpty(icoQuerypath))
-            //    osobaQP = icoQuerypath;
-            //else if (!string.IsNullOrEmpty(osobaIdQuerypathToIco))
-            //    osobaQP = osobaIdQuerypathToIco;
+
 
             List<Lib.Searching.Rule> rules = new List<Lib.Searching.Rule> {
                     new Lib.Searching.Rule("id:",idQuerypath ),
@@ -276,7 +270,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     new Lib.Searching.Rule(simpleQueryOsobaPrefix+@"osobaid" + simpleQueryOsobaPrefix + @":(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ", osobaIdQuerypath,false),
                 };
 
-            List<IRule>irules = new List<IRule> {
+            List<IRule> irules = new List<IRule> {
                new TransformPrefixWithValue("id:",idQuerypath,null ),
                new OsobaId("osobaid:",icoQuerypath,addLastCondition:osobaIdQuerypath ),
                new Holding(null,icoQuerypath ),
@@ -284,6 +278,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                new TransformPrefixWithValue("ico:",icoQuerypath,null ),
             };
+
+            //datetime rules
+            foreach (var m in ds.GetDatetimeMappingList())
+            {
+                irules.Add(new TransformPrefix(m + ":", m + ":", "[<>]?[{\\[]+"));
+                irules.Add(new TransformPrefixWithValue(m + ":", m + ":[${q}T00:00:00+02:00 TO ${q}T00:00:00+02:00||+1d]", "\\d+"));
+
+            }
 
 
             // add searched prefixes
@@ -293,7 +295,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .ToArray();
 
             var qp = HlidacStatu.Lib.Searching.SplittingQuery.SplitQuery(query);
-            string[] foundPrefixes = qp.Parts.Select(m=>m.Prefix)
+            string[] foundPrefixes = qp.Parts.Select(m => m.Prefix)
                 .Where(m => !string.IsNullOrEmpty(m))
                 .Where(m => !existingPrefixes.Contains(m))
                 .ToArray();
@@ -301,24 +303,34 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             foreach (var fPref in foundPrefixes)
             {
                 var pref = fPref.Substring(0, fPref.Length - 1);
-                string qpref = GetSpecificQueriesForDataset(ds, pref, "${q}", false);
-                string qpref_keyw = GetSpecificQueriesForDataset(ds, pref, "${q}", true);
-                string prefPath = "";
-                if (!string.IsNullOrWhiteSpace(qpref)
-                    && !string.IsNullOrWhiteSpace(qpref_keyw)
-                    )
-                    prefPath = $"( {qpref} OR {qpref_keyw} )";
-                else if (!string.IsNullOrWhiteSpace(qpref)
-                    && string.IsNullOrWhiteSpace(qpref_keyw))
-                    prefPath = $" {qpref} ";
-                else if (!string.IsNullOrWhiteSpace(qpref_keyw)
-                    && string.IsNullOrWhiteSpace(qpref))
-                    prefPath = $" {qpref_keyw} ";
 
-                if (!string.IsNullOrWhiteSpace(prefPath))
+                if (ds.IsPropertyDatetime(pref))
                 {
-                    //rules.Add(new Lib.Search.Rule(fPref, prefPath));
-                    irules.Add(new TransformPrefixWithValue(fPref, prefPath, null));
+                    irules.Add(new TransformPrefixWithValue(pref + ":", pref + ":[${q} TO ${q}||+1d]", "\\d+"));
+                }
+                else
+
+                {
+
+                    string qpref = GetSpecificQueriesForDataset(ds, pref, "${q}", false);
+                    string qpref_keyw = GetSpecificQueriesForDataset(ds, pref, "${q}", true);
+                    string prefPath = "";
+                    if (!string.IsNullOrWhiteSpace(qpref)
+                        && !string.IsNullOrWhiteSpace(qpref_keyw)
+                        )
+                        prefPath = $"( {qpref} OR {qpref_keyw} )";
+                    else if (!string.IsNullOrWhiteSpace(qpref)
+                        && string.IsNullOrWhiteSpace(qpref_keyw))
+                        prefPath = $" {qpref} ";
+                    else if (!string.IsNullOrWhiteSpace(qpref_keyw)
+                        && string.IsNullOrWhiteSpace(qpref))
+                        prefPath = $" {qpref_keyw} ";
+
+                    if (!string.IsNullOrWhiteSpace(prefPath))
+                    {
+                        //rules.Add(new Lib.Search.Rule(fPref, prefPath));
+                        irules.Add(new TransformPrefixWithValue(fPref, prefPath, null));
+                    }
                 }
             }
 

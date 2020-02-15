@@ -17,7 +17,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     return fn_LinkTextDocumentWithHighlighting(value, datasetId, dataId, linkText);
                 }
-                public static string fn_LinkTextDocumentWithHighlighting(dynamic value, string datasetId, string dataId, string linkText = "",
+                public static string fn_LinkTextDocumentWithHighlighting(
+                    dynamic value, string datasetId, string dataId, string linkText = "",
                     IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null, string highlPrefix = "", string highlPostfix = "")
                 {
 
