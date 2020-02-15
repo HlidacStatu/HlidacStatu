@@ -304,34 +304,33 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             {
                 var pref = fPref.Substring(0, fPref.Length - 1);
 
-                if (ds.IsPropertyDatetime(pref))
+                //if (ds.IsPropertyDatetime(pref))
+                //{
+                //    //irules.Add(new TransformPrefixWithValue(pref + ":", pref + ":[${q} TO ${q}||+1d]", "\\d+"));
+                //}
+                //else
+                //{
+
+                string qpref = GetSpecificQueriesForDataset(ds, pref, "${q}", false);
+                string qpref_keyw = GetSpecificQueriesForDataset(ds, pref, "${q}", true);
+                string prefPath = "";
+                if (!string.IsNullOrWhiteSpace(qpref)
+                    && !string.IsNullOrWhiteSpace(qpref_keyw)
+                    )
+                    prefPath = $"( {qpref} OR {qpref_keyw} )";
+                else if (!string.IsNullOrWhiteSpace(qpref)
+                    && string.IsNullOrWhiteSpace(qpref_keyw))
+                    prefPath = $" {qpref} ";
+                else if (!string.IsNullOrWhiteSpace(qpref_keyw)
+                    && string.IsNullOrWhiteSpace(qpref))
+                    prefPath = $" {qpref_keyw} ";
+
+                if (!string.IsNullOrWhiteSpace(prefPath))
                 {
-                    irules.Add(new TransformPrefixWithValue(pref + ":", pref + ":[${q} TO ${q}||+1d]", "\\d+"));
+                    //rules.Add(new Lib.Search.Rule(fPref, prefPath));
+                    irules.Add(new TransformPrefixWithValue(fPref, prefPath, null));
                 }
-                else
-
-                {
-
-                    string qpref = GetSpecificQueriesForDataset(ds, pref, "${q}", false);
-                    string qpref_keyw = GetSpecificQueriesForDataset(ds, pref, "${q}", true);
-                    string prefPath = "";
-                    if (!string.IsNullOrWhiteSpace(qpref)
-                        && !string.IsNullOrWhiteSpace(qpref_keyw)
-                        )
-                        prefPath = $"( {qpref} OR {qpref_keyw} )";
-                    else if (!string.IsNullOrWhiteSpace(qpref)
-                        && string.IsNullOrWhiteSpace(qpref_keyw))
-                        prefPath = $" {qpref} ";
-                    else if (!string.IsNullOrWhiteSpace(qpref_keyw)
-                        && string.IsNullOrWhiteSpace(qpref))
-                        prefPath = $" {qpref_keyw} ";
-
-                    if (!string.IsNullOrWhiteSpace(prefPath))
-                    {
-                        //rules.Add(new Lib.Search.Rule(fPref, prefPath));
-                        irules.Add(new TransformPrefixWithValue(fPref, prefPath, null));
-                    }
-                }
+                //}
             }
 
 
