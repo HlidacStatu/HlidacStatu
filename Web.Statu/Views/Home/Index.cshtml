@@ -5,7 +5,7 @@
 
 
 @{
-        int PocetReportu = 24;
+    int PocetReportu = 24;
 
     ViewBag.Title = "Hlídač státu";
     ViewBag.SubTitle = "Hlídáme je, protože si to zaslouží!";
@@ -96,7 +96,8 @@
             </div>
             <div class="block-col ">
                 <p>
-                    Na Hlídači máme mnoho databází od nás i od komunity.</p>
+                    Na Hlídači máme mnoho databází od nás i od komunity.
+                </p>
             </div>
 
             <div class="block-col block-part">
@@ -112,6 +113,10 @@
                     <a href="/data/Index/vyjadreni-politiku" class="tag">
                         Vyjádření politiků na <i class="fab fa-facebook-square"></i> a <i class="fab fa-twitter-square"></i>
                         (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("vyjadreni-politiku").NumberOfRecords()))
+                    </a>
+                    <a href="/data/Index/jednani-vlady" class="tag newbadge top-right">
+                        Jednání vlády od 2007
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("jednani-vlady").NumberOfRecords()))
                     </a>
                     <a href="/data/Index/stenozaznamy-psp" class="tag">
                         Proslovy poslanců v Poslanecké sněmovně od 2008
@@ -137,6 +142,9 @@
                         Národní investiční plán 2019
                         (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("narodni-investicni-plan").NumberOfRecords()))
                     </a>
+                    <a href="/data/" class="tag">
+                        a další databáze
+                    </a>
 
                 </div>
             </div>
@@ -154,12 +162,24 @@
                     Hlídač kauz
                 </h2>
             </div>
+            <div class="block-tags">
+
+                @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Where(m => m.Date > new DateTime(2020, 1, 25)))
+                {
+                    <span class="tag">
+                        <a href="@wp.Link">
+                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered,55)
+                        </a>
+                    </span>
+
+                }
+            </div>
             <div class="block-col block-part">
                 <div class="block-subtitle" style="font-weight:bold;color:red;">
                     Předražená zakázka na elektronické dálniční známky
                 </div>
                 <div class="block-tags">
-                    
+
                     <span class="tag">
                         <a href="https://www.hlidacstatu.cz/texty/neobvykle-obvykla-cena-is-pro-dalnicni-znamky-podle-znalce-je-zisk-643-milionu-ze-zakazky-za-98-milionu-obvykly/">
                             Neobvykle obvyklá cena IS pro dálniční známky.
@@ -191,7 +211,7 @@
                             <span class="glyphicon glyphicon-share"></span>
                         </a>
                     </span>
-</div>
+                </div>
             </div>
 
 
