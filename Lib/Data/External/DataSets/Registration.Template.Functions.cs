@@ -276,6 +276,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return Devmasters.Core.Lang.Plural.GetWithZero(number, zeroText, oneText, twoText, moreText);
                 }
 
+                public static string fn_Pluralize(string text, string regex, string groupname)
+                {
+                    return HlidacStatu.Util.ParseTools.GetRegexGroupValue(text, regex, groupname);
+                }
 
                 public static bool fn_IsNullOrEmpty(dynamic text)
                 {
