@@ -282,8 +282,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             //datetime rules
             foreach (var m in ds.GetDatetimeMappingList())
             {
-                irules.Add(new TransformPrefix(m + ":", m + ":", "[<>]?[{\\[]+"));
-                irules.Add(new TransformPrefixWithValue(m + ":", m + ":[${q}T00:00:00+02:00 TO ${q}T00:00:00+02:00||+1d]", "\\d+"));
+                //irules.Add(new TransformPrefix(m + ":", m + ":", "[<>]?[{\\[]+"));
+                irules.Add(new TransformPrefixWithValue(m + ":", m + ":[${q}T00:00:00+02:00 TO ${q}T00:00:00+02:00||+1d]", "^\\d{2,4}-\\d{2}-\\d{2}"));
 
             }
 

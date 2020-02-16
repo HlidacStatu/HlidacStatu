@@ -8,6 +8,10 @@ namespace HlidacStatu.Web.Controllers
 {
     public partial class DataController : GenericAuthController
     {
+
+#if (!DEBUG)
+        [OutputCache(VaryByParam = "*", Duration = 60 * 5)]
+#endif
         public ActionResult Index(string id)
         {
             if (string.IsNullOrEmpty(id))
