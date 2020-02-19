@@ -52,10 +52,7 @@ HlidacStatu.Web.Framework.Report.GlobalStatistics.SmlouvyPodleCeny())
         UtilChart.SimpleBarChart(true, true, 400, "week_chart", "Týden", "Počet smluv",
             HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Week))
         );
-    model.Add("day", "Počet vložených smluv po dnech",
-        UtilChart.SimpleBarChart(true, true, 400, "day_chart", "Den", "Počet smluv",
-            HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Day))
-        );
+
 
 
 

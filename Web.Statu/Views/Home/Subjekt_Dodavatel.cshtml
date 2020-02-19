@@ -47,7 +47,9 @@ new  ReportDataSource.Column() { Name="IČO",
                         },
     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
 },
-new  ReportDataSource.Column() { Name="Počet smluv",CssClass ="number"},
+new  ReportDataSource.Column() { Name="Počet smluv",
+        OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64( s)); },
+CssClass ="number"},
 }
 );
 
@@ -64,7 +66,11 @@ new  ReportDataSource.Column() { Name="IČO",
                         },
     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
 },
-new  ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },CssClass ="number" },
+new  ReportDataSource.Column() { Name="Součet cen", 
+    HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
+    TextRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:false, shortFormat:true); },
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( ((double?)s) ?? 0 ); }    
+    ,CssClass ="number" }
        }
    );
 

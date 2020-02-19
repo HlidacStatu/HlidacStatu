@@ -883,7 +883,7 @@ text zpravy: {txt}";
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]>)s;
                             var rok2 = data.Value.OrderByDescending(o=>o.DatumDo.Value.Year).FirstOrDefault();
-                            return rok2?.DatumDo?.Year.ToString() ?? "";
+                            return HlidacStatu.Util.RenderData.OrderValueFormat(rok2?.DatumDo);
                             }
                 },
                 new ReportDataSource.Column() { Name = "Dary",
@@ -897,7 +897,7 @@ text zpravy: {txt}";
                                         },
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Firma, HlidacStatu.Lib.Data.FirmaEvent[]>)s;
-                            return data.Value.Sum(sum=>sum.AddInfoNum ?? 0).ToString();
+                            return HlidacStatu.Util.RenderData.OrderValueFormat(data.Value.Sum(sum=>sum.AddInfoNum ?? 0));
                             }
                 },
                 });
@@ -943,12 +943,12 @@ text zpravy: {txt}";
                     HtmlRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]>)s;
                             var rok2 = data.Value.OrderByDescending(o=> o.DatumDo?.Year ?? (DateTime.Now.Year+1)).FirstOrDefault();
-                            return rok2?.DatumDo?.Year.ToString() ?? "";
+                            return HlidacStatu.Util.RenderData.OrderValueFormat(rok2?.DatumDo);
                                         },
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]>)s;
                             var rok2 = data.Value.OrderByDescending(o=>o.DatumDo?.Year ?? (DateTime.Now.Year+1)).FirstOrDefault();
-                            return rok2?.DatumDo?.Year.ToString() ?? "";
+                            return HlidacStatu.Util.RenderData.OrderValueFormat(rok2?.DatumDo);
                             }
                 },
                 new ReportDataSource.Column() { Name = "Dary",
@@ -962,7 +962,7 @@ text zpravy: {txt}";
                                         },
                     OrderValueRender = (s) => {
                             KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]> data = (KeyValuePair<HlidacStatu.Lib.Data.Osoba, HlidacStatu.Lib.Data.OsobaEvent[]>)s;
-                            return data.Value.Sum(sum=>sum.AddInfoNum ?? 0).ToString();
+                            return HlidacStatu.Util.RenderData.OrderValueFormat(data.Value.Sum(sum=>sum.AddInfoNum ?? 0));
                             }
                 },
                 });

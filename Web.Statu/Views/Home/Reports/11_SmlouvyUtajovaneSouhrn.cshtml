@@ -32,26 +32,31 @@
                                     return string.Format(@"<a href='/subjekt/{0}'>{1}</a>", data.Item2, data.Item1);
                                 },
             TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
-        },
-        new ReportDataSource.Column() {
-            Name ="Počet smluv s utajeným dodavatelem",
-        },
-        new ReportDataSource.Column() {
-            Name ="Počet všech smluv",
-        },
-        new ReportDataSource.Column() {
-            Name ="% smluv s utajenými dodavateli",
-            HtmlRender = (s) => { return ((double)s).ToString("P1"); },
-            TextRender = (s) => { return ((double)s).ToString("P1"); }
-        },
-        }
-        );
+    },
+    new ReportDataSource.Column() {
+    Name ="Počet smluv s utajeným dodavatelem",
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64(s)); }
+    },
+    new ReportDataSource.Column() {
+    Name ="Počet všech smluv",
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64(s)); }
+    },
+    new ReportDataSource.Column() {
+    Name ="% smluv s utajenými dodavateli",
+    HtmlRender = (s) => { return ((double)s).ToString("P1"); },
+    TextRender = (s) => { return ((double)s).ToString("P1"); },
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double)s); }
+    },
+    }
+    );
 
-    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+    foreach (Nest.KeyedBucket<object>
+        val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
     {
         rdsPerIco.AddRow(
-            new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
-            val.DocCount.ToString(),
+        new Tuple<string, string>
+            (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+            val.DocCount,
             HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet,
             (double)val.DocCount / (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet
             );
@@ -60,54 +65,54 @@
 
     var model = new HlidacStatu.Lib.Render.ReportModel();
     model.Add("perIcoChart_d", "Plátci utajující nejvíce smluv",
-        UtilChart.SimpleBarChart(
-            false, false,
-            400,
-            "perIco_d",
-             "Úřady", "Počet smluv",
-            rdsPerIco.Filter(10))
-        );
+    UtilChart.SimpleBarChart(
+    false, false,
+    400,
+    "perIco_d",
+    "Úřady", "Počet smluv",
+    rdsPerIco.Filter(10))
+    );
     model.Add("perIcoTable","", rdsPerIco);
 
-}
+            }
 
-<div class="dontembed">
-    <p class="text-muted">Odběratelé skrývající smluvní strany s odkazem na obchodní tajemství</p>
-    <p><a href="/Report/10">Úplný seznam smluv skrývající smlouvní strany</a></p>
-</div>
-<div class="onlyembed">
-    <h3>Úřady nejvíce skrývající své dodavatele</h3>
-</div>
-<div class="row">
-    <div class="col-xs-12 dontembed">
-        @foreach (var q in model.GetQueue("perIcoChart_d"))
+            <div class="dontembed">
+                <p class="text-muted">Odběratelé skrývající smluvní strany s odkazem na obchodní tajemství</p>
+                <p><a href="/Report/10">Úplný seznam smluv skrývající smlouvní strany</a></p>
+            </div>
+            <div class="onlyembed">
+                <h3>Úřady nejvíce skrývající své dodavatele</h3>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 dontembed">
+                    @foreach (var q in model.GetQueue("perIcoChart_d"))
         {
-            @UtilChart.RenderReport(q, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [[3,'desc']],
-                'lengthChange': false,
-                'info': false,
-                }", q.Key)
+                    @UtilChart.RenderReport(q, @"{
+                         'language': {
+                            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                        },
+                        'order': [[3,'desc']],
+                        'lengthChange': false,
+                        'info': false,
+                        }", q.Key)
         }
 
 
-    </div>
-    <div class="col-xs-12">
-        @foreach (var q in model.GetQueue("perIcoTable"))
+                </div>
+                <div class="col-xs-12">
+                    @foreach (var q in model.GetQueue("perIcoTable"))
         {
-            @UtilChart.RenderReport(q, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [[3,'desc']],
-                'lengthChange': false,
-                'info': false,
-                }", q.Key)
+                    @UtilChart.RenderReport(q, @"{
+                         'language': {
+                            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                        },
+                        'order': [[3,'desc']],
+                        'lengthChange': false,
+                        'info': false,
+                        }", q.Key)
         }
-    </div>
-</div>
+                </div>
+            </div>
 
 
 

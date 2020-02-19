@@ -164,16 +164,17 @@ namespace HlidacStatu.Util
             else
                 return ShortNicePrice(number, valueIfZero, mena, html, showDecimal, MaxScale.Jeden);
         }
-        static string tableOrderValueFormat = "00000000000000#";
-        public static string OrderValueFormat(string n) { return n; }
-        public static string OrderValueFormat(double n) { return (n * 1000000).ToString(tableOrderValueFormat); }
-        public static string OrderValueFormat(decimal n) { return OrderValueFormat((double)n); }
-        public static string OrderValueFormat(byte n) { return OrderValueFormat((double)n); }
-        public static string OrderValueFormat(float n) { return OrderValueFormat((double)n); }
-        public static string OrderValueFormat(int n) { return OrderValueFormat((double)n); }
-        public static string OrderValueFormat(long n) { return OrderValueFormat((double)n); }
-        public static string OrderValueFormat(short n) { return OrderValueFormat((double)n); }
-
+        static string tableOrderValueFormat = "000000000000000#";
+        public static string OrderValueFormat(string n) { return n ; }
+        public static string OrderValueFormat(double? n) { return ((n ?? 0) * 1000000).ToString(tableOrderValueFormat); }
+        public static string OrderValueFormat(decimal? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(byte? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(float? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(int? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(long? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(short? n) { return OrderValueFormat((double?)n); }
+        public static string OrderValueFormat(DateTime? n) { return OrderValueFormat(n.HasValue ? n.Value.Ticks : 0); }
+        public static string OrderValueFormat(TimeSpan n) { return OrderValueFormat(n.Ticks); }
 
         public static MaxScale GetBestScale(IEnumerable<double> numbers) => GetBestScale(numbers.Cast<decimal>());
         public static MaxScale GetBestScale(IEnumerable<int> numbers) => GetBestScale(numbers.Cast<decimal>());

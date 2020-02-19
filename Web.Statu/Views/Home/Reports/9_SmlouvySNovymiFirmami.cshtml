@@ -31,7 +31,7 @@
                 return data.vznikIco.Value.ToString("dd.MM.yyyy");
 
             },
-            OrderValueRender = (s) => { return ((AnalysisCalculation.IcoSmlouvaMinMax)s).vznikIco.Value.Ticks.ToString(); }
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((AnalysisCalculation.IcoSmlouvaMinMax)s).vznikIco.Value); }
         },
         new  ReportDataSource.Column() {
             Name ="Rozdíl dnů",
@@ -44,7 +44,7 @@
                     ;
 
             },
-            OrderValueRender = (s) => { return ((AnalysisCalculation.IcoSmlouvaMinMax)s).days.Value.ToString(); }
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((AnalysisCalculation.IcoSmlouvaMinMax)s).days.Value); }
         },
         new  ReportDataSource.Column() {
             Name ="První smlouva s firmou podepsána dne",
@@ -53,7 +53,7 @@
                 //return data.minUzavreni.Value.ToString("dd.MM.yyyy");
                 return string.Format("{1}<br/><a href='/hledatsmlouvy?q=ico%3A{2}+AND+podepsano%3A%3C%3D{0}'>První smlouva</a>", data.minUzavreni.Value.ToString("yyyy-MM-dd"), data.minUzavreni.Value.ToString("d.M.yyyy"), data.ico);
                 },
-                OrderValueRender = (s) => { return ((AnalysisCalculation.IcoSmlouvaMinMax)s).minUzavreni.Value.Ticks.ToString(); }
+            OrderValueRender = (s) => { return  HlidacStatu.Util.RenderData.OrderValueFormat(((AnalysisCalculation.IcoSmlouvaMinMax)s).minUzavreni.Value.Ticks); }
         },
         new  ReportDataSource.Column() {
             Name ="Smluvní aktivita",
@@ -70,7 +70,7 @@
                 ;
             },
             OrderValueRender = (s) => {
-                return HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(((AnalysisCalculation.IcoSmlouvaMinMax)s).ico).Summary.CelkemCena.ToString();
+                return HlidacStatu.Util.RenderData.OrderValueFormat(HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(((AnalysisCalculation.IcoSmlouvaMinMax)s).ico).Summary.CelkemCena);
             }
         },
             };
