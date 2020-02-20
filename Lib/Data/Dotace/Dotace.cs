@@ -20,11 +20,9 @@ namespace HlidacStatu.Lib.Data.Dotace
         public string KodProjektu { get; set; }
         [Nest.Text]
         public string NazevProjektu { get; set; }
-        [Nest.Keyword]
-        public string UrlZdroje { get; set; }
-        [Nest.Keyword]
-        public string NazevZdroje { get; set; }
-
+        [Nest.Object]
+        public List<Zdroj> Zdroje { get; set; }
+        
         [Nest.Object]
         public Prijemce Prijemce { get; set; }
 
@@ -40,10 +38,9 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         [Nest.Object]
         public List<Rozhodnuti> Rozhodnuti { get; set; }
-        [Nest.Keyword]
-        public string Hash { get; set; }
-        [Nest.Boolean]
-        public bool JeChyba { get; set; }
+
+        [Nest.Text]
+        public string Chyba { get; set; }
 
 
 

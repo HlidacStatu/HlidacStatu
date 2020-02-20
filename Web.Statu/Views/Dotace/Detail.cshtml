@@ -23,6 +23,12 @@
     @Util.AddBookmark(this.User, Model)
     Detail dotace "@Model.GetNazevDotace()"
 </h2>
+
+@if( Model.Chyba != null)
+{
+  <code><i class="fas fa-exclamation-circle"></i> @Model.Chyba</code>
+}
+
 <table class="table table-new table-new--dotted">
     <tbody>
         <tr>
@@ -81,16 +87,24 @@
         <tr>
             <th>Celková částka</th>
             <td>
-                <p>@(HlidacStatu.Util.RenderData.NicePrice((decimal)Model.DotaceCelkem))</p>
-                @if (Model.PujckaCelkem > 0)
+                @if (Model.DotaceCelkem == null)
                 {
-                    <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
+                    <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
                 }
+                else
+                {
+                    <p>@HlidacStatu.Util.RenderData.NicePrice((decimal)Model.DotaceCelkem)</p>
+                    if (Model.PujckaCelkem != null && Model.PujckaCelkem > 0)
+                    {
+                        <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
+                    }
+                }
+                
             </td>
         </tr>
         <tr>
             <th>Zdroj</th>
-            <td><a href="@Model.UrlZdroje">@Model.UrlZdroje</a></td>
+            <td><a href="@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Url).FirstOrDefault())">@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Url).FirstOrDefault()) (@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Nazev).FirstOrDefault()))</a></td>
         </tr>
     </tbody>
 </table>
@@ -98,72 +112,71 @@
 
 <h3 style="margin-top:50px">Rozhodnutí</h3>
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Rok</th>
-                <th>Požadovaná částka</th>
-                <th>Částka rozhodnutá</th>
-                <th>Je půjčkou</th>
-                <th>Zdroj financí</th>
-                <th>Poskytovatel financí</th>
-                <th>Čerpáno celkem</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rozhodnuti in Model.Rozhodnuti.OrderBy(r => r.Rok))
-            {
+    @if (Model.Rozhodnuti != null)
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @rozhodnuti.Rok
-                    </td>
-                    <td class="text-nowrap text-right">
-                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaPozadovana ?? 0)
-                    </td>
-                    <td class="text-nowrap text-right">
-                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaRozhodnuta ?? 0)
-                    </td>
-                    <td>
-                        @(rozhodnuti.JePujcka.HasValue && rozhodnuti.JePujcka.Value ? "ano" : "ne")
-                    </td>
-                    <td>
-                        @(rozhodnuti.ZdrojFinanci)
-                    </td>
-                    <td>
-                        @rozhodnuti.Poskytovatel
-                    </td>
-                    <td class="text-nowrap text-right">
-                        @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
-                    </td>
-
+                    <th>Rok</th>
+                    <th>Požadovaná částka</th>
+                    <th>Částka rozhodnutá</th>
+                    <th>Je půjčkou</th>
+                    <th>Zdroj financí</th>
+                    <th>Poskytovatel financí</th>
+                    <th>Čerpáno celkem</th>
                 </tr>
-                if (rozhodnuti?.Cerpani != null)
+            </thead>
+            <tbody>
+                @foreach (var rozhodnuti in Model.Rozhodnuti.OrderBy(r => r.Rok))
                 {
-                <tr>
-                    <td>Čerpáno</td>
-                    <td>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Rok</th>
-                                    <th>Částka</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var cerpani in rozhodnuti.Cerpani.OrderBy(c=> c.Rok))
-                                {
-                                    <tr>
-                                        <td>@cerpani.Rok</td>
-                                        <td class="text-nowrap text-right">@HlidacStatu.Util.RenderData.NicePrice(cerpani.CastkaSpotrebovana ?? 0)</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                }
+                    <tr>
+                        <td>
+                            @rozhodnuti.Rok
+                        </td>
+                        <td class="text-nowrap text-right">
+                            @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaPozadovana ?? 0)
+                        </td>
+                        <td class="text-nowrap text-right">
+                            @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CastkaRozhodnuta ?? 0)
+                        </td>
+                        <td>
+                            @(rozhodnuti.JePujcka.HasValue && rozhodnuti.JePujcka.Value ? "ano" : "ne")
+                        </td>
+                        <td>
+                            @(rozhodnuti.ZdrojFinanci)
+                        </td>
+                        <td>
+                            @rozhodnuti.Poskytovatel
+                        </td>
+                        <td class="text-nowrap text-right">
+                            @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
+                        </td>
 
-            }
-        </tbody>
-    </table>
+                    </tr>
+                    if (rozhodnuti?.Cerpani != null)
+                    {
+                    <tr>
+                        <td></td>
+                        <td colspan="6">
+                            <p class="new-p--gray">
+                                <span>Čerpáno: </span>
+                                <span>
+                                    @string.Join(", ",
+                                        rozhodnuti.Cerpani.OrderBy(c => c.Rok)
+                                            .Select(c => $"{HlidacStatu.Util.RenderData.NicePrice(c.CastkaSpotrebovana ?? 0)} (v roce {c.Rok})"))
+                                </span>
+                                
+                            </p>
+                        </td>
+                    </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <code><i class="fas fa-exclamation-circle"></i> U této dotace neevidujeme žádné rozhodnutí</code>
+    }
 </div>

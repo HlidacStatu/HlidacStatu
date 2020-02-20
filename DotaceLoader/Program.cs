@@ -44,7 +44,6 @@ namespace DotaceLoader
                             Dotace dotace = JsonConvert.DeserializeObject<Dotace>(record.Data);
                             dotace.IdDotace = constructedId;
                             dotace.Prijemce.Ico = NormalizeIco(dotace.Prijemce.Ico);
-                            dotace.Hash = record.Hash;
 
                             //dotace.CalculateTotals(); moved to bulksave
 

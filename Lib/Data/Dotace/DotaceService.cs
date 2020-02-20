@@ -42,6 +42,11 @@ namespace HlidacStatu.Lib.Data.Dotace
 
             var result = _esClient.IndexMany<Dotace>(dotace);
 
+            if (result.Errors)
+            {
+                var a = result.DebugInformation;
+            }
+
             return result.Errors;
         }
 

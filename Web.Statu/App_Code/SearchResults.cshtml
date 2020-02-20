@@ -491,13 +491,20 @@
         @(item.DatumPodpisu?.Date.ToString("dd.MM.yyyy") ?? "Neznámé")
     </td>
     <td class="text-nowrap text-right">
-        @HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem)
-        
-        @if (item.PujckaCelkem > 0)
+        @if(item.DotaceCelkem == null)
         {
-            <br />
-            <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem) je půjčka</p>
+            <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
         }
+        else
+        {
+            @HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem)
+            if (item.PujckaCelkem != null && item.PujckaCelkem > 0)
+            {
+                <br />
+                <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem) je půjčka</p>
+            }
+        }
+        
     </td>
     <td class="text-nowrap">
         <a href="/dotace/detail/@item.IdDotace">Detail</a>
