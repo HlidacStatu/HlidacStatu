@@ -115,6 +115,19 @@ namespace HlidacStatu.Lib.Data
                 });
         }
 
+        public string CurrentPoliticalParty()
+        {
+            return Events(ev =>
+                    ev.Type == (int)OsobaEvent.Types.Politicka
+                    && (ev.AddInfo == "člen strany"
+                        || ev.AddInfo == "předseda strany"
+                        || ev.AddInfo == "místopředseda strany"
+                        ))
+                .OrderByDescending(ev => ev.DatumOd)
+                .Select(ev => ev.Organizace)
+                .FirstOrDefault();
+        }
+
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             List<OsobaEvent> events = new List<OsobaEvent>();

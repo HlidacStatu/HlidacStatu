@@ -40,7 +40,7 @@ namespace HlidacStatu.Web.Controllers
 	                         , FIRST_VALUE(oes.organizace) OVER(partition by oes.osobaid order by oes.datumod desc) Aktpolstr
 	                         , oec.pocet
                           from Osoba os
-                          left join OsobaEvent oes on os.InternalId = oes.OsobaId and oes.AddInfo = N'člen strany' and oes.Type = 7
+                          left join OsobaEvent oes on os.InternalId = oes.OsobaId and oes.AddInfo in (N'člen strany',N'předseda strany',N'místopředseda strany') and oes.Type = 7
                           left join (select COUNT(pk) pocet, OsobaId from OsobaEvent group by osobaid) oec on oec.OsobaId = os.InternalId
                          where os.Status = 3";
 
@@ -177,13 +177,6 @@ namespace HlidacStatu.Web.Controllers
                     bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidspravce:{o.NameId}"
                 };
 
-                string politickaStrana = o.Events(ev =>
-                                ev.Type == (int)OsobaEvent.Types.Politicka
-                                && ev.AddInfo == "člen strany")
-                            .OrderByDescending(ev => ev.DatumOd)
-                            .Select(ev => ev.Organizace)
-                            .FirstOrDefault();
-
                 var result = new
                 {
                     id = o.NameId,
@@ -203,7 +196,7 @@ namespace HlidacStatu.Web.Controllers
                     insolvencyCompany = insCompany,
                     source = o.GetUrl(false),
                     sponsor = sponzorstvi,
-                    currentParty = politickaStrana,
+                    currentParty = o.CurrentPoliticalParty(),
                     contacts = o.GetSocialContact()
                 };
 

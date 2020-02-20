@@ -59,34 +59,11 @@
             Name ="Strana/Hnutí",
             HtmlRender = (s) => {
                 Osoba o = (Osoba)s;
-                OsobaEvent oe = o.Events()
-                    .Where(m=>m.Type==(int)OsobaEvent.Types.VolenaFunkce && "poslanec".Equals(m.AddInfo, StringComparison.InvariantCultureIgnoreCase)) //tady by to sneslo lepší porovnání než textovou hodnotou
-                    .OrderByDescending(m=>m.DatumOd)
-                    .FirstOrDefault();
-                if (oe == null)
-                {
-                    return "";
-                }
-                else
-                {
-                    return oe.Organizace;
-                }
+                return o.CurrentPoliticalParty();
             },
             OrderValueRender = (s) => {
                 Osoba o = (Osoba)s;
-                OsobaEvent oe = o.Events()
-                    .Where(m=>m.Type==(int)OsobaEvent.Types.VolenaFunkce && "poslanec".Equals(m.AddInfo, StringComparison.InvariantCultureIgnoreCase))
-                    .OrderByDescending(m=>m.DatumOd)
-                    .FirstOrDefault();
-                if (oe == null)
-                {
-                    return "";
-                }
-                else
-                {
-                    return oe.Organizace;
-                }
-
+                return o.CurrentPoliticalParty();
             }
         },
         new ReportDataSource.Column() { Name="Angažovanost",
