@@ -46,7 +46,7 @@ namespace DotaceLoader
                             dotace.Prijemce.Ico = NormalizeIco(dotace.Prijemce.Ico);
                             dotace.Hash = record.Hash;
 
-                            dotace.CalculateTotals();
+                            //dotace.CalculateTotals(); moved to bulksave
 
                             dotaceList.Add(dotace);
                         }

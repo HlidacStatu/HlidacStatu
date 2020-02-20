@@ -34,6 +34,12 @@ namespace HlidacStatu.Lib.Data.Dotace
         /// <returns></returns>
         public bool BulkSave(List<Dotace> dotace)
         {
+            foreach (var d in dotace)
+            {
+                // fill in sums
+                d.CalculateTotals();
+            }
+
             var result = _esClient.IndexMany<Dotace>(dotace);
 
             return result.Errors;
