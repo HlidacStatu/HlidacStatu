@@ -82,51 +82,52 @@ HtmlRender = (s) => {
     System.Tuple<string,string> data = (System.Tuple<string,string>)s;
         return string.Format("<a href='/subjekt/{0}'>{1}</a>", data.Item2, data.Item1);
         },
-        TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
-            },
-            new  ReportDataSource.Column() {
-                Name ="První výskyt v Registru smluv",
-                HtmlRender = (s) => { return ((DateTime)s).ToString("dd.MM.yyyy"); },
-                OrderValueRender = (s) => { return ((DateTime)s).Ticks.ToString(); }
-             },
-            new  ReportDataSource.Column() { Name="Hodnota smluv",
-                HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
-                OrderValueRender = (s) => { return ((double)s).ToString("F0"); }
-            },
-               }
-               );
+        TextRender = (s) => { return ((System.Tuple<string,string>
+    )s).Item1.ToString(); }
+    },
+    new  ReportDataSource.Column() {
+    Name ="První výskyt v Registru smluv",
+    HtmlRender = (s) => { return ((DateTime)s).ToString("dd.MM.yyyy"); },
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((DateTime)s); }
+    },
+    new  ReportDataSource.Column() { Name="Hodnota smluv",
+    HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double)s)); }
+    },
+    }
+    );
     foreach (var val in items)
     {
-        rdsNewestComp.AddRow(
-        new Tuple<string, string>
-            (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(val.ico, true), val.ico),
-            val.datum,
-            val.sum
-            );
-    }
-
-    //chart
-
-
-    var model = new HlidacStatu.Lib.Render.ReportModel();
-    model.Add("newCompanies","", rdsNewestComp);
-
-}
-
-
-<div class="row">
-    <div class="col-xs-12">
-        @foreach (var q in model.GetQueue("newCompanies"))
-        {
-            @UtilChart.RenderReport(q, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [],
-                'lengthChange': false,
-                'info': false,
-                }", q.Key)
+    rdsNewestComp.AddRow(
+    new Tuple<string, string>
+        (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(val.ico, true), val.ico),
+        val.datum,
+        val.sum
+        );
         }
-    </div>
-</div>
+
+        //chart
+
+
+        var model = new HlidacStatu.Lib.Render.ReportModel();
+        model.Add("newCompanies","", rdsNewestComp);
+
+        }
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                @foreach (var q in model.GetQueue("newCompanies"))
+        {
+                @UtilChart.RenderReport(q, @"{
+                     'language': {
+                        'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                    },
+                    'order': [],
+                    'lengthChange': false,
+                    'info': false,
+                    }", q.Key)
+        }
+            </div>
+        </div>
 

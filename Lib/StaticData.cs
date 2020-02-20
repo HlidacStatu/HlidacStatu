@@ -89,7 +89,7 @@ namespace HlidacStatu.Lib
 
         public static Dictionary<string, string> CPVKody = new Dictionary<string, string>();
 
-        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Lib.Text.WordpressPost[]> LastBlogPosts = null;
+        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]> LastBlogPosts = null;
 
         public static Dictionary<string, Lib.Data.Firma.ZiskyZtraty> ZiskyZtraty = null;
 
@@ -889,7 +889,7 @@ namespace HlidacStatu.Lib
                 }
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - LastBlogPosts");
-                LastBlogPosts = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost[]>(
+                LastBlogPosts = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]>(
                     TimeSpan.FromHours(3), (obj) =>
                         {
                             try
@@ -899,7 +899,7 @@ namespace HlidacStatu.Lib
                                     string blogUrl = @"https://www.hlidacstatu.cz/texty/wp-json/wp/v2/posts";
                                     string response = webClient.DownloadString(blogUrl);
 
-                                    Lib.Text.WordpressPost[] posts = Newtonsoft.Json.JsonConvert.DeserializeObject<Lib.Text.WordpressPost[]>(response);
+                                    Lib.Text.WordpressPost.WpPost[] posts = Text.WordpressPost.WpPost.FromJson(response);
 
                                     return posts;
                                 }
@@ -907,7 +907,7 @@ namespace HlidacStatu.Lib
                             }
                             catch (Exception)
                             {
-                                return new Lib.Text.WordpressPost[] { };
+                                return new Lib.Text.WordpressPost.WpPost[] { };
                             }
                         }
                     );

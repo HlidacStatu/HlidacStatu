@@ -9,7 +9,7 @@
     ViewBag.Title = "" + Model.FullNameWithYear();
 
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
-        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType),ViewBag.param1
+        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.param1
         );
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, aktualnost);
@@ -45,9 +45,10 @@
             </thead>
 
             @foreach (var vPerIco in (ostat.SoukromeFirmy.Union(ostat.StatniFirmy))
-                .OrderByDescending(o => o.Value.BasicStatPerYear.Summary.CelkemCena)
-                .ThenByDescending(o => o.Value.BasicStatPerYear.Summary.Pocet)
-                )
+    .OrderByDescending(o => o.Value.BasicStatPerYear.Summary.CelkemCena)
+    .ThenByDescending(o => o.Value.BasicStatPerYear.Summary.Pocet)
+    .Where(o => o.Value.BasicStatPerYear.Summary.Pocet > 0)
+    )
             {
                 string ico = vPerIco.Value.Subject().ICO;
                 <tr>
@@ -79,6 +80,18 @@
                 </tr>
             }
         </table>
+
+        @{ int numBezSmluv = ostat.SoukromeFirmy
+                .Count(o => o.Value.BasicStatPerYear.Summary.Pocet == 0);
+        }
+        @if (numBezSmluv > 0)
+        {
+            <p>
+                @Model.FullName() se angažuje či angažoval
+                <b>@Devmasters.Core.Lang.Plural.Get(numBezSmluv, "v jedné firmě", "v dalších {0} firmách", "v dalších {0} společnostech")</b>,
+                které nemají žádné obchodní vztahy se státem (uložené v registru smluv).
+            </p>
+        }
 
     </div>
 </div>

@@ -641,7 +641,10 @@ namespace HlidacStatu.Web.Controllers
                     else
                     {
                         value.DbCreatedBy = null;
-                        return Content(Newtonsoft.Json.JsonConvert.SerializeObject(value) ?? "null", "application/json");
+                        return Content(
+                            Newtonsoft.Json.JsonConvert.SerializeObject(
+                                value, Request.QueryString["nice"]=="1" ? Formatting.Indented : Formatting.None
+                                ) ?? "null", "application/json");
                     }
                 }
                 catch (DataSetException)

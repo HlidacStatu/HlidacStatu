@@ -148,9 +148,9 @@
                 foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(5))
                 {
                     <dl>
-                        <dt><a href="@post.link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.title.rendered))</a></dt>
+                        <dt><a href="@post.Link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Title.Rendered))</a></dt>
                         <dd>
-                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.excerpt.rendered)), 130, "...")
+                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Excerpt.Rendered)), 130, "...")
                         </dd>
                     </dl>
                 }
@@ -271,9 +271,9 @@
                 foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(5))
                 {
                     <dl>
-                        <dt><a href="@post.link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.title.rendered))</a></dt>
+                        <dt><a href="@post.Link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Title.Rendered))</a></dt>
                         <dd>
-                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.excerpt.rendered)), 130, "...")
+                            @Devmasters.Core.TextUtil.ShortenText(Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Excerpt.Rendered)), 130, "...")
                         </dd>
                     </dl>
                 }

@@ -1194,7 +1194,7 @@ namespace HlidacStatu.Lib.Data
                            2, itemDelimeter: ", ");
                     var descr = $"<b>{this.FullNameWithYear()}</b>";
                     if (!string.IsNullOrEmpty(kdoje))
-                        descr += "," + kdoje + (kdoje.EndsWith(".") ? "" : ".");
+                        descr += "," + kdoje + (kdoje.EndsWith(". ") ? "" : ". ");
                     f.Add(new InfoFact(descr, InfoFact.ImportanceLevel.Summary));
 
                     var statDesc = "";
@@ -1205,7 +1205,7 @@ namespace HlidacStatu.Lib.Data
                             + $"tyto firmy získaly od státu od 2016 celkem "
                             + Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                             + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true)
-                            + ".";
+                            + ". ";
                     ;
 
                     if (statDesc.Length > 0)
@@ -1221,11 +1221,11 @@ namespace HlidacStatu.Lib.Data
                         decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;
 
                         f.Add(new InfoFact($"{this.FullName()} "
-                            + Devmasters.Core.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}", $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}")
+                            + Devmasters.Core.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}", $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}")
                             + $" sponzoroval{(this.Muz() ? "" : "a")} " +
-                            Devmasters.Core.Lang.Plural.Get(strany.Length, strany[0], "{0} polit. strany", "{0} polit. stran")
+                            Devmasters.Core.Lang.Plural.Get(strany.Length, "stranu " + strany[0], "{0} polit. strany", "{0} polit. stran")
                             + $" v&nbsp;celkové výši <b>{HlidacStatu.Util.RenderData.ShortNicePrice(celkem, html: true)}</b>. "
-                            + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}."
+                            + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
                             , InfoFact.ImportanceLevel.Medium)
                             );
 
@@ -1236,19 +1236,29 @@ namespace HlidacStatu.Lib.Data
                     {
                         if (ostat.BasicStatPerYear[rok].Pocet > 0)
                         {
-                            f.Add(new InfoFact(
-                                Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
-                                + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>."
-                                , InfoFact.ImportanceLevel.Medium)
-                                );
+                            string ss="";
+                            if (stat.BasicStatPerYear[rok].CelkemCena == 0)
+                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
+                                    + $" zakázky v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
+                            else
+                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
+                                        + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>. ";
+
+                            f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium));
                         }
                         else if (ostat.BasicStatPerYear[rok - 1].Pocet > 0)
                         {
-                            f.Add(new InfoFact(
-                                $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
+                            string ss = "";
+                            if (stat.BasicStatPerYear[rok].CelkemCena == 0)
+                                ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
                                 Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"jedné firmě, která v&nbsp;roce {rok - 1} získala", $"{{0}} firmách, které v&nbsp;roce {rok} získaly", $"{{0}} firmách, které v&nbsp;roce {rok - 1} získaly")
-                                + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>."
-                                , InfoFact.ImportanceLevel.Medium)
+                                + $" zakázky  v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
+                            else
+                                ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
+                                Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"jedné firmě, která v&nbsp;roce {rok - 1} získala", $"{{0}} firmách, které v&nbsp;roce {rok} získaly", $"{{0}} firmách, které v&nbsp;roce {rok - 1} získaly")
+                                + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
+
+                                f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium)
                                 );
                         }
                     }

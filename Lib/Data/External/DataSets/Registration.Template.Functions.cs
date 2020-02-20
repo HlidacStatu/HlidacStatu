@@ -17,7 +17,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     return fn_LinkTextDocumentWithHighlighting(value, datasetId, dataId, linkText);
                 }
-                public static string fn_LinkTextDocumentWithHighlighting(dynamic value, string datasetId, string dataId, string linkText = "",
+                public static string fn_LinkTextDocumentWithHighlighting(
+                    dynamic value, string datasetId, string dataId, string linkText = "",
                     IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null, string highlPrefix = "", string highlPostfix = "")
                 {
 
@@ -275,6 +276,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return Devmasters.Core.Lang.Plural.GetWithZero(number, zeroText, oneText, twoText, moreText);
                 }
 
+                public static string fn_GetRegexGroupValue(string text, string regex, string groupname)
+                {
+                    return HlidacStatu.Util.ParseTools.GetRegexGroupValue(text, regex, groupname);
+                }
 
                 public static bool fn_IsNullOrEmpty(dynamic text)
                 {

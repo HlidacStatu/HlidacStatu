@@ -112,7 +112,7 @@ return sout;
 OrderValueRender = (s) => {
 Osoba o = (Osoba)s;
 var sum = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).BasicStatPerYear.Summary.CelkemCena;
-return (sum).ToString(HlidacStatu.Util.Consts.enCulture);
+return HlidacStatu.Util.RenderData.OrderValueFormat(sum);
 }
 },
 new ReportDataSource.Column() { Name="Sponzor polit.stran",
@@ -126,10 +126,10 @@ return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:tru
 },
 OrderValueRender = (s) => {
 Osoba o = (Osoba)s;
-return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
+return HlidacStatu.Util.RenderData.OrderValueFormat(o.Sponzoring().Sum(m=>m.AddInfoNum)) ;
 }
 },
-   };
+           };
 
     ReportDataSource vlada2013tbl = new ReportDataSource(columns);
     ReportDataSource vlada2017tbl = new ReportDataSource(columns);

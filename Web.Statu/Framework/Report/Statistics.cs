@@ -54,7 +54,9 @@ namespace HlidacStatu.Web.Framework.Report
                         TextRender = (s) => { return ((DateTime)s).ToString(datumFormat); },
                         OrderValueRender = (s) => { return ((DateTime)s).Ticks.ToString(); }
                     },
-                    new ReportDataSource.Column() { Name="Počet smluv"},
+                    new ReportDataSource.Column() { Name="Počet smluv",
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double?)s); },
+                    },
                 }
             );
 
@@ -115,9 +117,13 @@ namespace HlidacStatu.Web.Framework.Report
                     TextRender = (s) => {
                                             DateTime dt = ((DateTime)s);
                                             return string.Format("Date.UTC({0}, {1}, {2})", dt.Year, dt.Month-1, dt.Day);
-                                        }
+                                        },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((DateTime)s); },
                 },
-                new ReportDataSource.Column() { Name="Součet cen", HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); } },
+                new ReportDataSource.Column() { Name="Součet cen", 
+                    HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double?)s); },
+                },
             });
 
             var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
@@ -228,7 +234,7 @@ namespace HlidacStatu.Web.Framework.Report
                 },
                 new ReportDataSource.Column() { Name="Součet cen", 
                     HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
-                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double?)s)??0); }
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double?)s); }
                 },
             }
                 ); ; ;
@@ -278,7 +284,7 @@ namespace HlidacStatu.Web.Framework.Report
                         Name ="% smluv",
                         TextRender = (s) => { return ((double)s).ToString("N2") + "%"; },
                         HtmlRender = (s) => { return ((double)s).ToString("N2") + "%"; },
-                        OrderValueRender = (s) => { return ((double)s).ToString("N2"); }
+                        OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((double)s)); }
                     },
                 }
             );

@@ -36,7 +36,7 @@ return d.Pocet.ToString();
 },
 OrderValueRender = (s) => {
 var d = s;
-return d.Pocet.ToString();
+return HlidacStatu.Util.RenderData.OrderValueFormat(d.Pocet);
 }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -56,10 +56,10 @@ var d = s;
 var stat = ACore.GetBasicStatisticForICO(s.Ico);
 if (stat.Summary.Pocet > 0)
 {
-return ((double)d.Pocet/(double)stat.Summary.Pocet).ToString("N2",HlidacStatu.Util.Consts.enCulture);
+return HlidacStatu.Util.RenderData.OrderValueFormat(((double)d.Pocet/(double)stat.Summary.Pocet));
 }
 else
-return "0";
+return HlidacStatu.Util.RenderData.OrderValueFormat(0);
 }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -70,7 +70,7 @@ return Smlouva.NicePrice(d.CelkemCena,html:true, shortFormat:true);
 },
 OrderValueRender = (s) => {
 var d = s;
-return d.CelkemCena.ToString("G",HlidacStatu.Util.Consts.enCulture);
+return HlidacStatu.Util.RenderData.OrderValueFormat(d.CelkemCena);
 }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -90,10 +90,10 @@ var d = s;
 var stat = ACore.GetBasicStatisticForICO(s.Ico);
 if (stat.Summary.CelkemCena > 0)
 {
-return (d.CelkemCena/stat.Summary.CelkemCena).ToString("N1", HlidacStatu.Util.Consts.enCulture);
+return HlidacStatu.Util.RenderData.OrderValueFormat((d.CelkemCena/stat.Summary.CelkemCena));
 }
 else
-return "0";
+return HlidacStatu.Util.RenderData.OrderValueFormat(0);
 }
 },
 

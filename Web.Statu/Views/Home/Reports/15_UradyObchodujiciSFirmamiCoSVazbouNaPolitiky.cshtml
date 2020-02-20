@@ -63,12 +63,7 @@ HtmlRender = (s) => {
         },
 OrderValueRender = (s) => {
             var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            if (stat.Summary.Pocet > 0)
-            {
-                return ((double)s.Pocet/(double)stat.Summary.Pocet).ToString("P2");
-            }
-            else
-                return "0";
+            return HlidacStatu.Util.RenderData.OrderValueFormat(stat.Summary.Pocet);
     }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -77,7 +72,7 @@ HtmlRender = (s) => {
             return HlidacStatu.Lib.Data.Smlouva.NicePrice(s.CelkemCena,html:true, shortFormat:true);
         },
 OrderValueRender = (s) => {
-            return s.CelkemCena.ToString();
+            return HlidacStatu.Util.RenderData.OrderValueFormat(s.CelkemCena);
     }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -93,12 +88,7 @@ new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
         },
 OrderValueRender = (s) => {
             var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            if (stat.Summary.CelkemCena > 0)
-            {
-                return (s.CelkemCena/stat.Summary.CelkemCena).ToString("N1");
-            }
-            else
-                return "0";
+            return HlidacStatu.Util.RenderData.OrderValueFormat((stat.Summary.CelkemCena);
     }
 },
 

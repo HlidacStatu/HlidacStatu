@@ -14,53 +14,53 @@
 
     var tableColumns = new ReportDataSource.Column[]
         {
-new ReportDataSource.Column() { Name="IČO",
-HtmlRender = (s) => {
-HlidacStatu.Lib.Analysis.SubjectStatistic data = (HlidacStatu.Lib.Analysis.SubjectStatistic)s;
-return string.Format(@"<a title='{1}' href='/subjekt/{0}'>{2}</a>", data.Subject().ICO, data.Subject().Jmeno, Devmasters.Core.TextUtil.ShortenText(data.Subject().Jmeno, 50));
-},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).Subject().Jmeno; }
-},
-new ReportDataSource.Column() {
-Name ="Počet všech smluv",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet.ToString();},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet.ToString(); }
-},
-new ReportDataSource.Column() {
-Name ="Počet smluv bez uvedené ceny",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny.ToString();},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny.ToString(); }
-},
-new ReportDataSource.Column() {
-Name ="% smluv bez cen",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny.ToString("P1");},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny.ToString("G"); }
-},
-new ReportDataSource.Column() {
-Name ="Počet smluv bez smluvní strany",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany.ToString();},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany.ToString(); }
-},
-new ReportDataSource.Column() {
-Name ="% smluv bez smluvní strany",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1");},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("G"); }
-},
-new ReportDataSource.Column() {
-Name ="Počet smluv s firmami s vazbou na politiky",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky.ToString();},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky.ToString(); }
-},
-new ReportDataSource.Column() {
-Name ="% smluv s firmami s vazbou na politiky",
-HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky.ToString("P1");},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky.ToString("G"); }
-},
-new ReportDataSource.Column() {
-Name ="Hodnota smluv s firmami s vazbou na politiky",
-HtmlRender = (s) => { return  HlidacStatu.Util.RenderData.ShortNicePrice(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky,html:true);},
-OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky.ToString("G"); }
-},
+            new ReportDataSource.Column() { Name="IČO",
+            HtmlRender = (s) => {
+            HlidacStatu.Lib.Analysis.SubjectStatistic data = (HlidacStatu.Lib.Analysis.SubjectStatistic)s;
+            return string.Format(@"<a title='{1}' href='/subjekt/{0}'>{2}</a>", data.Subject().ICO, data.Subject().Jmeno, Devmasters.Core.TextUtil.ShortenText(data.Subject().Jmeno, 50));
+            },
+            OrderValueRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).Subject().Jmeno; }
+            },
+            new ReportDataSource.Column() {
+            Name ="Počet všech smluv",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet.ToString();},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).BasicStatPerYear.Summary.Pocet); }
+            },
+            new ReportDataSource.Column() {
+            Name ="Počet smluv bez uvedené ceny",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny.ToString();},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezCeny); }
+            },
+            new ReportDataSource.Column() {
+            Name ="% smluv bez cen",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny.ToString("P1");},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezCeny); }
+            },
+            new ReportDataSource.Column() {
+            Name ="Počet smluv bez smluvní strany",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany.ToString();},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumBezSmluvniStrany); }
+            },
+            new ReportDataSource.Column() {
+            Name ="% smluv bez smluvní strany",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1");},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentBezSmluvniStrany); }
+            },
+            new ReportDataSource.Column() {
+            Name ="Počet smluv s firmami s vazbou na politiky",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky.ToString();},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.NumSPolitiky); }
+            },
+            new ReportDataSource.Column() {
+            Name ="% smluv s firmami s vazbou na politiky",
+            HtmlRender = (s) => { return ((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky.ToString("P1");},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.PercentSPolitiky); }
+            },
+            new ReportDataSource.Column() {
+            Name ="Hodnota smluv s firmami s vazbou na politiky",
+            HtmlRender = (s) => { return  HlidacStatu.Util.RenderData.ShortNicePrice(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky,html:true);},
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(((HlidacStatu.Lib.Analysis.SubjectStatistic)s).RatingPerYear.Summary.SumKcSPolitiky); }
+            },
         }
         ;
 

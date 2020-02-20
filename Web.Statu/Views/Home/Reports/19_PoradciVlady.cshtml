@@ -94,7 +94,8 @@ new ReportDataSource.Column() { Name="Sponzor polit.stran",
     },
     OrderValueRender = (s) => {
         Osoba o = (Osoba)s;
-        return o.Sponzoring().Sum(m=>m.AddInfoNum).ToString() ;
+        var val= o.Sponzoring().Sum(m=>m.AddInfoNum) ;
+        return HlidacStatu.Util.RenderData.OrderValueFormat(val);
     }
 },
    });

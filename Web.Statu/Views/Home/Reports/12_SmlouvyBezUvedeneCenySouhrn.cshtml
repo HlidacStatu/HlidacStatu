@@ -35,14 +35,17 @@ new ReportDataSource.Column() { Name="IČO",
 },
 new ReportDataSource.Column() {
     Name ="Počet smluv bez uvedené ceny",
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64(s)); }
 },
 new ReportDataSource.Column() {
     Name ="Počet všech smluv",
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64(s)); }
 },
 new ReportDataSource.Column() {
     Name ="% smluv bez cen",
     HtmlRender = (s) => { return ((double)s).ToString("P1"); },
-    TextRender = (s) => { return ((double)s).ToString("P1"); }
+    TextRender = (s) => { return ((double)s).ToString("P1"); },
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double)s); }
 },
         }
         );
