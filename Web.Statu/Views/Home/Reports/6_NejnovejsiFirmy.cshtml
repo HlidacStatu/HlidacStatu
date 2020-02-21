@@ -49,21 +49,25 @@
 
     var res = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch("", 1, 0, anyAggregation: aggs);
 
-    var items = ((BucketAggregate)res.Aggregations["perico"])
+    var tmp = ((BucketAggregate)res.Aggregations["perico"])
     .Items
     .Concat(((BucketAggregate)res.Aggregations["perico2"]).Items)
-    .Cast<Nest.KeyedBucket<object>>
-        ()
-        .GroupBy(p => (string)p.Key,
+    .Cast<Nest.KeyedBucket<object>>()
+    .Where(m=>m.DocCount == 1)
+    .ToArray();
+    
+    DateTime now = DateTime.Now;
+
+    var items = tmp.GroupBy(p => (string)p.Key,
         e => new
         {
-            epoch = e?.Min("mindate2")?.Value ?? 1,
+            epoch = (e?.Min("mindate")?.Value ?? e?.Min("mindate2")?.Value) ?? 1 ,
             sum = e.Sum("sumico").Value,
         },
         (k, v) => new
         {
             ico = k,
-            epochTime = v.Select(m => m.epoch).Min(),
+            epochTime = v.Select(m => m.epoch).Max(),
             sum = v.Select(m => m.sum).Sum()
         })
         .Select(o => new
@@ -72,6 +76,7 @@
             datum = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)o.epochTime / 1000),
             sum = o.sum
         })
+        .Where(m=>(now - m.datum).TotalDays<2)
         .OrderByDescending(o => o.datum);
 
 
