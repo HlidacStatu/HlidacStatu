@@ -152,6 +152,22 @@ namespace HlidacStatu.Lib.Data
             _vazby = value.ToArray();
         }
 
+        public bool MaVztahySeStatem()
+        {
+            var ret = this.IsSponzor();
+            if (ret) return ret;
+
+            ret = this.Statistic().ToBasicData().Pocet> 0;
+            if (ret) return ret;
+
+            ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + this.ICO, null, 1, 1, 0).Total > 0;
+            if (ret) return ret;
+
+            ret = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + this.ICO, 1, 1, 0).Total > 0;
+            return ret;
+
+        }
+
         public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
         {
             return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy

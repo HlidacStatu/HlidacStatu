@@ -115,6 +115,22 @@ namespace HlidacStatu.Lib.Data
                 });
         }
 
+        public bool MaVztahySeStatem()
+        {
+            var ret = this.IsSponzor();
+            if (ret) return ret;
+
+            ret = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("osobaid:" + this.NameId, 1, 1, 0).Total > 0;
+            if (ret) return ret;
+
+            ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaid:" + this.NameId, null, 1, 1, 0).Total > 0;
+            if (ret) return ret;
+
+            ret = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("osobaid:" + this.NameId, 1, 1, 0).Total > 0;
+            return ret;
+
+        }
+
         public string CurrentPoliticalParty()
         {
             return Events(ev =>

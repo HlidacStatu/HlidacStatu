@@ -25,8 +25,7 @@
     //TODO better analysis based on records in other dbs
     bool noReasonToShow =
         Model.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
-        && ostat.ToBasicData().Pocet == 0
-        && Model.IsSponzor() == false
+        && Model.MaVztahySeStatem() == false
         ;
 
 

@@ -60,6 +60,49 @@
 
     @Util.AddVisitImg("/subjekt/" + Model.ICO)
 
+    @if (Model.firma.MaVztahySeStatem() == false)
+    {
+        <div class="container">
+            <table class="table table-new table-new--dotted">
+                <tbody>
+                    @if (Model.firma.Datum_Zapisu_OR.HasValue)
+                    {
+
+                        <tr>
+                            <th>Založena</th>
+                            <td>
+                                <div>@(Model.firma.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
+                    {
+                        <tr>
+                            <th>IČO</th>
+                            <td>@Model.firma.ICO</td>
+                        </tr>
+                    }
+                    @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
+                    {
+                        <tr>
+                            <th>Datová schránka</th>
+                            <td>@Model.firma.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="2">
+                            <div class="alert alert-warning" role="alert">
+                                Tento subjekt nemá žádné obchodní vztahy se státem ani s politickými stranami, proto o ni nezobrazujeme více detailů.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        return;
+    }
+
     @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Profile", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
 
     <div style="height:34px"></div>
