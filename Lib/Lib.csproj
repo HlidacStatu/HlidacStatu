@@ -95,8 +95,8 @@
     <Reference Include="Enyim.Caching, Version=2.9.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.4.4\lib\net40\Enyim.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.17.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.17\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.20.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.20\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.AWT.WinForms, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.8.1.5717.0\lib\IKVM.AWT.WinForms.dll</HintPath>
@@ -563,6 +563,7 @@
     <Compile Include="Data\Watchdog.Insolvence.cs" />
     <Compile Include="Data\Watchdog.VerejnaZakazka.cs" />
     <Compile Include="Data\Watchdog.Smlouva.cs" />
+    <Compile Include="Emails\EmailMessageFromTemplate.cs" />
     <Compile Include="Emails\Templates\FoundZakazkyItem.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
     <Compile Include="Data\AnalysisCalculation.cs" />
@@ -650,6 +651,8 @@
     <Compile Include="Enhancers\IEnhancer.cs" />
     <Compile Include="Enhancers\Util.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Render\ScribanT.cs" />
+    <Compile Include="Render\ScribanT.Functions.cs" />
     <Compile Include="Searching\DotaceSearchResult.cs" />
     <Compile Include="Searching\Highlighter.cs" />
     <Compile Include="Searching\InsolvenceSearchResult.cs" />

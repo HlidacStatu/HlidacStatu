@@ -3,6 +3,7 @@ using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using Nest;
 using System;
+using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Dotace
 {
@@ -14,17 +15,30 @@ namespace HlidacStatu.Lib.Data.Dotace
         static System.Text.RegularExpressions.Regex regFindRegex = new System.Text.RegularExpressions.Regex(regex, options);
 
 
-        // podle čeho můžeme vyhledat
-        static string[] queryShorcuts = new string[] {
-                "ico:",
-                "jmeno:",
-                "projekt:",
-                "castka:",
-                "osobaid:","holding:"
-                //"id:"
-            };
         static string[] queryOperators = new string[] { "AND", "OR" };
 
+
+        static IRule[] irules = new IRule[] {
+               new OsobaId("osobaid:","ico:" ),
+               new Holding(null,"ico:" ),
+
+               new TransformPrefix("ico:","prijemce.ico:",null ),
+               new TransformPrefix("jmeno:","prijemce.jmenoPrijemce:",null ),
+               new TransformPrefix("projekt:","nazevProjektu:",null ),
+                new TransformPrefix("castka:","dotaceCelkem:",null ),
+                new TransformPrefixWithValue("cena:","dotaceCelkem:<=${q} ","<=\\d" ),
+                new TransformPrefixWithValue("cena:","dotaceCelkem:>=${q} ",">=\\d" ),
+                new TransformPrefixWithValue("cena:","dotaceCelkem:<${q} ","<\\d" ),
+                new TransformPrefixWithValue("cena:","dotaceCelkem:>${q} ",">\\d" ),
+                new TransformPrefixWithValue("cena:","dotaceCelkem:${q} ",null ),
+
+
+            };
+
+        private string[] queryShorcuts()
+        {
+            return irules.SelectMany(m => m.Prefixes).Distinct().ToArray();
+        }
 
         public QueryContainer GetSimpleQuery(string query)
         {
@@ -34,40 +48,8 @@ namespace HlidacStatu.Lib.Data.Dotace
         {
             var query = searchdata.Q;
 
-            //fix field prefixes
-            //ds: -> 
-            Lib.Searching.Rule[] rules = new Lib.Searching.Rule[] {
-                   new Lib.Searching.Rule(@"osobaid:(?<q>((\w{1,} [-]{1} \w{1,})([-]{1} \d{1,3})?)) ","ico"),
-                   new Lib.Searching.Rule(@"holding:(?<q>(\d{1,8})) (\s|$){1,}","ico"),
-                   new Lib.Searching.Rule(@"ico:","prijemce.ico:"),
-                   new Lib.Searching.Rule("jmeno:","prijemce.jmenoPrijemce:"),
-                   new Lib.Searching.Rule("projekt:","nazevProjektu:"),
-                   new Lib.Searching.Rule("castka:","dotaceCelkem:"),
-                   //new Lib.Search.Rule("id:","idDotace:"),
-            };
-
-            IRule[] irules = new IRule[] {
-               new OsobaId("osobaid:","ico:" ),
-               //new Holding("holdingprijemce:","prijemceIco:" ),
-               //new Holding("holdingplatce:","icoplatce:" ),
-               //new Holding("holdingdodavatel:","icoprijemce:" ),
-               //new Holding("holdingzadavatel:","icoplatce:" ),
-               new Holding(null,"ico:" ),
-
-               new TransformPrefix("ico:","prijemce.ico:",null ),
-               new TransformPrefix("jmeno:","prijemce.jmenoPrijemce:",null ),
-               new TransformPrefix("projekt:","nazevProjektu:",null ),
-               new TransformPrefix("castka:","dotaceCelkem:",null ),
-               //new TransformPrefix("id:","idDotace:",null ),
-
-            };
-
-
             string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
-
-            if (searchdata.LimitedView)
-                modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
             var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
@@ -78,7 +60,6 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
             bool withHighlighting = false,
-            bool limitedView = false,
             AggregationContainerDescriptor<Dotace> anyAggregation = null, bool exactNumOfResults = false)
         {
             return SimpleSearch(new DotaceSearchResult()
@@ -86,7 +67,6 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Q = query,
                 Page = page,
                 PageSize = pagesize,
-                LimitedView = limitedView,
                 Order = order.ToString(),
                 ExactNumOfResults = exactNumOfResults
             }, withHighlighting, anyAggregation); ;
@@ -101,7 +81,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             var sw = new StopWatchEx();
             sw.Start();
             search.OrigQuery = search.Q;
-            search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);
+            search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts(), queryOperators);
 
             ISearchResponse<Dotace> res = null;
             try

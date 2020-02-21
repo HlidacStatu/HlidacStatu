@@ -25,8 +25,6 @@ namespace HlidacStatu.Lib.Searching
             }
         }
 
-        public bool LimitedView { get; set; } = false;
-
         public object ToRouteValues(int page)
         {
             return new

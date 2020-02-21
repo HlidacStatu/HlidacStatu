@@ -71,34 +71,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             public string Render(DataSet ds, dynamic dmodel, string qs = "",
                 IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = null)
             {
+                string template = GetTemplateHeader(ds.DatasetId, qs) + this.body;
+                Dictionary<string, object> globVar = new Dictionary<string, object>();
+                globVar.Add("highlightingData", highlightingData);
+                var xtemp = new HlidacStatu.Lib.Render.ScribanT(template, globVar);
 
-                string template = GetTemplateHeader(ds.DatasetId,qs) + this.body;
-                var xTemp = Scriban.Template.Parse(template);
-                if (xTemp.HasErrors)
-                {
-                    throw new System.ApplicationException(xTemp
-                        .Messages
-                        .Select(m => m.ToString())
-                        .Aggregate((f, s) => f + "\n" + s)
-                        );
-                }
-
-                var xmodel = new Scriban.Runtime.ScriptObject();
-                xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
-                var xfn = new Scriban.Runtime.ScriptObject(); ;
-                xfn.Import(typeof(HlidacStatu.Lib.Data.External.DataSets.Registration.Template.Functions)
-                    , renamer: member => member.Name);
-                var context = new Scriban.TemplateContext { MemberRenamer = member => member.Name, LoopLimit=65000 };
-                context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
-                context.PushGlobal(xmodel);
-                context.PushGlobal(xfn);
-                var scriptObjGlobalVariables = new ScriptObject();
-                // Notice: MyObject is not imported but accessible through
-                // the variable myobject
-                scriptObjGlobalVariables["highlightingData"] = highlightingData;
-                context.PushGlobal(scriptObjGlobalVariables);
-
-                var res = xTemp.Render(context);
+                var res = xtemp.Render(dmodel);
                 return res;
             }
 

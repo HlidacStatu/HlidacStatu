@@ -221,11 +221,28 @@ namespace HlidacStatu.Lib.Data
                         if (!string.IsNullOrEmpty(query) && query.Length > 2)
                         {
 
+
                             res.Osoby = new GeneralResult<Osoba>(
                                 HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query, 100)
                                 .OrderBy(m => m.Prijmeni)
                                 .ThenBy(m => m.Jmeno)
                                 );
+
+                            var fixedQuery = Tools.FixInvalidQuery(query,new string[] { "osobaid:","osoba:", "osobaid:","osobaiddodavatel: ","osobaidzadavatel:" }) ?? "";
+                            var sq = SplittingQuery.SplitQuery(fixedQuery);
+                            var foundOsoby = res.Osoby?.Result?.ToList() ?? new List<Osoba>();
+                            foreach (var prt in sq.Parts)
+                            {
+                                if (prt?.Prefix?.StartsWith("osoba") == true)
+                                {
+                                    if (!string.IsNullOrEmpty(prt?.Value) && Osoby.GetByNameId.Get(prt.Value) != null)
+                                    {
+                                        foundOsoby.Insert(0, Osoby.GetByNameId.Get(prt.Value));
+                                    }
+                                }
+                            }
+
+                            res.Osoby = new GeneralResult<Osoba>(foundOsoby);
                         }
                         else
                             res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
