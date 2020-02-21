@@ -88,7 +88,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 var xfn = new Scriban.Runtime.ScriptObject(); ;
                 xfn.Import(typeof(HlidacStatu.Lib.Data.External.DataSets.Registration.Template.Functions)
                     , renamer: member => member.Name);
-                var context = new Scriban.TemplateContext { MemberRenamer = member => member.Name };
+                var context = new Scriban.TemplateContext { MemberRenamer = member => member.Name, LoopLimit=65000 };
                 context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
                 context.PushGlobal(xmodel);
                 context.PushGlobal(xfn);
