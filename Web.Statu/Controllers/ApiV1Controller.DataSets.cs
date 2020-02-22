@@ -468,11 +468,11 @@ namespace HlidacStatu.Web.Controllers
                             , "application/json");
                     else
                     {
-                        var ds = DataSetDB.CachedDatasets.Get(id);
+                        var ds = DataSet.CachedDatasets.Get(id);
                         if (ds==null)
                             return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
                         else
-                            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ds),"application/json");
+                            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ds.Registration()),"application/json");
                     }
 
                 }
