@@ -733,17 +733,20 @@ namespace HlidacStatu.Lib.Searching
 
 
 
-        public static string ToElasticDate(DateTime date)
+        public static string ToElasticDate(DateTime? date, string defaultValue = "")
         {
-            switch (date.Kind)
+            if (date.HasValue == false)
+                return defaultValue;
+
+            switch (date.Value.Kind)
             {
                 case DateTimeKind.Unspecified:
                 case DateTimeKind.Local:
-                    return date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    return date.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                 case DateTimeKind.Utc:
-                    return date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    return date.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                 default:
-                    return date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    return date.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             }
         }
 

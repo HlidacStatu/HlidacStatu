@@ -543,6 +543,7 @@
     <Compile Include="Data\Search.ISearchResult.cs" />
     <Compile Include="Data\Search.MultiResult.cs" />
     <Compile Include="Data\Smlouva.SClassification.cs" />
+    <Compile Include="Data\Smlouva.WatchdogProcessor.cs" />
     <Compile Include="Data\SocialContact.cs" />
     <Compile Include="Data\Sponzori.cs" />
     <Compile Include="Data\UserOptions.Date.cs" />
@@ -698,6 +699,12 @@
     <Compile Include="Validators.cs" />
     <Compile Include="StaticData.cs" />
     <Compile Include="Text\WordPressPost.cs" />
+    <Compile Include="Watchdogs\Email.cs" />
+    <Compile Include="Watchdogs\IRenderContent.cs" />
+    <Compile Include="Watchdogs\IWatchdogProcessor.cs" />
+    <Compile Include="Watchdogs\Results.cs" />
+    <Compile Include="Watchdogs\SingleEmailPerUserProcessor.cs" />
+    <Compile Include="Watchdogs\Tools.cs" />
     <Compile Include="xsd\dump_index.cs">
       <DependentUpon>dump_index.xsd</DependentUpon>
     </Compile>

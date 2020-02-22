@@ -44,25 +44,34 @@ namespace HlidacStatu.Lib.Render
 
         public string Render(dynamic dmodel)
         {
+            try
+            {
 
-            var xmodel = new Scriban.Runtime.ScriptObject();
-            xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
-            var xfn = new Scriban.Runtime.ScriptObject(); ;
-            xfn.Import(typeof(HlidacStatu.Lib.Render.ScribanT.Functions)
-                , renamer: member => member.Name);
-            var context = new Scriban.TemplateContext { MemberRenamer = member => member.Name, LoopLimit = 65000 };
-            context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
-            context.PushGlobal(xmodel);
-            context.PushGlobal(xfn);
-            var scriptObjGlobalVariables = new ScriptObject();
+                var xmodel = new Scriban.Runtime.ScriptObject();
+                xmodel.Import(new { model = dmodel }, renamer: member => member.Name);
+                var xfn = new Scriban.Runtime.ScriptObject(); ;
+                xfn.Import(typeof(HlidacStatu.Lib.Render.ScribanT.Functions)
+                    , renamer: member => member.Name);
+                var context = new Scriban.TemplateContext { MemberRenamer = member => member.Name, LoopLimit = 65000 };
+                context.PushCulture(System.Globalization.CultureInfo.CurrentCulture);
+                context.PushGlobal(xmodel);
+                context.PushGlobal(xfn);
+                var scriptObjGlobalVariables = new ScriptObject();
 
-            foreach (var kv in this.globalVariables)
-                scriptObjGlobalVariables[kv.Key] = kv.Value;
+                foreach (var kv in this.globalVariables)
+                    scriptObjGlobalVariables[kv.Key] = kv.Value;
 
-            context.PushGlobal(scriptObjGlobalVariables);
-            
-            var res = xTemplate.Render(context);
-            return res;
+                context.PushGlobal(scriptObjGlobalVariables);
+
+                var res = xTemplate.Render(context);
+                return res;
+            }
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Error($"ScribanT render error\nTemplate {this.template}", e);
+                throw;
+            }
+
         }
 
     }
