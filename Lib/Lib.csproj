@@ -664,6 +664,7 @@
     <Compile Include="Searching\Rules\TransformPrefixWithValue.cs" />
     <Compile Include="Searching\Rules\Smlouva_Chyby.cs" />
     <Compile Include="Searching\Rules\VZ_Form.cs" />
+    <Compile Include="Searching\Rules\Smlouva_Oblast.cs" />
     <Compile Include="Searching\Rules\VZ_Oblast.cs" />
     <Compile Include="Searching\Rules\OsobaId.cs" />
     <Compile Include="Searching\Rules\IRule.cs" />

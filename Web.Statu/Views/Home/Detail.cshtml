@@ -182,6 +182,13 @@
                 </td>
 
             </tr>
+            @if (Model.GetRelevantClassification().Count() > 0)
+            {
+                <tr>
+                    <td>Oblast smlouvy</td>
+                    <td>@(string.Join(" / ", Model.GetRelevantClassification().Select(m => m.ClassifTypeName()) ))</td>
+                </tr>
+            }
             <tr>
                 <td>Hodnota smlouvy</td>
                 <td>

@@ -1,4 +1,4 @@
-﻿
+﻿@using Devmasters.Core;
 
 
 <div class="row">
@@ -147,6 +147,29 @@
                         <br />
                         <kbd>schvalil:jmeno</kbd> - jméno osoby, které smlouvy schválila.<br />
                         <kbd>textSmlouvy:text</kbd> - prohledává se pouze text smlouvy, pokud je k dispozici.<br />
+                        <br />
+                        <kbd>oblast:hodnota</kbd> - prohledává smlouvy, které jsme klasifikovali do některé z oblastí.<br />
+                        Seznam hodnot a oblastí:
+                            <ul>
+                                @foreach (var kv in HlidacStatu.Lib.Searching.Rules.Smlouva_Oblast.AllValues)
+                                {
+                                    bool gap = false;
+                                    string niceName = "";
+                                    HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes found;
+                                    if (Enum.TryParse<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes>(kv.Key, out found ))
+                                    {
+                                        niceName = found.ToNiceDisplayName();
+                                        gap = false;
+                                    }
+                                    else
+                                    {
+                                        Enum.TryParse<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes>(kv.Key+"_obecne", out found);
+                                        niceName = $"Všechny oblasti v '{found.ToNiceDisplayName()}'";
+                                        gap = true;
+                                    }
+                                    <li style='@(gap ? "padding-top:10px;" : "")'><kbd>oblast:@kv.Key</kbd> - @(niceName)</li>
+                                }
+                            </ul>
 
                     </dd>
                 </dl>

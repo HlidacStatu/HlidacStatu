@@ -138,6 +138,7 @@ namespace HlidacStatu.Lib.Data
                new TransformPrefix("schvalil:","schvalil:",null ),
                new TransformPrefix("textsmlouvy:","prilohy.plainTextContent:",null ),
                new Smlouva_Chyby(),
+               new Smlouva_Oblast(),
 
             };
 

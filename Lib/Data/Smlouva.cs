@@ -220,6 +220,21 @@ namespace HlidacStatu.Lib.Data
 
         public SClassification Classification { get; set; } = new SClassification();
 
+        public SClassification.Classification[] GetRelevantClassification()
+        {
+            this.Classification = this.Classification ?? new SClassification();
+            var types = this.Classification?.Types ?? new SClassification.Classification[] { };
+
+            var firstT = types.OrderByDescending(m => m.ClassifProbability).Where(m => m.ClassifProbability >= 0.5m).FirstOrDefault();
+            if (firstT == null)
+                return new SClassification.Classification[] { };
+            var secondT = types.OrderByDescending(m => m.ClassifProbability).Skip(1).Where(m => m.ClassifProbability >= 0.75m).FirstOrDefault();
+            
+            if (secondT == null)
+                return new SClassification.Classification[] { firstT };
+            else
+                return new SClassification.Classification[] { firstT,secondT };
+        }
 
         public bool SetClassification(bool rewrite = false, bool rewriteStems = false) //true if changed
         {
