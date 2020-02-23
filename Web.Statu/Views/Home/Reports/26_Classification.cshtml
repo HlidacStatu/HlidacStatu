@@ -1,0 +1,106 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+@using Nest;
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+
+@{
+    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs =
+        new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+            .Terms("x-agg", t => t
+                .Field("classification.types.typeValue")
+                .Size(150)
+            );
+
+    ReportDataSource rds = new ReportDataSource(new ReportDataSource.Column[]
+    {
+                new ReportDataSource.Column() { Name="Věcná oblast",
+                    TextRender = (s) => {
+                            return Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
+                        },
+                    ValueRender = (s) => {
+                            return "yy"+Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
+                    },
+                    HtmlRender = (s) =>
+                    {
+                        var obl = Smlouva.SClassification.Classification.ToClassifType(Convert.ToInt32(s));
+                        if (obl.HasValue)
+                        {
+                            var t = $"{obl.Value.ToNiceDisplayName()}&nbsp;<a href='{Smlouva.SClassification.Classification.GetUrl(obl.Value)}'><i class='fas fa-search'></i></a>";
+                            t +="";
+                            return t;
+                        }
+                        else
+                        {
+                            return Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
+                        }
+                    },
+                    OrderValueRender=(s)=>
+                    {
+                        return "zz"+Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
+                    }
+                },
+                new ReportDataSource.Column() { Name="Počet smluv z této oblasti",
+                    HtmlRender = (s) => { return HlidacStatu.Util.RenderData.NiceNumber((long)s, html:true); },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToInt64(s)); },
+                },
+                new ReportDataSource.Column() { Name="%",
+                    HtmlRender = (s) => { return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0]).ToString("P2"); },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] ); },
+                },
+                    });
+
+    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("*", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
+
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items)
+    {
+        int oblast = Convert.ToInt32(val.Key);
+        long count = val.DocCount ?? 0;
+        rds.AddRow(oblast, count,count);
+    }
+
+
+}
+<div class="bs-callout bs-callout-primary">
+    <h4>V jakých tématických oblastech státu uzavírá nejvíce smluv?</h4>
+    <div>
+        Stát uzavírá různé smlouvy z mnoha důvodů, pro různé typy služeb, prací, zboží. <b>Každou smlouvu se pokoušíme zařadit do jedné až dvou kategorií.</b>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-12">
+        @UtilChart.RenderReportChart("Věcné oblasti",
+               UtilChart.SimpleBarChart(
+                    false, false,
+                    400,"xx","Oblast", "Počet smluv",
+                    rds.Filter(new int[] {0,2 }, 15)))
+        <hr />
+
+        @UtilChart.RenderReportTable("Věcné oblasti", rds, @"{
+         'language': {
+            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+        },
+        'order': [],
+        'lengthChange': false,
+        'info': false,
+        }")
+
+    </div>
+
+</div>
+
+
+
+

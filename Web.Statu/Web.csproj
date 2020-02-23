@@ -1378,7 +1378,7 @@
     <Content Include="Views\Data\Promo\behind_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
-    <Content Include="Views\Home\Reports\25a_MinisterstvaStrany.cshtml" />
+    <Content Include="Views\Home\Reports\26_Classification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

@@ -23,6 +23,8 @@ namespace HlidacStatu.Lib.Data
                 this.LastUpdate = DateTime.Now;
                 this.Types = types;
             }
+            
+
 
             public class Classification
             {
@@ -35,30 +37,76 @@ namespace HlidacStatu.Lib.Data
 
                 public string ClassifTypeName()
                 {
+                    return ClassifTypeName(this.TypeValue);
+                }
+
+                public static string ClassifTypeName(int value)
+                {
                     ClassificationsTypes t;
-                    if (Enum.TryParse(TypeValue.ToString(), out t))
+                    if (Enum.TryParse(value.ToString(), out t))
                     { 
                         if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
                         {
-                            Util.Consts.Logger.Warning("Missing Classification value" + TypeValue);
+                            Util.Consts.Logger.Warning("Missing Classification value" + value);
                             return "(neznámý)";
                         }
                         return t.ToNiceDisplayName();
                     }
                     else
                     {
-                        Util.Consts.Logger.Warning("Missing Classification value" + TypeValue);
+                        Util.Consts.Logger.Warning("Missing Classification value" + value);
                         return "(neznámý)";
                     }
+                }
+                public static ClassificationsTypes? ToClassifType(int value)
+                {
+                    ClassificationsTypes t;
+                    if (Enum.TryParse(value.ToString(), out t))
+                    {
+                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                            return null;
+                        else
+                            return t;
+                    }
+                    else
+                        return null;
+                }
+                public static ClassificationsTypes? ToClassifType(string value)
+                {
+                    ClassificationsTypes t;
+                    if (Enum.TryParse(value, out t))
+                    {
+                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                            return null;
+                        else
+                            return t;
+                    }
+                    else
+                        return null;
                 }
 
                 public string ClassifSearchQuery()
                 {
-                    var val = ClassifType().ToString();
+                    return ClassifSearchQuery(ClassifType());
+                }
+                public static string ClassifSearchQuery(ClassificationsTypes t)
+                {
+                    var val = t.ToString();
                     if (val.EndsWith("_obecne"))
                         val = val.Replace("_obecne", "");
                     return val;
                 }
+
+                public static string GetUrl(ClassificationsTypes t, bool local = true)
+                {
+                    string url = "/HledatSmlouvy?Q=oblast:" + ClassifSearchQuery(t);
+                    if (local == false)
+                        return "https://www.hlidacstatu.cz" + url;
+                    else
+                        return url;
+                }
+
+
             }
             [ShowNiceDisplayName()]
             public enum ClassificationsTypes
@@ -334,6 +382,9 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Opravy a údržba")]
                 jine_opravy = 11906,
             }
+
+
+
 
             [Nest.Date]
             public DateTime? LastUpdate { get; set; } = null;
