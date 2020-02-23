@@ -1077,7 +1077,7 @@ namespace HlidacStatu.Lib.Data
             {
                 //Composite formatting { escaping
 
-                var licence = "\"{0}\":{{ note = \"-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --\" }}";
+                var licence = "\"{0}\":{{ \"note\":\"-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --\" }}";
                 ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"classification\": \\s? null", ret, string.Format(licence, "classification"));
                 ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitiky\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitiky"));
                 ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyNedavne\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyNedavne"));
