@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data
                     return val;
                 }
 
-                public static string GetUrl(ClassificationsTypes t, bool local = true)
+                public static string GetSearchUrl(ClassificationsTypes t, bool local = true)
                 {
                     string url = "/HledatSmlouvy?Q=oblast:" + ClassifSearchQuery(t);
                     if (local == false)

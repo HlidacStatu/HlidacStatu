@@ -36,7 +36,7 @@
                         var obl = Smlouva.SClassification.Classification.ToClassifType(Convert.ToInt32(s));
                         if (obl.HasValue)
                         {
-                            var t = $"{obl.Value.ToNiceDisplayName()}&nbsp;<a href='{Smlouva.SClassification.Classification.GetUrl(obl.Value)}'><i class='fas fa-search'></i></a>";
+                            var t = $"{obl.Value.ToNiceDisplayName()}&nbsp;<a href='{Smlouva.SClassification.Classification.GetSearchUrl(obl.Value)}'><i class='fas fa-search'></i></a>";
                             t +="";
                             return t;
                         }
