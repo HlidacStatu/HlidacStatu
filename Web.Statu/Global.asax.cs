@@ -20,6 +20,8 @@ namespace HlidacStatu.Web
 
             if (BannedIPs.Get().Contains(HttpContext.Current.Request.UserHostAddress.ToLower() ))
             {
+                Response.Clear();
+                Response.StatusCode = 403;
                 Server.Transfer("~/banned.aspx");
             }
 
