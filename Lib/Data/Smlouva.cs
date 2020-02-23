@@ -231,10 +231,15 @@ namespace HlidacStatu.Lib.Data
         internal SClassification.Classification[] relevantClassif(SClassification.Classification[] types)
         {
             types = types ?? new SClassification.Classification[] { };
-            var firstT = types.OrderByDescending(m => m.ClassifProbability).Where(m => m.ClassifProbability >= SClassification.MinAcceptableProbability).FirstOrDefault();
+            var firstT = types.OrderByDescending(m => m.ClassifProbability)
+                //.Where(m => m.ClassifProbability >= SClassification.MinAcceptableProbability)
+                .FirstOrDefault();
             if (firstT == null)
                 return new SClassification.Classification[] { };
-            var secondT = types.OrderByDescending(m => m.ClassifProbability).Skip(1).Where(m => m.ClassifProbability >= 0.75m).FirstOrDefault();
+            var secondT = types.OrderByDescending(m => m.ClassifProbability)
+                .Skip(1)
+                .Where(m => m.ClassifProbability >= (firstT.ClassifProbability*0.75m))
+                .FirstOrDefault();
 
             if (secondT == null)
                 return new SClassification.Classification[] { firstT };
