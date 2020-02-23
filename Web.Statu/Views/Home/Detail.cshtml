@@ -185,7 +185,7 @@
             @if (Model.GetRelevantClassification().Count() > 0)
             {
                 <tr>
-                    <td>Oblast smlouvy</td>
+                    <td>Oblast@((Model.GetRelevantClassification().Count()>1) ? "i" : "") smlouvy</td>
                     <td>@foreach (var classif in Model.GetRelevantClassification())
                     { 
                         <div>

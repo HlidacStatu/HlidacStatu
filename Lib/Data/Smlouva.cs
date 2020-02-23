@@ -1047,6 +1047,7 @@ namespace HlidacStatu.Lib.Data
                     p.odkaz = "";
                 }
             }
+
             if (allData == false)
             {
                 if (s.Prilohy != null)
@@ -1071,6 +1072,17 @@ namespace HlidacStatu.Lib.Data
                 }
 
                 );
+
+            if (allData == false)
+            {
+                //Composite formatting { escaping
+
+                var licence = "\"{0}\":{{ note = \"-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --\" }}";
+                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"classification\": \\s? null", ret, string.Format(licence, "classification"));
+                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitiky\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitiky"));
+                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyNedavne\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyNedavne"));
+                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyAktualni\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyAktualni"));
+            }
 
             return ret;
         }

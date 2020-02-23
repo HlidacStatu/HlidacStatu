@@ -703,7 +703,10 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return View("Error404");
                 }
-                var smodel = Smlouva.ExportToJson(model, !string.IsNullOrWhiteSpace(Request.QueryString["nice"]), apires.ApiCall.UserRoles.Contains("Admin") );
+                var smodel = Smlouva.ExportToJson(model, 
+                    !string.IsNullOrWhiteSpace(Request.QueryString["nice"]), 
+                    apires.ApiCall.UserRoles.Contains("Admin") 
+                    );
 
                 return Content(smodel, "application/json");
             }
