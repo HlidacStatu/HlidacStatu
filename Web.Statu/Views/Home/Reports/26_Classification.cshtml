@@ -74,7 +74,7 @@
                     },
                     OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToInt64(s)); },
                 },
-                new ReportDataSource.Column() { Name="v % z celku",
+                new ReportDataSource.Column() { Name="% ze všech",
                     CssClass="number",
                     HtmlRender = (s) => {
                         return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0]).ToString("P2");
@@ -95,7 +95,7 @@
                         return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToDecimal(v.Item1)); },
                 },
                 new ReportDataSource.Column() {
-                    Name="v % z celku",
+                    Name="% ze všech",
                     CssClass="number",
                     HtmlRender = (s) => {
                     return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2]).ToString("P2");
