@@ -13,12 +13,50 @@ namespace HlidacStatu.Web
 
         public static volatile MemoryCacheManager<string, string> CachedDatasets = null;
 
+        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]> BannedIPs = null;
+
+        protected void Application_BeginRequest(Object sender, EventArgs e)
+        {
+
+            if (BannedIPs.Get().Contains(HttpContext.Current.Request.UserHostAddress.ToLower() ))
+            {
+                Server.Transfer("~/banned.aspx");
+            }
+
+        }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            BannedIPs = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
+                TimeSpan.FromSeconds(30), "BannedIPs", (obj) =>
+                {
+                    
+                    var ret = new System.Collections.Generic.List<string>();
+                    try
+                    {
+                        using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+                        {
+                            var ds = p.ExecuteDataset(Devmasters.Core.Util.Config.GetConfigValue("CnnString"),
+                                 System.Data.CommandType.Text, "select IP from BannedIPs where Expiration is null or expiration > GetDate()",
+                                 null);
+                            foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                            {
+                                ret.Add(((string)dr[0]).ToLower());
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("Global.asax BannedIP db query", e);
+                    }
+                    return ret.ToArray();
+                }
+            );
 
             if (ValueProviderFactories.Factories.Any(m => m.GetType() == typeof(System.Web.Mvc.JsonValueProviderFactory)))
             {
