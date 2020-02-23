@@ -268,8 +268,8 @@ namespace HlidacStatu.Lib.Data
                                             )
                                             .ToArray();
 
-
-                    this.Classification = new SClassification(newClass);
+                    var newClassRelevant = relevantClassif(newClass);
+                    this.Classification = new SClassification(newClassRelevant);
                     this.Classification.LastUpdate = DateTime.Now;
                 }
                 return true;
