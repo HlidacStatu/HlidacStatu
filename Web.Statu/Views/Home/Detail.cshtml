@@ -186,7 +186,13 @@
             {
                 <tr>
                     <td>Oblast smlouvy</td>
-                    <td>@(string.Join(" / ", Model.GetRelevantClassification().Select(m => m.ClassifTypeName()) ))</td>
+                    <td>@foreach (var classif in Model.GetRelevantClassification())
+                    { 
+                        <div>
+                            @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
+                        </div>
+                    }
+                    </td>
                 </tr>
             }
             <tr>

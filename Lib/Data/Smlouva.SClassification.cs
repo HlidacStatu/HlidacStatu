@@ -14,6 +14,7 @@ namespace HlidacStatu.Lib.Data
     {
         public class SClassification
         {
+            public const decimal MinAcceptableProbability = 0.5m;
 
             public SClassification() { }
 
@@ -31,7 +32,9 @@ namespace HlidacStatu.Lib.Data
                 public decimal ClassifProbability { get; set; }
 
                 public ClassificationsTypes ClassifType() { return (ClassificationsTypes)TypeValue; }
-                public string ClassifTypeName() {
+
+                public string ClassifTypeName()
+                {
                     ClassificationsTypes t;
                     if (Enum.TryParse(TypeValue.ToString(), out t))
                     { 
@@ -47,6 +50,14 @@ namespace HlidacStatu.Lib.Data
                         Util.Consts.Logger.Warning("Missing Classification value" + TypeValue);
                         return "(neznámý)";
                     }
+                }
+
+                public string ClassifSearchQuery()
+                {
+                    var val = ClassifType().ToString();
+                    if (val.EndsWith("_obecne"))
+                        val = val.Replace("_obecne", "");
+                    return val;
                 }
             }
             [ShowNiceDisplayName()]
