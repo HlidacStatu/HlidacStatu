@@ -20,14 +20,31 @@
             .Terms("x-agg", t => t
                 .Field("classification.types.typeValue")
                 .Size(150)
+                .Aggregations(agg => agg
+                    .Sum("sumincome", s => s
+                        .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                    )
+                )
             );
+
+    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsZero =
+        new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+                    .Filter("zero", fo => fo
+                        .Filter(ffo => ffo.Term(tt => tt.Field(ttf => ttf.CalcutatedPriceQuality).Value(0)))
+                        .Aggregations(agg => agg
+                            .Terms("x-agg", t => t
+                                .Field("classification.types.typeValue")
+                                .Size(150)
+                            )
+                        )
+                    );
 
     ReportDataSource rds = new ReportDataSource(new ReportDataSource.Column[]
     {
                 new ReportDataSource.Column() { Name="Věcná oblast",
                     TextRender = (s) => {
                             return Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
-                        },
+},
                     ValueRender = (s) => {
                             return "yy"+Smlouva.SClassification.Classification.ClassifTypeName(Convert.ToInt32(s));
                     },
@@ -51,55 +68,107 @@
                     }
                 },
                 new ReportDataSource.Column() { Name="Počet smluv z této oblasti",
-                    HtmlRender = (s) => { return HlidacStatu.Util.RenderData.NiceNumber((long)s, html:true); },
+                    CssClass="number",
+                    HtmlRender = (s) => {
+                        return $"{HlidacStatu.Util.RenderData.NiceNumber((long)s, html:true)}";
+                    },
                     OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToInt64(s)); },
                 },
-                new ReportDataSource.Column() { Name="%",
-                    HtmlRender = (s) => { return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0]).ToString("P2"); },
-                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] ); },
+                new ReportDataSource.Column() { Name="v % z celku",
+                    CssClass="number",
+                    HtmlRender = (s) => {
+                        return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0]).ToString("P2");
+                    },
+                    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0]) ); },
                 },
-                    });
+                new ReportDataSource.Column() {
+                    Name="Hodnota smluv v Kč z této oblasti",
+                    CssClass="number",
+                    HtmlRender = (s) => {
+                        Tuple<decimal, decimal> v = (Tuple<decimal, decimal>)s;
+                        string price = HlidacStatu.Util.RenderData.NicePrice(v.Item1, shortFormat:true);
+                        var t =  $"<span alt='{price}' title='{price}'>{HlidacStatu.Util.RenderData.NicePrice(v.Item1, html:false, shortFormat:false)}";
+                        return t;
+                    },
+                    OrderValueRender = (s) => {
+                        Tuple<decimal, decimal> v = (Tuple<decimal, decimal>)s;
+                        return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToDecimal(v.Item1)); },
+                },
+                new ReportDataSource.Column() {
+                    Name="v % z celku",
+                    CssClass="number",
+                    HtmlRender = (s) => {
+                    return ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2]).ToString("P2");
+                    },
+                    OrderValueRender = (s) => {
+                    return HlidacStatu.Util.RenderData.OrderValueFormat( ( Convert.ToDouble(s) / HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2])); },
+                },
+                new ReportDataSource.Column() {
+                    Name="% utajených cen",
+                    CssClass="number",
+                    HtmlRender = (s) => {
+                        return Convert.ToDecimal(s).ToString("P2");
+                    },
+                    OrderValueRender = (s) => {
+                        return HlidacStatu.Util.RenderData.OrderValueFormat( Convert.ToDecimal(s)); },
+                },
+
+    });
 
     var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("*", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
+    var reszero = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("*", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggsZero, exactNumOfResults: true);
+
+    Dictionary<int, long> noPrices = new Dictionary<int, long>();
+    var filtered = ((SingleBucketAggregate)reszero.Result.Aggregations["zero"]).Values.First();
+    foreach (Nest.KeyedBucket<object> val in ((Nest.BucketAggregate)filtered).Items)
+    {
+        int oblast = Convert.ToInt32(val.Key);
+        long count = val.DocCount ?? 0;
+        noPrices.Add(oblast, count);
+    }
 
     foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items)
     {
         int oblast = Convert.ToInt32(val.Key);
         long count = val.DocCount ?? 0;
-        rds.AddRow(oblast, count,count);
+        decimal price = (decimal)(val.Sum("sumincome").Value ?? 0);
+        long zeroCount = noPrices.ContainsKey(oblast) ? noPrices[oblast] : 0;
+        decimal zeroPerc = count == 0 ? 0m : ((decimal)zeroCount / (decimal)count);
+
+        rds.AddRow(oblast, count, count, new Tuple<decimal, decimal>(price,zeroPerc), price, zeroPerc);
     }
 
 
-}
-<div class="bs-callout bs-callout-primary">
-    <h4>V jakých oborech uzavírá stát nejvíce smluv?</h4>
-    <div>
-        Stát uzavírá různé smlouvy z mnoha důvodů, pro různé typy služeb, prací, zboží. <b>Každou smlouvu se pokoušíme zařadit do jedné až dvou oborů (kategorií) ze celkem 140.</b>
-    </div>
-</div>
+        }
+        <div class="bs-callout bs-callout-primary">
+            <h4>V jakých oborech uzavírá stát nejvíce smluv?</h4>
+            <div>
+                Stát uzavírá různé smlouvy z mnoha důvodů, pro různé typy služeb, prací, zboží. <b>Každou smlouvu se pokoušíme zařadit do jedné až dvou oborů (kategorií) ze celkem 140.</b>
+            </div>
+        </div>
 
 
-<div class="row">
-    <div class="col-xs-12">
-        @UtilChart.RenderReportChart("Věcné oblasti",
-               UtilChart.SimpleBarChart(
-                    false, false,
-                    400,"xx","Oblast", "Počet smluv",
-                    rds.Filter(new int[] {0,2 }, 15)))
-        <hr />
+        <div class="row">
+            <div class="col-xs-12">
+                @UtilChart.RenderReportChart("Věcné oblasti",
+                       UtilChart.SimpleBarChart(
+                            false, false,
+                            400, "xx", "Oblast", "Počet smluv",
+                            rds.Filter(new int[] { 0, 1 }, 15)))
+                <hr />
 
-        @UtilChart.RenderReportTable("Věcné oblasti", rds, @"{
-         'language': {
-            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-        },
-        'order': [],
-        'lengthChange': false,
-        'info': false,
-        }")
+                @UtilChart.RenderReportTable("Věcné oblasti", rds, @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [],
+                'lengthChange': false,
+                'info': false,
+                }")
 
-    </div>
+            </div>
 
-</div>
+        </div>
 
 
 
