@@ -157,8 +157,8 @@ namespace HlidacStatu.Util
             {"ano2011","ANO" },
             {"ano","ANO" },
             {"hnuti ano","ANO" },
-            {"ANO 2011, o.s.","ANO" },
-            {"ANO 2011","ANO" },
+            {"ano 2011, o.s.","ANO" },
+            {"ano 2011","ANO" },
 
             {"obcanska demokraticka strana","ODS" },
 
