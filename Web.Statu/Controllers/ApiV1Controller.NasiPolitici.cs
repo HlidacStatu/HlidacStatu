@@ -18,6 +18,7 @@ namespace HlidacStatu.Web.Controllers
             public string JmenoAscii { get; set; }
             public string PrijmeniAscii { get; set; }
             public int? RokNarozeni { get; set; }
+            public int? RokUmrti { get; set; }
             public string Aktpolstr { get; set; }
             public int? Pocet { get; set; }
         }
@@ -36,7 +37,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     string sql = @"
                         select distinct os.NameId, os.Jmeno, os.Prijmeni
-                             , os.JmenoAscii, os.PrijmeniAscii, year(os.Narozeni) RokNarozeni
+                             , os.JmenoAscii, os.PrijmeniAscii, year(os.Narozeni) RokNarozeni, year(os.Umrti) RokUmrti
 	                         , FIRST_VALUE(oes.organizace) OVER(partition by oes.osobaid order by oes.datumod desc) Aktpolstr
 	                         , oec.pocet
                           from Osoba os
@@ -53,6 +54,7 @@ namespace HlidacStatu.Web.Controllers
                             asciiName = r.JmenoAscii,
                             asciiSurname = r.PrijmeniAscii,
                             birthYear = r.RokNarozeni,
+                            deathYear = r.RokUmrti,
                             currentParty = r.Aktpolstr,
                             eventCount = r.Pocet
                         });
