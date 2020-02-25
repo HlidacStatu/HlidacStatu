@@ -58,7 +58,9 @@ namespace HlidacStatu.Lib.Data
             [NiceDisplayName("Jiné")]
             Jine = 11,
             [NiceDisplayName("Sociální sítě")]
-            SocialniSite = 12
+            SocialniSite = 12,
+            [NiceDisplayName("Centrální registr oznámení")]
+            CentralniRegistrOznameni = 13
         }
 
         public enum SubTypes
