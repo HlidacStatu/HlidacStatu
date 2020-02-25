@@ -57,6 +57,34 @@
                     </div>
                 </div>
             </div>
+            <div class="new-p">
+                @foreach (var contact in Model.GetSocialContact())
+                {
+                    switch (contact.Service)
+                    {
+                        case "Facebook_page":
+                        case "Facebook_profile":
+                            <a href="https://www.facebook.com/@contact.Contact"><i class="fab fa-facebook-square fa-2x"></i></a>
+                            break;
+                        case "Twitter":
+                            <a href="https://www.twitter.com/@contact.Contact"><i class="fab fa-twitter-square fa-2x"></i></a>
+                            break;
+                        case "Instagram":
+                            <a href="https://www.instagram.com/@contact.Contact"><i class="fab fa-instagram fa-2x"></i></a>
+                            break;
+                        case "WWW":
+                            <a href="@contact.Contact"><i class="fas fa-globe fa-2x"></i></a>
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                
+            </div>
+            <div class="new-p">
+                <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid:@Model.NameId">Přehled vyjádření</a>
+            </div>
         </div>
         <div class="col-sm-8 col-md-9">
             @{
