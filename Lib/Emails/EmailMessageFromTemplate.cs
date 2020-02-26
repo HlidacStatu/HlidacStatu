@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HlidacStatu.Lib.Emails
@@ -47,10 +48,20 @@ namespace HlidacStatu.Lib.Emails
                 using (MailMessage msg = new MailMessage(this.From, this.To))
                 {
                     if (!string.IsNullOrEmpty(this.TextTemplate))
-                        msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(RenderView(this.TextTemplate), new System.Net.Mime.ContentType("text/plain")));
-                    if (!string.IsNullOrEmpty(this.HtmlTemplate))
-                        msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(RenderView(this.HtmlTemplate), new System.Net.Mime.ContentType("text/html")));
+                    {
+                        //msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(, new System.Net.Mime.ContentType("text/plain")));
+                        var view = AlternateView.CreateAlternateViewFromString(RenderView(this.TextTemplate), new System.Net.Mime.ContentType("text/plain"));
+                        view.ContentType.CharSet = Encoding.UTF8.WebName;
+                        msg.AlternateViews.Add(view);
 
+                    }
+                    if (!string.IsNullOrEmpty(this.HtmlTemplate))
+                    {
+                        //msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(RenderView(this.HtmlTemplate), new System.Net.Mime.ContentType("text/html")));
+                        var view = AlternateView.CreateAlternateViewFromString(RenderView(this.HtmlTemplate), new System.Net.Mime.ContentType("text/html"));
+                        view.ContentType.CharSet = Encoding.UTF8.WebName;
+                        msg.AlternateViews.Add(view);
+                    }
                     msg.Subject = this.Subject;
                     msg.BodyEncoding = System.Text.Encoding.UTF8;
                     msg.SubjectEncoding = System.Text.Encoding.UTF8;

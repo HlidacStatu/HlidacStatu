@@ -28,6 +28,9 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult IT(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData model)
         {
+            if (ModelState.IsValid == false)
+                return RedirectToAction("Index");
+
             if (model == null)
                 return View(new Lib.Searching.SmlouvaSearchResult());
             else
@@ -71,7 +74,9 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Hledat(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData model, string cpv)
         {
-            if (model == null || ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
+                return RedirectToAction("Index");
+            if (model == null )
                 return View(new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData());
 
             string[] cpvs = null;

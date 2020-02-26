@@ -61,6 +61,8 @@ namespace Postal
                     if (email.ImageEmbedder.HasImages)
                     {
                         var view = AlternateView.CreateAlternateViewFromString(messageBody, new ContentType("text/html"));
+                        view.ContentType.CharSet = Encoding.UTF8.WebName;
+
                         email.ImageEmbedder.AddImagesToView(view);
                         message.AlternateViews.Add(view);
                         message.Body = "Plain text not available.";

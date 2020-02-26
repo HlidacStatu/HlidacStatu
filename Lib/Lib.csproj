@@ -473,6 +473,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\External\DataSets\ApiResonseStatus.cs" />
+    <Compile Include="Data\External\DataSets\Dataset.WatchdogProcessor.cs" />
     <Compile Include="Data\External\DataSets\RuntimeClassBuilder.cs" />
     <Compile Include="Data\External\DataSets\DataSearchResult.cs" />
     <Compile Include="Data\External\DataSets\DataSet.Api.cs" />
@@ -511,6 +512,7 @@
     <Compile Include="Data\Insolvence\Rizeni.cs" />
     <Compile Include="Data\Insolvence\Rizeni.Db.cs" />
     <Compile Include="Data\Insolvence\RizeniStatistic.cs" />
+    <Compile Include="Data\Insolvence\Rizeni.WatchdogProcessor.cs" />
     <Compile Include="Data\ItemToOcrQueue.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
@@ -558,6 +560,7 @@
     <Compile Include="Data\Users.cs" />
     <Compile Include="Data\Validations.cs" />
     <Compile Include="Data\VZ\ProfilZadavatele.cs" />
+    <Compile Include="Data\VZ\VerejnaZakazka.WatchdogProcessor.cs" />
     <Compile Include="Data\VZ\VerejnaZakazka.Search.cs" />
     <Compile Include="Data\Watchdog.partial.Send.cs" />
     <Compile Include="Data\Watchdog.partial.cs" />

@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Data
 
             <tr><td colspan='4'>    
                 <hr/>
-                <a href='https://www.hlidacstatu.cz/HledatSmlouvy?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
+                <a href='https://www.hlidacstatu.cz/HledatSmlouvy?Q={{ html.url_encode Model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
                     {{ fn_Pluralize (model.Items.size - #LIMIT#) '' 'Další nalezená smlouva' 'Další {0} nalezené smlouvy' 'Dalších {0} nalezených smluv' }} 
                 </a>.
             </td></tr>
