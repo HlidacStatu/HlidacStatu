@@ -150,23 +150,34 @@
                         </td>
                         <td class="text-nowrap text-right">
                             @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
+                            
+                            @if(rozhodnuti?.Cerpani != null 
+                                && rozhodnuti.Cerpani.Count == 1
+                                && rozhodnuti.Cerpani.FirstOrDefault()?.Rok != null )
+                            {
+                                <p class="new-p--gray">
+                                    (v roce @rozhodnuti.Cerpani.FirstOrDefault().Rok)
+                                </p>
+                            }
                         </td>
 
                     </tr>
-                    if (rozhodnuti?.Cerpani != null)
+                    if (rozhodnuti?.Cerpani != null
+                        && rozhodnuti.Cerpani.Count > 1)
                     {
                     <tr>
                         <td></td>
-                        <td colspan="6">
-                            <p class="new-p--gray">
-                                <span>Čerpáno: </span>
-                                <span>
-                                    @string.Join(", ",
-                                        rozhodnuti.Cerpani.OrderBy(c => c.Rok)
-                                            .Select(c => $"{HlidacStatu.Util.RenderData.NicePrice(c.CastkaSpotrebovana ?? 0)} (v roce {c.Rok})"))
-                                </span>
-                                
-                            </p>
+                        <td style="vertical-align:top;" class="text-right">Jednotlivá čerpání</td>
+                        <td colspan="5">
+                            <ul>
+                                @foreach (var row in rozhodnuti.Cerpani.OrderBy(r=> r.Rok))
+                                {
+                                    <li>
+                                        @(HlidacStatu.Util.RenderData.NicePrice(row.CastkaSpotrebovana ?? 0)) (v roce @row.Rok)
+                                    </li>
+                                    
+                                }
+                            </ul>
                         </td>
                     </tr>
                     }

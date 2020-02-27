@@ -447,11 +447,11 @@
     <tr>
         <th></th>
         <th>Příjemce</th>
+        <th></th>
         <th>IČO příjemce</th>
         <th>Název projektu</th>
         <th>Datum podpisu</th>
         <th>Celková částka</th>
-        <th></th>
     </tr>
 }
 
@@ -467,6 +467,9 @@
         @(string.IsNullOrWhiteSpace(item.Prijemce.ObchodniJmeno) ?
                     item.Prijemce.Jmeno :
                     item.Prijemce.ObchodniJmeno)
+    </td>
+    <td class="text-nowrap">
+        <a href="/dotace/detail/@item.IdDotace">Detail</a>
     </td>
     <td>
         @if(item.Prijemce.Ico != "00000000")
@@ -495,9 +498,6 @@
             }
         }
         
-    </td>
-    <td class="text-nowrap">
-        <a href="/dotace/detail/@item.IdDotace">Detail</a>
     </td>
 </tr>
 }
