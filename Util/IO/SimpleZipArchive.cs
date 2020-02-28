@@ -39,14 +39,21 @@ namespace HlidacStatu.Util.IO
             this.swriter = StreamWriter.Synchronized(this.writer);
 
         }
+        public void Flush()
+        {
+            this.swriter.Flush();
+        }
 
         public void Write(string text)
         {
             this.swriter.Write(text);
         }
-        public void WriteLine(string text)
+        public void WriteLine(string text = null)
         {
-            this.swriter.WriteLine(text);
+            if (string.IsNullOrEmpty(text))
+                this.swriter.WriteLine();
+            else
+                this.swriter.WriteLine(text);
         }
 
         private void Finish()
@@ -77,21 +84,26 @@ namespace HlidacStatu.Util.IO
                 this.zipFile.Dispose();
 
         }
+
+        object lockDisp = new object();
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            lock (lockDisp)
             {
-                if (disposing)
+                if (!disposedValue)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    if (disposing)
+                    {
+                        // TODO: dispose managed state (managed objects).
+
+                    }
+
+                    // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                    // TODO: set large fields to null.
+
+                    disposedValue = true;
                     Finish();
-
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
             }
         }
 
