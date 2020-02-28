@@ -26,8 +26,6 @@ namespace HlidacStatu.Util.IO
             var fi = new FileInfo(this.ArchiveFileName);
             if (overwrite == false && fi.Exists)
                 throw new System.IO.IOException("File " + archive + " already exists.");
-            else if (fi.Exists)
-                fi.Delete();
 
             if (fi.Directory.Exists == false)
                 fi.Directory.Create();

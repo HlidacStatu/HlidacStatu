@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Data
     public partial class Osoba
     {
 
-        public JSON ToJsonEditor()
+        public JSON Export(bool allData = false)
         {
             var t = this;
             var r = new JSON();
@@ -31,10 +31,13 @@ namespace HlidacStatu.Lib.Data
             r.Umrti = t.Umrti?.ToString("yyyy-MM-dd") ?? "";
             r.Prijmeni = t.Prijmeni;
             r.Status = (Osoba.StatusOsobyEnum)t.Status;
-            r.Event = t.Events().Select(m =>
+            var events = this.Events();
+            if (allData == false)
+                events = events.Where(m => m.Type == (int)OsobaEvent.Types.Sponzor);
+
+            r.Event = events.Select(m =>
                 new JSON.ev()
                 {
-                    pk = m.pk,
                     Organizace = m.Organizace,
                     DatumOd = m.DatumOd?.ToString("yyyy-MM-dd") ?? "",
                     DatumDo = m.DatumDo?.ToString("yyyy-MM-dd") ?? "",
@@ -42,10 +45,10 @@ namespace HlidacStatu.Lib.Data
                     Note = m.Note,
                     Typ = (OsobaEvent.Types)m.Type,
                     AddInfoNum = m.AddInfoNum,
+                    AddInfo = m.AddInfo,
                     Zdroj = m.Zdroj
                 }
                 ).ToArray();
-            //throw new NotImplementedException();
             string[] angazovanostDesc = Enums.EnumToEnumerable(typeof(Firma.RelationSimpleEnum))
                 .Where(m => Convert.ToInt32(m.Value) < 0)
                 .Select(m => m.Key).ToArray();

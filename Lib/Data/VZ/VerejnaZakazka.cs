@@ -1087,30 +1087,23 @@ namespace HlidacStatu.Lib.Data.VZ
             public string UrlProfiluZadavatele { get; set; }
             public ZakazkaSource ZdrojZakazky { get; set; }
         }
-        public ExportedVZ Export()
+        public VerejnaZakazka Export(bool allData = false)
         {
-
-            return new ExportedVZ()
+            VerejnaZakazka vz = (VerejnaZakazka) this.MemberwiseClone();
+            if (allData == false)
             {
-                CPV = this.CPV,
-                DatumUverejneni = this.DatumUverejneni,
-                DatumUzavreniSmlouvy = this.DatumUzavreniSmlouvy,
-                Dodavatele = this.Dodavatele,
-                EvidencniCisloZakazky = this.EvidencniCisloZakazky,
-                Id = this.Id,
-                KonecnaHodnotaBezDPH = this.KonecnaHodnotaBezDPH,
-                KonecnaHodnotaMena = this.KonecnaHodnotaMena,
-                LhutaDoruceni = this.LhutaDoruceni,
-                NazevZakazky = this.NazevZakazky,
-                OdhadovanaHodnotaBezDPH = this.OdhadovanaHodnotaBezDPH,
-                OdhadovanaHodnotaMena = this.OdhadovanaHodnotaMena,
-                PopisZakazky = this.PopisZakazky,
-                PosledniZmena = this.PosledniZmena,
-                StavZakazky = this.StavZakazky,
-                Zadavatel = new ExportedVZ.SubjectExport(this.Zadavatel),
-                ZdrojZakazky = this.ZdrojZakazkyUrl(),
-
-            };
+                if (vz.Dokumenty != null)
+                {
+                    foreach (var vzd in vz.Dokumenty)
+                    {
+                        vzd.DirectUrl = "";
+                        vzd.PlainDocumentId = "";
+                        vzd.PlainText = "-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --";
+                    }
+                }
+            }
+            vz.RawHtml = "";
+            return vz;
         }
     }
 }

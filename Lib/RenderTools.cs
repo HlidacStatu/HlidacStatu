@@ -30,9 +30,7 @@ namespace HlidacStatu.Lib
             }
 
             Console.WriteLine(
-                string.Format("\n{0}: {1}/{2}   {3}%  End in {4}",
-                    DateTime.Now.ToLongTimeString(), data.ProcessedItems, data.TotalItems, data.PercentDone, send
-                )
+                string.Format($"\n{data.Prefix}{DateTime.Now.ToLongTimeString()}: {data.ProcessedItems}/{data.TotalItems} {data.PercentDone}%  End in {send}")
                 );
         }
 
