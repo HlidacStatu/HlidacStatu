@@ -1039,8 +1039,9 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static string ExportToJson(Smlouva s, bool formatted = false, bool allData = false)
+        public static string ExportToJson(Smlouva smlouva, bool formatted = false, bool allData = false, bool noDocsContent = false)
         {
+            Smlouva s = (Smlouva) smlouva.MemberwiseClone(); 
             if (s == null)
                 return null;
 
@@ -1068,6 +1069,15 @@ namespace HlidacStatu.Lib.Data
                 s.SVazbouNaPolitikyAktualni = null;
                 s.SVazbouNaPolitikyNedavne = null;
             }
+            if (noDocsContent)
+                if (s.Prilohy != null)
+                {
+                    foreach (var p in s.Prilohy)
+                    {
+                        p.PlainTextContent = null;
+                    }
+                }
+
             var ret = Newtonsoft.Json.JsonConvert.SerializeObject(s,
                 new JsonSerializerSettings()
                 {
