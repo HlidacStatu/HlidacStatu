@@ -494,8 +494,8 @@ namespace HlidacStatu.Lib.Data
             if (this.Narozeni.HasValue || this.Umrti.HasValue)
             {
                 string narozeni = this.Narozeni?.ToString("*yyyy") ?? "* ???";
-                string umrti = this.Umrti?.ToString("- ✝yyyy") ?? "";
-                result = $" ({narozeni} {umrti})";
+                string umrti = this.Umrti?.ToString(" - ✝yyyy") ?? "";
+                result = $" ({narozeni}{umrti})";
             }
             if (html)
                 result = result.Replace(" ", "&nbsp;");
@@ -1223,7 +1223,7 @@ namespace HlidacStatu.Lib.Data
                            2, itemDelimeter: ", ");
                     var descr = $"<b>{this.FullNameWithYear()}</b>";
                     if (!string.IsNullOrEmpty(kdoje))
-                        descr += "," + kdoje + (kdoje.EndsWith(". ") ? "" : ". ");
+                        descr += ", " + kdoje + (kdoje.EndsWith(". ") ? "" : ". ");
                     f.Add(new InfoFact(descr, InfoFact.ImportanceLevel.Summary));
 
                     var statDesc = "";

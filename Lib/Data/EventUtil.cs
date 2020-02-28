@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.Data
         {
             return RenderDatum(oEvent.DatumOd, oEvent.DatumDo, txtOd, txtDo, dateFormat, template);
         }
-        public static string RenderDatum(DateTime? DatumOd, DateTime? DatumDo, string txtOd = "", string txtDo = " - ", string dateFormat = "yyyy", string template = "{0}")
+        public static string RenderDatum(DateTime? DatumOd, DateTime? DatumDo, string txtOd = "", string txtDo = "–", string dateFormat = "yyyy", string template = "{0}")
         {
             if (DatumOd.HasValue && DatumDo.HasValue)
             {
@@ -30,7 +30,7 @@ namespace HlidacStatu.Lib.Data
                 else
                 {
                     return string.Format(template, 
-                        string.Format("{0} {1} {2} {3}",
+                        string.Format("{0} {1}{2}{3}",
                            txtOd,
                            DatumOd.Value.ToString(dateFormat),
                            txtDo,

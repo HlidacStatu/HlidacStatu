@@ -230,7 +230,7 @@ namespace HlidacStatu.Lib.Data
             {
 
                 case Types.Politicka:
-                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:"do", template:"({0})"), this.Organizace);
+                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:" do ", template:"({0})"), this.Organizace);
                 //    return sb.ToString();
                 //// poslanec a senátor sloučeni
                 case Types.PolitickaPracovni:
@@ -238,7 +238,7 @@ namespace HlidacStatu.Lib.Data
                 case Types.VerejnaSpravaPracovni:
                 case Types.SoukromaPracovni:
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
@@ -253,7 +253,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
                     {
-                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                         if (!string.IsNullOrEmpty(this.Organizace))
                             sb.Append(" - " + Organizace);
                         return sb.ToString();
@@ -265,7 +265,7 @@ namespace HlidacStatu.Lib.Data
                 default:
                     if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
                     {
-                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                         if (!string.IsNullOrEmpty(this.Organizace))
                             sb.Append(" - " + Organizace);
                         return sb.ToString();
@@ -298,7 +298,7 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:"do", template:"({0})"), this.Organizace);
+                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:" do ", template:"({0})"), this.Organizace);
                 //    return sb.ToString();
                 //// poslanec a senátor sloučeni
                 case Types.PolitickaPracovni:
@@ -306,7 +306,7 @@ namespace HlidacStatu.Lib.Data
                 case Types.VerejnaSpravaPracovni:
                 case Types.SoukromaPracovni:
                 case Types.VolenaFunkce:
-                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                    sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
@@ -321,7 +321,7 @@ namespace HlidacStatu.Lib.Data
                     }                    
                     if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
                     {
-                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                         if (!string.IsNullOrEmpty(this.Organizace))
                             sb.Append(" - " + Organizace);
                         return sb.ToString();
@@ -333,7 +333,7 @@ namespace HlidacStatu.Lib.Data
                 default:
                     if (!string.IsNullOrEmpty(this.AddInfo + this.Organizace))
                     {
-                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: "do", template: "({0})")} ");
+                        sb.Append($"{this.AddInfo} {this.RenderDatum(txtOd: "od", txtDo: " do ", template: "({0})")} ");
                         if (!string.IsNullOrEmpty(this.Organizace))
                             sb.Append(" - " + Organizace);
                         return sb.ToString();

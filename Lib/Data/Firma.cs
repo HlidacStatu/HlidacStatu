@@ -698,7 +698,9 @@ namespace HlidacStatu.Lib.Data
         {
             return Description(html, m => true, template, itemTemplate, itemDelimeter, numOfRecords);
         }
-        public string Description(bool html, Expression<Func<FirmaEvent, bool>> predicate, string template = "{0}", string itemTemplate = "{0}", string itemDelimeter = "<br/>",int numOfRecords = int.MaxValue)
+        public string Description(bool html, Expression<Func<FirmaEvent, bool>> predicate, 
+            string template = "{0}", string itemTemplate = "{0}",
+            string itemDelimeter = "<br/>",int numOfRecords = int.MaxValue)
         {
             StringBuilder sb = new StringBuilder();
             var events = this.Events(predicate);
@@ -708,7 +710,7 @@ namespace HlidacStatu.Lib.Data
             {
                 List<string> evs = events
                     .OrderBy(e => e.DatumOd)
-                    .Select(e => html ? e.RenderHtml(", ") : e.RenderText(" "))
+                    .Select(e => html ? e.RenderHtml(", ") : e.RenderText(", "))
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrEmpty(s))
                     .Take(numOfRecords)

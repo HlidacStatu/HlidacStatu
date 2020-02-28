@@ -23,11 +23,15 @@ namespace HlidacStatu.Lib.Data
         {
             var t = this;
             var r = new JSON();
-            
-            r.Gender =  (t.Pohlavi == "f") ? JSON.gender.Žena : JSON.gender.Muž;
+
+            r.Gender = (t.Pohlavi == "f") ? JSON.gender.Žena : JSON.gender.Muž;
             r.NameId = t.NameId;
             r.Jmeno = t.Jmeno;
-            r.Narozeni = t.Narozeni?.ToString("yyyy-MM-dd") ?? "";
+            if (allData == false)
+                r.Narozeni = t.Narozeni?.ToString("yyyy") ?? "";
+            else
+                r.Narozeni = t.Narozeni?.ToString("yyyy-MM-dd") ?? "";
+
             r.Umrti = t.Umrti?.ToString("yyyy-MM-dd") ?? "";
             r.Prijmeni = t.Prijmeni;
             r.Status = (Osoba.StatusOsobyEnum)t.Status;
@@ -52,7 +56,7 @@ namespace HlidacStatu.Lib.Data
             string[] angazovanostDesc = Enums.EnumToEnumerable(typeof(Firma.RelationSimpleEnum))
                 .Where(m => Convert.ToInt32(m.Value) < 0)
                 .Select(m => m.Key).ToArray();
-            
+
 
             r.Vazbyfirmy = Lib.Data.Graph.VsechnyDcerineVazby(this)
                 .Where(m => angazovanostDesc.Contains(m.Descr))
@@ -62,9 +66,9 @@ namespace HlidacStatu.Lib.Data
                         DatumOd = m.RelFrom?.ToString("yyyy-MM-dd") ?? "",
                         DatumDo = m.RelTo?.ToString("yyyy-MM-dd") ?? "",
                         Popis = m.Descr,
-                        TypVazby = (JSON.typVazby) Enum.Parse(typeof(JSON.typVazby),m.Descr, true) ,
+                        TypVazby = (JSON.typVazby)Enum.Parse(typeof(JSON.typVazby), m.Descr, true),
                         VazbaKIco = m.To.Id,
-                        VazbaKOsoba = m.To.PrintName() 
+                        VazbaKOsoba = m.To.PrintName()
                         //Zdroj = m.
                     })
                 .ToArray();
@@ -74,7 +78,7 @@ namespace HlidacStatu.Lib.Data
 
 
 
-        public partial class JSON 
+        public partial class JSON
         {
 
             public Osoba Save(string user)
@@ -88,7 +92,7 @@ namespace HlidacStatu.Lib.Data
                     o = Osoby.GetById.Get(this.Id);
                 else if (narozeni.HasValue == false)
                     return null;
-                if (o==null)
+                if (o == null)
                     o = Osoba.GetByName(t.Jmeno, t.Prijmeni, narozeni.Value);
                 if (o == null)
                     o = Osoba.GetByNameAscii(t.Jmeno, t.Prijmeni, narozeni.Value);
@@ -118,8 +122,8 @@ namespace HlidacStatu.Lib.Data
                     ev.Type = (int)e.Typ;
                     ev.AddInfo = e.AddInfo;
                     ev.Zdroj = e.Zdroj;
-                    ev.OsobaId = o.InternalId;                    
-                    o.AddOrUpdateEvent(ev,user);
+                    ev.OsobaId = o.InternalId;
+                    o.AddOrUpdateEvent(ev, user);
                 }
 
                 foreach (var v in t.Vazbyfirmy)
@@ -221,7 +225,7 @@ namespace HlidacStatu.Lib.Data
                 Žena = 1,
             }
 
-         
+
 
             public enum typVazby
             {
