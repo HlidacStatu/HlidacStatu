@@ -528,7 +528,8 @@ else
 
                         <p>
                             @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
+                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+                           " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
 
                         </p>
                     }
