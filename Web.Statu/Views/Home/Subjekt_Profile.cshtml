@@ -146,7 +146,7 @@ else
                 <td>
                     @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null,
                            "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
-                           "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                           prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText:"")
 
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
