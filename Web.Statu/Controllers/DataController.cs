@@ -1,5 +1,6 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -9,13 +10,44 @@ namespace HlidacStatu.Web.Controllers
     public partial class DataController : GenericAuthController
     {
 
+        static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]> datasetIndexStatCache =
+            new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromHours(2),
+                (o)=>
+                {
+                    List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>() ;
+                    var datasets = DataSetDB.Instance.SearchDataRaw("*", 1, 200)
+                        .Result
+                        .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s.Item2));
+
+                    foreach (var ds in datasets)
+                    {
+                        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
+                        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
+                        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
+                        ret.Add(new Models.DatasetIndexStat()
+                        {
+                            Ds = ds,
+                            RecordNum = recordNum,
+                            RecordNumWeek = recordNumWeek
+                        }) ;
+                    }
+                    return ret.ToArray();
+                }
+                );
+            
+           
+
+
 #if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 5)]
 #endif
         public ActionResult Index(string id)
         {
+            if (Request.QueryString["refresh"]=="1")
+                datasetIndexStatCache.Invalidate();
+
             if (string.IsNullOrEmpty(id))
-                return View();
+                return View(datasetIndexStatCache.Get());
 
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
@@ -65,6 +97,8 @@ namespace HlidacStatu.Web.Controllers
 
             if (confirmation == ds.DatasetId)
             {
+                datasetIndexStatCache.Invalidate();
+
                 DataSetDB.Instance.DeleteRegistration(ds.DatasetId, email);
                 return RedirectToAction("Index");
             }
@@ -120,6 +154,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction("Index");
+            
+            datasetIndexStatCache.Invalidate();
 
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)

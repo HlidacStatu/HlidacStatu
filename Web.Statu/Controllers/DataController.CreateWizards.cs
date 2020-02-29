@@ -36,6 +36,8 @@ namespace HlidacStatu.Web.Controllers
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
+            datasetIndexStatCache.Invalidate();
+
             var newReg = WebFormToRegistration(data, form);
             newReg.datasetId = form["datasetId"];
             newReg.created = DateTime.Now;
@@ -88,6 +90,8 @@ namespace HlidacStatu.Web.Controllers
             catch  { }
             if (reg == null)
                 ViewBag.ApiResponseError = ApiResponseStatus.Error(500, "Nekorektní záloha datasetu", "Nekorektní záloha datasetu");
+
+            datasetIndexStatCache.Invalidate();
 
             if (reg != null)
             {
@@ -355,7 +359,10 @@ namespace HlidacStatu.Web.Controllers
             if (DataSet.ExistsDataset(reg.datasetId))
                 reg.datasetId = reg.datasetId + "-" + Devmasters.Core.TextUtil.GenRandomString(5);
 
+            datasetIndexStatCache.Invalidate();
+
             var status = DataSet.Api.Create(reg, email);
+
             if (status.valid == false)
             {
                 if (DataSet.ExistsDataset((status.value?.ToString() ?? "")))
@@ -433,6 +440,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
+
             model.DatasetId = ds.DatasetId;
 
             if (ds.IsFlatStructure() == false)
@@ -482,6 +490,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
+            datasetIndexStatCache.Invalidate();
 
             Guid fileId = Guid.NewGuid();
             var uTmp = new Lib.IO.UploadedTmpFile();
@@ -513,6 +522,7 @@ namespace HlidacStatu.Web.Controllers
 
             model.DatasetId = id;
 
+
             string[] csvHeaders = null;
 
             if (string.IsNullOrEmpty(id))
@@ -524,6 +534,9 @@ namespace HlidacStatu.Web.Controllers
 
             if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
+
+            datasetIndexStatCache.Invalidate();
+
 
             if (ds.IsFlatStructure() == false)
             {

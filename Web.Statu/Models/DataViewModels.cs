@@ -10,6 +10,12 @@ using HlidacStatu.Lib.Data.External.DataSets;
 namespace HlidacStatu.Web.Models
 {
 
+    public class DatasetIndexStat
+    {
+        public HlidacStatu.Lib.Data.External.DataSets.Registration Ds { get; set; }
+        public long RecordNum { get; set; }
+        public long RecordNumWeek { get; set; }
+    }
 
     public class DataDetailModel
     {

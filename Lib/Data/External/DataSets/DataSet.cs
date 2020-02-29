@@ -953,11 +953,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     List<InfoFact> f = new List<InfoFact>();
 
-                    var sCreated = HlidacStatu.Lib.RenderTools.DateDiffShort_7pad(this.Registration().created, DateTime.Now, "Databáze byla založena před {0}.", "");
+                    DateTime dbCreated = this.Registration().created;
                     var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults: true);
                     var total = (int)first.Total;
                     var last = this.SearchData("*", 1, 1, "DbCreated desc");
-                    string minMax = sCreated + " ";
+
+                    var itemFirstDate = (DateTime)first.Result.First().DbCreated;
+                    var itemLastDate = (DateTime)last.Result.First().DbCreated;
+
+                    dbCreated = new DateTime(Math.Min(dbCreated.Ticks, itemFirstDate.Ticks));
+                    var sCreated = "Databáze byla založena "+ Devmasters.Core.DateTimeUtil.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower(); 
+                    string minMax ="";
                     if (total == 0)
                     {
                         minMax += "Neobsahuje žádný záznam";
@@ -967,8 +973,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         minMax += Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
                             "Obsahuje <b>jeden záznam</b>", "Obsahuje <b>{0} záznamy</b>", "Obsahuje <b>{0} záznamů</b>")
                             + ", nejstarší byl vložen <b>"
-                            + (Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
-                            + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + (Devmasters.Core.DateTimeUtil.Ago(itemFirstDate, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago(itemLastDate, HlidacStatu.Util.Consts.csCulture).ToLower())
                             + "</b>.";
                     }
                     var stat = sCreated + " " + minMax;

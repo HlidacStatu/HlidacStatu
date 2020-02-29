@@ -1,4 +1,6 @@
-﻿@using Nest;
+﻿@model HlidacStatu.Web.Models.DatasetIndexStat[]
+
+@using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
 @using Devmasters.Core;
@@ -10,11 +12,6 @@
     var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
     bool showBeta = true;
 
-    var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 100)
-        .Result
-        .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<HlidacStatu.Lib.Data.External.DataSets.Registration>(s.Item2));
-
-    datasets = datasets.OrderBy(r => r.name).ThenBy(r => r.id);
     int count = 0;
 
     bool shownFirstBeta = false;
@@ -47,20 +44,8 @@
 </div>
 
 <div class="row">
-    @*!string.IsNullOrWhiteSpace(Request.QueryString["beta"])*@
-    @if (true)
-    {
-        @RenderDatasets2(datasets.Where(m => m.betaversion == false), email)
-    }
-    else
-    {
-        foreach (var ds in datasets.Where(m => m.betaversion == false))
-        {
-            count++;
-            @RenderDataset(ds, email, count, "success")
 
-        } @*foreach*@
-    }
+    @RenderDatasets2(Model.Where(m => m.Ds.betaversion == false).OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id), email)
 </div>
 
 <hr />
@@ -77,86 +62,15 @@
         </div>
 
     </div>
-    @if (true)
-    {
-        <div style="padding-top:15px;"></div>
-        @RenderDatasets2(datasets.Where(m => m.betaversion == true), email)
-    }
-    else
-    {
-        count = 0;
-        foreach (var ds in datasets.Where(m => m.betaversion == true))
-        {
-            count++;
-            @RenderDataset(ds, email, count, "default")
-        }
-    }
+    <div style="padding-top:15px;"></div>
+    @RenderDatasets2(Model.Where(m => m.Ds.betaversion == true).OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id), email)
 </div>
 
 @Html.Partial("_new")
 
 
-@helper RenderDataset(HlidacStatu.Lib.Data.External.DataSets.Registration ds, string email, int count, string style)
-{
-    try
-    {
-        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-        bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-            || email == ds.createdBy
-            );
-        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
-        if (showEditBtn == false && recordNum < 5)
-        {
-            return; //don't show empty or near to empty datasets, which are not "my".
-        }
 
-        <div class="col-xs-12 col-sm-6">
-            <div class="panel panel-@style">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-7 col-sm-8">
-                            <a href="/data/Index/@dsContent.DatasetId"><b>@ds.name</b></a>
-                        </div>
-                        <div class="col-xs-5 col-sm-4 right">
-                            (<b>@recordNum</b> záznamů)
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <p style="min-height:40px">
-                        @if (!string.IsNullOrEmpty(ds.description))
-                        {
-                            @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
-                        }
-                    </p>
-                    <div>
-                        @*<a href="/data/Hledat/@dsContent.DatasetId?q=*&order=DbCreated+desc" class="btn btn-default" title="Vypsat nejnovější data"><i class="far fa-list"></i> Poslední</a>*@
-
-                        <a href="/data/Index/@dsContent.DatasetId" class="btn btn-default" style="margin-left:10px"><i class="far fa-info-circle"></i> Hledání v databázi a informace o db</a>
-
-                        @if (showEditBtn)
-                        {
-                            <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-info" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
-                        }
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        if (count % 2 == 0)
-        {
-            <div class="clearfix"></div>
-        }
-    }
-    catch (Exception)
-    {
-
-    }
-
-}
-
-
-@helper RenderDatasets2(IEnumerable<HlidacStatu.Lib.Data.External.DataSets.Registration> dss, string email)
+@helper RenderDatasets2(IEnumerable<HlidacStatu.Web.Models.DatasetIndexStat> dss, string email)
 {
 
     foreach (var ds in dss)
@@ -165,17 +79,14 @@
     }
 }
 
-@helper RenderDataset2(HlidacStatu.Lib.Data.External.DataSets.Registration ds, string email, string style)
+@helper RenderDataset2(HlidacStatu.Web.Models.DatasetIndexStat dss, string email, string style)
 {
     try
     {
-        var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
         bool showEditBtn = (HlidacStatu.Lib.Data.External.DataSets.DataSet.Api.SuperUsers.Contains(email)
-            || email == ds.createdBy
+            || email == dss.Ds.createdBy
             );
-        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
-        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
-        if (showEditBtn == false && recordNum < 5)
+        if (showEditBtn == false && dss.RecordNum < 5)
         {
             return; //don't show empty or near to empty datasets, which are not "my".
         }
@@ -183,33 +94,33 @@
 
             <div style="padding: 10px 0 30px 0">
                 <div class="col-xs-12 col-sm-offset-1 col-sm-7" style="font-size:19px">
-                    <a href="/data/Index/@dsContent.DatasetId"><b>@ds.name</b></a>
+                    <a href="/data/Index/@dss.Ds.datasetId"><b>@dss.Ds.name</b></a>
                 </div>
                 <div class="clearfix" style="padding-bottom:10px;"></div>
                 <div class="col-xs-12 col-sm-offset-1 col-sm-7">
-                    @if (!string.IsNullOrEmpty(ds.description))
+                    @if (!string.IsNullOrEmpty(dss.Ds.description))
                     {
-                        @(Devmasters.Core.TextUtil.ShortenText(ds.description.ToString(), 240, "..."))
+                        @(Devmasters.Core.TextUtil.ShortenText(dss.Ds.description.ToString(), 240, "..."))
                     }
                 </div>
                 <div class="col-xs-2 col-sm-2 text-muted">
-                    <b>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(recordNum, true))</b>&nbsp;záznamů
-                    @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)recordNumWeek, "", ", jeden&nbsp;nový", ", {0}&nbsp;nové", ", {0:### ### ###}&nbsp;nových"))
+                    <b>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(dss.RecordNum, true))</b>&nbsp;záznamů
+                    @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dss.RecordNumWeek, "", ", jeden&nbsp;nový", ", {0}&nbsp;nové", ", {0:### ### ###}&nbsp;nových"))
                 </div>
 
                 <div class="col-xs-12  col-sm-2">
                     @if (showEditBtn)
                     {
-                        <a href="/data/Manage/@dsContent.DatasetId" class="btn btn-info btn-sm" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
+                        <a href="/data/Manage/@dss.Ds.datasetId" class="btn btn-info btn-sm" alt="Nastavení datasetu" title="Nastavení datasetu"><i class="far fa-cog"></i> Nastavení</a>
                     }
                 </div>
             </div>
         </div>
 
-}
-catch (Exception e)
-{
-    HlidacStatu.Util.Consts.Logger.Error("Render Dataset Index ", e);
-}
+    }
+    catch (Exception e)
+    {
+        HlidacStatu.Util.Consts.Logger.Error("Render Dataset Index ", e);
+    }
 
 }
