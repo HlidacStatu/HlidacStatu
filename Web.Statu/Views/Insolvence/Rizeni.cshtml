@@ -63,6 +63,11 @@
 }
 else
 {
+    if (!Model.Rizeni.OnRadar)
+    {
+        @Html.Partial("_OnRadarInfo")
+    }
+
     @Html.Partial("_Status", Model)
 }
 

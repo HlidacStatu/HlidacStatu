@@ -266,15 +266,19 @@ MORATORIUM =
                         .Source(sr => sr.Includes(r => r.Fields("dokumenty.*").Fields("spisovaZnacka")))
                         .Query(q => q.Match(m => m.Field("dokumenty.id").Query(id)))); //TODO
 
-                return data.IsValid
-                    ? data.Hits.Select(h => new DokumentSeSpisovouZnackou
+                if (data.IsValid == false)
+                    throw new ApplicationException(data.ServerError?.ToString() ?? "");
+
+                if (data.Total == 0)
+                    return null;
+
+                return data.Hits.Select(h => new DokumentSeSpisovouZnackou
                     {
                         SpisovaZnacka = h.Source.SpisovaZnacka,
                         UrlId = h.Source.UrlId(),
                         Dokument = h.Source.Dokumenty.Single(d => d.Id == id),
                         Rizeni = h.Source
-                    }).First()
-                    : null;
+                    }).First();
             }
             catch (Exception e)
             {
