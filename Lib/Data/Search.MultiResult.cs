@@ -223,7 +223,7 @@ namespace HlidacStatu.Lib.Data
 
 
                             res.Osoby = new GeneralResult<Osoba>(
-                                HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query, 100)
+                                HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query.Trim(), 100)
                                 .OrderBy(m => m.Prijmeni)
                                 .ThenBy(m => m.Jmeno)
                                 );

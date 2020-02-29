@@ -1,0 +1,62 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+@{
+
+    Layout = null;
+
+
+    List<string> tabs = new List<string>();
+    List<string> results = new List<string>();
+    var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+    var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, 1);
+
+    if (insRes.IsValid && insRes.Total > 0)
+    {
+        tabs.Add($"V insolvenčním rejstříku ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(insRes.Total)})");
+        results.Add(
+            SearchResults.InsolvenceTableResult(this.User, this.Request, 5, insRes).ToHtmlString()
+        );
+    }
+
+    if (resVZ.IsValid && resVZ.Total > 0)
+    {
+        tabs.Add($"Účast ve veřejných zakázkách ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(resVZ.Total)})");
+        results.Add(
+            SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
+        );
+    }
+    var queries = HlidacStatu.Lib.Data.External.DataSets.Search.GetSpecificQueriesForDatasets("ICO", Model.ICO, true);
+    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiQueryMultiResult.GeneralSearch(queries, 1, 5);
+    if (dsSearch.IsValid && dsSearch.Total > 0)
+    {
+        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+        {
+            tabs.Add($"{dss.DataSet.Registration().name} ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(dss.Total)})");
+            results.Add(dss.RenderResultsInHtml(dss.Q, 5));
+        }
+    }
+}
+@if (tabs.Count > 0)
+{
+    <hr class="morespace" />
+    <h3 id="_dalsi_db">Informace z dalších databází</h3>
+
+    <div class="row">
+        @Util.VerticalTabs(tabs, results)
+        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+    </div>
+}
+
+
+
+

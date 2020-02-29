@@ -1320,15 +1320,16 @@ textarea {
     max-height: 120px;
     overflow: hidden;
 }
+
     .low-box .low-box-content {
-        top:-60px;
-        position:relative;
+        top: -60px;
+        position: relative;
     }
 
     .low-box .low-box-line {
         position: relative;
         top: 75px;
-        height:60px;
+        height: 60px;
         left: 0;
         width: 100%;
         margin: 0;
@@ -1366,27 +1367,27 @@ textarea {
     /* content: ""; △*/
 }
 
-    .line-text-divider {
-        color: #ccc;
-        width: 70%;
-        margin: 20px auto;
-        overflow: hidden;
-        text-align: center;
-        line-height: 1.2em;
+.line-text-divider {
+    color: #ccc;
+    width: 70%;
+    margin: 20px auto;
+    overflow: hidden;
+    text-align: center;
+    line-height: 1.2em;
+}
+
+    .line-text-divider:before, .line-text-divider:after {
+        content: "";
+        vertical-align: middle;
+        display: inline-block;
+        width: 50%;
+        border-bottom: 2px dotted #ccc;
+        margin: 0 2% 0 -55%;
     }
 
-        .line-text-divider:before, .line-text-divider:after {
-            content: "";
-            vertical-align: middle;
-            display: inline-block;
-            width: 50%;
-            border-bottom: 2px dotted #ccc;
-            margin: 0 2% 0 -55%;
-        }
-
-        .line-text-divider:after {
-            margin: 0 -55% 0 2%;
-        }
+    .line-text-divider:after {
+        margin: 0 -55% 0 2%;
+    }
 
 /*  vertical tab */
 div.verticaltab-container {
@@ -1505,10 +1506,10 @@ div.verticaltab-container {
 .highlighting {
 }
 
-.highlighting.snippet {
-    color: #666;
-    font-style: normal;
-}
+    .highlighting.snippet {
+        color: #666;
+        font-style: normal;
+    }
 
     .highlighting highl {
         font-weight: 900;
@@ -1518,6 +1519,7 @@ div.verticaltab-container {
         background-color: rgba(255, 255, 9, 0.3);
         font-size: 120%;
     }
+
     .highlighting.snippet highl {
         font-weight: 900;
         background-color: #c5f74f;
@@ -1590,3 +1592,11 @@ div.verticaltab-container {
         }
 
 
+.btn-emphasized {
+    
+}
+
+    .btn-emphasized b {
+        color: #000;
+        font-weight: unset;
+    }

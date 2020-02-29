@@ -159,10 +159,11 @@ else if (Model.HasResults == false)
     <div class="col-xs-12">
         <div class="new-p new-p--big" style="margin-top: 10px;">
             Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @HlidacStatu.Util.RenderData.Vysledky.NalezenoPocetVysledku(Model.Total).
+            @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny změny o <b>{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}</b> v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Změny o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."), showWDList: false, preBtnText: "")
         </div>
     </div>
 </div>
-
+<hr/>
 <div class="row">
     <div class="col-xs-12">
 
@@ -199,11 +200,6 @@ else if (Model.HasResults == false)
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xs-12">
-        @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny novinky o '{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}' ve všech databázích", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))
-    </div>
-</div>
 
 @if (Model.HasSmlouvy)
 {
@@ -266,7 +262,7 @@ else if (Model.HasResults == false)
                 <div class="text-center">
 
                     <a class="btn btn-default btn-default-new" href="@Url.Action("HledatSmlouvy", Model.Smlouvy.ToRouteValues(1))">zobrazit všechny nalezené smlouvy (<b>@Model.Smlouvy.Total</b>)</a>
-                    @Util.AddWatchDogSmall(this.User, Model.Query, typeof(HlidacStatu.Lib.Data.Smlouva))
+                    @*@Util.AddWatchDogSmall(this.User, Model.Query, typeof(HlidacStatu.Lib.Data.Smlouva))*@
                 </div>
             </div>
         </div>

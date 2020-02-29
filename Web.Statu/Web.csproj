@@ -1249,7 +1249,6 @@
     <Content Include="Views\ApiV1\Index.cshtml" />
     <Content Include="Views\Manage\AnalyzeSubjekt.cshtml" />
     <Content Include="Views\Manage\EditObject.cshtml" />
-    <Content Include="Views\Manage\EditOsoba.cshtml" />
     <Content Include="Views\Manage\HledejOsoby.cshtml" />
     <Content Include="Views\Manage\Objednavka.cshtml" />
     <Content Include="Views\Manage\Objednavka2.cshtml" />
@@ -1379,6 +1378,7 @@
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
+    <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

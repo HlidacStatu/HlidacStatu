@@ -40,6 +40,22 @@
     {
         get { return (WebViewPage)CurrentPage; }
     }
+
+    public static string GetSearchUrl(string url, string query)
+    { 
+        if (query != null)
+        {
+            if (url.Contains("?"))
+            {
+                url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+            else
+            {
+                url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+        }
+        return url;
+    }
 }
 
 @helper IfExists(bool showExists, string exists, string ifEmpty = "")
@@ -186,15 +202,15 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 }
 @helper FirmaMoreInfoLinks(string ico, string linkTemplate = null, string textTemplate = null)
 {
-var merkIco = HlidacStatu.Util.ParseTools.IcoToMerkIco(ico);
+    var merkIco = HlidacStatu.Util.ParseTools.IcoToMerkIco(ico);
 
-string firmoLink = string.Format("http://www.firmo.cz/cs/osoba/{0}?apc=4801", ico);
-string merkLink = "https://www.merk.cz/";
-string linkT = "<a href='{0}' onclick=\"return trackOutLink(this,'Detail');\">&nbsp;<img height='18' src='/Content/Img/{1}' /></a>";
-string textT = ""; //"více na {0}";
+    string firmoLink = string.Format("http://www.firmo.cz/cs/osoba/{0}?apc=4801", ico);
+    string merkLink = "https://www.merk.cz/";
+    string linkT = "<a href='{0}' onclick=\"return trackOutLink(this,'Detail');\">&nbsp;<img height='18' src='/Content/Img/{1}' /></a>";
+    string textT = ""; //"více na {0}";
 
     <span class="firmy-more-links">
-        @Html.Raw(string.Format(textT,string.Format(linkT, merkLink, "merk-logo.svg")))
+        @Html.Raw(string.Format(textT, string.Format(linkT, merkLink, "merk-logo.svg")))
     </span>
 }
 @helper RenderSearchLinkBetweenSubjects(string platceIco, string prijemceIco)
@@ -238,18 +254,18 @@ string textT = ""; //"více na {0}";
 
 @helper DynamicModal(string dynamicContentRelUrl)
 {
-if (!dynamicContentRelUrl.EndsWith("&"))
-{
-    if (dynamicContentRelUrl.Contains("?"))
+    if (!dynamicContentRelUrl.EndsWith("&"))
     {
-        dynamicContentRelUrl += "&";
+        if (dynamicContentRelUrl.Contains("?"))
+        {
+            dynamicContentRelUrl += "&";
+        }
+        else
+        {
+            dynamicContentRelUrl += "?";
+        }
     }
-    else
-    {
-        dynamicContentRelUrl += "?";
-    }
-}
-string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
+    string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
     <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="btn btn-link">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Opravit
     </a>
@@ -492,18 +508,7 @@ string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
 
 @helper AddSearchBtn(string url, string query = null, string btnText = "Hledat", string btnCss = null)
 {
-    if (query != null)
-    {
-        if (url.Contains("?"))
-        {
-            url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
-        }
-        else
-        {
-            url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
-        }
-    }
-    <a class="@(btnCss ?? "btn btn-default btn-xs")" href="@Html.Raw(url)">
+    <a class="@(btnCss ?? "btn btn-default btn-xs")" href="@Html.Raw(GetSearchUrl(url,query))">
         <span class="glyphicon glyphicon-search dark" aria-hidden="true"></span>
         @btnText
     </a>
@@ -511,11 +516,11 @@ string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
 
 @helper AddWatchDogSmall(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null,
                     string preBtnText = null, string postBtnText = null, string prefillWDname = "",
-                    bool showWDList = true, string datasetId = null, string btnCss = null)
+                    bool showWDList = false, string datasetId = null, string btnCss = null)
 {
     @AddWatchDog(user, query, dataType, btnText, preBtnText ?? "", postBtnText ?? "", prefillWDname, showWDList, datasetId, true, btnCss ?? "btn btn-warning btn-sm")
 }
-@helper AddWatchDog(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = true, string datasetId = null, bool showBtnIcon = true, string btnCss = null)
+@helper AddWatchDog(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = false, string datasetId = null, bool showBtnIcon = true, string btnCss = null)
 {
     string dataTypeName = "smlouvy";
     string dataTypeName2 = "smluv";
@@ -537,7 +542,7 @@ string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
     else if (dataType == null)
     {
         dataTypeName = "informace na Hlídači";
-        dataTypeName2 = "informací ve všech databázích Hlídače";
+        dataTypeName2 = "informací v celém Hlídači";
     }
 
     string datatypeApi = dataType?.Name ?? HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
@@ -585,6 +590,10 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
         //"<div class=\"bs-callout bs-callout-noborder bs-callout-primary\"><div>Máme pro vás sledovat <b>nové " + dataTypeName + "</b> odpovídající tomuto dotazu a <b>každý den vás na ně upozornit</b> emailem ?";
     }
+    if (string.IsNullOrEmpty(preBtnText))
+    {
+        postBtnText = "";
+    }
     if (postBtnText == null)
     {
         postBtnText = "</div>";
@@ -601,7 +610,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 <a href="#" class="@btnCss"
                    onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'authenticated');" role="button" data-toggle="modal" data-target="#addWDform@(uid)">
                     @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
-                    @btnText
+                    <span class="btn-emphasized">@Html.Raw(btnText)</span>
                 </a>
             }
             else
@@ -609,7 +618,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 <a href="/manage/outOfWatchdogs" class="@btnCss"
                    onclick="ga('send', 'event', 'btnWatchDog', 'OutOf', 'authenticated');" role="button">
                     @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
-                    @btnText
+                    <span class="btn-emphasized">@Html.Raw(btnText)</span>
                 </a>
             }
 

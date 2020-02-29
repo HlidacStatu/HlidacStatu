@@ -242,9 +242,20 @@
                 <li class="hidden-sm hidden-xs">
                     @if (Request.IsAuthenticated)
                     {
+                        <a href="/manage/Watchdogs"
+                           alt="Všichni uložení hlídači" title="Všichni uložení hlídači"
+                           onclick="ga('send', 'event', 'btnWatchDog', 'List', 'authenticated');" role="button"
+                           class="btn btn-warning btn-sm" style="
+    padding-left: 5px;
+    padding-right: 5px;
+    display:block
+">
+                            <i style="color:black;" class="fas fa-eye"></i>
+
+                        </a>
 
                         <a style="display:block;color:#c9302c;" title="Všechny uložené záložky" alt="Všechny uložené záložky" href="/manage/zalozky" class="bookmark bookmarkOn"></a>
-                        <a style="font-family: 'Glyphicons Halflings'" href="/manage/" title="Nastavení účtu" alt="Nastavení účtu" class="glyphicon glyphicon-user"></a>
+                        <a style="display:block;" href="/manage/" title="Nastavení účtu" alt="Nastavení účtu"><i class="fas fa-user"></i></a>
                         <a href="/Account/LogOff?rnd=@Guid.NewGuid().ToString("N")">Odhlásit</a>
                     }
                     else
