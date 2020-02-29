@@ -1,6 +1,7 @@
 ﻿    <li class="navbar__watchers">
         <a href="https://www.hlidacstatu.cz/smlouvy">Smlouvy</a>
         <a href="https://www.hlidacstatu.cz/VerejneZakazky">Veřejné zakázky</a>
+        <a href="https://www.hlidacstatu.cz/Dotace">Dotace</a>
         <a href="https://www.hlidacstatu.cz/Insolvence">Insolvences</a>
         <a href="https://www.hlidacstatu.cz/sponzori">Sponzoři</a>
         <a href="https://www.hlidacstatu.cz/StatniWeby">Weby státu</a>
