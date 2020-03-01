@@ -1150,10 +1150,13 @@ namespace HlidacStatu.Lib.Data
 
         public static Smlouva Load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
         {
+            bool specClient = client != null;
             try
             {
-                ElasticClient c = client;
-                if (client == null)
+                ElasticClient c = null;
+                if (specClient)
+                    c = client;
+                else
                     c = Lib.ES.Manager.GetESClient();
 
                 //var res = c.Get<Lib.Data.Smlouva>(idVerze);
@@ -1167,26 +1170,26 @@ namespace HlidacStatu.Lib.Data
                     return res.Source;
                 else
                 {
-                    if (client == null)
+                    if (specClient == false)
                     {
-                        c = ES.Manager.GetESClient_Sneplatne();
-                    }
-                    res = includePrilohy
-                        ? c.Get<Smlouva>(idVerze)
-                        : c.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); //todo: es7 check
+                        var c1 = ES.Manager.GetESClient_Sneplatne();
 
-                    if (res.Found)
-                        return res.Source;
-                    else if (res.IsValid)
-                    {
-                        ES.Manager.ESLogger.Warning("Valid Req: Cannot load Smlouva Id " + idVerze + "\nDebug:" + res.DebugInformation);
-                        //DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
-                    }
-                    else
-                    {
-                        ES.Manager.ESLogger.Error("Invalid Req: Cannot load Smlouva Id " + idVerze + "\n Debug:" + res.DebugInformation + " \nServerError:" + res.ServerError?.ToString(), res.OriginalException );
-                    }
+                        res = includePrilohy
+                            ? c1.Get<Smlouva>(idVerze)
+                            : c1.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); //todo: es7 check
 
+                        if (res.Found)
+                            return res.Source;
+                        else if (res.IsValid)
+                        {
+                            ES.Manager.ESLogger.Warning("Valid Req: Cannot load Smlouva Id " + idVerze + "\nDebug:" + res.DebugInformation);
+                            //DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
+                        }
+                        else
+                        {
+                            ES.Manager.ESLogger.Error("Invalid Req: Cannot load Smlouva Id " + idVerze + "\n Debug:" + res.DebugInformation + " \nServerError:" + res.ServerError?.ToString(), res.OriginalException);
+                        }
+                    }
                     return null;
                 }
 
