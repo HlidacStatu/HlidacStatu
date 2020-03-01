@@ -1179,12 +1179,12 @@ namespace HlidacStatu.Lib.Data
                         return res.Source;
                     else if (res.IsValid)
                     {
-                        ES.Manager.ESLogger.Warning("Valid Req: Cannot load Smlouva Id " + idVerze + "\n" + res.DebugInformation);
+                        ES.Manager.ESLogger.Warning("Valid Req: Cannot load Smlouva Id " + idVerze + "\nDebug:" + res.DebugInformation);
                         //DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
                     }
                     else
                     {
-                        ES.Manager.ESLogger.Error("Cannot load Smlouva Id " + idVerze + " \n " + res.ServerError?.ToString(), res.OriginalException );
+                        ES.Manager.ESLogger.Error("Invalid Req: Cannot load Smlouva Id " + idVerze + "\n Debug:" + res.DebugInformation + " \nServerError:" + res.ServerError?.ToString(), res.OriginalException );
                     }
 
                     return null;
