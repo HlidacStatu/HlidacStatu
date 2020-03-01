@@ -131,7 +131,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.OCR.TextReadability", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaceLoader", "DotaceLoader\DotaceLoader.csproj", "{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Play", "Play", "{F4002F1A-7F3B-4004-B6D1-6E38A55E0E6B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Playgr", "Playgr", "{F4002F1A-7F3B-4004-B6D1-6E38A55E0E6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1055,8 +1055,8 @@ Global
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

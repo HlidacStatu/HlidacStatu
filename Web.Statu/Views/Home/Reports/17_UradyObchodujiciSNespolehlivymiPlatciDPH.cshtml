@@ -110,7 +110,7 @@ foreach (var f in d.Detail.OrderByDescending(m=>m.CelkemCena).Take(previewCount)
 {
 sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - <a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>{3}</a></li>"
 ,d.Ico, f.Item,
-Firmy.GetJmeno(s.Ico)
+Firmy.GetJmeno(f.Item)
 , f.ToNiceString(null,false, string.Format("", d.Ico, f.Item))
 );
 
@@ -143,7 +143,7 @@ return sb.ToString();
 },
 }
 
-};
+        };
 
 
     var data = StaticData.UradyObchodujiciSNespolehlivymiPlatciDPH_Cache.Get();

@@ -31,6 +31,14 @@
                 + "<meta property=\"og:image:height\" content=\"1080\" />"
                 + "<meta property=\"og:image:type\" content=\"image/png\" />"
                 ;
+
+
+    bool showEmptyVersion = 
+        (Model.firma.MaVztahySeStatem() == false)
+        && (Model.firma.IsNespolehlivyPlatceDPH() == false)
+        && (Model.firma.MaVazbyNaPolitiky() == false)
+        ;
+
 }
 
 @section scripts
@@ -60,7 +68,7 @@
 
     @Util.AddVisitImg("/subjekt/" + Model.ICO)
 
-    @if (Model.firma.MaVztahySeStatem() == false)
+    @if (showEmptyVersion)
     {
         <div class="container">
             <table class="table table-new table-new--dotted">

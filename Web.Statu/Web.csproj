@@ -1303,7 +1303,6 @@
     <Content Include="Views\Home\Reports\23_TopSubjektyStat.cshtml" />
     <Content Include="Views\Home\Reports\24_TopOsobyStat.cshtml" />
     <Content Include="Views\Home\AnalyzaPlatcu.cshtml" />
-    <Content Include="Views\Home\Subjekt_Profile2.cshtml" />
     <Content Include="Views\Home\Subjekt_Stat2.cshtml" />
     <Content Include="Views\Home\ImageBannerCore1x1_social.cshtml" />
     <Content Include="Views\Home\ImageBannerCore16x9_social.cshtml" />

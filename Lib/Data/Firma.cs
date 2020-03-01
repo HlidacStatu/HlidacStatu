@@ -168,6 +168,22 @@ namespace HlidacStatu.Lib.Data
 
         }
 
+        public bool MaVazbyNaPolitiky()
+        {
+            return HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(this.ICO);
+        }
+
+        public Osoba[] VazbyNaPolitiky()
+        {
+            return
+                HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+                    .SoukromeFirmy[this.ICO]
+                    .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+                    .Where(p => p != null)
+                    .OrderBy(p => p.Prijmeni)
+                    .ToArray();
+        }
+
         public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
         {
             return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy

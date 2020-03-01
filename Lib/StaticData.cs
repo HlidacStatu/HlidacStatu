@@ -677,7 +677,7 @@ namespace HlidacStatu.Lib
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - MinisterstvaCache");
                 MinisterstvaCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.Ministerstva",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.Ministerstva",
                             (o) =>
                             {
                                 return StaticData.DatoveSchranky
@@ -691,7 +691,7 @@ namespace HlidacStatu.Lib
                             });
 
                 VysokeSkolyCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.VysokeSkoly",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.VysokeSkoly",
                         (o) =>
                         {
                             string[] icos = new string[] { "61384984","60461446","60460709","68407700","62156462","60076658","00216224","62156489","61988987","47813059","46747885","62690094","44555601","00216208",
@@ -705,7 +705,7 @@ namespace HlidacStatu.Lib
 
 
                 KrajskeUradyCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.KrajskeUrady",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.KrajskeUrady",
                         (o) =>
                         {
                             return StaticData.DatoveSchranky
@@ -718,7 +718,7 @@ namespace HlidacStatu.Lib
                         });
 
                 ManualChoosenCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.ManualChoosen",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.ManualChoosen",
                         (o) =>
                         {
                             string[] icos = new string[] { "72054506", "47114983", "61459445", "44848943", "69797111",
@@ -761,7 +761,7 @@ namespace HlidacStatu.Lib
                        .ToArray();
 
                 StatutarniMestaAllCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.StatutarniMestaAll",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.StatutarniMestaAll",
                         (o) =>
                         {
                             return StaticData.DatoveSchranky
@@ -779,7 +779,7 @@ namespace HlidacStatu.Lib
 
 
                 PrahaManualCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.PrahaManual",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.PrahaManual",
                         (o) =>
                         {
                             var ds = new string[] { "48ia97h", "ktdeucu" };
@@ -790,7 +790,7 @@ namespace HlidacStatu.Lib
                         });
 
                 OrganizacniSlozkyStatuCache = new Devmasters.Cache.V20
-                    .LocalMemory.LocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(24), "StatData.OrganizacniSlozkyStatu",
+                    .LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Firma>>(TimeSpan.FromHours(6), "StatData.OrganizacniSlozkyStatu",
                         (o) =>
                         {
                             return StaticData.DatoveSchranky

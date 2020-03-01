@@ -96,9 +96,16 @@ namespace HlidacStatu.Util.Cache
         public T Get(string key)
         {
 
-            var x = cache.Get<T>(fixKey(key));
+            IOperationResult<T> x = cache.Get<T>(fixKey(key));
             if (x.Status == Couchbase.IO.ResponseStatus.ClientFailure || x.Exception != null)
-                throw new Couchbase.CouchbaseResponseException(x.Status.ToString(), x.Exception);
+            {
+                System.Threading.Thread.Sleep(10);
+                x = cache.Get<T>(fixKey(key));
+                if (x.Status == Couchbase.IO.ResponseStatus.ClientFailure || x.Exception != null)
+                {
+                    throw new Couchbase.CouchbaseResponseException(x.Status.ToString(), x.Exception);
+                }
+            }
             return x.Value;
         }
 
