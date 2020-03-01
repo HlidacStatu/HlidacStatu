@@ -24,6 +24,11 @@ namespace HlidacStatu.Web.Controllers
                         var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
                         long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
                         long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
+
+                        //string order = string.IsNullOrWhiteSpace(ds.defaultOrderBy) ? "DbCreated desc" : ds.defaultOrderBy;
+                        //var data = dsContent.SearchDataRaw("*", 1, 1, order);
+
+
                         ret.Add(new Models.DatasetIndexStat()
                         {
                             Ds = ds,

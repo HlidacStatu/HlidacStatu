@@ -1379,6 +1379,7 @@
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
+    <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

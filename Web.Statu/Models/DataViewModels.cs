@@ -15,6 +15,8 @@ namespace HlidacStatu.Web.Models
         public HlidacStatu.Lib.Data.External.DataSets.Registration Ds { get; set; }
         public long RecordNum { get; set; }
         public long RecordNumWeek { get; set; }
+
+        public DateTime? LastRecord { get; set; }
     }
 
     public class DataDetailModel
