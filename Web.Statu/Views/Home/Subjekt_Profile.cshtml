@@ -109,12 +109,15 @@ else
                     <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
                 </tr>
             }
-            <tr>
-                <th>Dceřinné společnosti</th>
-                <td>
-                    <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
-                </td>
-            </tr>
+            @if (Model.Vazby()?.Count() > 0)
+            {
+                <tr>
+                    <th>Majetkové vazby společnosti</th>
+                    <td>
+                        <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
+                    </td>
+                </tr>
+            }
             <tr>
                 <th>Další informace o subjektu</th>
                 <td>
@@ -146,15 +149,15 @@ else
                 <td>
                     @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null,
                            "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
-                           prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText:"")
+                           prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
 
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
                         <br />
                         @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null,
                                $"Hlídat změny i "
-                               + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(),"v <b>jedné dceřinné společnosti</b>","ve <b>{0} dceřinných společnostech</b>","v <b>{0} dceřinných společnostech</b>")
-                               + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText:"")
+                               + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
+                               + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
                     }
                 </td>
             </tr>
@@ -181,8 +184,9 @@ else
                         obsah.Add("_smlouvy_s_politiky", "Smlouvy s politiky");
                         obsah.Add("_nespolehlivy_platce_dph", "Nespolehlivý plátce DPH");
                         obsah.Add("_podpora_politiku", "Podporovaní politici");
-                        obsah.Add("_insolvencni_rejstrik", "Insolvenční rejstřík");
                         obsah.Add("_verejne_zakazky", "Veřejné zakázky");
+                        obsah.Add("_dotace", "Dotace");
+                        obsah.Add("_insolvencni_rejstrik", "Insolvenční rejstřík");
                         obsah.Add("_zakladni_dotazy", "Vyhledávání pro " + (Model.JsemOVM() ? "úřad" : "firmy"));
                         obsah.Add("_navazani_politici", "Politici svázaní s " + (Model.JsemOVM() ? "úřadem" : "firmou"));
                         obsah.Add("_vazby_na_politiky", "Obchody úřadu s firmami navázanými na politiky");
@@ -505,38 +509,6 @@ else
                 }
             }
 
-
-            @{
-                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-
-                Dictionary<string, long> insolv = new Dictionary<string, long>();
-                insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
-                insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
-                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
-
-            }
-
-            <tr>
-                <th id="_insolvencni_rejstrik">Insolvenční rejstřík</th>
-                <td>
-                    @foreach (var kv in insolv.OrderByDescending(m => m.Value))
-                    {
-                        var text = kv.Key.Split('|');
-                        string surl = Util.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
-
-                        <p>
-                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
-                           " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
-
-                        </p>
-                    }
-                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
-                </td>
-            </tr>
             <tr>
                 @{
                     var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, 1);
@@ -559,6 +531,76 @@ else
                            $" se vyskytuje v <a href='{surl}'><b>jedné veřejné zakázce</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkách</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkach</b></a> jako {text[1]}")).
                         </p>
                     }
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+                </td>
+            </tr>
+
+
+
+            @{
+                var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                    .Sum("souhrn", s => s
+                        .Field(f => f.DotaceCelkem)
+
+                    );
+                var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
+                    (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false,
+                    dotaceAggs, exactNumOfResults: true);
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice((decimal)dotaceSearch.Result.Aggregations.Sum("souhrn").Value) + "</b>.";
+                string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
+            }
+            <tr>
+                <th id="_dotace">Dotace</th>
+                <td>
+                    <p>
+                        @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
+                                    " nedostala žádnou dotaci.",
+                                    " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                    " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                    " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                        @if (dotaceSearch.Total > 0)
+                        {
+
+                        }
+                        .
+                    </p>
+                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+                </td>
+            </tr>
+
+
+
+
+
+            @{
+                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+
+                Dictionary<string, long> insolv = new Dictionary<string, long>();
+                insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
+                insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
+                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
+
+            }
+            <tr>
+                <th id="_insolvencni_rejstrik">Insolvenční rejstřík</th>
+                <td>
+                    @foreach (var kv in insolv.OrderByDescending(m => m.Value))
+                    {
+                        var text = kv.Key.Split('|');
+                        string surl = Util.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
+
+                        <p>
+                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+                           " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
+
+                    </p>
+                }
                     <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
                 </td>
