@@ -152,6 +152,22 @@ namespace HlidacStatu.Lib.Data
             _vazby = value.ToArray();
         }
 
+        Graph.Edge[] _parentVazbyFirmy = null;
+        public Graph.Edge[] ParentVazbyFirmy(Relation.AktualnostType minAktualnost)
+        {
+            if (_parentVazbyFirmy == null)
+                _parentVazbyFirmy = Graph.GetDirectParentRelationsFirmy(this.ICO).ToArray();
+            return Relation.AktualniVazby(_parentVazbyFirmy, minAktualnost);
+        }
+
+        Graph.Edge[] _parentVazbyOsoby = null;
+        public Graph.Edge[] ParentVazbyOsoby(Relation.AktualnostType minAktualnost)
+        {
+            if (_parentVazbyOsoby == null)
+                _parentVazbyOsoby = Graph.GetDirectParentRelationsOsoby(this.ICO).ToArray();
+            return Relation.AktualniVazby(_parentVazbyOsoby, minAktualnost);
+        }
+
         public bool MaVztahySeStatem()
         {
             var ret = this.IsSponzor();

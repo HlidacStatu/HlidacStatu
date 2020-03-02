@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data
      */
 
         [Newtonsoft.Json.JsonObject(ItemNullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public  class GraphJson
+        public class GraphJson
         {
             public GraphJson(Node n, int distance, bool isRoot = false)
             {
@@ -53,7 +53,7 @@ namespace HlidacStatu.Lib.Data
             public GraphJson(Edge e)
             {
                 this.group = "edges";
-                
+
                 this.data.caption = e.Doba();
                 this.data.source = e.From == null ? null : e.From.UniqId;
                 this.data.target = e.To == null ? null : e.To.UniqId;
@@ -352,7 +352,32 @@ namespace HlidacStatu.Lib.Data
 
             }
 
+            public static Edge[] GetLongestUniqueEdges(IEnumerable<Edge> relations)
+            {
+                if (relations == null)
+                    return null;
+                if (relations.Count() < 2)
+                    return relations.ToArray();
 
+                var longestE = new List<Edge>();
+
+                var uniqEdges = relations
+                                    .Select(r => string.Join("|", r.From.UniqId, r.To.UniqId))
+                                    .Distinct();
+
+                foreach (var uniq in uniqEdges)
+                {
+                    var eParts = uniq.Split('|');
+
+                    var le = GetLongestEdge(relations
+                                 .Where(r => r.From.UniqId == eParts[0] && r.To.UniqId == eParts[1]));
+
+                    if (le != null)
+                        longestE.Add(le);
+                }
+
+                return longestE.ToArray();
+            }
 
             public static Edge GetLongestEdge(IEnumerable<Edge> relations)
             {
@@ -399,7 +424,7 @@ namespace HlidacStatu.Lib.Data
         public static IEnumerable<string> UniqIds(IEnumerable<Edge> edges)
         {
             if (edges == null)
-                return new string[]{ };
+                return new string[] { };
             var uids = edges
                     .Select(m => m.From?.UniqId)
                     .Where(m => m != null)
@@ -419,12 +444,13 @@ TimeSpan.FromDays(3));
 
         private static CouchbaseCacheManager<List<Edge>, string> vazbyOsobaNameIdCache
             = CouchbaseCacheManager<List<Edge>, string>.GetSafeInstance("VsechnyDcerineVazbyOsoba",
-            osobaNameId => {
+            osobaNameId =>
+            {
                 if (string.IsNullOrEmpty(osobaNameId))
                     return new List<Edge>();
                 Osoba o = Osoby.GetByNameId.Get(osobaNameId);
                 return vsechnyDcerineVazbyInternal(o, 0, true, null);
-                },
+            },
             TimeSpan.FromDays(3));
 
         public static List<Edge> VsechnyDcerineVazby(string ico, bool refresh = false)
@@ -537,13 +563,13 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
         }
         public static List<Graph.Edge> Holding(string ico, DateTime datumOd, DateTime datumDo, Relation.AktualnostType aktualnost)
         {
-            var vazby = vsechnyDcerineVazbyInternal(ico, 9, true, null,datumOd: datumOd, datumDo: datumDo);
+            var vazby = vsechnyDcerineVazbyInternal(ico, 9, true, null, datumOd: datumOd, datumDo: datumDo);
             var parents = GetParentRelations(ico, vazby, 0, datumOd, datumDo);
-            var rootNode = new Node() { Id = ico, Type= Node.NodeType.Company };
+            var rootNode = new Node() { Id = ico, Type = Node.NodeType.Company };
             if (parents?.Count() > 0)
             {
                 if (vazby.Any(m => m.Root))
-                    if (vazby.Any(m => m.From == null &&  m.To.UniqId == rootNode.UniqId))
+                    if (vazby.Any(m => m.From == null && m.To.UniqId == rootNode.UniqId))
                     {
                         vazby = vazby
                             .Where(m => !(m.From == null && m.To.UniqId != rootNode.UniqId))
@@ -679,112 +705,15 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
                             )
                             continue;
                     }
-                    var rel = new Edge();
+                    var rel = AngazovanostDataToEdge(ang,
+                        new Node() { Type = nodeType, Id = nodeId },
+                        new Node() { Type = ang.NodeType, Id = ang.subjId },
+                        level + 1
+                        );
 
-                    rel.From = new Node() { Type = nodeType, Id = nodeId };
-                    rel.To = new Node() { Type = ang.NodeType, Id = ang.subjId };
-                    rel.Distance = level + 1;
-
-                    rel.RelFrom = (DateTime?)PersistLib.IsNull(ang.fromDate, null);
-                    if (rel.RelFrom < minDate)
-                        rel.RelFrom = null;
-
-                    rel.RelTo = (DateTime?)PersistLib.IsNull(ang.toDate, null);
-                    if (rel.RelTo < minDate)
-                        rel.RelTo = null;
-                    int kod_ang = ang.kod_ang; 
-                    /*
-                           3  - prokura
-                           4  - člen dozorčí rady    
-                           24 - spolecnik       
-                           5  - Jediný akcionář
-                           1 - jednatel        
-
-                                                */
-                    rel.Descr = ang.descr;
-                    Firma.RelationSimpleEnum relRelationship = Firma.RelationSimpleEnum.Jiny;
-                    switch (kod_ang)
-                    {
-                        case 1:
-                            relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
-                            break;
-                        case 3:
-                            relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Prokura.ToNiceDisplayName();
-                            break;
-                        case 4:
-                        case 7:
-                        case 2:
-                        case 18:
-                        case 25:
-                        case 26:
-                        case 28:
-                        case 31:
-                            relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Dozorci_rada.ToNiceDisplayName();
-                            break;
-                        case 33:
-                        case 34:
-                        case 35:
-                            relRelationship = Firma.RelationSimpleEnum.Zakladatel;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Dozorci_rada.ToNiceDisplayName();
-                            break;
-                        case 5:
-                        case 9:
-                        case 10:
-                        case 15:
-                        case 19:
-                        case 24:
-                            relRelationship = Firma.RelationSimpleEnum.Spolecnik;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Spolecnik.ToNiceDisplayName();
-                            break;
-                        case 100:
-                            relRelationship = Firma.RelationSimpleEnum.Souhrnny;
-                            if (string.IsNullOrEmpty(rel.Descr))
-                                rel.Descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
-                            break;
-                        case 23://
-                        case 29://
-                        case 11://
-                        case 12://
-                        case 13://
-                        case 16://
-                        case 17://
-                        case 37://
-                        case 40://
-                        case 41://
-                        case 42: //
-                        case 99:
-                            relRelationship = Firma.RelationSimpleEnum.Jiny;
-                            break;
-                        default:
-
-                            if (kod_ang < 0)
-                                relRelationship = (Firma.RelationSimpleEnum)kod_ang;
-                            else
-                            {
-                                //rel.Relationship = Relation.RelationDescriptionEnum.Jednatel;
-                                relRelationship = Firma.RelationSimpleEnum.Jiny;
-                                if (string.IsNullOrEmpty(rel.Descr))
-                                    rel.Descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
-                            }
-                            break;
-                    }
 
                     if (excludeICO.Contains(rel))
                         continue;//skip to the next
-
-
-                    if (string.IsNullOrEmpty(rel.Descr))
-                        rel.Descr = relRelationship.ToNiceDisplayName();
-
-                    rel.UpdateAktualnost();
 
                     if (rel.Aktualnost >= aktualnost)
                         relations.Add(rel);
@@ -844,8 +773,223 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
             return relations;
         }
 
+        private static Edge AngazovanostDataToEdge(AngazovanostData ang, Node fromNode, Node toNode, int distance)
+        {
+            var rel = new Edge();
+            rel.From = fromNode;
+            rel.To = toNode;
+            rel.Distance = distance;
+            rel.RelFrom = (DateTime?)PersistLib.IsNull(ang.fromDate, null);
+            if (rel.RelFrom < minDate)
+                rel.RelFrom = null;
 
-        public static IEnumerable<Graph.Edge> GetParentRelations(string ico, 
+            rel.RelTo = (DateTime?)PersistLib.IsNull(ang.toDate, null);
+            if (rel.RelTo < minDate)
+                rel.RelTo = null;
+
+            var relData = AngazovanostDataToRelationSimple(ang);
+            rel.Descr = relData.Item2;
+            if (string.IsNullOrEmpty(rel.Descr))
+                rel.Descr = relData.Item1.ToNiceDisplayName();
+            rel.UpdateAktualnost();
+            return rel;
+        }
+        private static Tuple<Firma.RelationSimpleEnum, string> AngazovanostDataToRelationSimple(AngazovanostData ang)
+        {
+            Firma.RelationSimpleEnum relRelationship = Firma.RelationSimpleEnum.Jiny;
+            string descr = ang.descr;
+            /*
+       3  - prokura
+       4  - člen dozorčí rady    
+       24 - spolecnik       
+       5  - Jediný akcionář
+       1 - jednatel        
+    */
+
+
+            switch (ang.kod_ang)
+            {
+                case 1:
+                    relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
+                    break;
+                case 3:
+                    relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Prokura.ToNiceDisplayName();
+                    break;
+                case 4:
+                case 7:
+                case 2:
+                case 18:
+                case 25:
+                case 26:
+                case 28:
+                case 31:
+                    relRelationship = Firma.RelationSimpleEnum.Statutarni_organ;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Dozorci_rada.ToNiceDisplayName();
+                    break;
+                case 33:
+                case 34:
+                case 35:
+                    relRelationship = Firma.RelationSimpleEnum.Zakladatel;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Dozorci_rada.ToNiceDisplayName();
+                    break;
+                case 5:
+                case 9:
+                case 10:
+                case 15:
+                case 19:
+                case 24:
+                    relRelationship = Firma.RelationSimpleEnum.Spolecnik;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Spolecnik.ToNiceDisplayName();
+                    break;
+                case 100:
+                    relRelationship = Firma.RelationSimpleEnum.Souhrnny;
+                    if (string.IsNullOrEmpty(descr))
+                        descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
+                    break;
+                case 23://
+                case 29://
+                case 11://
+                case 12://
+                case 13://
+                case 16://
+                case 17://
+                case 37://
+                case 40://
+                case 41://
+                case 42: //
+                case 99:
+                    relRelationship = Firma.RelationSimpleEnum.Jiny;
+                    break;
+                default:
+
+                    if (ang.kod_ang < 0)
+                        relRelationship = (Firma.RelationSimpleEnum)ang.kod_ang;
+                    else
+                    {
+                        //rel.Relationship = Relation.RelationDescriptionEnum.Jednatel;
+                        relRelationship = Firma.RelationSimpleEnum.Jiny;
+                        if (string.IsNullOrEmpty(descr))
+                            descr = Firma.RelationSimpleEnum.Jednatel.ToNiceDisplayName();
+                    }
+                    break;
+            }
+
+            return new Tuple<Firma.RelationSimpleEnum, string>(relRelationship, descr);
+        }
+
+        public static IEnumerable<Graph.Edge> GetDirectParentRelationsFirmy(string ico)
+        {
+
+            string sql = @"select ico, vazbakIco, datumOd, datumDo, typVazby, pojmenovaniVazby, podil  from Firmavazby 
+            where vazbakico=@ico 
+        ";
+
+            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+
+            List<Graph.Edge> relations = new List<Graph.Edge>();
+            //get zakladni informace o subj.
+
+            //find politician in the DB
+            var db = new Devmasters.Core.PersistLib();
+            var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, new IDataParameter[] {
+                        new SqlParameter("ico",ico)
+                    });
+            //string sqlFirma = "select top 1 stav_subjektu from firma where ico = @ico";
+
+            var ds = db.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sqlCall, null);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                var parents = ds.Tables[0].AsEnumerable()
+                    .Where(m => (string)m["ico"] != ico)
+                    .Select(dr => new AngazovanostData()
+                    {
+                        subjId = (string)dr["ico"],
+                        subjname = "",
+                        NodeType = Node.NodeType.Company,
+                        fromDate = (DateTime?)PersistLib.IsNull(dr["datumOd"], null),
+                        toDate = (DateTime?)PersistLib.IsNull(dr["datumDo"], null),
+                        kod_ang = Convert.ToInt32(dr["typVazby"]),
+                        descr = (string)PersistLib.IsNull(dr["PojmenovaniVazby"], ""),
+                        podil = (decimal?)PersistLib.IsNull(dr["podil"], null)
+                    })
+                    .ToArray();
+                var ret = new List<Edge>();
+                for (int i = 0; i < parents.Length; i++)
+                {
+                    AngazovanostData ang = parents[i];
+                    var rel = AngazovanostDataToEdge(ang,
+                                new Node() { Type = Node.NodeType.Company, Id = ang.subjId },
+                                new Node() { Type = Node.NodeType.Company, Id = ico },
+                                -1
+                                );
+                    ret.Add(rel);
+                }
+                return Edge.GetLongestUniqueEdges(ret);
+            }
+            return new Graph.Edge[] { };
+        }
+        public static IEnumerable<Graph.Edge> GetDirectParentRelationsOsoby(string ico)
+        {
+
+            string sql = @"select OsobaID, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from osobavazby 
+                        where vazbakico=@ico 
+                    ";
+
+            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+
+            List<Graph.Edge> relations = new List<Graph.Edge>();
+            //get zakladni informace o subj.
+
+            //find politician in the DB
+            var db = new Devmasters.Core.PersistLib();
+            var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, new IDataParameter[] {
+                        new SqlParameter("ico",ico)
+                    });
+            //string sqlFirma = "select top 1 stav_subjektu from firma where ico = @ico";
+
+            var ds = db.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sqlCall, null);
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                var parents = ds.Tables[0].AsEnumerable()
+                    .Select(dr => new AngazovanostData()
+                    {
+                        subjId = ((int)dr["osobaId"]).ToString(),
+                        subjname = "",
+                        NodeType = Node.NodeType.Company,
+                        fromDate = (DateTime?)PersistLib.IsNull(dr["datumOd"], null),
+                        toDate = (DateTime?)PersistLib.IsNull(dr["datumDo"], null),
+                        kod_ang = Convert.ToInt32(dr["typVazby"]),
+                        descr = (string)PersistLib.IsNull(dr["PojmenovaniVazby"], ""),
+                        podil = (decimal?)PersistLib.IsNull(dr["podil"], null)
+                    })
+                    .ToArray();
+                var ret = new List<Edge>();
+                for (int i = 0; i < parents.Length; i++)
+                {
+                    AngazovanostData ang = parents[i];
+                    var rel = AngazovanostDataToEdge(ang,
+                                new Node() { Type = Node.NodeType.Person, Id = ang.subjId },
+                                new Node() { Type = Node.NodeType.Person, Id = ico },
+                                -1
+                                );
+
+                    ret.Add(rel);
+                }
+                return Edge.GetLongestUniqueEdges(ret);
+            }
+            return new Graph.Edge[] { };
+        }
+
+        public static IEnumerable<Graph.Edge> GetParentRelations(string ico,
             IEnumerable<Graph.Edge> currRelations, int distance,
             DateTime datumOd, DateTime datumDo)
         {
@@ -881,7 +1025,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
                 foreach (var parentIco in parentIcos)
                 {
 
-                    var parentRels = vsechnyDcerineVazbyInternal(parentIco, 0, true, null, 
+                    var parentRels = vsechnyDcerineVazbyInternal(parentIco, 0, true, null,
                         new ExcludeDataCol() { items = relations?.Select(m => new ExcludeData(m)).ToList() }
                         , datumOd: datumOd, datumDo: datumDo
                         );
@@ -900,7 +1044,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
 
                     if ((parentRels?.Count() ?? 0) > 0)
                     {
-                       relations.AddRange(parentRels);
+                        relations.AddRange(parentRels);
                     }
 
                 }
