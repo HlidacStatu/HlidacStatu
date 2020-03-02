@@ -569,6 +569,7 @@ else
                 }
                 var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumH) + "</b>.";
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
+                string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
             }
             <tr>
                 <th id="_dotace">Dotace</th>
@@ -590,9 +591,9 @@ else
                             
                             @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
                                         " nedostaly žádnou dotaci.",
-                                        " dostaly <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                        " dostaly <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                        " dostaly <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                                        " dostaly <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                        " dostaly <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                        " dostaly <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
 
                         </p>
                     }
