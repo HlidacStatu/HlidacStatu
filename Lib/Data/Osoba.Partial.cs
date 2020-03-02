@@ -137,7 +137,9 @@ namespace HlidacStatu.Lib.Data
                     ev.Type == (int)OsobaEvent.Types.Politicka
                     && (ev.AddInfo == "člen strany"
                         || ev.AddInfo == "předseda strany"
+                        || ev.AddInfo == "předsedkyně strany"
                         || ev.AddInfo == "místopředseda strany"
+                        || ev.AddInfo == "místopředsedkyně strany"
                         ))
                 .OrderByDescending(ev => ev.DatumOd)
                 .Select(ev => ev.Organizace)
