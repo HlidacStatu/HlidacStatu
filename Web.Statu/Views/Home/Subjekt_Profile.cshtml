@@ -303,7 +303,7 @@ else
                 )
             {
                 <tr>
-                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />provázané společnosti<br />od 2016</th>
+                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
                     <td>
                         @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
                         @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -542,12 +542,32 @@ else
                 var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
                     .Sum("souhrn", s => s
                         .Field(f => f.DotaceCelkem)
-
                     );
                 var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
                     (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false,
                     dotaceAggs, exactNumOfResults: true);
+
+
+                var dotaceAggsH = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                    .Terms("icos", s => s
+                        .Field(f => f.Prijemce.Ico)
+                        .Size(5000)
+                        .Aggregations(a=>a
+                            .Sum("sum", ss=>ss.Field(ff=>ff.DotaceCelkem))
+                        )
+                    );
+                var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("holding:" + Model.ICO, 1, 1,
+                    (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false,
+                    dotaceAggsH, exactNumOfResults: true);
                 var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice((decimal)dotaceSearch.Result.Aggregations.Sum("souhrn").Value) + "</b>.";
+
+                decimal sumH = 0;
+                var items = ((BucketAggregate)dotaceSearchH.Result.Aggregations["icos"]).Items;
+                foreach (KeyedBucket<object> item in items)
+                {
+                    sumH += (decimal)item.Sum("sum").Value;
+                }
+                var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumH) + "</b>.";
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
             }
             <tr>
@@ -560,12 +580,24 @@ else
                                     " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
                                     " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
                                     " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
-                        @if (dotaceSearch.Total > 0)
-                        {
-
-                        }
-                        .
                     </p>
+                    @if (dotaceSearchH.Total > 0)
+                    {
+                        <p>
+                            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) 
+                            (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby( HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                            
+                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
+                                        " nedostaly žádnou dotaci.",
+                                        " dostaly <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                        " dostaly <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                        " dostaly <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+
+                        </p>
+                    }
+
+                    .
                     <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
 
                 </td>
