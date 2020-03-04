@@ -3,6 +3,7 @@
 @using HlidacStatu.Lib
 @using System.Linq
 @using HlidacStatu.Util;
+@using Nest;
 
 @{
     Layout = null;
@@ -148,9 +149,10 @@
             <th>Zkratka této osoby v hlídači</th>
             <td>
                 <h4 style="padding-top: 0;margin-top: 0;">Hledání informací s vazbou na @Model.FullName()</h4>
-                <p>Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>,
-                zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na @Model.FullName()
-                nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou.
+                <p>
+                    Pokud napíšete do hledání text <code>osobaId:{Model.NameId}</code>,
+                    zobrazí se smlouvy, veřejné zakázky, dary a další informace, které mají vazbu na @Model.FullName()
+                    nebo firmy touto osobou přímo či nepřímo vlastněnou či řízenou.
                 </p>
 
             </td>
@@ -158,9 +160,9 @@
         <tr>
             <th>Sdílení osoby na sociálních sítích</th>
             <td>
-                    @Util.ShareFacebook(Model.GetUrl(false))
-                    @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.GetUrl(false))
+                @Util.ShareFacebook(Model.GetUrl(false))
+                @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                @Util.ShareWidget(Model.GetUrl(false))
             </td>
         </tr>
         <tr>
@@ -173,6 +175,56 @@
 
             </td>
         </tr>
+
+        @*dotace*@
+
+        @{
+            var dotaceAggsH = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                .Terms("icos", s => s
+                    .Field(f => f.Prijemce.Ico)
+                    .Size(5000)
+                    .Aggregations(a => a
+                        .Sum("sum", ss => ss.Field(ff => ff.DotaceCelkem))
+                    )
+                );
+            var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("osobaid:" + Model.NameId, 1, 1,
+                (int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                dotaceAggsH, exactNumOfResults: true);
+
+            decimal sumH = 0;
+            var items = ((BucketAggregate)dotaceSearchH.Result.Aggregations["icos"]).Items;
+            foreach (KeyedBucket<object> item in items)
+            {
+                sumH += (decimal)item.Sum("sum").Value;
+            }
+            var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumH) + "</b>.";
+            string durlH = "/dotace/hledat?Q=osobaid%3A" + Model.NameId;
+        }
+        <tr>
+            <th id="_dotace">Dotace</th>
+            <td>
+                @if (dotaceSearchH.Total > 0)
+                {
+                    <p>
+                        <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
+                        na osobu @Model.Jmeno @Model.Prijmeni
+                        (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+
+                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
+                                    " nedostaly žádnou dotaci.",
+                                    " dostaly <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                    " dostaly <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                    " dostaly <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+
+                    </p>
+                }
+
+                <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
+
+            </td>
+        </tr>
+
+
 
 
         @{
