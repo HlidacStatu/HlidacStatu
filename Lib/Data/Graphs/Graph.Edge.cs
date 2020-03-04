@@ -228,6 +228,8 @@ namespace HlidacStatu.Lib.Data
                     }
 
                 }
+
+                throw new NotImplementedException();
             }
 
             public static Edge GetLongestEdge(IEnumerable<Edge> relations)
