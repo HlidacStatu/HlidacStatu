@@ -37,6 +37,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                 (!string.IsNullOrWhiteSpace(_specificPrefix) && part.Prefix.Equals(_specificPrefix, StringComparison.InvariantCultureIgnoreCase))
                 ||
                 (string.IsNullOrWhiteSpace(_specificPrefix) &&
+                (
                     (part.Prefix.Equals("holding:", StringComparison.InvariantCultureIgnoreCase)
                     //RS
                     || part.Prefix.Equals("holdingprijemce:", StringComparison.InvariantCultureIgnoreCase)
@@ -48,6 +49,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                     //VZ
                     || part.Prefix.Equals("holdingdodavatel:", StringComparison.InvariantCultureIgnoreCase)
                     || part.Prefix.Equals("holdingzadavatel:", StringComparison.InvariantCultureIgnoreCase)
+                    )
                 )
                 )
             )

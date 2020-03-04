@@ -88,7 +88,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             IRule[] irules = new IRule[] {
                     new OsobaId("osobaid:","ico:" ),
                     new OsobaId("osobaiddluznik:","icodluznik:" ),
-                    new OsobaId("osobaidveritel:","icoicoveritel:" ),
+                    new OsobaId("osobaidveritel:","icoveritel:" ),
                     new OsobaId("osobaidspravce:","icospravce:" ),
 
                     new Holding("holding:","ico:" ),

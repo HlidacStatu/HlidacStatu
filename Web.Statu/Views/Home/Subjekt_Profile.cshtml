@@ -584,18 +584,22 @@ else
                     </p>
                     @if (dotaceSearchH.Total > 0)
                     {
-                        <p>
-                            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
-                            firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) 
-                            (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby( HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-                            
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
-                                        " nedostaly žádnou dotaci.",
-                                        " dostaly <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                        " dostaly <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                        " dostaly <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                <p>
+                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                    firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+                    (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
 
-                        </p>
+                    @Devmasters.Core.Lang.Plural.Get(items.Count,
+                         "dostala",
+                         "dostaly",
+                         "dostalo")
+                    @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
+                                                     " žádnou dotaci.",
+                                                     " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                     " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                     " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+
+                </p>
                     }
 
                     <div class="obsah_top"><a href="#_top">△ nahoru</a></div>

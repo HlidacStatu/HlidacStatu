@@ -205,18 +205,22 @@
             <td>
                 @if (dotaceSearchH.Total > 0)
                 {
-                    <p>
-                        <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
-                        na osobu @Model.Jmeno @Model.Prijmeni
-                        (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                <p>
+                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
+                    na osobu @Model.Jmeno @Model.Prijmeni
+                    (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                    @Devmasters.Core.Lang.Plural.Get(items.Count, 
+                      "dostala", 
+                      "dostaly", 
+                      "dostalo")
 
-                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
-                                    " nedostaly žádnou dotaci.",
-                                    " dostaly <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                    " dostaly <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                    " dostaly <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                    @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
+                                " žádnou dotaci.",
+                                " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
 
-                    </p>
+                </p>
                 }
 
                 <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
@@ -228,7 +232,7 @@
 
 
         @{
-            string osobaInsQuery = $"{{0}}.osobaId:{Model.NameId}";
+            string osobaInsQuery = $"osobaid{{0}}:{Model.NameId}";
             //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
             var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
             var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
