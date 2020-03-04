@@ -503,8 +503,13 @@
     </Compile>
     <Compile Include="Data\Firma.Lazy.cs" />
     <Compile Include="Data\Firma.Search.cs" />
-    <Compile Include="Data\Graph.cs" />
+    <Compile Include="Data\Graphs\Graph.cs" />
     <Compile Include="Data\Firma.Ciselniky.cs" />
+    <Compile Include="Data\Graphs\Graph.Edge.cs" />
+    <Compile Include="Data\Graphs\Graph.EdgeComparer.cs" />
+    <Compile Include="Data\Graphs\Graph.GraphJson.cs" />
+    <Compile Include="Data\Graphs\Graph.Node.cs" />
+    <Compile Include="Data\Graphs\Graph.NodeComparer.cs" />
     <Compile Include="Data\Insolvence\Dokument.cs" />
     <Compile Include="Data\Insolvence\Insolvence.Search.cs" />
     <Compile Include="Data\Insolvence\Insolvence.cs" />
@@ -539,7 +544,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\ErrorEnvelope.cs" />
-    <Compile Include="Data\Graph.Shortest.cs" />
+    <Compile Include="Data\Graphs\Graph.Shortest.cs" />
     <Compile Include="Data\Search.cs" />
     <Compile Include="Data\Search.DatasetMultiQueryMultiResult.cs" />
     <Compile Include="Data\Search.DatasetMultiResult.cs" />
