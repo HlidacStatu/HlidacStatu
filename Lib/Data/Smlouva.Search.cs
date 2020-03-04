@@ -107,7 +107,7 @@ namespace HlidacStatu.Lib.Data
 
 
             public static IRule[] irules = new IRule[] {
-               new OsobaId("osobaid","ico:" ),
+               new OsobaId("osobaid:","ico:" ),
                new Holding("holdingprijemce:","icoprijemce:" ),
                new Holding("holdingplatce:","icoplatce:" ),
                new Holding("holdingdodavatel:","icoprijemce:" ),
