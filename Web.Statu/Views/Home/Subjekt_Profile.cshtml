@@ -56,6 +56,7 @@
 
 }
 
+
 @if (Model.JsemOVM())
 {
     <h4>Úřad - orgán veřejné moci  <span class="text-muted">@Model.StatusFull()</span></h4>
@@ -269,7 +270,6 @@ else
                                 </li>
                             }
                         </ul>
-                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
                     </td>
                 </tr>
 
@@ -296,28 +296,17 @@ else
                         </text>
                     }
                 </td>
-            </tr>
-            @if (
-                Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
-                && Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().Pocet > 0
-                )
-            {
-                <tr>
-                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
-                    <td>
-                        @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
-                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
-                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                        @if (Model.PatrimStatu())
-                        {
-                            <text>
-                                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
-                            </text>
+                <td>
+                    <script>
+                        window.onload = function () {
+                            $('#graf').toggle();
                         }
-                    </td>
-                </tr>
-            }
-            <tr>
+                    </script>
+
+                    <a onclick="$('#graf').toggle();">Zobraz grafy</a>
+                </td>
+            </tr>
+            <tr id="graf">
                 <td colspan="2">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-4">
@@ -404,10 +393,29 @@ else
                             </div>
                         }
                     </div>
-                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                 </td>
             </tr>
+            @if (
+                Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
+                && Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().Pocet > 0
+                )
+            {
+                <tr>
+                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
+                    <td>
+                        @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
+                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                        @if (Model.PatrimStatu())
+                        {
+                            <text>
+                                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                            </text>
+                        }
+                    </td>
+                </tr>
+            }
+
             @if (Model.PatrimStatu() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
             {
                 double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
@@ -449,8 +457,6 @@ else
                                 </tr>
                             </tfoot>
                         </table>
-                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                     </td>
                 </tr>
             }
@@ -473,8 +479,6 @@ else
                     <th id="_nespolehlivy_platce_dph"><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma je nespolehlivý plátce DPH</span></th>
                     <td>
                         <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")</span>
-                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                     </td>
                 </tr>
 
@@ -501,8 +505,6 @@ else
                                     </li>
                                 }
                             </ul>
-                            <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                         </td>
                     </tr>
 
@@ -531,8 +533,6 @@ else
                            $" se vyskytuje v <a href='{surl}'><b>jedné veřejné zakázce</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkách</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkach</b></a> jako {text[1]}")).
                         </p>
                     }
-                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                 </td>
             </tr>
 
@@ -552,8 +552,8 @@ else
                     .Terms("icos", s => s
                         .Field(f => f.Prijemce.Ico)
                         .Size(5000)
-                        .Aggregations(a=>a
-                            .Sum("sum", ss=>ss.Field(ff=>ff.DotaceCelkem))
+                        .Aggregations(a => a
+                            .Sum("sum", ss => ss.Field(ff => ff.DotaceCelkem))
                         )
                     );
                 var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("holding:" + Model.ICO, 1, 1,
@@ -602,8 +602,6 @@ else
                 </p>
                     }
 
-                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                 </td>
             </tr>
 
@@ -637,8 +635,6 @@ else
 
                     </p>
                 }
-                    <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                 </td>
             </tr>
 
@@ -661,8 +657,6 @@ else
                                 </div>
                             </p>
                         }
-                        <div class="obsah_top"><a href="#_top">△ nahoru</a></div>
-
                     </td>
                 </tr>
 
