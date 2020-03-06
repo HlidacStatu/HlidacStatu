@@ -527,7 +527,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
                                 );
                     ret.Add(rel);
                 }
-                return Edge.GetLongestUniqueEdges(ret);
+                return Edge.GetLongestEdges(ret);
             }
             return new Graph.Edge[] { };
         }
@@ -579,7 +579,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
 
                     ret.Add(rel);
                 }
-                return Edge.GetLongestUniqueEdges(ret);
+                return Edge.GetLongestEdges(ret);
             }
             return new Graph.Edge[] { };
         }

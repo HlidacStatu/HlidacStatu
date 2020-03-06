@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Data
         public static Audit Add<T>(Operations operation, string user, string ipAddress, T newObj, T prevObj)
             where T : IAuditable
         {
-            return Add(operation, user, ipAddress, 
+            return Add(operation, user, ipAddress,
                 newObj?.ToAuditObjectId(), newObj?.ToAuditObjectTypeName(),
                 newObj?.ToAuditJson(), prevObj?.ToAuditJson()
                 );
@@ -58,25 +58,35 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static Audit Add(Operations operation, string user, string ipAddress, 
+        public static Audit Add(Operations operation, string user, string ipAddress,
             string objectId, string objectType,
             string newObjSer, string prevObjSer)
         {
-            using (DbEntities db = new DbEntities())
+            try
             {
-                var a = new Audit();
-                a.date = DateTime.Now;
-                a.objectId = objectId;
-                a.objectType = objectType;
-                a.operation = operation.ToString();
-                a.IP = ipAddress;
-                a.userId = user ?? "";
-                a.valueBefore = prevObjSer; 
-                a.valueAfter = newObjSer ?? "";
-                db.Audit.Add(a);
-                db.SaveChanges();
-                return a;
+
+                using (DbEntities db = new DbEntities())
+                {
+                    db.Database.CommandTimeout = 1;
+                    var a = new Audit();
+                    a.date = DateTime.Now;
+                    a.objectId = objectId;
+                    a.objectType = objectType;
+                    a.operation = operation.ToString();
+                    a.IP = ipAddress;
+                    a.userId = user ?? "";
+                    a.valueBefore = prevObjSer;
+                    a.valueAfter = newObjSer ?? "";
+                    db.Audit.Add(a);
+                    db.SaveChanges();
+                    return a;
+                }
             }
+            catch (Exception e)
+            {
+                return null;
+            }
+
         }
     }
 }

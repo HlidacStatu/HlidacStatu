@@ -168,7 +168,8 @@ namespace HlidacStatu.Lib.Data
 
             }
 
-            public static Edge[] GetLongestUniqueEdges(IEnumerable<Edge> relations)
+            [Obsolete()]
+            public static Edge[] GetLongestEdges_obsolete(IEnumerable<Edge> relations)
             {
                 if (relations == null)
                     return null;
@@ -194,42 +195,121 @@ namespace HlidacStatu.Lib.Data
 
                 return longestE.ToArray();
             }
-            public static Edge[] GetMergedLongestEdgesBetweenSameNodes(IEnumerable<Edge> relations)
+
+            public static Edge[] GetLongestEdges(IEnumerable<Edge> relations)
+            {
+                var longestE = new List<Edge>();
+
+                var uniqEdges = relations
+                    .Select(r => string.Join("|", r.From?.UniqId ?? "", r.To?.UniqId ?? "", r.Distance.ToString()))
+                    .Distinct();
+
+                foreach (var uniq in uniqEdges)
+                {
+                    var eParts = uniq.Split('|');
+
+                    var le = GetLongestEdgesBetweenSameNodes(relations
+                                 .Where(r => (r.From?.UniqId ?? "") == eParts[0] && (r.To?.UniqId ?? "") == eParts[1] && r.Distance.ToString() == eParts[2]));
+
+                    if (le != null)
+                        longestE.AddRange(le);
+                }
+
+                return longestE.ToArray();
+            }
+
+
+            public static Edge[] GetLongestEdgesBetweenSameNodes(IEnumerable<Edge> relations)
             {
                 if (relations == null)
                     return null;
                 if (relations.Count() < 2)
                     return relations.ToArray();
 
-                var uniqNodes = relations
-                    .Select(r => string.Join("|", r.From.UniqId, r.To.UniqId, r.Distance.ToString()))
+                var uniqEdges = relations
+                    .Select(r => string.Join("|", r.From?.UniqId ?? "", r.To?.UniqId ?? "", r.Distance.ToString()))
                     .Distinct();
-                if (uniqNodes.Count() > 1)
+                if (uniqEdges.Count() > 1)
                     throw new ArgumentOutOfRangeException("only same nodes and distance in relations");
 
-                var rels = relations.ToArray();
-                var longestEdges = new List<Edge>();
-
-                for (int i = 0; i < rels.Length; i++)
+                //if rels without limits, take it
+                if (relations.Any(r => r.RelFrom.HasValue == false && r.RelTo.HasValue == false))
                 {
-                    long fromDateT = rels[i].RelFrom?.Ticks ?? long.MinValue;
-                    long toDateT = rels[i].RelTo?.Ticks ?? long.MaxValue;
-
-                    if (fromDateT == long.MinValue && toDateT == long.MaxValue)
+                    var longest = GetLongestEdge(relations);
+                    var e = new Edge()
                     {
-                        var longest = GetLongestEdge(rels);
-                        var e = new Edge()
-                        {
-                            Descr = longest.Descr, From = longest.From,To = longest.To,
-                            Distance = longest.Distance,RelFrom = null,RelTo = null
-                        };
-                        e.UpdateAktualnost();
-                        return new Edge[] { e };
-                    }
-
+                        Descr = longest.Descr,
+                        From = longest.From,
+                        To = longest.To,
+                        Distance = longest.Distance,
+                        RelFrom = null,
+                        RelTo = null
+                    };
+                    e.UpdateAktualnost();
+                    return new Edge[] { e };
                 }
 
-                throw new NotImplementedException();
+                bool changed = false;
+                var tmp = new List<Edge>(relations.ToArray());
+                do
+                {
+                    changed = false;
+
+                    for (int i = 0; i < tmp.Count; i++)
+                    {
+                        var overlapped = false;
+                        for (int j = 0; j < tmp.Count; j++)
+                        {
+                            if (j == i)
+                                continue;
+                            if (HlidacStatu.Util.DateTools
+                                .IsContinuingIntervals(tmp[i].RelFrom, tmp[i].RelTo, tmp[j].RelFrom, tmp[j].RelTo))
+                            {
+                                var merged = MergeEdges(tmp[i], tmp[j]);
+                                if (i > j)
+                                {
+                                    tmp.RemoveAt(i);
+                                    tmp.RemoveAt(j);
+                                }
+                                else
+                                {
+                                    tmp.RemoveAt(j);
+                                    tmp.RemoveAt(i);
+                                }
+                                tmp.Insert(0, merged);
+                                changed = true;
+                                break;
+                            }
+                        }
+                        if (changed)
+                            break;
+                    }
+
+                } while (changed);
+
+                var finalList = tmp.ToArray();
+                return finalList;
+            }
+
+            private static Edge MergeEdges(Edge e1, Edge e2)
+            {
+                Edge longest = GetLongestEdge(new[] { e1, e2 });
+                Edge e = new Edge();
+                if (e1.Descr == e2.Descr)
+                    e.Descr = e1.Descr;
+                else if (e1.Descr.Contains(e2.Descr))
+                    e.Descr = e1.Descr;
+                else if (e2.Descr.Contains(e1.Descr))
+                    e.Descr = e2.Descr;
+                else
+                    e.Descr = e1.Descr + ", " + e2.Descr ;
+                e.From = longest.From;
+                e.To = longest.To;
+                e.Distance = longest.Distance;
+                e.RelFrom = Util.DateTools.LowerDate(e1.RelFrom, e2.RelFrom);
+                e.RelTo = Util.DateTools.HigherDate(e1.RelTo, e2.RelTo);
+                e.UpdateAktualnost();
+                return e;
             }
 
             public static Edge GetLongestEdge(IEnumerable<Edge> relations)

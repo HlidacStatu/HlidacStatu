@@ -24,6 +24,25 @@ namespace HlidacStatu.Util
             return prestupneRoky.Contains(rok);
         }
 
+        public static DateTime? LowerDate(DateTime? d1, DateTime? d2)
+        {
+            if (d1.HasValue == false || d2.HasValue == false)
+                return null;
+            else if (d1.Value < d2.Value)
+                return d1;
+            else
+                return d2;
+        }
+        public static DateTime? HigherDate(DateTime? d1, DateTime? d2)
+        {
+            if (d1.HasValue == false || d2.HasValue == false)
+                return null;
+            else if (d1.Value > d2.Value)
+                return d1;
+            else
+                return d2;
+        }
+
 
         public static string DateDiffShort(DateTime first, DateTime sec, string beforeTemplate = "{0}", string afterTemplate = "{0}")
         {
@@ -211,6 +230,35 @@ namespace HlidacStatu.Util
                 return false;
         }
 
+        public static bool IsContinuingIntervals(DateTime? dateIntervalFrom,
+                                            DateTime? dateIntervalTo,
+                                            DateTime? dateRelFrom,
+                                            DateTime? dateRelTo)
+        {
+            if (IsOverlappingIntervals(dateIntervalFrom, dateIntervalTo, dateRelFrom, dateRelTo))
+                return true;
+            DateTime? int1End = null;
+            DateTime? int2Start = null;
+            if (dateIntervalTo < dateRelFrom)
+            {
+                int1End = dateIntervalTo;
+                int2Start = dateRelFrom;
+            }
+            else
+            {
+                int1End = dateRelTo;
+                int2Start = dateIntervalFrom;
+            }
+            int1End = int1End ?? new DateTime(1980, 1, 1);
+            int2Start= int1End ?? new DateTime(1990, 1, 1);
+
+            if (int1End == new DateTime(1980, 1, 1) || int2Start == new DateTime(1990, 1, 1))
+                System.Diagnostics.Debugger.Break();
+
+            var days = Math.Abs((int2Start.Value - int1End.Value).TotalDays);
+            return (days <= 1);
+        }
+
         //based on sql dbo.IsSomehowInInterval
         public static bool IsOverlappingIntervals(DateTime? dateIntervalFrom,
                                             DateTime? dateIntervalTo,
@@ -227,7 +275,7 @@ namespace HlidacStatu.Util
             if (dateRelFrom is null)
                 dateRelFrom = new DateTime(1900, 01, 01);
             if (dateRelTo is null)
-                dateRelTo = DateTime.Now.AddDays(10);
+                dateRelTo = DateTime.Now.AddDays(1000);
 
 
             if (IsDateInInterval(dateRelFrom, dateRelTo, dateIntervalFrom))

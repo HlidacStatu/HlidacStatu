@@ -97,10 +97,16 @@ namespace HlidacStatu.Util.Cache
         {
 
             IOperationResult<T> x = cache.Get<T>(fixKey(key));
+            if (x.Status == Couchbase.IO.ResponseStatus.KeyNotFound)
+                return default(T);
+
             if (x.Status == Couchbase.IO.ResponseStatus.ClientFailure || x.Exception != null)
             {
                 System.Threading.Thread.Sleep(10);
                 x = cache.Get<T>(fixKey(key));
+                if (x.Status == Couchbase.IO.ResponseStatus.KeyNotFound)
+                    return default(T);
+
                 if (x.Status == Couchbase.IO.ResponseStatus.ClientFailure || x.Exception != null)
                 {
                     throw new Couchbase.CouchbaseResponseException(x.Status.ToString(), x.Exception);

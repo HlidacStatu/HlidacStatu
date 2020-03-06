@@ -76,7 +76,75 @@ namespace HlidacStatu.Lib.Data
             return this.FullNameWithNarozeni();
         }
 
+        private static DateTime minLookBack = new DateTime(DateTime.Now.Year - 5, 1, 1);
+        public bool IsPolitikBasedOnEvents()
+        {
+            var ret = this.Events(ev =>
+                        ev.Type == (int)OsobaEvent.Types.Politicka
+                        || ev.Type == (int)OsobaEvent.Types.PolitickaPracovni
+                        || ev.Type == (int)OsobaEvent.Types.VolenaFunkce
+                    )
+                    .Where(ev => (ev.DatumDo.HasValue && ev.DatumDo > minLookBack) || (ev.DatumDo.HasValue == false && ev.DatumOd > minLookBack.AddYears(-2) ))
+                    .ToArray();
+                    
+            return ret.Count()>0;
+        }
 
+        /// <summary>
+        /// returns true if changed
+        /// </summary>
+        public bool RecalculateStatus()
+        {
+            switch (this.StatusOsoby())
+            {
+                case StatusOsobyEnum.NeniPolitik:
+                    if (IsPolitikBasedOnEvents())
+                    {
+                        this.Status = (int)StatusOsobyEnum.Politik;
+                        return true;
+                    }
+
+                    //TODO zkontroluj, ze neni politik podle eventu
+                    break;
+
+                case StatusOsobyEnum.VazbyNaPolitiky:
+                case StatusOsobyEnum.ByvalyPolitik:
+                case StatusOsobyEnum.Sponzor:
+                    if (IsPolitikBasedOnEvents())
+                    {
+                        this.Status = (int)StatusOsobyEnum.Politik;
+                        return true;
+                    }
+                    if (this.IsSponzor() == false && this.MaVztahySeStatem() == false)
+                    {
+                        this.Status = (int)StatusOsobyEnum.NeniPolitik;
+                        return true;
+                    }
+                    break;
+                case StatusOsobyEnum.Politik:
+                    bool chgnd = false;
+                    if (IsPolitikBasedOnEvents()==false)
+                    {
+                        this.Status = (int)StatusOsobyEnum.NeniPolitik;
+                        chgnd=true;
+                    }
+                    if (chgnd && this.IsSponzor() == false && this.MaVztahySeStatem() == false)
+                    {
+                        this.Status = (int)StatusOsobyEnum.NeniPolitik;
+                        chgnd = true;
+                    }
+                    else
+                    {
+                        this.Status = (int)StatusOsobyEnum.Politik;
+                        chgnd = false;
+
+                    }
+                    return chgnd;
+                default:
+                    break;
+            }
+            return false;
+        }
         public bool IsSponzor()
         {
             return this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor).Any();
@@ -163,8 +231,8 @@ namespace HlidacStatu.Lib.Data
 
                 //sponzoring z navazanych firem kdyz byl statutar
                 IEnumerable<OsobaEvent> firmySponzoring = db.FirmaEvent.SqlQuery(@"
-                    select fe.* from firmaevent fe
-	                    inner join osobaVazby ov on ov.vazbakico=fe.ico and fe.Type=3
+                    select fe.* from firmaevent fe with (nolock)
+	                    inner join osobaVazby ov with (nolock) on ov.vazbakico=fe.ico and fe.Type=3
                     and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
                     and osobaid=" + this.InternalId)
                     //convert to osobaEvent

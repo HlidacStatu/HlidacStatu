@@ -66,7 +66,7 @@ namespace HlidacStatu.Lib.Data
                     return null;
 
                 var o = base.Get(key);
-                if (o.NameId == nullObj.NameId)
+                if (o == null || o?.NameId == nullObj.NameId)
                     return null;
                 else
                     return o;
