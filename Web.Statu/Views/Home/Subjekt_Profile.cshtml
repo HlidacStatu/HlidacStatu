@@ -224,7 +224,7 @@ else
                                     @Model.ObecneJmeno() má v registru smluv
                                     <span class="text-danger">
 
-                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)&chyby:zasadni">
+                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni">
                                             @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                                             {
                                                 @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0} smluv</b> obsahujících "))
@@ -254,7 +254,7 @@ else
                                         <span>Současně má v registru smluv</span>
                                     }
                                     <span class="text-danger">
-                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)&chyby:vazne">
+                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne">
                                             @if (numVazneIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                                             {
                                                 @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0}</b> smluv obsahujících "))
