@@ -11,8 +11,8 @@ namespace HlidacStatu.Lib.Data
         public class DatasetSumGeneralResult : GeneralResult<string>
         {
             public Lib.Data.External.DataSets.DataSet Dataset { get; set; }
-            public DatasetSumGeneralResult(long total, IEnumerable<string> results, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
-                : base(total, results, true)
+            public DatasetSumGeneralResult(string query, long total, IEnumerable<string> results, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
+                : base(query, total, results, true)
             {
                 this.Dataset = dataset;
                 this.DataSource = "Dataset." + this.Dataset.DatasetId;

@@ -14,6 +14,7 @@ namespace HlidacStatu.Lib.Data
 
         public class GeneralResult<T> : ISearchResult
         {
+            public string Query { get; set; }
             public IEnumerable<T> Result { get; private set; }
             public long Total { get; private set; }
             public bool IsValid { get; private set; }
@@ -21,12 +22,13 @@ namespace HlidacStatu.Lib.Data
             public string DataSource { get; set; }
             public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
 
-            public GeneralResult(IEnumerable<T> result)
-                : this(result?.Count() ?? 0, result, true)
+            public GeneralResult(string query, IEnumerable<T> result)
+                : this(query, result?.Count() ?? 0, result, true)
             { }
 
-            public GeneralResult(long total, IEnumerable<T> result, bool isValid = true)
+            public GeneralResult(string query, long total, IEnumerable<T> result, bool isValid = true)
             {
+                this.Query = query;
                 this.Result = result;
                 this.Total = total;
                 this.IsValid = isValid;

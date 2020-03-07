@@ -1,0 +1,842 @@
+﻿@model HlidacStatu.Lib.Data.Search.MultiResult
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Web.Framework;
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Data;
+@using HlidacStatu.Lib.Searching;
+
+@{
+    int numOfSmluv = 50;
+    int numOfOsob = 50;
+    int numOfDotaci = 50;
+    int numOfFirem = 50;
+    int numOfVZ = 50;
+    int numOfInsolvenci = 50;
+
+
+
+
+    ViewBag.ShowBookmarkUrl = true;
+
+    ViewBag.Title = "Výsledky hledání";
+    //ViewBag.SubTitle = Model?.Query;
+
+    bool hasPreview = Model.HasOsoby;
+
+    bool mainSearchRendered = false;
+
+    Dictionary<string, System.TimeSpan> viewRenderTimes = new Dictionary<string, TimeSpan>();
+}
+@section scripts
+    {
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="@Url.Action("Smlouvy", "Home")">Hledání</a></li>
+        <li title="@Model.Query">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</li>
+    </ol>
+}
+
+@if (string.IsNullOrEmpty(Model.Query))
+{
+
+    <div class="searching container">
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-1">
+                <img style="margin-top:20px; height:30px;width:auto" src="/Content/img/icon-not-found.svg">
+
+            </div>
+            <div class="col-xs-11">
+                <div class="new-p--big">
+                    Nevíme, co máme hledat, žádný dotaz jsme od vás nedostali.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8  col-md-6">
+            </div>
+        </div>
+
+        <!-- otazky? -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="searching__questions">
+                    <div>
+                        <div>
+                            <a class="link--blue" href="/napoveda">
+                                Jak vyhledávat?
+                            </a>
+                            <br>
+                            Pokud si stále nevíte rady, neváhejte se nás na cokoliv
+                            <a class="link--blue" href="/texty/kontakt">
+                                zeptat.
+                            </a>
+                        </div>
+                    </div>
+                    <img class="searching__questions__icon" src="/Content/img/icon-questions.svg">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    return;
+
+}
+else if (Model.HasResults == false)
+{
+
+    <div class="searching container">
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-1">
+                <img style="margin-top:20px; height:30px;width:auto" src="/Content/img/icon-not-found.svg">
+
+            </div>
+            <div class="col-xs-11">
+                <div class="new-p--big">
+                    Pro hledaný výraz <span title="@Model.Query" class="emphasized">@Devmasters.Core.TextUtil.ShortenText(Model.Query, 80, "...")</span> jsme bohužel nic nenašli
+                </div>
+            </div>
+        </div>
+        @if (Model.IsValid == false)
+        {
+            <div class="row">
+                <div class="col-xs-1">
+                </div>
+                <div class="col-xs-11">
+                    <div class="alert alert-danger" role="alert">
+                        Hledaný výraz není správně naformulován a my mu nerozumíme.
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-1">
+                </div>
+                <div class="col-xs-11">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Tipy pro kontrolu dotazu</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li><b>Uvozovky</b> - Zkontrolujte si, zda jste nezapomněli uzavřít uvozovky na konci</li>
+                                <li><b>Závorky</b> - Zkontrolujte si, zda jste nezapomněli uzavřít závorky na konci výrazu</li>
+                                <li><b>Syntaxe</b> - Zkontrolujte si i detaily syntaxe, <a href="/napoveda">nejlépe přímo s nápovědou</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- otazky? -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="searching__questions">
+                    <div>
+                        <div class="new-title new-title--smaller">
+                            Nenašli jste, co jste hledali?
+                        </div>
+                        <div>
+                            Zkuste zadat hledaný výraz jiným způsobem.
+                            <a class="link--blue" href="/napoveda">
+                                Jak vyhledávat?
+                            </a>
+                            <br>
+                            Pokud si stále nevíte rady, neváhejte se nás na cokoliv
+                            <a class="link--blue" href="/texty/kontakt">
+                                zeptat.
+                            </a>
+                        </div>
+                    </div>
+                    <img class="searching__questions__icon" src="/Content/img/icon-questions.svg">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    return;
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="new-p new-p--big" style="margin-top: 10px;">
+            Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @HlidacStatu.Util.RenderData.Vysledky.NalezenoPocetVysledku(Model.Total).
+            @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny změny o <b>{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}</b> v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Změny o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."), showWDList: false, preBtnText: "")
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="searching__counters">
+            @if (Model.HasSmlouvy)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#smlouvy">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.HasVZ)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.Insolvence.HasResult)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.Result.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.HasOsoby)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#osoby">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
+            }
+            @if (Model.HasFirmy)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
+            }
+            @if (Model.HasDotace)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#dotace">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
+            }
+            @if (Model.Datasets.HasResult)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#databaze">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    //debug
+    //Model.Smlouvy = null;
+    Model.VZ = null;
+    Model.Dotace = null;
+    Model.Insolvence = null;
+
+    //main content based on number of results
+
+    List<string> paorder = new List<string>();
+    if (Model.HasSmlouvy)
+    {
+        paorder.Add("smlouvy");
+        if (Model.Smlouvy.Total < 10)
+        {
+            if (Model.HasVZ && Model.VZ.Total > 10)
+            {
+                paorder.Insert(0, "vz");
+            }
+            else if (Model.HasDotace && Model.Dotace.Total > 10)
+            {
+                paorder.Insert(0, "dotace");
+            }
+            else if (Model.HasInsolvence && Model.Insolvence.Total > 10)
+            {
+                paorder.Insert(0, "insolvence");
+            }
+        }
+    }
+    if (Model.HasVZ)
+    {
+        if (paorder.Contains("vz") == false)
+        {
+            paorder.Add("vz");
+
+            if (Model.HasDotace && Model.Dotace.Total > Model.VZ.Total * 2)
+            {
+                paorder.Insert(paorder.FindIndex(0, m => m == "vz"), "dotace");
+            }
+            else if (Model.HasInsolvence && Model.Insolvence.Total > Model.VZ.Total * 3)
+            {
+                paorder.Insert(paorder.FindIndex(0, m => m == "vz"), "insolvence");
+            }
+        }
+    }
+    if (Model.HasDotace)
+    {
+        if (paorder.Contains("dotace") == false)
+        {
+            paorder.Add("dotace");
+
+            if (Model.HasInsolvence && Model.Insolvence.Total > Model.Dotace.Total * 2)
+            {
+                paorder.Insert(paorder.FindIndex(0, m => m == "dotace"), "insolvence");
+            }
+        }
+    }
+
+    if (Model.HasInsolvence)
+    {
+        if (paorder.Contains("insolvence") == false)
+        {
+            paorder.Add("insolvence");
+        }
+    }
+    if (paorder.Count() == 0)
+    {
+        paorder.Add("osoby");
+        paorder.Add("datasety");
+        paorder.Add("firmy");
+    }
+    else
+    {
+        paorder.Add("firmy");
+        paorder.Add("datasety");
+        paorder.Add("osoby");
+    }
+    bool secondColumnRendered = false;
+
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        @foreach (string part in paorder)
+        {
+            switch (part)
+            {
+                case "smlouvy":
+                    if (Model.HasSmlouvy)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderSmlouvy(mainSearchRendered ? 0 : numOfSmluv)
+                        sw.Stop();
+                        viewRenderTimes.Add("smlouvy", sw.Elapsed);
+                        mainSearchRendered = true;
+                    }
+
+                    break;
+                case "vz":
+                    if (Model.HasVZ)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderVZ(mainSearchRendered ? 0 : numOfVZ)
+                        sw.Stop();
+                        viewRenderTimes.Add("VZ", sw.Elapsed);
+                        mainSearchRendered = true;
+                    }
+
+                    break;
+                case "dotace":
+                    if (Model.HasDotace)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderDotace(mainSearchRendered ? 0 : numOfDotaci)
+                        sw.Stop();
+                        viewRenderTimes.Add("Dotace", sw.Elapsed);
+                        mainSearchRendered = true;
+                    }
+
+                    break;
+                case "insolvence":
+                    if (Model.HasInsolvence)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderInsolvence(mainSearchRendered ? 0 : numOfInsolvenci)
+                        sw.Stop();
+                        viewRenderTimes.Add("Insolvence", sw.Elapsed);
+                        mainSearchRendered = true;
+
+                    }
+                    break;
+                case "osoby":
+                    if (Model.HasOsoby)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+
+                        @RenderOsoby(mainSearchRendered ? 0 : numOfOsob)
+                        sw.Stop();
+                        viewRenderTimes.Add("Osoby", sw.Elapsed);
+                        mainSearchRendered = true;
+                    }
+                    break;
+                case "firmy":
+                    if (Model.HasFirmy)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderFirmy(mainSearchRendered ? 0 : numOfFirem)
+                        sw.Stop();
+                        viewRenderTimes.Add("Firmy", sw.Elapsed);
+                    }
+                    break;
+                case "datasety":
+                    if (Model.HasDatasets)
+                    {
+                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                        sw.Start();
+                        @RenderDatasets(mainSearchRendered ? 0 : 1)
+                        sw.Stop();
+                        viewRenderTimes.Add("Datasets", sw.Elapsed);
+                        mainSearchRendered = true;
+                    }
+                    break;
+                default:
+                    break;
+            } //switch
+
+            if (secondColumnRendered == false && mainSearchRendered)
+            {
+                secondColumnRendered = true;
+                @Html.Raw("</div><div id='midcol' class='col-sm-1 verticalBackgroundLine'></div><div id='rightcol' class='col-xs-12 col-sm-3'>")
+                @Html.Raw("<h2>Další výsledky</h2>")
+            }
+        } @*for*@
+    </div>
+</div>
+<script type='text/javascript'>
+    $(document).ready(function () {
+        $('#midcol').height($('#rightcol').height());
+    });
+</script>
+
+
+
+<!--
+    searchtimes: @Html.Raw(string.Join("\n", Model.SearchTimes().Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
+-->
+<!--
+    viewrendertimes: @Html.Raw(string.Join("\n", viewRenderTimes.Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
+-->
+@{
+    var t = Elastic.Apm.Agent.Tracer.StartTransaction("/hledej", "render");
+    foreach (var vrt in viewRenderTimes)
+    {
+        var sp = t.StartSpan(vrt.Key, "render");
+        sp.Duration = vrt.Value.TotalMilliseconds;
+        sp.End();
+    }
+    t.End();
+}
+
+
+@helper RenderOsoby(int numOfOsob)
+{
+    string osobaStatDescription = "";
+    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Result.First();
+
+    var alldata = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
+
+    var data = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
+                    .Where(v => !string.IsNullOrEmpty(v.To.Id))
+                    .GroupBy(f => f.To.Id, v => v, (ico, v) => new
+                    {
+                        ICO = ico,
+            //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
+            //VazbyPerIco = osoba.VazbyProICO(ico),
+            stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+                    })
+                    .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO)
+                    .ToArray();
+
+    var osobaStatDescTotalKc = HlidacStatu.Lib.Data.Smlouva.NicePrice(data.Sum(d => d.stat.Summary.CelkemCena), html: true, shortFormat: true);
+    osobaStatDescription = string.Format("{0}{1}",
+        Devmasters.Core.Lang.Plural.GetWithZero((int)alldata.Count(), "Žádná vazba na firmy", "Celkem vazba na <b>{0} firmu</b>", "Celkem vazba na <b>{0} firmy</b>", "Celkem vazba na <b>{0} firem</b>"),
+        Devmasters.Core.Lang.Plural.GetWithZero((int)data.Sum(d => d.stat.Summary.Pocet), "."
+            , ", <b>{0} smlouva</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
+            , ";, <b>{0} smlouvy</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
+            , ";, <b>{0} smluv</b> v registru smluv za <b>" + osobaStatDescTotalKc) + "</b>"
+    );
+    var funkceOsoba = osoba1.Description(true,
+                   m => m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor
+                        && m.Type != (int)HlidacStatu.Lib.Data.FirmaEvent.Types.SponzorZuctu,
+                   2);
+    string box1Css = "col-sm-4 col-md-3";
+    string box2Css = "col-sm-8 col-md-9";
+    string hideBox = "";
+    if (numOfOsob == 0)
+    {
+        box1Css = "col-sm-12";
+        box2Css = "col-sm-12";
+        hideBox = "hidden";
+    }
+
+
+    <div class="row" id="osoby">
+        <div class="col-xs-12">
+            <div class="searching__watcher">
+                <div class="watcher__title">
+                    <h3>
+                        Nalezené osoby
+                        <small>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</small>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- big result -->
+
+    <div class="row">
+        <div class="@box1Css">
+            <div class="person-profile-thumb">
+                <a href="@osoba1.GetUrl(true)">
+                    <div class="profile-picture" style="background-image: url('@osoba1.GetPhotoUrl(true)')">
+                    </div>
+                </a>
+                <div>
+                    <a class="section-title link--blue" href="@osoba1.GetUrl(true)">
+                        @osoba1.FullName()
+                    </a>
+                    <div class="new-p new-p--gray new-p--small">
+                        @osoba1.NarozeniYear()
+                    </div>
+                    <div class="new-p new-p--gray new-p--small">
+                        @osoba1.StatusOsoby().ToNiceDisplayName()
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="@box2Css">
+
+            @if (!string.IsNullOrWhiteSpace(funkceOsoba))
+            {
+                <div class="search-result-label">
+                    Funkce
+                </div>
+                <div class="new-p">
+                    @Html.Raw(funkceOsoba)
+                </div>
+            }
+            @if (false && osoba1.Sponzoring().Count() > 0)
+            {
+                <div class="search-result-label">
+                    Podpora politických stran
+                </div>
+                <div class="new-p">
+                    @Html.Raw(osoba1.Description(true,
+                       m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor,
+                       5))
+                </div>
+
+            }
+            <div class="search-result-label">
+                Angažovanost
+            </div>
+            <div class="new-p">
+                @Html.Raw(osobaStatDescription)
+            </div>
+            @if (osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count > 0)
+            {
+                <div class="search-result-label">
+                    Vazby
+                </div>
+                <div class="new-p table-new table-new--dotted">
+                    <table>
+                        <tbody>
+                            @foreach (var v in osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(3))
+                            {
+                                <tr>
+                                    <td><a href="/subjekt/@v.Value.Subject().ICO">@(v.Value.Subject().Jmeno)</a></td>
+                                    <td class="cell-gray">@Html.Raw(v.Value.BasicStatPerYear.Summary.ToNiceString(v.Value.Subject(), true))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="pull-right new-p"><a class="link" href="@osoba1.GetUrl(true)">další vazby @osoba1.FullName()</a></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+    if (Model.Osoby.Total > 1)
+    {
+        if (numOfOsob > 0)
+        {
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="search-result-label">
+                        Další nalezené osoby
+                    </div>
+                    <div class="new-p">
+                        @foreach (var osobaX in Model.Osoby.Result.Skip(1).Take(numOfOsob - 1))
+                        {
+                            <div class="person-profile-thumb person-profile-thumb--small" style="display:inline-block;padding-right:10px;">
+                                <a href="@osobaX.GetUrl(true)">
+                                    <div class="profile-picture" style="background-image: url('@osobaX.GetPhotoUrl(true)')">
+                                    </div>
+                                </a>
+                                <div>
+                                    <a class="section-title link--blue" href="@osobaX.GetUrl(true)">
+                                        @osobaX.FullName()
+                                    </a>
+                                    <div class="new-p new-p--gray new-p--small">
+                                        @Html.Raw(osobaX.NarozeniYear(true))
+                                    </div>
+                                    <div class="new-p new-p--gray new-p--small">
+                                        @osobaX.StatusOsoby().ToNiceDisplayName()
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        if (Model.Osoby.Total > numOfOsob && Model.Osoby.Total > 1)
+        {
+            <div style="height: 32px"></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-center">
+                        <a class="btn btn-default btn-default-new" href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()">
+                            @Devmasters.Core.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    <!-- end big result -->
+}
+
+@helper RenderVZ(int numOfVZ)
+{
+    if (numOfVZ == 0)
+    {
+        <hr />
+        <h4>
+            Našli jsme
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.VZ.Total,
+                    "ještě jednu veřejnou zakázku",
+                    "celkem {0} veřejné zakázky",
+                    "celkem {0} veřejných zakázek"))
+            <small style="padding-left:10px;">
+                <a href="@Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
+            </small>
+        </h4>
+        return;
+    }
+
+    //Model.VZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(Model.Query, null,
+    //    1, new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData().DefaultPageSize(),
+    //    (int)HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
+    var zakazkyTop = Model.VZ.Result.Hits
+    .Select(m => m.Source)
+    .Where(m => !string.IsNullOrEmpty(m.NazevZakazky?.Trim())
+                && !string.IsNullOrEmpty(m.PopisZakazky?.Trim())
+            )
+    .Take(numOfVZ);
+    if (zakazkyTop.Count() < numOfVZ)
+    {
+        zakazkyTop = zakazkyTop.Union(
+            Model.VZ.Result.Hits.Select(m => m.Source)
+            )
+            .Take(numOfVZ);
+    }
+    Model.VZ.ShowWatchdog = false;
+
+
+    <div class="row" id="verejnezakazky">
+        <div class="col-xs-12">
+            @Html.Partial("../VZ/_SearchResult", Model.VZ)
+
+        </div>
+    </div>
+
+
+
+}
+
+@helper RenderDotace(int numOfDotaci)
+{
+    if (numOfDotaci == 0)
+    {
+        <hr />
+        <h4>
+            Našli jsme
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Dotace.Total,
+             "ještě jednu dotaci",
+             "celkem {0} dotace",
+             "celkem {0} dotací"))
+            <small style="padding-left:10px;">
+                <a href="@Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
+            </small>
+        </h4>
+        return;
+    }
+    Model.Dotace.ShowWatchdog = false;
+    <div class="row" id="dotace">
+        <div class="col-xs-12">
+            @Html.Partial("../Dotace/_SearchResult", Model.Dotace)
+        </div>
+    </div>
+
+}
+
+@helper RenderInsolvence(int numOfInsolvenci)
+{
+    if (numOfInsolvenci == 0)
+    {
+        <hr />
+        <h4>
+            Našli jsme
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Insolvence.Total,
+                    "ještě jednu insolvenci",
+                    "celkem {0} insolvence",
+                    "celkem {0} insolvencí"))
+            <small style="padding-left:10px;">
+                <a href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
+            </small>
+        </h4>
+        return;
+    }
+    Model.Insolvence.ShowWatchdog = false;
+    <div class="row" id="insolvence">
+        <div class="col-xs-12">
+
+            @Html.Partial("../Insolvence/_SearchResult", Model.Insolvence)
+
+        </div>
+    </div>
+}
+
+@helper RenderDatasets(int numOfDSrecords)
+{
+    if (numOfDSrecords == 0)
+    {
+        <hr />
+        <h4>
+            V dalších databázích jsme našli
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Datasets.Total,
+                    "ještě jeden výsledek",
+                    "celkem {0} výsledky",
+                    "celkem {0} výsledků"))
+        </h4>
+        <div class="row" id="databaze">
+            <div class="col-xs-12">
+                <ul style="padding:0">
+                    @foreach (var ds in Model.Datasets.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total))
+                    {
+                        <li style="padding-bottom:5px;margin-bottom:5px;border-bottom:1px #eee dashed">
+                            @(ds.DataSet.Registration().name)&nbsp;<a href="@(ds.DataSet.DatasetSearchUrl(ds.Q))">@(HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(ds.Total))&nbsp;<i class="far fa-angle-double-right"></i></a>
+                        </li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+        return;
+    }
+    <div id="databaze" class="row">
+        <div class="col-xs-12">
+            <div class="searching__watcher">
+                <div class="watcher__title">
+                    <h3>
+                        Nalezené výsledky v dalších databázích
+                        <small>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</small>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @{
+            var tabs = Model.Datasets.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)
+                    .Select(m => $"{m.DataSet.Registration().name}&nbsp;({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(m.Total)})");
+            List<string> results = new List<string>();
+
+            foreach (var rds in Model.Datasets.Results
+               .Where(m => m.Total > 0)
+               .OrderByDescending(m => m.Total))
+            {
+                results.Add(rds.RenderResultsInHtml(Model.Query));
+            }
+        }
+        @Util.VerticalTabs(tabs, results)
+    </div>
+
+}
+
+@helper RenderFirmy(int numOfFirem)
+{
+    if (numOfFirem == 0)
+    {
+        <hr />
+        <h4>
+            Našli jsme
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Firmy.Total,
+                    "ještě jednu firmu",
+                    "celkem {0} firmy",
+                    "celkem {0} firem"))
+            <small style="padding-left:10px;">
+                <a href="@Url.Action("HledatFirmy", "Home", new { q = Model.Query })">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
+            </small>
+        </h4>
+        return;
+    }
+
+
+    <div class="row" id="firmy">
+        <div class="col-xs-12">
+            <div class="searching__watcher">
+                <div class="watcher__title">
+                    <h3>
+                        Nalezené firmy
+                        <small>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</small>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Nejvíce relevantní nalezené firmy</h4>
+    <div class="row" style="">
+        <table class="table table-hover">
+            @SearchResults.FirmyHead(false)
+            <tbody>
+
+                @foreach (var item in Model.Firmy.Result)
+                {
+                    var f = HlidacStatu.Lib.Data.Firmy.Get(item);
+                    if (f.Valid)
+                    {
+                        @SearchResults.FirmyRow(this.User, f, false)
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+@helper RenderSmlouvy(int numOfSmluv)
+{
+    if (numOfSmluv == 0)
+    {
+        <hr />
+        <h4>
+            Našli jsme
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Smlouvy.Total,
+                    "ještě jednu smlouvu",
+                    "celkem {0} smlouvy",
+                    "celkem {0} smluv"))
+            <small style="padding-left:10px;">
+                <a href="@Url.Action("HledatSmlouvy", "Home", Model.Smlouvy.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
+            </small>
+        </h4>
+        return;
+    }
+    //Model.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 1, new SmlouvaSearchResult().DefaultPageSize(),
+    //        Smlouva.Search.OrderResult.Relevance,
+    //        anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
+    //        );
+    Model.Smlouvy.ShowWatchdog = false;
+    <div id="smlouvy" class="row">
+        <div class="col-xs-12">
+
+            @Html.Partial("_SearchResult", Model.Smlouvy)
+        </div>
+    </div>
+
+}

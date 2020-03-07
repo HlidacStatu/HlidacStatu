@@ -81,7 +81,12 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 
 <div class="row">
     <div class="col-xs-12 col-sm-6">
-        <h4>@HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Result.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap) na výraz <span class="emphasized">@Model.Q</span></h4>
+        <h3>
+            Nalezené smlouvy
+            <small>
+                @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+            </small>
+        </h3>
         @if (Model?.Result?.Aggregations != null && Model?.Result?.Aggregations?.ContainsKey("sumKc") == true)
         {
             double? sum = ((Nest.ValueAggregate)Model?.Result?.Aggregations["sumKc"])?.Value;
@@ -95,7 +100,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         {
             @Html.CheckBoxFor(m => m.Chyby, new { @onchange = "changeChyby(this);" }) @Html.LabelFor(m => m.Chyby, "Ukázat chyby")
         }
-        @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control small pull-right", @id = "orderList", @onchange = "changeOrder(this);" })
+        @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control small pull-right", @style = "width:50%;max-width:300px", @id = "orderList", @onchange = "changeOrder(this);" })
     </div>
 </div>
 <div style="height:32px;"></div>
@@ -159,13 +164,13 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
         {
             <li class="@firstPageClass">
-                @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1), new string[] { "nameOfView" })
+                @Html.CurrentLink("« Předchozí","HledatSmlouvy","Home", Model.ToRouteValues(page - 1),null, new string[] { "nameOfView" })
             </li>
         }
         @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
         {
             <li class="@lastPageClass">
-                @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1), new string[] { "nameOfView", "routeData" })
+                @Html.CurrentLink("Následující »", "HledatSmlouvy","Home", Model.ToRouteValues(page + 1), null,new string[] { "nameOfView", "routeData" })
             </li>
         }
 
@@ -179,9 +184,9 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
                 !(string.IsNullOrEmpty(Model.Q) || Model.Q == "*")
                 )
             {
-            <li>
-                @Util.ExportButton(this.User, "smlouvy", Model.Q, Model.Order)
-            </li>
+                <li>
+                    @Util.ExportButton(this.User, "smlouvy", Model.Q, Model.Order)
+                </li>
             }
         }
     </ul>

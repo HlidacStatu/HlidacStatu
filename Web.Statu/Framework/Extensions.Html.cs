@@ -97,5 +97,5 @@ namespace HlidacStatu.Web.Framework
             return self.ActionLink(linkText, actionName, controllerName, routeValues, htmlAttributes);
         }
 
+        }
     }
-}

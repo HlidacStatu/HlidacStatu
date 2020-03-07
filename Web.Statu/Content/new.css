@@ -2573,6 +2573,32 @@ a.form-search__hint:active:focus {
         border-bottom: 1px solid #ddd;
     }
 
+    .table > tbody > tr.first > td {
+        line-height: 17px;
+        color: #333333;
+        font-size: 14px;
+        padding: 15px 10px 0px 10px;
+        vertical-align: middle;
+        border: none;
+    }
+    .table > tbody > tr.middle > td {
+        line-height: 17px;
+        color: #333333;
+        font-size: 14px;
+        padding: 0px 10px 0px 10px;
+        vertical-align: middle;
+        border: none;
+    }
+    .table > tbody > tr.last > td {
+        line-height: 17px;
+        color: #333333;
+        font-size: 14px;
+        padding: 0px 10px 15px 10px;
+        vertical-align: middle;
+        border: 0;
+        border-bottom: 1px solid #ddd;
+    }
+
     .table.table-bordered > tbody > tr > td {
         line-height: 17px;
         color: #333333;

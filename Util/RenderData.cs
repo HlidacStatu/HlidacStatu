@@ -42,7 +42,7 @@ namespace HlidacStatu.Util
                 case CapitalizationStyle.EveryWordUpperCap:
                     return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());                    
                 case CapitalizationStyle.FirstLetterUpperCap:
-                    return s.First().ToString().ToUpper() + s.Substring(1); ;
+                    return s.First().ToString().ToUpper() + s.Substring(1);
                 case CapitalizationStyle.AllLowerCap:
                     return s.ToLowerInvariant();
                 case CapitalizationStyle.NoChange:

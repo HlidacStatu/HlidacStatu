@@ -1,0 +1,71 @@
+﻿@model HlidacStatu.Lib.Data.Search.GeneralResult<string>
+@using System.Linq;
+@{
+    ViewBag.Title = "Hledání firem";
+    ViewBag.ShowBookmarkUrl = true;
+
+}
+@section scripts
+{
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Hledání firem</li>
+        <li class="active">@Model.Query</li>
+    </ol>
+}
+
+@if (Model.HasResult == false)
+{
+
+    <div class="searching container">
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-1">
+                <img style="margin-top:20px; height:30px;width:auto" src="/Content/img/icon-not-found.svg">
+
+            </div>
+            <div class="col-xs-11">
+                <div class="new-p--big">
+                    Pro hledaný výraz <span title="@Model.Query" class="emphasized">@Devmasters.Core.TextUtil.ShortenText(Model.Query, 80, "...")</span> jsme bohužel nic nenašli
+                </div>
+            </div>
+        </div>
+    </div>
+    return;
+}
+
+<div class="row" id="firmy">
+    <div class="col-xs-12">
+        <div class="searching__watcher">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Nalezené firmy
+                </h2>
+                <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Total)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Nejvíce relevantní nalezené firmy</h4>
+<div class="row" style="">
+    <table class="table table-hover">
+        @SearchResults.FirmyHead(false)
+        <tbody>
+
+            @foreach (var item in Model.Result)
+            {
+                var f = HlidacStatu.Lib.Data.Firmy.Get(item);
+                if (f.Valid)
+                {
+                    @SearchResults.FirmyRow(this.User, f, false)
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

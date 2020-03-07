@@ -167,7 +167,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         apmtran.CaptureSpan("Smlouvy", "search", () =>
                         {
-                            res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, 20, Smlouva.Search.OrderResult.Relevance,
+                            res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, pageSize, Smlouva.Search.OrderResult.Relevance,
                                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
                                 );
                         });
@@ -189,7 +189,7 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
                         sw.Start();
 
-                        res.Firmy = new GeneralResult<string>(Firma.Search.FindAllIco(query, 50));
+                        res.Firmy = new GeneralResult<string>(query,Firma.Search.FindAllIco(query, 50));
                         sw.Stop();
                         res.Firmy.ElapsedTime = sw.Elapsed;
                     }
@@ -222,7 +222,7 @@ namespace HlidacStatu.Lib.Data
                         {
 
 
-                            res.Osoby = new GeneralResult<Osoba>(
+                            res.Osoby = new GeneralResult<Osoba>(query,
                                 HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query.Trim(), 100)
                                 .OrderBy(m => m.Prijmeni)
                                 .ThenBy(m => m.Jmeno)
@@ -242,10 +242,10 @@ namespace HlidacStatu.Lib.Data
                                 }
                             }
 
-                            res.Osoby = new GeneralResult<Osoba>(foundOsoby);
+                            res.Osoby = new GeneralResult<Osoba>(query, foundOsoby);
                         }
                         else
-                            res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
+                            res.Osoby = new GeneralResult<Osoba>(query, new Osoba[] { });
                         sw.Stop();
                         res.Osoby.ElapsedTime = sw.Elapsed;
 
@@ -277,14 +277,12 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        if (showBeta)
-                        {
-                            var dotaceService = new Dotace.DotaceService();
-                            var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = 5 };
-                            res.Dotace = iqu;
-                            //if (showBeta)
-                            res.Dotace = dotaceService.SimpleSearch(new Searching.DotaceSearchResult { Q = query, PageSize = 5 });
-                        }
+                        var dotaceService = new Dotace.DotaceService();
+                        var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = pageSize };
+                        res.Dotace = dotaceService.SimpleSearch(
+                                new Searching.DotaceSearchResult { Q = query, PageSize = pageSize },
+                                anyAggregation: new Nest.AggregationContainerDescriptor<Lib.Data.Dotace.Dotace>().Sum("souhrn", s => s.Field(f => f.DotaceCelkem))
+                            );
                     }
                     catch (System.Exception e)
                     {
@@ -325,9 +323,9 @@ namespace HlidacStatu.Lib.Data
                 var sw = new Devmasters.Core.StopWatchEx();
                 sw.Start();
                 if (res.Osoby == null)
-                    res.Osoby = new GeneralResult<Osoba>(new Osoba[] { });
+                    res.Osoby = new GeneralResult<Osoba>(query, new Osoba[] { });
 
-                res.Osoby = new GeneralResult<Osoba>(res.Osoby.Result
+                res.Osoby = new GeneralResult<Osoba>(query, res.Osoby.Result
                             .Concat(Osoba.GetPolitikByQueryFromFirmy(query, (int)(10 - (res.Osoby?.Total ?? 0)), res.Firmy.Result)
                             )
                         );

@@ -45,7 +45,7 @@ namespace HlidacStatu.Util
                 if (hits == null)
                     return NasliJsmeVysledky(0);
                 if (hits.Relation == Nest.TotalHitsRelation.EqualTo)
-                    return NasliJsmeVysledky(hits.Value);
+                    return NasliJsmeVysledky(hits.Value, style);
                 else
                     return Capitalize(Devmasters.Core.Lang.Plural.GetWithZero((int)hits.Value, "nenašli jsme žádný výsledek", "našli jsme jeden výsledek", "našli jsme {0:### ### ##0} výsledky", "našli jsme více než {0:### ### ##0} výsledků"), style);
             }

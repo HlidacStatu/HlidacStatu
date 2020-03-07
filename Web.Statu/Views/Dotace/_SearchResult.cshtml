@@ -48,12 +48,20 @@ else
 
 
         <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <h2 class="text-nowrap">
-                    @(PluralForm.Get((int)Model.Result.Total, "Nalezena {0} dotace;Nalezeny {0} dotace;Nalezeno {0} dotací"))
-                    v celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.Result.Aggregations.Sum("souhrn").Value).
-                </h2>
-                <span>* Celková čáska je námi vypočítaná hodnota dotace, protože ne u všech zdrojů jsou částky uvedeny stejným způsobem. Známe-li čerpanou částku, použijeme tuto hodnotu. Pokud čerpanou částku zdroj neuvádí, používáme celkovou částku schválené dotace.</span>
+            <div class="col-xs-12">
+                <h3>
+                    Nalezené dotace
+                    <small>
+                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+                    </small>
+                </h3>
+                @if (Model?.Result?.Aggregations != null && Model?.Result?.Aggregations?.ContainsKey("souhrn") == true)
+                {
+                    double? sum = ((Nest.ValueAggregate)Model?.Result?.Aggregations["souhrn"])?.Value;
+                    <div>
+                        V celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)sum). <sup>*)</sup>
+                    </div>
+                }
             </div>
 
         </div>
@@ -102,18 +110,21 @@ else
                 @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
                 {
                     <li class="@firstPageClass">
-                        @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+                        @Html.ActionLink("« Předchozí","hledat","dotace", Model.ToRouteValues(page - 1),null)
                     </li>
                 }
                 @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
                 {
                     <li class="@lastPageClass">
-                        @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+                        @Html.ActionLink("Následující »","hledat","dotace", Model.ToRouteValues(page + 1),null)
                     </li>
                 }
             </ul>
         </div>
 
+        <div class="alert alert-info" role="alert">
+            <b>*) Celková částka</b> je námi vypočítaná orientační hodnota dotace. U části zdrojů jsou částky uvedeny neúplně či nepřesně. Známe-li čerpanou částku, použijeme tuto hodnotu. Pokud čerpanou částku zdroj neuvádí, používáme celkovou částku schválené dotace.
+        </div>
 
     }
 }

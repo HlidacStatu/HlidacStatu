@@ -1295,7 +1295,7 @@
     <Content Include="Views\Manage\Zalozky.cshtml" />
     <Content Include="Views\VZ\TextDokumentu.cshtml" />
     <Content Include="Views\Data\DatasetTextJson.cshtml" />
-    <Content Include="Views\Home\HledatSmlouvy.cshtml" />
+    <Content Include="Views\Home\HledatFirmy.cshtml" />
     <Content Include="Views\Data\TechnickeInfo.cshtml" />
     <Content Include="Views\Home\Porovnat.cshtml" />
     <Content Include="Views\Home\Reports\2211_Urady_S_Urady.cshtml" />
@@ -1380,6 +1380,8 @@
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
+    <Content Include="Views\Home\Hledat2.cshtml" />
+    <Content Include="Views\Home\HledatSmlouvy - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

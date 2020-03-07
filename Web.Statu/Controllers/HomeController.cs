@@ -1081,9 +1081,10 @@ text zpravy: {txt}";
             return View(model);
         }
 
-        public ActionResult HledatOld(Lib.Searching.SmlouvaSearchResult model)
+        public ActionResult HledatFirmy(string q)
         {
-            return HledatSmlouvy(model);
+            var model = new Lib.Data.Search.GeneralResult<string>(q, Firma.Search.FindAllIco(q, 50));
+            return View(model);
         }
 
         public ActionResult HledatSmlouvy(Lib.Searching.SmlouvaSearchResult model)
@@ -1124,7 +1125,7 @@ text zpravy: {txt}";
             if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(), "BetaTester") == true)
                 showBeta = true;
 
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, 5, showBeta);
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, 50, showBeta); 
             Lib.Data.Audit.Add(
                     Lib.Data.Audit.Operations.UserSearch
                     , this.User?.Identity?.Name
@@ -1152,7 +1153,10 @@ text zpravy: {txt}";
                     var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
                 }
             }
-            return View(res);
+            string viewName = "Hledat";
+            if (Request.QueryString["beta"]=="1")
+                viewName="Hledat2";
+            return View(viewName,res);
         }
 
         public ActionResult Novinky()

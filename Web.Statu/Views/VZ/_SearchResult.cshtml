@@ -43,22 +43,26 @@ else
 
 
         <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <h4>@(HlidacStatu.Util.RenderData.Vysledky.NasliJsmeVysledky(Model.Result.HitsMetadata.Total, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap) ) na výraz <span class="emphasized">@Model.Q</span>.</h4>
+            <div class="col-xs-12">
+                <h3>
+                    Nalezené veřejné zakázky
+                    <small>
+                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+                    </small>
+                </h3>
                 @*@if (Model.Result.Aggregations != null && Model.Result.Aggregations.ContainsKey("sumKc"))
-                    {
-                        double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;
-                        <h4>
-                            Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
-                        </h4>
-                    }*@
+        {
+            double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;
+            <h4>
+                Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
+            </h4>
+        }*@
             </div>
         </div>
 
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
                     <th>Zakázka</th>
                     <th>Poslední změna</th>
                     <th>Lhůta pro nabídky</th>
@@ -66,34 +70,27 @@ else
                     <th>Dodavatelé</th>
                     <th>Název</th>
                     <th>Cena</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Result.Hits.Select(m => m.Source))
                 {
-                <tr>
-                    <td>
-                        @{
-                            @Util.AddBookmark(this.User, item)
-                        }
-                    </td>
-
+                <tr class="first">
                     <td style="white-space: nowrap;">
-                        @if (HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
-                        {
-                            <a href="@Url.Action("Zakazka", new { id = item.Id, QS = Model.Q })">@item.EvidencniCisloZakazky</a>
-                        }
-                        else
-                        {
-                            <a href="#" data-toggle="modal" data-target="#VZInfoAnon" data-url="/zakazka/@item.Id">@item.EvidencniCisloZakazky</a>
-                        }
+                        @Util.NoWrapHtml(
+                            Util.AddBookmark(this.User, item),
+                            Html.Raw("&nbsp;"),
+                            Util.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request),
+                              $"<a href='{Url.Action("Zakazka", new { id = item.Id, QS = Model.Q })}'>{item.EvidencniCisloZakazky}</a>",
+                              $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
+                              )
+                        )
                     </td>
                     <td>
                         @(item.PosledniZmena?.ToShortDateString())
                     </td>
                     <td>
-                        @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena" )
+                        @(item.LhutaDoruceni?.ToShortDateString() ?? "neuvedena")
                     </td>
                     <td>
                         @if (item.Zadavatel != null)
@@ -126,7 +123,7 @@ else
                         }
                     </td>
                     <td>
-                        @item.NazevZakazky
+                        @Devmasters.Core.TextUtil.ShortenText(item.NazevZakazky,50)
                     </td>
                     <td>
                         <b>
@@ -144,12 +141,10 @@ else
                             }
                         </b>
                     </td>
-                    <td>
-                        <a href="https://www.vestnikverejnychzakazek.cz/SearchForm/SearchContract?contractNumber=@item.EvidencniCisloZakazky"><span class="glyphicon glyphicon-new-window"></span></a>
-                    </td>
                 </tr>
-                    <tr style="border-bottom:2px #777 solid">
-                        <td colspan="3" class="small text-info">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</td>
+                    <tr class="last">
+                        <td></td>
+                        <td colspan="2" ><span class="small">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</span></td>
                         <td colspan="4">
                             <span class="small">
                                 @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
@@ -187,13 +182,13 @@ else
                 @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
                 {
                     <li class="@firstPageClass">
-                        @Html.CurrentLink("« Předchozí", Model.ToRouteValues(page - 1))
+                        @Html.ActionLink("« Předchozí", "hledej","VZ",Model.ToRouteValues(page - 1),null)
                     </li>
                 }
                 @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
                 {
                     <li class="@lastPageClass">
-                        @Html.CurrentLink("Následující »", Model.ToRouteValues(page + 1))
+                        @Html.ActionLink("Následující »", "hledej","VZ",Model.ToRouteValues(page + 1),null)
                     </li>
                 }
                 <li>

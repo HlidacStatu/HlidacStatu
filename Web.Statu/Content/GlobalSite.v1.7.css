@@ -1600,3 +1600,14 @@ div.verticaltab-container {
         color: #444;
         font-weight: unset;
     }
+
+.verticalBackgroundLine:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid #E0E6ED;
+    transform: translate(-50%);
+}
