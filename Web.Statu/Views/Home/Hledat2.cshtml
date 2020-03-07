@@ -166,7 +166,8 @@ else if (Model.HasResults == false)
     <div class="col-xs-12">
         <div class="new-p new-p--big" style="margin-top: 10px;">
             Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @HlidacStatu.Util.RenderData.Vysledky.NalezenoPocetVysledku(Model.Total).
-            @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny změny o <b>{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}</b> v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Změny o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."), showWDList: false, preBtnText: "")
+            <br/>
+            @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny změny výsledků na dotaz <b>{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}</b> v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Změny o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."), showWDList: false, preBtnText: "")
         </div>
     </div>
 </div>
@@ -272,18 +273,12 @@ else if (Model.HasResults == false)
             paorder.Add("insolvence");
         }
     }
-    if (paorder.Count() == 0)
-    {
-        paorder.Add("osoby");
-        paorder.Add("datasety");
-        paorder.Add("firmy");
-    }
-    else
-    {
-        paorder.Add("firmy");
-        paorder.Add("datasety");
-        paorder.Add("osoby");
-    }
+
+
+    paorder.Insert(1,"osoby");
+    paorder.Add("datasety");
+    paorder.Add("firmy");
+
     bool secondColumnRendered = false;
 
 }
@@ -520,7 +515,7 @@ else if (Model.HasResults == false)
             <div class="new-p">
                 @Html.Raw(osobaStatDescription)
             </div>
-            @if (osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count > 0)
+            @if (false && osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count > 0)
             {
                 <div class="search-result-label">
                     Vazby
@@ -587,11 +582,9 @@ else if (Model.HasResults == false)
             <div style="height: 32px"></div>
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="text-center">
-                        <a class="btn btn-default btn-default-new" href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()">
-                            @Devmasters.Core.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob")
-                        </a>
-                    </div>
+                    <a href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()" style="font-size:18px">
+                        @Devmasters.Core.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob") ukázat&nbsp;<i class="far fa-angle-double-right"></i>
+                    </a>
                 </div>
             </div>
         }
@@ -610,9 +603,9 @@ else if (Model.HasResults == false)
                     "ještě <b>jednu veřejnou zakázku</b>",
                     "celkem <b>{0} veřejné zakázky</b>",
                     "celkem <b>{0} veřejných zakázek</b>"))
-            <small style="padding-left:10px;">
+            <span style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
-            </small>
+            </span>
         </h4>
         return;
     }
@@ -658,9 +651,9 @@ else if (Model.HasResults == false)
              "ještě <b>jednu dotaci</b>",
              "celkem <b>{0} dotace</b>",
              "celkem <b>{0} dotací</b>"))
-            <small style="padding-left:10px;">
+            <span style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
-            </small>
+            </span>
         </h4>
         return;
     }
@@ -684,9 +677,9 @@ else if (Model.HasResults == false)
                     "ještě <b>jednu insolvenci</b>",
                     "celkem <b>{0} insolvence</b>",
                     "celkem <b>{0} insolvencí</b>"))
-            <small style="padding-left:10px;">
+            <span style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
-            </small>
+            </span>
         </h4>
         return;
     }
@@ -769,9 +762,9 @@ else if (Model.HasResults == false)
                     "ještě <b>jednu firmu</b>",
                     "celkem <b>{0} firmy</b>",
                     "celkem <b>{0} firem</b>"))
-            <small style="padding-left:10px;">
+            <span style="padding-left:10px;">
                 <a href="@Url.Action("HledatFirmy", "Home", new { q = Model.Query })">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
-            </small>
+            </span>
         </h4>
         return;
     }
@@ -821,9 +814,9 @@ else if (Model.HasResults == false)
                     "ještě <b>jednu smlouvu</b>",
                     "celkem <b>{0} smlouvy</b>",
                     "celkem <b>{0} smluv</b>"))
-            <small style="padding-left:10px;">
+            <span style="padding-left:10px;">
                 <a href="@Url.Action("HledatSmlouvy", "Home", Model.Smlouvy.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
-            </small>
+            </span>
         </h4>
         return;
     }
