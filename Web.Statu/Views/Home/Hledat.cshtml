@@ -215,7 +215,7 @@ else if (Model.HasResults == false)
                     </h2>
                     <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.Total)</span>
                 </div>
-                <div class="table-new searching__watcher__table">
+                <div class="searching__watcher__table">
                     @if (Model.Smlouvy.Result.Aggregations != null && Model.Smlouvy.Result.Aggregations.ContainsKey("sumKc"))
                     {
                         double? sum = ((Nest.ValueAggregate)Model.Smlouvy.Result.Aggregations["sumKc"]).Value;
