@@ -210,9 +210,9 @@ else if (Model.HasResults == false)
 @{
     //debug
     //Model.Smlouvy = null;
-    Model.VZ = null;
-    Model.Dotace = null;
-    Model.Insolvence = null;
+    //Model.VZ = null;
+    //Model.Dotace = null;
+    //Model.Insolvence = null;
 
     //main content based on number of results
 
@@ -607,9 +607,9 @@ else if (Model.HasResults == false)
         <h4>
             Našli jsme
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.VZ.Total,
-                    "ještě jednu veřejnou zakázku",
-                    "celkem {0} veřejné zakázky",
-                    "celkem {0} veřejných zakázek"))
+                    "ještě <b>jednu veřejnou zakázku</b>",
+                    "celkem <b>{0} veřejné zakázky</b>",
+                    "celkem <b>{0} veřejných zakázek</b>"))
             <small style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </small>
@@ -655,9 +655,9 @@ else if (Model.HasResults == false)
         <h4>
             Našli jsme
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Dotace.Total,
-             "ještě jednu dotaci",
-             "celkem {0} dotace",
-             "celkem {0} dotací"))
+             "ještě <b>jednu dotaci</b>",
+             "celkem <b>{0} dotace</b>",
+             "celkem <b>{0} dotací</b>"))
             <small style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </small>
@@ -681,9 +681,9 @@ else if (Model.HasResults == false)
         <h4>
             Našli jsme
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Insolvence.Total,
-                    "ještě jednu insolvenci",
-                    "celkem {0} insolvence",
-                    "celkem {0} insolvencí"))
+                    "ještě <b>jednu insolvenci</b>",
+                    "celkem <b>{0} insolvence</b>",
+                    "celkem <b>{0} insolvencí</b>"))
             <small style="padding-left:10px;">
                 <a href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </small>
@@ -708,9 +708,9 @@ else if (Model.HasResults == false)
         <h4>
             V dalších databázích jsme našli
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Datasets.Total,
-                    "ještě jeden výsledek",
-                    "celkem {0} výsledky",
-                    "celkem {0} výsledků"))
+                    "ještě <b>jeden výsledek</b>",
+                    "celkem <b>{0} výsledky</b>",
+                    "celkem <b>{0} výsledků</b>"))
         </h4>
         <div class="row" id="databaze">
             <div class="col-xs-12">
@@ -766,9 +766,9 @@ else if (Model.HasResults == false)
         <h4>
             Našli jsme
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Firmy.Total,
-                    "ještě jednu firmu",
-                    "celkem {0} firmy",
-                    "celkem {0} firem"))
+                    "ještě <b>jednu firmu</b>",
+                    "celkem <b>{0} firmy</b>",
+                    "celkem <b>{0} firem</b>"))
             <small style="padding-left:10px;">
                 <a href="@Url.Action("HledatFirmy", "Home", new { q = Model.Query })">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </small>
@@ -818,9 +818,9 @@ else if (Model.HasResults == false)
         <h4>
             Našli jsme
             @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)Model.Smlouvy.Total,
-                    "ještě jednu smlouvu",
-                    "celkem {0} smlouvy",
-                    "celkem {0} smluv"))
+                    "ještě <b>jednu smlouvu</b>",
+                    "celkem <b>{0} smlouvy</b>",
+                    "celkem <b>{0} smluv</b>"))
             <small style="padding-left:10px;">
                 <a href="@Url.Action("HledatSmlouvy", "Home", Model.Smlouvy.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </small>
