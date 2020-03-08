@@ -166,7 +166,7 @@ else if (Model.HasResults == false)
     <div class="col-xs-12">
         <div class="new-p new-p--big" style="margin-top: 10px;">
             Pro hledaný výraz <span class="emphasized">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))</span> @HlidacStatu.Util.RenderData.Vysledky.NalezenoPocetVysledku(Model.Total).
-            <br/>
+            <br />
             @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny změny výsledků na dotaz <b>{Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")}</b> v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Změny o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."), showWDList: false, preBtnText: "")
         </div>
     </div>
@@ -275,7 +275,7 @@ else if (Model.HasResults == false)
     }
 
 
-    paorder.Insert(1,"osoby");
+    paorder.Insert(1, "osoby");
     paorder.Add("datasety");
     paorder.Add("firmy");
 
@@ -283,7 +283,11 @@ else if (Model.HasResults == false)
 
 }
 
-<div class="row">
+<div class="row bg-info" style="padding:10px 10px 0px 10px">
+    <div class="col-xs-12 col-sm-8"><p >Připravili jsme pro vás nové hledání. V této části <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-down"></i> jsou hlavní výsledky.</p></div>
+    <div class="col-xs-12 col-sm-4 text-right"><p >Zde <i class="fas fa-arrow-down"></i> výsledky z dalších částí Hlídače</p></div>
+    </div>
+    <div class="row">
     <div class="col-xs-12 col-sm-8">
         @foreach (string part in paorder)
         {
@@ -388,6 +392,10 @@ else if (Model.HasResults == false)
         $('#midcol').height($('#rightcol').height());
     });
 </script>
+
+
+
+
 
 
 

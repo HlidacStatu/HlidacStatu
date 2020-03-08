@@ -1396,6 +1396,7 @@ text zpravy: {txt}";
             else if (id?.ToLower() == "page")
             {
                 var pageUrl = v;
+                string socialTitle = "";
                 string socialHtml = "";
                 string socialFooter = "";
                 string socialSubFooter = "";
@@ -1404,6 +1405,11 @@ text zpravy: {txt}";
                 {
                     net.Timeout = 40000;
                     var cont = net.GetContent().Text;
+                    socialTitle = System.Net.WebUtility.HtmlDecode(
+                        HlidacStatu.Util.ParseTools
+                        .GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_title\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
+                        .OrderByDescending(o => o.Length).FirstOrDefault()
+                        );
                     socialHtml = System.Net.WebUtility.HtmlDecode(
                         HlidacStatu.Util.ParseTools
                         .GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_html\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
