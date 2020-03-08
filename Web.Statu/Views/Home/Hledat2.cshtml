@@ -284,10 +284,14 @@ else if (Model.HasResults == false)
 }
 
 <div class="row bg-info" style="padding:10px 10px 0px 10px">
-    <div class="col-xs-12 col-sm-8"><p >Připravili jsme pro vás nové hledání. V této části <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-down"></i> jsou hlavní výsledky.</p></div>
-    <div class="col-xs-12 col-sm-4 text-right"><p >Zde <i class="fas fa-arrow-down"></i> výsledky z dalších částí Hlídače</p></div>
+    <div class="col-xs-12">
+        <b>Připravili jsme pro vás nové hledání.</b>     
+        @Util.FeedbackModal("Jak se vám líbí/nelíbí? Napište nám",null,"btn btn-link",null,new string[] {"Libi","Líbí","Nelibi","Nelíbí" },false)
     </div>
-    <div class="row">
+    <div class="col-xs-12 col-sm-8"><p>V této části <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-down"></i> jsou hlavní výsledky.</p></div>
+    <div class="col-xs-12 col-sm-4 text-right"><p>Zde <i class="fas fa-arrow-down"></i> výsledky z dalších částí Hlídače</p></div>
+</div>
+<div class="row" style="padding-top:20px;">
     <div class="col-xs-12 col-sm-8">
         @foreach (string part in paorder)
         {

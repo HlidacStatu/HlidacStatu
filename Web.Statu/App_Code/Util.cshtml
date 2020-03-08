@@ -778,6 +778,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 }
 @helper FeedbackModal(string btnText, string selectOption, string style, string idPrefix, string[] options = null, bool mustAuth = false, string addData = "")
 {
+    bool defaultForm = options == null;
     System.Security.Principal.IPrincipal user = CurrPage.User;
     string[] defaultOptions = new string[] {
 "Chyba","Chci upozornit na chybu",
@@ -821,9 +822,12 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                         <h4 class="modal-title" id="@(idPrefix)fbTitle">
                             Upozornění či poslání vzkazu
                         </h4>
-                        <div class="alert alert-danger" role="alert">
-                            Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a>
-                        </div>
+                        @if (defaultForm)
+                        { 
+                            <div class="alert alert-danger" role="alert">
+                                Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a>
+                            </div>
+                        }
                     </div>
 
                     <!-- Modal Body -->

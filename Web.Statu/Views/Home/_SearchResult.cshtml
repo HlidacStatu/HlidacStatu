@@ -95,6 +95,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         }
     </div>
     <div class="col-xs-12 col-sm-6">
+        <br/>
         @if (Model.Chyby)
         {
             @Html.CheckBoxFor(m => m.Chyby, new { @onchange = "changeChyby(this);" }) @Html.LabelFor(m => m.Chyby, "Ukázat chyby")
