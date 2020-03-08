@@ -540,7 +540,7 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpGet, ActionName("DatasetSearch")]
         [ValidateInput(false)]
-        public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, bool desc = false)
+        public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
         {
             page = page ?? 1;
             if (page < 1)
@@ -589,7 +589,8 @@ namespace HlidacStatu.Web.Controllers
                     }
                     else
                     {
-                        var res = ds.SearchData(q, page.Value, 50, sort + (desc ? " desc" : ""));
+                        bool bDesc = (desc == "1" || desc?.ToLower() == "true");
+                        var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
                         res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
 
