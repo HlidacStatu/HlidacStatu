@@ -179,9 +179,16 @@ namespace HlidacStatu.Web.Controllers
                     bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidspravce:{o.NameId}"
                 };
 
+                var lastUpdate = o.Events(m => true)
+                    .OrderByDescending(e => e.Created)
+                    .Select(e => e.Created)
+                    .FirstOrDefault();
+
+
                 var result = new
                 {
                     id = o.NameId,
+                    lastUpdate = lastUpdate,
                     namePrefix = o.TitulPred,
                     nameSuffix = o.TitulPo,
                     name = o.Jmeno,
