@@ -1,4 +1,5 @@
-﻿using HlidacStatu.Web.Models.Apiv2;
+﻿using HlidacStatu.Lib.Data.External.DataSets;
+using HlidacStatu.Web.Models.Apiv2;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace HlidacStatu.Web.Controllers
     public class ApiV2Controller : GenericAuthController
     {
         [HttpGet]
-        [Route("/api/v2.0.0/smlouvy/detail/{id}")]
+        [Route("/api/v2/smlouvy/detail/{id}")]
         [SwaggerOperation("SmlouvyDetailIdGet")]
         [SwaggerResponse(statusCode: 200, type: typeof(Smlouva), description: "Úspěšně vrácena smlouva")]
         [SwaggerResponse(statusCode: 400, type: typeof(Chyba), description: "Některé z předaných parametrů byly zadané nesprávně")]
@@ -22,7 +23,19 @@ namespace HlidacStatu.Web.Controllers
         [SwaggerResponse(statusCode: 500, type: typeof(Chyba), description: "Došlo k interní chybě na serveru")]
         public ActionResult SmlouvyDetailIdGet([Required]string id)
         {
-            return Content(null, "application/json");
+            if (!Framework.ApiAuth.IsApiAuth(this,
+                parameters: new Framework.ApiCall.CallParameter[] {
+                    new Framework.ApiCall.CallParameter("id", id)
+                    
+                })
+                .Authentificated)
+            {
+                return new HttpUnauthorizedResult();
+            }
+            else
+            {
+                return Content(null, "application/json");
+            }
         }
 
     }

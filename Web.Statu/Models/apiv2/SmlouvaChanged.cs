@@ -34,19 +34,19 @@ namespace HlidacStatu.Web.Models.Apiv2
         [DataMember(Name="ParameterName")]
         public string ParameterName { get; set; }
 
-        /// <summary>
-        /// Gets or Sets PreviousValue
-        /// </summary>
-        [Required]
-        [DataMember(Name="PreviousValue")]
-        public  PreviousValue { get; set; }
+        ///// <summary>
+        ///// Gets or Sets PreviousValue
+        ///// </summary>
+        //[Required]
+        //[DataMember(Name="PreviousValue")]
+        //public  PreviousValue { get; set; }
 
-        /// <summary>
-        /// Gets or Sets NewValue
-        /// </summary>
-        [Required]
-        [DataMember(Name="NewValue")]
-        public  NewValue { get; set; }
+        ///// <summary>
+        ///// Gets or Sets NewValue
+        ///// </summary>
+        //[Required]
+        //[DataMember(Name="NewValue")]
+        //public  NewValue { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -57,8 +57,8 @@ namespace HlidacStatu.Web.Models.Apiv2
             var sb = new StringBuilder();
             sb.Append("class SmlouvaChanged {\n");
             sb.Append("  ParameterName: ").Append(ParameterName).Append("\n");
-            sb.Append("  PreviousValue: ").Append(PreviousValue).Append("\n");
-            sb.Append("  NewValue: ").Append(NewValue).Append("\n");
+            //sb.Append("  PreviousValue: ").Append(PreviousValue).Append("\n");
+            //sb.Append("  NewValue: ").Append(NewValue).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -99,16 +99,16 @@ namespace HlidacStatu.Web.Models.Apiv2
                     ParameterName == other.ParameterName ||
                     ParameterName != null &&
                     ParameterName.Equals(other.ParameterName)
-                ) && 
-                (
-                    PreviousValue == other.PreviousValue ||
-                    PreviousValue != null &&
-                    PreviousValue.Equals(other.PreviousValue)
-                ) && 
-                (
-                    NewValue == other.NewValue ||
-                    NewValue != null &&
-                    NewValue.Equals(other.NewValue)
+                //) && 
+                //(
+                //    PreviousValue == other.PreviousValue ||
+                //    PreviousValue != null &&
+                //    PreviousValue.Equals(other.PreviousValue)
+                //) && 
+                //(
+                //    NewValue == other.NewValue ||
+                //    NewValue != null &&
+                //    NewValue.Equals(other.NewValue)
                 );
         }
 
@@ -124,10 +124,10 @@ namespace HlidacStatu.Web.Models.Apiv2
                 // Suitable nullity checks etc, of course :)
                     if (ParameterName != null)
                     hashCode = hashCode * 59 + ParameterName.GetHashCode();
-                    if (PreviousValue != null)
-                    hashCode = hashCode * 59 + PreviousValue.GetHashCode();
-                    if (NewValue != null)
-                    hashCode = hashCode * 59 + NewValue.GetHashCode();
+                    //if (PreviousValue != null)
+                    //hashCode = hashCode * 59 + PreviousValue.GetHashCode();
+                    //if (NewValue != null)
+                    //hashCode = hashCode * 59 + NewValue.GetHashCode();
                 return hashCode;
             }
         }

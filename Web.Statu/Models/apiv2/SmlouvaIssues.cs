@@ -82,13 +82,13 @@ namespace HlidacStatu.Web.Models.Apiv2
         [DataMember(Name="Importance")]
         public int? Importance { get; set; }
 
-        /// <summary>
-        /// dodatečná data analyzéru
-        /// </summary>
-        /// <value>dodatečná data analyzéru</value>
-        [Required]
-        [DataMember(Name="AffectedParams")]
-        public  AffectedParams { get; set; }
+        ///// <summary>
+        ///// dodatečná data analyzéru
+        ///// </summary>
+        ///// <value>dodatečná data analyzéru</value>
+        //[Required]
+        //[DataMember(Name="AffectedParams")]
+        //public  AffectedParams { get; set; }
 
         /// <summary>
         /// jméno použitého analyzéru
@@ -113,7 +113,7 @@ namespace HlidacStatu.Web.Models.Apiv2
             sb.Append("  Public: ").Append(Public).Append("\n");
             sb.Append("  Permanent: ").Append(Permanent).Append("\n");
             sb.Append("  Importance: ").Append(Importance).Append("\n");
-            sb.Append("  AffectedParams: ").Append(AffectedParams).Append("\n");
+            //sb.Append("  AffectedParams: ").Append(AffectedParams).Append("\n");
             sb.Append("  AnalyzerType: ").Append(AnalyzerType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -186,11 +186,11 @@ namespace HlidacStatu.Web.Models.Apiv2
                     Importance != null &&
                     Importance.Equals(other.Importance)
                 ) && 
-                (
-                    AffectedParams == other.AffectedParams ||
-                    AffectedParams != null &&
-                    AffectedParams.Equals(other.AffectedParams)
-                ) && 
+                //(
+                //    AffectedParams == other.AffectedParams ||
+                //    AffectedParams != null &&
+                //    AffectedParams.Equals(other.AffectedParams)
+                //) && 
                 (
                     AnalyzerType == other.AnalyzerType ||
                     AnalyzerType != null &&
@@ -222,8 +222,8 @@ namespace HlidacStatu.Web.Models.Apiv2
                     hashCode = hashCode * 59 + Permanent.GetHashCode();
                     if (Importance != null)
                     hashCode = hashCode * 59 + Importance.GetHashCode();
-                    if (AffectedParams != null)
-                    hashCode = hashCode * 59 + AffectedParams.GetHashCode();
+                    //if (AffectedParams != null)
+                    //hashCode = hashCode * 59 + AffectedParams.GetHashCode();
                     if (AnalyzerType != null)
                     hashCode = hashCode * 59 + AnalyzerType.GetHashCode();
                 return hashCode;

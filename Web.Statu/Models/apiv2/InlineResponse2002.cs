@@ -34,13 +34,13 @@ namespace HlidacStatu.Web.Models.Apiv2
         [DataMember(Name="celkem")]
         public int? Celkem { get; set; }
 
-        /// <summary>
-        /// Pole vrácených záznamů
-        /// </summary>
-        /// <value>Pole vrácených záznamů</value>
-        [Required]
-        [DataMember(Name="zaznamy")]
-        public List<> Zaznamy { get; set; }
+        ///// <summary>
+        ///// Pole vrácených záznamů
+        ///// </summary>
+        ///// <value>Pole vrácených záznamů</value>
+        //[Required]
+        //[DataMember(Name="zaznamy")]
+        //public List<> Zaznamy { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -51,7 +51,7 @@ namespace HlidacStatu.Web.Models.Apiv2
             var sb = new StringBuilder();
             sb.Append("class InlineResponse2002 {\n");
             sb.Append("  Celkem: ").Append(Celkem).Append("\n");
-            sb.Append("  Zaznamy: ").Append(Zaznamy).Append("\n");
+            //sb.Append("  Zaznamy: ").Append(Zaznamy).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -92,11 +92,11 @@ namespace HlidacStatu.Web.Models.Apiv2
                     Celkem == other.Celkem ||
                     Celkem != null &&
                     Celkem.Equals(other.Celkem)
-                ) && 
-                (
-                    Zaznamy == other.Zaznamy ||
-                    Zaznamy != null &&
-                    Zaznamy.SequenceEqual(other.Zaznamy)
+                //) && 
+                //(
+                //    Zaznamy == other.Zaznamy ||
+                //    Zaznamy != null &&
+                //    Zaznamy.SequenceEqual(other.Zaznamy)
                 );
         }
 
@@ -112,8 +112,8 @@ namespace HlidacStatu.Web.Models.Apiv2
                 // Suitable nullity checks etc, of course :)
                     if (Celkem != null)
                     hashCode = hashCode * 59 + Celkem.GetHashCode();
-                    if (Zaznamy != null)
-                    hashCode = hashCode * 59 + Zaznamy.GetHashCode();
+                    //if (Zaznamy != null)
+                    //hashCode = hashCode * 59 + Zaznamy.GetHashCode();
                 return hashCode;
             }
         }

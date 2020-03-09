@@ -46,9 +46,9 @@ namespace HlidacStatu.Web.Models.Apiv2
         /// dlouhý popis úpravy
         /// </summary>
         /// <value>dlouhý popis úpravy</value>
-        [Required]
-        [DataMember(Name="Description")]
-        public  Description { get; set; }
+        //[Required]
+        //[DataMember(Name="Description")]
+        //public  Description { get; set; }
 
         /// <summary>
         /// Gets or Sets Changed
@@ -83,7 +83,7 @@ namespace HlidacStatu.Web.Models.Apiv2
             sb.Append("class SmlouvaEnhancements {\n");
             sb.Append("  Created: ").Append(Created).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            //sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Changed: ").Append(Changed).Append("\n");
             sb.Append("  Public: ").Append(Public).Append("\n");
             sb.Append("  EnhancerType: ").Append(EnhancerType).Append("\n");
@@ -133,11 +133,11 @@ namespace HlidacStatu.Web.Models.Apiv2
                     Title != null &&
                     Title.Equals(other.Title)
                 ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
-                ) && 
+                //(
+                //    Description == other.Description ||
+                //    Description != null &&
+                //    Description.Equals(other.Description)
+                //) && 
                 (
                     Changed == other.Changed ||
                     Changed != null &&
@@ -169,8 +169,8 @@ namespace HlidacStatu.Web.Models.Apiv2
                     hashCode = hashCode * 59 + Created.GetHashCode();
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
+                    //if (Description != null)
+                    //hashCode = hashCode * 59 + Description.GetHashCode();
                     if (Changed != null)
                     hashCode = hashCode * 59 + Changed.GetHashCode();
                     if (Public != null)
