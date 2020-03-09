@@ -189,6 +189,7 @@ namespace HlidacStatu.Web.Controllers
                     birthDate = o.Narozeni,
                     deathDate = o.Umrti,
                     status = o.StatusOsoby().ToString(),
+                    hasPhoto = o.HasPhoto(),
                     photo = photo,
                     description = statDescription,
                     companyConnection = angazovanost,
