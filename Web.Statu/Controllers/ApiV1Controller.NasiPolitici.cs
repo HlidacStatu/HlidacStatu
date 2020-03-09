@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Controllers
                 })
                 .Authentificated)
             {
-                Response.StatusCode = 401;
+                //Response.StatusCode = 401;
                 return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
             }
             else
@@ -83,12 +83,12 @@ namespace HlidacStatu.Web.Controllers
                 var o = Osoba.GetByNameId(id);
                 if (o == null)
                 {
-                    Response.StatusCode = 404;
+                    //Response.StatusCode = 404;
                     return Json(ApiResponseStatus.Error(404,"Politik not found"), JsonRequestBehavior.AllowGet);
                 }
                 if (o.StatusOsoby() != Osoba.StatusOsobyEnum.Politik )
                 {
-                    Response.StatusCode = 404;
+                    //Response.StatusCode = 404;
                     return Json(ApiResponseStatus.Error(404, "Person is not marked as politician"), JsonRequestBehavior.AllowGet);
                 }
 
