@@ -1125,7 +1125,7 @@ text zpravy: {txt}";
             if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(), "BetaTester") == true)
                 showBeta = true;
 
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, 50, showBeta); 
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, Lib.Searching.SearchDataResult<object>.DefaultPageSizeGlobal, showBeta); 
             Lib.Data.Audit.Add(
                     Lib.Data.Audit.Operations.UserSearch
                     , this.User?.Identity?.Name
@@ -1153,9 +1153,9 @@ text zpravy: {txt}";
                     var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
                 }
             }
-            string viewName = "Hledat";
-            if (Request.QueryString["beta"]=="1")
-                viewName="Hledat2";
+            string viewName = "Hledat2";
+            if (Request.QueryString["old"]=="1")
+                viewName="Hledat";
             return View(viewName,res);
         }
 

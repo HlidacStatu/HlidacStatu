@@ -7,12 +7,12 @@
 @using HlidacStatu.Lib.Searching;
 
 @{
-    int numOfSmluv = 50;
-    int numOfOsob = 50;
-    int numOfDotaci = 50;
-    int numOfFirem = 50;
-    int numOfVZ = 50;
-    int numOfInsolvenci = 50;
+    int numOfSmluv = SearchDataResult<object>.DefaultPageSizeGlobal;
+    int numOfOsob = 8;
+    int numOfDotaci = SearchDataResult<object>.DefaultPageSizeGlobal;
+    int numOfFirem = SearchDataResult<object>.DefaultPageSizeGlobal;
+    int numOfVZ = SearchDataResult<object>.DefaultPageSizeGlobal;
+    int numOfInsolvenci = SearchDataResult<object>.DefaultPageSizeGlobal;
 
 
 
@@ -283,10 +283,11 @@ else if (Model.HasResults == false)
 
 }
 
-<div class="row bg-info" style="padding:10px 10px 0px 10px">
+<div class="row bg-info" style="padding:10px 10px 0px 10px;border-top:2px #007cf5 solid">
     <div class="col-xs-12">
         <b>Připravili jsme pro vás nové hledání.</b>     
         @Util.FeedbackModal("Jak se vám líbí/nelíbí? Napište nám",null,"btn btn-link",null,new string[] {"Libi","Líbí","Nelibi","Nelíbí" },false)
+        <span style="padding-left"10px;" class="pull-right"><a href="/hledat?@(Request.QueryString)&old=1">Původní verze hledání zde</a></span>
     </div>
     <div class="col-xs-12 col-sm-8"><p>V této části <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-down"></i> jsou hlavní výsledky.</p></div>
     <div class="col-xs-12 col-sm-4 text-right"><p>Zde <i class="fas fa-arrow-down"></i> výsledky z dalších částí Hlídače</p></div>

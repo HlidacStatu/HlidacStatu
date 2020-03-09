@@ -642,7 +642,13 @@ namespace HlidacStatu.Web.Controllers
             page = page ?? 1;
             order = order ?? 0;
             Lib.Searching.SmlouvaSearchResult res = null;
-            var apires = Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("query", query), new Framework.ApiCall.CallParameter("page", page?.ToString()), new Framework.ApiCall.CallParameter("order", order?.ToString()) });
+            var apires = Framework.ApiAuth.IsApiAuth(this, 
+                parameters: new Framework.ApiCall.CallParameter[] { 
+                    new Framework.ApiCall.CallParameter("query", query), 
+                    new Framework.ApiCall.CallParameter("page", page?.ToString()), 
+                    new Framework.ApiCall.CallParameter("order", order?.ToString()) 
+                }
+                );
 
             if (apires.Authentificated)
             {

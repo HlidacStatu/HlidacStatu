@@ -10,7 +10,9 @@ namespace HlidacStatu.Lib.Searching
     public class SearchDataResult<T> : Lib.Data.Search.ISearchResult, ISocialInfo
         where T : class 
     {
-        public virtual int DefaultPageSize() { return 50; }
+
+        public const int DefaultPageSizeGlobal = 25;
+        public virtual int DefaultPageSize() { return DefaultPageSizeGlobal; }
         public virtual int MaxResultWindow() { return  Lib.Data.Smlouva.Search.MaxResultWindow; }
 
 

@@ -64,8 +64,8 @@
 
   <system.webServer>
     <httpErrors defaultResponseMode="File" existingResponse="Replace" errorMode="DetailedLocalOnly" xdt:Transform="Insert">
-      <remove statusCode="404"/>
-      <error statusCode="404" path="404.html" />
+      <!--<remove statusCode="404"/>
+      <error statusCode="404" path="404.html" />-->
       <remove statusCode="500"/>
       <error statusCode="500" path="500.html" />
       <remove statusCode="503"/>
