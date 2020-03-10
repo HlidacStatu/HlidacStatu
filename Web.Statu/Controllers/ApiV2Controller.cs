@@ -25,19 +25,19 @@ namespace HlidacStatu.Web.Controllers
         [SwaggerResponse(statusCode: 500, type: typeof(Chyba), description: "Došlo k interní chybě na serveru")]
         public ActionResult SmlouvyDetailIdGet([Required]string id)
         {
-            if (!Framework.ApiAuth.IsApiAuth(this,
-                parameters: new Framework.ApiCall.CallParameter[] {
-                    new Framework.ApiCall.CallParameter("id", id)
+            //if (!Framework.ApiAuth.IsApiAuth(this,
+            //    parameters: new Framework.ApiCall.CallParameter[] {
+            //        new Framework.ApiCall.CallParameter("id", id)
                     
-                })
-                .Authentificated)
-            {
-                return new HttpUnauthorizedResult();
-            }
-            else
-            {
-                return Content(null, "application/json");
-            }
+            //    })
+            //    .Authentificated)
+            //{
+            //    return new HttpUnauthorizedResult();
+            //}
+            //else
+            //{
+            return Content(null, "application/json");
+            //}
         }
 
     }
