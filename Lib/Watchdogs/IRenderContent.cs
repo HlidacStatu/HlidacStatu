@@ -11,6 +11,8 @@ namespace HlidacStatu.Lib.Watchdogs
         public string ContentText { get; set; }
         public string ContentHtml { get; set; }
 
+        public string ContentTitle { get; set; }
+
         public static RenderedContent Merge(IEnumerable<RenderedContent> tojoin)
         {
             StringBuilder sbT = new StringBuilder(1024);

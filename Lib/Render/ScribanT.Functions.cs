@@ -220,13 +220,13 @@ namespace HlidacStatu.Lib.Render
                     return value.ToString();
             }
 
-            public static string fn_FormatPrice(dynamic value, string mena = null)
+            public static string fn_FormatPrice(dynamic value, string mena = null, bool html = true)
             {
                 mena = mena ?? "Kč";
                 decimal? val = HlidacStatu.Util.ParseTools.ToDecimal(value.ToString());
                 if (val.HasValue)
                 {
-                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena);
+                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena,html: html);
                 }
                 return "";
             }

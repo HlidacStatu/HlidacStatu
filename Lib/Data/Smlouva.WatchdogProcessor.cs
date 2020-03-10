@@ -57,6 +57,7 @@ namespace HlidacStatu.Lib.Data
                 ret.ContentHtml = renderH.Render(data);
                 var renderT = new Lib.Render.ScribanT(TextTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentText = renderT.Render(data);
+                ret.ContentTitle = "Smlouvy";
 
                 return ret;
             }
@@ -67,11 +68,11 @@ namespace HlidacStatu.Lib.Data
                 <tr>
                     <td><a href='@Raw('https://www.hlidacstatu.cz/Detail/' + item.Id + '?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail')'>Detail</a></td>
                     <td>{{item.Platce.nazev}}</td>
-                    <td>{{item.Prijemce.nazev}}</td>
-                    <td>{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK}}</td>
+                    <td>{{for pp in item.Prijemce; ((fn_ShortenText pp.nazev 40) + ', '); end }}</td>
+                    <td>{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK html: true}}</td>
                 </tr>
                 <tr>
-                    <td colspan='4'>{{ item.Predmet }}</td>
+                    <td colspan='4' style='font-size:80%;border-bottom:1px #ddd solid'>{{ fn_ShortenText item.predmet 100 }}</td>
                 </tr>
         {{ end }}
 
@@ -89,9 +90,9 @@ namespace HlidacStatu.Lib.Data
             static string TextTemplate = @"
         {{ for item in model.Items limit:#LIMIT# }}
 ------------------------------------------------------
-| {{item.Platce.nazev}} ->  {{item.Prijemce.nazev}}
+| {{item.Platce.nazev}} -> {{for pp in item.Prijemce; ((fn_ShortenText pp.nazev 40) + ', '); end }}
 -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK }} / {{item.Predmet}}
+{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK html: false }} / {{ fn_ShortenText item.predmet 50 }}
 
 Více: https://www.hlidacstatu.cz/Detail/{{item.Id}}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
 ======================================================

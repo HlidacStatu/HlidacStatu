@@ -67,6 +67,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 ret.ContentHtml = renderH.Render(data);
                 var renderT = new Lib.Render.ScribanT(TextTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentText = renderT.Render(data);
+                ret.ContentTitle = "Insolvenční řízení";
+
 
                 return ret;
             }
@@ -74,22 +76,22 @@ namespace HlidacStatu.Lib.Data.Insolvence
             static string HtmlTemplate = @"
 {{func subjHtml 
    t =  $0 
-   dn = ""
+   dn = ''
    if (t.DatumNarozeni != null)
      dn = fn_FormatDate t.DatumNarozeni 'yyyy'
    end
 
-   if (fn_IsNullOrEmpty(t.ICO)==false)   
+   if ((fn_IsNullOrEmpty t.ICO )==false)
    }}
      <a href='/subjekt/{{t.ICO}}'>{{ fn_ShortenText t.PlneJmeno  30 }}</a> IČ:{{ t.ICO }}
      {{ ret }}
-   {{ else if fn_IsNullOrEmpty t.OsobaId == false }}
+   {{ else if (fn_IsNullOrEmpty t.OsobaId) == false }}
       <a href='/osoba/{{t.OsobaId}}'>{{fn_ShortenText t.PlneJmeno  30 }}</a>{{dn}}
    {{ else }}
        {{ t.PlneJmeno}} {{ dn }}
   {{ end }}
 
-end
+{{end
 }}
 
     <table border='1' cellpadding='5'>
@@ -128,10 +130,19 @@ end
                     {{end}}
                 </td>
                 <td>
-                    {{ if (item.PosledniZmena != null); fn_FormatDate item.PosledniZmena 'yyyy'; else 'neuvedena'; end }}
+                    {{ if (item.PosledniZmena != null)
+                         fn_FormatDate item.PosledniZmena 'yyyy'
+                         else 
+                         'neuvedena'
+                         end }}
                 </td>
                 <td>
-                    {{ if (item.DatumZalozeni != null); fn_FormatDate item.DatumZalozeni 'yyyy'; else 'neuvedena'; end }}
+                    {{ if (item.DatumZalozeni != null)
+                        fn_FormatDate item.DatumZalozeni 'yyyy'
+                     else 
+                        'neuvedena'
+
+                     end }}
                 </td>
                 <td>
                     {{ item.Stav }}
@@ -139,12 +150,12 @@ end
             </tr>
         {{ end }}
 
-        {{ if (model.Items.size > #LIMIT#) }}
+        {{ if (model.Items.size > 5) }}
 
             <tr><td colspan='4'>    
                 <hr/>
                 <a href='https://www.hlidacstatu.cz/insolvence/hledat?Q={{ html.url_encode Model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
-                    {{ fn_Pluralize (model.Items.size - #LIMIT#) '' 'Další nalezená insolvence' 'Další {0} nalezené insolvence' 'Dalších {0} nalezených insolvencí' }} 
+                    {{ fn_Pluralize (model.Items.size - 5) '' 'Další nalezená insolvence' 'Další {0} nalezené insolvence' 'Dalších {0} nalezených insolvencí' }} 
                 </a>.
             </td></tr>
         {{ end }}
@@ -153,15 +164,14 @@ end
             static string TextTemplate = @"
 {{ for item in model.Items limit:#LIMIT# }}
 ------------------------------------------------------
-Dlužníci:{{ if (item.Dluznici != null && item.Dluznici.size > 0) ; item.Dluznici[0].PlneJmeno; else 'neuveden'; end }}
-Věřitelé:{{ if (item.Veritele != null && item.Veritele.size > 0) ; item.Veritele[0].PlneJmeno; else 'neuveden'; end }}
+Dlužníci:{{ if (item.Dluznici != null && item.Dluznici.size > 0)}}{{item.Dluznici[0].PlneJmeno}}{{else}} neuveden{{end }}
+Věřitelé:{{ if (item.Veritele != null && item.Veritele.size > 0)}}{{item.Veritele[0].PlneJmeno}}{{else}}neuveden{{end }}
 Poslední změna: {{ fn_FormatDate item.PosledniZmena 'yyyy' }}
 Datum vzniku insolvence: {{ fn_FormatDate item.DatumZalozeni 'yyyy' }}
 Stav řízení: {{ item.Stav }}
-{{end }}
 Více: https://www.hlidacstatu.cz/Insolvence/Rizeni/{{ string.replace (string.replace item.SpisovaZnacka ' '  '_') '/'  '-' }}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
+{{end }}
 ======================================================
-{{ end }}
 
 {{ if (model.Items.size > #LIMIT#) }}
 {{ fn_Pluralize (model.Items.size - #LIMIT#) '' 'Další nalezená insolvence' 'Další {0} nalezené insolvence' 'Dalších {0} nalezených insolvencí' }} na https://www.hlidacstatu.cz/verejnezakazky/hledat?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>

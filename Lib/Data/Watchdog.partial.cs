@@ -169,23 +169,23 @@ namespace HlidacStatu.Lib.Data
 
             var res = new List<Lib.Watchdogs.IWatchdogProcessor>();
 
-            //if (this.dataType == WatchDog.AllDbDataType)
-            //{                                                     //add all datasets
-            //    foreach (var ds in External.DataSets.DataSetDB.ProductionDataSets.Get())
-            //    {
-            //        res.Add(new External.DataSets.WatchdogDataset(this, ds));
-            //    }
+            if (this.dataType == WatchDog.AllDbDataType)
+            {                                                     //add all datasets
+                foreach (var ds in External.DataSets.DataSetDB.ProductionDataSets.Get())
+                {
+                    res.Add(new Lib.Data.External.DataSets.DataSet.WatchdogProcessor(this, ds));
+                }
 
-            //}
+            }
 
             if (this.dataType == typeof(Smlouva).Name || this.dataType == WatchDog.AllDbDataType)
                 res.Add(new Smlouva.WatchdogProcessor(this));
-            //if (this.dataType == typeof(VZ.VerejnaZakazka).Name || this.dataType == WatchDog.AllDbDataType)
-            //    res.Add(new WatchdogVerejnaZakazka(this));
-            //if (this.dataType == typeof(Rizeni).Name || this.dataType == WatchDog.AllDbDataType)
-            //    res.Add(new WatchdogInsolvence(this));
-            //if (this.dataType.StartsWith(typeof(Lib.Data.External.DataSets.DataSet).Name))
-            //    res.Add(new Lib.Data.External.DataSets.WatchdogDataset(this));
+            if (this.dataType == typeof(VZ.VerejnaZakazka).Name || this.dataType == WatchDog.AllDbDataType)
+                res.Add(new VZ.VerejnaZakazka.WatchdogProcessor(this));
+            if (this.dataType == typeof(Rizeni).Name || this.dataType == WatchDog.AllDbDataType)
+                res.Add(new Insolvence.Rizeni.WatchdogProcessor(this));
+            if (this.dataType.StartsWith(typeof(Lib.Data.External.DataSets.DataSet).Name))
+                res.Add(new Lib.Data.External.DataSets.DataSet.WatchdogProcessor(this));
             //throw new System.NotImplementedException();
             return res;
         }

@@ -11,11 +11,11 @@ namespace HlidacStatu.Lib.Watchdogs
     public class SingleEmailPerUserProcessor
     {
 
-        public static void Send(IEnumerable<WatchDog> watchdogs, bool force = false, DateTime ? fromSpecificDate=null, DateTime? toSpecificDate = null)
+        public static void Send(IEnumerable<WatchDog> watchdogs, bool force = false, DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null)
         {
-            bool saveWatchdogStatus = 
-                force == false 
-                && fromSpecificDate.HasValue == false 
+            bool saveWatchdogStatus =
+                force == false
+                && fromSpecificDate.HasValue == false
                 && toSpecificDate.HasValue == false;
 
             Dictionary<string, WatchDog[]> groupedByUserNoSpecContact = watchdogs
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Watchdogs
                 List<RenderedContent> parts = new List<RenderedContent>();
                 foreach (var wd1 in wds)
                 {
-                    if (!(force || Tools.ReadyToRun(wd1.Period, wd1.LastSearched, DateTime.Now) ))
+                    if ((force || Tools.ReadyToRun(wd1.Period, wd1.LastSearched, DateTime.Now)) == false)
                         continue;
 
 
@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Watchdogs
 
                     DateTime? fromDate = fromSpecificDate;
                     DateTime? toDate = toSpecificDate;
-                    if (wd1.LatestRec.HasValue)
+                    if (fromDate.HasValue == false && wd1.LatestRec.HasValue)
                         fromDate = new DateTime(wd1.LatestRec.Value.Ticks, DateTimeKind.Utc);
                     if (fromDate.HasValue == false) //because of first search (=> no .LastSearched)
                         fromDate = DateTime.Now.Date.AddMonths(-1); //from previous month
@@ -92,16 +92,40 @@ namespace HlidacStatu.Lib.Watchdogs
                     List<RenderedContent> wdParts = new List<RenderedContent>();
                     foreach (var wdp in wdProcessorsForWD1)
                     {
-                        wdParts.Add(wdp.RenderResults(wdp.GetResults(fromDate, toDate, 30), 5));
+                        var results = wdp.GetResults(fromDate, toDate, 30);
+                        if (results.Total > 0)
+                            wdParts.Add(wdp.RenderResults(results, 5));
                     }
                     if (wdParts.Count() > 0)
                     {
                         //add watchdog header
                         RenderedContent wdtitle = new RenderedContent();
-                        wdtitle.ContentHtml = "xxxx";
-                        wdtitle.ContentText = "yyyy";
+                        wdtitle.ContentHtml = $@"
+<table style='width:100%;border:2px solid #003688;font-family: Cabin, sans-serif;'><tr><td style='background:#003688;color:white'>
+<h3 style='text-align: center;'>{wd1.Name}</h3>
+</td></tr>
+<tr><td style='font-size:12px;'>
+";
+                        wdtitle.ContentText = $">>> {wd1.Name}  <<<\n{new string('=',wd1.Name.Length+8)}";
+
                         parts.Add(wdtitle);
-                        parts.AddRange(wdParts);
+
+                        foreach (var wdp in wdParts)
+                        {
+                            //subHead
+                            parts.Add(new RenderedContent()
+                            {
+                                ContentHtml = $"<h3>{wdp.ContentTitle}</h3>",
+                                ContentText = $"{wdp.ContentTitle}\n{new string('-',wdp.ContentTitle.Length+1)}"
+                            }); ;
+                            parts.Add(wdp);
+                        }
+
+                        RenderedContent wdfooter = new RenderedContent();
+                        wdfooter.ContentHtml = "</td></tr></table><div style='padding-top:20px'></div>";
+                        wdfooter.ContentText = "\n\n";
+                        parts.Add(wdfooter);
+
                     }
 
                     if (saveWatchdogStatus)
@@ -114,7 +138,8 @@ namespace HlidacStatu.Lib.Watchdogs
                 if (parts.Count > 0)
                 {
                     //send it
-                    if (Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", RenderedContent.Merge(parts)))
+                    var content = RenderedContent.Merge(parts);
+                    if (Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content))
                     {
                         if (saveWatchdogStatus)
                         {

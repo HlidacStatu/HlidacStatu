@@ -58,11 +58,14 @@ namespace HlidacStatu.Lib.Data.VZ
                 ret.ContentHtml = renderH.Render(data);
                 var renderT = new Lib.Render.ScribanT(TextTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentText = renderT.Render(data);
+                ret.ContentTitle = "Veřejné zakázky";
 
                 return ret;
             }
 
             static string HtmlTemplate = @"
+
+
     <table border='1' cellpadding='5'>
         <thead>
             <tr>
@@ -75,19 +78,28 @@ namespace HlidacStatu.Lib.Data.VZ
             </tr>
         </thead>
         <tbody>
-        {{ for item in model.Items limit:#LIMIT# }}
+        {{ for item in model.Items limit:5 }}
             <tr>
                 <td style='white-space: nowrap;'>
                     <a href='https://www.hlidacstatu.cz/VerejneZakazky/Zakazka/{{ item.Id }}'>{{item.EvidencniCisloZakazky}}</a>
                 </td>
                 <td>
-                    {{ if (item.DatumUverejneni != null) ; fn_FormatDate item.DatumUverejneni.Value 'dd.MM.yyyy' ; end }}
+                    {{ if (item.DatumUverejneni != null) ; fn_FormatDate item.DatumUverejneni 'dd.MM.yyyy' ; end }}
                 </td>
                 <td>
-                    {{ if (item.LhutaDoruceni != null); fn_FormatDate item.LhutaDoruceni.Value 'dd.MM.yyyy'; else 'neuvedena'; end; )
+                    {{ if (item.LhutaDoruceni == null) 
+                        'neuvedena'  
+                        else 
+                        fn_FormatDate item.LhutaDoruceni 'dd.MM.yyyy' 
+                    end }}
                 </td>
                 <td>
-                    <span>{{ if (item.Zadavatel == null) ; 'neuveden'; else item.Zadavatel.Jmeno; end }}</span>
+                    <span>{{ if (item.Zadavatel == null)  
+                        'neuveden'  
+                        else 
+                          item.Zadavatel.Jmeno  
+
+                        end }}</span>
                 </td>
                 <td>
                     {{ item.NazevZakazky }}
@@ -96,11 +108,11 @@ namespace HlidacStatu.Lib.Data.VZ
                     <b>
                         {{ if item.KonecnaHodnotaBezDPH != null }}
                         
-                            {{ fn_FormatPrice item.KonecnaHodnotaBezDPH.Value }}
+                            {{ fn_FormatPrice item.KonecnaHodnotaBezDPH }}
                         
-                        {{ else if (item.OdhadovanaHodnotaBezDPH.HasValue) }}
+                        {{ else if ((fn_IsNullOrEmpty item.OdhadovanaHodnotaBezDPH) == false) }}
                         
-                            <span>odhad.cena </span> {{ fn_FormatPrice item.OdhadovanaHodnotaBezDPH.Value }}
+                            <span>odhad.cena </span> {{ fn_FormatPrice item.OdhadovanaHodnotaBezDPH }}
                         
                         {{ else }}
                         
@@ -118,27 +130,29 @@ namespace HlidacStatu.Lib.Data.VZ
             </tr>
         {{ end }}
 
-        {{ if (model.Items.size > #LIMIT#) }}
+        {{ if (model.Items.size > 5) }}
 
-            <tr><td colspan='4'>    
+            <tr><td colspan='4' style='font-size:80%;border-bottom:1px #ddd solid'>    
                 <hr/>
                 <a href='https://www.hlidacstatu.cz/verejnezakazky/hledat?Q={{ html.url_encode Model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
-                    {{ fn_Pluralize (model.Items.size - #LIMIT#) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} 
+                    {{ fn_Pluralize (model.Items.size - 5) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} 
                 </a>.
             </td></tr>
         {{ end }}
-    </table>
+      
+    </tbody>
+</table>
 ";
             static string TextTemplate = @"
 {{ for item in model.Items limit:#LIMIT# }}
 ------------------------------------------------------
-Zadavatel: {{ if (fn_IsNullOrEmpty item.Zadavatel ) ; 'neuveden'; else item.Zadavatel.Jmeno; end }} 
-Datum uveřejnění: {{ if (fn_IsNullOrEmpty item.DatumUverejneni); ''; else fn_FormatDate item.DatumUverejneni 'dd.MM.yyyy'}}
+Zadavatel: {{ if (fn_IsNullOrEmpty item.Zadavatel )}} neuveden{{else}}{{item.Zadavatel.Jmeno}}{{end}} 
+Datum uveřejnění: {{ if (fn_IsNullOrEmpty item.DatumUverejneni)}} {{else}} {{fn_FormatDate item.DatumUverejneni 'dd.MM.yyyy'}} {{end}}
 Zakázka: {{ item.NazevZakazky }}
-{{ if (item.KonecnaHodnotaBezDPH.HasValue) }}
-Cena: {{fn_FormatPrice item.KonecnaHodnotaBezDPH.Value}}
-{{ else if (fn_IsNullOrEmpty item.OdhadovanaHodnotaBezDPH) }}
-Odhadovaná cena: {{ fn_FormatPrice item.OdhadovanaHodnotaBezDPH.Value }}
+{{ if ( fn_IsNullOrEmpty item.KonecnaHodnotaBezDPH) == false }}
+Cena: {{fn_FormatPrice item.KonecnaHodnotaBezDPH html: false}}
+{{ else if (fn_IsNullOrEmpty item.OdhadovanaHodnotaBezDPH) == false }}
+Odhadovaná cena: {{ fn_FormatPrice item.OdhadovanaHodnotaBezDPH  html: false}}
 {{end }}
 Více: https://www.hlidacstatu.cz/VerejneZakazky/Zakazka/{{ item.Id }}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
 ======================================================

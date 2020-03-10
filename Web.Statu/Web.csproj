@@ -1422,8 +1422,8 @@
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
-    <Content Include="Views\Home\Hledat2.cshtml" />
     <Content Include="Views\Home\HledatSmlouvy - Copy.cshtml" />
+    <Content Include="Views\Home\HledatOld2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
