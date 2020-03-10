@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
+using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
 using Swashbuckle.Swagger.Annotations;
 using System;
@@ -14,7 +15,8 @@ namespace HlidacStatu.Web.Controllers
     public class ApiV2Controller : GenericAuthController
     {
         [HttpGet]
-        [Route("/api/v2/smlouvy/detail/{id}")]
+        //[Route("/api/v2/smlouvy/detail/{id}")]
+        [AuthorizeAndAudit]
         [SwaggerOperation("SmlouvyDetailIdGet")]
         [SwaggerResponse(statusCode: 200, type: typeof(Smlouva), description: "Úspěšně vrácena smlouva")]
         [SwaggerResponse(statusCode: 400, type: typeof(Chyba), description: "Některé z předaných parametrů byly zadané nesprávně")]

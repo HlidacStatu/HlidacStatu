@@ -389,6 +389,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="Attributes\AuthorizeAndAuditAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
