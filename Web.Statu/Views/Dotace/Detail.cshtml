@@ -74,11 +74,11 @@
         </tr>
         <tr>
             <th>Název programu</th>
-            <td>@Model.Program.Nazev</td>
+            <td>@(Model.Program?.Nazev ?? "neuveden")</td>
         </tr>
         <tr>
             <th>Kód programu</th>
-            <td>@Model.Program.Kod</td>
+            <td>@(Model.Program?.Kod ?? "neuveden")</td>
         </tr>
         <tr>
             <th>Datum podpisu</th>

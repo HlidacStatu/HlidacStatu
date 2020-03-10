@@ -182,13 +182,13 @@ else
                 @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
                 {
                     <li class="@firstPageClass">
-                        @Html.ActionLink("« Předchozí", "hledej","VZ",Model.ToRouteValues(page - 1),null)
+                        @Html.ActionLink("« Předchozí", "hledat","VZ",Model.ToRouteValues(page - 1),null)
                     </li>
                 }
                 @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
                 {
                     <li class="@lastPageClass">
-                        @Html.ActionLink("Následující »", "hledej","VZ",Model.ToRouteValues(page + 1),null)
+                        @Html.ActionLink("Následující »", "hledat","VZ",Model.ToRouteValues(page + 1),null)
                     </li>
                 }
                 <li>

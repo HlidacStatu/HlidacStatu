@@ -1,0 +1,32 @@
+﻿@model HlidacStatu.Lib.Searching.SmlouvaSearchResult
+@using System.Linq;
+@{
+    ViewBag.Title = "Hlídač Smluv: Hledání ";
+    ViewBag.SubTitle = Model?.Q;
+    ViewBag.ShowBookmarkUrl = true;
+
+}
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+<ol class="breadcrumb">
+    <li><a href="/">Hlídač Státu</a></li>
+    <li><a href="@Url.Action("Smlouvy","Home")">Hlídač Smluv</a></li>
+    <li class="active">@ViewBag.SubTitle</li>
+</ol>
+}
+
+
+
+@Html.Partial("_SearchResult", Model)
+
+
+
+@Html.Partial("_Symbols", Model)
+

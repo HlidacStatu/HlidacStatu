@@ -1153,9 +1153,9 @@ text zpravy: {txt}";
                     var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
                 }
             }
-            string viewName = "Hledat2";
+            string viewName = "Hledat";
             if (Request.QueryString["old"]=="1")
-                viewName="Hledat";
+                viewName="HledatOld";
             return View(viewName,res);
         }
 
