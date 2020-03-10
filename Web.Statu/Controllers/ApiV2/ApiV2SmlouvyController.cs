@@ -12,8 +12,9 @@ using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public class ApiV2Controller : GenericAuthController
+    public class ApiV2SmlouvyController : GenericAuthController
     {
+        // /api/v2/smlouvy/SmlouvyDetailIdGet/{id}
         [HttpGet]
         //[Route("/api/v2/smlouvy/detail/{id}")]
         [AuthorizeAndAudit]
@@ -25,19 +26,21 @@ namespace HlidacStatu.Web.Controllers
         [SwaggerResponse(statusCode: 500, type: typeof(Chyba), description: "Došlo k interní chybě na serveru")]
         public ActionResult SmlouvyDetailIdGet([Required]string id)
         {
-            //if (!Framework.ApiAuth.IsApiAuth(this,
-            //    parameters: new Framework.ApiCall.CallParameter[] {
-            //        new Framework.ApiCall.CallParameter("id", id)
-                    
-            //    })
-            //    .Authentificated)
-            //{
-            //    return new HttpUnauthorizedResult();
-            //}
-            //else
-            //{
-            return Content(null, "application/json");
-            //}
+            if (string.IsNullOrWhiteSpace(id))
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Missing Id");
+
+            var model = HlidacStatu.Lib.Data.Smlouva.Load(id);
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Smlouva not found");
+            }
+            var smodel = HlidacStatu.Lib.Data.Smlouva.ExportToJson(model,
+                !string.IsNullOrWhiteSpace(Request.QueryString["nice"]),
+                this.User.IsInRole("Admin")
+                );
+
+            return Content(smodel, "application/json");
+            
         }
 
     }

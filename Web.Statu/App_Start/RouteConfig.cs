@@ -20,9 +20,14 @@ namespace HlidacStatu.Web
                 defaults: new { controller = "ApiV1", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
             );
             routes.MapRoute(
-                name: "ApiV2",
-                url: "api/v2/{action}/{id}/{dataid}",
-                defaults: new { controller = "ApiV2", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
+                name: "ApiV2Smlouvy",
+                url: "api/v2/smlouvy/{action}/{id}/{dataid}",
+                defaults: new { controller = "ApiV2Smlouvy", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
+            );
+            routes.MapRoute(
+                name: "ApiV2VerejneZakazky",
+                url: "api/v2/verejnezakazky/{action}/{id}/{dataid}",
+                defaults: new { controller = "ApiV2VZ", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
             );
             routes.MapRoute(
                 name: "AccountController",
