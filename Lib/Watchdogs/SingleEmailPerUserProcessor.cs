@@ -115,9 +115,9 @@ namespace HlidacStatu.Lib.Watchdogs
                             //subHead
                             parts.Add(new RenderedContent()
                             {
-                                ContentHtml = $"<h3>{wdp.ContentTitle}</h3>",
+                                ContentHtml = $"<h3>{wdp.ContentTitle}</h3><hr/>",
                                 ContentText = $"{wdp.ContentTitle}\n{new string('-',wdp.ContentTitle.Length+1)}"
-                            }); ;
+                            });
                             parts.Add(wdp);
                         }
 

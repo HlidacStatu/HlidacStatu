@@ -150,6 +150,25 @@ namespace HlidacStatu.Lib.Render
                 }
                 return string.Empty;
             }
+            public static string fn_LastChars(dynamic value, int? length = null)
+            {
+
+                if (value == null)
+                    return string.Empty;
+                else
+                {
+                    if (length.HasValue == false)
+                        return value.ToString();
+                    if (length == 0)
+                        return string.Empty;
+
+                    string s = value.ToString();
+                    if (s.Length <= length)
+                        return s;
+                    else
+                        return s.Substring((s.Length - length.Value), length.Value);
+                }
+            }
 
             public static string fn_ShortenText(dynamic value, int? length = null)
             {

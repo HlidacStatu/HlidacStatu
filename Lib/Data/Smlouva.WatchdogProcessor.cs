@@ -64,6 +64,15 @@ namespace HlidacStatu.Lib.Data
 
             static string HtmlTemplate = @"
     <table border='0' cellpadding='5' class=''>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Plátce</th>
+                <th>Příjemci</th>
+                <th>Hodnota smlouvy</th>
+            </tr>
+        </thead>
+        <tbody>
         {{ for item in model.Items limit:#LIMIT# }}
                 <tr>
                     <td><a href='@Raw('https://www.hlidacstatu.cz/Detail/' + item.Id + '?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail')'>Detail</a></td>
@@ -85,6 +94,7 @@ namespace HlidacStatu.Lib.Data
                 </a>.
             </td></tr>
         {{ end }}
+        </tbody>
     </table>
 ";
             static string TextTemplate = @"

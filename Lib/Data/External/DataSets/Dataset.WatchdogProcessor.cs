@@ -110,10 +110,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 if (data.Items.Count() > numOfListed)
                     dataToRender = data.Items.Take((int)numOfListed);
                 else
-                    dataToRender = data.Items;
+                    dataToRender = data.Items.ToArray();
+
+                HlidacStatu.Lib.Data.External.DataSets.DataSearchResult resultToRender = new DataSearchResult();
+                resultToRender.Result = dataToRender;
 
                 //var renderH = new Lib.Render.ScribanT(HtmlTemplate.Replace("#LIMIT#", numOfListed.ToString()));
-                ret.ContentHtml = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet,dataToRender );
+                ret.ContentHtml = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet,resultToRender );
                 //var renderT = new Lib.Render.ScribanT(TextTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentText = " ";
                 ret.ContentTitle = this.DataSet.Registration().name;
