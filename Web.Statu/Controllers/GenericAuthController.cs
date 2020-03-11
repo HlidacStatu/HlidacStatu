@@ -233,7 +233,7 @@ namespace HlidacStatu.Web.Controllers
                 );
 
 
-            RedirectToAction("Error404").ExecuteResult(this.ControllerContext);
+            RedirectToAction("Error404","Home").ExecuteResult(this.ControllerContext);
 
         }
 
