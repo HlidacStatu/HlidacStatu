@@ -434,7 +434,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiV1Models.cs" />
-    <Compile Include="Models\apiv2\Chyba.cs" />
+    <Compile Include="Models\apiv2\ErrorMessage.cs" />
     <Compile Include="Models\apiv2\DatasetDefinice.cs" />
     <Compile Include="Models\apiv2\DatasetIdentifikator.cs" />
     <Compile Include="Models\apiv2\DatasetTemplate.cs" />
