@@ -30,6 +30,11 @@ namespace HlidacStatu.Web
                 defaults: new { controller = "ApiV2VZ", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
             );
             routes.MapRoute(
+                name: "ApiV2Osoby",
+                url: "api/v2/osoby/{action}/{id}/{dataid}",
+                defaults: new { controller = "ApiV2Osoby", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
+            );
+            routes.MapRoute(
                 name: "AccountController",
                 url: "account/{action}/{id}",
                 defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }

@@ -393,6 +393,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2Osoby.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2VZ.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2SmlouvyController.cs" />
     <Compile Include="Controllers\DataController.CreateWizards.cs" />
@@ -444,6 +445,9 @@
     <Compile Include="Models\apiv2\InlineResponse2001.cs" />
     <Compile Include="Models\apiv2\InlineResponse2002.cs" />
     <Compile Include="Models\apiv2\InlineResponse2003.cs" />
+    <Compile Include="Models\apiv2\OsobaDetailDTO.cs" />
+    <Compile Include="Models\apiv2\OsobaDTO.cs" />
+    <Compile Include="Models\apiv2\OsobaEventDTO.cs" />
     <Compile Include="Models\apiv2\Smlouva.cs" />
     <Compile Include="Models\apiv2\SmlouvaChanged.cs" />
     <Compile Include="Models\apiv2\SmlouvaCiziMena.cs" />
