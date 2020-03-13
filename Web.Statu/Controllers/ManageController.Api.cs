@@ -125,7 +125,7 @@ namespace HlidacStatu.Web.Controllers
 
                 string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
                 var sres = VerejnaZakazka.Searching.SimpleSearch(q, cpvs, 1, numOfRecords,
-                    Util.ParseTools.ToInt(o) ?? 0, (Request.QueryString["zahajeny"] == "1")
+                    (Util.ParseTools.ToInt(o) ?? 0).ToString(), (Request.QueryString["zahajeny"] == "1")
                     );
 
                 if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))

@@ -184,7 +184,7 @@ else if (Model.HasResults == false)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
             }
-            @if (Model.Insolvence.HasResult)
+            @if (Model.HasInsolvence)
             {
                 <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.Result.HitsMetadata.Total)</span></a></div>
             }

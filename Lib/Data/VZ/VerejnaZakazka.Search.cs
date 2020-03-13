@@ -311,7 +311,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
             public static VerejnaZakazkaSearchData SimpleSearch(string query, string[] cpv,
-                int page, int pageSize, int order, bool Zahajeny = false, bool withHighlighting = false,
+                int page, int pageSize, string order, bool Zahajeny = false, bool withHighlighting = false,
                 bool exactNumOfResults = false)
             {
                 return SimpleSearch(
@@ -322,7 +322,7 @@ namespace HlidacStatu.Lib.Data.VZ
                         CPV = cpv,
                         Page = page,
                         PageSize = pageSize,
-                        Order = order.ToString(),
+                        Order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order),
                         Zahajeny = Zahajeny,
                         ExactNumOfResults = exactNumOfResults
                     }, withHighlighting: withHighlighting

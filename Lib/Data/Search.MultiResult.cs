@@ -123,20 +123,20 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false)
+        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false, string order = null)
         {
             return Elastic.Apm.Agent.Tracer.CaptureTransaction<MultiResult>("GeneralSearch", "search",
                 (tran) =>
                 {
                     tran.Labels.Add("query", query);
-                    return GeneralSearch(tran, query, page, pageSize, showBeta);
+                    return GeneralSearch(tran, query, page, pageSize, showBeta, order);
                 }
             );
         }
 
 
         static object objGeneralSearchLock = new object();
-        private static MultiResult GeneralSearch(Elastic.Apm.Api.ITransaction apmtran, string query, int page = 1, int pageSize = 10, bool showBeta = false)
+        private static MultiResult GeneralSearch(Elastic.Apm.Api.ITransaction apmtran, string query, int page = 1, int pageSize = 10, bool showBeta = false, string order = null)
         {
             MultiResult res = new MultiResult() { Query = query };
 
@@ -167,7 +167,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         apmtran.CaptureSpan("Smlouvy", "search", () =>
                         {
-                            res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, pageSize, Smlouva.Search.OrderResult.Relevance,
+                            res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, pageSize, order,
                                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
                                 );
                         });
@@ -203,7 +203,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, (int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
+                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, order);
                     }
                     catch (System.Exception e)
                     {
@@ -261,10 +261,10 @@ namespace HlidacStatu.Lib.Data
 				{
 					try
 					{
-                        var iqu = new Searching.InsolvenceSearchResult { Q = query, PageSize = 5 };
+                        var iqu = new Searching.InsolvenceSearchResult { Q = query, PageSize = pageSize, Order = order };
                         res.Insolvence = iqu;
                         //if (showBeta)
-                        res.Insolvence = Insolvence.Insolvence.SimpleSearch(new Searching.InsolvenceSearchResult { Q = query, PageSize = 5 });
+                        res.Insolvence = Insolvence.Insolvence.SimpleSearch(new Searching.InsolvenceSearchResult { Q = query, PageSize = pageSize, Order = order });
 
                     }
                     catch (System.Exception e)
@@ -278,9 +278,9 @@ namespace HlidacStatu.Lib.Data
                     try
                     {
                         var dotaceService = new Dotace.DotaceService();
-                        var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = pageSize };
+                        var iqu = new Searching.DotaceSearchResult { Q = query, PageSize = pageSize, Order = order };
                         res.Dotace = dotaceService.SimpleSearch(
-                                new Searching.DotaceSearchResult { Q = query, PageSize = pageSize },
+                                new Searching.DotaceSearchResult { Q = query, PageSize = pageSize, Order = order },
                                 anyAggregation: new Nest.AggregationContainerDescriptor<Lib.Data.Dotace.Dotace>().Sum("souhrn", s => s.Field(f => f.DotaceCelkem))
                             );
                     }

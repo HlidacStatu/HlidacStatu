@@ -34,7 +34,7 @@ namespace HlidacStatu.Lib.Searching
             }
 
             set {
-                this._order = value;
+                this._order = value ?? "0";
                 if (OrderList == null)
                     InitOrderList();
                 if (OrderList != null && OrderList.Count > 0)

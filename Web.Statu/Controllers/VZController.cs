@@ -51,7 +51,7 @@ namespace HlidacStatu.Web.Controllers
                 var findSm = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(
                     $"_id:\"{vz.Id}\" AND ({this.Request.QueryString["qs"]})", 
                     new string[] { }, 1, 1,
-                    (int)Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, withHighlighting: true);
+                    ((int)Lib.Data.Smlouva.Search.OrderResult.FastestForScroll).ToString(), withHighlighting: true);
                 if (findSm.Total > 0)
                     ViewBag.Highlighting = findSm.Result.Hits.First().Highlight;  //todo: es7 check
 

@@ -513,8 +513,8 @@ else
 
             <tr>
                 @{
-                    var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, 1);
-                    var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, 1);
+                    var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, "1");
+                    var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, "1");
                     Dictionary<string, long> vzakaz = new Dictionary<string, long>();
                     vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
                     vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
@@ -544,7 +544,7 @@ else
                         .Field(f => f.DotaceCelkem)
                     );
                 var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
-                    (int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                    HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
                     dotaceAggs, exactNumOfResults: true);
 
 
@@ -557,7 +557,7 @@ else
                         )
                     );
                 var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("holding:" + Model.ICO, 1, 1,
-                    (int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                    HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
                     dotaceAggsH, exactNumOfResults: true);
                 var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice((decimal)dotaceSearch.Result.Aggregations.Sum("souhrn").Value) + "</b>.";
 

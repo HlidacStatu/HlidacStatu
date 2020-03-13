@@ -189,12 +189,27 @@ namespace HlidacStatu.Lib.Data
 
 
 
+            public static SmlouvaSearchResult SimpleSearch(string query, int page, int pageSize, string order,
+AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
+bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
+bool withHighlighting = false, bool exactNumOfResults = false)
+            {
+                order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order);
+                OrderResult eorder = OrderResult.Relevance;
+                System.Enum.TryParse<OrderResult>(order, out eorder);
+
+                return SimpleSearch(query, page, pageSize, eorder, anyAggregation,
+                    platnyZaznam, includeNeplatne, logError, fixQuery,
+                    withHighlighting, exactNumOfResults
+                    );
+
+            }
             public static SmlouvaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order,
         AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
         bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
         bool withHighlighting = false, bool exactNumOfResults = false)
             {
-
+            
                 var result = new SmlouvaSearchResult()
                 {
                     Page = page,

@@ -176,10 +176,10 @@ namespace HlidacStatu.Lib.Data
             ret = this.Statistic().ToBasicData().Pocet> 0;
             if (ret) return ret;
 
-            ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + this.ICO, null, 1, 1, 0).Total > 0;
+            ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + this.ICO, null, 1, 1, "0").Total > 0;
             if (ret) return ret;
 
-            ret = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + this.ICO, 1, 1, 0).Total > 0;
+            ret = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + this.ICO, 1, 1, "0").Total > 0;
             return ret;
 
         }

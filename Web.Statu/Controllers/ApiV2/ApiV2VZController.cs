@@ -65,7 +65,7 @@ namespace HlidacStatu.Web.Controllers
 
             result = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, page.Value,
                 Lib.Data.Smlouva.Search.DefaultPageSize,
-                order.Value);
+                order.Value.ToString());
 
 
             if (result.IsValid == false)

@@ -1119,13 +1119,13 @@ text zpravy: {txt}";
             return View(sres);
         }
 
-        public ActionResult Hledat(string q)
+        public ActionResult Hledat(string q, string order)
         {
             bool showBeta = false;
             if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(), "BetaTester") == true)
                 showBeta = true;
 
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, Lib.Searching.SearchDataResult<object>.DefaultPageSizeGlobal, showBeta); 
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, Lib.Searching.SearchDataResult<object>.DefaultPageSizeGlobal, showBeta,order); 
             Lib.Data.Audit.Add(
                     Lib.Data.Audit.Operations.UserSearch
                     , this.User?.Identity?.Name

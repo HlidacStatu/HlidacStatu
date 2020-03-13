@@ -20,7 +20,7 @@ namespace HlidacStatu.Lib.Data.VZ
             public DateTime GetLatestRec(DateTime toDate)
             {
                 var query = "posledniZmena:" + string.Format("[* TO {0}]", Lib.Searching.Tools.ToElasticDate(toDate));
-                var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, (int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate);
+                var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 1, ((int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.LastUpdate).ToString());
 
                 if (res.IsValid == false)
                     return DateTime.Now.Date.AddYears(-10);
@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data.VZ
                     query += string.Format("[{0} TO {1}]", Lib.Searching.Tools.ToElasticDate(fromDate, "*"), Lib.Searching.Tools.ToElasticDate(toDate, "*"));
                 }
                 var res = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 0, 50,
-                    order == null ? (int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc : Convert.ToInt32(order),
+                    order == null ? ((int)Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.DateAddedDesc).ToString() : order,
                     this.OrigWD.FocusId == 1);
 
                 return new Watchdogs.Results(res.ElasticResults.Hits.Select(m => (dynamic)m.Source), res.Total,

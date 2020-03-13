@@ -188,7 +188,7 @@
                     )
                 );
             var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("osobaid:" + Model.NameId, 1, 1,
-                (int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                ((int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll).ToString(), false,
                 dotaceAggsH, exactNumOfResults: true);
 
             decimal sumH = 0;
@@ -293,9 +293,9 @@
         </tr>
         <tr>
             @{
-                var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaid:" + Model.NameId, null, 1, 5, 1);
-                var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaiddodavatel:" + Model.NameId, null, 1, 0, 1);
-                var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaidzadavatel:" + Model.NameId, null, 1, 0, 1);
+                var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaid:" + Model.NameId, null, 1, 5, "1");
+                var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaiddodavatel:" + Model.NameId, null, 1, 0, "1");
+                var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("osobaidzadavatel:" + Model.NameId, null, 1, 0, "1");
                 Dictionary<string, long> vzakaz = new Dictionary<string, long>();
                 vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
                 vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);

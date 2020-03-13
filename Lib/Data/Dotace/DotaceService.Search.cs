@@ -57,8 +57,15 @@ namespace HlidacStatu.Lib.Data.Dotace
             return qc;
 
         }
-
-        public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, int order,
+        public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, DotaceSearchResult.DotaceOrderResult order,
+            bool withHighlighting = false,
+            AggregationContainerDescriptor<Dotace> anyAggregation = null, bool exactNumOfResults = false)
+        {
+            return SimpleSearch(query, page, pagesize, ((int)order).ToString(),
+                withHighlighting,
+                anyAggregation, exactNumOfResults);
+        }
+            public DotaceSearchResult SimpleSearch(string query, int page, int pagesize, string order,
             bool withHighlighting = false,
             AggregationContainerDescriptor<Dotace> anyAggregation = null, bool exactNumOfResults = false)
         {
@@ -67,7 +74,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Q = query,
                 Page = page,
                 PageSize = pagesize,
-                Order = order.ToString(),
+                Order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order),
                 ExactNumOfResults = exactNumOfResults
             }, withHighlighting, anyAggregation); ;
         }
