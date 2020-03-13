@@ -1265,7 +1265,6 @@
     <Content Include="Views\Home\Cenik.cshtml" />
     <Content Include="Views\Home\Detail.cshtml" />
     <Content Include="Views\Home\err404.cshtml" />
-    <Content Include="Views\Home\HledatOld.cshtml" />
     <Content Include="Views\Home\JsonDoc.cshtml" />
     <Content Include="Views\Home\Kontakt.cshtml" />
     <Content Include="Views\Home\Licence.cshtml" />
@@ -1428,8 +1427,7 @@
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
-    <Content Include="Views\Home\HledatSmlouvy - Copy.cshtml" />
-    <Content Include="Views\Home\HledatOld2.cshtml" />
+    <Content Include="Views\Home\HledatSmlouvy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
