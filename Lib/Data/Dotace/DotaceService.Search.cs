@@ -99,7 +99,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
                         .Query(q => GetSimpleQuery(search))
-                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                        .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -112,7 +112,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                             .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                             .From(page * search.PageSize)
                             .Query(q => GetSimpleQuery(search))
-                            .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                            .Sort(ss => GetSort(search.Order))
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(false))
                             .Aggregations(aggr => anyAggregation)
                             .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -157,9 +157,14 @@ namespace HlidacStatu.Lib.Data.Dotace
             return search;
         }
 
-        public SortDescriptor<Dotace> GetSort(int iorder)
+        public static SortDescriptor<Dotace> GetSort(string sorder)
         {
-            DotaceSearchResult.DotaceOrderResult order = (DotaceSearchResult.DotaceOrderResult)iorder;
+            DotaceSearchResult.DotaceOrderResult order = DotaceSearchResult.DotaceOrderResult.Relevance;
+            Enum.TryParse<DotaceSearchResult.DotaceOrderResult>(sorder, out order);
+            return GetSort(order);
+        }
+        public static SortDescriptor<Dotace> GetSort(DotaceSearchResult.DotaceOrderResult order)
+        {
 
             SortDescriptor<Dotace> s = new SortDescriptor<Dotace>().Field(f => f.Field("_score").Descending());
             switch (order)

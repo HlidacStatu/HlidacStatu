@@ -373,6 +373,12 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                 return res;
 
             }
+            public static SortDescriptor<Smlouva> GetSort(string sorder)
+            {
+                OrderResult order = OrderResult.Relevance;
+                Enum.TryParse<OrderResult>(sorder, out order);
+                return GetSort(order);
+            }
 
             public static SortDescriptor<Data.Smlouva> GetSort(OrderResult order)
             {

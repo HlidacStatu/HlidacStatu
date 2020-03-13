@@ -387,7 +387,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Source(so => so.Excludes(ex => ex.Field("dokumenty.plainText")))
                             .From(page * search.PageSize)
                             .Query(q => GetSimpleQuery(search))
-                            .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                            .Sort(ss => GetSort(search.Order))
                             .Aggregations(aggrFunc)
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
                             .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -400,7 +400,7 @@ namespace HlidacStatu.Lib.Data.VZ
                                 .Source(so => so.Excludes(ex => ex.Field("dokumenty.plainText")))
                                 .From(page * search.PageSize)
                                 .Query(q => GetSimpleQuery(search))
-                                .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                                .Sort(ss => GetSort(search.Order))
                                 .Aggregations(aggrFunc)
                                 .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(false))
                                 .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -478,7 +478,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .From(page * pageSize)
                             .Query(q => query)
                             //.Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
-                            .Sort(ss => GetSort((int)order))
+                            .Sort(ss => GetSort(order))
                             .Aggregations(aggrFunc)
 
                         );
@@ -537,7 +537,7 @@ namespace HlidacStatu.Lib.Data.VZ
                                     .DefaultOperator(Nest.Operator.And)
                                     )
                                 )
-                            .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                            .Sort(ss => GetSort(search.Order))
                             .Aggregations(aggrFunc)
                             );
                 }
@@ -569,9 +569,14 @@ namespace HlidacStatu.Lib.Data.VZ
                 return search;
             }
 
-            public static SortDescriptor<Data.VZ.VerejnaZakazka> GetSort(int iorder)
+            public static SortDescriptor<Data.VZ.VerejnaZakazka> GetSort(string sorder)
             {
-                VerejnaZakazkaSearchData.VZOrderResult order = (VerejnaZakazkaSearchData.VZOrderResult)iorder;
+                VerejnaZakazkaSearchData.VZOrderResult order = VerejnaZakazkaSearchData.VZOrderResult.Relevance;
+                Enum.TryParse<VerejnaZakazkaSearchData.VZOrderResult>(sorder, out order);
+                return GetSort(order);
+            }
+            public static SortDescriptor<Data.VZ.VerejnaZakazka> GetSort(VerejnaZakazkaSearchData.VZOrderResult order)
+            {
 
                 SortDescriptor<Data.VZ.VerejnaZakazka> s = new SortDescriptor<Data.VZ.VerejnaZakazka>().Field(f => f.Field("_score").Descending());
                 switch (order)

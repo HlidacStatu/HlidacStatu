@@ -176,7 +176,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
                         .Query(q => sq)
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
-                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                        .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -191,7 +191,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Source(sr => sr.Excludes(r => r.Fields("dokumenty.plainText")))
                         .Query(q => sq)
                         //.Sort(ss => new SortDescriptor<Rizeni>().Field(m => m.Field(f => f.PosledniZmena).Descending()))
-                        .Sort(ss => GetSort(Convert.ToInt32(search.Order)))
+                        .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(false))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
@@ -234,9 +234,14 @@ namespace HlidacStatu.Lib.Data.Insolvence
             return search;
         }
 
-        public static SortDescriptor<Data.Insolvence.Rizeni> GetSort(int iorder)
+        public static SortDescriptor<Rizeni> GetSort(string sorder)
         {
-            Searching.InsolvenceSearchResult.InsolvenceOrderResult order = (Searching.InsolvenceSearchResult.InsolvenceOrderResult)iorder;
+            Searching.InsolvenceSearchResult.InsolvenceOrderResult order = Searching.InsolvenceSearchResult.InsolvenceOrderResult.Relevance;
+            Enum.TryParse<InsolvenceSearchResult.InsolvenceOrderResult>(sorder, out order);
+            return GetSort(order);
+        }
+        public static SortDescriptor<Rizeni> GetSort(InsolvenceSearchResult.InsolvenceOrderResult order)
+        {
 
             SortDescriptor<Data.Insolvence.Rizeni> s = new SortDescriptor<Data.Insolvence.Rizeni>().Field(f => f.Field("_score").Descending());
             switch (order)
