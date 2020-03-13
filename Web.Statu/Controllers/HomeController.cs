@@ -1154,8 +1154,6 @@ text zpravy: {txt}";
                 }
             }
             string viewName = "Hledat";
-            if (Request.QueryString["old"]=="1")
-                viewName="HledatOld";
             return View(viewName,res);
         }
 
