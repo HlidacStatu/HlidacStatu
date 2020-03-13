@@ -52,12 +52,12 @@ else
 
         <table class="table table-hover">
             <thead>
-                @SearchResults.InsolvenceHead()
+                @SearchResults.InsolvenceHead(small: Model.SmallRender)
             </thead>
             <tbody>
                 @foreach (var hit in Model.Result.Hits)
                 {
-                    @SearchResults.InsolvenceRow(User, Request, hit.Source, Model.Q)
+                    @SearchResults.InsolvenceRow(User, Request, hit.Source, Model.Q, small:Model.SmallRender)
                 }
             </tbody>
         </table>

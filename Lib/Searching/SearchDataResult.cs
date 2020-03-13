@@ -81,6 +81,8 @@ namespace HlidacStatu.Lib.Searching
                 return this.Q;
         }
 
+        public bool SmallRender { get; set; } = false;
+
         public SearchDataResult()
                 : this(emptyOrderList)
         { }

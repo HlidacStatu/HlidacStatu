@@ -203,7 +203,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, 5, order);
+                        res.VZ = VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, 1, pageSize, order);
                     }
                     catch (System.Exception e)
                     {

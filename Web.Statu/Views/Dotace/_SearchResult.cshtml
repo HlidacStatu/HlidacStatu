@@ -46,9 +46,17 @@ else
     {
         <hr />
 
+        <script>
+            function changeOrderDotace(sel) {
+                var value = sel.value;
+                window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.DotaceSearchResult.GetSearchUrl(
+                                           this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
+                                           ,Model.Q))&order=' + value;
+            }
+        </script>
 
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 col-sm-6">
                 <h3>
                     Nalezené dotace
                     <small>
@@ -63,11 +71,9 @@ else
                     </div>
                 }
             </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 pull-right">
-                @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control small pull-right", @id = "orderList", @onchange = "changeOrder(this);" })
+            <div class="col-xs-12 col-sm-6">
+                <br />
+                @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control small pull-right", @id = "orderListVZ", @style = "width:60%;max-width:300px", @onchange = "changeOrderDotace(this);" })
             </div>
         </div>
 
@@ -110,13 +116,13 @@ else
                 @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
                 {
                     <li class="@firstPageClass">
-                        @Html.ActionLink("« Předchozí","hledat","dotace", Model.ToRouteValues(page - 1),null)
+                        @Html.ActionLink("« Předchozí", "hledat", "dotace", Model.ToRouteValues(page - 1), null)
                     </li>
                 }
                 @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
                 {
                     <li class="@lastPageClass">
-                        @Html.ActionLink("Následující »","hledat","dotace", Model.ToRouteValues(page + 1),null)
+                        @Html.ActionLink("Následující »", "hledat", "dotace", Model.ToRouteValues(page + 1), null)
                     </li>
                 }
             </ul>

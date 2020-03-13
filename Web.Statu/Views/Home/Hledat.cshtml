@@ -212,8 +212,8 @@ else if (Model.HasResults == false)
     //debug
     //Model.Smlouvy = null;
     //Model.VZ = null;
-    //Model.Dotace = null;
     //Model.Insolvence = null;
+    //Model.Dotace = null;
 
     //main content based on number of results
 
@@ -276,8 +276,7 @@ else if (Model.HasResults == false)
 
     if (paorder.Count < 2)
     {
-        paorder.Insert(1, "osoby");
-        //paorder.Add("osoby");
+        paorder.Add("osoby");
     }
     else
     {
@@ -294,7 +293,6 @@ else if (Model.HasResults == false)
     <div class="col-xs-12">
         <b>Připravili jsme pro vás nové hledání.</b>
         @Util.FeedbackModal("Jak se vám líbí/nelíbí? Napište nám", null, "btn btn-link", null, new string[] { "Libi", "Líbí", "Nelibi", "Nelíbí" }, false)
-        <span style="padding-left" 10px;" class="pull-right"><a href="/hledat?@(Request.QueryString)&old=1">Původní verze hledání zde</a></span>
     </div>
     <div class="col-xs-12 col-sm-8"><p>V této části <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-down"></i> jsou hlavní výsledky.</p></div>
     <div class="col-xs-12 col-sm-4 text-right"><p>Zde <i class="fas fa-arrow-down"></i> výsledky z dalších částí Hlídače</p></div>
@@ -646,6 +644,7 @@ else if (Model.HasResults == false)
             )
             .Take(numOfVZ);
     }
+    Model.VZ.SmallRender = true;
     Model.VZ.ShowWatchdog = false;
 
 
@@ -678,6 +677,7 @@ else if (Model.HasResults == false)
         return;
     }
     Model.Dotace.ShowWatchdog = false;
+    Model.Dotace.SmallRender = true;
     <div class="row" id="dotace">
         <div class="col-xs-12">
             @Html.Partial("../Dotace/_SearchResult", Model.Dotace)
@@ -701,9 +701,10 @@ else if (Model.HasResults == false)
                 <a href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </span>
         </h4>
-        return;
+    return;
     }
     Model.Insolvence.ShowWatchdog = false;
+    Model.Insolvence.SmallRender = true;
     <div class="row" id="insolvence">
         <div class="col-xs-12">
 
@@ -844,6 +845,7 @@ else if (Model.HasResults == false)
     //        Smlouva.Search.OrderResult.Relevance,
     //        anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
     //        );
+    Model.Smlouvy.SmallRender = true;
     Model.Smlouvy.ShowWatchdog = false;
     <div id="smlouvy" class="row">
         <div class="col-xs-12">

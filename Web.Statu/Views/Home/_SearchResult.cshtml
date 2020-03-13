@@ -106,14 +106,14 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 <div style="height:32px;"></div>
 <table class="table table-hover">
     <thead>
-        @SearchResults.SmlouvyHead(this.User)
+        @SearchResults.SmlouvyHead(this.User, small:Model.SmallRender)
     </thead>
     <tbody>
         @foreach (var item in Model?.Result.Hits)
         {
             var rec = item.Source;
 
-            @SearchResults.SmlouvyRow(this.User, rec, Model)
+            @SearchResults.SmlouvyRow(this.User, rec, Model,small: Model.SmallRender)
 
             if (Model.Chyby)
             {

@@ -31,12 +31,6 @@
 
 
 <script>
-    function changeOrderVZ(sel) {
-        var value = sel.value;
-        window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.GetSearchUrl(
-                                   this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
-                                   ,Model.Q, Zahajeny: Model.Zahajeny, oblast: Model.Oblast))&order=' + value;
-    }
     function changeZahajeny(sel) {
         var value = sel.checked;
         window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.GetSearchUrl(
@@ -59,13 +53,13 @@
             </span>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-4" style="padding-top:8px;">
+    <div class="col-xs-12 col-sm-6" style="padding-top:8px;">
         <div class="form-group">
             @Html.CheckBoxFor(m => m.Zahajeny) @*, new{@onchange = "changeZahajeny(this);"}*@
             @Html.LabelFor(m => m.Zahajeny, "pouze neuzavřené tendry")
         </div>
     </div>
-    <div class="col-xs-12 col-sm-4" style="padding-top:8px;">
+    <div class="col-xs-12 col-sm-6" style="padding-top:8px;">
         <div class="form-group">
             @Html.LabelFor(m => m.Oblast, "Omezit na ")
             @*@Html.DropDownList("Oblast", oblasti, new { @class = "form-control", style = "width:150px" })*@
@@ -77,12 +71,6 @@
                )
                 
             </select>
-        </div>
-    </div>
-    <div class="col-xs-12 col-sm-4 pull-right" style="padding-top:5px;">
-        <div class="form-group pull-right" style="padding-left:10px;">
-            @Html.LabelFor(m => m.Order, "Řadit výsledky")
-            @Html.DropDownListFor(m => m.Order, Model.OrderList, new { @class = "form-control", @id = "orderListVZ", @onchange = "changeOrderVZ(this);" })
         </div>
     </div>
 </form>

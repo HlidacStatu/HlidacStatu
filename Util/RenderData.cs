@@ -150,14 +150,7 @@ namespace HlidacStatu.Util
         {
 
             string s = string.Empty;
-            if (number == 0)
-            {
-                if (valueIfZero.Contains("{0}"))
-                    return string.Format(valueIfZero, mena);
-                else
-                    return valueIfZero;
-            }
-            else if (shortFormat)
+            if (shortFormat)
             {
                 return ShortNicePrice(number, valueIfZero, mena, html, showDecimal);
             }
@@ -338,7 +331,8 @@ namespace HlidacStatu.Util
 
             if (html)
             {
-                return String.Format("<span title=\"{2:### ### ### ### ### ##0} {1}\">{0}</span>", ret.Replace(" ", "&nbsp;"), mena, number);
+                return String.Format("<span title=\"{2:### ### ### ### ### ##0} {1}\">{0}</span>", 
+                    Devmasters.Core.TextUtil.ReplaceDuplicates(ret,' ').Replace(" ", "&nbsp;"), mena, number);
 
             }
             return ret;

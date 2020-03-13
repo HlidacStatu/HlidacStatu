@@ -339,7 +339,7 @@
             {
                 tabs.Add($"Účast ve veřejných zakázkách ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(resVZ.Total)})");
                 results.Add(
-                    SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, true).ToHtmlString()
+                    SearchResults.VZTableResult(this.User, this.Request, 5, resVZ, small:true).ToHtmlString()
                 );
             }
 
