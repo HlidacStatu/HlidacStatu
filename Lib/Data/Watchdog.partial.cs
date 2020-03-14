@@ -169,14 +169,6 @@ namespace HlidacStatu.Lib.Data
 
             var res = new List<Lib.Watchdogs.IWatchdogProcessor>();
 
-            if (this.dataType == WatchDog.AllDbDataType)
-            {                                                     //add all datasets
-                foreach (var ds in External.DataSets.DataSetDB.ProductionDataSets.Get())
-                {
-                    res.Add(new Lib.Data.External.DataSets.DataSet.WatchdogProcessor(this, ds));
-                }
-
-            }
 
             if (this.dataType == typeof(Smlouva).Name || this.dataType == WatchDog.AllDbDataType)
                 res.Add(new Smlouva.WatchdogProcessor(this));
@@ -186,6 +178,15 @@ namespace HlidacStatu.Lib.Data
                 res.Add(new Insolvence.Rizeni.WatchdogProcessor(this));
             if (this.dataType.StartsWith(typeof(Lib.Data.External.DataSets.DataSet).Name))
                 res.Add(new Lib.Data.External.DataSets.DataSet.WatchdogProcessor(this));
+
+            if (this.dataType == WatchDog.AllDbDataType)
+            {                                                     //add all datasets
+                foreach (var ds in External.DataSets.DataSetDB.ProductionDataSets.Get())
+                {
+                    res.Add(new Lib.Data.External.DataSets.DataSet.WatchdogProcessor(this, ds));
+                }
+
+            }
             //throw new System.NotImplementedException();
             return res;
         }

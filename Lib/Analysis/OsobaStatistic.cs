@@ -90,7 +90,7 @@ namespace HlidacStatu.Lib.Analysis
         {
             if (_statPerYearSoukrome == null)
             {
-                _statPerYearSoukrome = new BasicDataPerYear(this.SoukromeFirmy.Select(m => m.Value.BasicStatPerYear));
+                _statPerYearSoukrome = new BasicDataPerYear(this.SoukromeFirmy.Select(m => m.Value.BasicStatPerYear).Where(m=>m != null));
             }
             return _statPerYearSoukrome;
         }

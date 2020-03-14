@@ -16,6 +16,23 @@ namespace HlidacStatu.Util
             AllLowerCap,
             NoChange,
         }
+        public static string GetIntervalString(DateTime from, DateTime to)
+        {
+            string sFrom = "";
+            string sTo = "";
+            if (from == from.Date)
+                sFrom = from.ToString("d.M.");
+            else
+                sFrom = from.ToString("d.M. HH:mm");
+
+            if (to == to.Date)
+                sTo = to.ToString("d.M.");
+            else
+                sTo = to.ToString("d.M. HH:mm");
+
+
+            return string.Format("od {0} do {1} ", sFrom, sTo);
+        }
 
         public static string Random(params string[] texts)
         {

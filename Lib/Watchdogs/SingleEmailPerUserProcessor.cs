@@ -8,7 +8,7 @@ using static HlidacStatu.Lib.Data.WatchDog;
 
 namespace HlidacStatu.Lib.Watchdogs
 {
-    public class SingleEmailPerUserProcessor
+    public partial class SingleEmailPerUserProcessor
     {
 
         public static void Send(IEnumerable<WatchDog> watchdogs, bool force = false, DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null)
@@ -99,30 +99,17 @@ namespace HlidacStatu.Lib.Watchdogs
                     if (wdParts.Count() > 0)
                     {
                         //add watchdog header
-                        RenderedContent wdtitle = new RenderedContent();
-                        wdtitle.ContentHtml = $@"
-<table style='width:100%;border:2px solid #003688;font-family: Cabin, sans-serif;'><tr><td style='background:#003688;color:white'>
-<h3 style='text-align: center;'>{wd1.Name}</h3>
-</td></tr>
-<tr><td style='font-size:12px;'>
-";
-                        wdtitle.ContentText = $">>> {wd1.Name}  <<<\n{new string('=',wd1.Name.Length+8)}";
-
-                        parts.Add(wdtitle);
+                        parts.Add(Template.TopHeader(wd1.Name, Util.RenderData.GetIntervalString(fromDate.Value, toDate.Value)));
 
                         foreach (var wdp in wdParts)
                         {
                             //subHead
-                            parts.Add(new RenderedContent()
-                            {
-                                ContentHtml = $"<h3>{wdp.ContentTitle}</h3><hr/>",
-                                ContentText = $"{wdp.ContentTitle}\n{new string('-',wdp.ContentTitle.Length+1)}"
-                            });
-                            parts.Add(wdp);
+                            parts.Add(Template.DataContent(wdp));
+                            parts.Add(Template.Margin(50));
                         }
 
                         RenderedContent wdfooter = new RenderedContent();
-                        wdfooter.ContentHtml = "</td></tr></table><div style='padding-top:20px'></div>";
+                        wdfooter.ContentHtml = "";
                         wdfooter.ContentText = "\n\n";
                         parts.Add(wdfooter);
 
@@ -139,6 +126,8 @@ namespace HlidacStatu.Lib.Watchdogs
                 {
                     //send it
                     var content = RenderedContent.Merge(parts);
+                    var template = System.IO.File.ReadAllText(@"c:\!\mailbody.html");
+                    content.ContentHtml = template.Replace("#BODY#", content.ContentHtml);
                     if (Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content))
                     {
                         if (saveWatchdogStatus)

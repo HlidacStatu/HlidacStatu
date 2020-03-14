@@ -117,6 +117,21 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 //var renderH = new Lib.Render.ScribanT(HtmlTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentHtml = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet,resultToRender );
+                if (data.Total > dataToRender.Count())
+                {
+                    var s = "<table><tr><td height='30' style='line-height: 50px; min-height: 50px;'></td></tr></table>"
+                        + @"<table border='0' cellpadding='4' width='100%'><tr><td>" 
+                        + @"<a href='" + this.DataSet.DatasetSearchUrl(data.SearchUrl, false) + "'>" 
+                        + Devmasters.Core.Lang.Plural.Get((int)data.Total - dataToRender.Count(), 
+                                "Další nalezená záznam",
+                                "Další {0} nalezené záznamy",
+                                "Dalších {0} nalezených záznamů"
+                            )
+                       + @"</a>.</td></tr></table>"
+                       + "<table><tr><td height='30' style='line-height: 50px; min-height: 50px;'></td></tr></table>";
+                    ret.ContentHtml += s;
+                }
+
                 //var renderT = new Lib.Render.ScribanT(TextTemplate.Replace("#LIMIT#", numOfListed.ToString()));
                 ret.ContentText = " ";
                 ret.ContentTitle = this.DataSet.Registration().name;

@@ -66,7 +66,7 @@ namespace HlidacStatu.Lib.Data.VZ
             static string HtmlTemplate = @"
 
 
-    <table border='1' cellpadding='5'>
+    <table border='0' cellpadding='4' width='100%'>
         <thead>
             <tr>
                 <th>Zakázka</th>
@@ -130,14 +130,16 @@ namespace HlidacStatu.Lib.Data.VZ
             </tr>
         {{ end }}
 
-        {{ if (model.Items.size > 5) }}
+        {{ if (model.Total > 5) }}
 
-            <tr><td colspan='4' style='font-size:80%;border-bottom:1px #ddd solid'>    
-                <hr/>
-                <a href='https://www.hlidacstatu.cz/verejnezakazky/hledat?Q={{ html.url_encode Model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
-                    {{ fn_Pluralize (model.Items.size - 5) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} 
+            <tr><td colspan='7' height='30' style='line-height: 30px; min-height: 30px;'></td></tr>
+            <tr><td colspan='7' style='font-size:80%;border-bottom:1px #ddd solid'>    
+
+                <a href='https://www.hlidacstatu.cz/verejnezakazky/hledat?Q={{ html.url_encode model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
+                    {{ fn_Pluralize (model.Total - 5) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} 
                 </a>.
             </td></tr>
+            <tr><td colspan='7' height='30' style='line-height: 30px; min-height: 30px;'></td></tr>
         {{ end }}
       
     </tbody>
@@ -158,8 +160,8 @@ Více: https://www.hlidacstatu.cz/VerejneZakazky/Zakazka/{{ item.Id }}?utm_sourc
 ======================================================
 {{ end }}
 
-{{ if (model.Items.size > #LIMIT#) }}
-{{ fn_Pluralize (model.Items.size - #LIMIT#) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} na https://www.hlidacstatu.cz/verejnezakazky/hledat?Q=@(Raw(System.Web.HttpUtility.UrlEncode(Model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
+{{ if (model.Total > #LIMIT#) }}
+{{ fn_Pluralize (model.Total - #LIMIT#) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} na https://www.hlidacstatu.cz/verejnezakazky/hledat?Q=@(Raw(System.Web.HttpUtility.UrlEncode(model.SpecificQuery)))&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
 {{ end }}
 
 ";
