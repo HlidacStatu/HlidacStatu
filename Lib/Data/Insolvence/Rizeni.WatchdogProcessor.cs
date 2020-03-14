@@ -73,7 +73,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 return ret;
             }
 
-            static string HtmlTemplate = @"
+             public static string HtmlTemplate = @"
 {{func subjHtml 
    t =  $0 
    dn = ''
@@ -84,7 +84,6 @@ namespace HlidacStatu.Lib.Data.Insolvence
    if ((fn_IsNullOrEmpty t.ICO )==false)
    }}
      <a href='/subjekt/{{t.ICO}}'>{{ fn_ShortenText t.PlneJmeno  30 }}</a> IČ:{{ t.ICO }}
-     {{ ret }}
    {{ else if (fn_IsNullOrEmpty t.OsobaId) == false }}
       <a href='/osoba/{{t.OsobaId}}'>{{fn_ShortenText t.PlneJmeno  30 }}</a>{{dn}}
    {{ else }}
@@ -110,35 +109,35 @@ namespace HlidacStatu.Lib.Data.Insolvence
             <tr>
                 <td><a href='https://www.hlidacstatu.cz/Insolvence/Rizeni/{{ string.replace (string.replace item.SpisovaZnacka ' '  '_') '/'  '-' }}'>Řízení</a></td>
                 <td>
-                    {{ if (item.Dluznici != null && item.Dluznici.size > 0) }}
+                    {{ if (item.Dluznici  && item.Dluznici.size > 0) }}
                     
                         {{ subjHtml item.Dluznici[0] }}
                         {{if (item.Dluznici.size > 1) }}
                         
-                            <div>{{ fn_Pluralize (item.Dluznici.size - 1) 'a jeden další dlužník'  'a další {0} dlužníci'  'a dalších {0} dlužníků' }}</div>
+                            <div>{{ fn_Pluralize (item.Dluznici.size - 1) '' 'a jeden další dlužník'  'a další {0} dlužníci'  'a dalších {0} dlužníků' }}</div>
                         {{end}}
                     {{end }}
                 </td>
                 <td>
-                    {{ if (item.Veritele != null && item.Veritele.size > 0) }}
+                    {{ if (item.Veritele  && item.Veritele.size > 0) }}
 
                         {{ subjHtml item.Veritele[0] }}
                         {{ if (item.Veritele.size > 1) }}
                         
-                            <div>{{ fn_Pluralize (item.Veritele.size - 1) 'a jeden další věřitel'  'a další {0} věřitelé'  'a dalších {0} věřitelů' }}</div>
+                            <div>{{ fn_Pluralize (item.Veritele.size - 1) '' 'a jeden další věřitel'  'a další {0} věřitelé'  'a dalších {0} věřitelů' }}</div>
                         {{end }}
                     {{end}}
                 </td>
                 <td>
-                    {{ if (item.PosledniZmena != null)
-                         fn_FormatDate item.PosledniZmena 'yyyy'
+                    {{ if (item.PosledniZmena )
+                         fn_FormatDate item.PosledniZmena 'd.M.yyyy'
                          else 
                          'neuvedena'
                          end }}
                 </td>
                 <td>
-                    {{ if (item.DatumZalozeni != null)
-                        fn_FormatDate item.DatumZalozeni 'yyyy'
+                    {{ if (item.DatumZalozeni )
+                        fn_FormatDate item.DatumZalozeni 'd.M.yyyy'
                      else 
                         'neuvedena'
 
@@ -165,10 +164,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
             static string TextTemplate = @"
 {{ for item in model.Items limit:#LIMIT# }}
 ------------------------------------------------------
-Dlužníci:{{ if (item.Dluznici != null && item.Dluznici.size > 0)}}{{item.Dluznici[0].PlneJmeno}}{{else}} neuveden{{end }}
-Věřitelé:{{ if (item.Veritele != null && item.Veritele.size > 0)}}{{item.Veritele[0].PlneJmeno}}{{else}}neuveden{{end }}
-Poslední změna: {{ fn_FormatDate item.PosledniZmena 'yyyy' }}
-Datum vzniku insolvence: {{ fn_FormatDate item.DatumZalozeni 'yyyy' }}
+Dlužníci:{{ if (item.Dluznici  && item.Dluznici.size > 0)}}{{item.Dluznici[0].PlneJmeno}}{{else}} neuveden{{end }}
+Věřitelé:{{ if (item.Veritele && item.Veritele.size > 0)}}{{item.Veritele[0].PlneJmeno}}{{else}}neuveden{{end }}
+Poslední změna: {{ fn_FormatDate item.PosledniZmena 'd.M.yyyy' }}
+Datum vzniku insolvence: {{ fn_FormatDate item.DatumZalozeni 'd.M.yyyy' }}
 Stav řízení: {{ item.Stav }}
 Více: https://www.hlidacstatu.cz/Insolvence/Rizeni/{{ string.replace (string.replace item.SpisovaZnacka ' '  '_') '/'  '-' }}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail
 {{end }}

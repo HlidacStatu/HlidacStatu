@@ -11,7 +11,9 @@ namespace HlidacStatu.Lib.Watchdogs
     public partial class SingleEmailPerUserProcessor
     {
 
-        public static void Send(IEnumerable<WatchDog> watchdogs, bool force = false, DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null)
+        public static void Send(IEnumerable<WatchDog> watchdogs,
+            bool force = false, string[] specificContacts = null,
+            DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null)
         {
             bool saveWatchdogStatus =
                 force == false
@@ -88,30 +90,24 @@ namespace HlidacStatu.Lib.Watchdogs
                     if (toDate.HasValue == false)
                         toDate = Tools.RoundWatchdogTime(wd1.Period, DateTime.Now);
 
-
                     List<RenderedContent> wdParts = new List<RenderedContent>();
                     foreach (var wdp in wdProcessorsForWD1)
                     {
                         var results = wdp.GetResults(fromDate, toDate, 30);
                         if (results.Total > 0)
-                            wdParts.Add(wdp.RenderResults(results, 5));
+                        {
+                            RenderedContent rres = wdp.RenderResults(results, 5);
+                            wdParts.Add(Template.DataContent(results.Total, rres));
+                            wdParts.Add(Template.Margin(50));
+
+                        }
                     }
                     if (wdParts.Count() > 0)
                     {
                         //add watchdog header
                         parts.Add(Template.TopHeader(wd1.Name, Util.RenderData.GetIntervalString(fromDate.Value, toDate.Value)));
+                        parts.AddRange(wdParts);
 
-                        foreach (var wdp in wdParts)
-                        {
-                            //subHead
-                            parts.Add(Template.DataContent(wdp));
-                            parts.Add(Template.Margin(50));
-                        }
-
-                        RenderedContent wdfooter = new RenderedContent();
-                        wdfooter.ContentHtml = "";
-                        wdfooter.ContentText = "\n\n";
-                        parts.Add(wdfooter);
 
                     }
 
@@ -124,11 +120,25 @@ namespace HlidacStatu.Lib.Watchdogs
 
                 if (parts.Count > 0)
                 {
+                    parts.Add(Template.MailFooter());
                     //send it
                     var content = RenderedContent.Merge(parts);
                     var template = System.IO.File.ReadAllText(@"c:\!\mailbody.html");
                     content.ContentHtml = template.Replace("#BODY#", content.ContentHtml);
-                    if (Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content))
+
+                    bool sent = false;
+                    if (specificContacts != null && specificContacts.Length > 0)
+                    {
+                        foreach (var email in specificContacts)
+                        {
+                            Email.SendEmail(email, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content);
+                        }
+                    }
+                    else
+                    {
+                        sent = Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content);
+                    }
+                    if (sent)
                     {
                         if (saveWatchdogStatus)
                         {

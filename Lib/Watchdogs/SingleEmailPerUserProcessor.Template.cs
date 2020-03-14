@@ -34,21 +34,22 @@ namespace HlidacStatu.Lib.Watchdogs
             static string headerTemplateHtml = @"
 <table style='width:100%;border:2px solid #3669AA;font-family: Cabin, sans-serif;' cellspacing=0 cellpadding=0 border=0>
 <tr><td style='background:#3669AA;color:white;padding-top:20px;'>
-<h4 style='text-align: center;'>Data: <b>{0}</b></h4>
+<h4 style='text-align: center;'>Data: <b>{0} ({1})</b> </h4>
 </td></tr>
 <tr><td style='background:#EFF4FB;color:black;padding-top:20px;' bgcolor='#EFF4FB'>
-{1}
+{2}
 </td></tr>
 </table>
 ";
-            static string headerTemplateText = "{0}{1}\n{2}";
+            static string headerTemplateText = "{0} ({1})\n{2}\n{3}";
 
-            public static RenderedContent DataContent(RenderedContent data)
+            public static RenderedContent DataContent(long total, RenderedContent data)
             {
+                string stotal = Devmasters.Core.Lang.Plural.Get((int)total, "jeden záznam", "{0} články", "{0} článků");
                 return new RenderedContent()
                 {
-                    ContentHtml = string.Format(headerTemplateHtml, data.ContentTitle, FixTable(data).ContentHtml),
-                    ContentText = string.Format(headerTemplateText, data.ContentTitle, new string('=', data.ContentText.Length + 3), data.ContentText)
+                    ContentHtml = string.Format(headerTemplateHtml, data.ContentTitle, stotal, FixTable(data).ContentHtml),
+                    ContentText = string.Format(headerTemplateText, data.ContentTitle, stotal, new string('=', data.ContentText.Length + 3), data.ContentText)
                     
                 };
             }
@@ -72,6 +73,40 @@ namespace HlidacStatu.Lib.Watchdogs
                 return cont;
             }
 
+            public static RenderedContent MailFooter()
+            {
+                return new RenderedContent() { 
+                ContentHtml = DefaultEmailFooterHtml,
+                ContentText = DefaultEmailFooterText
+                };
+            }
+
+            public static string DefaultEmailFooterHtml = @"<p style=""font-size:18px;""><b>Podpořte provoz Hlídače</b></p>
+<p align=""left"">👉 <b>Kontrolujeme politiky a úředníky</b>, zda s našimi penězi zacházejí správně.
+<br>👉 <b>Stali jsme se důležitým zdroje informací pro novináře</b>.
+<br>👉 <b>Pomáháme státu zavádět moderní e-government</b>.
+<br>👉 <b>Zvyšujeme transparentnost českého státu.</b>
+</p>
+
+<p><a href=""https://www.darujme.cz/projekt/1200384"">Podpořte nás i malým příspěvkem. Díky!</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><i>&#8608; Hlídáme je, protože si to zaslouží</i></p>";
+        public static string DefaultEmailFooterText = @"
+
+PODPOŘTE PROVOZ HLÍDAČE
+
+👉 Kontrolujeme politiky a úředníky, zda s našimi penězi zacházejí správně.
+👉 Stali jsme se důležitým zdroje informací pro novináře.
+👉 Pomáháme státu zavádět moderní e-government.
+👉 Zvyšujeme transparentnost českého státu.
+
+
+Podpořte nás i malým příspěvkem na https://www.darujme.cz/projekt/1200384. Děkujeme!
+
+
+→ Hlídáme je, protože si to zaslouží
+";
         }
     }
 }

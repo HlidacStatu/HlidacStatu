@@ -75,7 +75,7 @@ namespace HlidacStatu.Lib.Data
         <tbody>
         {{ for item in model.Items limit:#LIMIT# }}
                 <tr>
-                    <td><a href='@Raw('https://www.hlidacstatu.cz/Detail/' + item.Id + '?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail')'>Detail</a></td>
+                    <td><a href='https://www.hlidacstatu.cz/Detail/{{item.Id}}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail'>{{item.Id}}</a></td>
                     <td>{{item.Platce.nazev}}</td>
                     <td>{{for pp in item.Prijemce; ((fn_ShortenText pp.nazev 40) + ', '); end }}</td>
                     <td>{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK html: true}}</td>
