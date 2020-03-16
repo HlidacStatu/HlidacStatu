@@ -239,13 +239,13 @@ namespace HlidacStatu.Lib.Render
                     return value.ToString();
             }
 
-            public static string fn_FormatPrice(dynamic value, string mena = null, bool html = true)
+            public static string fn_FormatPrice(dynamic value, string mena = null, bool html = true, bool shortFormat = false)
             {
                 mena = mena ?? "Kč";
                 decimal? val = HlidacStatu.Util.ParseTools.ToDecimal(value.ToString());
                 if (val.HasValue)
                 {
-                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena,html: html);
+                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena,html: html, shortFormat: shortFormat);
                 }
                 return "";
             }
