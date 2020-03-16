@@ -23,7 +23,7 @@ namespace HlidacStatu.Lib.Watchdogs
             Dictionary<string, WatchDog[]> groupedByUserNoSpecContact = watchdogs
                 .Where(w => w != null)
                 .Where(m => string.IsNullOrEmpty(m.SpecificContact))
-                .GroupBy(k => k.User().Id,
+                .GroupBy(k => k.UnconfirmedUser().Id,
                         v => v,
                         (k, v) => new { key = k, val = v.ToArray() }
                         )
@@ -93,13 +93,21 @@ namespace HlidacStatu.Lib.Watchdogs
                     List<RenderedContent> wdParts = new List<RenderedContent>();
                     foreach (var wdp in wdProcessorsForWD1)
                     {
-                        var results = wdp.GetResults(fromDate, toDate, 30);
-                        if (results.Total > 0)
+                        try
                         {
-                            RenderedContent rres = wdp.RenderResults(results, 5);
-                            wdParts.Add(Template.DataContent(results.Total, rres));
-                            wdParts.Add(Template.Margin(50));
 
+                            var results = wdp.GetResults(fromDate, toDate, 30);
+                            if (results.Total > 0)
+                            {
+                                RenderedContent rres = wdp.RenderResults(results, 5);
+                                wdParts.Add(Template.DataContent(results.Total, rres));
+                                wdParts.Add(Template.Margin(50));
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Util.Consts.Logger.Error("SingleEmailPerUserProcessor GetResults/RenderResults error", ex);
                         }
                     }
                     if (wdParts.Count() > 0)
@@ -120,11 +128,17 @@ namespace HlidacStatu.Lib.Watchdogs
 
                 if (parts.Count > 0)
                 {
-                    parts.Add(Template.MailFooter());
                     //send it
                     var content = RenderedContent.Merge(parts);
-                    var template = System.IO.File.ReadAllText(@"c:\!\mailbody.html");
-                    content.ContentHtml = template.Replace("#BODY#", content.ContentHtml);
+
+                    content.ContentHtml = Template.EmailBodyTemplateHtml
+                        .Replace("#BODY#", content.ContentHtml)
+                        .Replace("#FOOTERMSG#", Template.DefaultEmailFooterHtml)
+                        ;
+                    content.ContentText = null;
+                    //Template.EmailBodyTemplateText
+                    //.Replace("#BODY#", content.ContentText)
+                    //.Replace("#FOOTERMSG#", Template.DefaultEmailFooterText);
 
                     bool sent = false;
                     if (specificContacts != null && specificContacts.Length > 0)
