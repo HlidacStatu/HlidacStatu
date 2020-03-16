@@ -421,6 +421,7 @@
     <Compile Include="Controllers\WebyController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Framework\ApiAuth.cs" />
+    <Compile Include="Framework\ApiHelpers.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
     <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />

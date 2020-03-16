@@ -20,11 +20,25 @@ namespace HlidacStatu.Web.Attributes
         {
             var controller = (GenericAuthController)filterContext.Controller;
 
+            string datastring = null;
+            if(filterContext.HttpContext.Request.ContentLength > 0)
+            {
+                datastring = Framework.ApiHelpers.ReadRequestBody(filterContext.HttpContext.Request);
+            }
+
+            var parameters = filterContext.ActionParameters
+                            .Select(ap => new Framework.ApiCall.CallParameter(ap.Key, ap.Value?.ToString()))
+                            .ToList();
+
+            if (!string.IsNullOrWhiteSpace(datastring))
+            {
+                
+                parameters.Add(new Framework.ApiCall.CallParameter("requestBody", datastring));
+            }
+
             if (!Framework.ApiAuth.IsApiAuth(controller,
                 validRole: Roles,
-                parameters: filterContext.ActionParameters
-                            .Select(ap => new Framework.ApiCall.CallParameter(ap.Key, ap.Value?.ToString()))
-                            .ToArray())
+                parameters: parameters)
                 .Authentificated)
             {
                 filterContext.Result = new HttpUnauthorizedResult();

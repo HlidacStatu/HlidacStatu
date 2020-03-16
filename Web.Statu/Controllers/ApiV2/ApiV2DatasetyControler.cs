@@ -6,6 +6,9 @@ using Newtonsoft.Json;
 using HlidacStatu.Web.Models.apiv2;
 using HlidacStatu.Lib.Data.External.DataSets;
 using System;
+using System.Web;
+using System.IO;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -62,21 +65,27 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpPost]
         [AuthorizeAndAudit]
-        public ActionResult Create(Registration registration)
+        public ActionResult Create()
         {
-            if (registration == null)
-            {
-                Response.StatusCode = 400;
-                return Content(new ErrorMessage($"Chybí data.").ToJson(), "application/json");
-            }
+            var data = ApiHelpers.ReadRequestBody(this.Request);
+
             try
             {
-                var res = DataSet.Api.Create(registration, this.User.Identity.Name);
-
+                var reg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
+                var res = DataSet.Api.Create(reg, this.User.Identity.Name);
+                
                 if (res.valid)
-                    return Json(new { datasetId = res.value });
+                    return Content(JsonConvert.SerializeObject(new { datasetId = res.value }), "application/json");
                 else
-                    return Json(res);
+                {
+                    Response.StatusCode = 400;
+                    return Content(new ErrorMessage($"{res.error.description}").ToJson(), "application/json");
+                }
+            }
+            catch (JsonSerializationException jex)
+            {
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"{jex.Message}").ToJson(), "application/json");
             }
             catch (DataSetException dse)
             {
@@ -88,8 +97,63 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+
             }
+
+            
+        }
+
+        [HttpDelete]
+        [AuthorizeAndAudit]
+        public ActionResult Delete(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    Response.StatusCode = 400;
+                    return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
+                }
+
+                id = id.ToLower();
+                var r = DataSetDB.Instance.GetRegistration(id);
+                if (r == null)
+                {
+                    Response.StatusCode = 404;
+                    return Content(new ErrorMessage($"Dataset nenalezen.").ToJson(), "application/json");
+                }
+
+                if (r.createdBy != null && this.User.Identity.Name.ToLower() != r.createdBy?.ToLower())
+                {
+                    Response.StatusCode = 403;
+                    return Content(new ErrorMessage($"Nejste oprávněn mazat tento dataset.").ToJson(), "application/json");
+                }
+
+                var res = DataSetDB.Instance.DeleteRegistration(id, this.User.Identity.Name);
+                return Content(JsonConvert.SerializeObject(new { valid = res }),
+                    "application/json");
+
+            }
+            catch (DataSetException dse)
+            {
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"{dse.APIResponse.error.description}").ToJson(), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+
+            }
+
         }
 
     }
+
+
+
+
+
+    
 }
