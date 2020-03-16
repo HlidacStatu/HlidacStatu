@@ -40,8 +40,8 @@ namespace HlidacStatu.Web.Models
 	{
 		public string Oddil { get; set; }
 		public Dokument[] Dokumenty { get; set; }
-        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> HighlightingData { get; set; } //todo: ES7 check
-    }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> HighlightingData { get; set; }
+	}
 
 	public class SoudViewModel
 	{

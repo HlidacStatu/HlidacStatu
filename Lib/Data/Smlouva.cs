@@ -1163,7 +1163,7 @@ namespace HlidacStatu.Lib.Data
 
                 var res = includePrilohy
                     ? c.Get<Smlouva>(idVerze)
-                    : c.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); //todo: es7 check
+                    : c.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); 
 
 
                 if (res.Found)
@@ -1176,7 +1176,7 @@ namespace HlidacStatu.Lib.Data
 
                         res = includePrilohy
                             ? c1.Get<Smlouva>(idVerze)
-                            : c1.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); //todo: es7 check
+                            : c1.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); 
 
                         if (res.Found)
                             return res.Source;

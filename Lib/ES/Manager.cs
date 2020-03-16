@@ -363,7 +363,7 @@ namespace HlidacStatu.Lib.ES
             idxSt.Settings = set;
 
             var res = client.Indices
-                .Create(client.ConnectionSettings.DefaultIndex, i => i  //todo: es7 check
+                .Create(client.ConnectionSettings.DefaultIndex, i => i  
                     .InitializeUsing(idxSt)
                     .Map(mm => mm
                     .Properties(ps => ps
@@ -427,14 +427,14 @@ namespace HlidacStatu.Lib.ES
                     break;
                 case IndexType.Insolvence:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Insolvence.Rizeni>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Dotace:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
                        );
@@ -442,28 +442,28 @@ namespace HlidacStatu.Lib.ES
 
                 case IndexType.Smlouvy:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Smlouva>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Firmy:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.Logs:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Logs.ProfilZadavateleDownload>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.VerejneZakazkyNaProfiluRaw:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i //todo: es7 check
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
                             .InitializeUsing(idxSt)
                             .Map<Lib.Data.External.ProfilZadavatelu.ZakazkaRaw>(map => map
                                     .Properties(p => p

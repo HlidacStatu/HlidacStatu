@@ -53,7 +53,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (client == null)
             {
                 this.client = Lib.ES.Manager.GetESClient(DataSourcesDbName, idxType: ES.Manager.IndexType.DataSource);
-                var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
+                var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); 
                 if (!ret.Exists)
                 {
                     Newtonsoft.Json.Schema.Generation.JSchemaGenerator jsonG = new Newtonsoft.Json.Schema.Generation.JSchemaGenerator();

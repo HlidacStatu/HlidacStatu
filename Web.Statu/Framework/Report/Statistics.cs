@@ -302,7 +302,7 @@ namespace HlidacStatu.Web.Framework.Report
                 else
                     x = "Bez ceny";
                 rds.AddRow(x, data[i].Value - prevVal);
-                prevVal = data[i].Value ?? 0; //todo: es7 check
+                prevVal = data[i].Value ?? 0;
             }
             rds.AddRow("nad " + data[data.Count() - 1].Percentile.ToString("N0") + " Kč", 100 - prevVal);
             return rds;

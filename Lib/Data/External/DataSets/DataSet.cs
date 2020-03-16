@@ -64,7 +64,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
             }
 
-            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); 
             if (ret.Exists)
             {
                 throw new DataSetException(reg.datasetId, ApiResponseStatus.DatasetRegistered);
@@ -180,7 +180,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             this.client = Lib.ES.Manager.GetESClient(datasetId, idxType: ES.Manager.IndexType.DataSource);
 
 
-            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); //todo: es7 check
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); 
             if (ret.Exists == false)
             {
                 if (fireException)
@@ -197,7 +197,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             if (_mapping == null)
             {
-                var getIndexResponse = this.client.Indices.Get(this.client.ConnectionSettings.DefaultIndex); //todo: es7 check
+                var getIndexResponse = this.client.Indices.Get(this.client.ConnectionSettings.DefaultIndex); 
                 IIndexState remote = getIndexResponse.Indices[this.client.ConnectionSettings.DefaultIndex];
                 var dataMapping = remote?.Mappings?.Properties;
                 if (dataMapping == null)
@@ -690,7 +690,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             string updatedData = Newtonsoft.Json.JsonConvert.SerializeObject(objDyn);
             PostData pd = PostData.String(updatedData);
 
-            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); //todo: es7 check
+            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); 
 
             if (tres.Success)
             {
@@ -751,7 +751,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool ItemExists(string Id)
         {
             //GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.DocumentExists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, Id); //todo: es7 check
+            var res = this.client.LowLevel.DocumentExists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, Id); 
             return res.Exists;
         }
         public dynamic GetDataObj(string Id)
@@ -822,13 +822,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
             var res = this.client.Get<object>(req);
             if (res.Found)
-                return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); //todo: es7 check
+                return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); 
             else
             {
                 req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
                 res = this.client.Get<object>(req);
                 if (res.Found)
-                    return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); //todo: es7 check
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); 
                 else
                     return (string)null;
             }
@@ -837,7 +837,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool DeleteData(string Id)
         {
             //DeleteRequest req = new DeleteRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, Id); //todo: es7 check
+            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, Id); 
             return res.Success;
         }
 

@@ -12,10 +12,9 @@ namespace HlidacStatu.Lib.Searching
             highlights = highlights ?? new Dictionary<string, IReadOnlyCollection<string>>();
             foreach (var hlk in highlights.Where(k => k.Key == path))
             {
-                foreach (var txt in hlk.Value) //todo: ES7 check
+                foreach (var txt in hlk.Value) 
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
-
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
                     if (content?.Contains(stxt) == true)
                     {
                         return true;
@@ -38,8 +37,7 @@ namespace HlidacStatu.Lib.Searching
             {
                 foreach (var txt in hlk.Value)
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
-
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
                     hContent = hContent.Replace(stxt, txt); //orig text replace with text with highl tags
 
                 }
@@ -55,8 +53,7 @@ namespace HlidacStatu.Lib.Searching
             {
                 foreach (var txt in hlk.Value)
                 {
-                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", ""); //todo: ES7 check if there is still need for replace (i think that this line is not needed anymore)
-
+                    string stxt = txt.Replace("<highl>", "").Replace("</highl>", "");
                     if (content?.Contains(stxt) == true)
                     {
                         if (result.Length > 0)

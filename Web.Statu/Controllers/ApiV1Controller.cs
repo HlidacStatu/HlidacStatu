@@ -515,7 +515,7 @@ namespace HlidacStatu.Web.Controllers
             string nodes = "-------------------------\n";
             try
             {
-                res = HlidacStatu.Lib.ES.Manager.GetESClient().Cluster.Health(); //todo: es7 check
+                res = HlidacStatu.Lib.ES.Manager.GetESClient().Cluster.Health(); 
                 num = res?.NumberOfNodes ?? 0;
                 status = res?.Status.ToString() ?? "unknown";
 

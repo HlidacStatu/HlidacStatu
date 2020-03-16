@@ -100,8 +100,8 @@ namespace HlidacStatu.Web.Controllers
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 0, true);
                 if (findRizeni.Total > 0)
                 {
-                    highlighting = findRizeni.Result.Hits.First().Highlight;  //todo: ES7 check it
-                }
+                    highlighting = findRizeni.Result.Hits.First().Highlight; 
+				}
             }
 
             return View(new DokumentyViewModel
