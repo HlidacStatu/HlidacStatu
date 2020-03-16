@@ -35,7 +35,7 @@
         var value = sel.checked;
         window.location.href = '@Html.Raw(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.GetSearchUrl(
             this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.AbsolutePath
-            ,Model.Q, (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(Model.Order)), oblast: Model.Oblast))&Zahajeny=' + value;
+            ,Model.Q, Model.Order, oblast: Model.Oblast))&Zahajeny=' + value;
     }
 </script>
 
