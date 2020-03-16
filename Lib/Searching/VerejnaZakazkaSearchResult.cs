@@ -183,7 +183,7 @@ namespace HlidacStatu.Lib.Searching
         }
 
 
-        public static string GetSearchUrl(string pageUrl, string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
+        public static string GetSearchUrl(string pageUrl, string Q, string order = null, int? page = null, bool Zahajeny = false, string oblast = null)
         {
 
             string ret = string.Format("{0}{1}",
@@ -194,16 +194,20 @@ namespace HlidacStatu.Lib.Searching
         }
 
 
-        public static string GetSearchUrlQueryString(string Q, Lib.Data.Smlouva.Search.OrderResult? order = null, int? page = null, bool Zahajeny = false, string oblast = null)
+        public static string GetSearchUrlQueryString(string Q, string order = null, int? page = null, bool Zahajeny = false, string oblast = null)
         {
+            Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult? eorder = null;
+
+            if (Enum.TryParse<VerejnaZakazkaSearchData.VZOrderResult>(order, out var eeorder))
+                eorder = eeorder;
 
             string ret = string.Format("?Q={0}",
                System.Web.HttpUtility.UrlEncode(Q));
             if (Zahajeny)
                 ret = ret + "&Zahajeny=true" ;
 
-            if (order.HasValue)
-                ret = ret + "&order=" + ((int)order.Value).ToString();
+            if (eorder.HasValue)
+                ret = ret + "&order=" + ((int)eorder.Value).ToString();
             if (page.HasValue)
                 ret = ret + "&page=" + page.Value.ToString();
             if (oblast != null)
