@@ -820,7 +820,11 @@ namespace HlidacStatu.Lib.Data
             var parsedName = Lib.Validators.OsobaInText(text);
             if (parsedName != null)
             {
-                return GetPolitikByNameFtx(parsedName.Jmeno + " " + parsedName.Prijmeni);
+                var oo= GetPolitikByNameFtx(parsedName.Jmeno + " " + parsedName.Prijmeni);
+                if (oo.Count() == 0)
+                    return new Osoba[] { parsedName };
+                else
+                    return oo;
             }
             return new Osoba[] { };
         }

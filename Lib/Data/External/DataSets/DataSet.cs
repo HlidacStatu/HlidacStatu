@@ -616,11 +616,19 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             || c.Name.ToLower() == "fullname")
                         .FirstOrDefault()?.Name;
 
+                    var osobaidAttrName = jo.Children()
+                        .Select(c => c as JProperty)
+                        .Where(c => c != null)
+                        .Where(c => c.Name.ToLower() == "osobaid")
+                        .FirstOrDefault()?.Name;
+                    if (osobaidAttrName == null)
+                        osobaidAttrName = "OsobaId";
+
 
                     #region FindOsobaId
                     if (jmenoAttrName != null && prijmeniAttrName != null && narozeniAttrName != null)
                     {
-                        if (string.IsNullOrEmpty(jo["OsobaId"]?.Value<string>())
+                        if (string.IsNullOrEmpty(jo[osobaidAttrName]?.Value<string>())
                             && jo[narozeniAttrName] != null && jo[narozeniAttrName].Value<DateTime?>().HasValue
                             ) //pokud OsobaId je vyplnena, nehledej jinou
                         {
@@ -643,12 +651,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                 osobaInDb.Save();
                             }
                             osobaId = osobaInDb?.NameId;
-                            jo["OsobaId"] = osobaId;
+                            jo[osobaidAttrName] = osobaId;
                         }
                     }
                     else if (celejmenoAttrName != null && narozeniAttrName != null)
                     {
-                        if (string.IsNullOrEmpty(jo["OsobaId"]?.Value<string>())
+                        if (string.IsNullOrEmpty(jo[osobaidAttrName]?.Value<string>())
                             && jo[narozeniAttrName].Value<DateTime?>().HasValue
                             ) //pokud OsobaId je vyplnena, nehledej jinou
                         {
@@ -676,7 +684,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                                 }
                                 osobaId = osobaInDb?.NameId;
                             }
-                            jo["OsobaId"] = osobaId;
+                            jo[osobaidAttrName] = osobaId;
 
                         }
 

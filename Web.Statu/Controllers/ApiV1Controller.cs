@@ -876,15 +876,22 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        public ActionResult OsobaIdFromText(string text)
+        public ActionResult OsobaFromText(string text)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
             {
                 var oo = Lib.Data.Osoba.GetBestOsobaFromText(text);
 
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(
-                    new { osobaid = oo?.NameId ?? null }
-                    ), "application/json");
+                if (oo != null)
+                {
+                    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(
+                        new { osobaid = oo.NameId, jmeno = oo.Jmeno, prijmeni = oo.Prijmeni }
+                        ), "application/json");
+                }
+                else
+                {
+                    return Content("{}", "application/json");
+                }
             }
             else
             {
