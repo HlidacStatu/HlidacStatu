@@ -875,6 +875,23 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+
+        public ActionResult OsobaIdFromText(string text)
+        {
+            if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
+            {
+                var oo = Lib.Data.Osoba.GetBestOsobaFromText(text);
+
+                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(
+                    new { osobaid = oo?.NameId ?? null }
+                    ), "application/json");
+            }
+            else
+            {
+                return View("Error401");
+            }
+        }
+
         public ActionResult OsobaHledat(string jmeno, string prijmeni, string narozen)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)

@@ -84,10 +84,10 @@ namespace HlidacStatu.Lib.Data
                         || ev.Type == (int)OsobaEvent.Types.PolitickaPracovni
                         || ev.Type == (int)OsobaEvent.Types.VolenaFunkce
                     )
-                    .Where(ev => (ev.DatumDo.HasValue && ev.DatumDo > minLookBack) || (ev.DatumDo.HasValue == false && ev.DatumOd > minLookBack.AddYears(-2) ))
+                    .Where(ev => (ev.DatumDo.HasValue && ev.DatumDo > minLookBack) || (ev.DatumDo.HasValue == false && ev.DatumOd > minLookBack.AddYears(-2)))
                     .ToArray();
-                    
-            return ret.Count()>0;
+
+            return ret.Count() > 0;
         }
 
         /// <summary>
@@ -123,10 +123,10 @@ namespace HlidacStatu.Lib.Data
                     break;
                 case StatusOsobyEnum.Politik:
                     bool chgnd = false;
-                    if (IsPolitikBasedOnEvents()==false)
+                    if (IsPolitikBasedOnEvents() == false)
                     {
                         this.Status = (int)StatusOsobyEnum.NeniPolitik;
-                        chgnd=true;
+                        chgnd = true;
                     }
                     if (chgnd && this.IsSponzor() == false && this.MaVztahySeStatem() == false)
                     {
@@ -177,9 +177,10 @@ namespace HlidacStatu.Lib.Data
         public IEnumerable<SocialContact> GetSocialContact()
         {
             return this.Events(oe => oe.Type == (int)OsobaEvent.Types.SocialniSite)
-                .Select(oe => new SocialContact 
-                { 
-                    Service = oe.Organizace, Contact = oe.AddInfo 
+                .Select(oe => new SocialContact
+                {
+                    Service = oe.Organizace,
+                    Contact = oe.AddInfo
                 });
         }
 
@@ -236,8 +237,9 @@ namespace HlidacStatu.Lib.Data
                     and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
                     and osobaid=" + this.InternalId)
                     //convert to osobaEvent
-                    .Select(m=> {
-                        var v = this.VazbyProICO(m.ICO, m.DatumOd,m.DatumDo).FirstOrDefault();
+                    .Select(m =>
+                    {
+                        var v = this.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
                         string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.ShortName()} byl ve statut.orgánu)";
                         if (v != null)
                         {
@@ -255,8 +257,8 @@ namespace HlidacStatu.Lib.Data
                             Title = vazba,
                             Type = m.Type,
                             Zdroj = m.Zdroj
-                            };
-                        }
+                        };
+                    }
                     )
                     .AsQueryable()
                     .Where(predicate)
@@ -696,7 +698,7 @@ namespace HlidacStatu.Lib.Data
                     )
                     .Take(200);
             }
-            
+
         }
 
         public static IEnumerable<Osoba> GetPolitikByNameFtx(string jmeno, int maxNumOfResults = 1500)
@@ -711,7 +713,7 @@ namespace HlidacStatu.Lib.Data
                || (m.JmenoAscii + " " + m.PrijmeniAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                || (m.PrijmeniAscii + " " + m.JmenoAscii)?.StartsWith(nquery, StringComparison.InvariantCultureIgnoreCase) == true
                )
-           .OrderByDescending(m=>m.Status)
+           .OrderByDescending(m => m.Status)
            .ThenBy(m => m.Prijmeni)
            .Take(maxNumOfResults);
             return res;
@@ -801,7 +803,27 @@ namespace HlidacStatu.Lib.Data
             }
             return res;
         }
+        public static Osoba GetBestOsobaFromText(string text)
+        {
+            var osoby = GetOsobyFromText(text);
+            if (osoby.Count() == 0)
+                return null;
 
+            if (osoby.Count() == 1)
+                return osoby.First();
+
+
+            return osoby.OrderByDescending(o => o.Events().Count()).First();
+        }
+        public static IEnumerable<Osoba> GetOsobyFromText(string text)
+        {
+            var parsedName = Lib.Validators.OsobaInText(text);
+            if (parsedName != null)
+            {
+                return GetPolitikByNameFtx(parsedName.Jmeno + " " + parsedName.Prijmeni);
+            }
+            return new Osoba[] { };
+        }
 
         public static Osoba GetByNameAscii(string jmeno, string prijmeni, DateTime narozeni)
         {
@@ -946,7 +968,7 @@ namespace HlidacStatu.Lib.Data
         {
             if (string.IsNullOrWhiteSpace(this.JmenoAscii) || string.IsNullOrWhiteSpace(this.PrijmeniAscii))
                 return "";
-            if (!char.IsLetter(this.JmenoAscii[0])|| !char.IsLetter(this.PrijmeniAscii[0])) 
+            if (!char.IsLetter(this.JmenoAscii[0]) || !char.IsLetter(this.PrijmeniAscii[0]))
                 return "";
 
             string basic = Devmasters.Core.TextUtil.ShortenText(this.JmenoAscii, 23) + "-" + Devmasters.Core.TextUtil.ShortenText(this.PrijmeniAscii, 23).Trim();
@@ -1184,7 +1206,7 @@ namespace HlidacStatu.Lib.Data
 
                 var osobaOriginal = osobaToUpdate.ShallowCopy();
 
-                if( osobaToUpdate != null)
+                if (osobaToUpdate != null)
                 {
                     osobaToUpdate.Jmeno = osoba.Jmeno;
                     osobaToUpdate.Prijmeni = osoba.Prijmeni;
@@ -1335,7 +1357,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         if (ostat.BasicStatPerYear[rok].Pocet > 0)
                         {
-                            string ss="";
+                            string ss = "";
                             if (stat.BasicStatPerYear[rok].CelkemCena == 0)
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
                                     + $" zakázky v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
@@ -1357,8 +1379,8 @@ namespace HlidacStatu.Lib.Data
                                 Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"jedné firmě, která v&nbsp;roce {rok - 1} získala", $"{{0}} firmách, které v&nbsp;roce {rok} získaly", $"{{0}} firmách, které v&nbsp;roce {rok - 1} získaly")
                                 + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
 
-                                f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium)
-                                );
+                            f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium)
+                            );
                         }
                     }
                     _infofacts = f.OrderByDescending(o => o.Level).ToArray();
