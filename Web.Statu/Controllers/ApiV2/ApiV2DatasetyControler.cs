@@ -9,41 +9,43 @@ using System;
 using System.Web;
 using System.IO;
 using HlidacStatu.Web.Framework;
+using System.Linq;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RoutePrefix("api/v2/datasety")]
     public class ApiV2DatasetyController : GenericAuthController
     {
-        // /api/v2/datasety/seznam
-        [HttpGet]
+        // /api/v2/datasety/
+        [HttpGet, Route()]
         [AuthorizeAndAudit]
-        [SwaggerOperation("Seznam")]
-        [SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
+        //[SwaggerOperation("Seznam")]
+        //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
+        //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
+        //[SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
+        //[SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
+        //[SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
         public ActionResult Seznam()
         {
             return Content(JsonConvert.SerializeObject(
                     DataSetDB.Instance.SearchData("*", 1, 100).Result,
                     Formatting.None,
-                    new JsonSerializerSettings() 
-                    { 
-                        ContractResolver = Serialization.PublicDatasetContractResolver.Instance 
+                    new JsonSerializerSettings()
+                    {
+                        ContractResolver = Serialization.PublicDatasetContractResolver.Instance
                     }),
                 "application/json");
         }
 
-        // /api/v2/datasety/detail/{id}
-        [HttpGet]
+        // /api/v2/datasety/{id}
+        [HttpGet, Route("{id}")]
         [AuthorizeAndAudit]
-        [SwaggerOperation("Detail")]
-        [SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Žádná veřejná zakázka nenalezena")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
+        //[SwaggerOperation("Detail")]
+        //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
+        //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
+        //[SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
+        //[SwaggerResponse(statusCode: 404, description: "Žádná veřejná zakázka nenalezena")]
+        //[SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
         public ActionResult Detail(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -56,14 +58,61 @@ namespace HlidacStatu.Web.Controllers
             if (ds == null)
             {
                 Response.StatusCode = 404;
-                return Content(new ErrorMessage($"Dataset nenalezen.").ToJson(), "application/json");
+                return Content(new ErrorMessage($"Dataset {id} nenalezen.").ToJson(), "application/json");
             }
-            
+
             return Content(JsonConvert.SerializeObject(ds.Registration()), "application/json");
 
         }
 
-        [HttpPost]
+        [HttpGet, Route("{id}/hledat")]
+        [AuthorizeAndAudit]
+        public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
+        {
+            page = page ?? 1;
+            if (page < 1)
+                page = 1;
+            if (page > 200) // proč?
+                return Content(
+                    JsonConvert.SerializeObject(
+                    new { total = 0, page = 201, results = Array.Empty<dynamic>() }
+                )
+                , "application/json");
+
+            try
+            {
+                var ds = DataSet.CachedDatasets.Get(id?.ToLower());
+                if (ds == null)
+                {
+                    Response.StatusCode = 400;
+                    return Content(new ErrorMessage($"Dataset [{id}] nenalezen.").ToJson(), "application/json");
+                }
+
+                bool bDesc = (desc == "1" || desc?.ToLower() == "true");
+                var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
+                res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
+
+                return Content(
+                    JsonConvert.SerializeObject(new { total = res.Total, page = res.Page, results = res.Result })
+                    , "application/json");
+
+            }
+            catch (DataSetException dex)
+            {
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"{dex.APIResponse.error.description}").ToJson(), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+            }
+
+
+        }
+
+        [HttpPost, Route()]
         [AuthorizeAndAudit]
         public ActionResult Create()
         {
@@ -73,9 +122,12 @@ namespace HlidacStatu.Web.Controllers
             {
                 var reg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
                 var res = DataSet.Api.Create(reg, this.User.Identity.Name);
-                
+
                 if (res.valid)
+                {
+                    Response.StatusCode = 201;
                     return Content(JsonConvert.SerializeObject(new { datasetId = res.value }), "application/json");
+                }
                 else
                 {
                     Response.StatusCode = 400;
@@ -90,7 +142,7 @@ namespace HlidacStatu.Web.Controllers
             catch (DataSetException dse)
             {
                 Response.StatusCode = 400;
-                return Content(JsonConvert.SerializeObject(dse.APIResponse), "application/json");
+                return Content(new ErrorMessage($"{dse.APIResponse.error.description}").ToJson(), "application/json");
             }
             catch (Exception ex)
             {
@@ -99,11 +151,9 @@ namespace HlidacStatu.Web.Controllers
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
 
             }
-
-            
         }
 
-        [HttpDelete]
+        [HttpDelete, Route("{id}")]
         [AuthorizeAndAudit]
         public ActionResult Delete(string id)
         {
@@ -144,10 +194,170 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+            }
+        }
 
+        [HttpPut, Route()]
+        [AuthorizeAndAudit]
+        public ActionResult Update()
+        {
+            var data = ApiHelpers.ReadRequestBody(this.Request);
+
+            try
+            {
+                var newReg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
+                return Content(JsonConvert.SerializeObject(DataSet.Api.Update(newReg, this.User.Identity.Name)), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
             }
 
         }
+
+        #region items
+
+        [AuthorizeAndAudit]
+        [HttpGet, Route("{datasetId}/zaznam/{itemId}")]
+        public ActionResult DatasetItem_Get(string datasetId, string itemId)
+        {
+            
+            try
+            {
+                var ds = DataSet.CachedDatasets.Get(datasetId.ToLower());
+                var value = ds.GetDataObj(itemId);
+                //remove from item
+                if (value == null)
+                {
+                    Response.StatusCode = 404;
+                    return Content(new ErrorMessage($"Zaznam nenalezen.").ToJson(), "application/json");
+                }
+                else
+                {
+                    value.DbCreatedBy = null;
+                    return Content(
+                        Newtonsoft.Json.JsonConvert.SerializeObject(
+                            value, Request.QueryString["nice"] == "1" ? Formatting.Indented : Formatting.None
+                            ) ?? "null", "application/json");
+                }
+            }
+            catch (DataSetException)
+            {
+                Response.StatusCode = 404;
+                return Content(new ErrorMessage($"Dataset nenalezen.").ToJson(), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+            }
+        }
+
+        [AuthorizeAndAudit]
+        [HttpPost, Route("{datasetId}/zaznam/{itemId}")]
+        public ActionResult DatasetItem_Post(string datasetId, string itemId, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
+        {
+            
+            mode = mode.ToLower();
+            if (string.IsNullOrEmpty(mode))
+            {
+                if (rewrite == true)
+                    mode = "rewrite";
+                else
+                    mode = "skip";
+            }
+
+            var data = ApiHelpers.ReadRequestBody(this.Request);
+            datasetId = datasetId.ToLower();
+            try
+            {
+                var ds = DataSet.CachedDatasets.Get(datasetId);
+                var newId = itemId;
+
+                if (mode == "rewrite")
+                {
+                    newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+                }
+                else if (mode == "merge")
+                {
+                    if (ds.ItemExists(itemId))
+                    {
+                        //merge
+                        var oldObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(ds.GetData(itemId));
+                        var newObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(data);
+
+                        newObj["DbCreated"] = oldObj["DbCreated"];
+                        newObj["DbCreatedBy"] = oldObj["DbCreatedBy"];
+
+                        var diffs = Lib.Data.External.DataSets.Util.CompareObjects(oldObj, newObj);
+                        if (diffs.Count > 0)
+                        {
+                            oldObj.Merge(newObj,
+                            new Newtonsoft.Json.Linq.JsonMergeSettings()
+                            {
+                                MergeArrayHandling = Newtonsoft.Json.Linq.MergeArrayHandling.Union,
+                                MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
+                            }
+                            );
+
+                            newId = ds.AddData(oldObj.ToString(), itemId, this.User.Identity.Name, true);
+                        }
+                    }
+                    else
+                        newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+
+                }
+                else //skip 
+                {
+                    if (!ds.ItemExists(itemId))
+                        newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+                }
+                return Content(JsonConvert.SerializeObject(new { id = newId }), "application/json");
+            }
+            catch (DataSetException dse)
+            {
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"{dse.APIResponse.error.description}").ToJson(), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+
+            }
+            
+        }
+
+        [AuthorizeAndAudit]
+        [HttpPost, Route("{datasetId}/zaznam/{itemId}/existuje")]
+        public ActionResult DatasetItem_Exists(string datasetId, string itemId)
+        {
+            try
+            {
+                var ds = DataSet.CachedDatasets.Get(datasetId.ToLower());
+                var value = ds.ItemExists(itemId);
+                //remove from item
+                return Content(JsonConvert.SerializeObject(value), "application/json");
+            }
+            catch (DataSetException)
+            {
+                Response.StatusCode = 404;
+                return Content(new ErrorMessage($"Dataset {datasetId} nenalezen.").ToJson(), "application/json");
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
+            }
+        }
+
+        #endregion
+
 
     }
 
@@ -155,5 +365,5 @@ namespace HlidacStatu.Web.Controllers
 
 
 
-    
+
 }

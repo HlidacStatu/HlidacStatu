@@ -13,6 +13,7 @@ namespace HlidacStatu.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 name: "ApiV1",
@@ -34,11 +35,11 @@ namespace HlidacStatu.Web
                 url: "api/v2/osoby/{action}/{id}/{dataid}",
                 defaults: new { controller = "ApiV2Osoby", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
             );
-            routes.MapRoute(
-                name: "ApiV2Datasety",
-                url: "api/v2/datasety/{action}/{id}/{dataid}",
-                defaults: new { controller = "ApiV2Datasety", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
-            );
+            //routes.MapRoute(
+            //    name: "ApiV2Datasety",
+            //    url: "api/v2/datasety/{action}/{id}/{dataid}",
+            //    defaults: new { controller = "ApiV2Datasety", action = "Index", id = UrlParameter.Optional, dataid = UrlParameter.Optional }
+            //);
             routes.MapRoute(
                 name: "AccountController",
                 url: "account/{action}/{id}",
