@@ -12,11 +12,12 @@ using HlidacStatu.Web.Models.apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RoutePrefix("api/v2/osoby")]
     public class ApiV2OsobyController : GenericAuthController
     {
-        // /api/v2/verejnezakazky/detail/{id}
-        [HttpGet]
+        // /api/v2/osoby/{id}
         [AuthorizeAndAudit]
+        [HttpGet, Route("{id}")]
         [SwaggerOperation("Detail")]
         [SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
         [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
@@ -45,9 +46,9 @@ namespace HlidacStatu.Web.Controllers
             
         }
 
-        // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
-        [HttpGet]
+        // /api/v2/osoby/?jmeno=andrej&prijmeni=babis&narozen=1963-08-02
         [AuthorizeAndAudit]
+        [HttpGet, Route()]
         [SwaggerOperation("Hledat")]
         [SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
         [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]

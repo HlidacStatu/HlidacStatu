@@ -393,6 +393,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2FirmyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2DatasetyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2OsobyController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2VZController.cs" />

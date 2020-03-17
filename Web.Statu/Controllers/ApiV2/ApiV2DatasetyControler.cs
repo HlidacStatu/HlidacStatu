@@ -17,8 +17,8 @@ namespace HlidacStatu.Web.Controllers
     public class ApiV2DatasetyController : GenericAuthController
     {
         // /api/v2/datasety/
-        [HttpGet, Route()]
         [AuthorizeAndAudit]
+        [HttpGet, Route()]
         //[SwaggerOperation("Seznam")]
         //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
         //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
@@ -38,8 +38,8 @@ namespace HlidacStatu.Web.Controllers
         }
 
         // /api/v2/datasety/{id}
-        [HttpGet, Route("{id}")]
         [AuthorizeAndAudit]
+        [HttpGet, Route("{id}")]
         //[SwaggerOperation("Detail")]
         //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
         //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
@@ -65,8 +65,8 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        [HttpGet, Route("{id}/hledat")]
         [AuthorizeAndAudit]
+        [HttpGet, Route("{id}/hledat")]
         public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
         {
             page = page ?? 1;
@@ -112,8 +112,8 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        [HttpPost, Route()]
         [AuthorizeAndAudit]
+        [HttpPost, Route()]
         public ActionResult Create()
         {
             var data = ApiHelpers.ReadRequestBody(this.Request);
@@ -153,8 +153,8 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        [HttpDelete, Route("{id}")]
         [AuthorizeAndAudit]
+        [HttpDelete, Route("{id}")]
         public ActionResult Delete(string id)
         {
             try
@@ -197,8 +197,8 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        [HttpPut, Route()]
         [AuthorizeAndAudit]
+        [HttpPut, Route()]
         public ActionResult Update()
         {
             var data = ApiHelpers.ReadRequestBody(this.Request);
