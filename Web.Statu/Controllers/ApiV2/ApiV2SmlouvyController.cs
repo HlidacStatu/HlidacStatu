@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Web.Attributes;
+using HlidacStatu.Web.Models.apiv2;
 using HlidacStatu.Web.Models.Apiv2;
 using System.Linq;
 using System.Web.Mvc;
@@ -81,7 +82,8 @@ namespace HlidacStatu.Web.Controllers
                             this.User.IsInRole("Admin"))))
                     .ToArray();
 
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = result.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
+                return Content(new SearchResultDTO(result.Total, result.Page, filtered).ToJson(), "application/json");
+//                    Newtonsoft.Json.JsonConvert.SerializeObject(new { total = result.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
             }
 
         }

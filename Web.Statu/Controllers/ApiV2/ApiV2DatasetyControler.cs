@@ -19,16 +19,10 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/datasety/
         [AuthorizeAndAudit]
         [HttpGet, Route()]
-        public ActionResult Seznam()
+        public ActionResult GetAll()
         {
-            return Content(JsonConvert.SerializeObject(
-                    DataSetDB.Instance.SearchData("*", 1, 100).Result,
-                    Formatting.None,
-                    new JsonSerializerSettings()
-                    {
-                        ContractResolver = Serialization.PublicDatasetContractResolver.Instance
-                    }),
-                "application/json");
+            var result = DataSetDB.Instance.SearchData("*", 1, 100);
+            return Content(new SearchResultDTO(result.Total, result.Page, result.Result).ToJson(), "application/json");
         }
 
         // /api/v2/datasety/{id}
@@ -78,9 +72,7 @@ namespace HlidacStatu.Web.Controllers
                 var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
                 res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
-                return Content(
-                    JsonConvert.SerializeObject(new { total = res.Total, page = res.Page, results = res.Result })
-                    , "application/json");
+                return Content(new SearchResultDTO(res.Total, res.Page, res.Result).ToJson(), "application/json");
 
             }
             catch (DataSetException dex)

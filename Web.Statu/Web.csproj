@@ -443,6 +443,7 @@
     <Compile Include="Models\apiv2\OsobaDetailDTO.cs" />
     <Compile Include="Models\apiv2\OsobaDTO.cs" />
     <Compile Include="Models\apiv2\OsobaEventDTO.cs" />
+    <Compile Include="Models\apiv2\SearchResultDTO.cs" />
     <Compile Include="Models\DataViewModels.cs" />
     <Compile Include="Models\InsolvenceViewModels.cs" />
     <Compile Include="Models\WebyViewModels.cs" />

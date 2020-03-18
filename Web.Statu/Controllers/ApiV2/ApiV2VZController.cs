@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using HlidacStatu.Web.Models.apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -67,7 +68,8 @@ namespace HlidacStatu.Web.Controllers
                 var zakazky = result.Result.Hits
                     .Select(m => m.Source).ToArray();
 
-                return Content(JsonConvert.SerializeObject(zakazky), "application/json");
+                return Content(new SearchResultDTO(result.Total, result.Page, zakazky).ToJson(), "application/json");
+                //return Content(JsonConvert.SerializeObject(zakazky), "application/json");
             }
 
         }
