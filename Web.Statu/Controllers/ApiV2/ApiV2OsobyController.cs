@@ -1,10 +1,6 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
-using System.Linq;
 using System.Web.Mvc;
-using Newtonsoft.Json;
-using HlidacStatu.Util;
-using System;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Web.Models.apiv2;
 
@@ -38,30 +34,31 @@ namespace HlidacStatu.Web.Controllers
             
         }
 
+        //todo: replace with better function (after we load people to ES)
         // /api/v2/osoby/?jmeno=andrej&prijmeni=babis&narozen=1963-08-02
-        [AuthorizeAndAudit]
-        [HttpGet, Route()]
-        public ActionResult Hledat(string jmeno, string prijmeni, string narozen)
-        {
-            DateTime? dt = ParseTools.ToDateTime(narozen
-                    , "yyyy-MM-dd");
-            if (dt.HasValue == false)
-            {
-                Response.StatusCode = 400;
-                return Content(
-                    new ErrorMessage($"Špatný formát data. Použijte formát ve tvaru [yyyy-MM-dd].").ToJson(), 
-                    "application/json");
-                
-            }
-            var osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
-                .Select(o => new OsobaDTO(o))
-                .ToArray();
+        //[AuthorizeAndAudit]
+        //[HttpGet, Route()]
+        //public ActionResult Hledat(string jmeno, string prijmeni, string narozen)
+        //{
+        //    DateTime? dt = ParseTools.ToDateTime(narozen
+        //            , "yyyy-MM-dd");
+        //    if (dt.HasValue == false)
+        //    {
+        //        Response.StatusCode = 400;
+        //        return Content(
+        //            new ErrorMessage($"Špatný formát data. Použijte formát ve tvaru [yyyy-MM-dd].").ToJson(), 
+        //            "application/json");
 
-            return Content(JsonConvert.SerializeObject(
-                new { Total = osoby.Count(), Result = osoby }
-                ), "application/json");
+        //    }
+        //    var osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
+        //        .Select(o => new OsobaDTO(o))
+        //        .ToArray();
 
-        }
+        //    return Content(JsonConvert.SerializeObject(
+        //        new { Total = osoby.Count(), Result = osoby }
+        //        ), "application/json");
+
+        //}
 
     }
 }

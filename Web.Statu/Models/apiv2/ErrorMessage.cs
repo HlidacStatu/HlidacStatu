@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace HlidacStatu.Web.Models.Apiv2
@@ -7,19 +5,28 @@ namespace HlidacStatu.Web.Models.Apiv2
     /// <summary>
     /// 
     /// </summary>
-    [DataContract]
+    [JsonObject(MemberSerialization.OptOut)]
     public class ErrorMessage
     { 
         /// <summary>
         /// Gets or Sets error
         /// </summary>
-        [Required]
-        [DataMember(Name="error")]
         public string Error { get; set; }
+        
+        /// <summary>
+        /// Object with more details about error.
+        /// </summary>
+        public dynamic Detail { get; set; }
 
         public ErrorMessage(string error)
         {
             Error = error;
+        }
+
+        public ErrorMessage(string error, dynamic obj)
+        {
+            Error = error;
+            Detail = obj;
         }
 
         /// <summary>
@@ -37,7 +44,7 @@ namespace HlidacStatu.Web.Models.Apiv2
         /// <returns>JSON string presentation of the object</returns>
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return JsonConvert.SerializeObject(this);
         }
 
     }
