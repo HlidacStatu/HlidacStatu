@@ -831,11 +831,7 @@ namespace HlidacStatu.Lib.Data
             if (osoby.Count() == 0)
                 return null;
 
-            if (osoby.Count() == 1)
-                return osoby.First();
-
-
-            return osoby.OrderByDescending(o => o.Events().Count()).First();
+            return osoby.First();
         }
 
         static List<int> osobaImportanceOrder = new List<int>() { 3, 4, 2, 1, 0 };
