@@ -793,13 +793,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public IEnumerable<T> GetAllData<T>(string scrollTimeout = "2m", int scrollSize = 1000) where T : class
         {
-            ISearchResponse<T> initialResponse = this.client.Search<T>
+            ISearchResponse<dynamic> initialResponse = this.client.Search<dynamic>
                 (scr => scr.From(0)
                      .Take(scrollSize)
                      .MatchAll()
                      .Scroll(scrollTimeout));
 
-            List<T> results = new List<T>();
+            List<dynamic> results = new List<dynamic>();
 
             if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
                 throw new Exception(initialResponse.ServerError.Error.Reason);
@@ -811,7 +811,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             bool isScrollSetHasData = true;
             while (isScrollSetHasData)
             {
-                ISearchResponse<T> loopingResponse = client.Scroll<T>(scrollTimeout, scrollid);
+                ISearchResponse<dynamic> loopingResponse = client.Scroll<dynamic>(scrollTimeout, scrollid);
                 if (loopingResponse.IsValid)
                 {
                     results.AddRange(loopingResponse.Documents);
@@ -821,8 +821,16 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
 
             client.ClearScroll(new ClearScrollRequest(scrollid));
-            return results;
 
+            var data = results
+                .Select(m => Newtonsoft.Json.JsonConvert.SerializeObject(m))
+                .Select(j => Newtonsoft.Json.JsonConvert.DeserializeObject<T>(j))
+                .Cast<T>();
+                ;
+
+            return data;
+
+            //return results;
         }
 
         public string GetData(string Id)

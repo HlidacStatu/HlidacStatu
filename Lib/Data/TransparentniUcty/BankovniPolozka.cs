@@ -173,7 +173,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                 }.GetHashCode();
         }
 
-        public bool IsUnique()
+        public bool Exists()
         {
             if (string.IsNullOrEmpty(this.Id))
                 InitId();

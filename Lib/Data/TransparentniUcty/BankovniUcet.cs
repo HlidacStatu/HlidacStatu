@@ -90,7 +90,13 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
 
         public static IEnumerable<BankovniUcet> GetAll()
         {
-            return _client.GetAllData<BankovniUcet>();
+            var items =  _client.GetAllData<BankovniUcet>();
+
+            //var data = items
+            //    .Select(m => Newtonsoft.Json.JsonConvert.SerializeObject(m))
+            //    .Select(j => Newtonsoft.Json.JsonConvert.DeserializeObject<BankovniUcet>(j) as BankovniUcet);
+
+            return items;
         }
 
         public static string NormalizeCisloUctu(string s)

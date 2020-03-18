@@ -40,28 +40,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSDL tester", "Tests\WSDL tester\WSDL tester.csproj", "{643D19BF-1C1F-4967-B322-823EDE73D2B8}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "webtest", "Tests\webtest\", "{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_63905"
-		Debug.AspNetCompiler.PhysicalPath = "Tests\webtest\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63905\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_63905"
-		Release.AspNetCompiler.PhysicalPath = "Tests\webtest\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63905\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "63905"
-		SlnRelativePath = "Tests\webtest\"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postal.Mvc5.4.6", "3rd\Postal.MVC5 fork\Source\Postal.AspNetCore\Postal.Mvc5.4.6.csproj", "{CA00867C-D9BC-42D9-B04A-BF1957324882}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeGuesser", "3rd\FileTypeGuesser\FileTypeGuesser\FileTypeGuesser.csproj", "{0AE201D3-CE5B-404F-8C25-36BD929E1D19}"
@@ -481,28 +459,6 @@ Global
 		{643D19BF-1C1F-4967-B322-823EDE73D2B8}.x86Only|x64.Build.0 = Stage|Any CPU
 		{643D19BF-1C1F-4967-B322-823EDE73D2B8}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{643D19BF-1C1F-4967-B322-823EDE73D2B8}.x86Only|x86.Build.0 = Release|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|x64.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Debug|x86.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Release|x64.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Release|x64.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Release|x86.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Release|x86.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Stage|x64.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Stage|x64.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Stage|x86.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.Stage|x86.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|Any CPU.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|x64.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|x64.Build.0 = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|x86.ActiveCfg = Debug|Any CPU
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F}.x86Only|x86.Build.0 = Debug|Any CPU
 		{CA00867C-D9BC-42D9-B04A-BF1957324882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA00867C-D9BC-42D9-B04A-BF1957324882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA00867C-D9BC-42D9-B04A-BF1957324882}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1036,7 +992,6 @@ Global
 		{9D2FF62D-01C0-41B0-A3BE-32005365290C} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
 		{1E264E84-82F5-4E8F-9847-4EE0CB8F5117} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
 		{643D19BF-1C1F-4967-B322-823EDE73D2B8} = {F0B0A6EA-FAB7-4F57-9C96-C13E4B1F3812}
-		{AB26A7DF-6DCA-4984-8011-1D4F0C1CEF8F} = {F0B0A6EA-FAB7-4F57-9C96-C13E4B1F3812}
 		{CA00867C-D9BC-42D9-B04A-BF1957324882} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
 		{0AE201D3-CE5B-404F-8C25-36BD929E1D19} = {DA630231-0460-4B92-B657-BE9AFCA71AFD}
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
@@ -1055,8 +1010,8 @@ Global
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
