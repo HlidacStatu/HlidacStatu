@@ -43,9 +43,6 @@ namespace HlidacStatu.Web.Controllers
            
 
 
-#if (!DEBUG)
-        [OutputCache(VaryByParam = "*", Duration = 60 * 5)]
-#endif
         public ActionResult Index(string id)
         {
             if (Request.QueryString["refresh"]=="1")
