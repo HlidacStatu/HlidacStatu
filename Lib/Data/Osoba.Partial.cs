@@ -269,6 +269,28 @@ namespace HlidacStatu.Lib.Data
 
             return events;
         }
+
+        public static int[] VerejnopravniUdalosti = new int[] {
+                (int)OsobaEvent.Types.VolenaFunkce,
+                (int)OsobaEvent.Types.PolitickaPracovni,
+                (int)OsobaEvent.Types.Politicka,
+                (int)OsobaEvent.Types.VerejnaSpravaJine,
+                (int)OsobaEvent.Types.VerejnaSpravaPracovni,
+                (int)OsobaEvent.Types.Osobni,
+                (int)OsobaEvent.Types.Jine
+            };
+
+        public IEnumerable<OsobaEvent> Events_VerejnopravniUdalosti()
+        {
+            return Events_VerejnopravniUdalosti(e => true);
+        }
+        public IEnumerable<OsobaEvent> Events_VerejnopravniUdalosti(Expression<Func<OsobaEvent, bool>> predicate)
+        {
+            return Events(predicate)
+                .Where(e => VerejnopravniUdalosti.Contains(e.Type));
+        }
+
+
         public string Description(bool html, string template = "{0}", string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
             return Description(html, m => true, int.MaxValue, template, itemTemplate, itemDelimeter);
@@ -815,16 +837,36 @@ namespace HlidacStatu.Lib.Data
 
             return osoby.OrderByDescending(o => o.Events().Count()).First();
         }
+
+        static List<int> osobaImportanceOrder = new List<int>() { 3, 4, 2, 1, 0 };
+        static int[] osobaImportanceEventTypes = new int[] { (int)OsobaEvent.Types.Politicka, (int)OsobaEvent.Types.PolitickaPracovni, (int)OsobaEvent.Types.VolenaFunkce };
+
         public static IEnumerable<Osoba> GetOsobyFromText(string text)
         {
             var parsedName = Lib.Validators.OsobaInText(text);
             if (parsedName != null)
             {
-                var oo= GetPolitikByNameFtx(parsedName.Jmeno + " " + parsedName.Prijmeni);
+                var oo = GetPolitikByNameFtx(parsedName.Jmeno + " " + parsedName.Prijmeni);
                 if (oo.Count() == 0)
                     return new Osoba[] { parsedName };
-                else
+                else if (oo.Count() == 1)
+                {
                     return oo;
+                }
+                else
+                {
+                    oo = oo
+                        .OrderBy(o =>
+                        {
+                            var index = osobaImportanceOrder.IndexOf(o.Status);
+                            return index == -1 ? int.MaxValue : index;
+                        })
+                        //podle posledni politicke funkce
+                        .ThenByDescending(o => o.Events(e => osobaImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
+                        //podle poctu event
+                        .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count());
+                    return oo;
+                }
             }
             return new Osoba[] { };
         }
