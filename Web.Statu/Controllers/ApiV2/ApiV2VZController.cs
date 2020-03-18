@@ -12,15 +12,9 @@ namespace HlidacStatu.Web.Controllers
     public class ApiV2VZController : GenericAuthController
     {
         // /api/v2/verejnezakazky/detail/{id}
-        [HttpGet]
         [AuthorizeAndAudit(Roles = "Admin")]
-        [SwaggerOperation("Detail")]
-        [SwaggerResponse(statusCode: 200, type: typeof(Lib.Data.VZ.VerejnaZakazka), description: "Úspěšně vrácena veřejná zakázka")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
-        public ActionResult Detail([Required]string id)
+        [HttpGet]
+        public ActionResult Detail(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -44,13 +38,7 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
         [HttpGet]
         [AuthorizeAndAudit(Roles = "Admin")]
-        [SwaggerOperation("Hledat")]
-        [SwaggerResponse(statusCode: 200, type: typeof(Lib.Data.VZ.VerejnaZakazka[]), description: "Úspěšně vrácen seznam smluv")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Žádná veřejná zakázka nenalezena")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
-        public ActionResult Hledat([Required]string query, int? page, int? order)
+        public ActionResult Hledat(string query, int? page, int? order)
         {
             page = page ?? 1;
             order = order ?? 0;

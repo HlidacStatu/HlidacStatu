@@ -1,14 +1,9 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
-using Swashbuckle.Swagger.Annotations;
 using System.Web.Mvc;
 using Newtonsoft.Json;
-using HlidacStatu.Web.Models.apiv2;
 using HlidacStatu.Lib.Data.External.DataSets;
 using System;
-using System.Web;
-using System.IO;
-using HlidacStatu.Web.Framework;
 using System.Linq;
 
 namespace HlidacStatu.Web.Controllers

@@ -1,7 +1,5 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
-using Swashbuckle.Swagger.Annotations;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -12,12 +10,7 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/smlouvy/detail/{id}
         [HttpGet]
         [AuthorizeAndAudit]
-        [SwaggerOperation("Detail")]
-        [SwaggerResponse(statusCode: 200, type: typeof(Lib.Data.Smlouva), description: "Úspěšně vrácena smlouva")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
-        public ActionResult Detail([Required]string id)
+        public ActionResult Detail(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -43,12 +36,7 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/Smlouvy/hledat/?query=auto&page=1&order=0
         [HttpGet]
         [AuthorizeAndAudit]
-        [SwaggerOperation("Hledat")]
-        [SwaggerResponse(statusCode: 200, type: typeof(ErrorMessage), description: "Úspěšně vrácen seznam smluv")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Žádná smlouva nenalezena")]
-        public ActionResult Hledat([Required]string query, int? page, int? order)
+        public ActionResult Hledat(string query, int? page, int? order)
         {
             page = page ?? 1;
             order = order ?? 0;
@@ -97,8 +85,5 @@ namespace HlidacStatu.Web.Controllers
             }
 
         }
-
-
-
     }
 }

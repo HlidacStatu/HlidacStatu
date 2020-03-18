@@ -1,7 +1,5 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
-using Swashbuckle.Swagger.Annotations;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -18,13 +16,7 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/osoby/{id}
         [AuthorizeAndAudit]
         [HttpGet, Route("{id}")]
-        [SwaggerOperation("Detail")]
-        [SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
-        public ActionResult Detail([Required]string id)
+        public ActionResult Detail(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -49,12 +41,6 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/osoby/?jmeno=andrej&prijmeni=babis&narozen=1963-08-02
         [AuthorizeAndAudit]
         [HttpGet, Route()]
-        [SwaggerOperation("Hledat")]
-        [SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
-        [SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        [SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        [SwaggerResponse(statusCode: 404, description: "Žádná veřejná zakázka nenalezena")]
-        [SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
         public ActionResult Hledat(string jmeno, string prijmeni, string narozen)
         {
             DateTime? dt = ParseTools.ToDateTime(narozen

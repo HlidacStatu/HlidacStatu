@@ -19,12 +19,6 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/datasety/
         [AuthorizeAndAudit]
         [HttpGet, Route()]
-        //[SwaggerOperation("Seznam")]
-        //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDetailDTO), description: "Úspěšně vrácena veřejná zakázka")]
-        //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        //[SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        //[SwaggerResponse(statusCode: 404, description: "Požadovaný dokument nebyl nalezen")]
-        //[SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
         public ActionResult Seznam()
         {
             return Content(JsonConvert.SerializeObject(
@@ -40,12 +34,6 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/datasety/{id}
         [AuthorizeAndAudit]
         [HttpGet, Route("{id}")]
-        //[SwaggerOperation("Detail")]
-        //[SwaggerResponse(statusCode: 200, type: typeof(OsobaDTO), description: "Úspěšně vrácen seznam smluv")]
-        //[SwaggerResponse(statusCode: 400, type: typeof(ErrorMessage), description: "Některé z předaných parametrů byly zadané nesprávně")]
-        //[SwaggerResponse(statusCode: 401, type: typeof(ErrorMessage), description: "Nesprávný autorizační token")]
-        //[SwaggerResponse(statusCode: 404, description: "Žádná veřejná zakázka nenalezena")]
-        //[SwaggerResponse(statusCode: 500, description: "Došlo k interní chybě na serveru")]
         public ActionResult Detail(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -69,16 +57,14 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet, Route("{id}/hledat")]
         public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
         {
-            page = page ?? 1;
-            if (page < 1)
+            if (page is null || page < 1)
                 page = 1;
-            if (page > 200) // proč?
-                return Content(
-                    JsonConvert.SerializeObject(
-                    new { total = 0, page = 201, results = Array.Empty<dynamic>() }
-                )
-                , "application/json");
-
+            if (page > 200)
+            {
+                Response.StatusCode = 400;
+                return Content(new ErrorMessage($"Hodnota page nemůže být větší než 200").ToJson(), "application/json");
+            }
+             
             try
             {
                 var ds = DataSet.CachedDatasets.Get(id?.ToLower());
@@ -108,8 +94,6 @@ namespace HlidacStatu.Web.Controllers
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
             }
-
-
         }
 
         [AuthorizeAndAudit]
@@ -149,7 +133,6 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
-
             }
         }
 
@@ -258,7 +241,7 @@ namespace HlidacStatu.Web.Controllers
 
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznam/{itemId}")]
-        public ActionResult DatasetItem_Post(string datasetId, string itemId, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
+        public ActionResult DatasetItem_Update(string datasetId, string itemId, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
         {
             
             mode = mode.ToLower();
@@ -296,12 +279,11 @@ namespace HlidacStatu.Web.Controllers
                         if (diffs.Count > 0)
                         {
                             oldObj.Merge(newObj,
-                            new Newtonsoft.Json.Linq.JsonMergeSettings()
-                            {
-                                MergeArrayHandling = Newtonsoft.Json.Linq.MergeArrayHandling.Union,
-                                MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
-                            }
-                            );
+                                new Newtonsoft.Json.Linq.JsonMergeSettings()
+                                {
+                                    MergeArrayHandling = Newtonsoft.Json.Linq.MergeArrayHandling.Union,
+                                    MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
+                                });
 
                             newId = ds.AddData(oldObj.ToString(), itemId, this.User.Identity.Name, true);
                         }
@@ -327,9 +309,7 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Obecná chyba - {ex.Message}").ToJson(), "application/json");
-
             }
-            
         }
 
         [AuthorizeAndAudit]
@@ -358,12 +338,6 @@ namespace HlidacStatu.Web.Controllers
 
         #endregion
 
-
     }
-
-
-
-
-
 
 }
