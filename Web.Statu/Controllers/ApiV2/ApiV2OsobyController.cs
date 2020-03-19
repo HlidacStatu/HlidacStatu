@@ -11,27 +11,27 @@ namespace HlidacStatu.Web.Controllers
     {
         // /api/v2/osoby/{id}
         [AuthorizeAndAudit]
-        [HttpGet, Route("{id}")]
-        public ActionResult Detail(string id)
+        [HttpGet, Route("{osobaId}")]
+        public ActionResult Detail(string osobaId)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(osobaId))
             {
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
             }
 
-            var osoba = Osoba.GetByNameId(id);
+            var osoba = Osoba.GetByNameId(osobaId);
 
             if (osoba == null)
             {
                 Response.StatusCode = 404;
-                return Content(new ErrorMessage($"Osoba s id [{id}] nenalezena").ToJson(), "application/json");
+                return Content(new ErrorMessage($"Osoba s id [{osobaId}] nenalezena").ToJson(), "application/json");
             }
 
             OsobaDetailDTO OsobaDetail = new OsobaDetailDTO(osoba);
 
             return Content(OsobaDetail.ToJson(), "application/json");
-            
+
         }
 
         //todo: replace with better function (after we load people to ES)
@@ -50,7 +50,7 @@ namespace HlidacStatu.Web.Controllers
         //            "application/json");
 
         //    }
-        //    var osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
+        //    var osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
         //        .Select(o => new OsobaDTO(o))
         //        .ToArray();
 

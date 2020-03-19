@@ -27,20 +27,20 @@ namespace HlidacStatu.Web.Controllers
 
         // /api/v2/datasety/{id}
         [AuthorizeAndAudit]
-        [HttpGet, Route("{id}")]
-        public ActionResult Detail(string id)
+        [HttpGet, Route("{datasetId}")]
+        public ActionResult Detail(string datasetId)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(datasetId))
             {
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
             }
 
-            var ds = DataSet.CachedDatasets.Get(id);
+            var ds = DataSet.CachedDatasets.Get(datasetId);
             if (ds == null)
             {
                 Response.StatusCode = 404;
-                return Content(new ErrorMessage($"Dataset {id} nenalezen.").ToJson(), "application/json");
+                return Content(new ErrorMessage($"Dataset {datasetId} nenalezen.").ToJson(), "application/json");
             }
 
             return Content(JsonConvert.SerializeObject(ds.Registration()), "application/json");
@@ -48,12 +48,12 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
-        [HttpGet, Route("{id}/hledat")]
-        public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
+        [HttpGet, Route("{datasetId}/hledat")]
+        public ActionResult DatasetSearch(string datasetId, string query, int? strana, string sort = null, string desc = "0")
         {
-            if (page is null || page < 1)
-                page = 1;
-            if (page > 200)
+            if (strana is null || strana < 1)
+                strana = 1;
+            if (strana > 200)
             {
                 Response.StatusCode = 400;
                 return Content(new ErrorMessage($"Hodnota page nemůže být větší než 200").ToJson(), "application/json");
@@ -61,15 +61,15 @@ namespace HlidacStatu.Web.Controllers
              
             try
             {
-                var ds = DataSet.CachedDatasets.Get(id?.ToLower());
+                var ds = DataSet.CachedDatasets.Get(datasetId?.ToLower());
                 if (ds == null)
                 {
                     Response.StatusCode = 400;
-                    return Content(new ErrorMessage($"Dataset [{id}] nenalezen.").ToJson(), "application/json");
+                    return Content(new ErrorMessage($"Dataset [{datasetId}] nenalezen.").ToJson(), "application/json");
                 }
 
                 bool bDesc = (desc == "1" || desc?.ToLower() == "true");
-                var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
+                var res = ds.SearchData(query, strana.Value, 50, sort + (bDesc ? " desc" : ""));
                 res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
                 return Content(new SearchResultDTO(res.Total, res.Page, res.Result).ToJson(), "application/json");
@@ -129,19 +129,19 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
-        [HttpDelete, Route("{id}")]
-        public ActionResult Delete(string id)
+        [HttpDelete, Route("{datasetId}")]
+        public ActionResult Delete(string datasetId)
         {
             try
             {
-                if (string.IsNullOrEmpty(id))
+                if (string.IsNullOrEmpty(datasetId))
                 {
                     Response.StatusCode = 400;
                     return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
                 }
 
-                id = id.ToLower();
-                var r = DataSetDB.Instance.GetRegistration(id);
+                datasetId = datasetId.ToLower();
+                var r = DataSetDB.Instance.GetRegistration(datasetId);
                 if (r == null)
                 {
                     Response.StatusCode = 404;
@@ -154,7 +154,7 @@ namespace HlidacStatu.Web.Controllers
                     return Content(new ErrorMessage($"Nejste oprávněn mazat tento dataset.").ToJson(), "application/json");
                 }
 
-                var res = DataSetDB.Instance.DeleteRegistration(id, this.User.Identity.Name);
+                var res = DataSetDB.Instance.DeleteRegistration(datasetId, this.User.Identity.Name);
                 return Content(JsonConvert.SerializeObject(new { valid = res }),
                     "application/json");
 
@@ -195,7 +195,7 @@ namespace HlidacStatu.Web.Controllers
         #region items
 
         [AuthorizeAndAudit]
-        [HttpGet, Route("{datasetId}/zaznam/{itemId}")]
+        [HttpGet, Route("{datasetId}/zaznamy/{itemId}")]
         public ActionResult DatasetItem_Get(string datasetId, string itemId)
         {
             
@@ -232,7 +232,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
-        [HttpPost, Route("{datasetId}/zaznam/{itemId}")]
+        [HttpPost, Route("{datasetId}/zaznamy/{itemId}")]
         public ActionResult DatasetItem_Update(string datasetId, string itemId, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
         {
             
@@ -305,7 +305,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
-        [HttpPost, Route("{datasetId}/zaznam/{itemId}/existuje")]
+        [HttpGet, Route("{datasetId}/zaznamy/{itemId}/existuje")]
         public ActionResult DatasetItem_Exists(string datasetId, string itemId)
         {
             try
@@ -313,7 +313,7 @@ namespace HlidacStatu.Web.Controllers
                 var ds = DataSet.CachedDatasets.Get(datasetId.ToLower());
                 var value = ds.ItemExists(itemId);
                 //remove from item
-                return Content(JsonConvert.SerializeObject(value), "application/json");
+                return Content(JsonConvert.SerializeObject(new { itemExists = value }), "application/json");
             }
             catch (DataSetException)
             {

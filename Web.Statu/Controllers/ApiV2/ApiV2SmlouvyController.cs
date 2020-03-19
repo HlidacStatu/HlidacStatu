@@ -38,10 +38,10 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/Smlouvy/hledat/?query=auto&page=1&order=0
         [HttpGet, Route("hledat")]
         [AuthorizeAndAudit]
-        public ActionResult Hledat(string query, int? page, int? order)
+        public ActionResult Hledat(string query, int? strana, int? razeni)
         {
-            page = page ?? 1;
-            order = order ?? 0;
+            strana = strana ?? 1;
+            razeni = razeni ?? 0;
             Lib.Searching.SmlouvaSearchResult result = null;
 
             if (string.IsNullOrWhiteSpace(query))
@@ -62,9 +62,9 @@ namespace HlidacStatu.Web.Controllers
                 )
                 platnyzaznam = null;
 
-            result = Lib.Data.Smlouva.Search.SimpleSearch(query, page.Value,
+            result = Lib.Data.Smlouva.Search.SimpleSearch(query, strana.Value,
                 Lib.Data.Smlouva.Search.DefaultPageSize,
-                (Lib.Data.Smlouva.Search.OrderResult)order.Value,
+                (Lib.Data.Smlouva.Search.OrderResult)razeni.Value,
                 platnyZaznam: platnyzaznam);
 
 

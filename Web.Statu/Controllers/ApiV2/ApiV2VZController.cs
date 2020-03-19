@@ -40,10 +40,10 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
         [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("hledat")]
-        public ActionResult Hledat(string query, int? page, int? order)
+        public ActionResult Hledat(string query, int? strana, int? razeni)
         {
-            page = page ?? 1;
-            order = order ?? 0;
+            strana = strana ?? 1;
+            razeni = razeni ?? 0;
             Lib.Searching.VerejnaZakazkaSearchData result = null;
 
             if (string.IsNullOrWhiteSpace(query))
@@ -53,9 +53,9 @@ namespace HlidacStatu.Web.Controllers
             }
 
 
-            result = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, page.Value,
+            result = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(query, null, strana.Value,
                 Lib.Data.Smlouva.Search.DefaultPageSize,
-                order.Value.ToString());
+                razeni.Value.ToString());
 
 
             if (result.IsValid == false)

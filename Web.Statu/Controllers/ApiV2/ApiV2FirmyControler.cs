@@ -13,24 +13,24 @@ namespace HlidacStatu.Web.Controllers
     {
 
         [AuthorizeAndAudit]
-        [HttpGet, Route("{companyName}")]
-        public ActionResult CompanyID(string companyName)
+        [HttpGet, Route("{jmenoFirmy}")]
+        public ActionResult CompanyID(string jmenoFirmy)
         {
             try
             {
-                if (string.IsNullOrEmpty(companyName))
+                if (string.IsNullOrEmpty(jmenoFirmy))
                 {
                     Response.StatusCode = 400;
                     return Content(new ErrorMessage($"Hodnota companyName chybí.").ToJson(), "application/json");
                 }
                 else
                 {
-                    var name = Lib.Data.Firma.JmenoBezKoncovky(companyName);
+                    var name = Lib.Data.Firma.JmenoBezKoncovky(jmenoFirmy);
                     var found = Lib.Data.Firma.Search.FindAll(name, 1).FirstOrDefault();
                     if (found == null)
                     {
                         Response.StatusCode = 404;
-                        return Content(new ErrorMessage($"Firma {companyName} nenalezena.").ToJson(), "application/json");
+                        return Content(new ErrorMessage($"Firma {jmenoFirmy} nenalezena.").ToJson(), "application/json");
                     }
                     else
                         return Content(JsonConvert.SerializeObject(
