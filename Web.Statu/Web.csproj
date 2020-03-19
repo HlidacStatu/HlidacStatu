@@ -1070,6 +1070,9 @@
     <Content Include="Content\bootstrap\alerts.less" />
     <Content Include="App_Code\Infographic.cshtml" />
     <Content Include="apiv2doc.json" />
+    <Content Include="App_Data\Czech.3-2-5.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

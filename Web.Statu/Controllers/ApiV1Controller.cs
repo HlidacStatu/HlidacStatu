@@ -876,11 +876,11 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        public ActionResult OsobaFromText(string text)
+        public ActionResult PolitikFromText(string text)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
             {
-                var oo = Lib.Data.Osoba.Searching.GetFirstOsobaFromText(text);
+                var oo = Lib.Data.Osoba.Searching.GetFirstPolitikFromText(text);
 
                 if (oo != null)
                 {
@@ -890,7 +890,7 @@ namespace HlidacStatu.Web.Controllers
                 }
                 else
                 {
-                    return Content("{}", "application/json");
+                    return Content("[]", "application/json");
                 }
             }
             else
@@ -902,7 +902,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
             {
-                var oo = Lib.Data.Osoba.Searching.GetBestOsobyFromText(text);
+                var oo = Lib.Data.Osoba.Searching.GetBestPoliticiFromText(text);
 
                 if (oo != null)
                 {

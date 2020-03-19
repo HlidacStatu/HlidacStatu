@@ -11,7 +11,7 @@ namespace HlidacStatu.Web.Controllers
     {
 
         static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]> datasetIndexStatCache =
-            new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromHours(2),
+            new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromMinutes(15),
                 (o)=>
                 {
                     List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>() ;

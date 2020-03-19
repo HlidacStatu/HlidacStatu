@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class Osoba
     {
-        public static class Searching
+        public static partial class Searching
         {
             public static Osoba GetByName(string jmeno, string prijmeni, DateTime narozeni)
             {
@@ -191,27 +191,19 @@ namespace HlidacStatu.Lib.Data
             public static List<int> PolitikImportanceOrder = new List<int>() { 3, 4, 2, 1, 0 };
             public static int[] PolitikImportanceEventTypes = new int[] { (int)OsobaEvent.Types.Politicka, (int)OsobaEvent.Types.PolitickaPracovni, (int)OsobaEvent.Types.VolenaFunkce };
 
-            public static IEnumerable<Osoba> GetAllOsobyFromText(string text)
+            public static IEnumerable<Osoba> GetAllPoliticiFromText(string text)
             {
-                var parsedName = Lang.CS.Politici.FindCitations(text); //Lib.Validators.JmenoInText(text);
+                var parsedName = Politici.FindCitations(text); //Lib.Validators.JmenoInText(text);
 
                 var oo = parsedName.Select(nm => Osoby.GetByNameId.Get(nm))
                             .Where(o => o != null)
-                            .OrderBy(o =>
-                            {
-                                var index = PolitikImportanceOrder.IndexOf(o.Status);
-                                return index == -1 ? int.MaxValue : index;
-                            })
-                            //podle posledni politicke funkce
-                            .ThenByDescending(o => o.Events(e => PolitikImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
-                            //podle poctu event
-                            .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count());
+                            .OrderPoliticiByImportance();
                 return oo;
             }
-            public static IEnumerable<Osoba> GetBestOsobyFromText(string text)
+            public static IEnumerable<Osoba> GetBestPoliticiFromText(string text)
             {
                 List<Osoba> uniqO = new List<Osoba>();
-                var oo = GetAllOsobyFromText(text);
+                var oo = GetAllPoliticiFromText(text);
                 foreach (var o in oo)
                 {
                     if (
@@ -220,12 +212,14 @@ namespace HlidacStatu.Lib.Data
                         uniqO.Add(o);
                 }
 
-                return uniqO;
+                var ret = uniqO.OrderPoliticiByImportance();
+
+                return ret;
             }
 
-            public static Osoba GetFirstOsobaFromText(string text)
+            public static Osoba GetFirstPolitikFromText(string text)
             {
-                var osoby = GetBestOsobyFromText(text);
+                var osoby = GetBestPoliticiFromText(text);
                 if (osoby.Count() == 0)
                     return null;
 

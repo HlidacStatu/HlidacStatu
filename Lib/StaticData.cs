@@ -161,10 +161,10 @@ namespace HlidacStatu.Lib
 "stanislav-berkovec","stanislav-blaha","stanislav-fridrich-2","stanislav-grospic","stanislav-juranek","tatana-mala-2","tereza-hythova",
 "tomas-hanzel","tomas-kohoutek-7","tomas-martinek-10","tomas-vymazal-7","tomio-okamura","vaclav-klaus-2","vera-adamkova-1","vera-kovarova",
 "vera-prochazkova-19","vit-kankovsky","vit-rakusan","vlastimil-valek","vojtech-filip","vojtech-munzar",
-"vojtech-pikal","zbynek-stanjura","zdenek-ondracek","zdenek-podal","zuzana-majerova-zahradnikova","zuzana-ozanova", "ondrej-babka", "petr-beitl", 
-"josef-belica", "jiri-blaha-82", "monika-cervickova", "lenka-drazilova", "dvorak-jaroslav-1", "mikulas-ferjencik", "milan-hnilicka-1", 
+"vojtech-pikal","zbynek-stanjura","zdenek-ondracek","zdenek-podal","zuzana-majerova-zahradnikova","zuzana-ozanova", "ondrej-babka", "petr-beitl",
+"josef-belica", "jiri-blaha-82", "monika-cervickova", "lenka-drazilova", "dvorak-jaroslav-1", "mikulas-ferjencik", "milan-hnilicka-1",
 "pavel-jelinek,-phd.", "iva-kalatova", "jiri-kobza-2", "martin-kupka", "jan-lipavsky-2", "eva-matyasova", "jana-mrackova-vildumetzova",
-"frantisek-navrkal-2", "petr-pavek-8", "marketa-pekarova-adamova", "marie-pencikova", "roman-sklenak", "petr-venhoda", "ivo-vondrak", "vaclav-votava", 
+"frantisek-navrkal-2", "petr-pavek-8", "marketa-pekarova-adamova", "marie-pencikova", "roman-sklenak", "petr-venhoda", "ivo-vondrak", "vaclav-votava",
 "pavel-zacek"
 };
 
@@ -264,10 +264,6 @@ namespace HlidacStatu.Lib
                                         var index = Osoba.Searching.PolitikImportanceOrder.IndexOf(o.Status);
                                         return index == -1 ? int.MaxValue : index;
                                     })
-                                    //podle posledni politicke funkce
-                                    .ThenByDescending(o => o.Events(e => Osoba.Searching.PolitikImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
-                                    //podle poctu event
-                                    .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count())
                                     .ToList();
                                 ;
                                 //return osoby;
@@ -284,6 +280,8 @@ namespace HlidacStatu.Lib
 
                             using (Lib.Data.DbEntities db = new DbEntities())
                             {
+
+                                osoby.AddRange(Politici.Get());
                                 var osobyQ = db.Osoba
                                     .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
                                     .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
@@ -293,12 +291,7 @@ namespace HlidacStatu.Lib
                                     {
                                         var index = Osoba.Searching.PolitikImportanceOrder.IndexOf(o.Status);
                                         return index == -1 ? int.MaxValue : index;
-                                    })
-                                    //podle posledni politicke funkce
-                                    .ThenByDescending(o => o.Events(e => Osoba.Searching.PolitikImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
-                                    //podle poctu event
-                                    .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count())                                    ;
-                                osoby.AddRange(Politici.Get());
+                                    });
                                 osoby.AddRange(osobyQ);
                                 //return osoby;
                                 return osoby;
@@ -470,7 +463,7 @@ namespace HlidacStatu.Lib
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
                                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
-                                    ), exactNumOfResults:true
+                                    ), exactNumOfResults: true
                                     );
                                 var resNepl = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch("", 1, 0, platnyZaznam: false, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()

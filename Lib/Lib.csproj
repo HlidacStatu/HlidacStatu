@@ -525,6 +525,7 @@
     </Compile>
     <Compile Include="Data\ItemToOcrQueue.Partial.cs" />
     <Compile Include="Data\Osoba.Searching.cs" />
+    <Compile Include="Data\Osoba.Searching.Politici.cs" />
     <Compile Include="Data\Review.Partial.cs" />
     <Compile Include="Data\Audit.Partial.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />
@@ -663,6 +664,7 @@
     <Compile Include="Enhancers\IEnhancer.cs" />
     <Compile Include="Enhancers\Util.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Render\ScribanT.cs" />
     <Compile Include="Render\ScribanT.Functions.cs" />
     <Compile Include="Searching\DotaceSearchResult.cs" />
@@ -754,6 +756,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\rozhraniCRPDPH.wsdl" />
+    <Content Include="Czech.3-2-5.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Data\Db.edmx.diagram">
       <DependentUpon>Db.edmx</DependentUpon>
     </None>
