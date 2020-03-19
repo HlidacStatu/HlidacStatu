@@ -890,7 +890,7 @@ namespace HlidacStatu.Web.Controllers
                 }
                 else
                 {
-                    return Content("[]", "application/json");
+                    return Content("{}", "application/json");
                 }
             }
             else
@@ -914,7 +914,7 @@ namespace HlidacStatu.Web.Controllers
                 }
                 else
                 {
-                    return Content("{}", "application/json");
+                    return Content("[]", "application/json");
                 }
             }
             else

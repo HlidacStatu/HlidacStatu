@@ -39,8 +39,8 @@ namespace HlidacStatu.Lib.Data
                 static List<Tuple<string, string[]>> InitPoliticiStems()
                 {
                     HashSet<string> slova = new HashSet<string>();
-                    string[] prefixes = ("pan kolega poslanec předseda místopředseda prezident premiér"
-                        + "paní slečna kolegyně poslankyně předsedkyně místopředsedkyně prezidentka premiérka")
+                    string[] prefixes = ("pan kolega poslanec předseda místopředseda prezident premiér "
+                        + "paní slečna kolegyně poslankyně předsedkyně místopředsedkyně prezidentka premiérka ")
                         .Split(' ');
                     string[] blacklist = { "poslanec celý" };
                     string[] whitelist = { };
