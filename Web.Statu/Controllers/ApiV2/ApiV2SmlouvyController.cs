@@ -6,10 +6,11 @@ using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RoutePrefix("api/v2/smlouvy")]
     public class ApiV2SmlouvyController : GenericAuthController
     {
         // /api/v2/smlouvy/detail/{id}
-        [HttpGet]
+        [HttpGet, Route("{id}")]
         [AuthorizeAndAudit]
         public ActionResult Detail(string id)
         {
@@ -35,7 +36,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
         // /api/v2/Smlouvy/hledat/?query=auto&page=1&order=0
-        [HttpGet]
+        [HttpGet, Route("hledat")]
         [AuthorizeAndAudit]
         public ActionResult Hledat(string query, int? page, int? order)
         {

@@ -10,11 +10,12 @@ using HlidacStatu.Web.Models.apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [RoutePrefix("api/v2/verejnezakazky")]
     public class ApiV2VZController : GenericAuthController
     {
         // /api/v2/verejnezakazky/detail/{id}
         [AuthorizeAndAudit(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet, Route("{id}")]
         public ActionResult Detail(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -37,8 +38,8 @@ namespace HlidacStatu.Web.Controllers
         }
 
         // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
-        [HttpGet]
         [AuthorizeAndAudit(Roles = "Admin")]
+        [HttpGet, Route("hledat")]
         public ActionResult Hledat(string query, int? page, int? order)
         {
             page = page ?? 1;
