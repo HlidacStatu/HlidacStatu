@@ -118,6 +118,11 @@ namespace HlidacStatu.Web.Controllers
                 return new JsonResult() { Data = "chybí id" };
             }
             OsobaEvent osobaEvent = OsobaEvent.GetById(id ?? 0);
+            if (osobaEvent is null)
+            {
+                Response.StatusCode = 400;
+                return new JsonResult() { Data = "Event neexistuje." };
+            }
             osobaEvent.Delete(this.User.Identity.Name);
 
             return Json(new { Success = true });
