@@ -29,9 +29,9 @@ namespace HlidacStatu.Lib
 
         public static bool IsOsoba(string text)
         {
-            return OsobaInText(text) != null;
+            return JmenoInText(text) != null;
         }
-        public static Lib.Data.Osoba OsobaInText(string text, bool preferAccurateResult = false)
+        public static Lib.Data.Osoba JmenoInText(string text, bool preferAccurateResult = false)
         {
             if (string.IsNullOrEmpty(text))
                 return null;

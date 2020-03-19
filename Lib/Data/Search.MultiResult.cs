@@ -223,7 +223,7 @@ namespace HlidacStatu.Lib.Data
 
 
                             res.Osoby = new GeneralResult<Osoba>(query,
-                                HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(query.Trim(), 100)
+                                HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(query.Trim(), 100)
                                 .OrderBy(m => m.Prijmeni)
                                 .ThenBy(m => m.Jmeno)
                                 );
@@ -326,7 +326,7 @@ namespace HlidacStatu.Lib.Data
                     res.Osoby = new GeneralResult<Osoba>(query, new Osoba[] { });
 
                 res.Osoby = new GeneralResult<Osoba>(query, res.Osoby.Result
-                            .Concat(Osoba.GetPolitikByQueryFromFirmy(query, (int)(10 - (res.Osoby?.Total ?? 0)), res.Firmy.Result)
+                            .Concat(Osoba.Searching.GetPolitikByQueryFromFirmy(query, (int)(10 - (res.Osoby?.Total ?? 0)), res.Firmy.Result)
                             )
                         );
                 res.OsobaFtx = true;

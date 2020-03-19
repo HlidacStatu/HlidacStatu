@@ -48,7 +48,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                var o = HlidacStatu.Lib.Validators.OsobaInText(text);
+                var o = HlidacStatu.Lib.Validators.JmenoInText(text);
                 if (o == null)
                     return Json(new { }, JsonRequestBehavior.AllowGet);
                 else
@@ -90,7 +90,7 @@ namespace HlidacStatu.Web.Controllers
 
                 if (string.IsNullOrEmpty(jmeno) && string.IsNullOrEmpty(prijmeni) && !string.IsNullOrEmpty(celejmeno))
                 {
-                    Lib.Data.Osoba osobaZeJmena = Lib.Validators.OsobaInText(celejmeno );
+                    Lib.Data.Osoba osobaZeJmena = Lib.Validators.JmenoInText(celejmeno );
                     if (osobaZeJmena == null)
                     {
                         jmeno = "";

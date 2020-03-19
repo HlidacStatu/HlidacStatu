@@ -89,7 +89,7 @@
             <td>
                 @if (this.Request.IsAuthenticated)
                 {
-                    <a href="https://www.hlidacstatu.cz/api/v1/DatasetItem/@(Model.Dataset.DatasetId)/@(itemId)">
+                    <a href="https://www.hlidacstatu.cz/api/v1/DatasetItem/@(Model.Dataset.DatasetId)/@(itemId)?nice=1">
                         https://www.hlidacstatu.cz/api/v1/DatasetItem/@(Model.Dataset.DatasetId)/@(itemId)
                     </a>
                 }

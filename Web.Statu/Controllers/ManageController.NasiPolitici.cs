@@ -17,7 +17,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult FindPerson(string jmeno, string narozeni, bool? extendSearch)
         {
             // šlo by urychlit pomocí full text searche
-            var osoby = Osoba.FindAll(jmeno, narozeni, extendSearch.GetValueOrDefault(false));
+            var osoby = Osoba.Searching.FindAll(jmeno, narozeni, extendSearch.GetValueOrDefault(false));
 
             return View(osoby);
         }

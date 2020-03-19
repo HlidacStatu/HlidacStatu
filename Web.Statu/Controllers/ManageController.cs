@@ -294,9 +294,9 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult HledejOsoby(string jmeno, string prijmeni, string narozeni)
         {
             DateTime? nar = ParseTools.ToDateTime(narozeni, "yyyy-MM-dd");
-            var osoby = Osoba.GetAllByName(jmeno, prijmeni, nar);
+            var osoby = Osoba.Searching.GetAllByName(jmeno, prijmeni, nar);
             if (osoby.Count() == 0)
-                osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, nar);
+                osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, nar);
 
             return View(osoby);
         }
@@ -348,7 +348,7 @@ namespace HlidacStatu.Web.Controllers
                     if (string.IsNullOrWhiteSpace(fullName))
                         continue;
 
-                    var osoba = Lib.Validators.OsobaInText(fullName);
+                    var osoba = Lib.Validators.JmenoInText(fullName);
 
                     if (osoba is null)
                         continue;
@@ -406,7 +406,7 @@ namespace HlidacStatu.Web.Controllers
 
 
                 //Guid? foundId;
-                //if (Osoba.GetByName(p.Jmeno, p.Prijmeni, p.Narozeni.Value) == null)
+                //if (Osoba.Searching.GetByName(p.Jmeno, p.Prijmeni, p.Narozeni.Value) == null)
                 //{
                 //    if (cols.Count() > 5)
                 //        p.Description = cols[5];

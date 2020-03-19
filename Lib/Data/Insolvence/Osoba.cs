@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
         {
             if (_jmeno == null)
             {
-                var foundO = Validators.OsobaInText(this.PlneJmeno);
+                var foundO = Validators.JmenoInText(this.PlneJmeno);
                 _jmeno = foundO?.Jmeno ?? this.PlneJmeno;
                 _prijmeni = foundO?.Prijmeni ?? this.PlneJmeno;
             }
@@ -47,7 +47,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
         {
             if (_prijmeni == null)
             {
-                var foundO = Validators.OsobaInText(this.PlneJmeno);
+                var foundO = Validators.JmenoInText(this.PlneJmeno);
                 _jmeno = foundO?.Jmeno ?? this.PlneJmeno;
                 _prijmeni = foundO?.Prijmeni ?? this.PlneJmeno;
             }

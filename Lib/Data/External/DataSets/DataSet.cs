@@ -633,13 +633,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             ) //pokud OsobaId je vyplnena, nehledej jinou
                         {
                             string osobaId = null;
-                            var osobaInDb = Osoba.GetByName(
+                            var osobaInDb = Osoba.Searching.GetByName(
                                 jo[jmenoAttrName].Value<string>(),
                                 jo[prijmeniAttrName].Value<string>(),
                                 jo[narozeniAttrName].Value<DateTime>()
                                 );
                             if (osobaInDb == null)
-                                osobaInDb = Osoba.GetByNameAscii(
+                                osobaInDb = Osoba.Searching.GetByNameAscii(
                                     jo[jmenoAttrName].Value<string>(),
                                     jo[prijmeniAttrName].Value<string>(),
                                     jo[narozeniAttrName].Value<DateTime>()
@@ -661,17 +661,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             ) //pokud OsobaId je vyplnena, nehledej jinou
                         {
                             string osobaId = null;
-                            Lib.Data.Osoba osobaZeJmena = Lib.Validators.OsobaInText(jo[celejmenoAttrName].Value<string>());
+                            Lib.Data.Osoba osobaZeJmena = Lib.Validators.JmenoInText(jo[celejmenoAttrName].Value<string>());
                             if (osobaZeJmena != null)
                             {
-                                var osobaInDb = Osoba.GetByName(
+                                var osobaInDb = Osoba.Searching.GetByName(
                                     osobaZeJmena.Jmeno,
                                     osobaZeJmena.Prijmeni,
                                     jo[narozeniAttrName].Value<DateTime>()
                                     );
 
                                 if (osobaInDb == null)
-                                    osobaInDb = Osoba.GetByNameAscii(
+                                    osobaInDb = Osoba.Searching.GetByNameAscii(
                                            osobaZeJmena.Jmeno,
                                            osobaZeJmena.Prijmeni,
                                            jo[narozeniAttrName].Value<DateTime>()

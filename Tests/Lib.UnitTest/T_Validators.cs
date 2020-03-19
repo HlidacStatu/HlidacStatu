@@ -19,18 +19,18 @@ namespace HlidacStatu.Lib.Tests
         public void OsobaInTextTest()
         {
             var fn = "Michal Bláha";
-            var f = HlidacStatu.Lib.Validators.OsobaInText(fn);
+            var f = HlidacStatu.Lib.Validators.JmenoInText(fn);
             Assert.AreEqual(f?.Jmeno, "Michal", "Osoba1 error");
             Assert.AreEqual(f?.Prijmeni, "Bláha", "Osoba1 error");
 
 
             fn = "Bláha Michal";
-            f = HlidacStatu.Lib.Validators.OsobaInText(fn);
+            f = HlidacStatu.Lib.Validators.JmenoInText(fn);
             Assert.AreEqual(f?.Jmeno, "Michal", "Osoba2 error");
             Assert.AreEqual(f?.Prijmeni, "Bláha", "Osoba2 error");
 
             fn = "Doskocilova";
-            f = HlidacStatu.Lib.Validators.OsobaInText(fn);
+            f = HlidacStatu.Lib.Validators.JmenoInText(fn);
             Assert.AreEqual(f, null, "Osoba3 error");
 
         }

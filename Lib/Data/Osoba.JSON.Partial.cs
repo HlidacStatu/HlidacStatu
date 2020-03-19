@@ -93,9 +93,9 @@ namespace HlidacStatu.Lib.Data
                 else if (narozeni.HasValue == false)
                     return null;
                 if (o == null)
-                    o = Osoba.GetByName(t.Jmeno, t.Prijmeni, narozeni.Value);
+                    o = Osoba.Searching.GetByName(t.Jmeno, t.Prijmeni, narozeni.Value);
                 if (o == null)
-                    o = Osoba.GetByNameAscii(t.Jmeno, t.Prijmeni, narozeni.Value);
+                    o = Osoba.Searching.GetByNameAscii(t.Jmeno, t.Prijmeni, narozeni.Value);
 
                 if (o == null)
                     o = new Data.Osoba();

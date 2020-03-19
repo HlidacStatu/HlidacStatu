@@ -66,7 +66,7 @@ namespace HlidacStatu.Web.Controllers
                     "application/json");
                 
             }
-            var osoby = Osoba.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
+            var osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
                 .Select(o => new OsobaDTO(o))
                 .ToArray();
 

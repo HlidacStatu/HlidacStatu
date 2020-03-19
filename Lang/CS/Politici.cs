@@ -59,6 +59,11 @@ namespace HlidacStatu.Lang.CS
 
         }
 
+        /// <summary>
+        /// returns Osoba.NameId[]
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string[] FindCitations(string text)
         {
             var stopw = new Devmasters.Core.StopWatchEx();

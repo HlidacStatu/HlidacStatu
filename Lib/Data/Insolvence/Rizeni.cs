@@ -65,10 +65,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
-                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    var found = HlidacStatu.Lib.Validators.JmenoInText(d.PlneJmeno);
                     if (found != null)
                     {
-                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.Searching.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
                         if (o != null)
                         {
                             d.OsobaId = o.NameId;
@@ -88,10 +88,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
-                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    var found = HlidacStatu.Lib.Validators.JmenoInText(d.PlneJmeno);
                     if (found != null)
                     {
-                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.Searching.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
                         if (o != null)
                         {
                             d.OsobaId = o.NameId;
@@ -109,10 +109,10 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 if (skipOsobaIdLink == false && d.OsobaId == null && d.DatumNarozeni.HasValue)
                 {
                     //try to find osobaId from db
-                    var found = HlidacStatu.Lib.Validators.OsobaInText(d.PlneJmeno);
+                    var found = HlidacStatu.Lib.Validators.JmenoInText(d.PlneJmeno);
                     if (found != null)
                     {
-                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
+                        HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoba.Searching.GetByName(found.Jmeno, found.Prijmeni, d.DatumNarozeni.Value);
                         if (o != null)
                         {
                             d.OsobaId = o.NameId;

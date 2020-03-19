@@ -303,7 +303,7 @@ namespace HlidacStatu.Web.Controllers
                     )
                 )
             {
-                Osoba o = Osoba.GetByName(jmeno, prijmeni, dat.Value);
+                Osoba o = Osoba.Searching.GetByName(jmeno, prijmeni, dat.Value);
                 if (o == null)
                 {
                     o = new Osoba() { TitulPred = titulpred, Jmeno = jmeno, Prijmeni = prijmeni, TitulPo = titulpo, Narozeni = dat.Value };
@@ -574,7 +574,7 @@ namespace HlidacStatu.Web.Controllers
                 return Json(res, JsonRequestBehavior.AllowGet);
 
 
-            res = HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(q, 15)
+            res = HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(q, 15)
                 .Select(m => new PolitikTypeAhead() { name = m.FullNameWithYear(), nameId = m.NameId })
                 .ToArray();
 
@@ -880,7 +880,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
             {
-                var oo = Lib.Data.Osoba.GetBestOsobaFromText(text);
+                var oo = Lib.Data.Osoba.Searching.GetFirstOsobaFromText(text);
 
                 if (oo != null)
                 {
@@ -898,7 +898,30 @@ namespace HlidacStatu.Web.Controllers
                 return View("Error401");
             }
         }
+        public ActionResult PoliticiFromText(string text)
+        {
+            if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
+            {
+                var oo = Lib.Data.Osoba.Searching.GetBestOsobyFromText(text);
 
+                if (oo != null)
+                {
+                    return Content(Newtonsoft.Json.JsonConvert.SerializeObject(
+                        oo
+                            .Select(o=> new { osobaid = o.NameId, jmeno = o.Jmeno, prijmeni = o.Prijmeni })
+                            .ToArray()
+                        ), "application/json");
+                }
+                else
+                {
+                    return Content("{}", "application/json");
+                }
+            }
+            else
+            {
+                return View("Error401");
+            }
+        }
         public ActionResult OsobaHledat(string jmeno, string prijmeni, string narozen)
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
@@ -911,7 +934,7 @@ namespace HlidacStatu.Web.Controllers
                         new { error = "invalid date format. Use yyyy-MM-dd format." }
                         ), "application/json");
                 }
-                var found = Osoba.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
+                var found = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, dt.Value)
                     .Select(o => new osobaResult(o))
                     .ToArray();
 

@@ -524,6 +524,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\ItemToOcrQueue.Partial.cs" />
+    <Compile Include="Data\Osoba.Searching.cs" />
     <Compile Include="Data\Review.Partial.cs" />
     <Compile Include="Data\Audit.Partial.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />

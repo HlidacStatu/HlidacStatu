@@ -248,31 +248,8 @@ namespace HlidacStatu.Lib
                 //        );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Politici");
-                PolitickyAktivni = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
-                        TimeSpan.FromHours(36), "politickyAktivni", (obj) =>
-                        {
-                            List<Osoba> osoby = null;
-
-                            using (Lib.Data.DbEntities db = new DbEntities())
-                            {
-                                var osobyQ = db.Osoba
-                                    .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
-                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
-                                    .AsNoTracking();
-                                osoby = osobyQ.ToList();
-                                osoby.AddRange(db.Osoba
-                                                .AsNoTracking()
-                                                .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.Politik)
-                                    );
-                                //return osoby;
-                                return osoby;
-
-                            }
-
-                        }
-                    );
                 Politici = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
-                        TimeSpan.FromHours(36),"politiciOnly", (obj) =>
+                        TimeSpan.FromHours(36), "politiciOnly", (obj) =>
                         {
                             List<Osoba> osoby = null;
 
@@ -280,8 +257,19 @@ namespace HlidacStatu.Lib
                             {
                                 osoby = db.Osoba
                                     .AsNoTracking()
-                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.Politik )
+                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.Politik)
+                                    .ToArray()
+                                    .OrderBy(o =>
+                                    {
+                                        var index = Osoba.Searching.PolitikImportanceOrder.IndexOf(o.Status);
+                                        return index == -1 ? int.MaxValue : index;
+                                    })
+                                    //podle posledni politicke funkce
+                                    .ThenByDescending(o => o.Events(e => Osoba.Searching.PolitikImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
+                                    //podle poctu event
+                                    .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count())
                                     .ToList();
+                                ;
                                 //return osoby;
                                 return osoby;
 
@@ -289,6 +277,37 @@ namespace HlidacStatu.Lib
 
                         }
                     );
+                PolitickyAktivni = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
+                        TimeSpan.FromHours(36), "politickyAktivni", (obj) =>
+                        {
+                            List<Osoba> osoby = new List<Osoba>();
+
+                            using (Lib.Data.DbEntities db = new DbEntities())
+                            {
+                                var osobyQ = db.Osoba
+                                    .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
+                                    .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
+                                    .AsNoTracking()
+                                    .ToArray()
+                                    .OrderBy(o =>
+                                    {
+                                        var index = Osoba.Searching.PolitikImportanceOrder.IndexOf(o.Status);
+                                        return index == -1 ? int.MaxValue : index;
+                                    })
+                                    //podle posledni politicke funkce
+                                    .ThenByDescending(o => o.Events(e => Osoba.Searching.PolitikImportanceEventTypes.Contains(e.Type)).Max(e => e.DatumOd))
+                                    //podle poctu event
+                                    .ThenByDescending(o => o.Events_VerejnopravniUdalosti().Count())                                    ;
+                                osoby.AddRange(Politici.Get());
+                                osoby.AddRange(osobyQ);
+                                //return osoby;
+                                return osoby;
+
+                            }
+
+                        }
+                    );
+
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
                 Insolvence_firem_politiku_Cache = new Devmasters.Cache.V20.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]>(

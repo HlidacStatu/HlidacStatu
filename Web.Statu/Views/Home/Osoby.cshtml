@@ -32,7 +32,7 @@
     }
     else if (!string.IsNullOrEmpty(Request.QueryString["q"]))
     {
-        showList = HlidacStatu.Lib.Data.Osoba.GetPolitikByNameFtx(Request.QueryString["q"])
+        showList = HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(Request.QueryString["q"])
             .OrderBy(m => m.Prijmeni)
             .ThenBy(m => m.Jmeno)
             .ToList();
@@ -40,7 +40,7 @@
         if (ViewBag.SearchFtx == true)
         {
             showList = showList.Concat(
-                HlidacStatu.Lib.Data.Osoba.GetPolitikByQueryFromFirmy(Request.QueryString["q"])
+                HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByQueryFromFirmy(Request.QueryString["q"])
                 ).ToList();
         }
     }
