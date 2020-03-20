@@ -26,5 +26,6 @@ namespace HlidacStatu.Lib.Data
         public System.DateTime Created { get; set; }
         public string Zdroj { get; set; }
         public string Organizace { get; set; }
+        public Nullable<int> Status { get; set; }
     }
 }

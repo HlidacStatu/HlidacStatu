@@ -50,7 +50,7 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<EventType> EventType { get; set; }
         public virtual DbSet<OsobaEvent> OsobaEvent { get; set; }
     
-        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string krajId, string okresId)
+        public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string krajId, string okresId, Nullable<int> status)
         {
             var iCOParameter = iCO != null ?
                 new ObjectParameter("ICO", iCO) :
@@ -100,7 +100,11 @@ namespace HlidacStatu.Lib.Data
                 new ObjectParameter("okresId", okresId) :
                 new ObjectParameter("okresId", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter, krajIdParameter, okresIdParameter);
+            var statusParameter = status.HasValue ?
+                new ObjectParameter("status", status) :
+                new ObjectParameter("status", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Firma_Save", iCOParameter, dICParameter, datum_zapisu_ORParameter, stav_subjektuParameter, jmenoParameter, jmenoAsciiParameter, kod_PFParameter, sourceParameter, popisParameter, versionUpdateParameter, krajIdParameter, okresIdParameter, statusParameter);
         }
     
         public virtual int SmlouvaId_Save(string id, Nullable<int> active, Nullable<System.DateTime> created, Nullable<System.DateTime> updated)

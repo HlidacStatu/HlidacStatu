@@ -232,6 +232,7 @@
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="Zdroj" Type="nvarchar(max)" />
           <Property Name="Organizace" Type="nvarchar(max)" />
+          <Property Name="Status" Type="int" />
         </EntityType>
         <EntityType Name="OsobaExternalId">
           <Key>
@@ -359,6 +360,7 @@
           <Parameter Name="VersionUpdate" Type="int" Mode="In" />
           <Parameter Name="KrajId" Type="nvarchar" Mode="In" />
           <Parameter Name="okresId" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="int" Mode="In" />
         </Function>
         <Function Name="SmlouvaId_Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="nvarchar" Mode="In" />
@@ -446,6 +448,7 @@
             <Parameter Name="VersionUpdate" Mode="In" Type="Int32" />
             <Parameter Name="KrajId" Mode="In" Type="String" />
             <Parameter Name="okresId" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="DatoveSchrankies" EntityType="FirmyModel.DatoveSchranky" />
           <EntitySet Name="WatchDogs" EntityType="FirmyModel.WatchDog" />
@@ -838,6 +841,7 @@
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Organizace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1180,6 +1184,7 @@
           <EntitySetMapping Name="OsobaEvent">
             <EntityTypeMapping TypeName="FirmyModel.OsobaEvent">
               <MappingFragment StoreEntitySet="OsobaEvent">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Organizace" ColumnName="Organizace" />
                 <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
