@@ -63,25 +63,17 @@ namespace HlidacStatu.Lib.Data
             CentralniRegistrOznameni = 13
         }
 
-        public enum SubTypes
+        [Flags]
+        [ShowNiceDisplayName()]
+        public enum Statuses
         {
-            Prezident = 1,
-            Poslanec = 2,
-            Senator = 3,
-            ClenKrajskehoZastupitelstva = 4,
-            ClenObecnihoZastupitelstva = 5,
-            ClenNarodnihoVyboru = 6,
-            PoslanecEvropskehoParlamentu = 7,
-            PredsedaPoslaneckeSnemovnyParlamentuCR = 8,
-            PredsedaSenatuParlamentuCR = 9,
-            MistopredsedaPoslaneckeSnemovnyParlamentuCR = 10,
-            MistopredsedaSenatuParlamentuCR = 11,
-            PredsedaVladyCR = 12,
-            MistopredsedaVladyCR = 13,
-            MinistrVladyCR = 14,
-            StarostaPrimator = 15
+            [NiceDisplayName("Skryto NP")]
+            NasiPoliticiSkryte = 1,
+            //[NiceDisplayName("Jen pro tesst")]
+            //HlidacSkryte = 2
         }
 
+ 
         public void SetYearInterval(int year)
         {
             this.DatumOd = new DateTime(year, 1, 1);
@@ -170,7 +162,7 @@ namespace HlidacStatu.Lib.Data
                     var oe = db.OsobaEvent
                         .Where(ev =>
                             ev.OsobaId == osobaEvent.OsobaId
-                            && ev.Title == osobaEvent.Title
+                            && ev.AddInfo == osobaEvent.AddInfo
                             && ev.DatumOd == osobaEvent.DatumOd
                             && ev.Type == osobaEvent.Type
                             && ev.Organizace == osobaEvent.Organizace)
@@ -205,6 +197,7 @@ namespace HlidacStatu.Lib.Data
                         eventToUpdate.Title = osobaEvent.Title;
                         eventToUpdate.Type = osobaEvent.Type;
                         eventToUpdate.Zdroj = osobaEvent.Zdroj;
+                        eventToUpdate.Status = osobaEvent.Status;
 
                         eventToUpdate.Created = DateTime.Now;
 

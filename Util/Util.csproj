@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataValidators.cs" />
+    <Compile Include="EnumTools.cs" />
     <Compile Include="FirstCaseLowercaseContractResolver.cs" />
     <Compile Include="ArrayTools.cs" />
     <Compile Include="Cache\Core.cs" />

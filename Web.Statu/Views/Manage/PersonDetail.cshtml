@@ -1,6 +1,7 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
 @using Devmasters.Core
 @using HlidacStatu.Lib.Data
+@using HlidacStatu.Util
 
 @{
     ViewBag.Title = "PersonDetail";
@@ -64,6 +65,7 @@
                 data-addinfo=""
                 data-typ=""
                 data-zdroj=""
+                data-status=""
                 data-action="create">
             Přidat událost
         </button>
@@ -79,6 +81,7 @@
                         <th>Organizace</th>
                         <th>Role</th>
                         <th>Zdroj</th>
+                        <th>Stav</th>
                         <th>akce</th>
                     </tr>
                 </thead>
@@ -115,6 +118,23 @@
                                 @Html.DisplayFor(modelItem => udalost.Zdroj)
                             </td>
                             <td>
+                                @{ 
+                                    if(udalost.Status.HasValue)
+                                    {
+                                        var flags = udalost.Status.Value
+                                            .ConvertToEnum<OsobaEvent.Statuses>()
+                                            .GetUniqueFlags<OsobaEvent.Statuses>();
+
+                                        foreach(var flag in flags)
+                                        {
+                                            <p>@flag.ToNiceDisplayName()</p>
+                                        }
+                                    }
+                                    
+                                }
+                                
+                            </td>
+                            <td>
                                 <button type="button"
                                         class="btn btn-primary btn-sm"
                                         data-toggle="modal"
@@ -129,6 +149,7 @@
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
                                         data-zdroj="@udalost.Zdroj"
+                                        data-status="@udalost.Status"
                                         data-action="edit">
                                     Editovat
                                 </button>
@@ -146,6 +167,7 @@
                                         data-addinfo="@udalost.AddInfo"
                                         data-typ="@udalost.Type"
                                         data-zdroj="@udalost.Zdroj"
+                                        data-status="@udalost.Status"
                                         data-action="delete">
                                     Smazat
                                 </button>
@@ -221,6 +243,21 @@
                             <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
+                            <label for="status" class="col-form-label">Stavy:</label><br />
+                            @foreach (Enum value in Enum.GetValues(typeof(OsobaEvent.Statuses)))
+                            {
+                            <div class="form-inline">
+                                <input type="checkbox"
+                                       class="form-control statusbox"
+                                       value="@value.ToString("D")"
+                                       name="@value.ToString("G")">
+                                <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
+                            </div>
+
+                            }
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
                             <label for="zdroj" class="col-form-label">Zdroj:</label>
                             <input type="text" class="form-control" id="zdroj">
                             <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
@@ -239,6 +276,7 @@
 <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
 
 <script>
+    // setup modal window
     $('#eventModal').on('show.bs.modal', function (event) {
         // clear previous error messages
         clearErrorMessages();
@@ -254,6 +292,7 @@
         var castka = button.data('castka')
         var addinfo = button.data('addinfo')
         var typ = button.data('typ')
+        var status = button.data('status')
         var zdroj = button.data('zdroj')
 
         // set modal window
@@ -311,9 +350,28 @@
         modal.find('#castka').val(castka)
         modal.find('#addInfo').val(addinfo)
         modal.find('#zdroj').val(zdroj)
+
+        // set statusboxes correctly
+        $('.statusbox').each( (i,el) => {
+            if (parseInt(el.value).toString(2) & status.toString(2)) {
+                el.checked = true;
+            }
+            else {
+                el.checked = false;
+            }
+        });
     })
 
     function editEvent() {
+
+        statusValue = 0;
+
+        $('.statusbox').each( (i,el) => {
+            if( el.checked == true ) { 
+                statusValue = statusValue + parseInt(el.value);
+            }
+        });
+
         var osobaEvent = {
             "OsobaId": $("#personId").val(),
             "pk": $("#eventId").val(),
@@ -324,6 +382,7 @@
             "DatumOd": $("#datumOd").val(),
             "DatumDo": $("#datumDo").val(),
             "Type": $("#typ").val(),
+            "Status": statusValue,
             "Zdroj": $("#zdroj").val()
         }
 
@@ -424,26 +483,26 @@
 
     });
 
-    // scroll top
-    $(document).ready(function(){
-     $(window).scroll(function () {
-            if ($(this).scrollTop() > 800) {
-                $('#back-to-top').fadeIn();
-            } else {
-                $('#back-to-top').fadeOut();
-            }
-        });
-        // scroll body to 0px on click
-        $('#back-to-top').click(function () {
-            $('#back-to-top').tooltip('hide');
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
+    //// scroll top
+    //$(document).ready(function(){
+    // $(window).scroll(function () {
+    //        if ($(this).scrollTop() > 800) {
+    //            $('#back-to-top').fadeIn();
+    //        } else {
+    //            $('#back-to-top').fadeOut();
+    //        }
+    //    });
+    //    // scroll body to 0px on click
+    //    $('#back-to-top').click(function () {
+    //        $('#back-to-top').tooltip('hide');
+    //        $('body,html').animate({
+    //            scrollTop: 0
+    //        }, 800);
+    //        return false;
+    //    });
         
-        $('#back-to-top').tooltip('show');
+    //    $('#back-to-top').tooltip('show');
 
-    });
+    //});
 
 </script>
