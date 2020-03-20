@@ -23,11 +23,11 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [Authorize(Roles = "NasiPoliticiAdmin")]
-        public ActionResult PersonDetail(int? id)
+        public ActionResult PersonDetail(int? id, string columOrdering, int? descending)
         {
             if (id == null) return RedirectToAction(nameof(FindPerson));
 
-            Osoba osoba = HlidacStatu.Lib.Data.Osoba.GetByInternalId(id ?? 0);
+            Osoba osoba = Osoba.GetByInternalId(id ?? 0);
 
             return View(osoba);
         }

@@ -28,7 +28,7 @@ namespace HlidacStatu.Web.Controllers
             if (!Framework.ApiAuth.IsApiAuth(this)
                 .Authentificated)
             {
-                //Response.StatusCode = 401;
+                Response.StatusCode = 401;
                 return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
             }
             else
@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Controllers
                 })
                 .Authentificated)
             {
-                //Response.StatusCode = 401;
+                Response.StatusCode = 401;
                 return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
             }
             else
@@ -83,36 +83,36 @@ namespace HlidacStatu.Web.Controllers
                 var o = Osoba.GetByNameId(id);
                 if (o == null)
                 {
-                    //Response.StatusCode = 404;
+                    Response.StatusCode = 404;
                     return Json(ApiResponseStatus.Error(404,"Politik not found"), JsonRequestBehavior.AllowGet);
                 }
                 if (o.StatusOsoby() != Osoba.StatusOsobyEnum.Politik )
                 {
-                    //Response.StatusCode = 404;
+                    Response.StatusCode = 404;
                     return Json(ApiResponseStatus.Error(404, "Person is not marked as politician"), JsonRequestBehavior.AllowGet);
                 }
 
                 var statDescription =
-                    HlidacStatu.Util.InfoFact.RenderInfoFacts(
-                        o.InfoFacts().Where(i => i.Level != HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
+                    InfoFact.RenderInfoFacts(
+                        o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray()
                         , 4, true, true, "", "{0}");
 
                 var angazovanost =
-                    HlidacStatu.Util.InfoFact.RenderInfoFacts(
-                        o.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).ToArray()
+                    InfoFact.RenderInfoFacts(
+                        o.InfoFacts().Where(m => m.Level == InfoFact.ImportanceLevel.Stat).ToArray()
                         , 4, true, true, "", "{0}");
 
 
                 int[] types = {
-                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
-                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
-                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
-                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
-                    (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                    (int)OsobaEvent.Types.VolenaFunkce,
+                    (int)OsobaEvent.Types.PolitickaPracovni,
+                    (int)OsobaEvent.Types.Politicka,
+                    (int)OsobaEvent.Types.VerejnaSpravaJine,
+                    (int)OsobaEvent.Types.VerejnaSpravaPracovni,
                 };
-                var funkceOsoba = o.Description(true,
-                        m => types.Contains(m.Type),
-                        20);
+                //var funkceOsoba = o.Description(true,
+                //        m => types.Contains(m.Type),
+                //        20);
 
                 var roleOsoba = o.Events(m => types.Contains(m.Type))
                     .Select(e => new { 
@@ -123,24 +123,27 @@ namespace HlidacStatu.Web.Controllers
                     })
                     .ToArray();
 
+                var registrOznameni = o.Events(m => m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni)
+                    .Select(m => m.AddInfo).ToList();
+
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
                 //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
                 //query: dluznici.osobaId:{o.NameId}
-                var oinsDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsDluznik = Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "dluznici"), 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 //query: veritele.osobaId:{o.NameId}
-                var oinsVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsVeritel = Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "veritele"), 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
                 //query: spravci.osobaId:{o.NameId}
-                var oinsSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "spravci"), 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var oinsSpravce = Lib.Data.Insolvence.Insolvence.SimpleSearch(string.Format(osobaInsQuery, "spravci"), 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
 
                 Dictionary<string, long> oinsolv = new Dictionary<string, long>();
                 oinsolv.Add("dluznici|dlužník|dlužníka|dlužníkem", oinsDluznik.Total);
                 oinsolv.Add("veritele|věřitel|věřitele|veřitelem", oinsVeritel.Total);
                 oinsolv.Add("spravci|insolvenční správce|insolvenčního správce|insolvenčním správcem", oinsSpravce.Total);
 
-                var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + o.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
-                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
-                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + o.NameId, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insRes = Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + o.NameId, 1, 5, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+                var insDluznik = Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaiddluznik:" + o.NameId, 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insVeritel = Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidveritel:" + o.NameId, 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
+                var insSpravce = Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaidspravce:" + o.NameId, 1, 1, (int)Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, false);
 
                 Dictionary<string, long> insolv = new Dictionary<string, long>();
                 insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
@@ -149,7 +152,7 @@ namespace HlidacStatu.Web.Controllers
 
                 var photo = o.GetPhotoUrl(false);
 
-                var sponzorstvi = o.Events(m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor)
+                var sponzorstvi = o.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor)
                     .Select(m => new
                                 {
                                     party = m.Organizace,
@@ -200,6 +203,7 @@ namespace HlidacStatu.Web.Controllers
                     photo = photo,
                     description = statDescription,
                     companyConnection = angazovanost,
+                    notificationRegister = registrOznameni,
                     //funkce = funkceOsoba,
                     roles = roleOsoba,
                     insolvencyPerson = insPerson,
