@@ -1,36 +1,36 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
-using System.Web.Mvc;
+using System.Web.Http;
 using HlidacStatu.Lib.Data;
-using HlidacStatu.Web.Models.apiv2;
+using HlidacStatu.Web.Models.Apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/osoby")]
-    public class ApiV2OsobyController : GenericAuthController
+    public class ApiV2OsobyController : ApiController
     {
         // /api/v2/osoby/{id}
         [AuthorizeAndAudit]
         [HttpGet, Route("{osobaId}")]
-        public ActionResult Detail(string osobaId)
+        public OsobaDetailDTO Detail(string osobaId)
         {
             if (string.IsNullOrEmpty(osobaId))
             {
-                Response.StatusCode = 400;
-                return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
+                //Response.StatusCode =400;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota id chybí."));
             }
 
             var osoba = Osoba.GetByNameId(osobaId);
 
             if (osoba == null)
             {
-                Response.StatusCode = 404;
-                return Content(new ErrorMessage($"Osoba s id [{osobaId}] nenalezena").ToJson(), "application/json");
+                //Response.StatusCode =404;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Osoba s id [{osobaId}] nenalezena"));
             }
 
             OsobaDetailDTO OsobaDetail = new OsobaDetailDTO(osoba);
 
-            return Content(OsobaDetail.ToJson(), "application/json");
+            return OsobaDetail;
 
         }
 
@@ -44,7 +44,7 @@ namespace HlidacStatu.Web.Controllers
         //            , "yyyy-MM-dd");
         //    if (dt.HasValue == false)
         //    {
-        //        Response.StatusCode = 400;
+        //        //Response.StatusCode =400;
         //        return Content(
         //            new ErrorMessage($"Špatný formát data. Použijte formát ve tvaru [yyyy-MM-dd].").ToJson(), 
         //            "application/json");

@@ -1039,7 +1039,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static string ExportToJson(Smlouva smlouva, bool formatted = false, bool allData = false, bool noDocsContent = false)
+        public static Smlouva Export(Smlouva smlouva, bool allData = false, bool noDocsContent = false)
         {
             Smlouva s = (Smlouva) smlouva.MemberwiseClone(); 
             if (s == null)
@@ -1078,28 +1078,32 @@ namespace HlidacStatu.Lib.Data
                     }
                 }
 
-            var ret = Newtonsoft.Json.JsonConvert.SerializeObject(s,
-                new JsonSerializerSettings()
-                {
-                    Formatting = formatted ? Formatting.Indented : Formatting.None,
-                    //NullValueHandling = NullValueHandling.Ignore,         
-                    ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
-                }
+            //var ret = Newtonsoft.Json.JsonConvert.SerializeObject(s,
+            //    new JsonSerializerSettings()
+            //    {
+            //        Formatting = formatted ? Formatting.Indented : Formatting.None,
+            //        //NullValueHandling = NullValueHandling.Ignore,         
+            //        ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
+            //    }
 
-                );
+            //    );
 
             if (allData == false)
             {
                 //Composite formatting { escaping
 
-                var licence = "\"{0}\":{{ \"note\":\"-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --\" }}";
-                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"classification\": \\s? null", ret, string.Format(licence, "classification"));
-                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitiky\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitiky"));
-                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyNedavne\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyNedavne"));
-                ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyAktualni\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyAktualni"));
+                //var licence = "\"{0}\":{{ \"note\":\"-- Tato data jsou dostupná pouze v komerční nebo speciální licenci. Kontaktujte nás. --\" }}";
+                //ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"classification\": \\s? null", ret, string.Format(licence, "classification"));
+                //ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitiky\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitiky"));
+                //ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyNedavne\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyNedavne"));
+                //ret = HlidacStatu.Util.ParseTools.GetStringReplaceWithRegex("\"sVazbouNaPolitikyAktualni\": \\s? null", ret, string.Format(licence, "sVazbouNaPolitikyAktualni"));
+                s.Classification = null;
+                s.SVazbouNaPolitiky = null;
+                s.SVazbouNaPolitikyAktualni = null;
+                s.SVazbouNaPolitikyNedavne = null;
             }
 
-            return ret;
+            return s;
         }
 
         public static IEnumerable<string> AllIdsFromDB()

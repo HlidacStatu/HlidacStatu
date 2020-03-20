@@ -1,7 +1,7 @@
 ﻿using HlidacStatu.Lib.Data;
 using System;
 
-namespace HlidacStatu.Web.Models.apiv2
+namespace HlidacStatu.Web.Models.Apiv2
 {
     public class OsobaDTO
     {

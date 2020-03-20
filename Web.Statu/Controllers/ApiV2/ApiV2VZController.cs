@@ -4,43 +4,41 @@ using Nest;
 using Swashbuckle.Swagger.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Mvc;
+using System.Web.Http;
 using Newtonsoft.Json;
-using HlidacStatu.Web.Models.apiv2;
+using HlidacStatu.Web.Models.Apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/verejnezakazky")]
-    public class ApiV2VZController : GenericAuthController
+    public class ApiV2VZController : ApiController
     {
         // /api/v2/verejnezakazky/detail/{id}
         [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("{id}")]
-        public ActionResult Detail(string id)
+        public Lib.Data.VZ.VerejnaZakazka Detail(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                Response.StatusCode = 400;
-                return Content(new ErrorMessage($"Hodnota id chybí.").ToJson(), "application/json");
+                //Response.StatusCode =400;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota id chybí."));
             }
 
             var zakazka = Lib.Data.VZ.VerejnaZakazka.LoadFromES(id);
             if (zakazka == null)
             {
-                Response.StatusCode = 404;
-                return Content(new ErrorMessage($"Zakazka nenalezena").ToJson(), "application/json");
+                //Response.StatusCode =404;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Zakazka nenalezena"));
             }
 
-            var zakazkaJson = JsonConvert.SerializeObject(zakazka);
-
-            return Content(zakazkaJson, "application/json");
+            return zakazka;
             
         }
 
         // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
         [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("hledat")]
-        public ActionResult Hledat(string query, int? strana, int? razeni)
+        public SearchResultDTO Hledat(string query, int? strana, int? razeni)
         {
             strana = strana ?? 1;
             razeni = razeni ?? 0;
@@ -48,8 +46,8 @@ namespace HlidacStatu.Web.Controllers
 
             if (string.IsNullOrWhiteSpace(query))
             {
-                Response.StatusCode = 400;
-                return Content(new ErrorMessage($"Hodnota query chybí.").ToJson(), "application/json");
+                //Response.StatusCode =400;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota query chybí."));
             }
 
 
@@ -60,16 +58,15 @@ namespace HlidacStatu.Web.Controllers
 
             if (result.IsValid == false)
             {
-                Response.StatusCode = 400;
-                return Content(new ErrorMessage($"Špatně nastavená hodnota query=[{query}]").ToJson(),
-                               "application/json");
+                //Response.StatusCode =400;
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Špatně nastavená hodnota query=[{query}]"));
             }
             else
             {
                 var zakazky = result.Result.Hits
                     .Select(m => m.Source).ToArray();
 
-                return Content(new SearchResultDTO(result.Total, result.Page, zakazky).ToJson(), "application/json");
+                return new SearchResultDTO(result.Total, result.Page, zakazky);
                 //return Content(JsonConvert.SerializeObject(zakazky), "application/json");
             }
 

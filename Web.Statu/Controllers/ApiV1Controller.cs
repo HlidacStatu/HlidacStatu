@@ -683,7 +683,7 @@ namespace HlidacStatu.Web.Controllers
                 {
 
                     var filtered = res.Result.Hits
-                                    .Select(m => new Newtonsoft.Json.Linq.JRaw( HlidacStatu.Lib.Data.Smlouva.ExportToJson(m.Source,false, apires.ApiCall.UserRoles.Contains("Admin"))))
+                                    .Select(m => new Newtonsoft.Json.Linq.JRaw( HlidacStatu.Lib.Data.Smlouva.Export(m.Source,false, apires.ApiCall.UserRoles.Contains("Admin"))))
                                     .ToArray();
 
                     return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = res.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
@@ -709,12 +709,21 @@ namespace HlidacStatu.Web.Controllers
                 {
                     return View("Error404");
                 }
-                var smodel = Smlouva.ExportToJson(model, 
+                var smodel = Smlouva.Export(model, 
                     !string.IsNullOrWhiteSpace(Request.QueryString["nice"]), 
                     apires.ApiCall.UserRoles.Contains("Admin") 
                     );
+                var s = Newtonsoft.Json.JsonConvert.SerializeObject(
+                                Smlouva.Export(smodel),
+                                    new Newtonsoft.Json.JsonSerializerSettings()
+                                    {
+                                        Formatting = Newtonsoft.Json.Formatting.None,
+                                        //NullValueHandling = NullValueHandling.Ignore,         
+                                        ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
+                                    }
+                                );
 
-                return Content(smodel, "application/json");
+                return Content(s, "application/json");
             }
             else
             {

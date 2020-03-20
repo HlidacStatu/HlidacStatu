@@ -103,7 +103,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                     //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(oldReg.datasetId);
 
-                    return ApiResponseStatus.Valid();
+                    return ApiResponseStatus.Valid(dataset);
 
                 }
                 catch (DataSetException dse)
@@ -159,7 +159,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                     //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(reg.datasetId);
 
-                    return new ApiResponseStatus() { valid = true, value= newreg.datasetId };
+                    return new ApiResponseStatus() { valid = true, value= newreg };
                     
 
                 }

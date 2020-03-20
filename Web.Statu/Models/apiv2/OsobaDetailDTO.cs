@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HlidacStatu.Web.Models.apiv2
+namespace HlidacStatu.Web.Models.Apiv2
 {
     public class OsobaDetailDTO
     {

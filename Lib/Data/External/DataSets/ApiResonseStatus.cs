@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public static ApiResponseStatus StatniWebNotFound = Error(-91, "Web not found.");
 
-        public static ApiResponseStatus Valid() { return new ApiResponseStatus() { valid = true }; }
+        public static ApiResponseStatus Valid(object value = null) { return new ApiResponseStatus() { valid = true, value=value }; }
         public static ApiResponseStatus Error(int number, string description, string errorDetail = null)
         {
             return Error(new ErrorInfo()
@@ -57,6 +57,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             public int number { get; set; }
             public string description { get; set; }
             public string errorDetail { get; set; }
+
+            public override string ToString()
+            {
+                return $"{number}: {description}"
+                    + (string.IsNullOrEmpty(errorDetail) ? "" : "\n" + errorDetail);
+            }
         }
 
         public override string ToString()

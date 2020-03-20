@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace HlidacStatu.Web.Models.apiv2
+namespace HlidacStatu.Web.Models.Apiv2
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class SearchResultDTO

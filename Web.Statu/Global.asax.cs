@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -30,6 +31,7 @@ namespace HlidacStatu.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
@@ -60,12 +62,19 @@ namespace HlidacStatu.Web
                 }
             );
 
-            if (ValueProviderFactories.Factories.Any(m => m.GetType() == typeof(System.Web.Mvc.JsonValueProviderFactory)))
-            {
-                var f = ValueProviderFactories.Factories.Where(m => m.GetType() == typeof(System.Web.Mvc.JsonValueProviderFactory)).FirstOrDefault();
-                if (f != null)
-                    ValueProviderFactories.Factories.Remove(f);
-            }
+            //if (ValueProviderFactories.Factories.Any(m => m.GetType() == typeof(System.Web.Mvc.JsonValueProviderFactory)))
+            //{
+            //    var f = ValueProviderFactories.Factories.Where(m => m.GetType() == typeof(System.Web.Mvc.JsonValueProviderFactory)).FirstOrDefault();
+            //    if (f != null)
+            //        ValueProviderFactories.Factories.Remove(f);
+            //}
+
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings
+                .Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept",
+                        "text/html",
+                        StringComparison.InvariantCultureIgnoreCase,
+                        true,
+                        "application/json"));
 
             //System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new Framework.DataSetsVirtualPathProvider());
 
