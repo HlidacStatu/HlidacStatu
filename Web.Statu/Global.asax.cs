@@ -36,7 +36,7 @@ namespace HlidacStatu.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //GlobalConfiguration.Configure(config => SwaggerConfig.Register(config));
+
 
             BannedIPs = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
                 TimeSpan.FromSeconds(30), "BannedIPs", (obj) =>
