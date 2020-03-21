@@ -1060,7 +1060,6 @@ namespace HlidacStatu.Lib.Data
                 {
                     foreach (var p in s.Prilohy)
                     {
-                        p.DatlClassification = null;
                         p.FileMetadata = null;
                     }
                 }

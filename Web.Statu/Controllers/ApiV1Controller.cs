@@ -714,6 +714,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        [Obsolete]
         public ActionResult GetForClassification(string Id)
         {
             if (Framework.ApiAuth.IsApiAuth(this).Authentificated)
@@ -737,11 +738,6 @@ namespace HlidacStatu.Web.Controllers
 
                 if (model.Prilohy != null)
                 {
-                    foreach (var p in model.Prilohy)
-                    {
-                        p.DatlClassification = new Smlouva.Priloha.Classification() { Created = DateTime.Now };
-
-                    }
                     model.Save();
                 }
 

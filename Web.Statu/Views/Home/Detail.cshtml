@@ -271,16 +271,6 @@
                                             &nbsp;
                                         </div>
 
-                                        if (priloha.HasClassification())
-                                        {
-                                            <blockquote class="small">
-                                                @Util.IfExists(priloha.DatlClassification.GetDocType().HasValue, "<div>Dokument: <b>" + priloha.DatlClassification.GetDocType()?.ToNiceDisplayName() + "</b></div>")
-                                                @Util.IfExists(priloha.DatlClassification.GetContractType().HasValue, "<div>Typ: <b>" + priloha.DatlClassification.GetContractType()?.ToNiceDisplayName() + "</b></div>")
-                                                @Util.IfExists(priloha.DatlClassification.GetContractSubjectTypes() != null, "<div>Témata: <b>" + priloha.DatlClassification.GetContractSubjectTypes()?.Select(m => m.ToNiceDisplayName()).Aggregate((f, s) => f + ", " + s) + "</b></div>")
-                                                <footer style="font-size:100%;">Texty smluv analyzovány ve spolupráci s <a href="http://www.datlowe.cz" target="_blank"><img src="~/Content/Img/Datlowe_B_male.png" alt="Datlowe" style="height:1.1em;margin-left:10px;" /></a></footer>
-
-                                            </blockquote>
-                                        }
 
                                     }
                                 </li>
