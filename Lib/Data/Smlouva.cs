@@ -1180,7 +1180,7 @@ namespace HlidacStatu.Lib.Data
 
                         res = includePrilohy
                             ? c1.Get<Smlouva>(idVerze)
-                            : c1.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy)); 
+                            : c1.Get<Smlouva>(idVerze, s => s.SourceExcludes(sml => sml.Prilohy));
 
                         if (res.Found)
                             return res.Source;
@@ -1189,6 +1189,10 @@ namespace HlidacStatu.Lib.Data
                             ES.Manager.ESLogger.Warning("Valid Req: Cannot load Smlouva Id " + idVerze + "\nDebug:" + res.DebugInformation);
                             //DirectDB.NoResult("delete from SmlouvyIds where id = @id", new System.Data.SqlClient.SqlParameter("id", idVerze));
                         }
+                        else if (res.Found == false)
+                            return null;
+                        else if (res.ServerError.Status == 404)
+                            return null;
                         else
                         {
                             ES.Manager.ESLogger.Error("Invalid Req: Cannot load Smlouva Id " + idVerze + "\n Debug:" + res.DebugInformation + " \nServerError:" + res.ServerError?.ToString(), res.OriginalException);

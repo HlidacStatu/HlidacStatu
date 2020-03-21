@@ -10,7 +10,7 @@ namespace HlidacStatu.Lib.Data
         public enum ParameterType
         {
             DatLabLastUpdate = 1,
-
+            
         }
 
         public ParameterType Parameter
