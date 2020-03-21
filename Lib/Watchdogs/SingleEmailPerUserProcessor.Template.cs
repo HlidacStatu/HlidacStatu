@@ -66,6 +66,29 @@ namespace HlidacStatu.Lib.Watchdogs
                 };
             }
 
+            public static RenderedContent Paragraph(string htmltext)
+            {
+                return Paragraph(htmltext, Devmasters.Core.TextUtil.RemoveHTML(htmltext));
+            }
+                public static RenderedContent Paragraph(string htmltext, string plaintext)
+            {
+                return new RenderedContent()
+                {
+                    ContentHtml = string.Format(@"
+                        <table cellpadding='0' cellspacing='0' border='0' align='center' width='80%' style='width: 80%; min-width: 640px;' class='mlContentTable'>
+                            <tr>
+                                <td>
+                                    <p style='font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #111111;'>
+                        {0}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        ", htmltext),
+                    ContentText = string.Format("\n{0}\n\n",plaintext)
+                };
+            }
+
 
             public static RenderedContent FixTable(RenderedContent cont)
             {
@@ -290,21 +313,6 @@ sans-serif!important ; }    .bodyFont * { font-family: Arial, Helvetica, sans-se
                                                             <tr>
                                                                 <td class='bodyTitle' id='bodyText-6' style='font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #111111;'>
 
-                                                                <table cellpadding='0' cellspacing='0' border='0' align='center' width='80%' style='width: 80%; min-width: 640px;' class='mlContentTable'>
-                                                                    <tr>
-                                                                        <td>
-                                                                          <p style='font-family: Georgia, serif; font-size: 16px; line-height: 26px; color: #111111;'>
-                                                                            <b style='color:red'>NOVINKA!</b> Pokud máte nastaveno více hlídačů nových informací na Hlídači státu, nebudeme vám je posílat v jednotlivých mailech, ale vše najednou v jednom. Napište nám, jak se vám to líbí, co bychom měli změnit a vylepšit.
-                                                                          </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-
-                                                                <table cellpadding='0' cellspacing='0' border='0' align='center' width='80%' style='width: 80%; min-width: 640px;' class='mlContentTable'>
-                                                                    <tr>
-                                                                        <td height='20' class='spacingHeight-20' style='line-height: 20px; min-height: 20px;'></td>
-                                                                    </tr>
-                                                                </table>
 
                                                                 #BODY#
 

@@ -171,7 +171,7 @@ namespace HlidacStatu.Web.Controllers
 
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
                     model.Headers = csv.Context.HeaderRecord.Where(m=> !string.IsNullOrEmpty(m?.Trim())).ToArray();
 
@@ -403,7 +403,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
 
                     while (csv.Read())
@@ -459,7 +459,7 @@ namespace HlidacStatu.Web.Controllers
 
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
                     model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
                 }
@@ -576,7 +576,7 @@ namespace HlidacStatu.Web.Controllers
 
             using (System.IO.StreamReader r = new System.IO.StreamReader(path))
             {
-                var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                 csv.Read(); csv.ReadHeader();
                 csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
 

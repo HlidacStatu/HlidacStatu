@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Util.Cache;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web;
@@ -19,7 +20,7 @@ namespace HlidacStatu.Web
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
 
-            if (BannedIPs.Get().Contains(HttpContext.Current.Request.UserHostAddress.ToLower() ))
+            if (BannedIPs.Get().Contains(HttpContext.Current.Request.UserHostAddress.ToLower()))
             {
                 Response.Clear();
                 Response.StatusCode = 403;
@@ -35,11 +36,12 @@ namespace HlidacStatu.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            GlobalConfiguration.Configure(config => SwaggerConfig.Register(config));
 
             BannedIPs = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
                 TimeSpan.FromSeconds(30), "BannedIPs", (obj) =>
                 {
-                    
+
                     var ret = new System.Collections.Generic.List<string>();
                     try
                     {
@@ -69,12 +71,14 @@ namespace HlidacStatu.Web
             //        ValueProviderFactories.Factories.Remove(f);
             //}
 
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings
-                .Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept",
-                        "text/html",
-                        StringComparison.InvariantCultureIgnoreCase,
-                        true,
-                        "application/json"));
+            var formatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+
+            formatter.MediaTypeMappings
+            .Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept",
+                    "text/html",
+                    StringComparison.InvariantCultureIgnoreCase,
+                    true,
+                    "application/json"));
 
             //System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(new Framework.DataSetsVirtualPathProvider());
 
@@ -157,7 +161,7 @@ namespace HlidacStatu.Web
             }
 
 
-            finishResponse:
+        finishResponse:
 
             return;
         }

@@ -15,8 +15,8 @@ namespace HlidacStatu.Web.Controllers
     {
         // /api/v2/verejnezakazky/detail/{id}
         [AuthorizeAndAudit(Roles = "Admin")]
-        [HttpGet, Route("{id}")]
-        public Lib.Data.VZ.VerejnaZakazka Detail(string id)
+        [HttpGet, Route("detail/{id?}")]
+        public Lib.Data.VZ.VerejnaZakazka Detail(string id = null)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -38,7 +38,7 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/verejnezakazky/hledat/?query=auto&page=1&order=0
         [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("hledat")]
-        public SearchResultDTO Hledat(string query, int? strana, int? razeni)
+        public SearchResultDTO<Lib.Data.VZ.VerejnaZakazka>Hledat(string query = null, int? strana=null, int? razeni=null)
         {
             strana = strana ?? 1;
             razeni = razeni ?? 0;
@@ -66,7 +66,7 @@ namespace HlidacStatu.Web.Controllers
                 var zakazky = result.Result.Hits
                     .Select(m => m.Source).ToArray();
 
-                return new SearchResultDTO(result.Total, result.Page, zakazky);
+                return new SearchResultDTO<Lib.Data.VZ.VerejnaZakazka>(result.Total, result.Page, zakazky);
                 //return Content(JsonConvert.SerializeObject(zakazky), "application/json");
             }
 

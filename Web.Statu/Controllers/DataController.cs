@@ -21,20 +21,21 @@ namespace HlidacStatu.Web.Controllers
 
                     foreach (var ds in datasets)
                     {
+                        var rec = new Models.DatasetIndexStat(){Ds = ds };
                         var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-                        long recordNum = dsContent.SearchData("", 1, 0, exactNumOfResults: true).Total;
-                        long recordNumWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true).Total;
+                        var allrec = dsContent.SearchData("", 1, 1, exactNumOfResults: true);
+                        rec.RecordNum = allrec.Total;
+                        if (rec.RecordNum > 0)
+                        {
+                            rec.LastRecord = (DateTime?)allrec.Result.First().DbCreated;
+                        }
 
+                        var recordWeek = dsContent.SearchData($"DbCreated:[{DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")} TO *]", 1, 0, exactNumOfResults: true);
+                        rec.RecordNumWeek = recordWeek.Total;
                         //string order = string.IsNullOrWhiteSpace(ds.defaultOrderBy) ? "DbCreated desc" : ds.defaultOrderBy;
                         //var data = dsContent.SearchDataRaw("*", 1, 1, order);
 
-
-                        ret.Add(new Models.DatasetIndexStat()
-                        {
-                            Ds = ds,
-                            RecordNum = recordNum,
-                            RecordNumWeek = recordNumWeek
-                        }) ;
+                        ret.Add(rec) ;
                     }
                     return ret.ToArray();
                 }

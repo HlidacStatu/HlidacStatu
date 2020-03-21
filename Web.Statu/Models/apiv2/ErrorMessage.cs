@@ -16,6 +16,7 @@ namespace HlidacStatu.Web.Models.Apiv2
         { }
 
         public ErrorMessage(System.Net.HttpStatusCode statusCode, string error, dynamic detail = null)
+            : base(statusCode)
         {
             this.Error = error;
             if (detail != null)

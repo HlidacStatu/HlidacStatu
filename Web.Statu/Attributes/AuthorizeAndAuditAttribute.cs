@@ -23,7 +23,7 @@ namespace HlidacStatu.Web.Attributes
             string datastring = null;
             if(filterContext.HttpContext.Request.ContentLength > 0)
             {
-                datastring = Framework.ApiHelpers.ReadRequestBody(filterContext.HttpContext.Request);
+                datastring = Framework.Api.Helpers.ReadRequestBody(filterContext.HttpContext.Request);
             }
 
             var parameters = filterContext.ActionParameters

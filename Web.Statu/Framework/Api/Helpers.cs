@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Web;
 
-namespace HlidacStatu.Web.Framework
+namespace HlidacStatu.Web.Framework.Api
 {
-    public static class ApiHelpers
+    public static class Helpers
     {
         public static string ReadRequestBody(HttpRequestBase req)
         {
@@ -16,5 +16,7 @@ namespace HlidacStatu.Web.Framework
             }
             return ret;
         }
+
+
     }
 }

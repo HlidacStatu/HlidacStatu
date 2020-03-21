@@ -213,7 +213,7 @@ namespace HlidacStatu.Lib
 
                 using (System.IO.StreamReader r = new StreamReader(App_Data_Path + "CPV_CS.txt"))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = "\t" });
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = "\t" });
                     csv.Read(); csv.ReadHeader();
                     csv.Read();//skip second line
                     while (csv.Read())

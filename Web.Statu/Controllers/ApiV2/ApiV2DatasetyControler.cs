@@ -20,10 +20,10 @@ namespace HlidacStatu.Web.Controllers
         // /api/v2/datasety/
         [AuthorizeAndAudit]
         [HttpGet, Route()]
-        public SearchResultDTO GetAll()
+        public SearchResultDTO<Registration> GetAll()
         {
-            var result = DataSetDB.Instance.SearchData("*", 1, 100);
-            return new SearchResultDTO(result.Total, result.Page, result.Result);
+            var result = DataSetDB.AllDataSets.Get();
+            return new SearchResultDTO<Registration>(result.Length, 1, result.Select(m=>m.Registration()));
         }
 
         // /api/v2/datasety/{id}
@@ -50,7 +50,7 @@ namespace HlidacStatu.Web.Controllers
 
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}/hledat")]
-        public SearchResultDTO DatasetSearch(string datasetId, string query, int? strana, string sort = null, string desc = "0")
+        public SearchResultDTO<object> DatasetSearch(string datasetId, string query, int? strana, string sort = null, string desc = "0")
         {
             if (strana is null || strana < 1)
                 strana = 1;
@@ -73,7 +73,7 @@ namespace HlidacStatu.Web.Controllers
                 var res = ds.SearchData(query, strana.Value, 50, sort + (bDesc ? " desc" : ""));
                 res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
-                return new SearchResultDTO(res.Total, res.Page, res.Result);
+                return new SearchResultDTO<object>(res.Total, res.Page, res.Result);
 
             }
             catch (DataSetException dex)

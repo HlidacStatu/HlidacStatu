@@ -295,6 +295,7 @@ namespace HlidacStatu.Lib
                 List<byte[]> facesImg = new List<byte[]>();
                 CascadeClassifier _cascadeClassifier;
                 _cascadeClassifier = new CascadeClassifier(Lib.Init.WebAppDataPath + "haarcascade_frontalface_default.xml");
+                //Image<Bgr, byte> img = Image<Bgr, byte>.FromIplImagePtr(image.Image.GetHbitmap);  
                 Image<Bgr, byte> img = new Image<Bgr, byte>(image.Image);
                 Image<Gray, byte> grayframe = img.Convert<Gray, byte>();
                 var faces = _cascadeClassifier.DetectMultiScale(grayframe, 1.1, 10, Size.Empty); //the actual face detection happens here

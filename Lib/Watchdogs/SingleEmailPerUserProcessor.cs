@@ -13,7 +13,12 @@ namespace HlidacStatu.Lib.Watchdogs
 
         public static void Send(IEnumerable<WatchDog> watchdogs,
             bool force = false, string[] specificContacts = null,
-            DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null)
+            DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null,
+            string openingText = null,
+            int maxDegreeOfParallelism = 20,
+            Action<string> logOutputFunc = null,
+            Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc = null
+            )
         {
             bool saveWatchdogStatus =
                 force == false
@@ -29,145 +34,168 @@ namespace HlidacStatu.Lib.Watchdogs
                         )
                 .ToDictionary(k => k.key, v => v.val);
 
-            foreach (var kv in groupedByUserNoSpecContact)
-            {
-                WatchDog[] wds = kv.Value;
+            Devmasters.Core.Batch.Manager.DoActionForAll<KeyValuePair<string, WatchDog[]>>(groupedByUserNoSpecContact,
+                (kv) =>
+                {
+                    WatchDog[] wds = kv.Value;
 
-                AspNetUser user = null;
-                using (Lib.Data.DbEntities db = new DbEntities())
-                {
-                    user = db.AspNetUsers
-                    .Where(m => m.Id == kv.Key)
-                    .FirstOrDefault();
-                }
-                if (user == null)
-                {
-                    foreach (var wdtmp in wds)
+                    AspNetUser user = null;
+                    using (Lib.Data.DbEntities db = new DbEntities())
                     {
-                        if (wdtmp != null && wdtmp.StatusId != 0)
-                        {
-                            wdtmp.StatusId = 0;
-                            wdtmp.Save();
-                        }
+                        user = db.AspNetUsers
+                        .Where(m => m.Id == kv.Key)
+                        .FirstOrDefault();
                     }
-                    continue;
-                }
-                if (user.EmailConfirmed == false)
-                {
-                    bool repeated = false;
-                    foreach (var wdtmp in wds)
+                    if (user == null)
                     {
-                        if (wdtmp != null && wdtmp.StatusId > 0)
+                        foreach (var wdtmp in wds)
                         {
-                            wdtmp.DisableWDBySystem(DisabledBySystemReasons.NoConfirmedEmail, repeated);
-                            repeated = true;
-                        }
-                    }
-                    continue;
-                } //user.EmailConfirmed == false
-                string emailContact = user.Email;
-
-                //process wds
-
-                List<RenderedContent> parts = new List<RenderedContent>();
-                foreach (var wd1 in wds)
-                {
-                    if ((force || Tools.ReadyToRun(wd1.Period, wd1.LastSearched, DateTime.Now)) == false)
-                        continue;
-
-
-                    //specific Watchdog
-                    List<IWatchdogProcessor> wdProcessorsForWD1 = wd1.GetWatchDogProcessors();
-
-                    DateTime? fromDate = fromSpecificDate;
-                    DateTime? toDate = toSpecificDate;
-                    if (fromDate.HasValue == false && wd1.LatestRec.HasValue)
-                        fromDate = new DateTime(wd1.LatestRec.Value.Ticks, DateTimeKind.Utc);
-                    if (fromDate.HasValue == false) //because of first search (=> no .LastSearched)
-                        fromDate = DateTime.Now.Date.AddMonths(-1); //from previous month
-
-
-                    if (toDate.HasValue == false)
-                        toDate = Tools.RoundWatchdogTime(wd1.Period, DateTime.Now);
-
-                    List<RenderedContent> wdParts = new List<RenderedContent>();
-                    foreach (var wdp in wdProcessorsForWD1)
-                    {
-                        try
-                        {
-
-                            var results = wdp.GetResults(fromDate, toDate, 30);
-                            if (results.Total > 0)
+                            if (wdtmp != null && wdtmp.StatusId != 0)
                             {
-                                RenderedContent rres = wdp.RenderResults(results, 5);
-                                wdParts.Add(Template.DataContent(results.Total, rres));
-                                wdParts.Add(Template.Margin(50));
-
+                                wdtmp.StatusId = 0;
+                                wdtmp.Save();
                             }
                         }
-                        catch (Exception ex)
+                        return new Devmasters.Core.Batch.ActionOutputData();
+                    }
+                    if (user.EmailConfirmed == false)
+                    {
+                        bool repeated = false;
+                        foreach (var wdtmp in wds)
                         {
-                            Util.Consts.Logger.Error("SingleEmailPerUserProcessor GetResults/RenderResults error", ex);
+                            if (wdtmp != null && wdtmp.StatusId > 0)
+                            {
+                                wdtmp.DisableWDBySystem(DisabledBySystemReasons.NoConfirmedEmail, repeated);
+                                repeated = true;
+                            }
                         }
-                    }
-                    if (wdParts.Count() > 0)
+                        return new Devmasters.Core.Batch.ActionOutputData();
+                    } //user.EmailConfirmed == false
+                    string emailContact = user.Email;
+
+                    //process wds
+
+                    List<RenderedContent> parts = new List<RenderedContent>();
+                    foreach (var wd1 in wds)
                     {
-                        //add watchdog header
-                        parts.Add(Template.TopHeader(wd1.Name, Util.RenderData.GetIntervalString(fromDate.Value, toDate.Value)));
-                        parts.AddRange(wdParts);
+                        if ((force || Tools.ReadyToRun(wd1.Period, wd1.LastSearched, DateTime.Now)) == false)
+                            continue;
 
 
-                    }
+                        //specific Watchdog
+                        List<IWatchdogProcessor> wdProcessorsForWD1 = wd1.GetWatchDogProcessors();
 
-                    if (saveWatchdogStatus)
-                    {
-                        wd1.LastSearched = toDate.Value;
-                        wd1.Save();
-                    }
-                } //foreach wds
+                        DateTime? fromDate = fromSpecificDate;
+                        DateTime? toDate = toSpecificDate;
+                        if (fromDate.HasValue == false && wd1.LatestRec.HasValue)
+                            fromDate = new DateTime(wd1.LatestRec.Value.Ticks, DateTimeKind.Utc);
+                        if (fromDate.HasValue == false) //because of first search (=> no .LastSearched)
+                            fromDate = DateTime.Now.Date.AddMonths(-1); //from previous month
 
-                if (parts.Count > 0)
-                {
-                    //send it
-                    var content = RenderedContent.Merge(parts);
 
-                    content.ContentHtml = Template.EmailBodyTemplateHtml
-                        .Replace("#BODY#", content.ContentHtml)
-                        .Replace("#FOOTERMSG#", Template.DefaultEmailFooterHtml)
-                        ;
-                    content.ContentText = null;
-                    //Template.EmailBodyTemplateText
-                    //.Replace("#BODY#", content.ContentText)
-                    //.Replace("#FOOTERMSG#", Template.DefaultEmailFooterText);
+                        if (toDate.HasValue == false)
+                            toDate = Tools.RoundWatchdogTime(wd1.Period, DateTime.Now);
 
-                    bool sent = false;
-                    if (specificContacts != null && specificContacts.Length > 0)
-                    {
-                        foreach (var email in specificContacts)
+                        List<RenderedContent> wdParts = new List<RenderedContent>();
+                        foreach (var wdp in wdProcessorsForWD1)
                         {
-                            Email.SendEmail(email, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content);
+                            try
+                            {
+
+                                var results = wdp.GetResults(fromDate, toDate, 30);
+                                if (results.Total > 0)
+                                {
+                                    RenderedContent rres = wdp.RenderResults(results, 5);
+                                    wdParts.Add(Template.DataContent(results.Total, rres));
+                                    wdParts.Add(Template.Margin(50));
+
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Util.Consts.Logger.Error("SingleEmailPerUserProcessor GetResults/RenderResults error", ex);
+                            }
                         }
-                    }
-                    else
-                    {
-                        sent = Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace, co vás zajímají, na Hlídači státu", content);
-                    }
-                    if (sent)
-                    {
+                        if (wdParts.Count() > 0)
+                        {
+                            //add watchdog header
+                            parts.Add(Template.TopHeader(wd1.Name, Util.RenderData.GetIntervalString(fromDate.Value, toDate.Value)));
+                            parts.AddRange(wdParts);
+
+
+                        }
+
                         if (saveWatchdogStatus)
                         {
-                            DateTime dt = DateTime.Now;
-                            foreach (var wd in wds)
+                            wd1.LastSearched = toDate.Value;
+                            wd1.Save();
+                        }
+                    } //foreach wds
+
+                    if (parts.Count > 0)
+                    {
+                        //send it
+
+                        if (!string.IsNullOrEmpty(openingText))
+                            parts.Insert(0, Template.Paragraph(openingText));
+
+                        parts.Insert(0, Template.Paragraph(
+                        "<b style='color:red'>NOVINKA!</b> "
+                        + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
+                        + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
+                        + "Napište nám, jak se Vám to líbí, co bychom mohli změnit a vylepšit (stačí odpovědět na tento mail)."
+                        ,
+                        "NOVINKA! "
+                        + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
+                        + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
+                        + "Napište nám, jak se Vám to líbí, co bychom mohli změnit a vylepšit (stačí odpovědět na tento mail)."
+                        ));
+                        parts.Insert(0, Template.Margin());
+
+                        var content = RenderedContent.Merge(parts);
+
+                        content.ContentHtml = Template.EmailBodyTemplateHtml
+                            .Replace("#BODY#", content.ContentHtml)
+                            .Replace("#FOOTERMSG#", Template.DefaultEmailFooterHtml)
+                            ;
+                        content.ContentText = null;
+                        //Template.EmailBodyTemplateText
+                        //.Replace("#BODY#", content.ContentText)
+                        //.Replace("#FOOTERMSG#", Template.DefaultEmailFooterText);
+
+                        bool sent = false;
+                        if (specificContacts != null && specificContacts.Length > 0)
+                        {
+                            foreach (var email in specificContacts)
                             {
-                                wd.LastSent = dt;
-                                wd.Save();
+                                Email.SendEmail(email, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content);
+                            }
+                        }
+                        else
+                        {
+                            sent = Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content);
+                        }
+                        if (sent)
+                        {
+                            if (saveWatchdogStatus)
+                            {
+                                DateTime dt = DateTime.Now;
+                                foreach (var wd in wds)
+                                {
+                                    wd.LastSent = dt;
+                                    wd.Save();
+                                }
                             }
                         }
                     }
-                }
 
 
-            } //foreach groupedByUserNoSpecContact
+
+                    return new Devmasters.Core.Batch.ActionOutputData();
+                },
+                logOutputFunc, progressOutputFunc,
+                true, maxDegreeOfParallelism: maxDegreeOfParallelism
+                );
 
         }
     }

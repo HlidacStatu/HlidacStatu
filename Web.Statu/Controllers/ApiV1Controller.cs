@@ -103,11 +103,12 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
+        [Obsolete()]
         public ActionResult Dumps()
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Dumps", "") }).Authentificated)
             {
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(GetDumps(),Newtonsoft.Json.Formatting.Indented), "application/json");
+                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(Framework.Api.Dumps.GetDumps(),Newtonsoft.Json.Formatting.Indented), "application/json");
             }
             else
                 return new HttpStatusCodeResult(401);
@@ -156,67 +157,7 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        private List<Models.ApiV1Models.DumpInfoModel> GetDumps()
-        {
-
-            string baseUrl = "https://www.hlidacstatu.cz/api/v1/";
-            List<DumpInfoModel> data = new List<DumpInfoModel>();
-            //if (System.IO.File.Exists(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip"))
-            //{
-            //    System.IO.FileInfo fi = new FileInfo(HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump.zip");
-            //    data.Add(
-            //        new DumpInfoModel() { url = baseUrl + "Dump", created = fi.LastWriteTimeUtc, date = fi.LastWriteTimeUtc, fulldump = true, size = fi.Length }
-            //        );
-            //}
-            //for (int i = 1; i < 31; i++)
-            //{
-            //    DateTime date = DateTime.Now.Date.AddDays(-1 * i);
-            //    string fn = HlidacStatu.Lib.StaticData.Dumps_Path + "smlouvy.dump-" + date.ToString("yyyy-MM-dd") + ".zip";
-            //    if (System.IO.File.Exists(fn))
-            //    {
-            //        System.IO.FileInfo fil = new FileInfo(fn);
-            //        data.Add(
-            //            new DumpInfoModel()
-            //            {
-            //                url = baseUrl + "dump?date=" + date.ToString("yyyy-MM-dd"),
-            //                created = fil.LastWriteTimeUtc,
-            //                date = date,
-            //                fulldump = false,
-            //                size = fil.Length
-            //            }
-            //            );
-
-            //    }
-            //}
-
-            foreach (var fi in new System.IO.DirectoryInfo(Lib.StaticData.Dumps_Path).GetFiles("*.zip"))
-            {
-                var fn = fi.Name;
-                var regexStr = @"((?<type>(\w*))? \.)? (?<name>(\w|-)*)\.dump -? (?<date>\d{4} - \d{2} - \d{2})?.zip";
-                DateTime? date = Util.ParseTools.ToDateTimeFromCode(Util.ParseTools.GetRegexGroupValue(fn, regexStr, "date"));
-                string name = Util.ParseTools.GetRegexGroupValue(fn, regexStr, "name");
-                string dtype = Util.ParseTools.GetRegexGroupValue(fn, regexStr, "type");
-                if (!string.IsNullOrEmpty(dtype))
-                    name = dtype + "." + name;
-                data.Add(
-                    new DumpInfoModel()
-                    {
-                        url = baseUrl + $"dump?datatype={name}&date={date?.ToString("yyyy-MM-dd") ?? ""}" ,
-                        created = fi.LastWriteTimeUtc,
-                        date = date,
-                        fulldump = date.HasValue == false,
-                        size = fi.Length,
-                        dataType = name
-                    }
-                    ); ;
-            }
-
-
-
-            return data;
-        }
-
-
+        [Obsolete()]
         public ActionResult Dump(string date, string datatype = "smlouvy")
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Dump", date) }).Authentificated)

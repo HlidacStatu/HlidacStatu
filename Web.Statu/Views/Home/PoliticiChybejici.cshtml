@@ -7,7 +7,7 @@
 @{
 
     var csv = new CsvHelper.CsvReader(System.IO.File.OpenText(HlidacStatu.Lib.StaticData.App_Data_Path + "Novyzastupitele.csv"),
-        new CsvHelper.Configuration.Configuration() { HasHeaderRecord = true, Delimiter = ";" });
+        new CsvHelper.Configuration.CsvConfiguration(HlidacStatu.Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = ";" });
 
     //var csv =
 
