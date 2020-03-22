@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Watchdogs
             Devmasters.Core.Batch.Manager.DoActionForAll<KeyValuePair<string, WatchDog[]>>(groupedByUserNoSpecContact,
                 (kv) =>
                 {
-                    WatchDog[] wds = kv.Value;
+                    WatchDog[] userWatchdogs = kv.Value;
 
                     AspNetUser user = null;
                     using (Lib.Data.DbEntities db = new DbEntities())
@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Watchdogs
                     }
                     if (user == null)
                     {
-                        foreach (var wdtmp in wds)
+                        foreach (var wdtmp in userWatchdogs)
                         {
                             if (wdtmp != null && wdtmp.StatusId != 0)
                             {
@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Watchdogs
                     if (user.EmailConfirmed == false)
                     {
                         bool repeated = false;
-                        foreach (var wdtmp in wds)
+                        foreach (var wdtmp in userWatchdogs)
                         {
                             if (wdtmp != null && wdtmp.StatusId > 0)
                             {
@@ -76,7 +76,7 @@ namespace HlidacStatu.Lib.Watchdogs
                     //process wds
 
                     List<RenderedContent> parts = new List<RenderedContent>();
-                    foreach (var wd1 in wds)
+                    foreach (var wd1 in userWatchdogs)
                     {
                         if ((force || Tools.ReadyToRun(wd1.Period, wd1.LastSearched, DateTime.Now)) == false)
                             continue;
@@ -180,7 +180,7 @@ namespace HlidacStatu.Lib.Watchdogs
                             if (saveWatchdogStatus)
                             {
                                 DateTime dt = DateTime.Now;
-                                foreach (var wd in wds)
+                                foreach (var wd in userWatchdogs)
                                 {
                                     wd.LastSent = dt;
                                     wd.Save();
