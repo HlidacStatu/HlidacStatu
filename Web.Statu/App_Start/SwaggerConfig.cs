@@ -193,7 +193,7 @@ namespace HlidacStatu.Web
                          //
                          //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
                      })
-                .EnableSwaggerUi("api/v2/swagger/{*assetPath}", c => //api/v2/swagger/index
+                .EnableSwaggerUi("api/swagger/v2/{*assetPath}", c => //api/swagger/v2/index
                 {
                     // Use the "DocumentTitle" option to change the Document title.
                     // Very helpful when you have multiple Swagger pages open, to tell them apart.
