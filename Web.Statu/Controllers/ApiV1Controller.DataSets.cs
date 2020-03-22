@@ -758,8 +758,15 @@ namespace HlidacStatu.Web.Controllers
                                     MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
                                 }
                                 );
-
-                                newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
+                                try
+                                {
+                                    newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
+                                }
+                                catch (Exception e)
+                                {
+                                    HlidacStatu.Util.Consts.Logger.Error($"Dataset API spec: ds:{ds?.ToString()} dataid:{dataid} api:{apiAuth?.ApiCall?.User}", e);
+                                    throw;
+                                }
                             }
                         }
                         else
