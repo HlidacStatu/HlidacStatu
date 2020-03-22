@@ -14,7 +14,7 @@ namespace HlidacStatu.Web
             var thisAssembly = typeof(SwaggerConfig).Assembly;
 
             GlobalConfiguration.Configuration
-                .EnableSwagger("api/{apiVersion}/swagger", c =>
+                .EnableSwagger("api/swagger/{apiVersion}", c =>
                      {
                         // Use "SingleApiVersion" to describe a single version API. Swagger 2.0 includes an "Info" object to
                         // hold additional metadata for an API. Version and title are required but you can also provide
