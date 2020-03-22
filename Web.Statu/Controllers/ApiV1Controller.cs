@@ -54,8 +54,9 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
-        public ActionResult ResendConfirmationMail(string id)
+        public ActionResult ResendConfirmationMail(string _id)
         {
+            string id = _id;
 
             if (Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -297,8 +298,10 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        public ActionResult VZList(string id)
+        public ActionResult VZList(string _id)
         {
+            string id = _id;
+
             if (string.IsNullOrEmpty(id))
                 return new HttpStatusCodeResult(404);
 
@@ -329,8 +332,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [HttpGet()]
-        public ActionResult VZDetail(string id)
+        public ActionResult VZDetail(string _id)
         {
+            string id = _id;
+
             if (string.IsNullOrEmpty(id))
                 return new HttpStatusCodeResult(404);
 
@@ -371,8 +376,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [HttpPost()]
-        public ActionResult VZDetail(string id, FormCollection form)
+        public ActionResult VZDetail(string _id, FormCollection form)
         {
+            string id = _id;
+
             var content = ReadRequestBody(this.Request);
             //return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { debug=content, error = "Not implemented yet. Come back tomorrow." }), "application/json");
 
@@ -637,8 +644,10 @@ namespace HlidacStatu.Web.Controllers
             }
 
         }
-        public ActionResult Detail(string Id)
+        public ActionResult Detail(string _id)
         {
+            string Id = _id;
+
             var apires = Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Detail", Id) });
             if (apires.Authentificated)
             {
@@ -715,8 +724,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [Obsolete]
-        public ActionResult GetForClassification(string Id)
+        public ActionResult GetForClassification(string _id)
         {
+            string Id = _id;
+
             if (Framework.ApiAuth.IsApiAuth(this).Authentificated)
             {
                 if (string.IsNullOrWhiteSpace(Id))

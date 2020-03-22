@@ -14,7 +14,7 @@ namespace HlidacStatu.Web
             var thisAssembly = typeof(SwaggerConfig).Assembly;
 
             GlobalConfiguration.Configuration
-                .EnableSwagger("api/swagger/{apiVersion}", c =>
+                .EnableSwagger("api/{apiVersion}/swagger/", c =>
                      {
                         // Use "SingleApiVersion" to describe a single version API. Swagger 2.0 includes an "Info" object to
                         // hold additional metadata for an API. Version and title are required but you can also provide
@@ -193,7 +193,7 @@ namespace HlidacStatu.Web
                          //
                          //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
                      })
-                .EnableSwaggerUi("api/swagger/v2/{*assetPath}", c => //api/swagger/v2/index
+                .EnableSwaggerUi("api/v2/swagger/{*assetPath}", c => //api/v2/swagger/index
                 {
                     // Use the "DocumentTitle" option to change the Document title.
                     // Very helpful when you have multiple Swagger pages open, to tell them apart.

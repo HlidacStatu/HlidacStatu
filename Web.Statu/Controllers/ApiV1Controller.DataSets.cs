@@ -215,9 +215,9 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult DatasetTemplatePreview(string id, string type, string template)
+        public ActionResult DatasetTemplatePreview(string _id, string type, string template)
         {
-
+            string id = _id;
             if (string.IsNullOrEmpty(id))
                 return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
 
@@ -364,8 +364,10 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpPut, ActionName("Datasets")]
         [ValidateInput(false)]
-        public ActionResult Datasets_Update(string id)
+        public ActionResult Datasets_Update(string _id)
         {
+            string id = _id;
+
             var data = ReadRequestBody(this.Request);
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -396,8 +398,10 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpPut, ActionName("DatasetsPart")]
         [ValidateInput(false)]
-        public ActionResult DatasetsPart_Update(string id, string atribut)
+        public ActionResult DatasetsPart_Update(string _id, string atribut)
         {
+            string id = _id;
+
             if (string.IsNullOrEmpty(atribut))
                 return Json(ApiResponseStatus.InvalidFormat, JsonRequestBehavior.AllowGet);
 
@@ -436,18 +440,24 @@ namespace HlidacStatu.Web.Controllers
 
 
         [HttpPatch, ActionName("Datasets")]
-        public ActionResult Datasets_Patch(string id)
+        public ActionResult Datasets_Patch(string _id)
         {
+            string id = _id;
+
             return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
         }
         [HttpOptions, ActionName("Datasets")]
-        public ActionResult Datasets_Options(string id)
+        public ActionResult Datasets_Options(string _id)
         {
+            string id = _id;
+
             return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
         }
         [HttpGet, ActionName("Datasets")]
-        public ActionResult Datasets_GET(string id)
+        public ActionResult Datasets_GET(string _id)
         {
+            string id = _id;
+
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id)
@@ -491,8 +501,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [HttpDelete, ActionName("Datasets")]
-        public ActionResult Datasets_Delete(string id)
+        public ActionResult Datasets_Delete(string _id)
         {
+            string id = _id;
+
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id)
@@ -540,8 +552,10 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpGet, ActionName("DatasetSearch")]
         [ValidateInput(false)]
-        public ActionResult DatasetSearch(string id, string q, int? page, string sort = null, string desc = "0")
+        public ActionResult DatasetSearch(string _id, string q, int? page, string sort = null, string desc = "0")
         {
+            string id = _id;
+
             page = page ?? 1;
             if (page < 1)
                 page = 1;
@@ -616,8 +630,11 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [HttpGet, ActionName("DatasetItem")]
-        public ActionResult DatasetItem_Get(string id, string dataid)
+        public ActionResult DatasetItem_Get(string _id, string _dataid)
         {
+            string id = _id;
+            string dataid = _dataid;
+
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id),
@@ -663,8 +680,11 @@ namespace HlidacStatu.Web.Controllers
 
 
         [HttpGet, ActionName("DatasetItem_Exists")]
-        public ActionResult DatasetItem_Exists(string id, string dataid)
+        public ActionResult DatasetItem_Exists(string _id, string _dataid)
         {
+            string id = _id;
+            string dataid = _dataid;
+
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id),
@@ -702,8 +722,11 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpPost, ActionName("DatasetItem")]
         [ValidateInput(false)]
-        public ActionResult DatasetItem_Post(string id, string dataid, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
+        public ActionResult DatasetItem_Post(string _id, string _dataid, string mode = "", bool? rewrite = false) //rewrite for backwards compatibility
         {
+            string id = _id;
+            string dataid = _dataid;
+
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id),
@@ -799,8 +822,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        public ActionResult DatasetSendNotifications(string id)
+        public ActionResult DatasetSendNotifications(string _id)
         {
+            string id = _id;
+
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id)

@@ -67,8 +67,10 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult NasiPolitici_GetData(string id)
+        public ActionResult NasiPolitici_GetData(string _id)
         {
+            string id = _id;
+
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id),

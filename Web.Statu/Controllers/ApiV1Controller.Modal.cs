@@ -11,8 +11,10 @@ namespace HlidacStatu.Web.Controllers
     {
         
 
-        public ActionResult ModalClassification(string id, string modalId)
+        public ActionResult ModalClassification(string _id, string modalId)
         {
+            string id = _id;
+
             return View(new Tuple<string,string>(id,modalId));
         }
 

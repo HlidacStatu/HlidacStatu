@@ -33,8 +33,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [GZipOrDeflate()]
-        public ActionResult WebStatus(string id, string h)
+        public ActionResult WebStatus(string _id, string h)
         {
+            string id = _id;
+
             if (!Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                     new Framework.ApiCall.CallParameter("id", id)

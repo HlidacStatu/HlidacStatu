@@ -19,8 +19,11 @@ namespace HlidacStatu.Web.Controllers
     
 
 
-        public ActionResult Watchdog(string id, string dataid, string dataType = "VerejnaZakazka", string query = null, string expiration = null)
+        public ActionResult Watchdog(string _id, string _dataid, string dataType = "VerejnaZakazka", string query = null, string expiration = null)
         {
+            string id = _id;
+            string dataid = _dataid;
+
             id = id.ToLower();
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
