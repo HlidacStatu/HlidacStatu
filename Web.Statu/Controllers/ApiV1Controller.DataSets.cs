@@ -717,6 +717,8 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
+                HlidacStatu.Util.Consts.Logger.Error($"Dataset API DatasetItem: id:{id} dataid:{dataid} api:{apiAuth?.ApiCall?.User} mode:{mode} rewrite:{rewrite}");
+
                 mode = mode.ToLower();
                 if (string.IsNullOrEmpty(mode))
                 {
