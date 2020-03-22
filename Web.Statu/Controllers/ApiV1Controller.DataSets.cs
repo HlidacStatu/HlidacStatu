@@ -52,12 +52,13 @@ namespace HlidacStatu.Web.Controllers
                 if (o == null)
                     return Json(new { }, JsonRequestBehavior.AllowGet);
                 else
-                    return Json(new {
-                                        titulPred = o.TitulPred,
-                                        jmeno = o.Jmeno,
-                                        prijmeni = o.Prijmeni,
-                                        titulPo = o.TitulPo                                        
-                                    }, JsonRequestBehavior.AllowGet);
+                    return Json(new
+                    {
+                        titulPred = o.TitulPred,
+                        jmeno = o.Jmeno,
+                        prijmeni = o.Prijmeni,
+                        titulPo = o.TitulPo
+                    }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -90,7 +91,7 @@ namespace HlidacStatu.Web.Controllers
 
                 if (string.IsNullOrEmpty(jmeno) && string.IsNullOrEmpty(prijmeni) && !string.IsNullOrEmpty(celejmeno))
                 {
-                    Lib.Data.Osoba osobaZeJmena = Lib.Validators.JmenoInText(celejmeno );
+                    Lib.Data.Osoba osobaZeJmena = Lib.Validators.JmenoInText(celejmeno);
                     if (osobaZeJmena == null)
                     {
                         jmeno = "";
@@ -121,11 +122,13 @@ namespace HlidacStatu.Web.Controllers
                 else
                 {
                     var f = found.First();
-                    return Json(new {
-                                    Jmeno = f.Jmeno,
-                                    Prijmeni = f.Prijmeni,
-                                    //Narozeni = found.Narozeni.Value.ToString("yyyy-MM-dd"),
-                                    OsobaId = f.NameId}
+                    return Json(new
+                    {
+                        Jmeno = f.Jmeno,
+                        Prijmeni = f.Prijmeni,
+                        //Narozeni = found.Narozeni.Value.ToString("yyyy-MM-dd"),
+                        OsobaId = f.NameId
+                    }
                             , JsonRequestBehavior.AllowGet);
                 }
             }
@@ -145,7 +148,7 @@ namespace HlidacStatu.Web.Controllers
                             && string.Equals(o.Prijmeni, prijmeni, StringComparison.OrdinalIgnoreCase)
                             )
                         .ToArray();
-                        ;
+            ;
 
             if (found?.Count() > 0)
             {
@@ -479,10 +482,10 @@ namespace HlidacStatu.Web.Controllers
                     else
                     {
                         var ds = DataSet.CachedDatasets.Get(id);
-                        if (ds==null)
+                        if (ds == null)
                             return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
                         else
-                            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ds.Registration()),"application/json");
+                            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(ds.Registration()), "application/json");
                     }
 
                 }
@@ -661,7 +664,7 @@ namespace HlidacStatu.Web.Controllers
                         value.DbCreatedBy = null;
                         return Content(
                             Newtonsoft.Json.JsonConvert.SerializeObject(
-                                value, Request.QueryString["nice"]=="1" ? Formatting.Indented : Formatting.None
+                                value, Request.QueryString["nice"] == "1" ? Formatting.Indented : Formatting.None
                                 ) ?? "null", "application/json");
                     }
                 }
@@ -740,7 +743,6 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                HlidacStatu.Util.Consts.Logger.Error($"Dataset API DatasetItem: id:{id} dataid:{dataid} api:{apiAuth?.ApiCall?.User} mode:{mode} rewrite:{rewrite}");
 
                 mode = mode.ToLower();
                 if (string.IsNullOrEmpty(mode))
@@ -783,15 +785,7 @@ namespace HlidacStatu.Web.Controllers
                                     MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
                                 }
                                 );
-                                try
-                                {
-                                    newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
-                                }
-                                catch (Exception e)
-                                {
-                                    HlidacStatu.Util.Consts.Logger.Error($"Dataset API spec: ds:{ds?.ToString()} dataid:{dataid} api:{apiAuth?.ApiCall?.User}", e);
-                                    throw;
-                                }
+                                newId = ds.AddData(oldObj.ToString(), dataid, apiAuth.ApiCall.User, true);
                             }
                         }
                         else
