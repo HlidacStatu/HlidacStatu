@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Watchdogs
 {
-    public partial class SingleEmailPerUserProcessor
+    public partial class Mail
     {
         public static class Template
         {
@@ -349,7 +349,14 @@ sans-serif!important ; }    .bodyFont * { font-family: Arial, Helvetica, sans-se
                                                                         </tr>
                                                                         <tr>
                                                                             <td align='center' class='bodyTitle' style='font-family: Georgia, serif; font-size: 12px; line-height: 18px; color: #000000;'>
-                                                                                <a href='https://www.hlidacstatu.cz/manage/Watchdogs'>Chcete změnit nastavení tohoto hlídače nových smluv?</a>
+                                                                                <a href='https://www.hlidacstatu.cz/manage/Watchdogs'><b>Chcete změnit zasílání nových informací?</b></a>
+                                                                            
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td align='center' class='bodyTitle' style='font-family: Georgia, serif; font-size: 12px; line-height: 18px; color: #000000;'>
+                                                                                <a href='https://www.hlidacstatu.cz/manage/Watchdogs'>Chcete zrušit zasílání nových informací?</a>
+                                                                            
                                                                             </td>
                                                                         </tr>
                                                                     </table>

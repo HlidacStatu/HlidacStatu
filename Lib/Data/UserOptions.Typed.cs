@@ -18,10 +18,14 @@ namespace HlidacStatu.Lib.Data
 
         public UserOptions(AspNetUser user, ParameterType option, int? languageId = null)
         {
-            throw new NotImplementedException();
-            //this.LanguageId = languageId;
-            //this.UserId = user.Id;
-            //this.OptionId = (int)option;
+            var uo = Get(user.Id, option, languageId);
+            this.LanguageId = languageId;
+            this.UserId = user.Id;
+            this.OptionId = (int)option;
+            if (uo == null)
+                this.Value = null;
+            else
+            this.Value = uo.GetValue();
         }
 
         public virtual T GetValue()

@@ -15,10 +15,10 @@ namespace HlidacStatu.Lib.Data
     public partial class UserOptions
     {
         public int pk { get; set; }
-        public Nullable<int> UserId { get; set; }
+        public string UserId { get; set; }
         public int OptionId { get; set; }
         public System.DateTime Created { get; set; }
-        protected string Value { get; set; }
+        public string Value { get; protected set; }
         public Nullable<int> LanguageId { get; set; }
     }
 }

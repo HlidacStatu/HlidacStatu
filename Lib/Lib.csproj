@@ -730,8 +730,9 @@
     <Compile Include="Watchdogs\IWatchdogProcessor.cs" />
     <Compile Include="Watchdogs\RenderedContent.cs" />
     <Compile Include="Watchdogs\Results.cs" />
-    <Compile Include="Watchdogs\SingleEmailPerUserProcessor.cs" />
-    <Compile Include="Watchdogs\SingleEmailPerUserProcessor.Template.cs" />
+    <Compile Include="Watchdogs\Mail.cs" />
+    <Compile Include="Watchdogs\Mail.Template.cs" />
+    <Compile Include="Watchdogs\SingleEmailPerWatchdog.cs" />
     <Compile Include="Watchdogs\Tools.cs" />
     <Compile Include="xsd\dump_index.cs">
       <DependentUpon>dump_index.xsd</DependentUpon>
@@ -742,6 +743,7 @@
     <Compile Include="xsd\tSingleZaznam.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Watchdogs\SingleEmailPerUser.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

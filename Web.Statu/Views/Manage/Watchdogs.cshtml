@@ -5,13 +5,15 @@
 }
 
 <p class="text-success">@ViewBag.StatusMessage</p>
+
+
 @if (Model.Count() == 0)
 {
     <div class="modal" style="position:relative;display:block">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" >Jak přidat nového hlídače</h4>
+                    <h4 class="modal-title">Jak přidat nového hlídače</h4>
                 </div>
                 <div class="modal-body">
                     <p><code>Hlídač nových smluv</code> je jednoduše vyhledávací dotaz, který se spustí vždy po vložení nových smluv.</p>
@@ -33,12 +35,41 @@
     return;
 }
 
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Nastavení zasílání upozornění</b></div>
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <form action="watchdogsSett" method="post" class="" role="form" style="padding-bottom: 11px;">
+                        Posílat upozornění dohromady v jednom mailu (doporučujeme):
+                        <div class="material-switch pull-right">
+                            @{ 
+                                var aspnetuser = HlidacStatu.Lib.Data.AspNetUser.GetByEmail(this.User.Identity.Name);
+                                string allInOneWDcheck = aspnetuser.SentWatchdogOneByOne ? "" : "checked='checked'";
+                            }
+                            <input id="allInOne" name="allInOne" type="checkbox" onchange="$('#allInOneBtn').prop('disabled', false);" @(allInOneWDcheck)" />
+                            <label for="allInOne" class="label-success"></label>
+                            <button id="allInOneBtn" type="submit" class="btn btn-default btn-sm" disabled="disabled" style="margin: 0 0 0 10px;">Uložit</button>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<hr />
 <p>
     <a href="/" role="button" class="btn btn-warning">Přidat dalšího hlídače nových informací</a>
 </p>
 <table class="table table-hover">
     <tr>
-        <th>Jméno</th><th>Dotaz</th><th>Vytvořen</th><th>Aktivní</th><th></th>
+        <th>Jméno</th>
+        <th>Dotaz</th>
+        <th>Vytvořen</th>
+        <th>Aktivní</th>
+        <th></th>
     </tr>
 
     @foreach (var wd in Model)
@@ -65,32 +96,32 @@
             stype = "všech databází";
             idType = HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
         }
-    <tr>
-        <td>
-            <span class="text-info">@wd.Name</span><br />
-            <span class="text-muted small">Kontrola @stype @wd.Period.ToNiceDisplayName().ToLower()</span>
-        </td>
-        <td>
-            <a href="/Hledat?q=@(System.Net.WebUtility.UrlEncode(wd.SearchTerm))">@Devmasters.Core.TextUtil.ShortenText(wd.SearchTerm, 100, " ....")</a>
-            @if (!string.IsNullOrEmpty(wd.SpecificContact))
-            {
-                <br /> <span class="text-muted small">Kontakt: @wd.SpecificContact</span>
-            }
-        </td>
-        <td>@wd.Created.ToShortDateString()</td>
-        <td>@Util.IfExists(wd.StatusId > 0, "Ano", "Pozastaven")</td>
-        <td>
-            @if (wd.StatusId > 0)
-            {
-                <a href="@Url.Action("Watchdogs")?wid=@wd.Id&disable=1" class="btn btn-warning btn-xs">Pozastavit</a>
-            }
-            else
-            {
-                <a href="@Url.Action("Watchdogs")?wid=@wd.Id&enable=1" class="btn btn-success btn-xs">Znovu spustit</a>
-            }
-            <a href="@Url.Action("Watchdogs")?wid=@wd.Id&delete=1" class="btn btn-danger btn-xs" onclick="return confirm('Opravdu to chcete smazat?');">Smazat</a>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <span class="text-info">@wd.Name</span><br />
+                <span class="text-muted small">Kontrola @stype @wd.Period.ToNiceDisplayName().ToLower()</span>
+            </td>
+            <td>
+                <a href="/Hledat?q=@(System.Net.WebUtility.UrlEncode(wd.SearchTerm))">@Devmasters.Core.TextUtil.ShortenText(wd.SearchTerm, 100, " ....")</a>
+                @if (!string.IsNullOrEmpty(wd.SpecificContact))
+                {
+                    <br /> <span class="text-muted small">Kontakt: @wd.SpecificContact</span>
+                }
+            </td>
+            <td>@wd.Created.ToShortDateString()</td>
+            <td>@Util.IfExists(wd.StatusId > 0, "Ano", "Pozastaven")</td>
+            <td>
+                @if (wd.StatusId > 0)
+                {
+                    <a href="@Url.Action("Watchdogs")?wid=@wd.Id&disable=1" class="btn btn-warning btn-xs">Pozastavit</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Watchdogs")?wid=@wd.Id&enable=1" class="btn btn-success btn-xs">Znovu spustit</a>
+                }
+                <a href="@Url.Action("Watchdogs")?wid=@wd.Id&delete=1" class="btn btn-danger btn-xs" onclick="return confirm('Opravdu to chcete smazat?');">Smazat</a>
+            </td>
+        </tr>
 
     }
 

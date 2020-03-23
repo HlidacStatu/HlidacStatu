@@ -9,6 +9,14 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class AspNetUser
     {
+
+        public static AspNetUser GetByEmail(string email)
+        {
+            using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
+            {
+                return db.AspNetUsers.AsNoTracking().FirstOrDefault(m=>m.Email == email);
+            }
+        }
         public string GetAPIToken()
         {
             return HlidacStatu.Lib.Data.AspNetUserToken.GetToken(this.Email).Token.ToString("N");
@@ -32,5 +40,59 @@ namespace HlidacStatu.Lib.Data
                 return db.AspNetUserRoles.Any(m => m.UserId == this.Id && m.RoleId == roleId);
             }
         }
+
+
+        object _watchdogAllInOneLock = new object();
+        private WatchdogAllInOne _watchdogAllInOne = null;
+        public bool SentWatchdogOneByOne
+        {
+            get
+            {
+                InitWatchdogAllInOne();
+                return _watchdogAllInOne.GetValue();
+            }
+            set {
+                InitWatchdogAllInOne();
+                _watchdogAllInOne.SetValue(value);
+                _watchdogAllInOne.Save();
+            }
+        }
+        private void InitWatchdogAllInOne()
+        {
+            if (_watchdogAllInOne == null)
+            {
+                lock (_watchdogAllInOneLock)
+                {
+                    if (_watchdogAllInOne == null)
+                        _watchdogAllInOne = new WatchdogAllInOne(this);
+                }
+            }
+        }
+
+        public class WatchdogAllInOne : HlidacStatu.Lib.Data.UserOptions<bool>
+        {
+
+            public WatchdogAllInOne(AspNetUser user)
+                : base(user, ParameterType.WatchdogAllInOne, null)
+            {
+            }
+
+            protected override string SerializeToString(bool value)
+            {
+                return value ? "1" : "0";
+            }
+
+            protected override bool DeserializeFromString(string value)
+            {
+                if (value == null)
+                    return false;
+
+                if (value == "1")
+                    return true;
+                else 
+                    return false;
+            }
+        }
+
     }
 }

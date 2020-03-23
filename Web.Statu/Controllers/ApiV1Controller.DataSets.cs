@@ -816,43 +816,6 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        public ActionResult DatasetSendNotifications(string _id)
-        {
-            string id = _id;
-
-            var apiAuth = Framework.ApiAuth.IsApiAuth(this,
-                parameters: new Framework.ApiCall.CallParameter[] {
-                    new Framework.ApiCall.CallParameter("id", id)
-                });
-            if (!apiAuth.Authentificated)
-            {
-                //Response.StatusCode = 401;
-                return Json(ApiResponseStatus.ApiUnauthorizedAccess);
-            }
-            else
-            {
-                try
-                {
-                    var ds = DataSet.CachedDatasets.Get(id);
-                    HlidacStatu.Lib.Data.WatchDog.Send.SendWatchDogs(predicate: wd => wd.dataType == "DataSet." + ds.DatasetId, type: "dataset");
-
-                    return Json(ApiResponseStatus.ApiUnauthorizedAccess);
-                }
-                catch (DataSetException dse)
-                {
-                    return Json(dse.APIResponse, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    HlidacStatu.Util.Consts.Logger.Error("Dataset API", ex);
-                    return Json(ApiResponseStatus.GeneralExceptionError(ex), JsonRequestBehavior.AllowGet);
-
-                }
-
-
-
-            }
-        }
     }
 }
 

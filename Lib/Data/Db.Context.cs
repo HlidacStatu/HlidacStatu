@@ -128,15 +128,15 @@ namespace HlidacStatu.Lib.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SmlouvaId_Save", idParameter, activeParameter, createdParameter, updatedParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> UserOption_Add(Nullable<int> optionId, Nullable<int> userId, string value, Nullable<int> languageId)
+        public virtual ObjectResult<Nullable<int>> UserOption_Add(Nullable<int> optionId, string userId, string value, Nullable<int> languageId)
         {
             var optionIdParameter = optionId.HasValue ?
                 new ObjectParameter("optionId", optionId) :
                 new ObjectParameter("optionId", typeof(int));
     
-            var userIdParameter = userId.HasValue ?
+            var userIdParameter = userId != null ?
                 new ObjectParameter("userId", userId) :
-                new ObjectParameter("userId", typeof(int));
+                new ObjectParameter("userId", typeof(string));
     
             var valueParameter = value != null ?
                 new ObjectParameter("value", value) :
@@ -149,15 +149,15 @@ namespace HlidacStatu.Lib.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("UserOption_Add", optionIdParameter, userIdParameter, valueParameter, languageIdParameter);
         }
     
-        public virtual ObjectResult<UserOption_Get_Result> UserOption_Get(Nullable<int> optionId, Nullable<int> userId, Nullable<int> languageId)
+        public virtual ObjectResult<UserOption_Get_Result> UserOption_Get(Nullable<int> optionId, string userId, Nullable<int> languageId)
         {
             var optionIdParameter = optionId.HasValue ?
                 new ObjectParameter("optionId", optionId) :
                 new ObjectParameter("optionId", typeof(int));
     
-            var userIdParameter = userId.HasValue ?
+            var userIdParameter = userId != null ?
                 new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(int));
+                new ObjectParameter("UserId", typeof(string));
     
             var languageIdParameter = languageId.HasValue ?
                 new ObjectParameter("languageId", languageId) :
@@ -166,15 +166,15 @@ namespace HlidacStatu.Lib.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UserOption_Get_Result>("UserOption_Get", optionIdParameter, userIdParameter, languageIdParameter);
         }
     
-        public virtual int UserOption_Remove(Nullable<int> optionId, Nullable<int> userId, Nullable<int> languageId)
+        public virtual int UserOption_Remove(Nullable<int> optionId, string userId, Nullable<int> languageId)
         {
             var optionIdParameter = optionId.HasValue ?
                 new ObjectParameter("optionId", optionId) :
                 new ObjectParameter("optionId", typeof(int));
     
-            var userIdParameter = userId.HasValue ?
+            var userIdParameter = userId != null ?
                 new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(int));
+                new ObjectParameter("UserId", typeof(string));
     
             var languageIdParameter = languageId.HasValue ?
                 new ObjectParameter("languageId", languageId) :

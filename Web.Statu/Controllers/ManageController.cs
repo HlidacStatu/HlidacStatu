@@ -317,7 +317,7 @@ namespace HlidacStatu.Web.Controllers
             string tabdelimited = form["data"];
             foreach (var line in tabdelimited.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
             {
-                string[] cols = line.Split(new string[] { "\t","|" }, StringSplitOptions.None);
+                string[] cols = line.Split(new string[] { "\t", "|" }, StringSplitOptions.None);
 
                 // Vždy musí být řádek o 13 sloupcích. Povinné položky jsou:
                 // varianta a) jmeno, prijmeni, narozeni
@@ -402,7 +402,7 @@ namespace HlidacStatu.Web.Controllers
                     OsobaEvent.CreateOrUpdate(dalsiEvent, this.User.Identity.Name);
                 }
 
-                
+
 
 
                 //Guid? foundId;
@@ -447,7 +447,7 @@ namespace HlidacStatu.Web.Controllers
                     statusOsoby = (Osoba.StatusOsobyEnum)statx;
                 }
             }
-            catch {}
+            catch { }
 
             return statusOsoby;
         }
@@ -456,7 +456,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ShowClassification(string id, bool force = false)
         {
 
-            return View(new Tuple<string,bool>(id, force));
+            return View(new Tuple<string, bool>(id, force));
         }
 
         [Authorize(Roles = "canEditData")]
@@ -508,13 +508,25 @@ namespace HlidacStatu.Web.Controllers
                     typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet).Name,
                 };
 
+        [HttpPost]
+        public ActionResult WatchdogsSett(FormCollection form)
+        {
+            var usr = AspNetUser.GetByEmail(this.AuthUser().Email);
+            usr.SentWatchdogOneByOne = (form["allinone"] == "on" ? false : true);
+            return Redirect("Watchdogs?rnd=" + Util.Consts.Rnd.Next(1,10000));
+        }
+        [HttpGet, ActionName("WatchdogsSett")]
+        public ActionResult WatchdogsSett_get()
+        {
+            return Redirect("Watchdogs");
+        }
         public ActionResult Watchdogs(string id, string wid, string disable, string enable, string delete)
         {
             string currWDtype = null;
             if (!string.IsNullOrEmpty(id))
             {
                 if (WatchdogTypes.Any(w => w.ToLower() == id.ToLower()))
-                    currWDtype =  id ;
+                    currWDtype = id;
             }
             //if (currWDtypes == null)
             //    currWDtypes = WatchdogTypes;
@@ -556,12 +568,12 @@ namespace HlidacStatu.Web.Controllers
                 }
                 else
                 {
-                        wds.AddRange(
-                            db.WatchDogs.AsNoTracking()
-                                .Where(m => 
-                                (m.dataType == currWDtype || currWDtype == null) 
-                                && m.UserId == userid)
-                            );
+                    wds.AddRange(
+                        db.WatchDogs.AsNoTracking()
+                            .Where(m =>
+                            (m.dataType == currWDtype || currWDtype == null)
+                            && m.UserId == userid)
+                        );
                 }
 
             }

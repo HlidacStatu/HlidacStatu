@@ -291,7 +291,7 @@
             <PropertyRef Name="pk" />
           </Key>
           <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
           <Property Name="OptionId" Type="int" Nullable="false" />
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" />
@@ -370,18 +370,18 @@
         </Function>
         <Function Name="UserOption_Add" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="optionId" Type="int" Mode="In" />
-          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="userId" Type="nvarchar" Mode="In" />
           <Parameter Name="value" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="languageId" Type="int" Mode="In" />
         </Function>
         <Function Name="UserOption_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="optionId" Type="int" Mode="In" />
-          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
           <Parameter Name="languageId" Type="int" Mode="In" />
         </Function>
         <Function Name="UserOption_Remove" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="optionId" Type="int" Mode="In" />
-          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
           <Parameter Name="languageId" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="FirmyModelStoreContainer">
@@ -484,18 +484,18 @@
           <EntitySet Name="UserOptions" EntityType="FirmyModel.UserOptions" />
           <FunctionImport Name="UserOption_Add" ReturnType="Collection(Int32)">
             <Parameter Name="optionId" Mode="In" Type="Int32" />
-            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="userId" Mode="In" Type="String" />
             <Parameter Name="value" Mode="In" Type="String" />
             <Parameter Name="languageId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="UserOption_Get" ReturnType="Collection(FirmyModel.UserOption_Get_Result)">
             <Parameter Name="optionId" Mode="In" Type="Int32" />
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="String" />
             <Parameter Name="languageId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="UserOption_Remove">
             <Parameter Name="optionId" Mode="In" Type="Int32" />
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="UserId" Mode="In" Type="String" />
             <Parameter Name="languageId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="ItemToOcrQueue" EntityType="FirmyModel.ItemToOcrQueue" />
@@ -789,15 +789,15 @@
             <PropertyRef Name="pk" />
           </Key>
           <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
+          <Property Name="UserId" Type="String" MaxLength="128" />
           <Property Name="OptionId" Type="Int32" Nullable="false" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" a:SetterAccess="Protected" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Protected" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" a:SetterAccess="Protected" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Public" />
           <Property Name="LanguageId" Type="Int32" />
         </EntityType>
         <ComplexType Name="UserOption_Get_Result">
           <Property Type="Int32" Name="pk" Nullable="false" />
-          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OptionId" Nullable="false" />
           <Property Type="DateTime" Name="Created" Nullable="false" Precision="23" />
           <Property Type="String" Name="Value" Nullable="true" />

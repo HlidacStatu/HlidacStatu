@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Data
     public partial class UserOption_Get_Result
     {
         public int pk { get; set; }
-        public Nullable<int> UserId { get; set; }
+        public string UserId { get; set; }
         public int OptionId { get; set; }
         public System.DateTime Created { get; set; }
         public string Value { get; set; }

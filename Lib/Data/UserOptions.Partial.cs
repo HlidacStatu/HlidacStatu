@@ -10,7 +10,7 @@ namespace HlidacStatu.Lib.Data
         public enum ParameterType
         {
             DatLabLastUpdate = 1,
-            
+            WatchdogAllInOne = 2,
         }
 
         public ParameterType Parameter
@@ -42,12 +42,12 @@ namespace HlidacStatu.Lib.Data
             this.Value = r?.Value;
         }
 
-        public UserOptions(AspNetUser user, ParameterType option, int? languageId = null)
+        protected UserOptions(AspNetUser user, ParameterType option, int? languageId = null)
         {
-            throw new NotImplementedException();
-            //this.LanguageId = languageId;
-            //this.UserId = user.Id;
-            //this.OptionId = (int)option;
+            //throw new NotImplementedException();
+            this.LanguageId = languageId;
+            this.UserId = user.Id;
+            this.OptionId = (int)option;
         }
 
         public virtual void Save()
@@ -69,9 +69,9 @@ namespace HlidacStatu.Lib.Data
             new DbEntities().UserOption_Remove(this.OptionId, this.UserId, this.LanguageId);
         }
 
-        protected static UserOptions Get(int customerId, ParameterType option, int? languageid)
+        protected static UserOptions Get(string userId, ParameterType option, int? languageid)
         {
-            var r = new DbEntities().UserOption_Get((int)option, customerId, languageid);
+            var r = new DbEntities().UserOption_Get((int)option, userId, languageid);
             return (UserOptions)r.FirstOrDefault();
         }
 

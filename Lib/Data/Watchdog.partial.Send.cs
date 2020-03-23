@@ -9,64 +9,12 @@ namespace HlidacStatu.Lib.Data
 
     public partial class WatchDog
     {
+        [Obsolete]
         public static class Send
         {
-            public enum WatchdogTypeForSend
-            {
-                smlouvy,
-                zakazky,
-                dataset,
-                insolvence,
-                global
-            }
-            public static void SendWatchDogs(WatchdogTypeForSend? type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug = false)
-            {
-                SendWatchDogs(type?.ToString(), ids, userid, date, specificemail, forceSend, predicate,debug);
-            }
-            public static void SendWatchDogs(string type, string[] ids = null, string userid = null, string date = null, string specificemail = null, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug = false)
-            {
-                if (!string.IsNullOrEmpty(type))
-                {
-                    type = type.ToLower();
-                    if (type == WatchdogTypeForSend.smlouvy.ToString())
-                    {
-                        _SendWatchDogs(typeof(Smlouva).Name, ids, userid, date, specificemail, forceSend, predicate,debug);
-                        return;
-                    }
-                    else if (type == WatchdogTypeForSend.zakazky.ToString())
-                    {
-                        _SendWatchDogs(typeof(VZ.VerejnaZakazka).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
-                        return;
-                    }
-                    else if (type == WatchdogTypeForSend.insolvence.ToString())
-                    {
-                        _SendWatchDogs(typeof(Insolvence.Rizeni).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
-                        return;
-                    }
-                    else if (type == WatchdogTypeForSend.dataset.ToString())
-                    {
-                        _SendWatchDogs(typeof(DataSet).Name, ids, userid, date, specificemail, forceSend, predicate, debug);
-                        return;
-                    }
-                    else if (type == WatchdogTypeForSend.global.ToString())
-                    {
-                        _SendWatchDogs(WatchDog.AllDbDataType, ids, userid, date, specificemail, forceSend, predicate, debug);
-                        return;
-                    }
-                    else
-                    {
-                        throw new System.ArgumentOutOfRangeException("type", "ERROR: invalid type. Nothing sent");
-                        return;
-                    }
-                }
 
-                _SendWatchDogs("", ids, userid, date, specificemail, forceSend, predicate, debug);
-                //SendVerejneZakazkyWatchDogs(ids, userid, date, specificemail, forceSend);
-                //SendDatasetWatchDogs(ids, userid, date, specificemail, forceSend);
-            }
-
-
-            private static void _SendWatchDogs(string datatype, string[] ids, string userid, string date, string specificemail, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug=false)
+            [Obsolete]
+            private static void _SendWatchDogs_old(string datatype, string[] ids, string userid, string date, string specificemail, bool forceSend = false, Expression<Func<WatchDog, bool>> predicate = null, bool debug = false)
             {
                 HlidacStatu.Util.Consts.Logger.Info("Starting SendWatchDogs type:" + datatype);
 
@@ -102,74 +50,74 @@ namespace HlidacStatu.Lib.Data
                 try
                 {
 
-                Devmasters.Core.Batch.Manager.DoActionForAll<int, object>(watchdogs,
-                    (wdid, obj) =>
-                    {
-                        string log = "";
-                        var mainWatchdog = WatchDog.Load(wdid);
-                        var mainWDBs = WatchDog.GetWatchDogBase(mainWatchdog);
-
-                        var notifResult = true;
-
-
-                        foreach (var wdb in mainWDBs)
+                    Devmasters.Core.Batch.Manager.DoActionForAll<int, object>(watchdogs,
+                        (wdid, obj) =>
                         {
-                            HlidacStatu.Util.Consts.Logger.Debug($"Starting watchdog {wdb.ToString()}");
+                            string log = "";
+                            var mainWatchdog = WatchDog.Load(wdid);
+                            var mainWDBs = WatchDog.GetWatchDogBase(mainWatchdog);
+
+                            var notifResult = true;
 
 
-                            var mainDatatype = wdb.OrigWD.dataType;
-                            var user = wdb.OrigWD.User();
-                            if (user == null) //is not confirmed
+                            foreach (var wdb in mainWDBs)
                             {
-                                var uuser = wdb.OrigWD.UnconfirmedUser();
-                                wdb.OrigWD.DisableWDBySystem(DisabledBySystemReasons.NoConfirmedEmail,
-                                    alreadySendInfo.Contains(uuser.Id)
-                                    );
-                                alreadySendInfo.Add(uuser.Id);
-                                break; //exit for
+                                HlidacStatu.Util.Consts.Logger.Debug($"Starting watchdog {wdb.ToString()}");
+
+
+                                var mainDatatype = wdb.OrigWD.dataType;
+                                var user = wdb.OrigWD.User();
+                                if (user == null) //is not confirmed
+                            {
+                                    var uuser = wdb.OrigWD.UnconfirmedUser();
+                                    wdb.OrigWD.DisableWDBySystem(DisabledBySystemReasons.NoConfirmedEmail,
+                                        alreadySendInfo.Contains(uuser.Id)
+                                        );
+                                    alreadySendInfo.Add(uuser.Id);
+                                    break; //exit for
                             }
-                            if (user != null && wdb.OrigWD.StatusId > 0) //check again, some of them could change to disabled
+                                if (user != null && wdb.OrigWD.StatusId > 0) //check again, some of them could change to disabled
                             {
-                                try
-                                {
-                                    notifResult = notifResult | _processIndividualWD(wdb, date, null, specificemail, forceSend,debug);
+                                    try
+                                    {
+                                        notifResult = notifResult | _processIndividualWD(wdb, date, null, specificemail, forceSend, debug);
 
 
-                                }
-                                catch (Exception e)
-                                {
-                                    HlidacStatu.Util.Consts.Logger.Error("WatchDog search error", e);
-                                    log += "WatchDog search error " + e.ToString();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        HlidacStatu.Util.Consts.Logger.Error("WatchDog search error", e);
+                                        log += "WatchDog search error " + e.ToString();
                                     //throw;
                                 }
+                                }
                             }
-                        }
-                        if (notifResult && date == null && forceSend == false)
-                        {
-                            DateTime toDate = WatchDogProcessor.DefaultRoundWatchdogTime(mainWatchdog.Period, DateTime.Now);
+                            if (notifResult && date == null && forceSend == false)
+                            {
+                                DateTime toDate = WatchDogProcessor.DefaultRoundWatchdogTime(mainWatchdog.Period, DateTime.Now);
 
-                            if (mainWatchdog.LastSearched.HasValue == false || mainWatchdog.LastSearched < toDate)
-                                mainWatchdog.LastSearched = toDate;
-                            mainWatchdog.RunCount++;
-                            var latestRec = toDate;
-                            if (mainWatchdog.LatestRec.HasValue == false)
-                                mainWatchdog.LatestRec = latestRec;
-                            else if (latestRec > mainWatchdog.LatestRec)
-                                mainWatchdog.LatestRec = latestRec;
+                                if (mainWatchdog.LastSearched.HasValue == false || mainWatchdog.LastSearched < toDate)
+                                    mainWatchdog.LastSearched = toDate;
+                                mainWatchdog.RunCount++;
+                                var latestRec = toDate;
+                                if (mainWatchdog.LatestRec.HasValue == false)
+                                    mainWatchdog.LatestRec = latestRec;
+                                else if (latestRec > mainWatchdog.LatestRec)
+                                    mainWatchdog.LatestRec = latestRec;
 
-                            mainWatchdog.LastSent = mainWatchdog.LastSearched;
+                                mainWatchdog.LastSent = mainWatchdog.LastSearched;
 
-                            mainWatchdog.Save();
-                        }
-
+                                mainWatchdog.Save();
+                            }
 
 
-                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = log };
-                    },
-                    null,
-                    HlidacStatu.Util.Consts.outputWriter.OutputWriter,
-                    HlidacStatu.Util.Consts.progressWriter.ProgressWriter,
-                    System.Diagnostics.Debugger.IsAttached ? false : true);
+
+                            return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = log };
+                        },
+                        null,
+                        HlidacStatu.Util.Consts.outputWriter.OutputWriter,
+                        HlidacStatu.Util.Consts.progressWriter.ProgressWriter,
+                        System.Diagnostics.Debugger.IsAttached ? false : true);
                 }
                 catch (Exception e)
                 {
