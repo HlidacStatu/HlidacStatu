@@ -74,19 +74,128 @@
             <table class="table tableStickyHeader">
                 <thead>
                     <tr>
-                        <th>Datum od</th>
-                        <th>Datum do</th>
-                        <th>Titulek</th>
-                        <th>Typ události</th>
-                        <th>Organizace</th>
-                        <th>Role</th>
-                        <th>Zdroj</th>
-                        <th>Stav</th>
+                        <th class="text-nowrap">
+                            Datum od
+                            <a href="?columnOrdering=datumod">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=datumod&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Datum do
+                            <a href="?columnOrdering=datumdo">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=datumdo&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Titulek
+                            <a href="?columnOrdering=titulek">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=titulek&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Typ události
+                            <a href="?columnOrdering=typ">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=typ&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Organizace
+                            <a href="?columnOrdering=organizace">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=organizace&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Role
+                            <a href="?columnOrdering=role">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=role&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Zdroj
+                            <a href="?columnOrdering=zdroj">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=zdroj&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Stav
+                            <a href="?columnOrdering=stav">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=stav&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
                         <th>akce</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var udalost in Model.Events())
+                    @{ 
+                        var co = Request.Params["columnOrdering"];
+
+                        Func<OsobaEvent, object> sortExpression;
+                        switch (co)
+                        {
+                            case "datumdo":
+                                sortExpression = (x => x.DatumDo);
+                                break;
+                            case "titulek":
+                                sortExpression = (x => x.Title);
+                                break;
+                            case "typ":
+                                sortExpression = (x => x.TypeName);
+                                break;
+                            case "organizace":
+                                sortExpression = (x => x.Organizace);
+                                break;
+                            case "role":
+                                sortExpression = (x => x.AddInfo);
+                                break;
+                            case "zdroj":
+                                sortExpression = (x => x.Zdroj);
+                                break;
+                            case "stav":
+                                sortExpression = (x => x.Status);
+                                break;
+                            case "datumod":
+                            default:
+                                sortExpression = (x => x.DatumOd);
+                                break;
+                        }
+
+                        int desc;
+                        IEnumerable<OsobaEvent> udalosti;
+                        if(int.TryParse(Request.Params["descending"], out desc) && desc == 1)
+                        {
+                            udalosti = Model.Events().OrderByDescending(sortExpression);
+                        }
+                        else
+                        {
+                            udalosti = Model.Events().OrderBy(sortExpression);
+                        }
+                    }
+
+                    @foreach (var udalost in udalosti)
                     {
                         <tr>
                             <td>
