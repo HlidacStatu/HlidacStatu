@@ -64,6 +64,11 @@ namespace HlidacStatu.Lib.Data
         {
             try
             {
+                if (operation == Operations.Search)
+                {
+                    //disable search (not userSearch) audits for a while
+                    return new Audit();
+                }
 
                 using (DbEntities db = new DbEntities())
                 {
