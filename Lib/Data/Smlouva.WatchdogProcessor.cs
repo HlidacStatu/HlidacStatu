@@ -75,13 +75,14 @@ namespace HlidacStatu.Lib.Data
         <tbody>
         {{ for item in model.Items limit:#LIMIT# }}
                 <tr>
-                    <td><a href='https://www.hlidacstatu.cz/Detail/{{item.Id}}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail'>{{item.Id}}</a></td>
+                    <td>
+                    {{ fn_Smlouva_GetConfidenceHtml item }}<a href='https://www.hlidacstatu.cz/Detail/{{item.Id}}?utm_source=hlidac&utm_medium=emailtxt&utm_campaign=detail'>{{item.Id}}</a></td>
                     <td>{{item.Platce.nazev}}</td>
                     <td>{{for pp in item.Prijemce; ((fn_ShortenText pp.nazev 40) + ', '); end }}</td>
                     <td>{{ fn_FormatPrice item.CalculatedPriceWithVATinCZK html: true}}</td>
                 </tr>
                 <tr>
-                    <td colspan='4' style='font-size:80%;border-bottom:1px #ddd solid'>{{ fn_ShortenText item.predmet 130 }}</td>
+                    <td colspan='4' style='border-bottom:1px #ddd solid'>{{ fn_ShortenText item.predmet 130 }}</td>
 <!-- <hr size='1' style='border-width: 1px;' /> -->
                 </tr>
         {{ end }}
@@ -89,7 +90,7 @@ namespace HlidacStatu.Lib.Data
         {{ if (model.Total > #LIMIT#) }}
             <tr><td colspan='4' height='30' style='line-height: 30px; min-height: 30px;'></td></tr>
             <tr><td colspan='4'>                   
-                <a href='https://www.hlidacstatu.cz/HledatSmlouvy?Q={{ html.url_encode model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
+                <a href='https://www.hlidacstatu.cz/HledatSmlouvy?Q={{ html.url_encode model.SearchQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
                     {{ fn_Pluralize (model.Total - #LIMIT#) '' 'Další nalezená smlouva' 'Další {0} nalezené smlouvy' 'Dalších {0} nalezených smluv' }} 
                 </a>.
             </td></tr>

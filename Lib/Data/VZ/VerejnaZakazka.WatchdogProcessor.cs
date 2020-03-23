@@ -135,7 +135,7 @@ namespace HlidacStatu.Lib.Data.VZ
             <tr><td colspan='7' height='30' style='line-height: 30px; min-height: 30px;'></td></tr>
             <tr><td colspan='7' style='font-size:80%;border-bottom:1px #ddd solid'>    
 
-                <a href='https://www.hlidacstatu.cz/verejnezakazky/hledat?Q={{ html.url_encode model.SpecificQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
+                <a href='https://www.hlidacstatu.cz/verejnezakazky/hledat?Q={{ html.url_encode model.SearchQuery }}&utm_source=hlidac&utm_medium=emailtxt&utm_campaign=more'>
                     {{ fn_Pluralize (model.Total - 5) '' 'Další nalezená zakázka' 'Další {0} nalezené zakázky' 'Dalších {0} nalezených zakázek' }} 
                 </a>.
             </td></tr>

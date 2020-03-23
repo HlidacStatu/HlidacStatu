@@ -8,7 +8,7 @@ namespace HlidacStatu.Lib.Render
 {
     public partial class ScribanT
     {
-        public class Functions : ScriptObject
+        public partial class Functions : ScriptObject
         {
             public static string fn_LinkTextDocument(dynamic value, string datasetId, string dataId, string linkText = "")
             {

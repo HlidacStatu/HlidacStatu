@@ -121,7 +121,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     var s = "<table><tr><td height='30' style='line-height: 50px; min-height: 50px;'></td></tr></table>"
                         + @"<table border='0' cellpadding='4' width='100%'><tr><td>" 
-                        + @"<a href='" + this.DataSet.DatasetSearchUrl(data.SearchUrl, false) + "'>" 
+                        + @"<a href='" + this.DataSet.DatasetSearchUrl(data.SearchQuery, false) + "'>" 
                         + Devmasters.Core.Lang.Plural.Get((int)data.Total - dataToRender.Count(), 
                                 "Další nalezená záznam",
                                 "Další {0} nalezené záznamy",
