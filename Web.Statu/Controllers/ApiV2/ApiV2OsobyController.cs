@@ -2,7 +2,6 @@
 using HlidacStatu.Web.Models.Apiv2;
 using System.Web.Http;
 using HlidacStatu.Lib.Data;
-using HlidacStatu.Web.Models.Apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -16,7 +15,6 @@ namespace HlidacStatu.Web.Controllers
         {
             if (string.IsNullOrEmpty(osobaId))
             {
-                //Response.StatusCode =400;
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota id chybí."));
             }
 
@@ -24,14 +22,12 @@ namespace HlidacStatu.Web.Controllers
 
             if (osoba == null)
             {
-                //Response.StatusCode =404;
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Osoba s id [{osobaId}] nenalezena"));
             }
 
             OsobaDetailDTO OsobaDetail = new OsobaDetailDTO(osoba);
 
             return OsobaDetail;
-
         }
 
         //todo: replace with better function (after we load people to ES)
