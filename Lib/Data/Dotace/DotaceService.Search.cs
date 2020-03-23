@@ -21,9 +21,9 @@ namespace HlidacStatu.Lib.Data.Dotace
         static IRule[] irules = new IRule[] {
                new OsobaId("osobaid:","ico:" ),
                new Holding(null,"ico:" ),
-
+               //(prijemce.jmeno:${q} OR prijemce.obchodniJmeno:${q})
                new TransformPrefix("ico:","prijemce.ico:",null ),
-               new TransformPrefix("jmeno:","prijemce.jmeno:",null ),
+               new TransformPrefixWithValue("jmeno:","(prijemce.jmeno:${q} OR prijemce.obchodniJmeno:${q})",null ),
                new TransformPrefix("projekt:","nazevProjektu:",null ),
                 new TransformPrefix("castka:","dotaceCelkem:",null ),
                 new TransformPrefixWithValue("cena:","dotaceCelkem:<=${q} ","<=\\d" ),
