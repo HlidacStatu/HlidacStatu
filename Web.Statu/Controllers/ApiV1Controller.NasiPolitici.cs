@@ -116,7 +116,9 @@ namespace HlidacStatu.Web.Controllers
                 //        m => types.Contains(m.Type),
                 //        20);
 
-                var roleOsoba = o.Events(m => types.Contains(m.Type))
+                var roleOsoba = o.Events(m => 
+                        types.Contains(m.Type)
+                        && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
                     .Select(e => new { 
                         role = e.AddInfo,
                         dateFrom = e.DatumOd,
@@ -125,7 +127,9 @@ namespace HlidacStatu.Web.Controllers
                     })
                     .ToArray();
 
-                var registrOznameni = o.Events(m => m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni)
+                var registrOznameni = o.Events(m => 
+                        m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni
+                        && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
                     .Select(m => m.AddInfo).ToList();
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
@@ -154,7 +158,9 @@ namespace HlidacStatu.Web.Controllers
 
                 var photo = o.GetPhotoUrl(false);
 
-                var sponzorstvi = o.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor)
+                var sponzorstvi = o.Events(m => 
+                        m.Type == (int)OsobaEvent.Types.Sponzor
+                        && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
                     .Select(m => new
                                 {
                                     party = m.Organizace,
