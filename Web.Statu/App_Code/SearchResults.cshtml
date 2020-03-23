@@ -363,8 +363,8 @@
                 Util.AddBookmark(user, item),
                 Html.Raw("&nbsp;"),
                 Util.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req),
-                  $"<a href='{Url.Action("Zakazka", new { id = item.Id, QS = query })}'>{item.EvidencniCisloZakazky}</a>",
-                  $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
+                  $"<a href='{item.GetUrl(true,query)}'>{item.EvidencniCisloZakazky}</a>",
+                  $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/verejnezakazky/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
                   )
             )
         </td>
@@ -460,7 +460,7 @@
             @{
                 @Util.AddBookmark(user, item)
             }
-            <a href="/dotace/detail/@item.IdDotace">Detail</a>
+            <a href="@(item.GetUrl(true,query))">Detail</a>
         </td>
         <td>
             @Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.ObchodniJmeno) ?
