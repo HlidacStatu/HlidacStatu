@@ -536,6 +536,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             Newtonsoft.Json.Linq.JObject obj = Newtonsoft.Json.Linq.JObject.Parse(data);
             dynamic objDyn = Newtonsoft.Json.Linq.JObject.Parse(data);
+
+            var jpaths = obj
+                .SelectTokens("$..HsProcessType")
+                .ToArray();
+            var jpathObjs = jpaths.Select(j => j.Parent.Parent).ToArray();
+
             if (validateSchema)
             {
                 Newtonsoft.Json.Schema.JSchema schema = DataSetDB.Instance.GetRegistration(this.datasetId).GetSchema();
@@ -573,11 +579,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
 
             //check special HsProcessType
-            var jobj = (Newtonsoft.Json.Linq.JObject)objDyn;
-            var jpaths = jobj
-                .SelectTokens("$..HsProcessType")
-                .ToArray();
-            var jpathObjs = jpaths.Select(j => j.Parent.Parent).ToArray();
             if (this.DatasetId == DataSetDB.DataSourcesDbName) //don't analyze for registration of new dataset
                 jpathObjs = new JContainer[] { };
 
