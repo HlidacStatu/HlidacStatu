@@ -4,6 +4,7 @@ using HlidacStatu.Lib.Data.Dotace;
 using Newtonsoft.Json;
 using System.Configuration;
 using System.Collections.Generic;
+using HlidacStatu.Lib;
 
 namespace DotaceLoader
 {
@@ -64,6 +65,44 @@ namespace DotaceLoader
                 }
 
             }
+        }
+
+        public static string FullIcoFix(Dotace dotace)
+        {
+            var ico = dotace.Prijemce.Ico;
+            // if there is no ico, we try to find it
+            if (string.IsNullOrWhiteSpace(ico))
+            {
+                string companyName = string.IsNullOrWhiteSpace(dotace.Prijemce.ObchodniJmeno) ? 
+                    dotace.Prijemce.Jmeno : 
+                    dotace.Prijemce.ObchodniJmeno;
+
+                if (string.IsNullOrWhiteSpace(companyName))
+                    return string.Empty; // todo: log - nemělo by nastat
+
+                ico = FindIco(companyName);
+            }
+
+            return NormalizeIco(ico);
+        }
+
+        public static string FindIco(string companyName)
+        {
+            var name = HlidacStatu.Lib.Data.Firma.JmenoBezKoncovky(companyName);
+            name = Devmasters.Core.TextUtil.RemoveDiacritics(name);
+
+            if(StaticData.FirmyNazvyOnlyAscii.TryGetValue(name, out var ica))
+            {
+                if (ica.Length > 0)
+                {
+                    var ico = ica[0];
+                    return ico;
+                }
+            }
+            
+            // todo: nenalezeno, zalogovat
+            return string.Empty;
+            
         }
 
         public static string NormalizeIco(string ico)
