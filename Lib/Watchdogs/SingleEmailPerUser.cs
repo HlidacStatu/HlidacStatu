@@ -24,6 +24,8 @@ namespace HlidacStatu.Lib.Watchdogs
                 && fromSpecificDate.HasValue == false
                 && toSpecificDate.HasValue == false;
 
+            Util.Consts.Logger.Info($"SingleEmailPerUser Start processing {watchdogs.Count()} watchdogs.");
+
             Dictionary<string, WatchDog[]> groupedByUserNoSpecContact = watchdogs
                 .Where(w => w != null)
                 .Where(m => string.IsNullOrEmpty(m.SpecificContact))
@@ -32,6 +34,9 @@ namespace HlidacStatu.Lib.Watchdogs
                         (k, v) => new { key = k, val = v.ToArray() }
                         )
                 .ToDictionary(k => k.key, v => v.val);
+
+            Util.Consts.Logger.Info($"SingleEmailPerUser {groupedByUserNoSpecContact.Count()} emails.");
+
 
             Devmasters.Core.Batch.Manager.DoActionForAll<KeyValuePair<string, WatchDog[]>>(groupedByUserNoSpecContact,
                 (kv) =>
@@ -49,12 +54,15 @@ namespace HlidacStatu.Lib.Watchdogs
                     var res = Mail.SendWatchdogsInOneEmail(userWatchdogs, user,
                         force, specificContacts, fromSpecificDate, toSpecificDate, openingText);
 
+                    Util.Consts.Logger.Info($"SingleEmailPerUser {kv.Key} sent result {res.ToString()}.");
+
                     return new Devmasters.Core.Batch.ActionOutputData();
                 },
                 logOutputFunc, progressOutputFunc,
                 true, maxDegreeOfParallelism: maxDegreeOfParallelism
                 );
 
+            Util.Consts.Logger.Info($"SingleEmailPerUser Done processing {watchdogs.Count()} watchdogs.");
 
         }
     }

@@ -24,6 +24,8 @@ namespace HlidacStatu.Lib.Watchdogs
                 && fromSpecificDate.HasValue == false
                 && toSpecificDate.HasValue == false;
 
+            Util.Consts.Logger.Info($"SingleEmailPerWatchdog Start processing {watchdogs.Count()} watchdogs.");
+
             Devmasters.Core.Batch.Manager.DoActionForAll<WatchDog>(watchdogs,
                 (userWatchdog) =>
                 {
@@ -32,12 +34,15 @@ namespace HlidacStatu.Lib.Watchdogs
                     var res = Mail.SendWatchdog(userWatchdog, user,
                         force, specificContacts, fromSpecificDate, toSpecificDate, openingText);
 
+                    Util.Consts.Logger.Info($"SingleEmailPerWatchdog watchdog {userWatchdog.Id} sent result {res.ToString()}.");
+
                     return new Devmasters.Core.Batch.ActionOutputData();
                 },
                 logOutputFunc, progressOutputFunc,
                 true, maxDegreeOfParallelism: maxDegreeOfParallelism
                 );
 
+            Util.Consts.Logger.Info($"SingleEmailPerWatchdog Done processing {watchdogs.Count()} watchdogs.");
 
         }
     }
