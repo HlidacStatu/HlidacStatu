@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.Configuration;
 using System.Collections.Generic;
 using HlidacStatu.Lib;
+using Devmasters.Cache.V20.File;
+using System.Linq;
 
 namespace DotaceLoader
 {
@@ -44,7 +46,7 @@ namespace DotaceLoader
 
                             Dotace dotace = JsonConvert.DeserializeObject<Dotace>(record.Data);
                             dotace.IdDotace = constructedId;
-                            dotace.Prijemce.Ico = NormalizeIco(dotace.Prijemce.Ico);
+                            dotace.Prijemce.Ico = FullIcoFix(dotace);
 
                             //dotace.CalculateTotals(); moved to bulksave
 
@@ -89,18 +91,12 @@ namespace DotaceLoader
         public static string FindIco(string companyName)
         {
             var name = HlidacStatu.Lib.Data.Firma.JmenoBezKoncovky(companyName);
-            name = Devmasters.Core.TextUtil.RemoveDiacritics(name);
+            //name = Devmasters.Core.TextUtil.RemoveDiacritics(name);
+            var ico = StaticData.FirmyNazvy.Get()
+                .Where(m => m.Value.Jmeno == name)
+                .Select(x => x.Key)
+                .FirstOrDefault();
 
-            if(StaticData.FirmyNazvyOnlyAscii.TryGetValue(name, out var ica))
-            {
-                if (ica.Length > 0)
-                {
-                    var ico = ica[0];
-                    return ico;
-                }
-            }
-            
-            // todo: nenalezeno, zalogovat
             return string.Empty;
             
         }
