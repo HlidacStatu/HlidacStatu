@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Watchdogs
             bool force = false, string[] specificContacts = null,
             DateTime? fromSpecificDate = null, DateTime? toSpecificDate = null,
             string openingText = null,
-            int maxDegreeOfParallelism = 20,
+            int? maxDegreeOfParallelism = 20,
             Action<string> logOutputFunc = null,
             Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc = null
             )
