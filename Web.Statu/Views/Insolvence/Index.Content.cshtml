@@ -32,7 +32,7 @@
                                     new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Insolvence.Rizeni>()
                                         .DateHistogram("x-agg", h => h
                                             .Field(f => f.DatumZalozeni)
-                                            .Interval(Nest.DateInterval.Month)
+                                            .CalendarInterval(Nest.DateInterval.Month)
                                             .Format("yyyy-MM-dd")
                                         );
                                     DateTime minDate = new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, 1);
@@ -84,7 +84,7 @@
                                              .Aggregations(agg2 => agg2
                                                  .DateHistogram("x-agg", h => h
                                                      .Field("dokumenty.datumVlozeni")
-                                                     .Interval(Nest.DateInterval.Month)
+                                                     .CalendarInterval(Nest.DateInterval.Month)
                                                      .Format("yyyy-MM-dd")
                                                 )
                                             )

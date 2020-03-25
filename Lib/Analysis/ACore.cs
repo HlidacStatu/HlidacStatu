@@ -63,7 +63,7 @@ namespace HlidacStatu.Lib.Analysis
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                 .DateHistogram("x-agg", h => h
                     .Field(f => f.datumUzavreni)
-                    .Interval(Nest.DateInterval.Year)
+                    .CalendarInterval(Nest.DateInterval.Year)
                     .Aggregations(agg => agg
                         .Sum("sumincome", s => s
                             .Field(ff => ff.CalculatedPriceWithVATinCZK)
@@ -122,13 +122,13 @@ namespace HlidacStatu.Lib.Analysis
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                     .DateHistogram("x-agg", h => h
                         .Field(f => f.datumUzavreni)
-                        .Interval(Nest.DateInterval.Year)
+                        .CalendarInterval(Nest.DateInterval.Year)
                     );
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggYSum =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                     .DateHistogram("x-agg", h => h
                         .Field(f => f.datumUzavreni)
-                        .Interval(Nest.DateInterval.Year)
+                        .CalendarInterval(Nest.DateInterval.Year)
                         .Aggregations(agg => agg
                             .Sum("sumincome", s => s
                                 .Field(ff => ff.CalculatedPriceWithVATinCZK)
@@ -197,7 +197,7 @@ namespace HlidacStatu.Lib.Analysis
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                     .DateHistogram("x-agg", h => h
                         .Field(f => f.datumUzavreni)
-                        .Interval(Nest.DateInterval.Year)
+                        .CalendarInterval(Nest.DateInterval.Year)
                     );
 
             //init result

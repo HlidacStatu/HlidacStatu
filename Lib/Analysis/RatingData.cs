@@ -16,6 +16,7 @@
         public decimal SumKcSPolitiky { get; set; } = 0;
         public decimal PercentKcSPolitiky { get; set; } = 0;
 
+
     }
 
 }

@@ -111,6 +111,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaceLoader", "DotaceLoade
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Playgr", "Playgr", "{F4002F1A-7F3B-4004-B6D1-6E38A55E0E6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis", "Analysis\Analysis.csproj", "{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -980,6 +982,30 @@ Global
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299}.x86Only|x64.Build.0 = Release|Any CPU
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299}.x86Only|x86.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|x64.Build.0 = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Debug|x86.Build.0 = Debug|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|x64.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|x64.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|x86.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Release|x86.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|x64.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|x64.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|x86.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.Stage|x86.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|Any CPU.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|Any CPU.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|x64.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|x64.Build.0 = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|x86.ActiveCfg = Release|Any CPU
+		{C06BBA2F-C17E-4C8F-B1E2-D16FB1F69698}.x86Only|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1010,8 +1036,8 @@ Global
 		{4C9528F5-79D9-40BA-8CF0-CADCB9BAF299} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

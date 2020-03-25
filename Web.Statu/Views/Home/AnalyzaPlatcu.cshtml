@@ -31,7 +31,7 @@
             .Aggregations(ag2 => ag2
                 .DateHistogram("x-agg", h2 => h2
                     .Field(f => f.datumUzavreni)
-                    .Interval(Nest.DateInterval.Year)
+                    .CalendarInterval(Nest.DateInterval.Year)
                     .Aggregations(agg => agg
                         .Sum("sumincome", s => s
                             .Field(ff => ff.CalculatedPriceWithVATinCZK)

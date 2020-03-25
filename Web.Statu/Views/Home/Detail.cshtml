@@ -380,7 +380,8 @@
                     Tento záznam jako JSON:
                 </td>
                 <td>
-                    <a href="@Url.Action("Detail", "ApiV1", new { id = Model.Id, json = 1, nice = 1 })" target="_blank">https://www.hlidacstatu.cz@(Url.Action("Detail", "ApiV1", new { id = Model.Id, json = 1, nice = 1 }).ToString())</a>
+                    <a href="/api/v1/Detail/@(Model.Id)?json=1&nice=1" target="_blank">https://www.hlidacstatu.cz/api/v1/Detail/@(Model.Id)?json=1&nice=1
+                    </a>
                     <br />
                     <small class="text-muted">Popis JSON <a href="@Url.Action("Index", "ApiV1")">zde</a></small>
                     <small class="text-muted">Chcete všechna data najednou? Koukněte <a href="@Url.Action("Index", "ApiV1")">sem</a>.</small>
