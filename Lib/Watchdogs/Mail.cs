@@ -146,17 +146,30 @@ namespace HlidacStatu.Lib.Watchdogs
                 if (!string.IsNullOrEmpty(openingText))
                     parts.Insert(0, Template.Paragraph(openingText));
 
-                parts.Insert(0, Template.Paragraph(
-                "<b style='color:red'>NOVINKA!</b> "
-                + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
-                + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
-                + "Napište nám, jak se Vám to líbí, co bychom mohli změnit a vylepšit (stačí odpovědět na tento mail)."
-                ,
-                "NOVINKA! "
-                + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
-                + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
-                + "Napište nám, jak se Vám to líbí, co bychom mohli změnit a vylepšit (stačí odpovědět na tento mail)."
-                ));
+                if (DateTime.Now < new DateTime(2020, 4, 2))
+                {
+                    parts.Insert(0, Template.Margin());
+                    parts.Insert(0, Template.Paragraph(
+                    "<b style='color:red'>NOVINKA!</b> "
+                    + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
+                    + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
+                    + "Pokud vám vyhovuje každý hlídač v samostatném mailu, snadno to změníte přes odkaz v patičce."
+                    ,
+                    "NOVINKA! "
+                    + "Pokud máte na Hlídači státu nastaveno více hlídačů nových informací, nebudeme Vám je už posílat v jednotlivých mailech. "
+                    + "Místo toho obdržíte jeden souhrnný, ve kterém najdete vše najednou!  "
+                    + "Pokud vám vyhovuje každý hlídač v samostatném mailu, snadno to změníte přes odkaz v patičce."
+                    ));
+                }
+                else
+                {
+                    parts.Insert(0, Template.Margin());
+                    parts.Insert(0, Template.Paragraph(
+                    "Seznam nalezených nových informací, které vás zajímají, pěkně pohromadě v jednom souhrnném mailu."
+                    ,
+                    "Seznam nalezených nových informací, které vás zajímají, pěkně pohromadě v jednom souhrnném mailu."
+                    ));
+                }
                 parts.Insert(0, Template.Margin());
 
                 var content = RenderedContent.Merge(parts);
@@ -175,13 +188,13 @@ namespace HlidacStatu.Lib.Watchdogs
                 {
                     foreach (var email in specificContacts)
                     {
-                        Email.SendEmail(email, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content);
+                        Email.SendEmail(email, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content, fromEmail: "hlidac@hlidacstatu.cz");
                         return SendStatus.Sent;
                     }
                 }
                 else
                 {
-                    sent = Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content);
+                    sent = Email.SendEmail(emailContact, $"({DateTime.Now.ToShortDateString()}) Nové informace nalezené na Hlídači státu", content, fromEmail: "hlidac@hlidacstatu.cz");
                 }
                 if (sent)
                 {

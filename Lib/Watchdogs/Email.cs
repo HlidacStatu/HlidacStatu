@@ -9,12 +9,12 @@ namespace HlidacStatu.Lib.Watchdogs
 {
     public class Email
     {
-        public static bool SendEmail(string toEmail, string subject, RenderedContent content)
+        public static bool SendEmail(string toEmail, string subject, RenderedContent content, string fromEmail = "podpora@hlidacstatu.cz")
         {
             try
             {
 
-                using (MailMessage msg = new MailMessage("podpora@hlidacstatu.cz", toEmail))
+                using (MailMessage msg = new MailMessage(fromEmail, toEmail))
                 {
                     if (!string.IsNullOrEmpty(content.ContentText))
                     {
