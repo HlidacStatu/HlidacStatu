@@ -34,7 +34,7 @@ namespace HlidacStatu.Lib.Data
                 set
                 {
                     _plainTextContent = value;
-                    this.Lenght = this.PlainTextContent.Length;
+                    this.Lenght = this.PlainTextContent?.Length ?? 0;
                     this.WordCount = ParseTools.CountWords(this.PlainTextContent);
                 }
             }

@@ -232,10 +232,10 @@ namespace HlidacStatu.Lib.Data.VZ
                    new Lib.Searching.Rule("cena:","(konecnaHodnotaBezDPH:${q} OR odhadovanaHodnotaBezDPH:${q}) " ),
                    new Lib.Searching.Rule("zverejneno:\\[","datumUverejneni:[" ),
                    new Lib.Searching.Rule("zverejneno:(?=[<>])","datumUverejneni:${q}" ),
-                   new Lib.Searching.Rule("zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("zverejneno:(?=\\d)","datumUverejneni:[${q} TO ${q}||+1d}" ),
                    new Lib.Searching.Rule("podepsano:\\[","datumUzavreniSmlouvy:[" ),
                    new Lib.Searching.Rule("podepsano:(?=[<>])","datumUzavreniSmlouvy:${q}" ),
-                   new Lib.Searching.Rule("podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]" ),
+                   new Lib.Searching.Rule("podepsano:(?=\\d)","datumUzavreniSmlouvy:[${q} TO ${q}||+1d}" ),
                    new Lib.Searching.Rule("text:","prilohy.plainTextContent:" ),
                 };
 
@@ -276,9 +276,9 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
                     new TransformPrefix("zverejneno:","datumUverejneni:", "[<>]?[{\\[]+" ),
-                    new TransformPrefixWithValue("zverejneno:","datumUverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("zverejneno:","datumUverejneni:[${q} TO ${q}||+1d}", "\\d+" ),
                     new TransformPrefix("podepsano:","datumUzavreniSmlouvy:", "[<>]?[{\\[]+" ),
-                    new TransformPrefixWithValue("podepsano:","datumUzavreniSmlouvy:[${q} TO ${q}||+1d]", "\\d+" ),
+                    new TransformPrefixWithValue("podepsano:","datumUzavreniSmlouvy:[${q} TO ${q}||+1d}", "\\d+" ),
 
                     new TransformPrefix("text:","prilohy.plainTextContent:"  ,null),
 

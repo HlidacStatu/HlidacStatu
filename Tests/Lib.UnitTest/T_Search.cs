@@ -15,7 +15,7 @@ namespace HlidacStatu.Lib.Tests
         Searching.Rules.IRule r_holding = new Searching.Rules.Holding(null, "ico:");
         Searching.Rules.IRule r_holding2 = new Searching.Rules.Holding("holdingprijemce:", "icoprijemce:");
         Searching.Rules.IRule r_ico_tpwv = new Searching.Rules.TransformPrefixWithValue("ico:", " ( prijemce.ico:${q} OR platce.ico:${q} ) ", null);
-        Searching.Rules.IRule r_podeps_tpwv1 = new Searching.Rules.TransformPrefixWithValue("podepsano:", " datumUzavreni:[${q} TO ${q}||+1d] ", "\\d+");
+        Searching.Rules.IRule r_podeps_tpwv1 = new Searching.Rules.TransformPrefixWithValue("podepsano:", " datumUzavreni:[${q} TO ${q}||+1d} ", "\\d+");
         Searching.Rules.IRule r_zverejn_tps = new Searching.Rules.TransformPrefix("zverejneno:", "casZverejneni:", "[<>]?[{\\[]+");
         Searching.Rules.IRule r_schyby = new Searching.Rules.Smlouva_Chyby();
         Searching.Rules.IRule r_cpv = new Searching.Rules.VZ_CPV();
@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Tests
                 r_ico_tpwv.Process(Searching.SplittingQuery.SplitQuery("ico:04711157").Parts.FirstOrDefault())?.Query?.FullQuery());
 
 
-            Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d]",
+            Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d}",
                 r_podeps_tpwv1.Process(Searching.SplittingQuery.SplitQuery("podepsano:2019-01-01").Parts.FirstOrDefault())?.Query?.FullQuery());
 
             Assert.AreEqual<string>("casZverejneni:{2019-01-01 TO 2019-01-02}",
@@ -119,10 +119,10 @@ namespace HlidacStatu.Lib.Tests
                new TransformPrefix("cena:","calculatedPriceWithVATinCZK:",null ),
                new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
                new TransformPrefix("zverejneno:","casZverejneni:", "[<>]?[{\\[]+" ),
-               new TransformPrefixWithValue("zverejneno:","casZverejneni:[${q} TO ${q}||+1d]", "\\d+" ),
+               new TransformPrefixWithValue("zverejneno:","casZverejneni:[${q} TO ${q}||+1d}", "\\d+" ),
                new TransformPrefix("podepsano:","datumUzavreni:[", "[<>]?[{\\[]+" ),
                new TransformPrefixWithValue("podepsano:","datumUzavreni:${q}", "[<>]?[{\\[]+" ),
-               new TransformPrefixWithValue("podepsano:","datumUzavreni:[${q} TO ${q}||+1d]", "\\d+"  ),
+               new TransformPrefixWithValue("podepsano:","datumUzavreni:[${q} TO ${q}||+1d}", "\\d+"  ),
                new TransformPrefix("schvalil:","schvalil:",null ),
                new TransformPrefix("textsmlouvy:","prilohy.plainTextContent:",null ),
                new Smlouva_Chyby(),
@@ -155,7 +155,7 @@ namespace HlidacStatu.Lib.Tests
                 Searching.SimpleQueryCreator.GetSimpleQuery("osobaid:michal-blaha-2 AND zverejneno:[2012-12-01 TO 2019-12-10] 2229001/0710", rules).FullQuery());
 
 
-            Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d]",
+            Assert.AreEqual<string>("datumUzavreni:[2019-01-01 TO 2019-01-01||+1d}",
                 Searching.SimpleQueryCreator.GetSimpleQuery("podepsano:2019-01-01", rules).FullQuery());
 
 
