@@ -52,6 +52,10 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/dotace");
             }
             var dotace = _dotaceService.Get(id);
+            if(dotace is null)
+            {
+                return NotFound();
+            }
             return View(dotace);
         }
     }
