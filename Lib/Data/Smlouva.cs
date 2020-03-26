@@ -694,6 +694,7 @@ namespace HlidacStatu.Lib.Data
 
             this.ConfidenceValue = GetConfidenceValue();
 
+            /////// HINTS
 
             if (this.Hint == null)
                 this.Hint = new HintSmlouva();

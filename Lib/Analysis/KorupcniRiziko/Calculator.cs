@@ -39,7 +39,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = null;
-
+        Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel = null;
+        
         public Calculator(string ico)
         {
             this.Ico = ico;
@@ -54,22 +55,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             _calc_SeZasadnimNedostatkem = AdvancedQuery.PerYear($"ico:{this.Ico} and chyby:zasadni");
 
-            _calc_UzavrenoOVikendu = new Dictionary<int, Lib.Analysis.BasicData>();
-            foreach (int year in Calculator.CalculationYears)
-            {
-                var data = AdvancedQuery.PerYear($"ico:{this.Ico} AND ({AdvancedQuery.ToElasticQuery(Util.DateTools.NepracovniDny[year])})");
-                _calc_UzavrenoOVikendu.Add(year, data[year]);
-            }
+            _calc_UzavrenoOVikendu= AdvancedQuery.PerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)");
 
-            _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( "
-                + $"( cenabezDPH:>{Consts.Limit1bezDPH - Consts.IntervalOkolo} AND cenabezDPH:<={Consts.Limit1bezDPH} )"
-                + $" OR ( cena:>{Consts.Limit1bezDPH * 1.21m - Consts.IntervalOkolo} AND cena:<={Consts.Limit1bezDPH * 1.21m} )"
-                + $" OR ( cenabezDPH:>{Consts.Limit2bezDPH - Consts.IntervalOkolo} AND cenabezDPH:<={Consts.Limit1bezDPH} )"
-                + $" OR ( cena:>{Consts.Limit2bezDPH * 1.21m - Consts.IntervalOkolo} AND cena:<={Consts.Limit2bezDPH * 1.21m} )"
-                + ")"
+            _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )");
 
-                );
 
+            _calc_NovaFirmaDodavatel = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:<30 )");
         }
 
         public Data CalculateForYear(int year)
