@@ -382,12 +382,12 @@ namespace HlidacStatu.Lib
                                 TimeSpan.FromHours(3), (obj) =>
                                 {
                                     List<FirmaEvent> firmy = null;
-
+                                    DateTime limit10let = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-10);
                                     using (Lib.Data.DbEntities db = new DbEntities())
                                     {
                                         firmy = db.FirmaEvent
                                             .AsNoTracking()
-                                            .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
+                                            .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor && m.DatumDo > limit10let)
                                             //.Where(m=>m.)
                                             //.Select(m=>m.ICO)
                                             .ToList();

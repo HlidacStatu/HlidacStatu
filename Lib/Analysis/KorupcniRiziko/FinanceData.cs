@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace HlidacStatu.Analysis.KorupcniRiziko
+namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class FinanceData
     {

@@ -7,14 +7,14 @@ using HlidacStatu.Lib.Analysis;
 using HlidacStatu.Lib.Searching;
 using Nest;
 
-namespace HlidacStatu.Analysis.KorupcniRiziko
+namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class AdvancedQuery
     {
 
         public static Dictionary<int, BasicData> PerYear(string query, int[] yearsInterval = null)
         {
-            yearsInterval = yearsInterval ?? Analysis.Calendar.CalculationYears;
+            yearsInterval = yearsInterval ?? Calculator.CalculationYears;
 
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggY =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
@@ -55,5 +55,16 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
 
             return result;
         }
+
+        public static string ToElasticQuery(IEnumerable<DateTime> dates)
+        {
+            if (dates == null)
+                return string.Empty;
+            if (dates.Count() == 0)
+                return string.Empty;
+
+            return "( " + string.Join(" OR ", dates) + " ) ";
+        }
+
     }
 }

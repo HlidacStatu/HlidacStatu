@@ -237,6 +237,8 @@ namespace HlidacStatu.Lib.Data
         [Nest.Boolean()]
         public bool? SVazbouNaPolitikyNedavne { get; set; } = false;
 
+        public HintSmlouva Hint { get; set; }
+
         public Subjekt VkladatelDoRejstriku { get; set; }
         public void AddEnhancement(Enhancers.Enhancement enh)
         {
@@ -585,10 +587,13 @@ namespace HlidacStatu.Lib.Data
                 icos = ico_s_VazbouPolitikNedavne;
             if (aktualnost == Relation.AktualnostType.Aktualni)
                 icos = ico_s_VazbouPolitikAktualni;
+
+
             Firma f = null;
             if (this.platnyZaznam)
             {
                 f = Firmy.Get(this.Platce.ico);
+
                 if (f.Valid && !f.PatrimStatu())
                 {
                     if (!string.IsNullOrEmpty(this.Platce.ico) && icos.Contains(this.Platce.ico))
@@ -688,6 +693,51 @@ namespace HlidacStatu.Lib.Data
             this.LastUpdate = DateTime.Now;
 
             this.ConfidenceValue = GetConfidenceValue();
+
+
+            if (this.Hint == null)
+                this.Hint = new HintSmlouva();
+
+            List<Firma> firmy = this.Prijemce.Select(m => m.ico)
+                .Concat(new string[] { this.Platce.ico })
+                .Where(m => !string.IsNullOrWhiteSpace(m))
+                .Select(m => Firmy.Get(m))
+                .Where(f => f.Valid)
+                .ToList();
+
+            this.Hint.DenUzavreni = (int)Util.DateTools.TypeOfDay(this.datumUzavreni);
+            this.Hint.PocetDniOdZalozeniFirmy = (int)firmy
+                .Select(f => (this.datumUzavreni - (f.Datum_Zapisu_OR ?? new DateTime(1990, 1, 1))).TotalDays)
+                .Min();
+
+            this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.Neni;
+            if (firmy.Any(f => f.IsSponzorBefore(this.datumUzavreni)))
+                this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.PrimoSubjekt;
+            else if (firmy.Any(f => f.MaVazbyNaPolitikyPred(this.datumUzavreni)))
+                this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.AngazovanyMajitel;
+
+            this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.OK;
+            if (
+                    ((this.hodnotaBezDph - Analysis.KorupcniRiziko.Consts.IntervalOkolo > Analysis.KorupcniRiziko.Consts.Limit1bezDPH)
+                    && (this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH))
+                ||
+                (
+                    ((this.CalculatedPriceWithVATinCZK - Analysis.KorupcniRiziko.Consts.IntervalOkolo) > Analysis.KorupcniRiziko.Consts.Limit1bezDPH * 1.21m)
+                    && (this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH * 1.21m))
+                )
+                this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit2M;
+
+            if (
+                    ((this.hodnotaBezDph - Analysis.KorupcniRiziko.Consts.IntervalOkolo > Analysis.KorupcniRiziko.Consts.Limit2bezDPH)
+                    && (this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH)
+                )
+                ||
+                (
+                    ((this.CalculatedPriceWithVATinCZK - Analysis.KorupcniRiziko.Consts.IntervalOkolo) > Analysis.KorupcniRiziko.Consts.Limit2bezDPH * 1.21m)
+                    && (this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH * 1.21m)
+                )
+                )
+                this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit6M;
 
         }
 
@@ -937,7 +987,7 @@ namespace HlidacStatu.Lib.Data
                 return new SClassification.Classification[] { };
             var secondT = types.OrderByDescending(m => m.ClassifProbability)
                 .Skip(1)
-                .Where(m => m.ClassifProbability >= (firstT.ClassifProbability*0.75m))
+                .Where(m => m.ClassifProbability >= (firstT.ClassifProbability * 0.75m))
                 .FirstOrDefault();
 
             if (secondT == null)

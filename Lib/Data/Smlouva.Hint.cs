@@ -12,12 +12,6 @@ namespace HlidacStatu.Lib.Data
             Limit2M = 1,
             Limit6M = 2
         }
-        public enum DenUzavreniTyp
-        {
-            Pracovni = 0,
-            Vikend = 1,
-            Svatek = 2
-        }
         public enum PolitickaAngazovanostTyp
         {
             Neni = 0,
@@ -27,9 +21,16 @@ namespace HlidacStatu.Lib.Data
 
         [Nest.Number]
         public int SmlouvaULimitu { get; set; } = 0;
+
         [Nest.Number]
         public int DenUzavreni { get; set; } = 0;
+
         [Nest.Number]
         public int SmlouvaSPolitickyAngazovanymSubjektem { get; set; } = 0;
+
+        [Nest.Number]
+        public int PocetDniOdZalozeniFirmy{ get; set; } = 999999;
+
+
     }
 }

@@ -667,7 +667,7 @@ namespace HlidacStatu.Web.Controllers
                                 Smlouva.Export(smodel),
                                     new Newtonsoft.Json.JsonSerializerSettings()
                                     {
-                                        Formatting = Newtonsoft.Json.Formatting.None,
+                                        Formatting = (Request.QueryString["nice"]=="1" ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None),
                                         //NullValueHandling = NullValueHandling.Ignore,         
                                         ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
                                     }

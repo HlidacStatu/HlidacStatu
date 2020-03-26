@@ -173,7 +173,7 @@ namespace HlidacStatu.Lib.Data
             var ret = this.IsSponzor();
             if (ret) return ret;
 
-            ret = this.Statistic().ToBasicData().Pocet> 0;
+            ret = this.Statistic().ToBasicData().Pocet > 0;
             if (ret) return ret;
 
             ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + this.ICO, null, 1, 1, "0").Total > 0;
@@ -182,6 +182,21 @@ namespace HlidacStatu.Lib.Data
             ret = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + this.ICO, 1, 1, "0").Total > 0;
             return ret;
 
+        }
+
+        public bool MaVazbyNaPolitikyPred(DateTime date)
+        {
+            if (MaVazbyNaPolitiky())
+            {
+                var osoby = VazbyNaPolitiky();
+                foreach (var o in osoby)
+                {
+                    var found = o.Sponzoring().Any(m => m.DatumOd < date);
+                    if (found)
+                        return true;
+                }
+            }
+            return false;
         }
 
         public bool MaVazbyNaPolitiky()
@@ -246,7 +261,7 @@ namespace HlidacStatu.Lib.Data
             }
 
 
-            var firstRel = Graph.VsechnyDcerineVazby(this.ICO,true);
+            var firstRel = Graph.VsechnyDcerineVazby(this.ICO, true);
 
 
             this.Vazby(Graph.Edge.Merge(oldRel, firstRel).ToArray());
@@ -274,7 +289,8 @@ namespace HlidacStatu.Lib.Data
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.Jmeno, 50); }
+            return Devmasters.Core.TextUtil.ShortenText(this.Jmeno, 50);
+        }
 
         public string SocialInfoSubTitle()
         {
@@ -374,11 +390,11 @@ namespace HlidacStatu.Lib.Data
         Analysis.SubjectStatistic _statistic = null;
         public Analysis.SubjectStatistic Statistic()
         {
-                if (_statistic == null)
-                {
-                    _statistic = new Analysis.SubjectStatistic(this);
+            if (_statistic == null)
+            {
+                _statistic = new Analysis.SubjectStatistic(this);
 
-                }
+            }
             return _statistic;
         }
 
@@ -466,6 +482,16 @@ namespace HlidacStatu.Lib.Data
                 return false;
 
         }
+
+
+        public bool IsSponzorBefore(DateTime date)
+        {
+            return StaticData.SponzorujiciFirmy_Vsechny.Get()
+                .Where(m =>m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor
+                            && m.DatumOd < date)
+                .Any();
+
+        }
         public bool IsSponzor()
         {
             return this.Events(m =>
@@ -493,7 +519,7 @@ namespace HlidacStatu.Lib.Data
             return Firma.JmenoBezKoncovky(this.Jmeno);
         }
 
-        
+
 
         public string KoncovkaFirmy()
         {
@@ -730,9 +756,9 @@ namespace HlidacStatu.Lib.Data
         {
             return Description(html, m => true, template, itemTemplate, itemDelimeter, numOfRecords);
         }
-        public string Description(bool html, Expression<Func<FirmaEvent, bool>> predicate, 
+        public string Description(bool html, Expression<Func<FirmaEvent, bool>> predicate,
             string template = "{0}", string itemTemplate = "{0}",
-            string itemDelimeter = "<br/>",int numOfRecords = int.MaxValue)
+            string itemDelimeter = "<br/>", int numOfRecords = int.MaxValue)
         {
             StringBuilder sb = new StringBuilder();
             var events = this.Events(predicate);
@@ -847,7 +873,7 @@ namespace HlidacStatu.Lib.Data
                             , InfoFact.ImportanceLevel.Summary)
                             );
 
-                        f.Add(new InfoFact( $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> "
+                        f.Add(new InfoFact($"Mezi lety <b>{rok - 1}-{rok - 2000}</b> "
                             + stat.BasicStatPerYear.YearChange(rok).RenderChangeWord(false, stat.BasicStatPerYear.YearChange(rok).CenaChangePerc,
                             "došlo k <b>poklesu zakázek o&nbsp;{0:P2}</b> v&nbsp;Kč . ", " nedošlo ke změně objemu zakázek. ", "došlo k <b>nárůstu zakázek o&nbsp;{0:P2}</b> v&nbsp;Kč. ")
                             , InfoFact.ImportanceLevel.Medium)
@@ -864,7 +890,7 @@ namespace HlidacStatu.Lib.Data
                         }
                         else if (stat.RatingPerYear[rok - 1].NumBezCeny > 0)
                         {
-                            f.Add(new InfoFact (
+                            f.Add(new InfoFact(
                                 $"V <b>{rok - 1} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktů " +
                                 Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
                                 + $", což je celkem <b>{stat.RatingPerYear[rok - 1].PercentBezCeny.ToString("P2")}</b> ze všech. "
@@ -951,7 +977,7 @@ namespace HlidacStatu.Lib.Data
                                                                         , " angažují {0} politicky angažované osoby - "
                                                                         , " angažuje {0} politicky angažovaných osob - ")
                                     + sPolitici + ". "
-                                    , InfoFact.ImportanceLevel.Medium)                                    
+                                    , InfoFact.ImportanceLevel.Medium)
                                     );
                             }
                         }
@@ -962,7 +988,7 @@ namespace HlidacStatu.Lib.Data
                                 Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
                                 + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.RatingPerYear[rok].SumKcSPolitiky, html: true)}</b> "
                                 + $" (tj. {stat.RatingPerYear[rok].PercentKcSPolitiky.ToString("P2")}). "
-                                ,InfoFact.ImportanceLevel.Medium)
+                                , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
                         else if (PatrimStatu() && stat.RatingPerYear[rok - 1].NumSPolitiky > 0)
@@ -1030,7 +1056,7 @@ namespace HlidacStatu.Lib.Data
         {
             return GetUrl(local, string.Empty);
         }
-            public string GetUrl(bool local, string foundWithQuery)
+        public string GetUrl(bool local, string foundWithQuery)
         {
             string url = "/subjekt/" + this.ICO;
             if (!string.IsNullOrEmpty(foundWithQuery))

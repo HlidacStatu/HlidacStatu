@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using HlidacStatu.Lib.Data;
 using Nest;
 
-namespace HlidacStatu.Analysis.KorupcniRiziko
+namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
 
     public class Calculator
     {
+        public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
 
         public class Data
         {
@@ -54,22 +55,17 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
             _calc_SeZasadnimNedostatkem = AdvancedQuery.PerYear($"ico:{this.Ico} and chyby:zasadni");
 
             _calc_UzavrenoOVikendu = new Dictionary<int, Lib.Analysis.BasicData>();
-            foreach (int year in Calendar.CalculationYears)
+            foreach (int year in Calculator.CalculationYears)
             {
-                var data = AdvancedQuery.PerYear($"ico:{this.Ico} AND ({Calendar.ToElasticQuery(Calendar.NepracovniDny[year])})");
+                var data = AdvancedQuery.PerYear($"ico:{this.Ico} AND ({AdvancedQuery.ToElasticQuery(Util.DateTools.NepracovniDny[year])})");
                 _calc_UzavrenoOVikendu.Add(year, data[year]);
             }
 
-            int limit1bezDPH = 2000000;
-            int limit2bezDPH = 6000000;
-            int interval = 100000;
             _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( "
-                + $"( cenabezDPH:>{limit1bezDPH-interval} AND cenabezDPH:<={limit1bezDPH} )"
-                + $" OR ( cena:>{limit1bezDPH - interval} AND cena:<={limit1bezDPH} )"
-                + $" OR ( cena:>{limit1bezDPH*1.21 - interval} AND cena:<={limit1bezDPH*1.21} )"
-                + $" OR ( cenabezDPH:>{limit2bezDPH - interval} AND cenabezDPH:<={limit1bezDPH} )"
-                + $" OR ( cena:>{limit2bezDPH - interval} AND cena:<={limit2bezDPH} )"
-                + $" OR ( cena:>{limit2bezDPH * 1.21 - interval} AND cena:<={limit2bezDPH * 1.21} )"
+                + $"( cenabezDPH:>{Consts.Limit1bezDPH - Consts.IntervalOkolo} AND cenabezDPH:<={Consts.Limit1bezDPH} )"
+                + $" OR ( cena:>{Consts.Limit1bezDPH * 1.21m - Consts.IntervalOkolo} AND cena:<={Consts.Limit1bezDPH * 1.21m} )"
+                + $" OR ( cenabezDPH:>{Consts.Limit2bezDPH - Consts.IntervalOkolo} AND cenabezDPH:<={Consts.Limit1bezDPH} )"
+                + $" OR ( cena:>{Consts.Limit2bezDPH * 1.21m - Consts.IntervalOkolo} AND cena:<={Consts.Limit2bezDPH * 1.21m} )"
                 + ")"
 
                 );
@@ -91,7 +87,7 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
             ret.PercNovaFirmaDodavatel = 0;
             ret.PercSmluvUlimitu =
                 (decimal)_calc_ULimitu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            ret.PercUzavrenoOVikendu = 
+            ret.PercUzavrenoOVikendu =
                 (decimal)_calc_UzavrenoOVikendu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
 
             ret.BasicStat = this.urad.Statistic().BasicStatPerYear[year];

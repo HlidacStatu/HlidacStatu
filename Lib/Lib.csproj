@@ -453,6 +453,10 @@
     <Compile Include="Analysis\BasicDataPerYear.cs" />
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\AdvancedQuery.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
     <Compile Include="Analysis\OsobaStatistic.cs" />
     <Compile Include="Analysis\ComplexStatistic.cs" />
     <Compile Include="Analysis\RatingData.cs" />
