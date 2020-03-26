@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel = null;
-        
+
         public Calculator(string ico)
         {
             this.Ico = ico;
@@ -55,7 +55,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             _calc_SeZasadnimNedostatkem = AdvancedQuery.PerYear($"ico:{this.Ico} and chyby:zasadni");
 
-            _calc_UzavrenoOVikendu= AdvancedQuery.PerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)");
+            _calc_UzavrenoOVikendu = AdvancedQuery.PerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)");
 
             _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )");
 
@@ -65,24 +65,26 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public Data CalculateForYear(int year)
         {
+            decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
             Data ret = new Data();
+
+            ret.PercBezUvedeneCeny = this.urad.Statistic().RatingPerYear[year].PercentBezCeny;
+            ret.PercSeZasadnimNedostatkem = (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
+
+            ret.PercNovaFirmaDodavatel = (decimal)_calc_NovaFirmaDodavatel[year].Pocet / smlouvyZaRok;
+            ret.PercSmluvUlimitu = (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
+            ret.PercUzavrenoOVikendu = (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
+
+            ret.BasicStat = this.urad.Statistic().BasicStatPerYear[year];
+            ret.Rating = this.urad.Statistic().RatingPerYear[year];
+
+
             ret.CelkovaKoncentraceDodavatelu = 0;
             ret.KoncentraceDodavatelůBezUvedeneCeny = 0;
             ret.KoncetraceDodavateluObory = null;
 
-            ret.PercBezUvedeneCeny = this.urad.Statistic().RatingPerYear[year].PercentBezCeny;
-            ret.PercSeZasadnimNedostatkem =
-                (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
 
-            ret.PercNovaFirmaDodavatel = 0;
-            ret.PercSmluvUlimitu =
-                (decimal)_calc_ULimitu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            ret.PercUzavrenoOVikendu =
-                (decimal)_calc_UzavrenoOVikendu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-
-            ret.BasicStat = this.urad.Statistic().BasicStatPerYear[year];
-            ret.Rating = this.urad.Statistic().RatingPerYear[year];
             return ret;
         }
 
