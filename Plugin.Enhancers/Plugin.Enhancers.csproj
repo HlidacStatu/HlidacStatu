@@ -38,6 +38,10 @@
     <Reference Include="Devmasters.Net, Version=1.472.3.24, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Net.1.472.3.24\lib\Net45\Devmasters.Net.dll</HintPath>
     </Reference>
+    <Reference Include="GhostscriptSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd\binaries\GhostscriptSharp.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.11.23.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.23\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -187,10 +191,6 @@
     <Compile Include="TextMiner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd\GhostScriptSharp\GhostscriptSharp.csproj">
-      <Project>{56605627-e6fa-4f47-9440-fb877cea5c84}</Project>
-      <Name>GhostscriptSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lib.OCR.Api.Client\Lib.OCR.Api.Client.csproj">
       <Project>{7609680c-3c9d-4735-8709-e64f7116ab70}</Project>
       <Name>Lib.OCR.Api.Client</Name>
