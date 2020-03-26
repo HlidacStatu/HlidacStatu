@@ -6,14 +6,18 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Analysis
 {
-    public class Kalendar
+    public class Calendar
     {
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
 
         public static int[] CalendarYears = Enumerable.Range(2017, 5).ToArray();
         public static Dictionary<int, DateTime[]> Svatky = new Dictionary<int, DateTime[]>();
         public static Dictionary<int, DateTime[]> Vikendy = new Dictionary<int, DateTime[]>();
-        static Kalendar()
+
+        public static Dictionary<int, DateTime[]> NepracovniDny = new Dictionary<int, DateTime[]>();
+
+
+        static Calendar()
         {
             //zdroj: Zákon č. 245/2000 Sb o statních svátcích
             // a https://www.kurzy.cz/kalendar/statni-svatky/2021/
@@ -93,7 +97,7 @@ namespace HlidacStatu.Analysis
                 Util.ParseTools.ToDate("26.12.2017").Value,
         });
 
-            foreach (var year in CalculationYears)
+            foreach (var year in CalendarYears)
             {
                 DateTime start = new DateTime(year, 1, 1);
                 Vikendy.Add(year,
@@ -104,7 +108,20 @@ namespace HlidacStatu.Analysis
                             .ToArray()
                             );
             }
+            foreach (var year in CalendarYears)
+            {
+                NepracovniDny.Add(year,Svatky[year].Concat(Vikendy[year]).Distinct().ToArray());
+            }
+        }
 
+        public static string ToElasticQuery(IEnumerable<DateTime> dates)
+        {
+            if (dates == null)
+                return string.Empty;
+            if (dates.Count() == 0)
+                return string.Empty;
+
+            return "( " + string.Join(" OR ", dates) + " ) ";
         }
     }
 }

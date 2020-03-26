@@ -83,7 +83,9 @@ namespace HlidacStatu.Lib.Searching
                         sout.Add(val[i]);
                         continue;
                     }
-                    if (string.IsNullOrWhiteSpace(Prefix) && i == 0 && val.Length > 1 && formulaStart.Contains(val[i]) && val[i + 1] == '=')
+                    if (string.IsNullOrWhiteSpace(Prefix) == false
+                        && i == 0 && val.Length > 1 
+                        && formulaStart.Contains(val[i]) && val[i + 1] == '=')
                     {
                         sout.Add(val[i]);
                         sout.Add(val[i + 1]);

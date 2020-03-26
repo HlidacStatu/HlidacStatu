@@ -9,16 +9,12 @@ using Nest;
 
 namespace HlidacStatu.Analysis.KorupcniRiziko
 {
-    public class Query
+    public class AdvancedQuery
     {
 
-        public class BaseData
-        {
-
-        }
         public static Dictionary<int, BasicData> PerYear(string query, int[] yearsInterval = null)
         {
-            yearsInterval = yearsInterval ?? Analysis.Kalendar.CalculationYears;
+            yearsInterval = yearsInterval ?? Analysis.Calendar.CalculationYears;
 
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggY =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
@@ -39,7 +35,7 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
                     );
 
             var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, 0,
-                HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggY, exactNumOfResults: true);
+                HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggYSum, exactNumOfResults: true);
 
 
             Dictionary<int, BasicData> result = new Dictionary<int, BasicData>();

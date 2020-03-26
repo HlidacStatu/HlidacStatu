@@ -34,16 +34,46 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
         public string Ico { get; set; }
 
 
-        private Firma firma = null;
-        Dictionary<int, Lib.Analysis.BasicData> _calc_PercSeZasadnimNedostatkem = null;
+        private Firma urad = null;
+        Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
+        Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu = null;
+        Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = null;
 
         public Calculator(string ico)
         {
             this.Ico = ico;
-            _calc_PercSeZasadnimNedostatkem = Query.PerYear($"ico:{this.Ico} and chyby:zasadni");
-            this.firma = Firmy.Get(this.Ico);
-            if (firma.Valid == false)
+            InitData();
+        }
+
+        private void InitData()
+        {
+            this.urad = Firmy.Get(this.Ico);
+            if (urad.Valid == false)
                 throw new ArgumentOutOfRangeException("invalid ICO");
+
+            _calc_SeZasadnimNedostatkem = AdvancedQuery.PerYear($"ico:{this.Ico} and chyby:zasadni");
+
+            _calc_UzavrenoOVikendu = new Dictionary<int, Lib.Analysis.BasicData>();
+            foreach (int year in Calendar.CalculationYears)
+            {
+                var data = AdvancedQuery.PerYear($"ico:{this.Ico} AND ({Calendar.ToElasticQuery(Calendar.NepracovniDny[year])})");
+                _calc_UzavrenoOVikendu.Add(year, data[year]);
+            }
+
+            int limit1bezDPH = 2000000;
+            int limit2bezDPH = 6000000;
+            int interval = 100000;
+            _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( "
+                + $"( cenabezDPH:>{limit1bezDPH-interval} AND cenabezDPH:<={limit1bezDPH} )"
+                + $" OR ( cena:>{limit1bezDPH - interval} AND cena:<={limit1bezDPH} )"
+                + $" OR ( cena:>{limit1bezDPH*1.21 - interval} AND cena:<={limit1bezDPH*1.21} )"
+                + $" OR ( cenabezDPH:>{limit2bezDPH - interval} AND cenabezDPH:<={limit1bezDPH} )"
+                + $" OR ( cena:>{limit2bezDPH - interval} AND cena:<={limit2bezDPH} )"
+                + $" OR ( cena:>{limit2bezDPH * 1.21 - interval} AND cena:<={limit2bezDPH * 1.21} )"
+                + ")"
+
+                );
+
         }
 
         public Data CalculateForYear(int year)
@@ -53,17 +83,19 @@ namespace HlidacStatu.Analysis.KorupcniRiziko
             ret.KoncentraceDodavatelůBezUvedeneCeny = 0;
             ret.KoncetraceDodavateluObory = null;
 
-            ret.PercBezUvedeneCeny = this.firma.Statistic().RatingPerYear[year].PercentBezCeny;
+            ret.PercBezUvedeneCeny = this.urad.Statistic().RatingPerYear[year].PercentBezCeny;
             ret.PercSeZasadnimNedostatkem =
-                _calc_PercSeZasadnimNedostatkem[year].Pocet / (decimal)firma.Statistic().BasicStatPerYear[year].Pocet;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.firma.Statistic().RatingPerYear[year].PercentSPolitiky;
+                (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
 
             ret.PercNovaFirmaDodavatel = 0;
-            ret.PercSmluvUlimitu = 0;
-            ret.PercUzavrenoOVikendu = 0;
+            ret.PercSmluvUlimitu =
+                (decimal)_calc_ULimitu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
+            ret.PercUzavrenoOVikendu = 
+                (decimal)_calc_UzavrenoOVikendu[year].Pocet / (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
 
-            ret.BasicStat = this.firma.Statistic().BasicStatPerYear[year];
-            ret.Rating = this.firma.Statistic().RatingPerYear[year];
+            ret.BasicStat = this.urad.Statistic().BasicStatPerYear[year];
+            ret.Rating = this.urad.Statistic().RatingPerYear[year];
             return ret;
         }
 
