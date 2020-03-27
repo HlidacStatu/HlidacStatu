@@ -23,7 +23,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         var rec = new Models.DatasetIndexStat(){Ds = ds };
                         var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-                        var allrec = dsContent.SearchData("", 1, 1, exactNumOfResults: true);
+                        var allrec = dsContent.SearchData("", 1, 1,sort:"DbCreated desc", exactNumOfResults: true);
                         rec.RecordNum = allrec.Total;
                         if (rec.RecordNum > 0)
                         {
