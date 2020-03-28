@@ -218,7 +218,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     .Query(q => qc)
                     .Sort(ss => sortD)
                     .Highlight(h => Lib.Searching.Tools.GetHighlight<Object>(withHighlighting))
-                    .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+                    .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
            );
 
             //fix Highlighting for large texts
@@ -234,7 +234,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         .Query(q => qc)
                         .Sort(ss => sortD)
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Object>(false))
-                        .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+                        .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
                 );
 
             }

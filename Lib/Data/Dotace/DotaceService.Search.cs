@@ -102,7 +102,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                         .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
-                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                        .TrackTotalHits((search.ExactNumOfResults || page*search.PageSize==0) ? true : (bool?)null)
                 );
                 if (res.IsValid && withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
                 {
@@ -115,7 +115,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                             .Sort(ss => GetSort(search.Order))
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Dotace>(false))
                             .Aggregations(aggr => anyAggregation)
-                            .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                            .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
                     );
                 }
 

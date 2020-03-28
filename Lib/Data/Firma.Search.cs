@@ -80,12 +80,13 @@ namespace HlidacStatu.Lib.Data
                 ISearchResponse<FirmaInElastic> res = null;
                 try
                 {
-                     res = ES.Manager.GetESClient_Firmy()
-                        .Search<FirmaInElastic>(s => s
-                            .Size(limit)
-                            .From(0)
+                    res = ES.Manager.GetESClient_Firmy()
+                       .Search<FirmaInElastic>(s => s
+                           .Size(limit)
+                           .From(0)
+                            .TrackTotalHits(limit == 0 ? true : (bool?)null)
                             .Query(q => qc)
-                        );
+                       );
 
                     if (res.IsValid)
                     {

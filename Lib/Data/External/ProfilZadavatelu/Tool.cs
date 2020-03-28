@@ -51,6 +51,7 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
                                 .Source(ss => ss.Excludes(f => f.Fields("xmlError", "xmlInvalidContent", "httpError")))
                                 .From(page * size)
                                 .Query(q => q.Term(t => t.Field(f => f.HttpValid).Value(false)))
+                                .TrackTotalHits(page * size == 0 ? true : (bool?)null)
                                 .Scroll("2m")
                                 );
                 };

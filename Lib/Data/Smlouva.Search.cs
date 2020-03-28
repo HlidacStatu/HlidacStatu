@@ -320,7 +320,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                             .Sort(ss => GetSort(order))
                             .Aggregations(aggrFunc)
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
-                            .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+                            .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
                     );
                     if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                     {
@@ -334,7 +334,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                                 .Sort(ss => GetSort(order))
                                 .Aggregations(aggrFunc)
                                 .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(false))
-                                .TrackTotalHits(exactNumOfResults ? true : (bool?)null)
+                                .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
                         );
                     }
                 }

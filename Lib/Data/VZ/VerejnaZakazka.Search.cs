@@ -390,7 +390,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             .Sort(ss => GetSort(search.Order))
                             .Aggregations(aggrFunc)
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(withHighlighting))
-                            .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                            .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
                     );
                     if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                     {
@@ -403,7 +403,7 @@ namespace HlidacStatu.Lib.Data.VZ
                                 .Sort(ss => GetSort(search.Order))
                                 .Aggregations(aggrFunc)
                                 .Highlight(h => Lib.Searching.Tools.GetHighlight<VerejnaZakazka>(false))
-                                .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                                .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
                         );
                     }
                 }
@@ -480,7 +480,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             //.Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
                             .Sort(ss => GetSort(order))
                             .Aggregations(aggrFunc)
-
+                            .TrackTotalHits(page * pageSize == 0 ? true : (bool?)null)
                         );
                 if (res.IsValid == false)
                     Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res);
@@ -539,6 +539,7 @@ namespace HlidacStatu.Lib.Data.VZ
                                 )
                             .Sort(ss => GetSort(search.Order))
                             .Aggregations(aggrFunc)
+                            .TrackTotalHits(page * search.PageSize == 0 ? true : (bool?)null)
                             );
                 }
                 catch (Exception e)

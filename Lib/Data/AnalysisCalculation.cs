@@ -79,7 +79,9 @@ namespace HlidacStatu.Lib.Data
                 if (from.HasValue)
                     sdate = string.Format(" AND podepsano:[{0} TO {1}]", from.Value.ToString("yyyy-MM-dd"), DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")); //podepsano:[2016-01-01 TO 2016-12-31]
 
+                
                 return Lib.ES.Manager.GetESClient().Search<Lib.Data.Smlouva>(a => a
+                            .TrackTotalHits(page*size == 0)
                             .Size(size)
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
@@ -226,6 +228,7 @@ namespace HlidacStatu.Lib.Data
             searchFunc = (size, page) =>
             {
                 return Lib.ES.Manager.GetESClient().Search<Lib.Data.Smlouva>(a => a
+                            .TrackTotalHits(page * size == 0)
                             .Size(size)
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
@@ -419,6 +422,7 @@ namespace HlidacStatu.Lib.Data
             searchFunc = (size, page) =>
             {
                 return Lib.ES.Manager.GetESClient().Search<Lib.Data.Smlouva>(a => a
+                            .TrackTotalHits(page * size == 0)
                             .Size(size)
                             .From(page * size)
                             .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))

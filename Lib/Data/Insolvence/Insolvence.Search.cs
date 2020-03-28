@@ -179,7 +179,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
-                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                        .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
                 );
                 if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                 {
@@ -194,7 +194,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                         .Sort(ss => GetSort(search.Order))
                         .Highlight(h => Lib.Searching.Tools.GetHighlight<Rizeni>(false))
                         .Aggregations(aggr => anyAggregation)
-                        .TrackTotalHits(search.ExactNumOfResults ? true : (bool?)null)
+                        .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
                 );
                 }
                 }

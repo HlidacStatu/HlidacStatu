@@ -352,6 +352,7 @@ MORATORIUM =
                            .From(page * size)
                            .Query(q => q.MatchAll())
                            .Scroll("1m")
+                           .TrackTotalHits(page * size == 0 ? true : (bool?)null)
                             );
             };
 
