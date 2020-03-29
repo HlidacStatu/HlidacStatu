@@ -53,7 +53,7 @@ namespace HlidacStatu.Web.Controllers
                     new string[] { }, 1, 1,
                     ((int)Lib.Data.Smlouva.Search.OrderResult.FastestForScroll).ToString(), withHighlighting: true);
                 if (findSm.Total > 0)
-                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlight; 
+                    ViewBag.Highlighting = findSm.ElasticResults.Hits.First().Highlight; 
             }
 
             return View(vz);

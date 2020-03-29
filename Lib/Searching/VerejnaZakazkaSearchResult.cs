@@ -144,15 +144,14 @@ namespace HlidacStatu.Lib.Searching
 
         public bool ShowWatchdog { get; set; } = true;
 
-        public Nest.ISearchResponse<Data.VZ.VerejnaZakazka> Result
+       public IEnumerable<Data.VZ.VerejnaZakazka> Results
         {
             get
             {
-                return this.ElasticResults;
-            }
-            set
-            {
-                this.ElasticResults = value;
+                if (this.ElasticResults != null)
+                    return this.ElasticResults.Hits.Select(m => m.Source);
+                else
+                    return new Data.VZ.VerejnaZakazka[] { };
             }
         }
 

@@ -13,15 +13,14 @@ namespace HlidacStatu.Lib.Searching
         {
         }
 
-        public Nest.ISearchResponse<Dotace> Result
+       public IEnumerable<Dotace> Results
         {
             get
             {
-                return ElasticResults;
-            }
-            set
-            {
-                ElasticResults = value;
+                if (this.ElasticResults != null)
+                    return this.ElasticResults.Hits.Select(m => m.Source);
+                else
+                    return new Data.Dotace.Dotace[] { };
             }
         }
 

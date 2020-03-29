@@ -5,7 +5,7 @@
 @using System.Linq;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Util;
-@if (Model?.Result?.IsValid == false || Model.Result == null)
+@if (Model?.ElasticResults?.IsValid == false || Model.ElasticResults == null)
 {
     <div class="row">
         <div class="col-xs-12">
@@ -24,15 +24,15 @@ else
             @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
         }*@
 
-    if (Model.Result == null)
+    if (Model.ElasticResults == null)
     {
         <span></span>
     }
-    else if (Model.Result.Total == 0)
+    else if (Model.ElasticResults.Total == 0)
     {
         <h2>Žádné insolvence jsme nenalezli.</h2>
     }
-    else if (Model.Result.Total > 0)
+    else if (Model.ElasticResults.Total > 0)
     {
         <hr />
 
@@ -43,7 +43,7 @@ else
                 <h3>
                     Nalezené insolvence
                     <small>
-                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.ElasticResults.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
                     </small>
                 </h3>
 
@@ -55,7 +55,7 @@ else
                 @SearchResults.InsolvenceHead(small: Model.SmallRender)
             </thead>
             <tbody>
-                @foreach (var hit in Model.Result.Hits)
+                @foreach (var hit in Model.ElasticResults.Hits)
                 {
                     @SearchResults.InsolvenceRow(User, Request, hit.Source, Model.Q, small:Model.SmallRender)
                 }
@@ -79,7 +79,7 @@ else
                     {
                         firstPageClass = "disabled";
                     }
-                    if (Model.Result.Total < page * Model.DefaultPageSize())
+                    if (Model.ElasticResults.Total < page * Model.DefaultPageSize())
                     {
                         lastPageClass = "disabled";
                     }

@@ -192,7 +192,7 @@
                 dotaceAggsH, exactNumOfResults: true);
 
             decimal sumH = 0;
-            var items = ((BucketAggregate)dotaceSearchH.Result.Aggregations["icos"]).Items;
+            var items = ((BucketAggregate)dotaceSearchH.ElasticResults.Aggregations["icos"]).Items;
             foreach (KeyedBucket<object> item in items)
             {
                 sumH += (decimal)item.Sum("sum").Value;

@@ -138,7 +138,7 @@ namespace HlidacStatu.Web.Controllers
                     //header
                     sb.AppendLine("URL\tČíslo zakázky\tPoslední změna\tLhůta pro nabídky\tKonečná cena bez DPH"
                         + "\tOdhadovaná cena bez DPH\tNázev zakázky\tPopis\tZadavatel\tZadavatel IC\tDodavatele a jejich ICO");
-                    foreach (var item in sres.Result.Hits)
+                    foreach (var item in sres.ElasticResults.Hits)
                     {
                         var s = item.Source;
                         sb.AppendLine(

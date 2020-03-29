@@ -70,8 +70,7 @@ namespace HlidacStatu.Lib.Analysis
                         )
                     )
                 );
-            // new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
-            //CelkemCena = res.ElasticResults.Aggregations.Keys.Contains("sumKc") ? ((Nest.ValueAggregate)res.Result.Aggregations["sumKc"]).Value : 0,
+
 
 
             var client = HlidacStatu.Lib.ES.Manager.GetESClient();

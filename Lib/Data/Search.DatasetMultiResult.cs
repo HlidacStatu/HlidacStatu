@@ -82,7 +82,7 @@ namespace HlidacStatu.Lib.Data
                             var rds = ds.SearchData(query, page, pageSize, sort);
                             if (rds.IsValid)
                             {
-                                //var dssr = new DatasetSumGeneralResult(rds.Total, rds.Result.Select(s => s.Item2), ds, rds.ElapsedTime);
+
                                 res.Results.Add(rds);
                             }
                         }

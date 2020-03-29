@@ -414,7 +414,7 @@ namespace HlidacStatu.Lib.Data.VZ
                         Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
                             + search.OrigQuery + "   query:"
                             + search.Q
-                            + "\n\n res:" + search.Result.ToString()
+                            + "\n\n res:" + search.ElasticResults.ToString()
                             , ex: e);
                     else
                         HlidacStatu.Util.Consts.Logger.Error("", e);
@@ -428,7 +428,7 @@ namespace HlidacStatu.Lib.Data.VZ
                     Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
                         + search.OrigQuery + "   query:"
                         + search.Q
-                        + "\n\n res:" + search.Result?.ToString()
+                        + "\n\n res:" + search.ElasticResults?.ToString()
                         );
 
 
@@ -550,7 +550,7 @@ namespace HlidacStatu.Lib.Data.VZ
                         HlidacStatu.Lib.ES.Manager.LogQueryError<VerejnaZakazka>(res, "Exception, Orig query:"
                             + search.OrigQuery + "   query:"
                             + search.Q
-                            + "\n\n res:" + search.Result.ToString()
+                            + "\n\n res:" + search.ElasticResults.ToString()
                             , ex: e);
                     }
                     else

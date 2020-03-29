@@ -43,7 +43,7 @@
                                         "( " + query + " ) AND datumZalozeni:[" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(nextMonth) + "}",
                                         1, 0, 0, limitedView: false, anyAggregation: aggs);
 
-                                    IEnumerable<ReportDataTimeValue> data = ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
+                                    IEnumerable<ReportDataTimeValue> data = ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items
                                         .Cast<Nest.DateHistogramBucket>()
                                         .Select(m => new ReportDataTimeValue()
                                         {
@@ -94,7 +94,7 @@
                                     res = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch(
                                         "( " + query + " ) AND datumZalozeni:[" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(nextMonth) + "}",
                                         1, 0, 0, limitedView: false, anyAggregation: aggs);
-                                    var typ = ((SingleBucketAggregate)res.Result.Aggregations["typ"])
+                                    var typ = ((SingleBucketAggregate)res.ElasticResults.Aggregations["typ"])
                                         .First().Value;
                                     data = ((BucketAggregate)typ).Items
                                         .Cast<Nest.DateHistogramBucket>()

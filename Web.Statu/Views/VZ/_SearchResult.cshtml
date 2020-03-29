@@ -8,7 +8,7 @@
 
 }
 
-@if (Model?.Result?.IsValid == false || Model.Result == null)
+@if (Model?.ElasticResults?.IsValid == false || Model.ElasticResults == null)
 {
     <div class="row">
         <div class="col-xs-12">
@@ -28,15 +28,15 @@ else
         @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
     }
 
-    if (Model.Result == null)
+    if (Model.ElasticResults == null)
     {
         <span></span>
     }
-    else if (Model.Result.Total == 0)
+    else if (Model.ElasticResults.Total == 0)
     {
         <h2>Žádné zakázky jsme nenalezli.</h2>
     }
-    else if (Model.Result.Total > 0)
+    else if (Model.ElasticResults.Total > 0)
     {
         <hr />
 
@@ -54,7 +54,7 @@ else
                 <h3>
                     Nalezené veřejné zakázky
                     <small>
-                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+                        @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.ElasticResults.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
                     </small>
                 </h3>
                 @*@if (Model.Result.Aggregations != null && Model.Result.Aggregations.ContainsKey("sumKc"))
@@ -76,7 +76,7 @@ else
                 @SearchResults.VZHeader()
             </thead>
             <tbody>
-                @foreach (var item in Model.Result.Hits.Select(m => m.Source))
+                @foreach (var item in Model.ElasticResults.Hits.Select(m => m.Source))
                 {
                     @SearchResults.VZRow(this.User, this.Request, item, Model.Q, small: Model.SmallRender)
                 }
@@ -100,7 +100,7 @@ else
                     {
                         firstPageClass = "disabled";
                     }
-                    if (Model.Result.Total < page * Model.DefaultPageSize())
+                    if (Model.ElasticResults.Total < page * Model.DefaultPageSize())
                     {
                         lastPageClass = "disabled";
                     }

@@ -27,7 +27,7 @@
                 @SearchResults.OsobaHead()
             </thead>
             <tbody>
-                @foreach (var hit in result.Result.Hits.Take(maxItems))
+                @foreach (var hit in result.ElasticResults.Hits.Take(maxItems))
                 {
                     @SearchResults.OsobaRow(user, req, hit.Source)
                 }
@@ -140,7 +140,7 @@
                 @SearchResults.InsolvenceHead()
             </thead>
             <tbody>
-                @foreach (var hit in result.Result.Hits.Take(maxItems))
+                @foreach (var hit in result.ElasticResults.Hits.Take(maxItems))
                 {
                     @SearchResults.InsolvenceRow(user, req, hit.Source)
                 }
@@ -439,7 +439,7 @@
             </thead>
             <tbody>
 
-                @foreach (var item in result.Result.Hits.Select(m => m.Source)
+                @foreach (var item in result.ElasticResults.Hits.Select(m => m.Source)
                                 //.Where(m => !string.IsNullOrEmpty(m.NazevZakazky?.Trim()) && !string.IsNullOrEmpty(m.PopisZakazky?.Trim()))
                                 .Take(maxItems))
                 {

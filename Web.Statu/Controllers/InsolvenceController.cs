@@ -70,7 +70,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{model.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})",1,1,0, true);
                 if (findRizeni.Total > 0)
-                    ViewBag.Highlighting = findRizeni.Result.Hits.First().Highlight;
+                    ViewBag.Highlighting = findRizeni.ElasticResults.Hits.First().Highlight;
             }
             ViewBag.showHighliting = showHighliting;
             return View(model);
@@ -100,7 +100,7 @@ namespace HlidacStatu.Web.Controllers
                 var findRizeni = Insolvence.SimpleSearch($"_id:\"{data.Rizeni.SpisovaZnacka}\" AND ({this.Request.QueryString["qs"]})", 1, 1, 0, true);
                 if (findRizeni.Total > 0)
                 {
-                    highlighting = findRizeni.Result.Hits.First().Highlight; 
+                    highlighting = findRizeni.ElasticResults.Hits.First().Highlight; 
 				}
             }
 

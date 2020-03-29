@@ -631,7 +631,7 @@ else if (Model.HasResults == false)
     //Model.VZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(Model.Query, null,
     //    1, new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData().DefaultPageSize(),
     //    (int)HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData.VZOrderResult.Relevance);
-    var zakazkyTop = Model.VZ.Result.Hits
+    var zakazkyTop = Model.VZ.ElasticResults.Hits
     .Select(m => m.Source)
     .Where(m => !string.IsNullOrEmpty(m.NazevZakazky?.Trim())
                 && !string.IsNullOrEmpty(m.PopisZakazky?.Trim())
@@ -640,7 +640,7 @@ else if (Model.HasResults == false)
     if (zakazkyTop.Count() < numOfVZ)
     {
         zakazkyTop = zakazkyTop.Union(
-            Model.VZ.Result.Hits.Select(m => m.Source)
+            Model.VZ.ElasticResults.Hits.Select(m => m.Source)
             )
             .Take(numOfVZ);
     }

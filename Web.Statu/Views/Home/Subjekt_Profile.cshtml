@@ -548,7 +548,7 @@ else
                     dotaceAggs, exactNumOfResults: true);
 
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
-                decimal sumDotace = (decimal)dotaceSearch.Result.Aggregations.Sum("souhrn").Value;
+                decimal sumDotace = (decimal)dotaceSearch.ElasticResults.Aggregations.Sum("souhrn").Value;
                 var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotace) + "</b>.";
 
             }
@@ -594,7 +594,7 @@ else
                             dotaceAggsH, exactNumOfResults: true);
 
                         decimal sumDotaceH = 0;
-                        var items = ((BucketAggregate)dotaceSearchH.Result.Aggregations["icos"]).Items;
+                        var items = ((BucketAggregate)dotaceSearchH.ElasticResults.Aggregations["icos"]).Items;
                         foreach (KeyedBucket<object> item in items)
                         {
                             sumDotaceH += (decimal)item.Sum("sum").Value;

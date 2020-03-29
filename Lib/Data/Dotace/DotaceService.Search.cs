@@ -128,7 +128,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                     ES.Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
                         + search.OrigQuery + "   query:"
                         + search.Q
-                        + "\n\n res:" + search.Result.ToString()
+                        + "\n\n res:" + search.ElasticResults.ToString()
                         , ex: e);
                 }
                 else
@@ -146,7 +146,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 ES.Manager.LogQueryError<Dotace>(res, "Exception, Orig query:"
                     + search.OrigQuery + "   query:"
                     + search.Q
-                    + "\n\n res:" + search.Result?.ToString()
+                    + "\n\n res:" + search.ElasticResults?.ToString()
                     );
             }
 

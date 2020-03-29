@@ -1240,7 +1240,7 @@ text zpravy: {txt}";
                 {
                     sb.Append(
                         Newtonsoft.Json.JsonConvert.SerializeObject(
-                            vz.Result.Hits.Select(h => new
+                            vz.ElasticResults.Hits.Select(h => new
                             {
                                 Id = h.Id,
                                 DetailUrl = h.Source.GetUrl(false),

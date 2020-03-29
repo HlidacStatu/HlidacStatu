@@ -11,17 +11,16 @@ namespace HlidacStatu.Lib.Searching
                 {
                 }
 
-        public Nest.ISearchResponse<Data.Insolvence.Rizeni> Result
-		{
-			get
-			{
-				return ElasticResults;
-			}
-			set
-			{
-				ElasticResults = value;
-			}
-		}
+       public IEnumerable<Data.Insolvence.Rizeni> Results
+        {
+            get
+            {
+                if (this.ElasticResults != null)
+                    return this.ElasticResults.Hits.Select(m => m.Source);
+                else
+                    return new Data.Insolvence.Rizeni[] { };
+            }
+        }
 
         public bool LimitedView { get; set; } = true;
 

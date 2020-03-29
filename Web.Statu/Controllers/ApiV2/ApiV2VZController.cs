@@ -49,7 +49,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                var zakazky = result.Result.Hits
+                var zakazky = result.ElasticResults.Hits
                     .Select(m => m.Source).ToArray();
 
                 return new SearchResultDTO<Lib.Data.VZ.VerejnaZakazka>(result.Total, result.Page, zakazky);

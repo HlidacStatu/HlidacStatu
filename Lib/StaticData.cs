@@ -323,7 +323,7 @@ namespace HlidacStatu.Lib
                                                  if (res.IsValid && res.Total > 0)
                                                  {
                                                      List<HlidacStatu.Lib.Data.Insolvence.Rizeni> insolvenceIntoList = new List<Data.Insolvence.Rizeni>();
-                                                     foreach (var i in res.Result.Hits.Select(m => m.Source))
+                                                     foreach (var i in res.ElasticResults.Hits.Select(m => m.Source))
                                                      {
                                                          bool addToList = false;
                                                          var pdluznici = i.Dluznici.Where(m => icos.Contains(m.ICO));

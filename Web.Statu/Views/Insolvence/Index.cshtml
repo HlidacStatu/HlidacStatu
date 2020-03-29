@@ -50,7 +50,7 @@
                 @SearchResults.InsolvenceHead()
             </thead>
             <tbody>
-                @foreach (var item in spolecnosti.Result.Hits.Take(20))
+                @foreach (var item in spolecnosti.ElasticResults.Hits.Take(20))
                 {
                     @SearchResults.InsolvenceRow(User, Request, item.Source, "")
                 }
@@ -70,7 +70,7 @@
                 @SearchResults.InsolvenceHead()
             </thead>
             <tbody>
-                @foreach (var item in osoby.Result.Hits.Take(20))
+                @foreach (var item in osoby.ElasticResults.Hits.Take(20))
                 {
                     @SearchResults.InsolvenceRow(User, Request, item.Source, "")
                 }
