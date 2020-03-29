@@ -18,6 +18,33 @@
     <script src="/Scripts/typeahead.jquery.min.js"></script>
     <script src="/Scripts/bloodhound.min.js"></script>
     <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+
+    <script>
+        $(function () {
+            persons = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/v1/persons?q=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('.typeahead').typeahead(null, {
+                display: 'name',
+                name: "person",
+                source: persons,
+                limit: 30,
+            });
+
+            $('.typeahead').bind('typeahead:select', function (ev, suggestion) {
+                $("#osobaNamedId").val(suggestion.nameId);
+
+            });
+
+        }); //jquery.start
+    </script>
+
 }
 
 @section breadcrumb
@@ -27,34 +54,35 @@
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="form-search">
-                <label class="sr-only" for="I">Hledat politiky a sponzory politických stran</label>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-search">
+            <label class="sr-only" for="I">Hledat politiky a sponzory politických stran</label>
 
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1 col-xs-12">
-                        <h4>Hledat politiky a sponzory politických stran</h4>
-                        <form method="get" action="/osoby/Hledat" class="form-search__input-wrapper" role="form">
-                            <input class="form-search__input" id="Q" name="Q" placeholder="Jméno osoby" style="max-width: none;" type="text">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 col-xs-12">
+                    <h4>Hledat politiky a sponzory politických stran</h4>
+                    <form method="get" action="/osoby/Hledat" class="form-search__input-wrapper" role="form">
+                        <input class="form-search__input typeahead" id="Q" name="Q" placeholder="Jméno osoby" style="max-width: none;width:100%;" type="text">
+                        <input type="hidden" name="osobaNamedId" id="osobaNamedId" />
 
-                            <button class="form-search__btn" type="submit">Hledat politika či sponzora</button>
-                        </form>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-9 col-xs-12 ">
-                        <p>
-                            <a class="form-search__hint pull-right" href="/napoveda">
-                                Jak vyhledávat?
-                            </a>
-                        </p>
-                    </div>
+                        <button class="form-search__btn" type="submit">Hledat politika či sponzora</button>
+                    </form>
                 </div>
-
-                <div class="clearfix" style="padding-bottom:20px;"></div>
+                <div class="col-sm-2 col-sm-offset-9 col-xs-12 ">
+                    <p>
+                        <a class="form-search__hint pull-right" href="/napoveda">
+                            Jak vyhledávat?
+                        </a>
+                    </p>
+                </div>
             </div>
+
+            <div class="clearfix" style="padding-bottom:20px;"></div>
         </div>
     </div>
-}
+</div>
+
 
 @Util.FeedbackModal("Poslat opravu či připomínku")
 

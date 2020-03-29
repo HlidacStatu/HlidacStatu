@@ -19,114 +19,89 @@
 
 
 @helper OsobaTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
-            int maxItems, HlidacStatu.Lib.Searching.InsolvenceSearchResult result)
+            int maxItems, HlidacStatu.Lib.Searching.OsobaSearchResult result)
 {
-    <div class="table-new searching__watcher__table">
         <table class="table table-hover">
             <thead>
                 @SearchResults.OsobaHead()
             </thead>
             <tbody>
-                @foreach (var hit in result.ElasticResults.Hits.Take(maxItems))
+                @foreach (var hit in result.Results.Take(maxItems))
                 {
-                    @SearchResults.OsobaRow(user, req, hit.Source)
+                    @SearchResults.OsobaRow(user, req, hit)
                 }
             </tbody>
         </table>
 
-        @if (result.Total > maxItems)
-        {
-            <div class="text-center">
-                <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "Insolvence", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
-            </div>
-        }
-
-    </div>
+    
 }
 
 @helper OsobaHead(bool small = false)
 {
     <tr>
-        <th>Spisová značka</th>
-        <th>Dlužníci</th>
-        <th>Věritelé</th>
-        <th>Datum vzniku</th>
-        <th>Poslední změna</th>
-        <th>Stav řízení</th>
-        @if (small == false)
-        {
-            <th>Soud</th>
-        }
+        <th>Osoba</th>
+        <th>Popis</th>
+        <th>Vazby</th>
     </tr>
 }
 
 @helper OsobaRow(System.Security.Principal.IPrincipal user, HttpRequestBase request,
-    HlidacStatu.Lib.Data.Insolvence.Rizeni item, string query = "", bool small = false)
+    HlidacStatu.Lib.Data.Osoba item, string query = "", bool small = false)
 {
     <tr>
         <td style="white-space: nowrap;">
             @Util.NoWrapHtml(
                 Util.AddBookmark(user, item),
                 Html.Raw("&nbsp;"),
-                 Util.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request),
-                    $"<a href='{item.GetUrl(true, query)}'>{item.SpisovaZnacka}</a>",
-                    $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/Insolvence/Rizeni/{item.UrlId()}'>{item.SpisovaZnacka}</a>"
-                )
+                Html.Raw($"<a href='{item.GetUrl(false)}'><b>{item.FullNameWithYear(true)}</b></a>")
              )
         </td>
         <td>
-            @if (item.Dluznici?.Count > 0)
+            @Html.Raw(item.Description(true, m => true, 3))
+        </td>
+        <td>
+            @if (item.Vazby() != null)
             {
-                foreach (var o in item.Dluznici.Take(2))
+                foreach (var v in item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Take(2))
                 {
-                    <div>@Html.Raw(o.ToHtml())</div>
+                    @RenderOsobaVazba(v)
                 }
-                if (item.Dluznici.Count == 3)
+                if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length == 3)
                 {
-                    <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
+                    @RenderOsobaVazba(item.Vazby()[2])
                 }
-                else if (item.Dluznici.Count > 3)
+                else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
                 {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>
+                    <span>@HlidacStatu.Util.PluralForm.Get(item.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>
                 }
             }
         </td>
-        <td>
-            @if (item.Veritele?.Count > 0)
-            {
-                foreach (var o in item.Veritele.Take(2))
-                {
-                    <div>@Html.Raw(o.ToHtml())</div>
-                }
-                if (item.Veritele.Count == 3)
-                {
-                    <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
-                }
-                else if (item.Veritele.Count > 3)
-                {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
-                }
-            }
-        </td>
-        <td>
-            @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
-        </td>
-        <td>
-            @item.PosledniZmena.Date.ToString("d.MM.yyyy")
-        </td>
-
-        <td>
-            <span title="@item.StavRizeniDetail()">@item.StavRizeni()</span>
-        </td>
-        @if (small == false)
-        {
-            <td>
-                <span>@item.SoudFullName()</span>
-            </td>
-        }
     </tr>
 }
+@helper RenderOsobaVazba(HlidacStatu.Lib.Data.Graph.Edge v)
+{
+    var fname = v.To.PrintName();
+<div>
+    @if (string.IsNullOrEmpty(fname))
+    {
+    fname = HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(v.To.Id, true);
+    }
+    @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
 
+    @if (v.RelFrom.HasValue && v.RelTo.HasValue)
+    {
+    @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
+    }
+    else if (v.RelTo.HasValue)
+    {
+    @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
+    }
+    else if (v.RelFrom.HasValue)
+    {
+    @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
+    }
+</div>
+}
 
 
 

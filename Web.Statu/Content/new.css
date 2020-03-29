@@ -2522,7 +2522,7 @@ a.form-search__hint:active:focus {
     -webkit-transition: .3s;
     transition: .3s;
     line-height: 54px;
-    white-space: normal;
+    white-space: nowrap;
 }
 
 @media (max-width: 479px) {

@@ -20,10 +20,17 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
-        public ActionResult Hledat(string prefix, string q)
+        public ActionResult Hledat(string q, string osobaNamedId)
         {
             if (string.IsNullOrWhiteSpace(q))
                 return Redirect("/osoby");
+
+            if (!string.IsNullOrWhiteSpace(osobaNamedId))
+            {
+                var o = Osoby.GetByNameId.Get(osobaNamedId);
+                if (o != null)
+                    return Redirect(o.GetUrl(false));
+            }
 
             var res = Lib.Data.Osoba.Search.SimpleSearch(q, 1, 50, Osoba.Search.OrderResult.Relevance);
             return View(res);

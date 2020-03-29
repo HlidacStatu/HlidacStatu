@@ -210,10 +210,10 @@ else if (Model.HasResults == false)
 
 @{
     //debug
-    //Model.Smlouvy = null;
-    //Model.VZ = null;
-    //Model.Insolvence = null;
-    //Model.Dotace = null;
+    Model.Smlouvy = null;
+    Model.VZ = null;
+    Model.Insolvence = null;
+    Model.Dotace = null;
 
     //main content based on number of results
 
@@ -259,7 +259,7 @@ else if (Model.HasResults == false)
         {
             paorder.Add("dotace");
 
-            if (Model.HasInsolvence && Model.Insolvence.Total > Model.Dotace.Total * 2 && paorder.Contains("insolvence")==false)
+            if (Model.HasInsolvence && Model.Insolvence.Total > Model.Dotace.Total * 2 && paorder.Contains("insolvence") == false)
             {
                 paorder.Insert(paorder.FindIndex(0, m => m == "dotace"), "insolvence");
             }
@@ -430,7 +430,11 @@ else if (Model.HasResults == false)
 @helper RenderOsoby(int numOfOsob)
 {
     string osobaStatDescription = "";
-    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Result.First();
+    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Result.FirstOrDefault();
+    if (osoba1 == null)
+    {
+        return;
+    }
 
     var alldata = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
@@ -563,49 +567,24 @@ else if (Model.HasResults == false)
     </div>
     if (Model.Osoby.Total > 1)
     {
-        if (numOfOsob > 0)
-        {
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="search-result-label">
-                        Další nalezené osoby
-                    </div>
-                    <div class="new-p">
-                        @foreach (var osobaX in Model.Osoby.Result.Skip(1).Take(numOfOsob - 1))
+
+        <div class="row" id="osoba" style="margin-top:40px;">
+            <div class="col-xs-12">
+
+                <table class="table table-hover">
+                    <thead>
+                        @SearchResults.OsobaHead()
+                    </thead>
+                    <tbody>
+                        @foreach (var hit in Model.Osoby.Result.Skip(1))
                         {
-                            <div class="person-profile-thumb person-profile-thumb--small" style="display:inline-block;padding-right:10px;">
-                                <a href="@osobaX.GetUrl(true)">
-                                    <div class="profile-picture" style="background-image: url('@osobaX.GetPhotoUrl(true)')">
-                                    </div>
-                                </a>
-                                <div>
-                                    <a class="section-title link--blue" href="@osobaX.GetUrl(true)">
-                                        @osobaX.FullName()
-                                    </a>
-                                    <div class="new-p new-p--gray new-p--small">
-                                        @Html.Raw(osobaX.NarozeniYear(true))
-                                    </div>
-                                    <div class="new-p new-p--gray new-p--small">
-                                        @osobaX.StatusOsoby().ToNiceDisplayName()
-                                    </div>
-                                </div>
-                            </div>
+                            @SearchResults.OsobaRow(this.User, this.Request, hit)
                         }
-                    </div>
-                </div>
+                    </tbody>
+                </table>
+
             </div>
-        }
-        if (Model.Osoby.Total > numOfOsob && Model.Osoby.Total > 1)
-        {
-            <div style="height: 32px"></div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <a href="/Osoby?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()" style="font-size:18px">
-                        @Devmasters.Core.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob") ukázat&nbsp;<i class="far fa-angle-double-right"></i>
-                    </a>
-                </div>
-            </div>
-        }
+        </div>
     }
     <!-- end big result -->
 }
@@ -701,7 +680,7 @@ else if (Model.HasResults == false)
                 <a href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">ukázat&nbsp;<i class="far fa-angle-double-right"></i></a>
             </span>
         </h4>
-    return;
+        return;
     }
     Model.Insolvence.ShowWatchdog = false;
     Model.Insolvence.SmallRender = true;
