@@ -3,6 +3,7 @@ using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
+using HlidacStatu.Util;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -80,16 +81,28 @@ namespace HlidacStatu.Lib.Data
             {
 
                 //fix without elastic
+                if (page < 1)
+                    page = 1;
+                var takeNum = page * pageSize;
+                if (takeNum > 100)
+                    takeNum = 100;
 
-                var resFtx = new Data.Search.GeneralResult<Osoba>(query,
-                    HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(query.Trim(), 100)
-                    .OrderBy(m => m.Prijmeni)
-                    .ThenBy(m => m.Jmeno)
-                    );
+                IEnumerable<Osoba> resFtx = HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(query.Trim(), takeNum)
+                    .OrderPoliticiByImportance();
+
+                var res = new OsobaSearchResult();
+                res.Total = resFtx.Count();
+                
+                resFtx = resFtx
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+
+                //order by person importance
+                //resFtx.Result = res.ftx
 
                 var fixedQuery = Tools.FixInvalidQuery(query, new string[] { "osobaid:", "osoba:", "osobaid:", "osobaiddodavatel: ", "osobaidzadavatel:" }) ?? "";
                 var sq = SplittingQuery.SplitQuery(fixedQuery);
-                var foundOsoby = resFtx.Result?.ToList() ?? new List<Osoba>();
+                var foundOsoby = resFtx.ToList() ?? new List<Osoba>();
                 foreach (var prt in sq.Parts)
                 {
                     if (prt?.Prefix?.StartsWith("osoba") == true)
@@ -97,19 +110,18 @@ namespace HlidacStatu.Lib.Data
                         if (!string.IsNullOrEmpty(prt?.Value) && Osoby.GetByNameId.Get(prt.Value) != null)
                         {
                             foundOsoby.Insert(0, Osoby.GetByNameId.Get(prt.Value));
+                            res.Total++;
                         }
                     }
                 }
 
-                var res = new OsobaSearchResult();
                 res.Q = query;
                 res.ElasticResults = null; //TODO
                 res.Results = foundOsoby;
-                res.Total = foundOsoby.Count();
                 res.Page = page;
                 res.PageSize = pageSize;
                 res.Order = order.ToString();
-
+                res.IsValid = true;
                 return res;
             }
 

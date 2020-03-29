@@ -15,7 +15,7 @@ namespace HlidacStatu.Lib.Data
             public string Query { get; set; }
             public Lib.Searching.SmlouvaSearchResult Smlouvy { get; set; } = null;
             public Lib.Searching.VerejnaZakazkaSearchData VZ { get; set; } = null;
-            public GeneralResult<Osoba> Osoby { get; set; } = null;
+            public OsobaSearchResult Osoby { get; set; } = null;
             public bool OsobaFtx = false;
             public GeneralResult<string> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
@@ -218,34 +218,7 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
                         sw.Start();
 
-                        if (!string.IsNullOrEmpty(query) && query.Length > 2)
-                        {
-
-
-                            res.Osoby = new GeneralResult<Osoba>(query,
-                                HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(query.Trim(), 100)
-                                .OrderBy(m => m.Prijmeni)
-                                .ThenBy(m => m.Jmeno)
-                                );
-
-                            var fixedQuery = Tools.FixInvalidQuery(query,new string[] { "osobaid:","osoba:", "osobaid:","osobaiddodavatel: ","osobaidzadavatel:" }) ?? "";
-                            var sq = SplittingQuery.SplitQuery(fixedQuery);
-                            var foundOsoby = res.Osoby?.Result?.ToList() ?? new List<Osoba>();
-                            foreach (var prt in sq.Parts)
-                            {
-                                if (prt?.Prefix?.StartsWith("osoba") == true)
-                                {
-                                    if (!string.IsNullOrEmpty(prt?.Value) && Osoby.GetByNameId.Get(prt.Value) != null)
-                                    {
-                                        foundOsoby.Insert(0, Osoby.GetByNameId.Get(prt.Value));
-                                    }
-                                }
-                            }
-
-                            res.Osoby = new GeneralResult<Osoba>(query, foundOsoby);
-                        }
-                        else
-                            res.Osoby = new GeneralResult<Osoba>(query, new Osoba[] { });
+                        res.Osoby = Osoba.Search.SimpleSearch(query, 1, 10, Osoba.Search.OrderResult.Relevance);
                         sw.Stop();
                         res.Osoby.ElapsedTime = sw.Elapsed;
 
@@ -318,21 +291,6 @@ namespace HlidacStatu.Lib.Data
             );
 
             //TODO too slow, temporarily disabled
-            if (false && res.HasFirmy && (res.Osoby == null || res.Osoby.Total < 5))
-            {
-                var sw = new Devmasters.Core.StopWatchEx();
-                sw.Start();
-                if (res.Osoby == null)
-                    res.Osoby = new GeneralResult<Osoba>(query, new Osoba[] { });
-
-                res.Osoby = new GeneralResult<Osoba>(query, res.Osoby.Result
-                            .Concat(Osoba.Searching.GetPolitikByQueryFromFirmy(query, (int)(10 - (res.Osoby?.Total ?? 0)), res.Firmy.Result)
-                            )
-                        );
-                res.OsobaFtx = true;
-                sw.Stop();
-                res.AddOsobyTime = sw.Elapsed;
-            }
 
             totalsw.Stop();
             res.TotalSearchTime = totalsw.Elapsed;

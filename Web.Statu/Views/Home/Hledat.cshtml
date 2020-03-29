@@ -210,10 +210,10 @@ else if (Model.HasResults == false)
 
 @{
     //debug
-    Model.Smlouvy = null;
-    Model.VZ = null;
-    Model.Insolvence = null;
-    Model.Dotace = null;
+    //Model.Smlouvy = null;
+    //Model.VZ = null;
+    //Model.Insolvence = null;
+    //Model.Dotace = null;
 
     //main content based on number of results
 
@@ -430,7 +430,7 @@ else if (Model.HasResults == false)
 @helper RenderOsoby(int numOfOsob)
 {
     string osobaStatDescription = "";
-    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Result.FirstOrDefault();
+    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Results.FirstOrDefault();
     if (osoba1 == null)
     {
         return;
@@ -567,24 +567,39 @@ else if (Model.HasResults == false)
     </div>
     if (Model.Osoby.Total > 1)
     {
+        if (numOfOsob > 1)
+        {
+            <div class="row" id="osoba" style="margin-top:40px;">
+                <div class="col-xs-12">
 
-        <div class="row" id="osoba" style="margin-top:40px;">
-            <div class="col-xs-12">
+                    <table class="table table-hover">
+                        <thead>
+                            @SearchResults.OsobaHead()
+                        </thead>
+                        <tbody>
+                            @foreach (var hit in Model.Osoby.Results.Skip(1).Take(numOfOsob - 1))
+                            {
+                                @SearchResults.OsobaRow(this.User, this.Request, hit)
+                            }
+                        </tbody>
+                    </table>
 
-                <table class="table table-hover">
-                    <thead>
-                        @SearchResults.OsobaHead()
-                    </thead>
-                    <tbody>
-                        @foreach (var hit in Model.Osoby.Result.Skip(1))
-                        {
-                            @SearchResults.OsobaRow(this.User, this.Request, hit)
-                        }
-                    </tbody>
-                </table>
-
+                </div>
             </div>
-        </div>
+        }
+
+        if (Model.Osoby.Total > numOfOsob)
+        {
+
+            <div style="height: 32px"></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="/Osoby/hledat?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()" style="font-size:18px">
+                        @Devmasters.Core.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob") ukázat&nbsp;<i class="far fa-angle-double-right"></i>
+                    </a>
+                </div>
+            </div>
+        }
     }
     <!-- end big result -->
 }
