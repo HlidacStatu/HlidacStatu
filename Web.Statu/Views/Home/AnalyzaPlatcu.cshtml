@@ -48,7 +48,7 @@
     int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
     int maxDateYear = DateTime.Now.Year;
 
-    foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.Result.Aggregations["perIco"]).Items)
+    foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.ElasticResults.Aggregations["perIco"]).Items)
     {
         var ico = (string)icoVal.Key;
 

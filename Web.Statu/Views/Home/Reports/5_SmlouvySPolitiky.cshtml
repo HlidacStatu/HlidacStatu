@@ -140,7 +140,7 @@
 
     var model = new HlidacStatu.Lib.Searching.SmlouvaSearchResult(this.Request.QueryString, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.PriceDesc);
 
-    model.Result = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch(qc, model.Page,
+    model.ElasticResults = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch(qc, model.Page,
         100, (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Convert.ToInt32(model.Order)));
 
     model.Chyby = false;

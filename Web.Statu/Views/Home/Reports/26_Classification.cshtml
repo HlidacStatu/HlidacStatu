@@ -119,7 +119,7 @@
     var reszero = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("*", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggsZero, exactNumOfResults: true);
 
     Dictionary<int, long> noPrices = new Dictionary<int, long>();
-    var filtered = ((SingleBucketAggregate)reszero.Result.Aggregations["zero"]).Values.First();
+    var filtered = ((SingleBucketAggregate)reszero.ElasticResults.Aggregations["zero"]).Values.First();
     foreach (Nest.KeyedBucket<object> val in ((Nest.BucketAggregate)filtered).Items)
     {
         int oblast = Convert.ToInt32(val.Key);
@@ -127,7 +127,7 @@
         noPrices.Add(oblast, count);
     }
 
-    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items)
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
     {
         int oblast = Convert.ToInt32(val.Key);
         long count = val.DocCount ?? 0;

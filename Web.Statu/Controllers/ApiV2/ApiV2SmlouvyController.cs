@@ -44,7 +44,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                var filtered = result.Result.Hits
+                var filtered = result.ElasticResults.Hits
                     .Select(m => 
                         Lib.Data.Smlouva.Export(m.Source, 
                             false, 

@@ -41,12 +41,12 @@
     Dictionary<string, int> allPartnersIcos = null;
 
     allPartnersIcos =  //top per sumIncome
-        ((BucketAggregate)res.Result.Aggregations["perPrice"]).Items
+        ((BucketAggregate)res.ElasticResults.Aggregations["perPrice"]).Items
         .Cast<Nest.KeyedBucket<object>>()
         .OrderByDescending(o => o.Sum("sumincome").Value)
         .Select((s, idx) => new { ico = (string)s.Key, index = idx })
         .Concat(
-        ((BucketAggregate)res.Result.Aggregations["perIco"]).Items
+        ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items
         .Cast<Nest.KeyedBucket<object>>()
         .OrderByDescending(o => o.DocCount)
         .Select((s, idx) => new { ico = (string)s.Key, index = idx })

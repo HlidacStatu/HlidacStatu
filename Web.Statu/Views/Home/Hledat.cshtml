@@ -178,15 +178,15 @@ else if (Model.HasResults == false)
         <div class="searching__counters">
             @if (Model.HasSmlouvy)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#smlouvy">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#smlouvy">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.ElasticResults.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasVZ)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.ElasticResults.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasInsolvence)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.Result.HitsMetadata.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.ElasticResults.HitsMetadata.Total)</span></a></div>
             }
             @if (Model.HasOsoby)
             {

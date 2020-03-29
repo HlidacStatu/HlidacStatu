@@ -28,8 +28,8 @@
             )
     );
 
-    var aggMin = minMaxDate.Result.Aggregations["min"] as Nest.ValueAggregate;
-    var aggMax = minMaxDate.Result.Aggregations["max"] as Nest.ValueAggregate;
+    var aggMin = minMaxDate.ElasticResults.Aggregations["min"] as Nest.ValueAggregate;
+    var aggMax = minMaxDate.ElasticResults.Aggregations["max"] as Nest.ValueAggregate;
 
     double? minEpoch = aggMin?.Value;
     double? maxEpoch = aggMax?.Value;
@@ -171,8 +171,8 @@ else
                 </td>
             </tr>
             @{
-                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
-                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).Result.HitsMetadata.Total;
+                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
             }
             <tr>
                 <th>Obsah stránky</th>

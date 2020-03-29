@@ -503,13 +503,13 @@ namespace HlidacStatu.Lib.Data
 
 
                     var objednatele = new List<Analysis.BasicData<string>>();
-                    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+                    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)
                     {
                         var ico = (string)val.Key;
                         objednatele.Add(new Analysis.BasicData<string>(ico, Analysis.ACore.GetBasicStatisticForICO(ico)));
                     }
 
-                    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perPrice"]).Items)
+                    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["perPrice"]).Items)
                     {
                         var ico = (string)val.Key;
 
@@ -600,9 +600,9 @@ namespace HlidacStatu.Lib.Data
                     {
 
                         var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + ico, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggs, exactNumOfResults: true);
-                        if (res.Result.Aggregations.Count > 0)
+                        if (res.ElasticResults.Aggregations.Count > 0)
                         {
-                            var epoch = ((Nest.ValueAggregate)res.Result.Aggregations.First().Value).Value;
+                            var epoch = ((Nest.ValueAggregate)res.ElasticResults.Aggregations.First().Value).Value;
                             if (epoch.HasValue)
                             {
                                 var mindate = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000);

@@ -624,13 +624,13 @@ namespace HlidacStatu.Web.Controllers
                 if (res.IsValid == false)
                 {
                     Response.StatusCode = 500;
-                    return Json(new { error = "Bad query", reason = res.Result.ServerError }, JsonRequestBehavior.AllowGet);
+                    return Json(new { error = "Bad query", reason = res.ElasticResults.ServerError }, JsonRequestBehavior.AllowGet);
 
                 }
                 else
                 {
 
-                    var filtered = res.Result.Hits
+                    var filtered = res.ElasticResults.Hits
                                     .Select(m => new Newtonsoft.Json.Linq.JRaw( HlidacStatu.Lib.Data.Smlouva.Export(m.Source,false, apires.ApiCall.UserRoles.Contains("Admin"))))
                                     .ToArray();
 
@@ -704,7 +704,7 @@ namespace HlidacStatu.Web.Controllers
 
                 var result = new Models.ApiV1Models.ClassificatioListItemModel();
 
-                var contracts = items.Result.Hits
+                var contracts = items.ElasticResults.Hits
                             .Select(m => new Models.ApiV1Models.ClassificatioListItemModel.Contract()
                             {
                                 contractId = m.Source.Id,

@@ -635,14 +635,14 @@ namespace HlidacStatu.Lib.Data
                     );
 
                 if (res.IsValid == false)
-                    HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(res.Result);
+                    HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(res.ElasticResults);
                 else
-                    result.AddRange(res.Result.Hits.Select(m => m.Source).Where(m => m.Id != this.Id));
+                    result.AddRange(res.ElasticResults.Hits.Select(m => m.Source).Where(m => m.Id != this.Id));
 
                 if (resNeplatne.IsValid == false)
-                    HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(resNeplatne.Result);
+                    HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(resNeplatne.ElasticResults);
                 else
-                    result.AddRange(resNeplatne.Result.Hits.Select(m => m.Source).Where(m => m.Id != this.Id));
+                    result.AddRange(resNeplatne.ElasticResults.Hits.Select(m => m.Source).Where(m => m.Id != this.Id));
 
                 _otherVersions = result.ToArray();
 
@@ -717,6 +717,8 @@ namespace HlidacStatu.Lib.Data
             else if (firmy.Any(f => f.MaVazbyNaPolitikyPred(this.datumUzavreni)))
                 this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.AngazovanyMajitel;
 
+
+            //U limitu
             this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.OK;
             if (
                     ((this.hodnotaBezDph - Analysis.KorupcniRiziko.Consts.IntervalOkolo > Analysis.KorupcniRiziko.Consts.Limit1bezDPH)

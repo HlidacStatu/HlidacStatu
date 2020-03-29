@@ -755,13 +755,6 @@ text zpravy: {txt}";
             return View();
         }
 
-        //[OutputCache(VaryByParam ="q;prefix", Duration =60*60)]
-        public ActionResult Osoby(string prefix, string q, bool ftx = false)
-        {
-            ViewBag.SearchFtx = ftx;
-            return View();
-        }
-
 
         [ChildActionOnly]
 #if (!DEBUG)
@@ -824,7 +817,8 @@ text zpravy: {txt}";
         }
 
 
-        public ActionResult Sponzori(string strana, string typ, int? rok)
+        [Obsolete]
+        public ActionResult rmeove_Sponzori(string strana, string typ, int? rok)
         {
             if (string.IsNullOrWhiteSpace(strana))
             {
@@ -1075,7 +1069,7 @@ text zpravy: {txt}";
                 var findSm = Lib.Data.Smlouva.Search.SimpleSearch($"_id:\"{model.Id}\" AND ({this.Request.QueryString["qs"]})", 1, 1,
                     Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, withHighlighting: true);
                 if (findSm.Total > 0)
-                    ViewBag.Highlighting = findSm.Result.Hits.First().Highlight;
+                    ViewBag.Highlighting = findSm.ElasticResults.Hits.First().Highlight;
 
             }
             return View(model);

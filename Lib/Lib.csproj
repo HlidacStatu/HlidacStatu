@@ -576,6 +576,7 @@
     <Compile Include="Data\Search.MultiResult.cs" />
     <Compile Include="Data\Smlouva.SClassification.cs" />
     <Compile Include="Data\Smlouva.Hint.cs" />
+    <Compile Include="Data\Osoba.Search.cs" />
     <Compile Include="Data\Smlouva.Subjekt.cs" />
     <Compile Include="Data\Smlouva.WatchdogProcessor.cs" />
     <Compile Include="Data\SocialContact.cs" />
@@ -693,6 +694,7 @@
     <Compile Include="Render\ScribanT.Functions.cs" />
     <Compile Include="Searching\DotaceSearchResult.cs" />
     <Compile Include="Searching\Highlighter.cs" />
+    <Compile Include="Searching\OsobaSearchResult.cs" />
     <Compile Include="Searching\InsolvenceSearchResult.cs" />
     <Compile Include="ES\Manager.cs" />
     <Compile Include="Searching\Rule.cs" />

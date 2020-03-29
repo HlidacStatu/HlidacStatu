@@ -16,15 +16,14 @@ namespace HlidacStatu.Lib.Searching
 
         public bool IncludeNeplatne { get; set; } = false;
 
-        public Nest.ISearchResponse<Data.Smlouva> Result
+        public IEnumerable<Data.Smlouva> Results
         {
             get
             {
-                return this.ElasticResults;
-            }
-            set
-            {
-                this.ElasticResults = value;
+                if (this.ElasticResults != null)
+                    return this.ElasticResults.Hits.Select(m => m.Source);
+                else
+                    return new Data.Smlouva[] { };
             }
         }
 
@@ -64,7 +63,7 @@ namespace HlidacStatu.Lib.Searching
         }
         public object ToRouteValues(int page)
         {
-            return new 
+            return new
             {
                 Q = this.OrigQuery,
                 Page = page,

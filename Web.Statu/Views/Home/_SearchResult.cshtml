@@ -5,7 +5,7 @@
 @using HlidacStatu.Web.Framework;
 
 @{
-    if (Model.Result == null)
+    if (Model.ElasticResults == null)
     {
         return;
     }
@@ -32,7 +32,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
     }
 
 </script>
-@if (Model?.Result?.IsValid == false || Model.Result == null)
+@if (Model?.ElasticResults?.IsValid == false || Model.ElasticResults == null)
 {
     <div class="row">
         <div class="col-xs-12">
@@ -83,12 +83,12 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         <h3>
             Nalezené smlouvy
             <small>
-                @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Result.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
+                @HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.ElasticResults.HitsMetadata.Total, false, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)
             </small>
         </h3>
-        @if (Model?.Result?.Aggregations != null && Model?.Result?.Aggregations?.ContainsKey("sumKc") == true)
+        @if (Model?.ElasticResults?.Aggregations != null && Model?.ElasticResults?.Aggregations?.ContainsKey("sumKc") == true)
         {
-            double? sum = ((Nest.ValueAggregate)Model?.Result?.Aggregations["sumKc"])?.Value;
+            double? sum = ((Nest.ValueAggregate)Model?.ElasticResults?.Aggregations["sumKc"])?.Value;
             <h4>
                 Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
             </h4>
@@ -109,7 +109,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         @SearchResults.SmlouvyHead(this.User, small:Model.SmallRender)
     </thead>
     <tbody>
-        @foreach (var item in Model?.Result.Hits)
+        @foreach (var item in Model?.ElasticResults.Hits)
         {
             var rec = item.Source;
 
@@ -152,7 +152,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
             {
                 firstPageClass = "disabled";
             }
-            if (Model.Result.Total < page * Model.PageSize
+            if (Model.ElasticResults.Total < page * Model.PageSize
                 || page * Model.PageSize >= Model.MaxResultWindow()
                 )
             {

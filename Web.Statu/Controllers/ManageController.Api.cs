@@ -99,7 +99,7 @@ namespace HlidacStatu.Web.Controllers
                     System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     //header
                     sb.AppendLine("URL\tID smlouvy\tPodepsána\tZveřejněna\tHodnota smlouvy\tPředmět smlouvy\tPlátce\tPlatce IC\tDodavatele a jejich ICO");
-                    foreach (var item in sres.Result.Hits)
+                    foreach (var item in sres.ElasticResults.Hits)
                     {
                         var s = item.Source;
                         sb.AppendLine(

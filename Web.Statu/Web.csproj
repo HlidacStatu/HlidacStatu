@@ -438,6 +438,7 @@
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
     <Compile Include="Controllers\ManageController.Admin.cs" />
+    <Compile Include="Controllers\OsobyController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ManageController.Api.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -1367,7 +1368,7 @@
     <Content Include="Views\Home\Napoveda.cshtml" />
     <Content Include="Views\Home\Osoba.cshtml" />
     <Content Include="Views\Home\OsobaVazby.cshtml" />
-    <Content Include="Views\Home\Osoby.cshtml" />
+    <Content Include="Views\Osoby\Index.cshtml" />
     <Content Include="Views\Home\PoliticiChybejici.cshtml" />
     <Content Include="Views\Home\PravniPomoc.cshtml" />
     <Content Include="Views\Home\PridatPolitika.cshtml" />
@@ -1524,6 +1525,7 @@
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
     <Content Include="Views\Home\HledatSmlouvy.cshtml" />
+    <Content Include="Views\Osoby\Hledat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

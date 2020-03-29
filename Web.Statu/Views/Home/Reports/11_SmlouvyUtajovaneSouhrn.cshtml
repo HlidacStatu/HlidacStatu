@@ -51,7 +51,7 @@
     );
 
     foreach (Nest.KeyedBucket<object>
-        val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+        val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)
     {
         rdsPerIco.AddRow(
         new Tuple<string, string>

@@ -70,14 +70,14 @@
        }
    );
 
-    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perIco"]).Items)
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)
     {
         rdsPerIco.AddRow(
             new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
             val.DocCount.ToString()
             );
     }
-    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Result.Aggregations["perPrice"]).Items)
+    foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["perPrice"]).Items)
     {
         rdsPerPrice.AddRow(
                 new Tuple<string, string>(HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),

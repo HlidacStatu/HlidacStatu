@@ -1,0 +1,104 @@
+﻿@model HlidacStatu.Lib.Searching.OsobaSearchResult
+@using Devmasters.Core
+@using HlidacStatu.Lib
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Analysis
+@using System.Linq;
+@using HlidacStatu.Web.Framework;
+@using HlidacStatu.Web.Models;
+
+@{
+    ViewBag.Title = "Politici a osoby s vazbou na politiku";
+    ViewBag.MoreHtml = "<p><b>Tady najdete <a href='/Report/5'>smlouvy soukromých firem s vazbou na politiky</a></b></p>";
+
+
+
+}
+
+
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<h3>Nalezené osoby</h3>
+<table class="table table-hover table-bordered">
+    @foreach (var politik in Model.Results)
+    {
+        <tr>
+            <td>
+                @Util.AddBookmark(this.User, politik)
+            </td>
+            <td style="text-wrap:none">
+                <a href="@(politik.GetUrl(false))"><b>@Html.Raw(politik.FullNameWithYear(true))</b></a>
+                
+            </td>
+            <td>
+                @Html.Raw(politik.Description(true, m => true, 3))
+            </td>
+            <td>
+                @if (politik.Vazby() != null)
+                {
+                    foreach (var v in politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Take(2))
+                    {
+                        @RenderVazba(v)
+                    }
+                    if (politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length == 3)
+                    {
+                        @RenderVazba(politik.Vazby()[2])
+                    }
+                    else if (politik.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
+                    {
+                        <span>@HlidacStatu.Util.PluralForm.Get(politik.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+
+@Util.FeedbackModal("Poslat opravu či připomínku")
+
+@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+
+
+@helper RenderVazba(HlidacStatu.Lib.Data.Graph.Edge v)
+{
+
+    var fname = v.To.PrintName();
+    if (string.IsNullOrEmpty(fname))
+    {
+        fname = HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(v.To.Id, true);
+    }
+    @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
+
+    if (v.RelFrom.HasValue && v.RelTo.HasValue)
+    {
+        @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
+
+    }
+    else if (v.RelTo.HasValue)
+    {
+        @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
+
+    }
+    else if (v.RelFrom.HasValue)
+    {
+        @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
+
+    }
+
+    <br />
+
+}

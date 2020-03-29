@@ -129,7 +129,7 @@ namespace HlidacStatu.Web.Framework.Report
             var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
 
             foreach (Nest.DateHistogramBucket val in
-                    ((BucketAggregate)res.Result.Aggregations["x-agg"]).Items
+                    ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items
             )
             {
                 if (val.Date >= minDate && val.Date <= maxDate)

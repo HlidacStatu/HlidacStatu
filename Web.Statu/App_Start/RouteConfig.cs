@@ -13,7 +13,7 @@ namespace HlidacStatu.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapMvcAttributeRoutes();
+            routes.MapMvcAttributeRoutes();
             
             routes.MapRoute(
                 name: "ApiV1",
@@ -81,7 +81,13 @@ namespace HlidacStatu.Web
 				defaults: new { controller = "Insolvence", action = "Index", id = UrlParameter.Optional }
 			);
 
-			routes.MapRoute(
+            routes.MapRoute(
+                name: "OsobyController",
+                url: "Osoby/{action}/{id}",
+                defaults: new { controller = "Osoby", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

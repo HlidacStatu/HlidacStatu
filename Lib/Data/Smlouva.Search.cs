@@ -221,7 +221,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
 
                 if (string.IsNullOrEmpty(query))
                 {
-                    result.Result = null;
+                    result.ElasticResults = null;
                     result.IsValid = false;
                     result.Total = 0;
                     return result;
