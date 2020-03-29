@@ -173,7 +173,7 @@ namespace HlidacStatu.Lib.Data
 
                     db.OsobaEvent.Add(osobaEvent);
                     db.SaveChanges();
-                    Osoba._cachedEvents.Delete(osobaEvent.OsobaId);
+                    Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
                     Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
                     return osobaEvent;
                 }
@@ -203,7 +203,7 @@ namespace HlidacStatu.Lib.Data
                         eventToUpdate.Created = DateTime.Now;
 
                         db.SaveChanges();
-                        Osoba._cachedEvents.Delete(osobaEvent.OsobaId);
+                        Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
                         Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
 
                         return eventToUpdate;
@@ -355,7 +355,7 @@ namespace HlidacStatu.Lib.Data
                     db.OsobaEvent.Attach(this);
                     db.Entry(this).State = System.Data.Entity.EntityState.Deleted;
                     Audit.Add<OsobaEvent>(Audit.Operations.Delete, user, this, null);
-                    Osoba._cachedEvents.Delete(this.OsobaId);
+                    Osoby.CachedEvents.Delete(this.OsobaId);
                     db.SaveChanges();
                 }
             }

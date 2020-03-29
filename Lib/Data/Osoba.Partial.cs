@@ -15,20 +15,6 @@ namespace HlidacStatu.Lib.Data
     public partial class Osoba
         : Bookmark.IBookmarkable, ISocialInfo
     {
-        internal static volatile MemoryCacheManager<IEnumerable<OsobaEvent>, int> _cachedEvents
-        = MemoryCacheManager<IEnumerable<OsobaEvent>, int>.GetSafeInstance("osobyEvents",
-            osobaInternalId =>
-            {
-                using (DbEntities db = new DbEntities())
-                {
-                    return db.OsobaEvent
-                        .AsNoTracking()
-                        .Where(m => m.OsobaId == osobaInternalId)
-                        .ToArray();
-                }
-            },
-            TimeSpan.FromMinutes(2));
-
 
         public static string[] TitulyPred = new string[] {
             "Akad. mal.","Akad. malíř","arch.","as.","Bc.","Bc. et Bc.","BcA.","Dip Mgmt.",
@@ -239,7 +225,8 @@ namespace HlidacStatu.Lib.Data
 
         public void FlushCache()
         {
-            _cachedEvents.Delete(this.InternalId);
+            Osoby.CachedEvents.Delete(this.InternalId);
+            Osoby.CachedFirmySponzoring.Delete(this.InternalId);
         }
 
         public IQueryable<OsobaEvent> NoFilteredEvents()
@@ -248,7 +235,7 @@ namespace HlidacStatu.Lib.Data
         }
         public IQueryable<OsobaEvent> NoFilteredEvents(Expression<Func<OsobaEvent, bool>> predicate)
         {
-            IQueryable<OsobaEvent> oe = _cachedEvents.Get(this.InternalId)
+            IQueryable<OsobaEvent> oe = Osoby.CachedEvents.Get(this.InternalId)
                 .AsQueryable();
             return oe.Where(predicate);
         }
@@ -265,35 +252,7 @@ namespace HlidacStatu.Lib.Data
             {
 
                 //sponzoring z navazanych firem kdyz byl statutar
-                IEnumerable<OsobaEvent> firmySponzoring = db.FirmaEvent.SqlQuery(@"
-                    select fe.* from firmaevent fe with (nolock)
-	                    inner join osobaVazby ov with (nolock) on ov.vazbakico=fe.ico and fe.Type=3
-                    and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
-                    and osobaid=" + this.InternalId)
-                    //convert to osobaEvent
-                    .Select(m =>
-                    {
-                        var v = this.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
-                        string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.ShortName()} byl ve statut.orgánu)";
-                        if (v != null)
-                        {
-                            vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({this.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
-                        }
-                        return new OsobaEvent()
-                        {
-                            OsobaId = this.InternalId,
-                            Organizace = m.AddInfo,
-                            AddInfoNum = m.AddInfoNum,
-                            Created = m.Created,
-                            DatumDo = m.DatumDo,
-                            DatumOd = m.DatumOd,
-                            Note = "",
-                            Title = vazba,
-                            Type = m.Type,
-                            Zdroj = m.Zdroj
-                        };
-                    }
-                    )
+                IEnumerable<OsobaEvent> firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
                     .AsQueryable()
                     .Where(predicate)
                     .ToArray()
