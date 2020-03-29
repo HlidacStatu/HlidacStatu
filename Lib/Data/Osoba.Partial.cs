@@ -1,5 +1,6 @@
 ﻿using Devmasters.Core;
 using HlidacStatu.Util;
+using HlidacStatu.Util.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,20 +15,40 @@ namespace HlidacStatu.Lib.Data
     public partial class Osoba
         : Bookmark.IBookmarkable, ISocialInfo
     {
+        internal static volatile MemoryCacheManager<IEnumerable<OsobaEvent>, int> _cachedEvents
+        = MemoryCacheManager<IEnumerable<OsobaEvent>, int>.GetSafeInstance("osobyEvents",
+            osobaInternalId =>
+            {
+                using (DbEntities db = new DbEntities())
+                {
+                    return db.OsobaEvent
+                        .AsNoTracking()
+                        .Where(m => m.OsobaId == osobaInternalId)
+                        .ToArray();
+                }
+            },
+            TimeSpan.FromMinutes(2));
 
 
         public static string[] TitulyPred = new string[] {
             "Akad. mal.","Akad. malíř","arch.","as.","Bc.","Bc. et Bc.","BcA.","Dip Mgmt.",
-"DiS.","Doc.","Dott.","Dr.","DrSc.","et","Ing.","JUDr.","Mag.",
-"MDDr.","Mg.","Mg.A.","MgA.","Mgr.","MSc.","MSDr.","MUDr.","MVDr.",
-"Odb. as.","PaedDr.","Ph.Dr.","PharmDr.","PhDr.","PhMr.","prof.",
-"Prof.","RCDr.","RNDr.","RSDr.","RTDr.","ThDr.","ThLic.","ThMgr." };
+            "DiS.","Doc.","Dott.","Dr.","DrSc.","et","Ing.","JUDr.","Mag.",
+            "MDDr.","Mg.","Mg.A.","MgA.","Mgr.","MSc.","MSDr.","MUDr.","MVDr.",
+            "Odb. as.","PaedDr.","Ph.Dr.","PharmDr.","PhDr.","PhMr.","prof.",
+            "Prof.","RCDr.","RNDr.","RSDr.","RTDr.","ThDr.","ThLic.","ThMgr." };
 
         public static string[] TitulyPo = new string[] {
             "BA","HONS", "BBA",
             "DBA","DBA.","CertHE","DipHE","BSc","BSBA","BTh","MIM","BBS","DiM","Di.M.",
             "CSc.", "D.E.A.", "DiS.", "Dr.h.c.", "DrSc.", "FACP", "jr.", "LL.M.",
             "MBA", "MD", "MEconSc.", "MgA.", "MIM", "MPA", "MPH", "MSc.", "Ph.D.", "Th.D." };
+
+
+        public Osoba()
+        {
+
+        }
+
 
         public StatusOsobyEnum StatusOsoby() { return (StatusOsobyEnum)this.Status; }
 
@@ -215,20 +236,33 @@ namespace HlidacStatu.Lib.Data
                 .FirstOrDefault();
         }
 
+
+        public void FlushCache()
+        {
+            _cachedEvents.Delete(this.InternalId);
+        }
+
+        public IQueryable<OsobaEvent> NoFilteredEvents()
+        {
+            return NoFilteredEvents(m => true);
+        }
+        public IQueryable<OsobaEvent> NoFilteredEvents(Expression<Func<OsobaEvent, bool>> predicate)
+        {
+            IQueryable<OsobaEvent> oe = _cachedEvents.Get(this.InternalId)
+                .AsQueryable();
+            return oe.Where(predicate);
+        }
+
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
-            List<OsobaEvent> events = new List<OsobaEvent>();
+            List<OsobaEvent> events = this.NoFilteredEvents()
+                                    .Where(_sponzoringLimitsPredicate)
+                                    .Where(predicate)
+                                    .ToList();
+
+
             using (DbEntities db = new DbEntities())
             {
-                //db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
-
-                events.AddRange(db.OsobaEvent
-                    .AsNoTracking()
-                    .Where(m => m.OsobaId == this.InternalId)
-                    .Where(_sponzoringLimitsPredicate)
-                    .Where(predicate)
-                    .ToArray())
-                    ;
 
                 //sponzoring z navazanych firem kdyz byl statutar
                 IEnumerable<OsobaEvent> firmySponzoring = db.FirmaEvent.SqlQuery(@"

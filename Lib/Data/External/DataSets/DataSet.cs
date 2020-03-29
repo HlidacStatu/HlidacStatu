@@ -21,7 +21,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     {
                         return new DataSet(datasetId);
                     },
-                    TimeSpan.FromMinutes(120));
+                    TimeSpan.FromMinutes(10));
 
 
         public static Newtonsoft.Json.JsonSerializerSettings DefaultDeserializationSettings = new Newtonsoft.Json.JsonSerializerSettings()
