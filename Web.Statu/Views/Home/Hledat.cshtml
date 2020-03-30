@@ -172,41 +172,6 @@ else if (Model.HasResults == false)
     </div>
 </div>
 <hr />
-<div class="row">
-    <div class="col-xs-12">
-
-        <div class="searching__counters">
-            @if (Model.HasSmlouvy)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#smlouvy">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.ElasticResults.HitsMetadata.Total)</span></a></div>
-            }
-            @if (Model.HasVZ)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#verejnezakazky">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.ElasticResults.HitsMetadata.Total)</span></a></div>
-            }
-            @if (Model.HasInsolvence)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#insolvence">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.ElasticResults.HitsMetadata.Total)</span></a></div>
-            }
-            @if (Model.HasOsoby)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#osoby">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
-            }
-            @if (Model.HasFirmy)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#firmy">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
-            }
-            @if (Model.HasDotace)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#dotace">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
-            }
-            @if (Model.Datasets.HasResult)
-            {
-                <div class="searching__counter"><a class="link--blue link--big" href="#databaze">Další databáze <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total)</span></a></div>
-            }
-        </div>
-    </div>
-</div>
 
 @{
     //debug
@@ -220,74 +185,112 @@ else if (Model.HasResults == false)
     List<string> paorder = new List<string>();
     if (Model.HasSmlouvy)
     {
-        paorder.Add("smlouvy");
+        paorder.Add(Model.Smlouvy.GetType().Name);
         if (Model.Smlouvy.Total < 10)
         {
             if (Model.HasVZ && Model.VZ.Total > 10)
             {
-                paorder.Insert(0, "vz");
+                paorder.Insert(0, Model.VZ.GetType().Name);
             }
             else if (Model.HasDotace && Model.Dotace.Total > 10)
             {
-                paorder.Insert(0, "dotace");
+                paorder.Insert(0, Model.Dotace.GetType().Name);
             }
             else if (Model.HasInsolvence && Model.Insolvence.Total > 10)
             {
-                paorder.Insert(0, "insolvence");
+                paorder.Insert(0, Model.Insolvence.GetType().Name);
             }
         }
     }
     if (Model.HasVZ)
     {
-        if (paorder.Contains("vz") == false)
+        if (paorder.Contains(Model.VZ.GetType().Name) == false)
         {
-            paorder.Add("vz");
+            paorder.Add(Model.VZ.GetType().Name);
 
-            if (Model.HasDotace && Model.Dotace.Total > Model.VZ.Total * 2 && paorder.Contains("dotace") == false)
+            if (Model.HasDotace && Model.Dotace.Total > Model.VZ.Total * 2 && paorder.Contains(Model.Dotace.GetType().Name) == false)
             {
-                paorder.Insert(paorder.FindIndex(0, m => m == "vz"), "dotace");
+                paorder.Insert(paorder.FindIndex(0, m => m == Model.VZ.GetType().Name), Model.Dotace.GetType().Name);
             }
-            else if (Model.HasInsolvence && Model.Insolvence.Total > Model.VZ.Total * 3 && paorder.Contains("insolvence") == false)
+            else if (Model.HasInsolvence && Model.Insolvence.Total > Model.VZ.Total * 3 && paorder.Contains(Model.Insolvence.GetType().Name) == false)
             {
-                paorder.Insert(paorder.FindIndex(0, m => m == "vz"), "insolvence");
+                paorder.Insert(paorder.FindIndex(0, m => m == Model.VZ.GetType().Name), Model.Insolvence.GetType().Name);
             }
         }
     }
     if (Model.HasDotace)
     {
-        if (paorder.Contains("dotace") == false)
+        if (paorder.Contains(Model.Dotace.GetType().Name) == false)
         {
-            paorder.Add("dotace");
+            paorder.Add(Model.Dotace.GetType().Name);
 
-            if (Model.HasInsolvence && Model.Insolvence.Total > Model.Dotace.Total * 2 && paorder.Contains("insolvence") == false)
+            if (Model.HasInsolvence && Model.Insolvence.Total > Model.Dotace.Total * 2 && paorder.Contains(Model.Insolvence.GetType().Name) == false)
             {
-                paorder.Insert(paorder.FindIndex(0, m => m == "dotace"), "insolvence");
+                paorder.Insert(paorder.FindIndex(0, m => m == Model.Dotace.GetType().Name), Model.Insolvence.GetType().Name);
             }
         }
     }
 
     if (Model.HasInsolvence)
     {
-        if (paorder.Contains("insolvence") == false)
+        if (paorder.Contains(Model.Insolvence.GetType().Name) == false)
         {
-            paorder.Add("insolvence");
+            paorder.Add(Model.Insolvence.GetType().Name);
         }
     }
 
     if (paorder.Count < 2)
     {
-        paorder.Add("osoby");
+        paorder.Add(Model.Osoby.GetType().Name);
     }
     else
     {
-        paorder.Insert(1, "osoby");
+        paorder.Insert(1, Model.Osoby.GetType().Name);
     }
-    paorder.Add("datasety");
-    paorder.Add("firmy");
+    paorder.Add(Model.Datasets.GetType().Name);
+    paorder.Add(Model.Firmy.GetType().Name);
 
     bool secondColumnRendered = false;
 
 }
+
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="searching__counters">
+            @if (Model.HasSmlouvy)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", "Home", Model.Smlouvy.ToRouteValues(1))">Smlouvy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Smlouvy.ElasticResults.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.HasVZ)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1))">Veřejné zakázky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.VZ.ElasticResults.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.HasInsolvence)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "Insolvence", Model.Insolvence.ToRouteValues(1))">Insolvence <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Insolvence.ElasticResults.HitsMetadata.Total)</span></a></div>
+            }
+            @if (Model.HasOsoby)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "Osoby", Model.Osoby.ToRouteValues(1))">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
+            }
+            @if (Model.HasFirmy)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("HledatFirmy", "Home", new { q = Model.Firmy.Query })">Firmy <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Firmy.Total)</span></a></div>
+            }
+            @if (Model.HasDotace)
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1))">Dotace <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Dotace.Total)</span></a></div>
+            }
+            @if (Model.Datasets.HasResult )
+            {
+                <div class="searching__counter"><a class="link--blue link--big" href="#databaze">Další výsledky <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Datasets.Total) najdete v pravém sloupci</span></a></div>
+            }
+        </div>
+    </div>
+</div>
+
+
 
 <div class="row bg-info" style="padding:10px 10px 0px 10px;border-top:2px #007cf5 solid">
     <div class="col-xs-12">
@@ -301,92 +304,93 @@ else if (Model.HasResults == false)
     <div class="col-xs-12 col-sm-8">
         @foreach (string part in paorder)
         {
-            switch (part)
+            if (part == Model.Smlouvy.GetType().Name)
             {
-                case "smlouvy":
-                    if (Model.HasSmlouvy)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderSmlouvy(mainSearchRendered ? 0 : numOfSmluv)
-                        sw.Stop();
-                        viewRenderTimes.Add("smlouvy", sw.Elapsed);
-                        mainSearchRendered = true;
-                    }
+                if (Model.HasSmlouvy)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderSmlouvy(mainSearchRendered ? 0 : numOfSmluv)
+                    sw.Stop();
+                    viewRenderTimes.Add("smlouvy", sw.Elapsed);
+                    mainSearchRendered = true;
+                }
+            }
+            else if (part == Model.VZ.GetType().Name)
+            {
+                if (Model.HasVZ)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderVZ(mainSearchRendered ? 0 : numOfVZ)
+                    sw.Stop();
+                    viewRenderTimes.Add("VZ", sw.Elapsed);
+                    mainSearchRendered = true;
+                }
+            }
+            else if (part == Model.Dotace.GetType().Name)
+            {
+                if (Model.HasDotace)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderDotace(mainSearchRendered ? 0 : numOfDotaci)
+                    sw.Stop();
+                    viewRenderTimes.Add("Dotace", sw.Elapsed);
+                    mainSearchRendered = true;
+                }
+            }
+            else if (part == Model.Insolvence.GetType().Name)
+            {
+                if (Model.HasInsolvence)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderInsolvence(mainSearchRendered ? 0 : numOfInsolvenci)
+                    sw.Stop();
+                    viewRenderTimes.Add("Insolvence", sw.Elapsed);
+                    mainSearchRendered = true;
 
-                    break;
-                case "vz":
-                    if (Model.HasVZ)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderVZ(mainSearchRendered ? 0 : numOfVZ)
-                        sw.Stop();
-                        viewRenderTimes.Add("VZ", sw.Elapsed);
-                        mainSearchRendered = true;
-                    }
+                }
+            }
+            else if (part == Model.Osoby.GetType().Name)
+            {
+                if (Model.HasOsoby)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
 
-                    break;
-                case "dotace":
-                    if (Model.HasDotace)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderDotace(mainSearchRendered ? 0 : numOfDotaci)
-                        sw.Stop();
-                        viewRenderTimes.Add("Dotace", sw.Elapsed);
-                        mainSearchRendered = true;
-                    }
-
-                    break;
-                case "insolvence":
-                    if (Model.HasInsolvence)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderInsolvence(mainSearchRendered ? 0 : numOfInsolvenci)
-                        sw.Stop();
-                        viewRenderTimes.Add("Insolvence", sw.Elapsed);
-                        mainSearchRendered = true;
-
-                    }
-                    break;
-                case "osoby":
-                    if (Model.HasOsoby)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-
-                        @RenderOsoby(mainSearchRendered ? 0 : numOfOsob)
-                        sw.Stop();
-                        viewRenderTimes.Add("Osoby", sw.Elapsed);
-                        mainSearchRendered = true;
-                    }
-                    break;
-                case "firmy":
-                    if (Model.HasFirmy)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderFirmy(mainSearchRendered ? 0 : numOfFirem)
-                        sw.Stop();
-                        viewRenderTimes.Add("Firmy", sw.Elapsed);
-                    }
-                    break;
-                case "datasety":
-                    if (Model.HasDatasets)
-                    {
-                        Devmasters.Core.StopWatchEx sw = new StopWatchEx();
-                        sw.Start();
-                        @RenderDatasets(mainSearchRendered ? 0 : 1)
-                        sw.Stop();
-                        viewRenderTimes.Add("Datasets", sw.Elapsed);
-                        mainSearchRendered = true;
-                    }
-                    break;
-                default:
-                    break;
-            } //switch
+                    @RenderOsoby(mainSearchRendered ? 0 : numOfOsob)
+                    sw.Stop();
+                    viewRenderTimes.Add("Osoby", sw.Elapsed);
+                    mainSearchRendered = true;
+                }
+            }
+            else if (part == Model.Firmy.GetType().Name)
+            {
+                if (Model.HasFirmy)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderFirmy(mainSearchRendered ? 0 : numOfFirem)
+                    sw.Stop();
+                    viewRenderTimes.Add("Firmy", sw.Elapsed);
+                }
+            }
+            else if (part == Model.Datasets.GetType().Name)
+            {
+                if (Model.HasDatasets)
+                {
+                    Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+                    sw.Start();
+                    @RenderDatasets(mainSearchRendered ? 0 : 1)
+                    sw.Stop();
+                    viewRenderTimes.Add("Datasets", sw.Elapsed);
+                    mainSearchRendered = true;
+                }
+            }
+            else
+            { }
 
             if (secondColumnRendered == false && mainSearchRendered)
             {
