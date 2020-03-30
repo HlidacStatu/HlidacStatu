@@ -451,7 +451,7 @@ namespace HlidacStatu.Lib
                         }
                     );
 
-                HlidacStatu.Util.Consts.Logger.Info("Static data - Da ");
+                HlidacStatu.Util.Consts.Logger.Info("Static data - BasicStatisticData ");
                 BasicStatisticData = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<double>>(
                         TimeSpan.FromHours(6), (obj) =>
                         {

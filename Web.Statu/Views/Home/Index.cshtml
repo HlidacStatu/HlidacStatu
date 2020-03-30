@@ -49,7 +49,7 @@
                 <li class=""><a href="/data">Další databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
                 <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
                 <li class=""><a href="/texty">Komentáře</a></li>
-                <li class=""><a href="https://platforma.hlidacstatu.cz">Fórum</a></li>
+                <li class=""><a href="https://www.hlidacstatu.cz/texty/series/tipy/">Tipy „Jak používat Hlídače“</a></li>
             </ul>
             <ul>
                 <li>
@@ -166,7 +166,12 @@
             </div>
             <div class="block-tags">
 
-                @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Where(m => m.Date > new DateTime(2020, 1, 25)))
+                @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts
+                    .Get()
+                    .Where(m => m.Date > new DateTime(2020, 1, 25) && m.Categories.Contains(246)==false) //not tipy
+                    .OrderByDescending(m=>m.Date)
+                    .Take(5)
+                    )
                 {
                     <span class="tag">
                         <a href="@wp.Link">
