@@ -10,15 +10,15 @@ namespace HlidacStatu.Util.Cache
         : Manager<T,Key, CouchbaseCache<T>>
         where T : class
     {
-    
-        public CouchbaseCacheManager(string keyPrefix, System.Func<Key, T> func, TimeSpan expiration)
+        string bucketName = null;
+        public CouchbaseCacheManager(string keyPrefix, System.Func<Key, T> func, TimeSpan expiration, string bucketName = null)
             : base(keyPrefix, func,expiration)
         {
+            this.bucketName = bucketName;
         }
         protected override CouchbaseCache<T> getTCacheInstance(Key key, TimeSpan expiration, Func<Key, T> contentFunc)
         {
-
-            return new CouchbaseCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key));
+            return new CouchbaseCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key),bucketName);
         }
 
 

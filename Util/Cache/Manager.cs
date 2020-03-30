@@ -5,7 +5,13 @@ using System.Linq;
 namespace HlidacStatu.Util.Cache
 {
 
-    public class Manager<T, Key, TCache>
+    /// <summary>
+    /// Manager jednotlivych instanci Cache
+    /// </summary>
+    /// <typeparam name="T">Typ ukladanych dat</typeparam>
+    /// <typeparam name="Key">Typ unikatniho klice</typeparam>
+    /// <typeparam name="TCache">Typ cache</typeparam>
+    public abstract class Manager<T, Key, TCache>
         where T : class
         where TCache : Devmasters.Cache.V20.BaseCache<T>
     {
@@ -30,10 +36,7 @@ namespace HlidacStatu.Util.Cache
             return getTCacheInstance(key, expiration, o => contentFunc.Invoke(key)).Get();                
         }
 
-        protected virtual TCache getTCacheInstance(Key key, TimeSpan expiration, System.Func<Key, T> contentFunc)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract TCache getTCacheInstance(Key key, TimeSpan expiration, System.Func<Key, T> contentFunc);
 
         public void Delete(Key key)
         {

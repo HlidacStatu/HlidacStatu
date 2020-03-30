@@ -627,24 +627,6 @@ namespace HlidacStatu.Lib
                        return Lib.Data.AnalysisCalculation.GetUradyObchodujiciSCasovePodezrelymiFirmami();
                    });
 
-                //SmlouvySPolitiky_nedavne_Cache = new Devmasters.Cache.V20.File.FileCache<string[]>
-                //    (StaticData.App_Data_Path, TimeSpan.Zero, "SmlouvySPolitiky_nedavne",
-                //    (o) =>
-                //    {
-                //        return Lib.Data.AnalysisCalculation.SmlouvyIdSPolitiky(FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy, SponzorujiciFirmy_Nedavne.Get(), true);
-                //    });
-                //SmlouvySPolitiky_aktualni_Cache = new Devmasters.Cache.V20.File.FileCache<string[]>
-                //    (StaticData.App_Data_Path, TimeSpan.Zero, "SmlouvySPolitiky_aktualni",
-                //    (o) =>
-                //    {
-                //        return Lib.Data.AnalysisCalculation.SmlouvyIdSPolitiky(FirmySVazbamiNaPolitiky_aktualni_Cache.Get().SoukromeFirmy, SponzorujiciFirmy_Nedavne.Get(), true);
-                //    });
-                //SmlouvySPolitiky_vsechny_Cache = new Devmasters.Cache.V20.File.FileCache<string[]>
-                //    (StaticData.App_Data_Path, TimeSpan.Zero, "SmlouvySPolitiky_vsechny",
-                //    (o) =>
-                //    {
-                //        return Lib.Data.AnalysisCalculation.SmlouvyIdSPolitiky(FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy, SponzorujiciFirmy_Vsechny.Get(), true);
-                //    });
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - UradyObchodujiciSFirmami_s_vazbouNaPolitiky_*");
                 UradyObchodujiciSFirmami_s_vazbouNaPolitiky_aktualni_Cache = new Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaUradyStat>

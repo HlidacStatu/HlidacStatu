@@ -49,8 +49,8 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Core.1.472.5\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.20.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Core.1.472.20\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
