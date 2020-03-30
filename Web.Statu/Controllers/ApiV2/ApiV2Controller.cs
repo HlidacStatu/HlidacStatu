@@ -33,6 +33,13 @@ namespace HlidacStatu.Web.Controllers
             return "pong " + text;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AuthorizeAndAudit]
+        [HttpGet, Route("geterror/{id}")]
+        public string GetError([FromUri]int? id = 200)
+        {
+            throw new HttpResponseException(new ErrorMessage((System.Net.HttpStatusCode)id, $"error {id}"));
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [AuthorizeAndAudit]

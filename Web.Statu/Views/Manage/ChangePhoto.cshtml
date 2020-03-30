@@ -10,7 +10,7 @@
 @section metatags
 {
 
-    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(o.NameId.ToLower())
+    @if (o != null && HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(o.NameId.ToLower())
                 || Model.NotInterestingToShow() 
         )
     {

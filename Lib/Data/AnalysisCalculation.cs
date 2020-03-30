@@ -589,7 +589,7 @@ namespace HlidacStatu.Lib.Data
             Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(allIcos,
             (ico, param) =>
             {
-            Firma ff = Firmy.Get(ico);
+                Firma ff = Firmy.Get(ico);
                 if (Firma.IsValid(ff))
                 {
                     if (ff.PatrimStatu()) //statni firmy tam nechci
