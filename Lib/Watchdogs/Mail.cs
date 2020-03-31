@@ -134,6 +134,7 @@ namespace HlidacStatu.Lib.Watchdogs
 
                 if (saveWatchdogStatus)
                 {
+                    wd1.LatestRec = toDate.Value;
                     wd1.LastSearched = toDate.Value;
                     wd1.Save();
                 }
