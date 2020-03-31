@@ -90,12 +90,14 @@ namespace DotaceLoader
 
         public static string FindIco(string companyName)
         {
+            throw new System.NotImplementedException();
+
             var name = HlidacStatu.Lib.Data.Firma.JmenoBezKoncovky(companyName);
             //name = Devmasters.Core.TextUtil.RemoveDiacritics(name);
-            var ico = StaticData.FirmyNazvy.Get()
-                .Where(m => m.Value.Jmeno == name)
-                .Select(x => x.Key)
-                .FirstOrDefault();
+            //var ico = StaticData.FirmyNazvy.Get()
+            //    .Where(m => m.Value.Jmeno == name)
+            //    .Select(x => x.Key)
+            //    .FirstOrDefault();
 
             return string.Empty;
             
