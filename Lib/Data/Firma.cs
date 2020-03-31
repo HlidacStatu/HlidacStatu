@@ -12,13 +12,6 @@ namespace HlidacStatu.Lib.Data
     public partial class Firma
         : Bookmark.IBookmarkable, ISocialInfo
     {
-        public class ZiskyZtraty
-        {
-            public int Rok { get; set; }
-            public string Ico { get; set; }
-            public double Vynos { get; set; }
-            public double Naklad { get; set; }
-        }
 
         public static bool IsValid(Firma f)
         {

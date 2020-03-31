@@ -286,11 +286,11 @@ namespace HlidacStatu.Lib
 
 
                     if (firmaBezKoncovky.Length > 3
-                        && StaticData.FirmyNazvyOnlyAscii.ContainsKey(simpleName)
+                        && StaticData.FirmyNazvyOnlyAscii.Get().ContainsKey(simpleName)
                         )
                     {
                         //nasel jsem ico?
-                        foreach (var ico in StaticData.FirmyNazvyOnlyAscii[simpleName])
+                        foreach (var ico in StaticData.FirmyNazvyOnlyAscii.Get()[simpleName])
                         {
 
                             Firma f = Firmy.Get(ico); //TODO StaticData.FirmyNazvyAscii.Get()[simpleName]);

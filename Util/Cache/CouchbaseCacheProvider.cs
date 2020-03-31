@@ -9,7 +9,7 @@ namespace HlidacStatu.Util.Cache
     public class CouchbaseCacheProvider<T> : ICacheProvider<T>
       where T : class
     {
-        Couchbase.Core.IBucket bucketConn = null;
+        private Couchbase.Core.IBucket bucketConn { get;  set; } = null;
 
         bool randomizeExpiration = true;
 

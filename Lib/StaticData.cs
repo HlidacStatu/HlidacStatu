@@ -41,9 +41,8 @@ namespace HlidacStatu.Lib
 
         public static HashSet<string> Urady_OVM = new HashSet<string>();
 
-        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, FirmaName>> FirmyNazvy = null;
-        //public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, string>> FirmyNazvyAscii = null;
-        public static System.Collections.Concurrent.ConcurrentDictionary<string, string[]> FirmyNazvyOnlyAscii = new System.Collections.Concurrent.ConcurrentDictionary<string, string[]>();
+
+        public static Devmasters.Cache.V20.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>> FirmyNazvyOnlyAscii = null;
 
         public static Devmasters.Cache.V20.File.FileCache<IEnumerable<AnalysisCalculation.IcoSmlouvaMinMax>> FirmyCasovePodezreleZalozene = null;
         public static Devmasters.Cache.V20.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>> UradyObchodujiciSCasovePodezrelymiFirmami = null;
@@ -91,7 +90,6 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]> LastBlogPosts = null;
 
-        public static Dictionary<string, Lib.Data.Firma.ZiskyZtraty> ZiskyZtraty = null;
 
         public static Dictionary<string, HlidacStatu.Lib.Analysis.TemplatedQuery> Afery = new Dictionary<string, Analysis.TemplatedQuery>();
 
@@ -562,33 +560,12 @@ namespace HlidacStatu.Lib
                     );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Mestske_Firmy ");
-                Mestske_Firmy = System.IO.File
+                VsechnyStatniMestskeFirmy = System.IO.File
                     .ReadAllLines(StaticData.App_Data_Path + "mistni_firmy_ico.txt")
                     .Where(s => !string.IsNullOrEmpty(s.Trim()))
-                    .ToArray();
-
-                VsechnyStatniMestskeFirmy.UnionWith(Mestske_Firmy);
-                XDocument xds = null;
-                using (var xml = System.IO.File.OpenText(StaticData.App_Data_Path + @"datafile-seznam_ds_ovm.xml"))
-                {
-                    xds = XDocument.Load(xml);
-                }
-                var xds_ns = xds.Root.Name.Namespace;
-
-                VsechnyStatniMestskeFirmy.UnionWith(xds
-                   .Descendants(xds_ns + "box")
-                   .Select(m => m.Element(xds_ns + "ico")?.Value ?? "")
-                   .Where(i => !string.IsNullOrEmpty(i))
-                   );
-
-                VsechnyStatniMestskeFirmy.UnionWith(DatoveSchranky
-                        .Descendants(StaticData.DatoveSchrankyNS + "Subjekt")
-                        .Select(m => m.Element(StaticData.DatoveSchrankyNS + "ICO")?.Value ?? "")
-                        .Where(i => !string.IsNullOrEmpty(i))
-                   );
+                    .ToHashSet();
 
 
-                //StatniMestskeFirmy.Add
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - FirmySVazbamiNaPolitiky_*");
                 FirmySVazbamiNaPolitiky_aktualni_Cache = new Devmasters.Cache.V20.File.FileCache<Lib.Data.AnalysisCalculation.VazbyFiremNaPolitiky>
@@ -824,63 +801,44 @@ namespace HlidacStatu.Lib
                         .Distinct());
 
 
-                HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvy");
+                HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii");
 
-                FirmyNazvy = new Devmasters.Cache.V20.File.FileCache<Dictionary<string, FirmaName>>(
-                    StaticData.App_Data_Path, TimeSpan.Zero, "FirmyNazvy",
-                    (obj) =>
+                FirmyNazvyOnlyAscii = 
+                    new Devmasters.Cache.V20.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>>
+                    (StaticData.App_Data_Path, TimeSpan.Zero, "FirmyNazvyOnlyAscii",
+                    (o) =>
+                    {
+                        HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii starting generation");
+                        System.Collections.Concurrent.ConcurrentDictionary<string, string[]> res
+                            = new System.Collections.Concurrent.ConcurrentDictionary<string, string[]>();
+                        string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+                        using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
                         {
-                            Dictionary<string, FirmaName> ff = new Dictionary<string, FirmaName>();
 
-                            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
-                            using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+                            var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma", null);
+                            while (reader.Read())
                             {
-
-                                var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma", null);
-                                int num = 0;
-                                while (reader.Read())
+                                string ico = reader.GetString(0).Trim();
+                                string name = reader.GetString(1).Trim();
+                                if (Devmasters.Core.TextUtil.IsNumeric(ico))
                                 {
-                                    string ico = reader.GetString(0).Trim();
-                                    string name = reader.GetString(1).Trim();
-                                    if (Devmasters.Core.TextUtil.IsNumeric(ico))
+                                    ico = Util.ParseTools.NormalizeIco(ico);
+                                    var jmenoa = Devmasters.Core.TextUtil.RemoveDiacritics(Firma.JmenoBezKoncovky(name)).Trim().ToLower();
+                                    if (!res.ContainsKey(jmenoa))
+                                        res[jmenoa] = new string[] { ico };
+                                    else if (!res[jmenoa].Contains(ico))
                                     {
-                                        num++;
-                                        string koncovka;
-                                        string jmeno = Firma.JmenoBezKoncovkyFull(name, out koncovka);
-                                        //firmy.Add(ico, name);
-                                        if (!ff.ContainsKey(ico))
-                                            ff.Add(ico,
-                                                new FirmaName()
-                                                {
-                                                    Jmeno = jmeno,
-                                                    Koncovka = koncovka
-                                                }
-                                            );
+                                        var v = res[jmenoa];
+                                        res[jmenoa] = v.Union(new string[] { ico }).ToArray();
                                     }
                                 }
-
                             }
-                            return ff;
                         }
-                    );
+                        HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii generation finished");
+                        return res;
+                    }
+                );
 
-
-
-                HlidacStatu.Util.Consts.Logger.Info("Static data - ZiskyZtraty");
-                ZiskyZtraty = new Dictionary<string, Lib.Data.Firma.ZiskyZtraty>(5000);
-                foreach (var line in System.IO.File.ReadAllLines(App_Data_Path + "ZiskyZtraty.tab"))
-                {
-                    string[] cols = line.Split('\t');//rok \t ico \t naklady \t vynosy
-
-                    ZiskyZtraty.Add(cols[1], new Firma.ZiskyZtraty()
-                    {
-                        Ico = cols[1],
-                        Rok = int.Parse(cols[0]),
-                        Naklad = double.Parse(cols[2]),
-                        Vynos = double.Parse(cols[3])
-                    });
-
-                }
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - LastBlogPosts");
                 LastBlogPosts = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]>(
@@ -962,25 +920,7 @@ namespace HlidacStatu.Lib
             } //lock
             HlidacStatu.Util.Consts.Logger.Info("Static data - Init DONE");
 
-            new Thread(() =>
-            {
-                Thread.CurrentThread.IsBackground = true;
-                HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii starting thread");
 
-                foreach (var kv in FirmyNazvy.Get())
-                {
-                    var jmenoa = Devmasters.Core.TextUtil.RemoveDiacritics(kv.Value.Jmeno).Trim().ToLower();
-                    var ico = kv.Key;
-                    if (!FirmyNazvyOnlyAscii.ContainsKey(jmenoa))
-                        FirmyNazvyOnlyAscii[jmenoa] = new string[] { ico };
-                    else if (!FirmyNazvyOnlyAscii[jmenoa].Contains(ico))
-                    {
-                        var v = FirmyNazvyOnlyAscii[jmenoa];
-                        FirmyNazvyOnlyAscii[jmenoa] = v.Union(new string[] { ico }).ToArray();
-                    }
-                }
-                HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii thread finished");
-            }).Start();
 
         }
 
