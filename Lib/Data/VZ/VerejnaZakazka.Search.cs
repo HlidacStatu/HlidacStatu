@@ -367,14 +367,6 @@ namespace HlidacStatu.Lib.Data.VZ
                     search.OrigQuery = query;
                     query = Lib.Searching.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators);
                 }
-                if (logError && search.Q != search.OrigQuery)
-                {
-                    HlidacStatu.Util.Consts.Logger.Debug(new Devmasters.Core.Logging.LogMessage()
-                        .SetMessage("Fixed query")
-                        .SetCustomKeyValue("runningQuery", search.Q)
-                        .SetCustomKeyValue("origQuery", search.OrigQuery)
-                        );
-                }
 
 
                 search.Q = query;

@@ -235,14 +235,6 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                     query = Searching.Tools.FixInvalidQuery(query, irules, Searching.Tools.DefaultQueryOperators );
                     result.Q = query;
                 }
-                if (logError && result.Q != result.OrigQuery)
-                {
-                    HlidacStatu.Util.Consts.Logger.Debug(new Devmasters.Core.Logging.LogMessage()
-                        .SetMessage("Fixed query")
-                        .SetCustomKeyValue("runningQuery", result.Q)
-                        .SetCustomKeyValue("origQuery", result.OrigQuery)
-                        );
-                }
 
                 if (platnyZaznam.HasValue)
                     query = Lib.Searching.Tools.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value.ToString().ToLower());
