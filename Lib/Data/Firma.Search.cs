@@ -12,7 +12,6 @@ namespace HlidacStatu.Lib.Data
         {
 
             [ElasticsearchType(IdProperty = nameof(Ico))]
-
             public class FirmaInElastic
             {
                 public string Jmeno { get; set; }
@@ -24,6 +23,7 @@ namespace HlidacStatu.Lib.Data
 
                 [Keyword()]
                 public string Ico { get; set; }
+
 
                 private FirmaInElastic() { }
 

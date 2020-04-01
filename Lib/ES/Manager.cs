@@ -21,6 +21,7 @@ namespace HlidacStatu.Lib.ES
         {
             Smlouvy,
             Firmy,
+            KIndex,
             VerejneZakazky,
             ProfilZadavatele,
             VerejneZakazkyRaw2006,
@@ -44,6 +45,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyNaProfiluRaw = "verejnezakazkyprofilraw";
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
         public static string defaultIndexName_Firmy = "firmy";
+        public static string defaultIndexName_KIndex = "kindex";
         public static string defaultIndexName_Logs = "logs";
         //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
         public static string defaultIndexName_Insolvence = "insolvencnirestrik";
@@ -135,6 +137,10 @@ namespace HlidacStatu.Lib.ES
         {
             return GetESClient(defaultIndexName_Firmy, timeOut, connectionLimit, IndexType.Firmy);
         }
+        public static ElasticClient GetESClient_KIndex(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_KIndex, timeOut, connectionLimit, IndexType.Firmy);
+        }
 
         static string dataSourceIndexNamePrefix = "data_";
         public static ElasticClient GetESClient(string indexName, int timeOut = 60000, int connectionLimit = 80, IndexType? idxType = null, bool init = true)
@@ -171,6 +177,8 @@ namespace HlidacStatu.Lib.ES
                 return IndexType.Smlouvy;
             else if (indexName == defaultIndexName_Firmy)
                 return IndexType.Firmy;
+            else if (indexName == defaultIndexName_KIndex)
+                return IndexType.KIndex;
             else if (indexName == defaultIndexName_VerejneZakazky)
                 return IndexType.VerejneZakazky;
             else if (indexName == defaultIndexName_ProfilZadavatele)
@@ -452,6 +460,13 @@ namespace HlidacStatu.Lib.ES
                        .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
+                       );
+                    break;
+                case IndexType.KIndex:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Map<Analysis.KorupcniRiziko.CalculatedData>(map => map.AutoMap(maxRecursion: 2))
                        );
                     break;
                 case IndexType.Logs:

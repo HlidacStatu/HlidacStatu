@@ -13,27 +13,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
 
-        public class Data
-        {
-            public decimal CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
-            public decimal KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
-            public decimal PercBezUvedeneCeny { get; set; } //% smluv bez uvedené ceny
-            public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
-            public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
-            public decimal PercSmlouvySPolitickyAngazovanouFirmou { get; set; } //% smluv uzavřených s firmou navazanou na politicky aktivní osobu v předchozích 5 letechs
-            public decimal PercSmluvUlimitu { get; set; } //% smluv těsně pod hranicí 2M Kč (zakázka malého rozsahu) a 6M (u stavebnictví)
-            public decimal PercUzavrenoOVikendu { get; set; } // % smluv uzavřených o víkendu či státním svátku
-            public Dictionary<int, decimal> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
-
-            public Lib.Analysis.BasicData BasicStat { get; set; }
-            public Lib.Analysis.RatingData Rating { get; set; }
-
-            public int Rok { get; set; }
-        }
-
-        public Dictionary<int, Data> roky { get; set; } = new Dictionary<int, Data>();
-        public string Ico { get; set; }
-
 
         private Firma urad = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
@@ -41,10 +20,39 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel = null;
 
+        public string Ico { get; set; }
+
+        private CalculatedData kindex = null;
+
         public Calculator(string ico)
         {
             this.Ico = ico;
-            InitData();
+        }
+
+        object lockCalc = new object();
+        public CalculatedData GetData(bool refresh=false)
+        {
+            if (refresh)
+                kindex = null;
+            lock (lockCalc)
+            {
+                if (kindex == null)
+                {
+                    kindex = Calculate();
+                }
+            }
+
+            return kindex;
+        }
+
+        private CalculatedData Calculate()
+        {
+            this.InitData();
+            foreach (var year in CalculationYears)
+            {
+                kindex.roky.Add(year, CalculateForYear(year));
+            }
+            return kindex;
         }
 
         private void InitData()
@@ -63,10 +71,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             _calc_NovaFirmaDodavatel = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:<30 )");
         }
 
-        public Data CalculateForYear(int year)
+        private CalculatedData.Annual CalculateForYear(int year)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            Data ret = new Data();
+            CalculatedData.Annual ret = new CalculatedData.Annual();
 
             ret.PercBezUvedeneCeny = this.urad.Statistic().RatingPerYear[year].PercentBezCeny;
             ret.PercSeZasadnimNedostatkem = (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
