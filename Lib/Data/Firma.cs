@@ -99,6 +99,20 @@ namespace HlidacStatu.Lib.Data
 
         public short? IsInRS { get; set; }
 
+        FirmaHint _firmaHint = null;
+        public FirmaHint Hint
+        {
+            get
+            {
+                if (_firmaHint == null)
+                {
+                    _firmaHint = FirmaHint.Load(this.ICO);
+                    
+                }
+                return _firmaHint;
+            }
+        }
+
 
         private string _jmeno = string.Empty;
         public string Jmeno
@@ -480,7 +494,7 @@ namespace HlidacStatu.Lib.Data
         public bool IsSponzorBefore(DateTime date)
         {
             return StaticData.SponzorujiciFirmy_Vsechny.Get()
-                .Where(m =>m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor
+                .Where(m => m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor
                             && m.DatumOd < date)
                 .Any();
 

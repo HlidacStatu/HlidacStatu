@@ -99,6 +99,13 @@
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="Zdroj" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="FirmaHint">
+          <Key>
+            <PropertyRef Name="Ico" />
+          </Key>
+          <Property Name="Ico" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="PocetDni_k_PrvniSmlouve" Type="int" />
+        </EntityType>
         <EntityType Name="FirmaVazby">
           <Key>
             <PropertyRef Name="pk" />
@@ -393,6 +400,7 @@
           <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventType" EntityType="Self.EventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaEvent" EntityType="Self.FirmaEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirmaHint" EntityType="Self.FirmaHint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaVazby" EntityType="Self.FirmaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceItems" EntityType="Self.InvoiceItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invoices" EntityType="Self.Invoices" Schema="dbo" store:Type="Tables" />
@@ -501,6 +509,7 @@
           <EntitySet Name="ItemToOcrQueue" EntityType="FirmyModel.ItemToOcrQueue" />
           <EntitySet Name="EventType" EntityType="FirmyModel.EventType" />
           <EntitySet Name="OsobaEvent" EntityType="FirmyModel.OsobaEvent" />
+          <EntitySet Name="FirmaHint" EntityType="FirmyModel.FirmaHint" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -789,7 +798,7 @@
             <PropertyRef Name="pk" />
           </Key>
           <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" MaxLength="128" />
+          <Property Name="UserId" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
           <Property Name="OptionId" Type="Int32" Nullable="false" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" a:SetterAccess="Protected" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Public" />
@@ -842,6 +851,13 @@
           <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Organizace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="FirmaHint">
+          <Key>
+            <PropertyRef Name="Ico" />
+          </Key>
+          <Property Name="Ico" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PocetDni_k_PrvniSmlouve" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1197,6 +1213,14 @@
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="OsobaId" ColumnName="OsobaId" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FirmaHint">
+            <EntityTypeMapping TypeName="FirmyModel.FirmaHint">
+              <MappingFragment StoreEntitySet="FirmaHint">
+                <ScalarProperty Name="PocetDni_k_PrvniSmlouve" ColumnName="PocetDni_k_PrvniSmlouve" />
+                <ScalarProperty Name="Ico" ColumnName="Ico" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

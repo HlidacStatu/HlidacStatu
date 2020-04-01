@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public class Data
         {
             public decimal CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
-            public decimal KoncentraceDodavatelůBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
+            public decimal KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
             public decimal PercBezUvedeneCeny { get; set; } //% smluv bez uvedené ceny
             public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
             public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
@@ -81,7 +81,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             ret.CelkovaKoncentraceDodavatelu = 0;
-            ret.KoncentraceDodavatelůBezUvedeneCeny = 0;
+            ret.KoncentraceDodavateluBezUvedeneCeny = 0;
             ret.KoncetraceDodavateluObory = null;
 
 
