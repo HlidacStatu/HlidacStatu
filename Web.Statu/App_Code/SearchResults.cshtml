@@ -553,9 +553,9 @@
             <a href="@(item.GetUrl(true,query))">Detail</a>
         </td>
         <td>
-            @Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.ObchodniJmeno) ?
-                                item.Prijemce.Jmeno :
-                                item.Prijemce.ObchodniJmeno)
+            @Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
+                                item.Prijemce.ObchodniJmeno :
+                                item.Prijemce.HlidacJmeno)
                         , 40)
         </td>
         <td>
