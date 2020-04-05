@@ -30,6 +30,7 @@
         <EntityTypeShape EntityType="FirmyModel.EventType" Width="1.5" PointX="14.375" PointY="10.75" />
         <EntityTypeShape EntityType="FirmyModel.OsobaEvent" Width="1.5" PointX="14.375" PointY="13.75" />
         <EntityTypeShape EntityType="FirmyModel.FirmaHint" Width="1.5" PointX="14.375" PointY="7.75" />
+        <EntityTypeShape EntityType="FirmyModel.UcetniJednotka" Width="1.5" PointX="5.375" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

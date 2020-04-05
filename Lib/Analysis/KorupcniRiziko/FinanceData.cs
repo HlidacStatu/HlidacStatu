@@ -9,50 +9,62 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class FinanceData
     {
+        public decimal? OvlivnitelneNakladyCinnosti { get; set; } = null;
+        public Dictionary<string, decimal> Ukazatele { get; set; } = new Dictionary<string, decimal>();
+
+        public bool NeuplnyRok { get; set; }
+    }
+    public class FinanceDataCalculator 
+    {
+        public int Rok { get; set; }
+
+        public string Ico { get; set; }
         static object lockObj = new object();
         static Dictionary<int, int> obdobi = null;
-        static FinanceData()
+        static FinanceDataCalculator()
         {
             lock (lockObj)
             {
                 if (obdobi != null)
                     return;
 
-                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent("https://monitor.mfcr.cz/api/obdobi"))
+                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent("https://monitor.statnipokladna.cz/api/obdobi"))
                 {
                     var html = url.GetContent();
                     JArray data = JArray.Parse(html.Text);
                     obdobi = data
                         .Where(m => m.Value<bool>("isYear") == true)
-                        .Select(m=> new { k = m.Value<int>("year"), v = m.Value<int>("loadID") })
+                        .Select(m => new { k = m.Value<int>("year"), v = m.Value<int>("loadID") })
                         .ToArray()
-                        .ToDictionary(k=>k.k,v=>v.v);
+                        .ToDictionary(k => k.k, v => v.v);
                 }
             }
         }
-
-
 
         private JObject rozvaha = null;
         private JObject vykaz_zisku_ztrat = null;
         private JObject penezni_toky = null;
 
-        public FinanceData(string ico, int rok)
+
+        public FinanceDataCalculator(string ico, int rok)
         {
+            this.Ico = ico;
+            this.Rok = rok;
             // https://monitor.mfcr.cz/api/ucetni-zaverka/2?obdobi=1909&ic=44992785
-            int loadId = obdobi[rok];
-            this.rozvaha = GetData($"https://monitor.mfcr.cz/api/ucetni-zaverka/1?obdobi={loadId}&ic={ico}");
-            this.vykaz_zisku_ztrat = GetData($"https://monitor.mfcr.cz/api/ucetni-zaverka/2?obdobi={loadId}&ic={ico}");
-            this.penezni_toky = GetData($"https://monitor.mfcr.cz/api/ucetni-zaverka/3?obdobi={loadId}&ic={ico}");
         }
 
-        public bool IncompleteYear { 
-            get {
-                return this.rozvaha != null && this.vykaz_zisku_ztrat != null && this.penezni_toky != null;
-            } }
-
-        public  decimal OvlivnitelneNakladyCinnosti()
+        public FinanceData GetData()
         {
+            var data = new FinanceData();
+
+            int loadId = obdobi[this.Rok];
+            this.rozvaha = GetData($"https://monitor.statnipokladna.cz/api/ucetni-zaverka/1?obdobi={loadId}&ic={Ico}");
+            this.vykaz_zisku_ztrat = GetData($"https://monitor.statnipokladna.cz/api/ucetni-zaverka/2?obdobi={loadId}&ic={Ico}");
+            this.penezni_toky = GetData($"https://monitor.statnipokladna.cz/api/ucetni-zaverka/3?obdobi={loadId}&ic={Ico}");
+
+            data.NeuplnyRok = this.rozvaha == null || this.vykaz_zisku_ztrat == null || this.penezni_toky == null;
+            
+
             //Ovlivnitelné náklady činnosti dle metodiky MF
             // (https://www.mfcr.cz/assets/cs/media/Ucetnictvi_Prezentace_2014-02-13_Aplikace-klicovych-analytickych-ukazatelu-a-jejich-vyuziti-v-rizeni-verejnych-financi.pdf ), 
             // tzn. položky A.I.1-A.I.12; A.I.35, A.I.36 z výkazu zisku a ztrát + položka B.I. z přehledu o peněžních toků 
@@ -63,6 +75,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     .Where(m => m.Value<string>("code") == "B.I.")
                     .FirstOrDefault()
                     ?.Value<decimal>("value") ?? 0;
+
+            data.Ukazatele.Add("Cashflow.B.I", BI);
+
             decimal A = 0;
             if (this.vykaz_zisku_ztrat != null)
             {
@@ -75,10 +90,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         A = A + item.Value<decimal>("mainActivity")
                                + item.Value<decimal>("economicActivity");
+                        data.Ukazatele.Add("VykazZiskuZtrat.HlavniCinnost." + $"A.I.{i}", item.Value<decimal>("mainActivity"));
+                        data.Ukazatele.Add("VykazZiskuZtrat.HospodarskaCinnost." + $"A.I.{i}", item.Value<decimal>("economicActivity"));
+                    }
+                    else
+                    {
+                        data.Ukazatele.Add("VykazZiskuZtrat.HlavniCinnost." + $"A.I.{i}", 0);
+                        data.Ukazatele.Add("VykazZiskuZtrat.HospodarskaCinnost." + $"A.I.{i}", 0);
                     }
                 }
             }
-            return A + BI;
+            data.OvlivnitelneNakladyCinnosti = A + BI;
+
+            return data;
         }
 
         //https://monitor.statnipokladna.cz/api/prispevkove-organizace?obdobi=1512&ic=00006947
@@ -89,7 +113,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
                 {
-                    
+                    net.Timeout = 1000 * 180;
                     var json = net.GetContent();
                     JObject data = JObject.Parse(json.Text);
                     return data;

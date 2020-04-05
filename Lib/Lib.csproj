@@ -456,10 +456,12 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\KorupcniRiziko\AdvancedQuery.cs" />
-    <Compile Include="Analysis\KorupcniRiziko\CalculatedData.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.COFOG.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
     <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
     <Compile Include="Analysis\OsobaStatistic.cs" />
     <Compile Include="Analysis\ComplexStatistic.cs" />
     <Compile Include="Analysis\RatingData.cs" />
@@ -582,6 +584,9 @@
     <Compile Include="Data\Smlouva.WatchdogProcessor.cs" />
     <Compile Include="Data\SocialContact.cs" />
     <Compile Include="Data\Sponzori.cs" />
+    <Compile Include="Data\UcetniJednotka.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\UserOptions.Date.cs" />
     <Compile Include="Data\UserOptions.Typed.cs" />
     <Compile Include="Data\UserOptions.Partial.cs" />

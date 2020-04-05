@@ -466,7 +466,7 @@ namespace HlidacStatu.Lib.ES
                     res = client.Indices
                        .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
-                           .Map<Analysis.KorupcniRiziko.CalculatedData>(map => map.AutoMap(maxRecursion: 2))
+                           .Map<Analysis.KorupcniRiziko.KIndexData>(map => map.AutoMap(maxRecursion: 2))
                        );
                     break;
                 case IndexType.Logs:

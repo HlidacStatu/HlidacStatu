@@ -293,6 +293,48 @@
           <Property Name="updated" Type="datetime" Nullable="false" />
           <Property Name="active" Type="int" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UcetniJednotka">
+          <Key>
+            <PropertyRef Name="ico" />
+          </Key>
+          <Property Name="ico" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="start_date" Type="datetime2" Precision="7" />
+          <Property Name="end_date" Type="datetime2" Precision="7" />
+          <Property Name="ucjed_nazev" Type="nvarchar" MaxLength="300" />
+          <Property Name="dic" Type="nvarchar" MaxLength="50" />
+          <Property Name="adresa" Type="nvarchar" MaxLength="300" />
+          <Property Name="nuts_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="zrizovatel_ico" Type="nvarchar" MaxLength="150" />
+          <Property Name="cofog_id" Type="int" />
+          <Property Name="isektor_id" Type="int" />
+          <Property Name="kapitola_id" Type="int" />
+          <Property Name="nace_id" Type="int" />
+          <Property Name="druhuj_id" Type="int" />
+          <Property Name="poddruhuj_id" Type="int" />
+          <Property Name="konecplat" Type="datetime2" Precision="7" />
+          <Property Name="forma_id" Type="int" />
+          <Property Name="katobyv_id" Type="int" />
+          <Property Name="obec" Type="nvarchar" MaxLength="150" />
+          <Property Name="kraj" Type="nvarchar" MaxLength="50" />
+          <Property Name="stat_id" Type="int" />
+          <Property Name="zdrojfin_id" Type="int" />
+          <Property Name="druhrizeni_id" Type="int" />
+          <Property Name="veduc_id" Type="int" />
+          <Property Name="zuj" Type="nvarchar" MaxLength="50" />
+          <Property Name="sidlo" Type="nvarchar" MaxLength="150" />
+          <Property Name="zpodm_id" Type="int" />
+          <Property Name="kod_pou" Type="int" />
+          <Property Name="typorg_id" Type="int" />
+          <Property Name="pocob" Type="int" />
+          <Property Name="ulice" Type="nvarchar" MaxLength="250" />
+          <Property Name="kod_rp" Type="int" />
+          <Property Name="datumakt" Type="datetime2" Precision="7" />
+          <Property Name="aktorg_id" Type="int" />
+          <Property Name="datumvzniku" Type="datetime2" Precision="7" />
+          <Property Name="psc" Type="nvarchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="UserOptions">
           <Key>
             <PropertyRef Name="pk" />
@@ -415,6 +457,45 @@
           <EntitySet Name="SmlouvyIds" EntityType="Self.SmlouvyIds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserOptions" EntityType="Self.UserOptions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WatchDog" EntityType="Self.WatchDog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UcetniJednotka" EntityType="Self.UcetniJednotka" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UcetniJednotka].[ico] AS [ico], 
+    [UcetniJednotka].[start_date] AS [start_date], 
+    [UcetniJednotka].[end_date] AS [end_date], 
+    [UcetniJednotka].[ucjed_nazev] AS [ucjed_nazev], 
+    [UcetniJednotka].[dic] AS [dic], 
+    [UcetniJednotka].[adresa] AS [adresa], 
+    [UcetniJednotka].[nuts_id] AS [nuts_id], 
+    [UcetniJednotka].[zrizovatel_ico] AS [zrizovatel_ico], 
+    [UcetniJednotka].[cofog_id] AS [cofog_id], 
+    [UcetniJednotka].[isektor_id] AS [isektor_id], 
+    [UcetniJednotka].[kapitola_id] AS [kapitola_id], 
+    [UcetniJednotka].[nace_id] AS [nace_id], 
+    [UcetniJednotka].[druhuj_id] AS [druhuj_id], 
+    [UcetniJednotka].[poddruhuj_id] AS [poddruhuj_id], 
+    [UcetniJednotka].[konecplat] AS [konecplat], 
+    [UcetniJednotka].[forma_id] AS [forma_id], 
+    [UcetniJednotka].[katobyv_id] AS [katobyv_id], 
+    [UcetniJednotka].[obec] AS [obec], 
+    [UcetniJednotka].[kraj] AS [kraj], 
+    [UcetniJednotka].[stat_id] AS [stat_id], 
+    [UcetniJednotka].[zdrojfin_id] AS [zdrojfin_id], 
+    [UcetniJednotka].[druhrizeni_id] AS [druhrizeni_id], 
+    [UcetniJednotka].[veduc_id] AS [veduc_id], 
+    [UcetniJednotka].[zuj] AS [zuj], 
+    [UcetniJednotka].[sidlo] AS [sidlo], 
+    [UcetniJednotka].[zpodm_id] AS [zpodm_id], 
+    [UcetniJednotka].[kod_pou] AS [kod_pou], 
+    [UcetniJednotka].[typorg_id] AS [typorg_id], 
+    [UcetniJednotka].[pocob] AS [pocob], 
+    [UcetniJednotka].[ulice] AS [ulice], 
+    [UcetniJednotka].[kod_rp] AS [kod_rp], 
+    [UcetniJednotka].[datumakt] AS [datumakt], 
+    [UcetniJednotka].[aktorg_id] AS [aktorg_id], 
+    [UcetniJednotka].[datumvzniku] AS [datumvzniku], 
+    [UcetniJednotka].[psc] AS [psc]
+    FROM [dbo].[UcetniJednotka] AS [UcetniJednotka]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
@@ -510,6 +591,7 @@
           <EntitySet Name="EventType" EntityType="FirmyModel.EventType" />
           <EntitySet Name="OsobaEvent" EntityType="FirmyModel.OsobaEvent" />
           <EntitySet Name="FirmaHint" EntityType="FirmyModel.FirmaHint" />
+          <EntitySet Name="UcetniJednotka" EntityType="FirmyModel.UcetniJednotka" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -858,6 +940,46 @@
           </Key>
           <Property Name="Ico" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="PocetDni_k_PrvniSmlouve" Type="Int32" />
+        </EntityType>
+        <EntityType Name="UcetniJednotka">
+          <Key>
+            <PropertyRef Name="ico" />
+          </Key>
+          <Property Name="ico" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="start_date" Type="DateTime" Precision="7" />
+          <Property Name="end_date" Type="DateTime" Precision="7" />
+          <Property Name="ucjed_nazev" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="dic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adresa" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="nuts_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="zrizovatel_ico" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="cofog_id" Type="Int32" />
+          <Property Name="isektor_id" Type="Int32" />
+          <Property Name="kapitola_id" Type="Int32" />
+          <Property Name="nace_id" Type="Int32" />
+          <Property Name="druhuj_id" Type="Int32" />
+          <Property Name="poddruhuj_id" Type="Int32" />
+          <Property Name="konecplat" Type="DateTime" Precision="7" />
+          <Property Name="forma_id" Type="Int32" />
+          <Property Name="katobyv_id" Type="Int32" />
+          <Property Name="obec" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="kraj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="stat_id" Type="Int32" />
+          <Property Name="zdrojfin_id" Type="Int32" />
+          <Property Name="druhrizeni_id" Type="Int32" />
+          <Property Name="veduc_id" Type="Int32" />
+          <Property Name="zuj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sidlo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="zpodm_id" Type="Int32" />
+          <Property Name="kod_pou" Type="Int32" />
+          <Property Name="typorg_id" Type="Int32" />
+          <Property Name="pocob" Type="Int32" />
+          <Property Name="ulice" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="kod_rp" Type="Int32" />
+          <Property Name="datumakt" Type="DateTime" Precision="7" />
+          <Property Name="aktorg_id" Type="Int32" />
+          <Property Name="datumvzniku" Type="DateTime" Precision="7" />
+          <Property Name="psc" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1221,6 +1343,47 @@
               <MappingFragment StoreEntitySet="FirmaHint">
                 <ScalarProperty Name="PocetDni_k_PrvniSmlouve" ColumnName="PocetDni_k_PrvniSmlouve" />
                 <ScalarProperty Name="Ico" ColumnName="Ico" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UcetniJednotka">
+            <EntityTypeMapping TypeName="FirmyModel.UcetniJednotka">
+              <MappingFragment StoreEntitySet="UcetniJednotka">
+                <ScalarProperty Name="psc" ColumnName="psc" />
+                <ScalarProperty Name="datumvzniku" ColumnName="datumvzniku" />
+                <ScalarProperty Name="aktorg_id" ColumnName="aktorg_id" />
+                <ScalarProperty Name="datumakt" ColumnName="datumakt" />
+                <ScalarProperty Name="kod_rp" ColumnName="kod_rp" />
+                <ScalarProperty Name="ulice" ColumnName="ulice" />
+                <ScalarProperty Name="pocob" ColumnName="pocob" />
+                <ScalarProperty Name="typorg_id" ColumnName="typorg_id" />
+                <ScalarProperty Name="kod_pou" ColumnName="kod_pou" />
+                <ScalarProperty Name="zpodm_id" ColumnName="zpodm_id" />
+                <ScalarProperty Name="sidlo" ColumnName="sidlo" />
+                <ScalarProperty Name="zuj" ColumnName="zuj" />
+                <ScalarProperty Name="veduc_id" ColumnName="veduc_id" />
+                <ScalarProperty Name="druhrizeni_id" ColumnName="druhrizeni_id" />
+                <ScalarProperty Name="zdrojfin_id" ColumnName="zdrojfin_id" />
+                <ScalarProperty Name="stat_id" ColumnName="stat_id" />
+                <ScalarProperty Name="kraj" ColumnName="kraj" />
+                <ScalarProperty Name="obec" ColumnName="obec" />
+                <ScalarProperty Name="katobyv_id" ColumnName="katobyv_id" />
+                <ScalarProperty Name="forma_id" ColumnName="forma_id" />
+                <ScalarProperty Name="konecplat" ColumnName="konecplat" />
+                <ScalarProperty Name="poddruhuj_id" ColumnName="poddruhuj_id" />
+                <ScalarProperty Name="druhuj_id" ColumnName="druhuj_id" />
+                <ScalarProperty Name="nace_id" ColumnName="nace_id" />
+                <ScalarProperty Name="kapitola_id" ColumnName="kapitola_id" />
+                <ScalarProperty Name="isektor_id" ColumnName="isektor_id" />
+                <ScalarProperty Name="cofog_id" ColumnName="cofog_id" />
+                <ScalarProperty Name="zrizovatel_ico" ColumnName="zrizovatel_ico" />
+                <ScalarProperty Name="nuts_id" ColumnName="nuts_id" />
+                <ScalarProperty Name="adresa" ColumnName="adresa" />
+                <ScalarProperty Name="dic" ColumnName="dic" />
+                <ScalarProperty Name="ucjed_nazev" ColumnName="ucjed_nazev" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
+                <ScalarProperty Name="ico" ColumnName="ico" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
