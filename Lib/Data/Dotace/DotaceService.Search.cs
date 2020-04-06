@@ -25,6 +25,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                new TransformPrefix("ico:","prijemce.ico:",null ),
                new TransformPrefixWithValue("jmeno:","(prijemce.hlidacJmeno:${q} OR prijemce.obchodniJmeno:${q})",null ),
                new TransformPrefix("projekt:","nazevProjektu:",null ),
+               new TransformPrefix("kod:","kodProjektu:",null ),
                 new TransformPrefix("castka:","dotaceCelkem:",null ),
                 new TransformPrefixWithValue("cena:","dotaceCelkem:<=${q} ","<=\\d" ),
                 new TransformPrefixWithValue("cena:","dotaceCelkem:>=${q} ",">=\\d" ),

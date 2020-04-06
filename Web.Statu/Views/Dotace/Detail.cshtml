@@ -70,7 +70,12 @@
         </tr>
         <tr>
             <th>Kód projektu</th>
-            <td>@Model.KodProjektu</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(Model.KodProjektu))
+                {
+                    <a href="/dotace/hledat?q=kod:@Model.KodProjektu" title="Vyhledat podobné dotace">@Model.KodProjektu</a>
+                }
+            </td>
         </tr>
         <tr>
             <th>Název projektu</th>
