@@ -9,7 +9,7 @@ using Nest;
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
 
-    public class Calculator
+    public partial class Calculator
     {
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
 
@@ -95,8 +95,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.Statistika = this.urad.Statistic().RatingPerYear[year];
 
 
-            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavatelu($"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year+1}-01-01}}");
-            ret.KoncentraceDodavateluBezUvedeneCeny = 0;
+            string query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
+            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavatelu(query);
+            if (ret.CelkovaKoncentraceDodavatelu != null)
+                ret.KoncentraceDodavateluBezUvedeneCeny 
+                    = KoncentraceDodavatelu(query + " AND cena:0",ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
             ret.KoncetraceDodavateluObory = null;
 
 
@@ -112,7 +115,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
         }
-        private decimal KoncentraceDodavatelu(string query)
+        private KIndexData.KoncentraceDodavateluIndexy KoncentraceDodavatelu(string query, decimal? prumHodnotaSmlouvy = null)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = (size, page) =>
                 {
@@ -164,56 +167,30 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 Util.Consts.outputWriter.OutputWriter, Util.Consts.progressWriter.ProgressWriter,
                 false, 100);
 
-            Dictionary<string, decimal> kontraktyPerIco = smlStat
-                .GroupBy(k => k.IcoDodavatele, v => v, (k, v) => new { ico = k, sum = v.Sum(s => s.CastkaSDPH) })
-                .OrderByDescending(k=>k.sum)   //just better debug
-                .ToDictionary(k => k.ico, v => v.sum);
-
-            IEnumerable<Tuple<string, decimal>> kontrakty = smlStat
-                .Select(m => new Tuple<string, decimal>(m.IcoDodavatele, m.CastkaSDPH))
-                .OrderByDescending(m => m.Item2) //just better debug
+            IEnumerable<SmlouvyForIndex> smlouvy = smlStat
+                .Select(m => new SmlouvyForIndex(m.IcoDodavatele, prumHodnotaSmlouvy ?? m.CastkaSDPH))
+                .OrderByDescending(m => m.HodnotaSmlouvy) //just better debug
                 .ToArray(); //just better debug
 
 
-            var herfindahlIndex = HerfindahlIndex(kontraktyPerIco.Values);
-            var herfindahlIndex_z = Herfindahl_ZIndex(kontrakty);
-            return herfindahlIndex;
+            if (smlouvy.Count() == 0)
+                return null;
+
+            var ret = new KIndexData.KoncentraceDodavateluIndexy();
+            ret.PrumernaHodnotaSmluv = smlouvy
+                                .Where(m => m.HodnotaSmlouvy != 0)
+                                .Select(m => Math.Abs(m.HodnotaSmlouvy))
+                                .Average();
+
+            ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy);
+            ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy);
+            ret.Herfindahl_Hirschman_Modified = Herfindahl_Hirschman_Modified(smlouvy);
+
+            ret.Comprehensive_Industrial_Concentration_Index = Comprehensive_Industrial_Concentration_Index(smlouvy);
+            ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy);
+            ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy);
+            return ret;
         }
-
-        public static decimal HerfindahlIndex(IEnumerable<Tuple<string, decimal>> individualContractDodavatelCena)
-        {
-            var groupedPerDodavatel = individualContractDodavatelCena
-        .GroupBy(k => k.Item1, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.Item2) })
-        .ToDictionary(k => k.k, v => v.sumVal);
-
-            return HerfindahlIndex(groupedPerDodavatel.Values);
-        }
-
-        public static decimal HerfindahlIndex(IEnumerable<decimal> valuesGroupedByCompany)
-        {
-            decimal total = valuesGroupedByCompany.Sum();
-            decimal hindex = valuesGroupedByCompany
-                .Select(v => v / total) //podil na trhu
-                .Select(v => v * v) // ^2
-                .Sum(); //SUM
-            return hindex;
-        }
-        public static decimal Herfindahl_ZIndex(
-            IEnumerable<Tuple<string,decimal>> individualContractDodavatelCena)
-        {
-            decimal idealHI = HerfindahlIndex(individualContractDodavatelCena.Select(m=>m.Item2));
-
-            var groupedPerDodavatel = individualContractDodavatelCena
-                .GroupBy(k => k.Item1, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.Item2) })
-                .ToDictionary(k => k.k, v => v.sumVal);
-
-            decimal HI = HerfindahlIndex(groupedPerDodavatel.Values);
-
-
-            return HI/idealHI;
-        }
-
-
 
 
     }

@@ -1536,6 +1536,10 @@
     <Content Include="Scripts\jquery-1.11.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj">
+      <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
+      <Name>Lib.OCR.TextReadability</Name>
+    </ProjectReference>
     <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
       <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
       <Name>DotNet.Highcharts</Name>

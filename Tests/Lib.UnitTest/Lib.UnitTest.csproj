@@ -95,6 +95,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="T_KorupcniRiziko.cs" />
     <Compile Include="T_Validators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="T_BankovniPolozka.cs" />
