@@ -97,13 +97,13 @@ namespace HlidacStatu.Lib.Data
                         return found;
                     }
                     else
-                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res);
+                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res,query);
                 }
                 catch (Exception e)
                 {
 
                     if (res != null && res.ServerError != null)
-                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res);
+                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res,query);
                     else
                         HlidacStatu.Util.Consts.Logger.Error("", e);
                     throw;
