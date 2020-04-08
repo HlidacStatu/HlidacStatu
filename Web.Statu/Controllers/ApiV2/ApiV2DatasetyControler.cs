@@ -218,7 +218,7 @@ namespace HlidacStatu.Web.Controllers
 
         #region items
         /// <summary>
-        /// Načtení položky z datasetu
+        /// Detail konkrétní položky z datasetu
         /// </summary>
         /// <param name="datasetId">Id datasetu (můžeme ho získat ze seznamu datasetů)</param>
         /// <param name="itemId">Id položky v datasetu, kterou chceme načíst</param>
@@ -255,6 +255,17 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Vloží nebo updatuje záznam v datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu</param>
+        /// <param name="itemId">Id záznamu</param>
+        /// <param name="data">Objekt, který se má vložit, nebo updatovat</param>
+        /// <param name="mode">"skip" (default) - pokud záznam existuje, nic se na něm nezmění.
+        /// "merge" - snaží se spojit data z obou záznamů.
+        /// "rewrite" - pokud záznam existuje, je bez milosti přepsán
+        /// </param>
+        /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznamy/{itemId}")]
         public DSItemResponseDTO DatasetItem_Update(string datasetId, string itemId, 
