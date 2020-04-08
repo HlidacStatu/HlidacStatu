@@ -605,6 +605,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         }
 
+        /// <summary>
+        /// Indexing data in bulk
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="createdBy"></param>
+        /// <returns></returns>
         public List<string> AddDataBulk(string data, string createdBy)
         {
             JArray jArray = JArray.Parse(data);

@@ -13,6 +13,10 @@ namespace HlidacStatu.Web.Controllers
     [RoutePrefix("api/v2/datasety")]
     public class ApiV2DatasetyController : ApiController
     {
+        /// <summary>
+        /// Načte seznam datasetů
+        /// </summary>
+        /// <returns>Seznam datastů</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route()]
         public SearchResultDTO<Registration> GetAll()
@@ -21,6 +25,11 @@ namespace HlidacStatu.Web.Controllers
             return new SearchResultDTO<Registration>(result.Length, 1, result.Select(m=>m.Registration()));
         }
 
+        /// <summary>
+        /// Detail konkrétního datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu (můžeme ho získat ze seznamu datasetů)</param>
+        /// <returns>Detail datasetu</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}")]
         public Registration Detail(string datasetId)
@@ -39,6 +48,15 @@ namespace HlidacStatu.Web.Controllers
             return ds.Registration();
         }
 
+        /// <summary>
+        /// Vyhledávání v položkách datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu (můžeme ho získat ze seznamu datasetů)</param>
+        /// <param name="dotaz">Hledaný výraz</param>
+        /// <param name="strana">Stránkování</param>
+        /// <param name="sort">Název pole pro řazení</param>
+        /// <param name="desc">Řazení: 0 - Vzestupně; 1 - Sestupně</param>
+        /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}/hledat")]
         public SearchResultDTO<object> DatasetSearch(string datasetId, [FromUri]string dotaz = null, [FromUri]int? strana = null, [FromUri]string sort = null, [FromUri]string desc = "0")
@@ -84,8 +102,12 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost, Route()]
         public DSCreatedDTO Create([FromBody] Registration data)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join(Environment.NewLine, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
+            }
 
-            //todo: modelstate validation
             try
             {
                 var reg = data;
@@ -117,6 +139,11 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Smazání datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu (můžeme ho získat ze seznamu datasetů)</param>
+        /// <returns>True/False</returns>
         [AuthorizeAndAudit]
         [HttpDelete, Route("{datasetId}")]
         public bool Delete(string datasetId)
@@ -155,13 +182,25 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Update datasetu.
+        /// Není možné změnit hodnoty jsonSchema a datasetId. Pokud je potřebuješ změnit, musíš datovou sadu smazat a zaregistrovat znovu.
+        /// </summary>
+        /// <param name="data">Objekt typu Registration - asi example by to chtělo</param>
+        /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpPut, Route()]
-        public Registration Update([FromBody] string data)
+        public Registration Update([FromBody] Registration data)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join(Environment.NewLine, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
+            }
+
             try
             {
-                var newReg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
+                var newReg = data;
                 var res = DataSet.Api.Update(newReg, this.User.Identity.Name);
                 if (res.valid)
                 {
@@ -178,10 +217,15 @@ namespace HlidacStatu.Web.Controllers
         }
 
         #region items
-
+        /// <summary>
+        /// Načtení položky z datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu (můžeme ho získat ze seznamu datasetů)</param>
+        /// <param name="itemId">Id položky v datasetu, kterou chceme načíst</param>
+        /// <returns>Vrací detail položky</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}/zaznamy/{itemId}")]
-        public HttpResponseMessage DatasetItem_Get(string datasetId, string itemId, string nice)
+        public object DatasetItem_Get(string datasetId, string itemId)
         {
 
             try
@@ -196,9 +240,8 @@ namespace HlidacStatu.Web.Controllers
                 else
                 {
                     value.DbCreatedBy = null;
-                    string s = Newtonsoft.Json.JsonConvert.SerializeObject(value, (nice == "1" ? Formatting.Indented : Formatting.None));
+                    return value;
                     
-                    return Request.CreateResponse<string>(System.Net.HttpStatusCode.OK, s);
                 }
             }
             catch (DataSetException)
@@ -218,6 +261,12 @@ namespace HlidacStatu.Web.Controllers
             [FromBody]object data,
             string mode = "") 
         {
+
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join(Environment.NewLine, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
+            }
 
             mode = mode.ToLower();
             if (string.IsNullOrEmpty(mode))
@@ -286,7 +335,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var message = string.Join("\n\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
+                var message = string.Join(Environment.NewLine, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
             }
 
