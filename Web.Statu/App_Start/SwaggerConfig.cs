@@ -2,6 +2,9 @@
 using WebActivatorEx;
 using HlidacStatu.Web;
 using Swashbuckle.Application;
+using System.Reflection;
+using System.IO;
+using System;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -118,6 +121,9 @@ namespace HlidacStatu.Web
                          // more Xml comment files.
                          //
                          //c.IncludeXmlComments(GetXmlCommentsPath());
+                         var xmlFile = "HlidacStatu.Web.xml";
+                         var xmlPath = Path.Combine(AppContext.BaseDirectory,"bin", xmlFile);
+                         c.IncludeXmlComments(xmlPath);
 
                          // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                          // exposed in your API. However, there may be occasions when more control of the output is needed.
