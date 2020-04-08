@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Web.Http;
 using System.Net.Http;
+using System.Collections.Generic;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -74,18 +75,27 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Vytvoří nový dataset
+        /// </summary>
+        /// <param name="data">Objekt typu Registration - asi example by to chtělo</param>
+        /// <returns> vrací id vytvořeného datasetu </returns>
         [AuthorizeAndAudit]
         [HttpPost, Route()]
-        public Registration Create([FromBody] string data)
+        public DSCreatedDTO Create([FromBody] Registration data)
         {
+
+            //todo: modelstate validation
             try
             {
-                var reg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
+                var reg = data;
+                //var reg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
                 var res = DataSet.Api.Create(reg, this.User.Identity.Name);
 
                 if (res.valid)
                 {
-                    return ((Registration)res.value);
+                    var regval = (DataSet)res.value;
+                    return new DSCreatedDTO(regval.DatasetId);  
                 }
                 else
                 {
@@ -204,8 +214,8 @@ namespace HlidacStatu.Web.Controllers
 
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznamy/{itemId}")]
-        public CreatedDatasetItemResponseDTO DatasetItem_Update(string datasetId, string itemId, 
-            [FromBody]string data,
+        public DSItemResponseDTO DatasetItem_Update(string datasetId, string itemId, 
+            [FromBody]object data,
             string mode = "") 
         {
 
@@ -223,14 +233,14 @@ namespace HlidacStatu.Web.Controllers
 
                 if (mode == "rewrite")
                 {
-                    newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+                    newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
                 }
                 else if (mode == "merge")
                 {
                     if (ds.ItemExists(itemId))
                     {
                         var oldObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(ds.GetData(itemId));
-                        var newObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(data);
+                        var newObj = Lib.Data.External.DataSets.Util.CleanHsProcessTypeValuesFromObject(data.ToString());
 
                         newObj["DbCreated"] = oldObj["DbCreated"];
                         newObj["DbCreatedBy"] = oldObj["DbCreatedBy"];
@@ -249,15 +259,15 @@ namespace HlidacStatu.Web.Controllers
                         }
                     }
                     else
-                        newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+                        newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
 
                 }
                 else //skip 
                 {
                     if (!ds.ItemExists(itemId))
-                        newId = ds.AddData(data, itemId, this.User.Identity.Name, true);
+                        newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
                 }
-                return new CreatedDatasetItemResponseDTO() { id = newId };
+                return new DSItemResponseDTO() { id = newId };
             }
             catch (DataSetException dse)
             {
@@ -268,6 +278,35 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Obecná chyba - {ex.Message}"));
             }
+        }
+
+        [AuthorizeAndAudit]
+        [HttpPost, Route("{datasetId}/zaznamy/")]
+        public List<DSItemResponseDTO> DatasetItem_BulkInsert(string datasetId, [FromBody]object data)
+        {
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join("\n\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.Exception.Message));
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
+            }
+
+            var ds = DataSet.CachedDatasets.Get(datasetId);
+            string json = data.ToString();
+            List<string> results = new List<string>();
+            try
+            {
+                results = ds.AddDataBulk(json, "usr");
+            }
+            catch (DataSetException dse)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{dse.APIResponse.error.description}"));
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Obecná chyba - {ex.Message}"));
+            }
+            return results.Select(i => new DSItemResponseDTO() { id = i }).ToList();
         }
 
         [AuthorizeAndAudit]

@@ -2,10 +2,13 @@
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 using Nest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Mail;
 
@@ -544,24 +547,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             if (validateSchema)
             {
-                Newtonsoft.Json.Schema.JSchema schema = DataSetDB.Instance.GetRegistration(this.datasetId).GetSchema();
-
-                if (schema != null)
-                {
-                    IList<string> errors;
-                    if (!obj.IsValid(schema, out errors))
-                    {
-                        if (errors == null || errors?.Count == 0)
-                            errors = new string[] { "", "" };
-
-                        throw DataSetException.GetExc(this.datasetId,
-                            ApiResponseStatus.DatasetItemInvalidFormat.error.number,
-                            ApiResponseStatus.DatasetItemInvalidFormat.error.description,
-                            errors.Aggregate((f, s) => f + ";" + s)
-                            );
-                    }
-                }
-
+                //throws error if schema is not valid
+                CheckSchema(obj);
             }
             if (string.IsNullOrEmpty(id))
                 throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetItemNoSetID);
@@ -577,11 +564,184 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             objDyn.DbCreatedBy = createdBy;
 
 
-
             //check special HsProcessType
             if (this.DatasetId == DataSetDB.DataSourcesDbName) //don't analyze for registration of new dataset
                 jpathObjs = new JContainer[] { };
 
+            FillPersonData(jpathObjs);
+
+            string updatedData = Newtonsoft.Json.JsonConvert.SerializeObject(objDyn);
+            PostData pd = PostData.String(updatedData);
+
+            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); 
+
+            if (tres.Success)
+            {
+                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(tres.Body);
+
+                string finalId = jobject.Value<string>("_id");
+
+                //do DocumentMining after successfull save
+                //record must exists before document mining
+                if (skipOCR == false)
+                {
+                    SubscribeToOCR(jpathObjs, finalId);
+                }
+
+                return finalId;
+            }
+            else
+            {
+                var status = ApiResponseStatus.DatasetItemSaveError;
+                if (tres.TryGetServerError(out var servererr))
+                {
+                    status.error.errorDetail = servererr.Error.ToString();
+                }
+                throw new DataSetException(this.datasetId, status);
+            }
+
+            //return res.ToString();
+            //ElasticsearchResponse<string> result = this.client.Raw.Index(document.Index, document.Type, document.Id, documentJson);
+
+        }
+
+        public List<string> AddDataBulk(string data, string createdBy)
+        {
+            JArray jArray = JArray.Parse(data);
+
+            List<string> bulkRequestBuilder = new List<string>();
+
+            foreach (var jtoken in jArray)
+            {
+                var jobj = (JObject)jtoken;
+                CheckSchema(jobj);
+
+                jobj.Add("DbCreated", JToken.FromObject(DateTime.UtcNow));
+                jobj.Add("DbCreatedBy", JToken.FromObject(createdBy));
+
+                //check special HsProcessType
+                var jpathObjs = new JContainer[] { };
+
+                if (this.DatasetId != DataSetDB.DataSourcesDbName) //don't analyze for registration of new dataset
+                {
+                    var jpaths = jobj
+                        .SelectTokens("$..HsProcessType")
+                        .ToArray();
+                    jpathObjs = jpaths.Select(j => j.Parent.Parent).ToArray();
+                }
+
+                FillPersonData(jpathObjs);
+
+                string id;
+
+                if (jobj["Id"] == null)
+                {
+                    if (jobj["id"] == null)
+                    {
+                        throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetItemNoSetID);
+                    }
+
+                    id = jobj["id"].Value<string>();
+                }
+                else
+                {
+                    id = jobj["Id"].Value<string>();
+                }
+
+                bulkRequestBuilder.Add($"{{\"index\":{{\"_index\":\"{client.ConnectionSettings.DefaultIndex}\",\"_id\":\"{id}\"}}}}");
+                bulkRequestBuilder.Add(jobj.ToString(Formatting.None));
+
+            }
+
+            // Je potřeba sestavit request ručně a použít low-level klienta.
+            // NEST nedokáže správně identifikovat klasický dynamic[]. 
+            // Při použití expando objektu v dynamic sice jde použít NEST IndexMany, 
+            // ale protože expando nemá property, tak nedokáže správně nastavit elastic _id
+
+            PostData pd = PostData.MultiJson(bulkRequestBuilder);
+            var result = client.LowLevel.Bulk<BulkResponse>(pd);
+
+
+            if (!result.IsValid)
+            {
+                var status = ApiResponseStatus.DatasetItemSaveError;
+                status.error.errorDetail = string.Join(";", result.ItemsWithErrors.Select(i => $"{i.Id} - {i.Error.Reason}\n"));
+                throw new DataSetException(this.datasetId, status);
+            }
+
+            foreach (var item in result.Items)
+            {
+                JObject jobj = jArray.Where(jt => (jt["id"]?.Value<string>() == item.Id)
+                                                || (jt["Id"]?.Value<string>() == item.Id))
+                                     .Select(jt => (JObject)jt)
+                                     .FirstOrDefault();
+                var jpaths = jobj
+                        .SelectTokens("$..HsProcessType")
+                        .ToArray();
+                var jpathObjs = jpaths.Select(j => j.Parent.Parent).ToArray();
+                SubscribeToOCR(jpathObjs, item.Id);
+            }
+
+            return result.Items.Select(i => i.Id).ToList();
+        }
+
+        /// <summary>
+        /// Register item to OCR query
+        /// </summary>
+        /// <param name="jpathObjs"></param>
+        /// <param name="finalId"></param>
+        private void SubscribeToOCR(JContainer[] jpathObjs, string finalId)
+        {
+            foreach (var jo in jpathObjs)
+            {
+                if (jo["HsProcessType"].Value<string>() == "document")
+                {
+                    if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
+                    {
+                        if (Uri.TryCreate(jo["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
+                        {
+                            Lib.Data.ItemToOcrQueue.AddNewTask(ItemToOcrQueue.ItemToOcrType.Dataset,
+                                                               finalId,
+                                                               this.datasetId,
+                                                               OCR.Api.Client.TaskPriority.Standard);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if Json is valid. If not throws error
+        /// </summary>
+        private bool CheckSchema(JObject obj)
+        {
+            JSchema schema = DataSetDB.Instance.GetRegistration(this.datasetId).GetSchema();
+
+            if (schema != null)
+            {
+                IList<string> errors;
+                if (!obj.IsValid(schema, out errors))
+                {
+                    if (errors == null || errors?.Count == 0)
+                        errors = new string[] { "", "" };
+
+                    throw DataSetException.GetExc(this.datasetId,
+                        ApiResponseStatus.DatasetItemInvalidFormat.error.number,
+                        ApiResponseStatus.DatasetItemInvalidFormat.error.description,
+                        errors.Aggregate((f, s) => f + ";" + s)
+                        );
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Loop through array and fills in osobaid if array contains any person data
+        /// </summary>
+        /// <param name="jpathObjs"></param>
+        private void FillPersonData(JContainer[] jpathObjs)
+        {
             foreach (var jo in jpathObjs)
             {
                 if (jo["HsProcessType"].Value<string>() == "person")
@@ -694,69 +854,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     #endregion
                 }
             }
-
-
-            string updatedData = Newtonsoft.Json.JsonConvert.SerializeObject(objDyn);
-            PostData pd = PostData.String(updatedData);
-
-            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); 
-
-            if (tres.Success)
-            {
-                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(tres.Body);
-
-                string finalId = jobject.Value<string>("_id");
-
-                //do DocumentMining after successfull save
-                //record must exists before document mining
-                bool needsOCR = false;
-                if (skipOCR == false)
-                {
-                    foreach (var jo in jpathObjs)
-                    {
-                        if (jo["HsProcessType"].Value<string>() == "document")
-                        {
-                            if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
-                            {
-                                if (Uri.TryCreate(jo["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
-                                {
-                                    //get text from document
-                                    //var url = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
-                                    //url = url + $"/{client.ConnectionSettings.DefaultIndex}/data/{finalId}/_update";
-                                    //string callback = HlidacStatu.Lib.OCR.Api.CallbackData.PrepareElasticCallbackDataForOCRReq($"{jo.Path}.DocumentPlainText", false);
-                                    //var ocrCallBack = new HlidacStatu.Lib.OCR.Api.CallbackData(new Uri(url), callback, HlidacStatu.Lib.OCR.Api.CallbackData.CallbackType.LocalElastic);
-                                    //HlidacStatu.Lib.OCR.Api.Client.TextFromUrl(
-                                    //    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
-                                    //    uri2Ocr, "Dataset+" + createdBy,
-                                    //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.Standard, HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.Maximum
-                                    //    ); //TODOcallBackData: ocrCallBack);
-
-                                    needsOCR = true;
-
-                                }
-                            }
-                        }
-                    }
-                }
-                if (needsOCR)
-                    Lib.Data.ItemToOcrQueue.AddNewTask(ItemToOcrQueue.ItemToOcrType.Dataset, finalId, this.datasetId, OCR.Api.Client.TaskPriority.Standard);
-
-                return finalId;
-            }
-            else
-            {
-                var status = ApiResponseStatus.DatasetItemSaveError;
-                if (tres.TryGetServerError(out var servererr))
-                {
-                    status.error.errorDetail = servererr.Error.ToString();
-                }
-                throw new DataSetException(this.datasetId, status);
-            }
-
-            //return res.ToString();
-            //ElasticsearchResponse<string> result = this.client.Raw.Index(document.Index, document.Type, document.Id, documentJson);
-
         }
+
         public bool ItemExists(string Id)
         {
             //GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, "data", Id);

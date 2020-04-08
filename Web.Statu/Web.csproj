@@ -465,7 +465,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiV1Models.cs" />
-    <Compile Include="Models\Apiv2\DatasetDTOs.cs" />
+    <Compile Include="Models\Apiv2\DSCreatedDTO.cs" />
+    <Compile Include="Models\Apiv2\DSItemResponseDTO.cs" />
     <Compile Include="Models\Apiv2\ErrorMessage.cs" />
     <Compile Include="Models\Apiv2\FirmaDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDetailDTO.cs" />
