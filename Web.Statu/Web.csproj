@@ -418,6 +418,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2AuthController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2FirmyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2DatasetyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2Controller.cs" />
@@ -451,6 +452,7 @@
     <Compile Include="Framework\Api\ApiAuth.cs" />
     <Compile Include="Framework\Api\Helpers.cs" />
     <Compile Include="Framework\Api\Dumps.cs" />
+    <Compile Include="Framework\Api\IAuthenticableController.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
     <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />

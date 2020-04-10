@@ -5,13 +5,12 @@ using HlidacStatu.Lib.Data.External.DataSets;
 using System;
 using System.Linq;
 using System.Web.Http;
-using System.Net.Http;
 using System.Collections.Generic;
 
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/datasety")]
-    public class ApiV2DatasetyController : ApiController
+    public class ApiV2DatasetyController : ApiV2AuthController
     {
         /// <summary>
         /// Načte seznam datasetů
@@ -96,8 +95,15 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Vytvoří nový dataset
         /// </summary>
-        /// <param name="data">Objekt typu Registration - asi example by to chtělo</param>
+        /// <remarks>
+        /// Ukázkový požadavek:
+        /// https://raw.githubusercontent.com/HlidacStatu/API/master/v2/create_dataset.example.json
+        ///     
+        /// </remarks>
+        /// <param name="data">Objekt typu Registration</param>
         /// <returns> vrací id vytvořeného datasetu </returns>
+        /// <response code="200">Dataset vytvořen</response>
+        /// <response code="400">Chyba v datech</response>
         [AuthorizeAndAudit]
         [HttpPost, Route()]
         public DSCreatedDTO Create([FromBody] Registration data)
@@ -110,9 +116,7 @@ namespace HlidacStatu.Web.Controllers
 
             try
             {
-                var reg = data;
-                //var reg = JsonConvert.DeserializeObject<Registration>(data, DataSet.DefaultDeserializationSettings);
-                var res = DataSet.Api.Create(reg, this.User.Identity.Name);
+                var res = DataSet.Api.Create(data, this.ApiAuth.ApiCall.User);
 
                 if (res.valid)
                 {
@@ -162,14 +166,18 @@ namespace HlidacStatu.Web.Controllers
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Dataset nenalezen."));
                 }
 
-                if (r.createdBy != null && this.User.Identity.Name.ToLower() != r.createdBy?.ToLower())
+                if (r.createdBy != null && this.ApiAuth.ApiCall.User.ToLower() != r.createdBy?.ToLower())
                 {
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.Forbidden, $"Nejste oprávněn mazat tento dataset."));
                 }
 
-                var res = DataSetDB.Instance.DeleteRegistration(datasetId, this.User.Identity.Name);
+                var res = DataSetDB.Instance.DeleteRegistration(datasetId, this.ApiAuth.ApiCall.User);
                 return res;
 
+            }
+            catch (HttpResponseException)
+            {
+                throw;
             }
             catch (DataSetException dse)
             {
@@ -184,9 +192,14 @@ namespace HlidacStatu.Web.Controllers
 
         /// <summary>
         /// Update datasetu.
-        /// Není možné změnit hodnoty jsonSchema a datasetId. Pokud je potřebuješ změnit, musíš datovou sadu smazat a zaregistrovat znovu.
         /// </summary>
-        /// <param name="data">Objekt typu Registration - asi example by to chtělo</param>
+        ///
+        /// <remarks>
+        /// Není možné změnit hodnoty jsonSchema a datasetId. Pokud je potřebuješ změnit, 
+        /// musíš datovou sadu smazat a zaregistrovat znovu.
+        /// </remarks>
+        /// 
+        /// <param name="data">Objekt typu Registration</param>
         /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpPut, Route()]
@@ -198,21 +211,22 @@ namespace HlidacStatu.Web.Controllers
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, message));
             }
 
+            ApiResponseStatus res;
             try
             {
-                var newReg = data;
-                var res = DataSet.Api.Update(newReg, this.User.Identity.Name);
-                if (res.valid)
-                {
-                    return (Registration)res.value;
-                }
-                throw new HttpResponseException(new ErrorMessage(res));
+                res = DataSet.Api.Update(data, this.ApiAuth.ApiCall.User);
             }
             catch (Exception ex)
             {
                 Util.Consts.Logger.Error("Dataset API", ex);
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Obecná chyba - {ex.Message}"));
             }
+      
+            if (res.valid)
+            {
+                return (Registration)res.value;
+            }
+            throw new HttpResponseException(new ErrorMessage(res));
 
         }
 
@@ -293,7 +307,7 @@ namespace HlidacStatu.Web.Controllers
 
                 if (mode == "rewrite")
                 {
-                    newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
+                    newId = ds.AddData(data.ToString(), itemId, this.ApiAuth.ApiCall.User, true);
                 }
                 else if (mode == "merge")
                 {
@@ -315,17 +329,17 @@ namespace HlidacStatu.Web.Controllers
                                     MergeNullValueHandling = Newtonsoft.Json.Linq.MergeNullValueHandling.Ignore
                                 });
 
-                            newId = ds.AddData(oldObj.ToString(), itemId, this.User.Identity.Name, true);
+                            newId = ds.AddData(oldObj.ToString(), itemId, this.ApiAuth.ApiCall.User, true);
                         }
                     }
                     else
-                        newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
+                        newId = ds.AddData(data.ToString(), itemId, this.ApiAuth.ApiCall.User, true);
 
                 }
                 else //skip 
                 {
                     if (!ds.ItemExists(itemId))
-                        newId = ds.AddData(data.ToString(), itemId, this.User.Identity.Name, true);
+                        newId = ds.AddData(data.ToString(), itemId, this.ApiAuth.ApiCall.User, true);
                 }
                 return new DSItemResponseDTO() { id = newId };
             }

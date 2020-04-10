@@ -1,19 +1,18 @@
 ﻿using System.IO;
-using System.Web;
 
 namespace HlidacStatu.Web.Framework.Api
 {
     public static class Helpers
     {
-        public static string ReadRequestBody(HttpRequestBase req)
+        public static string ReadRequestBody(Stream req)
         {
             string ret = "";
-            using (var stream = new MemoryStream())
+            using (var stream = new StreamReader(req))
             {
-                req.InputStream.Seek(0, SeekOrigin.Begin);
-                req.InputStream.CopyTo(stream);
-                ret = System.Text.Encoding.UTF8.GetString(stream.ToArray());
+                stream.BaseStream.Position = 0;
+                ret = stream.ReadToEnd();
             }
+            
             return ret;
         }
 
