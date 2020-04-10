@@ -81,6 +81,10 @@ namespace HlidacStatu.Web.Controllers
 
                 return new SearchResultDTO<object>(res.Total, res.Page, res.Result);
             }
+            catch (HttpResponseException)
+            {
+                throw;
+            }
             catch (DataSetException dex)
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{dex.APIResponse.error.description}"));
@@ -127,6 +131,10 @@ namespace HlidacStatu.Web.Controllers
                 {
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{res.error.description}"));
                 }
+            }
+            catch (HttpResponseException)
+            {
+                throw;
             }
             catch (JsonSerializationException jex)
             {
@@ -257,6 +265,10 @@ namespace HlidacStatu.Web.Controllers
                     return value;
                     
                 }
+            }
+            catch (HttpResponseException)
+            {
+                throw;
             }
             catch (DataSetException)
             {

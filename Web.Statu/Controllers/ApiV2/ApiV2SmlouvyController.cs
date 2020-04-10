@@ -6,7 +6,7 @@ using System.Web.Http;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/smlouvy")]
-    public class ApiV2SmlouvyController : ApiController
+    public class ApiV2SmlouvyController : ApiV2AuthController
     {
         [HttpGet, Route("hledat")]
         [AuthorizeAndAudit]

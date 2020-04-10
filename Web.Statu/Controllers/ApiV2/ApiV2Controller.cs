@@ -10,7 +10,7 @@ using System.IO;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2")]
-    public class ApiV2Controller : ApiController
+    public class ApiV2Controller : ApiV2AuthController
     {
         // /api/v2/{id}
         [AuthorizeAndAudit]

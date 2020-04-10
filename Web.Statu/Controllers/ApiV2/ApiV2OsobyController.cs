@@ -6,7 +6,7 @@ using HlidacStatu.Lib.Data;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/osoby")]
-    public class ApiV2OsobyController : ApiController
+    public class ApiV2OsobyController : ApiV2AuthController
     {
         // /api/v2/osoby/{id}
         [AuthorizeAndAudit]

@@ -9,7 +9,7 @@ using System.Linq;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/firmy")]
-    public class ApiV2FirmyController : ApiController
+    public class ApiV2FirmyController : ApiV2AuthController
     {
 
         [AuthorizeAndAudit]

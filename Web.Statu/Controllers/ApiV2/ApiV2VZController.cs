@@ -6,7 +6,7 @@ using System.Web.Http;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/verejnezakazky")]
-    public class ApiV2VZController : ApiController
+    public class ApiV2VZController : ApiV2AuthController
     {
         [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("detail/{id?}")]
