@@ -1,8 +1,6 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
 using System.Web.Http;
-using HlidacStatu.Lib.Data;
-using HlidacStatu.Web.Models.Apiv2;
 using System.Net.Http;
 using System.Net;
 using HlidacStatu.Util;

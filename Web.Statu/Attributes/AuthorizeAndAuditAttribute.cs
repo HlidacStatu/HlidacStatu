@@ -1,6 +1,10 @@
-﻿using HlidacStatu.Web.Controllers;
+﻿using System.IO;
 using System.Linq;
-using System.Web.Mvc;
+using System.Security.Principal;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
+using HlidacStatu.Web.Framework;
+using HlidacStatu.Web.Framework.Api;
 
 namespace HlidacStatu.Web.Attributes
 {
@@ -16,33 +20,35 @@ namespace HlidacStatu.Web.Attributes
         /// </summary>
         public string Roles { get; set; }
         
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        public async override void OnActionExecuting(HttpActionContext filterContext)
         {
-            var controller = (GenericAuthController)filterContext.Controller;
+            var controller = (IAuthenticableController)filterContext.ControllerContext.Controller;
+            //filterContext.RequestContext.Principal = new GenericPrincipal()
 
-            string datastring = null;
-            if(filterContext.HttpContext.Request.ContentLength > 0)
-            {
-                datastring = Framework.Api.Helpers.ReadRequestBody(filterContext.HttpContext.Request);
-            }
 
-            var parameters = filterContext.ActionParameters
+            var stream = filterContext.Request.Content.ReadAsStreamAsync().Result;
+            string datastring = Helpers.ReadRequestBody(stream);
+
+
+            var parameters = filterContext.ActionArguments
                             .Select(ap => new Framework.ApiCall.CallParameter(ap.Key, ap.Value?.ToString()))
                             .ToList();
 
             if (!string.IsNullOrWhiteSpace(datastring))
             {
-                
                 parameters.Add(new Framework.ApiCall.CallParameter("requestBody", datastring));
             }
 
-            if (!Framework.ApiAuth.IsApiAuth(controller,
+            var apiAuth = Framework.ApiAuth.IsApiAuth(controller,
                 validRole: Roles,
-                parameters: parameters)
-                .Authentificated)
+                parameters: parameters);
+
+            if (!apiAuth.Authentificated)
             {
-                filterContext.Result = new HttpUnauthorizedResult();
+                filterContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }
+
+            controller.ApiAuth = apiAuth;
 
         }
 
