@@ -37,6 +37,10 @@ namespace HlidacStatu.Web.Controllers
                         };
                 }
             }
+            catch (HttpResponseException)
+            {
+                throw;
+            }
             catch (DataSetException dse)
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{dse.APIResponse.error.description}"));

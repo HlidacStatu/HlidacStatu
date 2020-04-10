@@ -21,6 +21,13 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
+        [HttpGet, Route("getmyip")]
+        public string GetIp()
+        {
+            return this.ApiAuth.ApiCall.IP;
+        }
+
+        [AuthorizeAndAudit]
         [HttpGet, Route("dumps")]
         public Models.ApiV1Models.DumpInfoModel[] Dumps()
         {

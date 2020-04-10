@@ -57,7 +57,7 @@ namespace HlidacStatu.Web.Controllers
 
         [HttpGet, Route("{id?}")]
         [AuthorizeAndAudit]
-        public Lib.Data.Smlouva Detail(string id =null ,[FromUri] string nice = "")
+        public Lib.Data.Smlouva Detail(string id = null, [FromUri]string nice = "")
         {
             if (string.IsNullOrWhiteSpace(id))
             {
