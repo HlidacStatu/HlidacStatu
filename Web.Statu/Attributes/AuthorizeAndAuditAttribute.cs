@@ -20,7 +20,7 @@ namespace HlidacStatu.Web.Attributes
         /// </summary>
         public string Roles { get; set; }
         
-        public async override void OnActionExecuting(HttpActionContext filterContext)
+        public override void OnActionExecuting(HttpActionContext filterContext)
         {
             var controller = (IAuthenticableController)filterContext.ControllerContext.Controller;
             //filterContext.RequestContext.Principal = new GenericPrincipal()
