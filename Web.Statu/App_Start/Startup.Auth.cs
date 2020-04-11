@@ -40,7 +40,7 @@ namespace HlidacStatu.Web
                 }
 
             };
-
+            string redirPath = "/Account/Login";
             var coProviderOrigHandler = coProvider.OnApplyRedirect;
             //Our logic to dynamically modify the path (maybe needs some fine tuning)
             coProvider.OnApplyRedirect = ctx =>
@@ -52,7 +52,7 @@ namespace HlidacStatu.Web
                         ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
                     }
                     else
-                        coProviderOrigHandler.Invoke(ctx);
+                        ctx.Response.Redirect(redirPath);
                 }
                 else
                     coProviderOrigHandler.Invoke(ctx);
@@ -61,7 +61,7 @@ namespace HlidacStatu.Web
             var co = new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
+                LoginPath = new PathString(redirPath),
                 Provider = coProvider
             };
             
