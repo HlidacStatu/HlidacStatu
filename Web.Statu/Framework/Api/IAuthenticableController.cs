@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HlidacStatu.Lib.Data;
 
 namespace HlidacStatu.Web.Framework
 {
@@ -14,5 +15,7 @@ namespace HlidacStatu.Web.Framework
         
         //used only in apiV2
         ApiAuth.Result ApiAuth { get; set; }
+
+        AspNetUser AuthUser();
     }
 }

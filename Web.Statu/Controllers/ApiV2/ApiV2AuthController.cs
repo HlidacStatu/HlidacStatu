@@ -25,6 +25,12 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        public Lib.Data.AspNetUser AuthUser()
+        {
+            Lib.Data.AspNetUser user = Lib.Data.AspNetUser.GetByEmail(this?.User?.Identity?.Name);
+            return user;
+        }
+
         public ApiAuth.Result ApiAuth { get; set; }
         
     }

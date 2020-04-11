@@ -24,10 +24,10 @@ namespace HlidacStatu.Web.Controllers
             SignInManager = signInManager;
         }
 
-        public Microsoft.AspNet.Identity.EntityFramework.IdentityUser AuthUser()
-        {
 
-            Microsoft.AspNet.Identity.EntityFramework.IdentityUser user = UserManager.FindByEmail(this.User.Identity.Name);
+        public Lib.Data.AspNetUser AuthUser()
+        {
+            Lib.Data.AspNetUser user = Lib.Data.AspNetUser.GetByEmail(this?.User?.Identity?.Name);
             return user;
         }
 
