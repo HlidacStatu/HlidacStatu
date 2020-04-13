@@ -205,6 +205,10 @@ namespace HlidacStatu.Web.Controllers
         /// <remarks>
         /// Není možné změnit hodnoty jsonSchema a datasetId. Pokud je potřebuješ změnit, 
         /// musíš datovou sadu smazat a zaregistrovat znovu.
+        /// 
+        /// Ukázkový požadavek:
+        /// https://raw.githubusercontent.com/HlidacStatu/API/master/v2/create_dataset.example.json
+        /// 
         /// </remarks>
         /// 
         /// <param name="data">Objekt typu Registration</param>
@@ -315,6 +319,11 @@ namespace HlidacStatu.Web.Controllers
             try
             {
                 var ds = DataSet.CachedDatasets.Get(datasetId);
+                if (ds is null)
+                {
+                    throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Dataset nenalezen."));
+                }
+
                 var newId = itemId;
 
                 if (mode == "rewrite")
@@ -355,6 +364,10 @@ namespace HlidacStatu.Web.Controllers
                 }
                 return new DSItemResponseDTO() { id = newId };
             }
+            catch (HttpResponseException)
+            {
+                throw;
+            }
             catch (DataSetException dse)
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{dse.APIResponse.error.description}"));
@@ -366,6 +379,38 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Hromadné vkládání záznamů
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Pokud záznamy s daným ID existují, tak budou přepsány.
+        /// 
+        ///     Ukázkový požadavek:  
+        ///     
+        ///     [
+        ///     	{
+        ///     		"HsProcessType": "person",
+        ///     		"Id": "2",
+        ///     		"jmeno": "Ferda",
+        ///     		"prijmeni": "Mravenec",
+        ///     		"narozeni": "2018-11-13T20:20:39+00:00"
+        ///     	},
+        ///     	{
+        ///     		"HsProcessType": "document",
+        ///     		"Id": "broukpytlik",
+        ///     		"jmeno": "Brouk",
+        ///     		"prijmeni": "Pytlík",
+        ///     		"narozeni": "2017-12-10T00:00:00+00:00",
+        ///     		"DocumentUrl": "www.hlidacstatu.cz",
+        ///     		"DocumentPlainText": null
+        ///     	}
+        ///     ]        
+        ///      
+        /// </remarks>
+        /// <param name="datasetId">Id datasetu, kam chceme záznamy nahrát</param>
+        /// <param name="data">Pole JSON objektů</param>
+        /// <returns>Id vložených záznamů</returns>
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznamy/")]
         public List<DSItemResponseDTO> DatasetItem_BulkInsert(string datasetId, [FromBody]object data)
@@ -377,6 +422,11 @@ namespace HlidacStatu.Web.Controllers
             }
 
             var ds = DataSet.CachedDatasets.Get(datasetId);
+            if (ds is null)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Dataset nenalezen."));
+            }
+
             string json = data.ToString();
             List<string> results = new List<string>();
             try
@@ -395,6 +445,13 @@ namespace HlidacStatu.Web.Controllers
             return results.Select(i => new DSItemResponseDTO() { id = i }).ToList();
         }
 
+
+        /// <summary>
+        /// Kontrola, jestli záznam existuje v datasetu
+        /// </summary>
+        /// <param name="datasetId">Id datasetu</param>
+        /// <param name="itemId">Id záznamu</param>
+        /// <returns>true/false</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}/zaznamy/{itemId}/existuje")]
         public bool DatasetItem_Exists(string datasetId, string itemId)
@@ -402,9 +459,17 @@ namespace HlidacStatu.Web.Controllers
             try
             {
                 var ds = DataSet.CachedDatasets.Get(datasetId.ToLower());
+                if (ds is null)
+                {
+                    throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Dataset nenalezen."));
+                }
                 var value = ds.ItemExists(itemId);
                 //remove from item
                 return value;
+            }
+            catch (HttpResponseException)
+            {
+                throw;
             }
             catch (DataSetException)
             {

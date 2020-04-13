@@ -8,7 +8,11 @@ namespace HlidacStatu.Web.Controllers
     [RoutePrefix("api/v2/osoby")]
     public class ApiV2OsobyController : ApiV2AuthController
     {
-        // /api/v2/osoby/{id}
+        /// <summary>
+        /// Vypíše detail osoby na základě "osobaId" parametru.
+        /// </summary>
+        /// <param name="osobaId">Id osoby v Hlídači Státu</param>
+        /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{osobaId}")]
         public OsobaDetailDTO Detail(string osobaId)

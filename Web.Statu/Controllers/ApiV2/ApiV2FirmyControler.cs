@@ -11,7 +11,11 @@ namespace HlidacStatu.Web.Controllers
     [RoutePrefix("api/v2/firmy")]
     public class ApiV2FirmyController : ApiV2AuthController
     {
-
+        /// <summary>
+        /// Vyhledá firmu v databázi Hlídače státu.
+        /// </summary>
+        /// <param name="jmenoFirmy">název firmy</param>
+        /// <returns>Ico, jméno a datová schránka</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{jmenoFirmy}")]
         public FirmaDTO CompanyID(string jmenoFirmy)
