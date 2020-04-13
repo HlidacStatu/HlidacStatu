@@ -26,7 +26,11 @@
 
 @if( Model.Chyba != null)
 {
-  <code><i class="fas fa-exclamation-circle"></i> @Model.Chyba</code>
+    foreach (var chyba in Model.Chyba)
+    {
+        <code><i class="fas fa-exclamation-circle"></i> @chyba</code>
+
+    }
 }
 
 <table class="table table-new table-new--dotted">
@@ -34,9 +38,13 @@
         <tr>
             <th>Příjemce dotace</th>
             <td>
-                @(string.IsNullOrWhiteSpace(Model.Prijemce.ObchodniJmeno) ?
-                    Model.Prijemce.Jmeno :
-                    Model.Prijemce.ObchodniJmeno)
+                @Model.Prijemce.HlidacJmeno
+            </td>
+        </tr>
+        <tr>
+            <th>Příjemce dotace - jak je uvedeno v datech</th>
+            <td>
+                @Model.Prijemce.ObchodniJmeno
             </td>
         </tr>
         <tr>
@@ -62,11 +70,12 @@
         </tr>
         <tr>
             <th>Kód projektu</th>
-            <td>@Model.KodProjektu</td>
-        </tr>
-        <tr>
-            <th>Identifikátor projektu</th>
-            <td>@Model.IdProjektu</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(Model.KodProjektu))
+                {
+                    <a href="/dotace/hledat?q=kod:@Model.KodProjektu" title="Vyhledat podobné dotace">@Model.KodProjektu</a>
+                }
+            </td>
         </tr>
         <tr>
             <th>Název projektu</th>
@@ -99,7 +108,7 @@
                         <p class="text-muted">z toho @HlidacStatu.Util.RenderData.NicePrice((decimal)Model.PujckaCelkem) je půjčka.</p>
                     }
                 }
-                
+
             </td>
         </tr>
         <tr>

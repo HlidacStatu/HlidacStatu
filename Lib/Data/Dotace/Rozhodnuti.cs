@@ -5,8 +5,6 @@ namespace HlidacStatu.Lib.Data.Dotace
 {
     public class Rozhodnuti
     {
-        [Nest.Keyword]
-        public string Id { get; set; }
         [Nest.Number]
         public decimal? CastkaPozadovana { get; set; }
         [Nest.Number]

@@ -30,6 +30,31 @@
 
 @Html.Partial("_SearchForm", new HlidacStatu.Lib.Searching.DotaceSearchResult())
 
+<h2>Informace k dotacím</h2>
+<div>
+    <p>Zpracováváme dotace z následujících zdrojů:</p>
+    <ul>
+        <li>
+            Cedr - kompletní
+        </li>
+        <li>
+            EU Fondy - podařilo se nám dohledat dotace od roku 2014 do současnosti
+        </li>
+        <li>
+            DotInfo - kompletní
+        </li>
+        <li>
+            SZIF - od roku 2014 do roku 2018 (novější zatím nejsou k dispozici)
+        </li>
+        <li>
+            Czech Invest - kompletní
+        </li>
+    </ul>
+    <p>Některé dotace se mohou objevit vícekrát - strojově v tuto chvíli nejsme schopni detekovat duplicity, protože stav dat v jednotlivých zdrojích neumožní přesné detekování duplicit. Proto celková hodnota udávaná při vyhledávání je pouze orientační, námi vypočtená částka.</p>
+
+</div>
+
+
 <h2>Jak vyhledávat v dotacích</h2>
 <div>
     <dl>
@@ -104,10 +129,11 @@
             <kbd>holding:12345678</kbd> - IČO matky holdingu, hledá se pro všechny firmy holdingu<br>
             <br>
             <br>
-            <kbd>projekt:"název projektu"</kbd> - dotace se specifickým názvem projektu (např. "TJ Vodní stavby Tábor")<br>
-            <kbd>jmeno:"jméno příjemce"</kbd> - dotace, kde jméno příjemce odpovídá zadanému výrazu ("Ředitelství silnic a dálnic")<br>
+            <kbd>projekt:"název projektu"</kbd> - dotace se specifickým názvem projektu (např. "TJ Vodní stavby Tábor")<br />
+            <kbd>kod:"kód projektu"</kbd> - dotace podle kódu projektu (např. "CZ.03.2.60/0.0/0.0/16_064/0006407")<br />
+            <kbd>jmeno:"jméno příjemce"</kbd> - dotace, kde jméno příjemce odpovídá zadanému výrazu ("Ředitelství silnic a dálnic")<br />
             <kbd>castka:&gt;castka</kbd> - dotace s částkou vyšší než. Možno použí i <kbd>&gt;=</kbd> <kbd>&lt;=</kbd>
-            <kbd>&lt;</kbd><br>
+            <kbd>&lt;</kbd><br />
         </dd>
     </dl>
 </div>
@@ -115,7 +141,7 @@
 <h2>Ukázky možností</h2>
 <ul>
     <li>
-        Hledání podle IČO - <a href="/dotace/hledat?Q=ico:00190489">Nemocnice pardubice</a>, <a href="/dotace/hledat?Q=ico:70994234">SŽDC</a>
+        Hledání podle IČO - <a href="/dotace/hledat?Q=ico:00190489">Nemocnice Pardubice</a>, <a href="/dotace/hledat?Q=ico:70994234">SŽDC</a>
     </li>
     <li>
         Hledání podle příjemce - <a href="/dotace/hledat?Q=jmeno:'Ředitelství silnic a dálnic ČR'">ŘSD</a>, <a href="/dotace/hledat?Q=jmeno:univerzita">Univerzita</a>

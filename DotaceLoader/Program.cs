@@ -20,7 +20,7 @@ namespace DotaceLoader
 
             var dotaceService = new DotaceService();
 
-            string sqlCursor = @"DECLARE export_cur CURSOR FOR Select * from export.dotacejson;";
+            string sqlCursor = @"DECLARE export_cur CURSOR FOR Select * from dotace.dotace;";
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
@@ -41,12 +41,12 @@ namespace DotaceLoader
 
                         foreach (var record in dotaceExport)
                         {
-                            string constructedId = $"{record.NazevZdroje}-{record.IdDotace}";
+                            string constructedId = record.IdDotace;
                             constructedId = Devmasters.Core.TextUtil.NormalizeToURL(constructedId);
 
                             Dotace dotace = JsonConvert.DeserializeObject<Dotace>(record.Data);
                             dotace.IdDotace = constructedId;
-                            dotace.Prijemce.Ico = FullIcoFix(dotace);
+                            //dotace.Prijemce.Ico = FullIcoFix(dotace);
 
                             //dotace.CalculateTotals(); moved to bulksave
 
@@ -69,40 +69,7 @@ namespace DotaceLoader
             }
         }
 
-        public static string FullIcoFix(Dotace dotace)
-        {
-            var ico = dotace.Prijemce.Ico;
-            // if there is no ico, we try to find it
-            if (string.IsNullOrWhiteSpace(ico))
-            {
-                string companyName = string.IsNullOrWhiteSpace(dotace.Prijemce.ObchodniJmeno) ? 
-                    dotace.Prijemce.Jmeno : 
-                    dotace.Prijemce.ObchodniJmeno;
-
-                if (string.IsNullOrWhiteSpace(companyName))
-                    return string.Empty; // todo: log - nemělo by nastat
-
-                ico = FindIco(companyName);
-            }
-
-            return NormalizeIco(ico);
-        }
-
-        public static string FindIco(string companyName)
-        {
-            throw new System.NotImplementedException();
-
-            var name = HlidacStatu.Lib.Data.Firma.JmenoBezKoncovky(companyName);
-            //name = Devmasters.Core.TextUtil.RemoveDiacritics(name);
-            //var ico = StaticData.FirmyNazvy.Get()
-            //    .Where(m => m.Value.Jmeno == name)
-            //    .Select(x => x.Key)
-            //    .FirstOrDefault();
-
-            return string.Empty;
-            
-        }
-
+        
         public static string NormalizeIco(string ico)
         {
             if (ico == null)

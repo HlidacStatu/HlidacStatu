@@ -13,6 +13,8 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Text]
         public string ObchodniJmeno { get; set; }
         [Nest.Text]
+        public string HlidacJmeno { get; set; }
+        [Nest.Text]
         public string Jmeno { get; set; }
         [Nest.Number]
         public int? RokNarozeni { get; set; }

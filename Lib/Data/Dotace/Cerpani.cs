@@ -8,8 +8,6 @@ namespace HlidacStatu.Lib.Data.Dotace
 {
     public class Cerpani
     {
-        [Nest.Keyword]
-        public string Id { get; set; }
         [Nest.Number]
         public decimal? CastkaSpotrebovana { get; set; }
         [Nest.Number]

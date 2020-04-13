@@ -15,8 +15,6 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Date]
         public DateTime? DatumAktualizace { get; set; }
         [Nest.Keyword]
-        public string IdProjektu { get; set; }
-        [Nest.Keyword]
         public string KodProjektu { get; set; }
         [Nest.Text]
         public string NazevProjektu { get; set; }
@@ -40,7 +38,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         public List<Rozhodnuti> Rozhodnuti { get; set; }
 
         [Nest.Text]
-        public string Chyba { get; set; }
+        public List<string> Chyba { get; set; }
 
 
 
@@ -54,10 +52,6 @@ namespace HlidacStatu.Lib.Data.Dotace
             if (!string.IsNullOrWhiteSpace(NazevProjektu))
             {
                 return NazevProjektu;
-            }
-            if (!string.IsNullOrWhiteSpace(IdProjektu))
-            {
-                return IdProjektu;
             }
             if (!string.IsNullOrWhiteSpace(KodProjektu))
             {
