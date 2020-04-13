@@ -12,6 +12,8 @@ namespace HlidacStatu.Lib.Data
 
         public static AspNetUser GetByEmail(string email)
         {
+            if (string.IsNullOrEmpty(email))
+                return null;
             using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
             {
                 return db.AspNetUsers.AsNoTracking().FirstOrDefault(m=>m.Email == email);

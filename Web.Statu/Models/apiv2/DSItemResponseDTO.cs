@@ -5,7 +5,7 @@ using System.Web;
 
 namespace HlidacStatu.Web.Models.Apiv2
 {
-    public class CreatedDatasetItemResponseDTO
+    public class DSItemResponseDTO
     {
         public string id { get; set; }
     }

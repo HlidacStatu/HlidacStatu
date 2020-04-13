@@ -1,8 +1,6 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Models.Apiv2;
 using System.Web.Http;
-using HlidacStatu.Lib.Data;
-using HlidacStatu.Web.Models.Apiv2;
 using System.Net.Http;
 using System.Net;
 using HlidacStatu.Util;
@@ -12,7 +10,7 @@ using System.IO;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2")]
-    public class ApiV2Controller : ApiController
+    public class ApiV2Controller : ApiV2AuthController
     {
         // /api/v2/{id}
         [AuthorizeAndAudit]
@@ -20,6 +18,13 @@ namespace HlidacStatu.Web.Controllers
         public string Ping(string text)
         {
             return "pong " + text;
+        }
+
+        [AuthorizeAndAudit]
+        [HttpGet, Route("getmyip")]
+        public string GetIp()
+        {
+            return this.ApiAuth.ApiCall.IP;
         }
 
         [AuthorizeAndAudit]

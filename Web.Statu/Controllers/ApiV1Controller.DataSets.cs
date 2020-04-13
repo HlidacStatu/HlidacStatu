@@ -339,7 +339,7 @@ namespace HlidacStatu.Web.Controllers
                     var res = DataSet.Api.Create(reg, apiAuth.ApiCall.User);
 
                     if (res.valid)
-                        return Json(new { datasetId = ((Registration)res.value).datasetId });
+                        return Json(new { datasetId = ((DataSet)res.value).DatasetId });
                     else
                         return Json(res);
                 }

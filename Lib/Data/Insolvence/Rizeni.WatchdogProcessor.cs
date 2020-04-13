@@ -107,7 +107,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
         <tbody>
         {{ for item in model.Items limit:#LIMIT# }}
             <tr>
-                <td><a href='https://www.hlidacstatu.cz/Insolvence/Rizeni/{{ string.replace (string.replace item.SpisovaZnacka ' '  '_') '/'  '-' }}'>Řízení</a></td>
+                <td><a href='https://www.hlidacstatu.cz/Insolvence/Rizeni/{{ string.replace (string.replace item.SpisovaZnacka ' '  '_') '/'  '-' }}?qs={{html.url_encode model.SearchQuery}}&utm_source=hlidac&utm_medium=email&utm_campaign=detail'>Řízení</a></td>
                 <td>
                     {{ if (item.Dluznici  && item.Dluznici.size > 0) }}
                     

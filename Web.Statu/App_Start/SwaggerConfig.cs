@@ -2,6 +2,9 @@
 using WebActivatorEx;
 using HlidacStatu.Web;
 using Swashbuckle.Application;
+using System.Reflection;
+using System.IO;
+using System;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -20,11 +23,11 @@ namespace HlidacStatu.Web
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v2", "HlidacStatu.Web")
+                        c.SingleApiVersion("v2", "HlidacStatu_ApiV2")
                          .Description("REST API Hlídače státu")
                          .TermsOfService("https://www.hlidacstatu.cz/texty/provoznipodminky/")
                          .Contact(cc => cc
-                             .Name("Kontakt")
+                             .Name("Hlídač státu")
                              .Url("https://www.hlidacstatu.cz/texty/kontakt/")
                              .Email("podpora@hlidacstatu.cz"))
                          .License(lc => lc
@@ -118,6 +121,9 @@ namespace HlidacStatu.Web
                          // more Xml comment files.
                          //
                          //c.IncludeXmlComments(GetXmlCommentsPath());
+                         var xmlFile = "HlidacStatu.Web.xml";
+                         var xmlPath = Path.Combine(AppContext.BaseDirectory,"bin", xmlFile);
+                         c.IncludeXmlComments(xmlPath);
 
                          // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                          // exposed in your API. However, there may be occasions when more control of the output is needed.

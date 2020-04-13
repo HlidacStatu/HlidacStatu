@@ -238,7 +238,7 @@
                                             {
                                                 if (this.User?.IsInRole("novinar") == true)
                                                 {
-                                                    <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value })" data-link="kopie">(naše kopie)</a> <b>!Pozor, tato smlouva byla zneplatněna a tato příloha není veřejně dostupná!</b>
+                                                    <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value, secret = priloha.LimitedAccessSecret(this.User.Identity.Name) })" data-link="kopie">(naše kopie)</a> <b>!Pozor, tato smlouva byla zneplatněna a tato příloha není veřejně dostupná!</b>
                                                 }
                                                 else
                                                 {

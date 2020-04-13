@@ -6,8 +6,27 @@ using System.Web.Http;
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/smlouvy")]
-    public class ApiV2SmlouvyController : ApiController
+    public class ApiV2SmlouvyController : ApiV2AuthController
     {
+        /// <summary>
+        /// Vyhledá smlouvy v databázi smluv
+        /// </summary>
+        /// <param name="dotaz">fulltext dotaz dle <a href="https://www.hlidacstatu.cz/napoveda">syntaxe</a> </param>
+        /// <param name="strana">stránka, max. hodnota je 250</param>
+        /// <param name="razeni">
+        /// pořadí výsledků:<br />
+        /// 0: podle relevance<br />
+        /// 1: nově zveřejněné první<br />
+        /// 2: nově zveřejněné poslední<br />
+        /// 3: nejlevnější první<br />
+        /// 4: nejdražší první<br />
+        /// 5: nově uzavřené první<br />
+        /// 6: nově uzavřené poslední<br />
+        /// 7: nejvíce chybové první<br />
+        /// 8: podle odběratele<br />
+        /// 9: podle dodavatele<br />
+        /// </param>
+        /// <returns></returns>
         [HttpGet, Route("hledat")]
         [AuthorizeAndAudit]
         public SearchResultDTO<Lib.Data.Smlouva> Hledat([FromUri] string dotaz = null, [FromUri] int? strana = null, [FromUri] int? razeni = null)
@@ -55,9 +74,14 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Vrátí detail jedné smlouvy.
+        /// </summary>
+        /// <param name="id">id smlouvy</param>
+        /// <returns>detail smlouvy</returns>
         [HttpGet, Route("{id?}")]
         [AuthorizeAndAudit]
-        public Lib.Data.Smlouva Detail(string id =null ,[FromUri] string nice = "")
+        public Lib.Data.Smlouva Detail(string id = null)
         {
             if (string.IsNullOrWhiteSpace(id))
             {

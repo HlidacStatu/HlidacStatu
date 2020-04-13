@@ -193,14 +193,14 @@ namespace HlidacStatu.Lib.Data
                 {
 
                     if (res != null && res.ServerError != null)
-                        Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res);
+                        Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res,query.ToString());
                     else
                         HlidacStatu.Util.Consts.Logger.Error("", e);
                     throw;
                 }
 
                 if (res.IsValid == false && logError)
-                    Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res);
+                    Lib.ES.Manager.LogQueryError<Lib.Data.Smlouva>(res, query.ToString());
 
                 return res;
             }

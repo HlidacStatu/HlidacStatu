@@ -9,10 +9,23 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     [Nest.ElasticsearchType(IdProperty = nameof(Ico))]
     public partial class KIndexData
     {
+        public class KoncentraceDodavateluIndexy
+        {
+            public decimal Herfindahl_Hirschman_Index { get; set; }
+            public decimal Herfindahl_Hirschman_Normalized { get; set; }
+            public decimal Herfindahl_Hirschman_Modified { get; set; }
+            public decimal Comprehensive_Industrial_Concentration_Index { get; set; }
+            public decimal Hall_Tideman_Index { get; set; }
+            public decimal Kwoka_Dominance_Index { get; set; }
+
+            public decimal PrumernaHodnotaSmluv { get; set; } //pouze tech s hodnotou vyssi nez 0 Kc
+        }
         public class Annual
         {
-            public decimal CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
-            public decimal KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
+            
+            public decimal PodilSmluvNaCelkovychNakupech { get; set; } //Podíl smluv na celkových nákupech
+            public KoncentraceDodavateluIndexy CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
+            public KoncentraceDodavateluIndexy KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
             public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
             public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
             public decimal PercSmlouvySPolitickyAngazovanouFirmou { get; set; } //% smluv uzavřených s firmou navazanou na politicky aktivní osobu v předchozích 5 letechs

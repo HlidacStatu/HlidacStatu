@@ -104,7 +104,7 @@ namespace HlidacStatu.Web.Framework
 
 
 
-        public static ApiAuth.Result IsApiAuth(Controllers.GenericAuthController c, string validRole = null, IEnumerable<ApiCall.CallParameter> parameters = null, [CallerMemberName] string method = "")
+        public static ApiAuth.Result IsApiAuth(IAuthenticableController c, string validRole = null, IEnumerable<ApiCall.CallParameter> parameters = null, [CallerMemberName] string method = "")
         {
             if (string.IsNullOrEmpty(validRole))
                 return IsApiAuth(c, new string[] { }, parameters, method);
@@ -112,7 +112,7 @@ namespace HlidacStatu.Web.Framework
                 return IsApiAuth(c, validRole.Split(','), parameters, method);
         }
 
-        public static ApiAuth.Result IsApiAuth(Controllers.GenericAuthController c, string[] validRoles, IEnumerable<ApiCall.CallParameter> parameters = null, [CallerMemberName] string method = "")
+        public static ApiAuth.Result IsApiAuth(IAuthenticableController c, string[] validRoles, IEnumerable<ApiCall.CallParameter> parameters = null, [CallerMemberName] string method = "")
         {
             var usrmgr = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
@@ -124,77 +124,63 @@ namespace HlidacStatu.Web.Framework
                 string[] userroles = usrmgr.GetRoles(user.Id).ToArray();
 
                 if (validRoles == null)
-                    return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                    return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                 else if (validRoles.Count() == 0)
-                    return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                    return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                 else
                 {
                     foreach (var role in validRoles)
                     {
                         if (c.User.IsInRole(role.Trim()))
-                            return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                            return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                     }
-                    return ApiAuth.Result.Invalid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                    return ApiAuth.Result.Invalid(new ApiCall() { IP = c.HostIpAddress, UserId = user?.Id, User = c.User.Identity.Name, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                 }
             }
-            else if (IsApiAuthHeader(c.HttpContext.Request, out login))
+            else if (IsApiAuthHeader(c.AuthToken, out login))
             {
                 Microsoft.AspNet.Identity.EntityFramework.IdentityUser user = usrmgr.FindByEmail(login);
                 if (user == null)
-                    return ApiAuth.Result.Invalid(new ApiCall() { IP = c.Request.UserHostAddress, UserId=null, User = null, Id = method, Method = method, Parameters = parameters });
+                    return ApiAuth.Result.Invalid(new ApiCall() { IP = c.HostIpAddress, UserId=null, User = null, Id = method, Method = method, Parameters = parameters });
                 else
                 {
                     string[] userroles = usrmgr.GetRoles(user.Id).ToArray();
 
                     if (validRoles == null)
-                        return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                        return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                     else if (validRoles.Count() == 0)
-                        return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                        return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                     else
                     {
                         foreach (var role in validRoles)
                         {
                             if (usrmgr.IsInRole(user.Id, role.Trim()))
-                                return ApiAuth.Result.Valid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                                return ApiAuth.Result.Valid(new ApiCall() { IP = c.HostIpAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                         }
-                        return ApiAuth.Result.Invalid(new ApiCall() { IP = c.Request.UserHostAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
+                        return ApiAuth.Result.Invalid(new ApiCall() { IP = c.HostIpAddress, UserId = user.Id, User = user.Email, Id = method, Method = method, Parameters = parameters, UserRoles = userroles });
                     }
 
                 }
 
             }
             else
-                return ApiAuth.Result.Invalid(new ApiCall() { IP = c.Request.UserHostAddress,UserId=null, User = null, Id = method, Method = method, Parameters = parameters });
+                return ApiAuth.Result.Invalid(new ApiCall() { IP = c.HostIpAddress, UserId=null, User = null, Id = method, Method = method, Parameters = parameters });
 
 
         }
 
 
-        private static bool IsApiAuthHeader(System.Web.HttpRequestBase req)
-        {
-            string login = "";
-            return IsApiAuthHeader(req, out login);
-        }
-        private static bool IsApiAuthHeader(System.Web.HttpRequestBase req, out string login)
+        private static bool IsApiAuthHeader(string authToken, out string login)
         {
             login = "";
-            string token = "";
-
-            if (req.Headers != null && req.Headers.AllKeys.Contains("Authorization"))
-            {
-                token = req.Headers["Authorization"];
-            }
-            else if (req.QueryString["Authorization"] != null)
-            {
-                token = req.QueryString["Authorization"];
-            }
-            if (string.IsNullOrEmpty(token))
+            
+            if (string.IsNullOrEmpty(authToken))
                 return false;
-            token = token.Replace("Token ", "").Trim();
+            authToken = authToken.Replace("Token ", "").Trim();
 
             Guid t = Guid.Empty;
 
-            if (Guid.TryParse(token, out t))
+            if (Guid.TryParse(authToken, out t))
             {
                 using (HlidacStatu.Lib.Data.DbEntities db = new DbEntities())
                 {

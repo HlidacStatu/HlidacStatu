@@ -476,18 +476,21 @@ text zpravy: {txt}";
 
             if (model.znepristupnenaSmlouva())
             {
-                if (string.IsNullOrEmpty(secret)) //pokus jak se dostat k znepristupnene priloze
-                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
-                else if (this.User?.Identity?.IsAuthenticated == false) //neni zalogovany
-                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
-                else if (this.AuthUser()?.EmailConfirmed == false)
+                if (this.AuthUser()?.IsInRole("Admin") == false)
                 {
-                    return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
-                }
-                else
-                {
-                    if (priloha.LimitedAccessSecret(this.User.Identity.GetUserName()) != secret)
+                    if (string.IsNullOrEmpty(secret)) //pokus jak se dostat k znepristupnene priloze
                         return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                    else if (this.User?.Identity?.IsAuthenticated == false) //neni zalogovany
+                        return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                    else if (this.AuthUser()?.EmailConfirmed == false)
+                    {
+                        return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                    }
+                    else
+                    {
+                        if (priloha.LimitedAccessSecret(this.User.Identity.GetUserName()) != secret)
+                            return Redirect(model.GetUrl(false)); //jdi na detail smlouvy
+                    }
                 }
             }
             var fn = HlidacStatu.Lib.Init.PrilohaLocalCopy.GetFullPath(model, priloha);

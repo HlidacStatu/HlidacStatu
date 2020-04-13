@@ -81,7 +81,6 @@ namespace HlidacStatu.Lib.Data
                 //}
             }
 
-
             public string LimitedAccessSecret(string forEmail)
             {
                 if (string.IsNullOrEmpty(forEmail))

@@ -359,26 +359,27 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 
 @helper ShareWidget(string url, string title = "Vložit do vlastní stránky", int width = 500)
 {
-    var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
-    var wid = Devmasters.Core.TextUtil.GenRandomString(5);
-    var pageUrl = new Uri(url);
-    var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
-    var embedUrl = url.Replace(rootUrl, "");
-    if (embedUrl.IndexOf("?") > 0)
-    {
-        embedUrl = embedUrl + "&embed=1";
-    }
-    else
-    {
-        embedUrl = embedUrl + "?embed=1";
-    }
-    var extHtmlL1 = $"<script src='{rootUrl}/widget/{wid}?width={width}' type='text/javascript'></script>";
-    var extHtmlL2 = $"<div id='{wid}' style='width:{width}px' widget-page='{url.Replace(rootUrl, "")}'></div>";
-    var iframeHtml = $"<iframe " +
-    $" style='border: 0px; width: 100%; overflow: hidden; max-width: {width}px;'" +
-    "frameborder='0' width='100%' border='0' cellspacing='0' " +
-    $"src='{embedUrl}'" +
-    "scrolling='auto' ></iframe>";
+var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
+var wid = Devmasters.Core.TextUtil.GenRandomString(5);
+var pageUrl = new Uri(url);
+var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
+var embedUrl = url.Replace(rootUrl, "");
+if (embedUrl.IndexOf("?") > 0)
+{
+    embedUrl = embedUrl + "&embed=1";
+}
+else
+{
+    embedUrl = embedUrl + "?embed=1";
+}
+var widgetUrl = url.Replace(rootUrl, "");
+var extHtmlL1 = $"<script src='{rootUrl}/widget/{wid}?width={width}' type='text/javascript'></script>";
+var extHtmlL2 = $"<div id='{wid}' style='width:{width}px' widget-page='{widgetUrl}'></div>\n";
+var iframeHtml = $"<iframe " +
+$" style='border: 0px; width: 100%; overflow: hidden; max-width: {width}px;'" +
+"frameborder='0' width='100%' border='0' cellspacing='0' " +
+$"src='{embedUrl}'" +
+"scrolling='auto' ></iframe>";
 
     <span class="dontembed">
         <a href="" class="ssk ssk-text ssk-amethyst ssk-xs" data-toggle="modal" data-target="#modal@(modalid)">
@@ -403,11 +404,14 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     -moz-box-sizing: border-box;box-sizing: border-box;border-radius: 0 3px 3px 3px;display: block;white-space:nowrap;position: relative;z-index: 2;">@Html.Raw(extHtmlL1)
 @Html.Raw(extHtmlL2)</textarea>
                     </form>
-                    <hr />
-                    <h3>Ukázka zobrazení</h3>
-                    <div id="modaliframe@(modalid)">
-                        Načítáme náhled, jak to bude vypadat.
-                    </div>
+                    <p style="font-size:14px;">
+                        Pokud máte <a href="https://www.michalblaha.cz/2019/01/obsah-hlidace-statu-prehledne-na-vlastni-strance-v-clanku-ci-blogu-kdekoliv/" target="_blank">Wordpress plugin</a>: <code>[hlidac-statu page="@(widgetUrl)"]</code>
+                        </p>
+                        <hr />
+                        <h3>Ukázka zobrazení</h3>
+                        <div id="modaliframe@(modalid)">
+                            Načítáme náhled, jak to bude vypadat.
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>

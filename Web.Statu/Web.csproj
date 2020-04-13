@@ -41,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DocumentationFile>bin\HlidacStatu.Web.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\HlidacStatu.Web.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
@@ -416,6 +418,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2AuthController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2FirmyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2DatasetyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2Controller.cs" />
@@ -449,6 +452,7 @@
     <Compile Include="Framework\Api\ApiAuth.cs" />
     <Compile Include="Framework\Api\Helpers.cs" />
     <Compile Include="Framework\Api\Dumps.cs" />
+    <Compile Include="Framework\Api\IAuthenticableController.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
     <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />
@@ -465,7 +469,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiV1Models.cs" />
-    <Compile Include="Models\Apiv2\DatasetDTOs.cs" />
+    <Compile Include="Models\Apiv2\DSCreatedDTO.cs" />
+    <Compile Include="Models\Apiv2\DSItemResponseDTO.cs" />
     <Compile Include="Models\Apiv2\ErrorMessage.cs" />
     <Compile Include="Models\Apiv2\FirmaDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDetailDTO.cs" />
@@ -1536,6 +1541,10 @@
     <Content Include="Scripts\jquery-1.11.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj">
+      <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
+      <Name>Lib.OCR.TextReadability</Name>
+    </ProjectReference>
     <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
       <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
       <Name>DotNet.Highcharts</Name>
@@ -1606,6 +1615,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\HlidacStatu.Web.xml</DocumentationFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />

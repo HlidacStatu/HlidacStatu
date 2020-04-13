@@ -1,19 +1,15 @@
-﻿using HlidacStatu.Lib.Data;
-using HlidacStatu.Util;
+﻿using HlidacStatu.Web.Framework;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Nest;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
-using static HlidacStatu.Web.Models.ApiV1Models;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public partial class GenericAuthController : AsyncController
+    public partial class GenericAuthController : AsyncController, IAuthenticableController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -28,10 +24,10 @@ namespace HlidacStatu.Web.Controllers
             SignInManager = signInManager;
         }
 
-        public Microsoft.AspNet.Identity.EntityFramework.IdentityUser AuthUser()
-        {
 
-            Microsoft.AspNet.Identity.EntityFramework.IdentityUser user = UserManager.FindByEmail(this.User.Identity.Name);
+        public Lib.Data.AspNetUser AuthUser()
+        {
+            Lib.Data.AspNetUser user = Lib.Data.AspNetUser.GetByEmail(this?.User?.Identity?.Name);
             return user;
         }
 
@@ -59,9 +55,31 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        
+        public string HostIpAddress { get => this.Request.UserHostAddress; }
+        public string AuthToken 
+        { 
+            get 
+            {
+
+                if (this.Request.Headers != null && this.Request.Headers.AllKeys.Contains("Authorization"))
+                {
+                    return this.Request.Headers["Authorization"];
+                }
+                else if (this.Request.QueryString["Authorization"] != null)
+                {
+                    return this.Request.QueryString["Authorization"];
+                }
+
+                return "";
+            }
+        }
+
+        public ApiAuth.Result ApiAuth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 #if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 48)]
-#endif 
+#endif
         [ChildActionOnly]
         public ActionResult CachedAction_Child_48H(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4, string param5, string param6, string param7, string param8)
         {

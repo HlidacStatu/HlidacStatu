@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 resultToRender.Result = dataToRender;
 
                 //var renderH = new Lib.Render.ScribanT(HtmlTemplate.Replace("#LIMIT#", numOfListed.ToString()));
-                ret.ContentHtml = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet,resultToRender );
+                ret.ContentHtml = this.DataSet.Registration().searchResultTemplate.Render(this.DataSet,resultToRender, data.SearchQuery );
                 if (data.Total > dataToRender.Count())
                 {
                     var s = "<table><tr><td height='30' style='line-height: 50px; min-height: 50px;'></td></tr></table>"
