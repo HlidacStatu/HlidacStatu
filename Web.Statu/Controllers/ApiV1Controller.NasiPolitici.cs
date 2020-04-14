@@ -94,7 +94,7 @@ namespace HlidacStatu.Web.Controllers
                     return Json(ApiResponseStatus.Error(404, "Person is not marked as politician"), JsonRequestBehavior.AllowGet);
                 }
 
-                var vazby = o.AktualniVazby(Relation.AktualnostType.Aktualni)
+                var vazby = o.AktualniVazby(Relation.AktualnostType.Nedavny)
                     .Where(v => v.Distance == 1 && v.To?.Type == Graph.Node.NodeType.Company)
                     .Take(10)
                     .Select(v => new
