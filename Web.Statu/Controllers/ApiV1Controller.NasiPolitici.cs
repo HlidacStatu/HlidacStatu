@@ -94,6 +94,20 @@ namespace HlidacStatu.Web.Controllers
                     return Json(ApiResponseStatus.Error(404, "Person is not marked as politician"), JsonRequestBehavior.AllowGet);
                 }
 
+                var vazby = o.AktualniVazby(Relation.AktualnostType.Aktualni)
+                    .Where(v => v.Distance == 1 && v.To?.Type == Graph.Node.NodeType.Company)
+                    .Take(10)
+                    .Select(v => new
+                    {
+                        company = Firma.FromIco(v.To.Id).Jmeno,
+                        ico = v.To.Id,
+                        since = v.RelFrom,
+                        until = v.RelTo,
+                        description = v.Descr
+
+                    }).ToList();
+                
+
                 var statDescription =
                     InfoFact.RenderInfoFacts(
                         o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray()
@@ -219,7 +233,8 @@ namespace HlidacStatu.Web.Controllers
                     source = o.GetUrl(false),
                     sponsor = sponzorstvi,
                     currentParty = o.CurrentPoliticalParty(),
-                    contacts = o.GetSocialContact()
+                    contacts = o.GetSocialContact(),
+                    connections = vazby
                 };
 
                 return Content(JsonConvert.SerializeObject(result), "application/json");
