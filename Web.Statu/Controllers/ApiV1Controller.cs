@@ -33,25 +33,32 @@ namespace HlidacStatu.Web.Controllers
         }
 
         // GET: ApiV1
-        [Authorize]
         public ActionResult Index()
         {
-            //global::hlst
-            ViewBag.Token = HlidacStatu.Lib.Data.AspNetUserToken.GetToken(this.User.Identity.Name).Token.ToString("N");
-
-            if (!string.IsNullOrEmpty(Request.QueryString["getocr"]))
+            if (Framework.ApiAuth.IsApiAuth(this).Authentificated)
             {
-                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent(
-                    $"https://ocr.hlidacstatu.cz/AddApi.ashx?apikey={Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey")}&email={this.User.Identity.Name}"
-                    ))
+
+                //global::hlst
+                ViewBag.Token = HlidacStatu.Lib.Data.AspNetUserToken.GetToken(this.User.Identity.Name).Token.ToString("N");
+
+                if (!string.IsNullOrEmpty(Request.QueryString["getocr"]))
                 {
-                    var json = Newtonsoft.Json.Linq.JToken.Parse(url.GetContent().Text);
-                    
-                    ViewBag.OcrToken = json.Value<string>("apikey");
+                    using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent(
+                        $"https://ocr.hlidacstatu.cz/AddApi.ashx?apikey={Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey")}&email={this.User.Identity.Name}"
+                        ))
+                    {
+                        var json = Newtonsoft.Json.Linq.JToken.Parse(url.GetContent().Text);
+
+                        ViewBag.OcrToken = json.Value<string>("apikey");
+                    }
+
                 }
-                
+                return View();
             }
-            return View();
+            else
+            {
+                return Redirect(MvcApplication.LoginRedirPath+"?returnUrl=" + System.Net.WebUtility.UrlEncode("/api/v1/Index"));
+            }
         }
 
         public ActionResult ResendConfirmationMail(string _id)

@@ -5,9 +5,13 @@ using Newtonsoft.Json;
 using HlidacStatu.Lib.Data.External.DataSets;
 using System;
 using System.Linq;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
+
+    [SwaggerControllerTag("Firmy")]
+
     [RoutePrefix("api/v2/firmy")]
     public class ApiV2FirmyController : ApiV2AuthController
     {

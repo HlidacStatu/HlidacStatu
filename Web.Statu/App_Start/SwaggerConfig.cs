@@ -5,6 +5,8 @@ using Swashbuckle.Application;
 using System.Reflection;
 using System.IO;
 using System;
+using Swashbuckle.Swagger;
+using System.Linq;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -38,6 +40,18 @@ namespace HlidacStatu.Web
                              .Description("API Key Authentication")
                              .Name("Authorization")
                              .In("header");
+                         c.GroupActionsBy(apiDesc =>
+                         {
+                             var attribute = apiDesc.GetControllerAndActionAttributes<Web.Framework.SwaggerControllerTagAttribute>();
+                             if (attribute.Any())
+                             {
+                                 return attribute.First().ControllerName;
+                             }
+                             else
+                             {
+                                 return apiDesc.ActionDescriptor.ControllerDescriptor.ControllerName;
+                             }
+                         });
                          c.PrettyPrint();
 
                          // By default, the service root url is inferred from the request used to access the docs.
@@ -199,6 +213,9 @@ namespace HlidacStatu.Web
                          //
                          //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
                      })
+
+
+
                 .EnableSwaggerUi("api/v2/swagger/{*assetPath}", c => //api/v2/swagger/index
                 {
                     // Use the "DocumentTitle" option to change the Document title.
@@ -270,7 +287,7 @@ namespace HlidacStatu.Web
                     // If your API supports ApiKey, you can override the default values.
                     // "apiKeyIn" can either be "query" or "header"
                     //
-                    c.EnableApiKeySupport("apiKey", "header");
+                    c.EnableApiKeySupport("Authorization", "header");
                 });
         }
     }

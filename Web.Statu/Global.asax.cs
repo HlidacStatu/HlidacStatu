@@ -12,6 +12,8 @@ namespace HlidacStatu.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        public static string LoginRedirPath = "/Account/Login";
+
 
         public static volatile MemoryCacheManager<string, string> CachedDatasets = null;
 

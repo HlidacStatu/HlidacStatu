@@ -6,9 +6,13 @@ using System;
 using System.Linq;
 using System.Web.Http;
 using System.Collections.Generic;
+using System.Web.Http.Description;
+using Swashbuckle.Swagger.Annotations;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [SwaggerControllerTag("Datasety")]
     [RoutePrefix("api/v2/datasety")]
     public class ApiV2DatasetyController : ApiV2AuthController
     {
@@ -18,6 +22,7 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>Seznam datastů</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route()]
+        [SwaggerOperation(Tags = new[] { "Beta" })]
         public SearchResultDTO<Registration> GetAll()
         {
             var result = DataSetDB.AllDataSets.Get();

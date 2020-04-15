@@ -2,9 +2,14 @@
 using HlidacStatu.Web.Models.Apiv2;
 using System.Web.Http;
 using HlidacStatu.Lib.Data;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
+
+
+    [SwaggerControllerTag("Osoby")]
+
     [RoutePrefix("api/v2/osoby")]
     public class ApiV2OsobyController : ApiV2AuthController
     {

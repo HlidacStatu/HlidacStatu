@@ -6,12 +6,25 @@ using System.Net;
 using HlidacStatu.Util;
 using System;
 using System.IO;
+using System.Web.Http.Description;
+using HlidacStatu.Web.Framework;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [SwaggerControllerTag("Core")]
     [RoutePrefix("api/v2")]
     public class ApiV2Controller : ApiV2AuthController
     {
+
+        /*
+        Atributy pro API
+        [SwaggerOperation(Tags = new[] { "Beta" })] - zarazeni metody do jine skupiny metod, pouze na urovni methody
+        [ApiExplorerSettings(IgnoreApi = true)] - neni videt v dokumentaci, ani ve swagger file
+        [SwaggerControllerTag("Core")] - Tag pro vsechny metody v controller
+        */
+
+
+
         // /api/v2/{id}
         [AuthorizeAndAudit]
         [HttpGet, Route("ping/{text}")]
@@ -20,6 +33,8 @@ namespace HlidacStatu.Web.Controllers
             return "pong " + text;
         }
 
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         [AuthorizeAndAudit]
         [HttpGet, Route("getmyip")]
         public string GetIp()

@@ -1,10 +1,12 @@
 ﻿using HlidacStatu.Web.Attributes;
+using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models.Apiv2;
 using System.Linq;
 using System.Web.Http;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [SwaggerControllerTag("Veřejné zakázky")]
     [RoutePrefix("api/v2/verejnezakazky")]
     public class ApiV2VZController : ApiV2AuthController
     {

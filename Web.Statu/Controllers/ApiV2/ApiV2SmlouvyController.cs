@@ -1,10 +1,13 @@
 ﻿using HlidacStatu.Web.Attributes;
+using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models.Apiv2;
 using System.Linq;
 using System.Web.Http;
 
 namespace HlidacStatu.Web.Controllers
 {
+    [SwaggerControllerTag("Smlouvy")]
+
     [RoutePrefix("api/v2/smlouvy")]
     public class ApiV2SmlouvyController : ApiV2AuthController
     {
