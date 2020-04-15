@@ -667,11 +667,11 @@ namespace HlidacStatu.Web.Controllers
                     return View("Error404");
                 }
                 var smodel = Smlouva.Export(model, 
-                    !string.IsNullOrWhiteSpace(Request.QueryString["nice"]), 
-                    apires.ApiCall.UserRoles.Contains("Admin") 
+                    allData: apires.ApiCall.UserRoles.Contains("Admin"),
+                    docsContent: apires.ApiCall.UserRoles.Contains("Admin")
                     );
                 var s = Newtonsoft.Json.JsonConvert.SerializeObject(
-                                Smlouva.Export(smodel),
+                                    smodel,
                                     new Newtonsoft.Json.JsonSerializerSettings()
                                     {
                                         Formatting = (Request.QueryString["nice"]=="1" ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None),

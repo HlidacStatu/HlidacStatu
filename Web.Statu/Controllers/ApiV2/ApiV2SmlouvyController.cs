@@ -69,7 +69,7 @@ namespace HlidacStatu.Web.Controllers
                 var filtered = result.ElasticResults.Hits
                     .Select(m => 
                         Lib.Data.Smlouva.Export(m.Source, 
-                            false, 
+                            this.User.IsInRole("Admin"),
                             this.User.IsInRole("Admin")))
                     .ToArray();
 
@@ -96,7 +96,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Smlouva nenalezena"));
             }
-            var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin"));
+            var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin"), this.User.IsInRole("Admin"));
 
             return s;
         }

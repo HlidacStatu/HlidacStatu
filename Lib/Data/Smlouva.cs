@@ -1127,7 +1127,7 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public static Smlouva Export(Smlouva smlouva, bool allData = false, bool noDocsContent = false)
+        public static Smlouva Export(Smlouva smlouva, bool allData = false, bool docsContent = false)
         {
             Smlouva s = (Smlouva)smlouva.MemberwiseClone();
             if (s == null)
@@ -1156,7 +1156,7 @@ namespace HlidacStatu.Lib.Data
                 s.SVazbouNaPolitikyAktualni = null;
                 s.SVazbouNaPolitikyNedavne = null;
             }
-            if (noDocsContent)
+            if (docsContent == false)
                 if (s.Prilohy != null)
                 {
                     foreach (var p in s.Prilohy)
