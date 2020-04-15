@@ -74,6 +74,12 @@ namespace HlidacStatu.Web
             //}
 
             var formatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            formatter.SerializerSettings = new Newtonsoft.Json.JsonSerializerSettings()
+            {
+                Formatting = Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore,
+                //ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver()
+            };
 
             formatter.MediaTypeMappings
             .Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept",
