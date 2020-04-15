@@ -505,6 +505,14 @@ text zpravy: {txt}";
 
         }
 
+        public ActionResult ZobrazD()
+        {
+            var deb = Framework.WebContextInfo.GetFullInfoString(this.HttpContext);
+            Lib.Watchdogs.Email.SendEmail("michal@michalblaha.cz", "ZobrazD", new Lib.Watchdogs.RenderedContent() { ContentText = deb });
+
+            return View();
+        }
+
         public ActionResult PoliticiChybejici()
         {
 

@@ -460,12 +460,13 @@
     <Compile Include="Framework\RobotFromIP.cs" />
     <Compile Include="Framework\Shared\Data.cs" />
     <Compile Include="Framework\LimitedAccess.cs" />
-    <Compile Include="Framework\SwaggerControllerNameAttribute.cs" />
+    <Compile Include="Framework\SwaggerControllerTagAttribute.cs" />
     <Compile Include="Framework\Visit.cs" />
     <Compile Include="Framework\DisableController.cs" />
     <Compile Include="Framework\Extensions.Html.cs" />
     <Compile Include="Framework\Extensions.Routing.cs" />
     <Compile Include="Framework\Report\Statistics.cs" />
+    <Compile Include="Framework\WebContextInfo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1530,6 +1531,7 @@
     <Content Include="Views\Home\HledatSmlouvy.cshtml" />
     <Content Include="Views\Osoby\Hledat.cshtml" />
     <Content Include="Views\Insolvence\Index.Content.Politici.cshtml" />
+    <Content Include="Views\Home\ZobrazD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

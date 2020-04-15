@@ -1,0 +1,25 @@
+﻿
+@using HlidacStatu.Web;
+
+@using System.Linq;
+@using Devmasters.Core;
+@{
+    ViewBag.Title = "Stránka není určena pro širokou veřejnost";
+
+    string url = ViewBag.SourceUrl;
+    if (!string.IsNullOrEmpty(Request.QueryString["from"]))
+    {
+        url = Request.QueryString["from"];
+    }
+}
+
+@section scripts
+{
+}
+
+<h3 class="text-center" style="padding-bottom:30px;">Tato stránka není určena pro širokou veřejnost.</h3>
+<p class="text-center">
+    <a class="btn btn-primary btn-lg" href="@(string.IsNullOrEmpty(ViewBag.NextUrl) ? Html.Raw("/") : Html.Raw(Model))" role="button">
+        @(string.IsNullOrEmpty(ViewBag.NextUrlText) ? "Pokračovat na titulní stránce" : (string)ViewBag.NextUrlText)
+    </a>
+</p>
