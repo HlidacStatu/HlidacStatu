@@ -1313,6 +1313,7 @@ text zpravy: {txt}";
             return View(viewName, new ImageBannerCoreData() { title = title, subtitle = subtitle, body = body, footer = footer, img = img, color = color });
         }
 
+
         //#if (!DEBUG)
         //        [OutputCache(VaryByParam = "id;v;t;st;b;f;img;rat;res;d;embed", Duration = 60 * 60 * 2)]
         //#endif
@@ -1343,7 +1344,19 @@ text zpravy: {txt}";
             {
                 VerejnaZakazka vz = VerejnaZakazka.LoadFromES(v);
                 if (vz != null)
-                {
+             try
+            {
+                var path = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(id));
+                Framework.Visit.AddVisit(path,
+                    Framework.Visit.IsCrawler(Request.UserAgent) ?
+                        Visit.VisitChannel.Crawler : Visit.VisitChannel.Web);
+            }
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
+            }
+
+               {
                     url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(vz, rat == "1x1", true);
                 }
 
@@ -1492,6 +1505,30 @@ text zpravy: {txt}";
                 return File(data, "image/png");
 
         }
+        public ActionResult Tip(string id)
+        {
+            string url = "";
+            using (DbEntities db = new DbEntities())
+            {
+                url = db.TipUrl.Where(m => m.Name == id).Select(m => m.Url).FirstOrDefault();
+                url = url ?? "/";
+            }
+
+            try
+            {
+                var path = "/tip/" + id;
+                Framework.Visit.AddVisit(path,
+                    Framework.Visit.IsCrawler(Request.UserAgent) ?
+                        Visit.VisitChannel.Crawler : Visit.VisitChannel.Web);
+            }
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
+            }
+
+            return Redirect(url);
+        }
+
 
 
 

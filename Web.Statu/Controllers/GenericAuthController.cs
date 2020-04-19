@@ -1,4 +1,5 @@
-﻿using HlidacStatu.Web.Framework;
+﻿using HlidacStatu.Lib.Data;
+using HlidacStatu.Web.Framework;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -55,11 +56,11 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        
+
         public string HostIpAddress { get => this.Request.UserHostAddress; }
-        public string AuthToken 
-        { 
-            get 
+        public string AuthToken
+        {
+            get
             {
 
                 if (this.Request.Headers != null && this.Request.Headers.AllKeys.Contains("Authorization"))
@@ -245,13 +246,24 @@ namespace HlidacStatu.Web.Controllers
 
         protected override void HandleUnknownAction(string actionName)
         {
+            string url = null;
+            using (DbEntities db = new DbEntities())
+            {
+                url = db.TipUrl.Where(m => m.Name == actionName).Select(m => m.Url).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                Redirect(url).ExecuteResult(this.ControllerContext);
+                return;
+            }
+
             HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
                 .SetMessage("Url not found")
                 .SetCustomKeyValue("URL", Request.RawUrl)
                 );
 
 
-            RedirectToAction("Error404","Home").ExecuteResult(this.ControllerContext);
+            RedirectToAction("Error404", "Home").ExecuteResult(this.ControllerContext);
 
         }
 

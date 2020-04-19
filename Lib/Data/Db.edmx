@@ -293,6 +293,15 @@
           <Property Name="updated" Type="datetime" Nullable="false" />
           <Property Name="active" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="TipUrl">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="150" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UcetniJednotka">
@@ -455,6 +464,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="OsobaVazby" EntityType="Self.OsobaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SmlouvyIds" EntityType="Self.SmlouvyIds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TipUrl" EntityType="Self.TipUrl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserOptions" EntityType="Self.UserOptions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WatchDog" EntityType="Self.WatchDog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UcetniJednotka" EntityType="Self.UcetniJednotka" store:Type="Tables" store:Schema="dbo">
@@ -592,6 +602,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="OsobaEvent" EntityType="FirmyModel.OsobaEvent" />
           <EntitySet Name="FirmaHint" EntityType="FirmyModel.FirmaHint" />
           <EntitySet Name="UcetniJednotka" EntityType="FirmyModel.UcetniJednotka" />
+          <EntitySet Name="TipUrl" EntityType="FirmyModel.TipUrl" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -980,6 +991,15 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="aktorg_id" Type="Int32" />
           <Property Name="datumvzniku" Type="DateTime" Precision="7" />
           <Property Name="psc" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TipUrl">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1384,6 +1404,16 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
                 <ScalarProperty Name="end_date" ColumnName="end_date" />
                 <ScalarProperty Name="start_date" ColumnName="start_date" />
                 <ScalarProperty Name="ico" ColumnName="ico" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipUrl">
+            <EntityTypeMapping TypeName="FirmyModel.TipUrl">
+              <MappingFragment StoreEntitySet="TipUrl">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

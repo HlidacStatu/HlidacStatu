@@ -585,6 +585,9 @@
     <Compile Include="Data\Smlouva.WatchdogProcessor.cs" />
     <Compile Include="Data\SocialContact.cs" />
     <Compile Include="Data\Sponzori.cs" />
+    <Compile Include="Data\TipUrl.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\UcetniJednotka.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
