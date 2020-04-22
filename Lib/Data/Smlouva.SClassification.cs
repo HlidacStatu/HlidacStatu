@@ -326,8 +326,8 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Finance")]
                 finance_obecne = 11400,
-                [NiceDisplayName("Finanční a pojišťovací služby")]
-                finance_sluzby = 11401,
+                [NiceDisplayName("Pojišťovací služby")]
+                finance_pojisteni= 11401,
                 [NiceDisplayName("Účetní, revizní a peněžní služby")]
                 finance_ucetni = 11402,
                 [NiceDisplayName("Podnikatelské a manažerské poradenství a související služby")]

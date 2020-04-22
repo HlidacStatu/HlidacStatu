@@ -685,11 +685,13 @@ namespace HlidacStatu.Lib.Data
             return _podobneSmlouvy;
         }
 
-        public void PrepareBeforeSave()
+        public void PrepareBeforeSave(bool updateLastUpdateValue = true)
         {
             this.SVazbouNaPolitiky = this.JeSmlouva_S_VazbouNaPolitiky(Relation.AktualnostType.Libovolny);
             this.SVazbouNaPolitikyNedavne = this.JeSmlouva_S_VazbouNaPolitiky(Relation.AktualnostType.Nedavny);
             this.SVazbouNaPolitikyAktualni = this.JeSmlouva_S_VazbouNaPolitiky(Relation.AktualnostType.Aktualni);
+
+            if (updateLastUpdateValue)
             this.LastUpdate = DateTime.Now;
 
             this.ConfidenceValue = GetConfidenceValue();
@@ -744,13 +746,13 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public bool Save(ElasticClient client = null)
+        public bool Save(ElasticClient client = null, bool updateLastUpdateValue = true)
         {
             var item = this;
             if (item == null)
                 return false;
 
-            item.PrepareBeforeSave();
+            item.PrepareBeforeSave(updateLastUpdateValue);
             ElasticClient c = client;
             if (c == null)
             {
