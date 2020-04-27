@@ -1,4 +1,5 @@
 ﻿using Devmasters.Core;
+using Elastic.Apm.Api;
 using HlidacStatu.Util.Cache;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -561,8 +562,58 @@ namespace HlidacStatu.Lib.Data
                 return data;
             }
 
+            
 
+        }
 
+        /// <summary>
+        /// Sets new classification on smlouva. And saves data also to audit table []. 
+        /// Originally created for manual override of classification.
+        /// </summary>
+        /// <param name="typeValues">new classification</param>
+        /// <param name="username">author</param>
+        public void OverrideClassification(int[] typeValues, string username)
+        {
+            if (typeValues.Length == 0)
+                throw new ArgumentException($"typeValues is empty");
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException($"username is empty");
+
+            List<SClassification.Classification> newClassification = new List<SClassification.Classification>();
+            for (int i = 0; i < typeValues.Length; i++)
+            {
+                if (!Enum.IsDefined(typeof(SClassification.ClassificationsTypes), typeValues[i]))
+                    throw new ArgumentException($"TypeValue [{typeValues[i]}] is not defined in {nameof(SClassification.ClassificationsTypes)}.");
+
+                var classItem = new SClassification.Classification
+                {
+                    TypeValue = typeValues[i],
+                    ClassifProbability = (i == 0) ? 0.8m : 0.5m
+                };
+                newClassification.Add(classItem);
+            }
+
+            // save to db
+            using (Lib.Data.DbEntities db = new DbEntities())
+            {
+                db.ClassificationOverride.Add(
+                    new ClassificationOverride()
+                    {
+                        IdSmlouvy = this.Id,
+                        Created = DateTime.Now,
+                        CreatedBy = username,
+                        OriginalCat1 = this.Classification.Types.Length > 0 ? (int?)this.Classification.Types[0].TypeValue : null,
+                        OriginalCat2 = this.Classification.Types.Length > 1 ? (int?)this.Classification.Types[1].TypeValue : null,
+                        CorrectCat1 = newClassification.Count > 0 ? (int?)newClassification[0].TypeValue : null,
+                        CorrectCat2 = newClassification.Count > 1 ? (int?)newClassification[1].TypeValue : null
+                    });
+                db.SaveChanges();
+            }
+
+            var idsmlouvy = this.Id;
+
+            this.Classification.Types = newClassification.ToArray();
+            this.Save();
         }
     }
 }

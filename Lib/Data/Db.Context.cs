@@ -52,6 +52,7 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<FirmaHint> FirmaHint { get; set; }
         public virtual DbSet<UcetniJednotka> UcetniJednotka { get; set; }
         public virtual DbSet<TipUrl> TipUrl { get; set; }
+        public virtual DbSet<ClassificationOverride> ClassificationOverride { get; set; }
     
         public virtual int Firma_Save(string iCO, string dIC, Nullable<System.DateTime> datum_zapisu_OR, Nullable<byte> stav_subjektu, string jmeno, string jmenoAscii, Nullable<int> kod_PF, string source, string popis, Nullable<int> versionUpdate, string krajId, string okresId, Nullable<int> status)
         {

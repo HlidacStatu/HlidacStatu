@@ -67,6 +67,19 @@
           <Property Name="ItemId" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Created" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="ClassificationOverride">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSmlouvy" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OriginalCat1" Type="int" />
+          <Property Name="OriginalCat2" Type="int" />
+          <Property Name="CorrectCat1" Type="int" />
+          <Property Name="CorrectCat2" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="150" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
         <EntityType Name="DatoveSchranky">
           <Key>
             <PropertyRef Name="DS" />
@@ -448,6 +461,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="AspNetUserTokens" EntityType="Self.AspNetUserTokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bookmarks" EntityType="Self.Bookmarks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClassificationOverride" EntityType="Self.ClassificationOverride" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventType" EntityType="Self.EventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaEvent" EntityType="Self.FirmaEvent" Schema="dbo" store:Type="Tables" />
@@ -603,6 +617,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="FirmaHint" EntityType="FirmyModel.FirmaHint" />
           <EntitySet Name="UcetniJednotka" EntityType="FirmyModel.UcetniJednotka" />
           <EntitySet Name="TipUrl" EntityType="FirmyModel.TipUrl" />
+          <EntitySet Name="ClassificationOverride" EntityType="FirmyModel.ClassificationOverride" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -1000,6 +1015,19 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="Url" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ClassificationOverride">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSmlouvy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OriginalCat1" Type="Int32" />
+          <Property Name="OriginalCat2" Type="Int32" />
+          <Property Name="CorrectCat1" Type="Int32" />
+          <Property Name="CorrectCat2" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1414,6 +1442,20 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClassificationOverride">
+            <EntityTypeMapping TypeName="FirmyModel.ClassificationOverride">
+              <MappingFragment StoreEntitySet="ClassificationOverride">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CorrectCat2" ColumnName="CorrectCat2" />
+                <ScalarProperty Name="CorrectCat1" ColumnName="CorrectCat1" />
+                <ScalarProperty Name="OriginalCat2" ColumnName="OriginalCat2" />
+                <ScalarProperty Name="OriginalCat1" ColumnName="OriginalCat1" />
+                <ScalarProperty Name="IdSmlouvy" ColumnName="IdSmlouvy" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

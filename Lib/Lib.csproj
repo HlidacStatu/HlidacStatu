@@ -482,6 +482,9 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Bookmark.Partial.cs" />
+    <Compile Include="Data\ClassificationOverride.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\Darujme.cs" />
     <Compile Include="Data\Dotace\Cerpani.cs" />
     <Compile Include="Data\Dotace\Dotace.cs" />

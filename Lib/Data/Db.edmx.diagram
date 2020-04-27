@@ -32,6 +32,7 @@
         <EntityTypeShape EntityType="FirmyModel.FirmaHint" Width="1.5" PointX="14.375" PointY="7.75" />
         <EntityTypeShape EntityType="FirmyModel.UcetniJednotka" Width="1.5" PointX="5.375" PointY="15.75" />
         <EntityTypeShape EntityType="FirmyModel.TipUrl" Width="1.5" PointX="7.375" PointY="15.75" />
+        <EntityTypeShape EntityType="FirmyModel.ClassificationOverride" Width="1.5" PointX="9.375" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

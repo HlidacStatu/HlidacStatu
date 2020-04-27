@@ -438,6 +438,7 @@
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
     <Compile Include="Controllers\ManageController.Admin.cs" />
+    <Compile Include="Controllers\ManageController.Smlouvy.cs" />
     <Compile Include="Controllers\OsobyController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ManageController.Api.cs" />
@@ -1532,6 +1533,7 @@
     <Content Include="Views\Osoby\Hledat.cshtml" />
     <Content Include="Views\Insolvence\Index.Content.Politici.cshtml" />
     <Content Include="Views\Home\ZobrazD.cshtml" />
+    <Content Include="Views\Manage\EditClassification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

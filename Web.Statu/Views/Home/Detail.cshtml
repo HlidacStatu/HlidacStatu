@@ -185,13 +185,31 @@
             @if (Model.GetRelevantClassification().Count() > 0)
             {
                 <tr>
-                    <td>Oblast@((Model.GetRelevantClassification().Count()>1) ? "i" : "") smlouvy</td>
-                    <td>@foreach (var classif in Model.GetRelevantClassification())
-                    { 
-                        <div>
-                            @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
+                    <td>
+                        
+
+                        Oblast@((Model.GetRelevantClassification().Count() > 1) ? "i" : "") smlouvy
+                    </td>
+                    <td>
+                        <div class="row">
+                            @if (this.User?.IsInRole("canEditData") == true)
+                            {
+                                <div class="col-xs-1">
+                                    <a href="/manage/EditClassification/@Model.Id" style="font-size:2em">
+                                        <i class="far fa-axe"></i>
+                                    </a>
+                                </div>
+                            }
+                            <div class="col-xs-11">
+                                @foreach (var classif in Model.GetRelevantClassification())
+                                {
+                                    <div>
+                                        @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
+                                    </div>
+                                }
+                            </div>
+
                         </div>
-                    }
                     </td>
                 </tr>
             }
