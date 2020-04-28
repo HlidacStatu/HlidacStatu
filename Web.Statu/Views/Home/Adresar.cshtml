@@ -24,7 +24,8 @@
 }
 
 
-@Html.Action("Adresar_Child")
+
+@Html.Action("CachedAction_Child_12H", new { model = (object)null, NameOfView = "Adresar_Child", auth = this.User.Identity.IsAuthenticated})
 
 
 @section footerscripts

@@ -42,7 +42,7 @@
     }
 
     public static string GetSearchUrl(string url, string query)
-    { 
+    {
         if (query != null)
         {
             if (url.Contains("?"))
@@ -261,7 +261,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     </span>
 }
 
-@helper DynamicModal(string dynamicContentRelUrl)
+@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null)
 {
     if (!dynamicContentRelUrl.EndsWith("&"))
     {
@@ -274,9 +274,11 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
             dynamicContentRelUrl += "?";
         }
     }
+    nazevOdkazu = nazevOdkazu ?? "Opravit";
+    _class = _class ?? "btn btn-link";
     string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
-    <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="btn btn-link">
-        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Opravit
+    <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>@(nazevOdkazu)
     </a>
     <div class="modal fade" id="@(modalId)Form" tabindex="-1" role="dialog" aria-labelledby="@(modalId)Title" aria-hidden="true">
         <div class="modal-dialog">
@@ -359,27 +361,27 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 
 @helper ShareWidget(string url, string title = "Vložit do vlastní stránky", int width = 500)
 {
-var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
-var wid = Devmasters.Core.TextUtil.GenRandomString(5);
-var pageUrl = new Uri(url);
-var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
-var embedUrl = url.Replace(rootUrl, "");
-if (embedUrl.IndexOf("?") > 0)
-{
-    embedUrl = embedUrl + "&embed=1";
-}
-else
-{
-    embedUrl = embedUrl + "?embed=1";
-}
-var widgetUrl = url.Replace(rootUrl, "");
-var extHtmlL1 = $"<script src='{rootUrl}/widget/{wid}?width={width}' type='text/javascript'></script>";
-var extHtmlL2 = $"<div id='{wid}' style='width:{width}px' widget-page='{widgetUrl}'></div>\n";
-var iframeHtml = $"<iframe " +
-$" style='border: 0px; width: 100%; overflow: hidden; max-width: {width}px;'" +
-"frameborder='0' width='100%' border='0' cellspacing='0' " +
-$"src='{embedUrl}'" +
-"scrolling='auto' ></iframe>";
+    var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
+    var wid = Devmasters.Core.TextUtil.GenRandomString(5);
+    var pageUrl = new Uri(url);
+    var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
+    var embedUrl = url.Replace(rootUrl, "");
+    if (embedUrl.IndexOf("?") > 0)
+    {
+        embedUrl = embedUrl + "&embed=1";
+    }
+    else
+    {
+        embedUrl = embedUrl + "?embed=1";
+    }
+    var widgetUrl = url.Replace(rootUrl, "");
+    var extHtmlL1 = $"<script src='{rootUrl}/widget/{wid}?width={width}' type='text/javascript'></script>";
+    var extHtmlL2 = $"<div id='{wid}' style='width:{width}px' widget-page='{widgetUrl}'></div>\n";
+    var iframeHtml = $"<iframe " +
+    $" style='border: 0px; width: 100%; overflow: hidden; max-width: {width}px;'" +
+    "frameborder='0' width='100%' border='0' cellspacing='0' " +
+    $"src='{embedUrl}'" +
+    "scrolling='auto' ></iframe>";
 
     <span class="dontembed">
         <a href="" class="ssk ssk-text ssk-amethyst ssk-xs" data-toggle="modal" data-target="#modal@(modalid)">
@@ -406,12 +408,12 @@ $"src='{embedUrl}'" +
                     </form>
                     <p style="font-size:14px;">
                         Pokud máte <a href="https://www.michalblaha.cz/2019/01/obsah-hlidace-statu-prehledne-na-vlastni-strance-v-clanku-ci-blogu-kdekoliv/" target="_blank">Wordpress plugin</a>: <code>[hlidac-statu page="@(widgetUrl)"]</code>
-                        </p>
-                        <hr />
-                        <h3>Ukázka zobrazení</h3>
-                        <div id="modaliframe@(modalid)">
-                            Načítáme náhled, jak to bude vypadat.
-                        </div>
+                    </p>
+                    <hr />
+                    <h3>Ukázka zobrazení</h3>
+                    <div id="modaliframe@(modalid)">
+                        Načítáme náhled, jak to bude vypadat.
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
@@ -827,7 +829,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                             Upozornění či poslání vzkazu
                         </h4>
                         @if (defaultForm)
-                        { 
+                        {
                             <div class="alert alert-danger" role="alert">
                                 Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a>
                             </div>

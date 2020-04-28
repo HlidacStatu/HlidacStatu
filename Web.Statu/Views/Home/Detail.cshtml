@@ -207,6 +207,13 @@
                                         @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
                                     </div>
                                 }
+                            <div>
+                                @Util.DynamicModal("/api/v1/modalclassification/234234", " Jsou oblasti špatně? Dejte nám vědět, prosím.","btn btn-link")
+                                <br/>
+                                <span class="small">
+                                    Zatřídění do oblastí dělá stroj a někdy se může splést. Každá vaše oprava našeho robota zpřesní. Díky.
+                                </span>
+                            </div>
                             </div>
 
                         </div>

@@ -31,28 +31,33 @@
                         <label class="col-sm-offset-1 col-sm-10" for="@(modalId)InputTyp">Zaškrtněte kategorie, do kterých smlouva podle vás patří</label>
                         <div class="col-sm-offset-1 col-sm-10">
                             <div class="checkbox" style="height:500px;overflow-y:auto;border:1px #d0d0d0 solid;width:80%;overflow-x:hidden;padding:10px;">
-                                @foreach (var item in Devmasters.Core.Enums
+                                @foreach (var main in Devmasters.Core.Enums
                                     .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
-                                    .OrderBy(m => m.Value)
-                                    )
+                                    .Select(m=> new { value = Convert.ToInt32(m.Value), key = m.Key })
+                                    .Where(m => m.value % 100 == 0)
+                                    .OrderBy(m => m.key)
+                                )
                                 {
-                                    if (Convert.ToInt32(item.Value) % 100 == 0)
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" name="@(modalId)InputTxt" value="@(main.value)_@main.key" /><b>@main.key</b>
+                                        </label>
+                                    </div>
+                                    foreach (var item in Devmasters.Core.Enums
+                                        .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                                        .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                                        .Where(m => m.value % 100 != 0)
+                                        .Where(m => m.value - (m.value % 100) == main.value)
+                                        .OrderBy(m => m.key)
+                                    )
                                     {
                                         <div>
                                             <label>
-                                                <input type="checkbox" name="@(modalId)InputTxt" value="@(item.Value)_@item.Key" /> @item.Key
+                                                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="@(modalId)InputTxt" value="@(item.value)_@item.key" />@(item.key)
                                             </label>
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <div>
-                                            <label>
-                                                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="@(modalId)InputTxt" value="@(item.Value)_@item.Key" /> @(item.Key)
-                                            </label>
-                                        </div>
-                                    }
                                 }
+                                    }
                             </div>
                         </div>
                     </div>
@@ -70,7 +75,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         Zrušit
                     </button>
-                    <button type="button" onclick="send@(modalId)();" class="btn btn-primary" data-dismiss="modal">
+                    <button type="button" onclick="send@(modalId)();" class="btn btn-primary" >
                         Odeslat opravené zatřídění
                     </button>
                 </div>
@@ -81,7 +86,11 @@
         var prf = '#@(modalId)';
         var typ = $(prf + "InputTyp").val();
         var email = $(prf + "InputEmail").val();
-        var text = "";//$(prf + "InputTxt").val();
+        if (email == null || email == '') {
+            alert("Vyplňte váš email, prosím.");
+            return false;
+        }
+        var text = "Navrhovaná clasifikace pro smlouvu";//$(prf + "InputTxt").val();
         var url = $(prf + "Url").val();
         var adddata = $(prf + "data").val();
 
@@ -98,6 +107,7 @@
             })
             .done(function () {
                 alert("Děkujeme za zaslání opravy.");
+                $(prf + "Form").modal("hide");
             });
 
     }
