@@ -22,7 +22,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public class Annual
         {
-            
+            protected Annual() { }
+            public Annual(int rok) { this.Rok = rok; }
+
             public decimal PodilSmluvNaCelkovychNakupech { get; set; } //Podíl smluv na celkových nákupech
             public KoncentraceDodavateluIndexy CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
             public KoncentraceDodavateluIndexy KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
@@ -41,21 +43,33 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public FinanceData FinancniUdaje { get; set; }
         }
 
-        public Dictionary<int, Annual> roky { get; set; } = new Dictionary<int, Annual>();
+        public List<Annual> roky { get; set; } = new List<Annual>();
 
         public string Ico { get; set; }
         public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();
 
-
         public void Save()
-        { 
+        {
             //calculate fields before saving
-            
+
             var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 throw new ApplicationException(res.ServerError?.ToString());
             }
+        }
+
+        public static KIndexData Get(string ico)
+        {
+            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
+            if (res.Found == false)
+                return null;
+            else if (!res.IsValid)
+            {
+                throw new ApplicationException(res.ServerError?.ToString());
+            }
+            else
+                return res.Source;
         }
 
     }

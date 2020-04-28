@@ -27,6 +27,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public Calculator(string ico)
         {
             this.Ico = ico;
+            kindex = KIndexData.Get(ico);
         }
 
         object lockCalc = new object();
@@ -50,7 +51,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             this.InitData();
             foreach (var year in CalculationYears)
             {
-                kindex.roky.Add(year, CalculateForYear(year));
+                kindex.roky.Add(CalculateForYear(year));
             }
             return kindex;
         }
@@ -80,16 +81,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private KIndexData.Annual CalculateForYear(int year)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            KIndexData.Annual ret = new KIndexData.Annual();
+            KIndexData.Annual ret = new KIndexData.Annual(year);
             var fc = new FinanceDataCalculator(this.Ico, year);
             ret.FinancniUdaje = fc.GetData();
 
-            ret.PercSeZasadnimNedostatkem = (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
+            ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
             ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
 
-            ret.PercNovaFirmaDodavatel = (decimal)_calc_NovaFirmaDodavatel[year].Pocet / smlouvyZaRok;
-            ret.PercSmluvUlimitu = (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
-            ret.PercUzavrenoOVikendu = (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
+            ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_NovaFirmaDodavatel[year].Pocet / smlouvyZaRok;
+            ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
+            ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
 
             ret.Smlouvy = this.urad.Statistic().BasicStatPerYear[year];
             ret.Statistika = this.urad.Statistic().RatingPerYear[year];
