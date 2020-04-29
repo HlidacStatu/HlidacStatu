@@ -24,6 +24,13 @@
     Detail dotace "@Model.GetNazevDotace()"
 </h2>
 
+@if(!string.IsNullOrWhiteSpace(Model.Duplicita) && Model.Zdroj.Nazev != "cedr")
+{
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-circle"></i> Tento záznam je velmi pravděpodobně duplicitou dotace <a href="/Dotace/Detail/@Model.Duplicita.ToLower()">@Model.GetNazevDotace()</a>
+    </div>
+}
+
 @if( Model.Chyba != null)
 {
     foreach (var chyba in Model.Chyba)
@@ -96,7 +103,7 @@
         <tr>
             <th>Celková částka</th>
             <td>
-                @if (Model.DotaceCelkem == null)
+                @if (Model.DotaceCelkem == null || Model.DotaceCelkem == 0)
                 {
                     <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
                 }
@@ -113,7 +120,7 @@
         </tr>
         <tr>
             <th>Zdroj</th>
-            <td><a href="@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Url).FirstOrDefault())">@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Url).FirstOrDefault()) (@(Model.Zdroje.Where(z => z.IsPrimary).Select(z => z.Nazev).FirstOrDefault()))</a></td>
+            <td><a href="@(Model.Zdroj?.Url)">@(Model.Zdroj?.Url)</a> (@(Model.Zdroj?.Nazev))</td>
         </tr>
     </tbody>
 </table>
@@ -158,11 +165,20 @@
                             @rozhodnuti.Poskytovatel
                         </td>
                         <td class="text-nowrap text-right">
-                            @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
-                            
-                            @if(rozhodnuti?.Cerpani != null 
+
+                            @if (Model.DotaceCelkem == null || Model.DotaceCelkem == 0)
+                            {
+                                <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
+                            }
+                            else
+                            {
+                                @HlidacStatu.Util.RenderData.NicePrice(rozhodnuti.CerpanoCelkem ?? 0)
+
+                            }
+
+                            @if (rozhodnuti?.Cerpani != null
                                 && rozhodnuti.Cerpani.Count == 1
-                                && rozhodnuti.Cerpani.FirstOrDefault()?.Rok != null )
+                                && rozhodnuti.Cerpani.FirstOrDefault()?.Rok != null)
                             {
                                 <p class="new-p--gray">
                                     (v roce @rozhodnuti.Cerpani.FirstOrDefault().Rok)

@@ -68,6 +68,9 @@ else
                     double? sum = ((Nest.ValueAggregate)Model?.ElasticResults?.Aggregations["souhrn"])?.Value;
                     <div>
                         V celkové hodnotě @HlidacStatu.Util.RenderData.NicePrice((decimal)sum). <sup>*)</sup>
+                        <div class="alert alert-info" role="alert">
+                            <b>*) Celková hodnota</b> je námi vypočítaná přibližná hodnota čerpaných dotací. U spousty zdrojů není tato informace správně uvedena a proto jsou v součtu vynechány.
+                        </div>
                     </div>
                 }
             </div>
@@ -128,9 +131,7 @@ else
             </ul>
         </div>
 
-        <div class="alert alert-info" role="alert">
-            <b>*) Celková částka</b> je námi vypočítaná orientační hodnota dotace. U části zdrojů jsou částky uvedeny neúplně či nepřesně. Známe-li čerpanou částku, použijeme tuto hodnotu. Pokud čerpanou částku zdroj neuvádí, používáme celkovou částku schválené dotace.
-        </div>
+        
 
     }
 }
