@@ -21,19 +21,19 @@
 @helper OsobaTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
             int maxItems, HlidacStatu.Lib.Searching.OsobaSearchResult result)
 {
-        <table class="table table-hover">
-            <thead>
-                @SearchResults.OsobaHead()
-            </thead>
-            <tbody>
-                @foreach (var hit in result.Results.Take(maxItems))
-                {
-                    @SearchResults.OsobaRow(user, req, hit)
-                }
-            </tbody>
-        </table>
+    <table class="table table-hover">
+        <thead>
+            @SearchResults.OsobaHead()
+        </thead>
+        <tbody>
+            @foreach (var hit in result.Results.Take(maxItems))
+            {
+                @SearchResults.OsobaRow(user, req, hit)
+            }
+        </tbody>
+    </table>
 
-    
+
 }
 
 @helper OsobaHead(bool small = false)
@@ -81,26 +81,26 @@
 @helper RenderOsobaVazba(HlidacStatu.Lib.Data.Graph.Edge v)
 {
     var fname = v.To.PrintName();
-<div>
-    @if (string.IsNullOrEmpty(fname))
-    {
-    fname = HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(v.To.Id, true);
-    }
-    @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
+    <div>
+        @if (string.IsNullOrEmpty(fname))
+        {
+            fname = HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(v.To.Id, true);
+        }
+        @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
 
-    @if (v.RelFrom.HasValue && v.RelTo.HasValue)
-    {
-    @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
-    }
-    else if (v.RelTo.HasValue)
-    {
-    @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
-    }
-    else if (v.RelFrom.HasValue)
-    {
-    @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
-    }
-</div>
+        @if (v.RelFrom.HasValue && v.RelTo.HasValue)
+        {
+            @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
+        }
+        else if (v.RelTo.HasValue)
+        {
+            @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
+        }
+        else if (v.RelFrom.HasValue)
+        {
+            @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
+        }
+    </div>
 }
 
 
@@ -539,15 +539,19 @@
         <th>IČO příjemce</th>
         <th>Název projektu</th>
         <th>Datum podpisu</th>
-        <th>Celková částka <sup>*)</sup></th>
+        <th>Čerpaná částka</th>
     </tr>
 }
 
 @helper DotaceRow(System.Security.Principal.IPrincipal user, HttpRequestBase request, HlidacStatu.Lib.Data.Dotace.Dotace item, string query = "")
 {
-    <tr>
+    <tr class="@((!string.IsNullOrWhiteSpace(item.Duplicita) && item.Zdroj.Nazev != "cedr") ? "alert alert-warning" : "") ">
         <td class="text-nowrap">
             @{
+                if (!string.IsNullOrWhiteSpace(item.Duplicita) && item.Zdroj.Nazev != "cedr")
+                {
+                    <i class="fas fa-exclamation-circle text-warning" title="Potencionální duplicita"></i>
+                }
                 @Util.AddBookmark(user, item)
             }
             <a href="@(item.GetUrl(true,query))">Detail</a>
@@ -570,8 +574,8 @@
         <td class="text-nowrap">
             @(item.DatumPodpisu?.Date.ToString("dd.MM.yyyy") ?? "Neznámé")
         </td>
-        <td class="text-right number">
-            @if (item.DotaceCelkem == null)
+        <td class="text-right number text-nowrap">
+            @if (item.DotaceCelkem == null || item.DotaceCelkem == 0)
             {
                 <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
             }

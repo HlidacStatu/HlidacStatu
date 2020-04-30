@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Text]
         public string NazevProjektu { get; set; }
         [Nest.Object]
-        public List<Zdroj> Zdroje { get; set; }
+        public Zdroj Zdroj { get; set; }
         
         [Nest.Object]
         public Prijemce Prijemce { get; set; }
@@ -34,8 +34,13 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Number]
         public decimal? PujckaCelkem { get; set; }
 
+        // Rozhodnutí je neuvěřitelné hausnumero a může se v něm skrývat cokoliv.
+        // Například to může být hodnota, která odpovídá nákladům na realizování dotovaného projektu společnosti, 
+        // kde dotace samotná může dosahovat třeba jen 40 % z rozhodnuté částky
         [Nest.Object]
         public List<Rozhodnuti> Rozhodnuti { get; set; }
+        [Nest.Keyword]
+        public string Duplicita { get; set; }
 
         [Nest.Text]
         public List<string> Chyba { get; set; }
@@ -117,8 +122,8 @@ namespace HlidacStatu.Lib.Data.Dotace
                 // we need to refresh values (in case something was changed)
                 Rozhodnuti.ForEach(r => r.RecalculateCerpano());
 
-                DotaceCelkem = Rozhodnuti.Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
-                PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka.HasValue && r.JePujcka.Value).Sum(r => r.CerpanoCelkem ?? r.CastkaRozhodnuta);
+                DotaceCelkem = Rozhodnuti.Sum(r => r.CerpanoCelkem ?? 0);
+                PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka.HasValue && r.JePujcka.Value).Sum(r => r.CerpanoCelkem ?? 0);
             }
          
         }
