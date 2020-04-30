@@ -165,7 +165,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                     return new Devmasters.Core.Batch.ActionOutputData();
                 }, null,
-                Util.Consts.outputWriter.OutputWriter, Util.Consts.progressWriter.ProgressWriter,
+                null, null,
                 false, 100);
 
             IEnumerable<SmlouvyForIndex> smlouvy = smlStat
@@ -180,8 +180,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var ret = new KIndexData.KoncentraceDodavateluIndexy();
             ret.PrumernaHodnotaSmluv = smlouvy
                                 .Where(m => m.HodnotaSmlouvy != 0)
-                                .Select(m => Math.Abs(m.HodnotaSmlouvy))
-                                .Average();
+                                .Count() == 0 ? 0 : smlouvy
+                                                        .Where(m => m.HodnotaSmlouvy != 0)
+                                                        .Select(m => Math.Abs(m.HodnotaSmlouvy))
+                                                        .Average();
 
             ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy);
             ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy);
