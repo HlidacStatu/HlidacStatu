@@ -495,6 +495,7 @@ namespace HlidacStatu.Lib
 
                 string ds_ovm = App_Data_Path + "DS_OVM.xml";
 
+                //zdroj https://www.czechpoint.cz/public/vyvojari/otevrena-data/
                 HlidacStatu.Util.Consts.Logger.Info("Static data - DatoveSchranky ");
                 using (var xml = System.IO.File.OpenText(ds_ovm))
                 {

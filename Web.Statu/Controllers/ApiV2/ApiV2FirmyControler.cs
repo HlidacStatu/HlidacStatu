@@ -65,7 +65,7 @@ namespace HlidacStatu.Web.Controllers
 
         [AuthorizeAndAudit()]
         [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet, Route("vsechny/soubor")]
+        [HttpGet, Route("vsechny")]
         public HttpResponseMessage Vsechny()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(1024 * 500);
@@ -73,7 +73,7 @@ namespace HlidacStatu.Web.Controllers
             using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
             {
 
-                var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma", null);
+                var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma where ISNUMERIC(ico) = 1", null);
                 while (reader.Read())
                 {
                     string ico = reader.GetString(0).Trim();
