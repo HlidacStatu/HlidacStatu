@@ -65,7 +65,7 @@ namespace HlidacStatu.Web.Controllers
 
         [AuthorizeAndAudit()]
         [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet, Route("vsechny")]
+        [HttpGet, Route("vsechny/soubor")]
         public HttpResponseMessage Vsechny()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(1024 * 500);
