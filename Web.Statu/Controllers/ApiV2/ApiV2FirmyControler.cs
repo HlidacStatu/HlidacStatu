@@ -6,6 +6,9 @@ using HlidacStatu.Lib.Data.External.DataSets;
 using System;
 using System.Linq;
 using HlidacStatu.Web.Framework;
+using System.Web.Http.Description;
+using System.Data;
+using System.Net.Http;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -60,6 +63,32 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
+        [AuthorizeAndAudit()]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet, Route("vsechny")]
+        public HttpResponseMessage Vsechny()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(1024 * 500);
+            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+            {
+
+                var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma", null);
+                while (reader.Read())
+                {
+                    string ico = reader.GetString(0).Trim();
+                    string name = reader.GetString(1).Trim();
+                    if (Devmasters.Core.TextUtil.IsNumeric(ico))
+                    {
+                        ico = Util.ParseTools.NormalizeIco(ico);
+                        sb.AppendLine(ico + "\t" + name);
+                    }
+                }
+            }
+
+            var res = new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(sb.ToString()) };
+            return res;
+        }
 
     }
 }
