@@ -42,11 +42,17 @@
 }
 @section metatags
 {
-    @{bool noIndex = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
-          .SoukromeFirmy[Model.ICO]
-          .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
-          .Where(p => p != null)
-          .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
+    @{
+        bool noIndex = false;
+        if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+          .SoukromeFirmy.ContainsKey(Model.ICO))
+        {
+            noIndex = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+              .SoukromeFirmy[Model.ICO]
+              .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+              .Where(p => p != null)
+              .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
+        }
     }
     @if (noIndex)
     {
