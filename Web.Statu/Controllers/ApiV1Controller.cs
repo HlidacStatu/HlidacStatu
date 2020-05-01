@@ -637,8 +637,8 @@ namespace HlidacStatu.Web.Controllers
                 else
                 {
 
-                    var filtered = res.ElasticResults.Hits
-                                    .Select(m => new Newtonsoft.Json.Linq.JRaw( HlidacStatu.Lib.Data.Smlouva.Export(m.Source,false, apires.ApiCall.UserRoles.Contains("Admin"))))
+                    var filtered = res.Results
+                                    .Select(m =>  HlidacStatu.Lib.Data.Smlouva.Export(m,false, apires.ApiCall.UserRoles.Contains("Admin")))
                                     .ToArray();
 
                     return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = res.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
