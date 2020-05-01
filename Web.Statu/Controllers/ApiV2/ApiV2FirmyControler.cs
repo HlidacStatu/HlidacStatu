@@ -78,7 +78,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     string ico = reader.GetString(0).Trim();
                     string name = reader.GetString(1).Trim();
-                    if (Devmasters.Core.TextUtil.IsNumeric(ico))
+                    if (!string.IsNullOrWhiteSpace(ico)
+                        && !string.IsNullOrWhiteSpace(name)
+                        && Devmasters.Core.TextUtil.IsNumeric(ico))
                     {
                         ico = Util.ParseTools.NormalizeIco(ico);
                         sb.AppendLine(ico + "\t" + name);
