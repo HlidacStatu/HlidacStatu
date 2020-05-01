@@ -698,9 +698,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// <param name="finalId"></param>
         private void SubscribeToOCR(JContainer[] jpathObjs, string finalId)
         {
+            string[] values = new string[]{"document", "documentsave" };
             foreach (var jo in jpathObjs)
             {
-                if (jo["HsProcessType"].Value<string>() == "document")
+                if (values.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
                     {

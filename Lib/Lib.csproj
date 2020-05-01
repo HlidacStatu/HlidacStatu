@@ -498,6 +498,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\External\DataSets\ApiResonseStatus.cs" />
+    <Compile Include="Data\External\DataSets\DataSet.Item.SavedFile.cs" />
     <Compile Include="Data\External\DataSets\DataSet.WatchdogProcessor.cs" />
     <Compile Include="Data\External\DataSets\RuntimeClassBuilder.cs" />
     <Compile Include="Data\External\DataSets\DataSearchResult.cs" />
@@ -702,6 +703,7 @@
     <Compile Include="Enhancers\Util.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\DatasetSavedFile.cs" />
     <Compile Include="Render\ScribanT.cs" />
     <Compile Include="Render\ScribanT.Functions.Private.cs" />
     <Compile Include="Render\ScribanT.Functions.cs" />
