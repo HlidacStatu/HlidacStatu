@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Linq;
 @{
     /**/
 
@@ -6,6 +6,14 @@
 
     ViewBag.Title = "Změna fotky " + o.FullNameWithYear();
 
+}
+@section metatags
+{
+
+    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(o.NameId.ToLower()))
+    {
+        <meta name="robots" content="noindex, noarchive">
+    }
 }
 
 <div class="row">

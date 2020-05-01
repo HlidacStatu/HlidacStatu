@@ -33,12 +33,25 @@
                 ;
 
 
-    bool showEmptyVersion = 
+    bool showEmptyVersion =
         (Model.firma.MaVztahySeStatem() == false)
         && (Model.firma.IsNespolehlivyPlatceDPH() == false)
         && (Model.firma.MaVazbyNaPolitiky() == false)
         ;
 
+}
+@section metatags
+{
+    @{bool noIndex = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+          .SoukromeFirmy[Model.ICO]
+          .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+          .Where(p => p != null)
+          .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
+    }
+    @if (noIndex)
+    {
+        <meta name="robots" content="noindex, noarchive">
+    }
 }
 
 @section scripts
@@ -69,12 +82,12 @@
     @Util.AddVisitImg("/subjekt/" + Model.ICO)
 
     @if (showEmptyVersion)
-    {
+        {
         <div class="container">
             <table class="table table-new table-new--dotted">
                 <tbody>
                     @if (Model.firma.Datum_Zapisu_OR.HasValue)
-                    {
+        {
 
                         <tr>
                             <th>Založena</th>
@@ -83,15 +96,15 @@
                             </td>
                         </tr>
                     }
-                    @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
-                    {
+        @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
+        {
                         <tr>
                             <th>IČO</th>
                             <td>@Model.firma.ICO</td>
                         </tr>
                     }
-                    @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
-                    {
+        @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
+        {
                         <tr>
                             <th>Datová schránka</th>
                             <td>@Model.firma.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>

@@ -8,6 +8,15 @@
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
 
 }
+@section metatags
+{
+
+    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower()))
+    {
+        <meta name="robots" content="noindex, noarchive">
+    }
+}
+
 @section scripts
 {
     <link rel="stylesheet" href="/Scripts/treant.js/Treant.css" type="text/css" />
@@ -115,46 +124,46 @@
         <li><a href="@Url.Action("Osoba","Home", new { id = Model.NameId })">@Model.FullNameWithYear(false)</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
-    }
+}
 
 
 
-    <p>
-        <a href="@Url.Action("Politik", new { id = Model.NameId })">Kompletní seznam angažovanosti politika v jednotlivých firmách</a>
-    </p>
+<p>
+    <a href="@Url.Action("Politik", new { id = Model.NameId })">Kompletní seznam angažovanosti politika v jednotlivých firmách</a>
+</p>
 
-    <p>
-        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
-        </a>
-        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
-        </a>
-        <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
-        </a>
-    </p>
+<p>
+    <a href="@Url.Action("PolitikVazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
+    </a>
+    <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
+    </a>
+    <a href="@Url.Action("PolitikVazby", new { id = Model.NameId,aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
+    </a>
+</p>
 
 
-    <p style="padding-top:30px;">
-        @Html.Raw(
-                        HlidacStatu.Lib.Data.Relation.TiskVazeb(
-                            Model.FullName(false),
-                            Model.AktualniVazby(aktualnost),
-                            HlidacStatu.Lib.Data.Relation.TiskEnum.Html
-                        )
+<p style="padding-top:30px;">
+    @Html.Raw(
+                    HlidacStatu.Lib.Data.Relation.TiskVazeb(
+                        Model.FullName(false),
+                        Model.AktualniVazby(aktualnost),
+                        HlidacStatu.Lib.Data.Relation.TiskEnum.Html
                     )
+                )
 
-    </p>
+</p>
 
-    @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+@Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
 
-    @section footerscripts
+@section footerscripts
 {
-        <script>
+    <script>
         @*var hier_config = {
                 chart: {
                     container: "#hierarchy",
@@ -164,6 +173,6 @@
                 nodeStructure: @Html.Raw(nodeStructure)
             };
             new Treant( hier_config );*@
-        </script>
+    </script>
 
-    }
+}
