@@ -42,6 +42,18 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return System.IO.File.ReadAllBytes(GetFullPath(filename));
                 }
 
+                public bool Exists(Uri url)
+                {
+                    var fullname = GetFullPath(url.LocalPath);
+                    var fullnameAttrs = fullname + ".attrs";
+                    if (!System.IO.File.Exists(fullnameAttrs))
+                        return false;
+
+                    var attrs = Newtonsoft.Json.JsonConvert.DeserializeObject<FileAttributes>(System.IO.File.ReadAllText(fullnameAttrs));
+                    return System.IO.File.Exists(VersionedFilename(fullname, attrs.Version));
+
+                }
+
                 public byte[] GetData(Uri url)
                 {
                     var fullname = GetFullPath(url.LocalPath);

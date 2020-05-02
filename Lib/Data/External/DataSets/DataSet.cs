@@ -597,6 +597,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     status.error.errorDetail = servererr.Error.ToString();
                 }
+                HlidacStatu.Util.Consts.Logger.Error("AddData id:" + id + "\n"+tres.DebugInformation +"\n"+servererr?.Error?.ToString());
+
                 throw new DataSetException(this.datasetId, status);
             }
 
