@@ -12,6 +12,15 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             public class SavedFile
             {
+                public class FileAttributes
+                {
+                    public string Source { get; set; }
+                    public DateTime Downloaded { get; set; }
+                    public string ContentType { get; set; }
+                    public int Version { get; set; } = 0;
+                    public long Size { get; set; }
+                }
+
                 public DataSet Ds = null;
                 public string ItemId = null;
                 IO.DatasetSavedFile filesystem = null;
@@ -27,15 +36,19 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return filesystem.GetFullPath(this, NormalizeFilename(filename));
                 }
 
-                public byte[] GetData(string filename)
+                //don't use
+                private byte[] GetData(string filename)
                 {
                     return System.IO.File.ReadAllBytes(GetFullPath(filename));
                 }
 
                 public byte[] GetData(Uri url)
                 {
+                    var fullname = GetFullPath(url.LocalPath);
+                    var fullnameAttrs = fullname + ".attrs";
 
-                    return System.IO.File.ReadAllBytes(GetFullPath(url.LocalPath));
+                    var attrs = Newtonsoft.Json.JsonConvert.DeserializeObject<FileAttributes>(System.IO.File.ReadAllText(fullnameAttrs));
+                    return System.IO.File.ReadAllBytes(VersionedFilename(fullname, attrs.Version));
 
                 }
 
@@ -53,9 +66,20 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return generatedFileName;
                 }
 
-                public bool Save(string fullPath)
+                //private now, don't use
+                private bool Save(string originalFilePath)
                 {
-                    return Save(System.IO.File.ReadAllBytes(fullPath), fullPath);
+
+                    System.IO.FileInfo fi = new System.IO.FileInfo(originalFilePath);
+
+                    FileAttributes fa = new FileAttributes()
+                    {
+                        ContentType = HlidacStatu.Util.MimeTools.MimetypeFromExtension(originalFilePath),
+                        Source = originalFilePath,
+                        Size = fi.Length,
+                        Downloaded = DateTime.UtcNow
+                    };
+                    return Save(System.IO.File.ReadAllBytes(originalFilePath), originalFilePath, fa);
                 }
                 public bool Save(Uri url)
                 {
@@ -65,17 +89,45 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         net.Tries = 3;
                         net.TimeInMsBetweenTries = 10000;
                         var data = net.GetBinary().Binary;
-                        return Save(data, url.LocalPath);
+                        var attrs = new FileAttributes()
+                        {
+                            Downloaded = DateTime.UtcNow,
+                            Source = url.AbsoluteUri,
+                            ContentType = net.ContentType,
+                            Size = data.Length
+                        };
+                        return Save(data, url.LocalPath, attrs);
                     }
                 }
 
-                public bool Save(byte[] data, string filename)
+
+                private static string VersionedFilename(string fullname, int version)
+                {
+                    if (version == 0)
+                        return fullname;
+                    else
+                        return fullname + "." + version;
+                }
+                public bool Save(byte[] data, string filename, FileAttributes attrs)
                 {
 
                     var fullname = this.GetFullPath(filename);
+                    var fullnameAttrs = fullname + ".attrs";
                     try
                     {
-                        System.IO.File.WriteAllBytes(fullname, data);
+                        if (System.IO.File.Exists(fullname))
+                        {
+                            int nextVersion = FindNextVersion(fullname);
+                            int lastVersion = nextVersion - 1;
+                            System.IO.FileInfo fiLast = new System.IO.FileInfo(VersionedFilename(fullname, lastVersion));
+                            if (HlidacStatu.Util.IO.BinaryCompare.FilesContentsAreEqual(fiLast, data))
+                            {
+                                return true;
+                            }
+                            attrs.Version = nextVersion;
+                        }
+                        System.IO.File.WriteAllBytes(VersionedFilename(fullname, attrs.Version), data);
+                        System.IO.File.WriteAllText(fullnameAttrs, Newtonsoft.Json.JsonConvert.SerializeObject(attrs));
                         return true;
                     }
                     catch (Exception)
@@ -83,6 +135,25 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         throw;
                     }
                 }
+
+                private static int FindNextVersion(string fullname)
+                {
+                    int maxVersions = 99;
+                    int version = 0;
+                    while (true)
+                    {
+                        version++;
+                        var tmpFn = fullname + "." + version.ToString();
+                        if (!System.IO.File.Exists(tmpFn))
+                            return version;
+
+                        if (version == maxVersions)
+                            return maxVersions;
+                    }
+                }
+
+
+
             }
         }
     }

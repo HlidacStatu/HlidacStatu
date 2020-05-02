@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public class Document
         {
-            private static MimeSharp.Mime mime = new MimeSharp.Mime();
+            //private static MimeMapping mime = new MimeMapping.Mime();
             public string ContentType { get; set; }
 
             private string _filename = default(string);
@@ -25,7 +25,7 @@ namespace HlidacStatu.Lib.OCR.Api
                 get { return _filename; }
                 set {
                     _filename = value ?? "neznamy.bin";
-                    this.ContentType =  mime.Lookup(_filename );
+                    this.ContentType = MimeMapping.MimeUtility.GetMimeMapping(_filename );
                 }
             }
 

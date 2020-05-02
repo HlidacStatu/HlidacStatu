@@ -69,6 +69,9 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MimeMapping, Version=1.0.1.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeMapping.1.0.1.26\lib\netstandard2.0\MimeMapping.dll</HintPath>
+    </Reference>
     <Reference Include="Nest, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\NEST.7.6.1\lib\net461\Nest.dll</HintPath>
     </Reference>
@@ -150,12 +153,14 @@
     <Compile Include="Cache\Manager.cs" />
     <Compile Include="Cache\MemoryCacheManager.cs" />
     <Compile Include="InfinitiveTask.cs" />
+    <Compile Include="IO\BinaryCompare.cs" />
     <Compile Include="IO\SimpleZipArchive.cs" />
     <Compile Include="IO\ThrottledStream.cs" />
     <Compile Include="ISocialInfo.cs" />
     <Compile Include="InfoFact.cs" />
     <Compile Include="IOTools.cs" />
     <Compile Include="MathTools.cs" />
+    <Compile Include="MimeTools.cs" />
     <Compile Include="RenderData.cs" />
     <Compile Include="ParseTools.cs" />
     <Compile Include="PluralWords.cs" />
