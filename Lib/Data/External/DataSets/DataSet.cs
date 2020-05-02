@@ -691,6 +691,36 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return result.Items.Select(i => i.Id).ToList();
         }
 
+
+        public static string[] AUDIOCommands = new string[] { "audio", "audiosave" };
+        /// <summary>
+        /// Register item to Audio Speech2Text queueu
+        /// </summary>
+        /// <param name="jpathObjs"></param>
+        /// <param name="finalId"></param>
+        private void SubscribeToSpeech2Text(JContainer[] jpathObjs, string finalId)
+        {
+
+            foreach (var jo in jpathObjs)
+            {
+                if (AUDIOCommands.Contains(jo["HsProcessType"].Value<string>()))
+                {
+                    if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
+                    {
+                        if (Uri.TryCreate(jo["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
+                        {
+                            Lib.Data.ItemToOcrQueue.AddNewTask(ItemToOcrQueue.ItemToOcrType.Dataset,
+                                                               finalId,
+                                                               this.datasetId,
+                                                               OCR.Api.Client.TaskPriority.Standard);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public static string[] OCRCommands = new string[] { "document", "documentsave" };
         /// <summary>
         /// Register item to OCR query
         /// </summary>
@@ -698,10 +728,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// <param name="finalId"></param>
         private void SubscribeToOCR(JContainer[] jpathObjs, string finalId)
         {
-            string[] values = new string[]{"document", "documentsave" };
+            
             foreach (var jo in jpathObjs)
             {
-                if (values.Contains(jo["HsProcessType"].Value<string>()))
+                if (OCRCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
                     {
@@ -743,6 +773,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return true;
         }
 
+        public static string[] PERSONLookupCommands = new string[] { "person" };
+
+
         /// <summary>
         /// Loop through array and fills in osobaid if array contains any person data
         /// </summary>
@@ -751,7 +784,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             foreach (var jo in jpathObjs)
             {
-                if (jo["HsProcessType"].Value<string>() == "person")
+                if (PERSONLookupCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     var jmenoAttrName = jo.Children()
                         .Select(c => c as JProperty)

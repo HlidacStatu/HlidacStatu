@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Render
                     if (jobj != null)
                     {
                         if (
-                            jobj["HsProcessType"].Value<string>() == "document"
+                            Data.External.DataSets.DataSet.OCRCommands.Contains(jobj["HsProcessType"].Value<string>())
                             && Uri.TryCreate(jobj["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri)
                             && !string.IsNullOrEmpty(jobj["DocumentPlainText"].Value<string>())
                             )
@@ -52,7 +52,7 @@ namespace HlidacStatu.Lib.Render
                             return result;
                         }
                         else if (
-                            jobj["HsProcessType"].Value<string>() == "document"
+                            Data.External.DataSets.DataSet.OCRCommands.Contains(jobj["HsProcessType"].Value<string>())
                             && Uri.TryCreate(jobj["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2)
                             )
                         {

@@ -18,7 +18,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             var jpathObjs = jpaths.Select(j => j.Parent.Parent).ToArray();
             foreach (var jo in jpathObjs)
             {
-                if (jo["HsProcessType"].Value<string>() == "person")
+                if (DataSet.PERSONLookupCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     var osobaIdAttrName = jo.Children()
                             .Select(c => c as JProperty)
@@ -28,7 +28,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                     jo[osobaIdAttrName] = null;
                 }
-                if (jo["HsProcessType"].Value<string>() == "document")
+                if (Data.External.DataSets.DataSet.OCRCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     jo["DocumentPlainText"] = null;
                 }
