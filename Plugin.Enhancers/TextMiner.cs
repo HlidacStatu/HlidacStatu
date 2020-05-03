@@ -14,6 +14,7 @@ namespace HlidacStatu.Plugin.Enhancers
         bool skipOCR = false;
         bool forceAlreadyMined = false;
         int priority = 5;
+        private bool forceOCR;
 
         public enum OCREngines
         {
@@ -29,13 +30,14 @@ namespace HlidacStatu.Plugin.Enhancers
                 pathToOcr += "\\";
         }
 
-        public TextMiner(bool skipOCR, bool forceAlreadyMined, bool asyncOCR = false, int priority = 5)
+        public TextMiner(bool skipOCR, bool forceAlreadyMined, bool asyncOCR = false, int priority = 5, bool forceOCR = false)
             : this()
         {
             this.skipOCR = skipOCR;
             this.forceAlreadyMined = forceAlreadyMined;
             this.asyncOCR = asyncOCR;
             this.priority = priority;
+            this.forceOCR = forceOCR;
         }
         public void SetInstanceData(object data)
         {
@@ -86,6 +88,9 @@ namespace HlidacStatu.Plugin.Enhancers
                             HlidacStatu.Lib.OCR.Api.Client.MiningIntensity intensity = HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.Maximum;
                             if (skipOCR)
                                 intensity = HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.SkipOCR;
+                            if (this.forceOCR)
+                                intensity = Lib.OCR.Api.Client.MiningIntensity.ForceOCR;
+
 
                             Base.Logger.Debug($"STARTING TextMiner Client.TextFromFile Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
 

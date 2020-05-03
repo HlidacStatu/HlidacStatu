@@ -588,7 +588,7 @@ namespace HlidacStatu.Lib.Data
                 var classItem = new SClassification.Classification
                 {
                     TypeValue = typeValues[i],
-                    ClassifProbability = (i == 0) ? 0.8m : 0.5m
+                    ClassifProbability = (i == 0) ? 0.8m : 0.7m
                 };
                 newClassification.Add(classItem);
             }

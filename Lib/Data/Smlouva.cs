@@ -692,7 +692,7 @@ namespace HlidacStatu.Lib.Data
             this.SVazbouNaPolitikyAktualni = this.JeSmlouva_S_VazbouNaPolitiky(Relation.AktualnostType.Aktualni);
 
             if (updateLastUpdateValue)
-            this.LastUpdate = DateTime.Now;
+                this.LastUpdate = DateTime.Now;
 
             this.ConfidenceValue = GetConfidenceValue();
 
@@ -709,9 +709,13 @@ namespace HlidacStatu.Lib.Data
                 .ToList();
 
             this.Hint.DenUzavreni = (int)Util.DateTools.TypeOfDay(this.datumUzavreni);
-            this.Hint.PocetDniOdZalozeniFirmy = (int)firmy
-                .Select(f => (this.datumUzavreni - (f.Datum_Zapisu_OR ?? new DateTime(1990, 1, 1))).TotalDays)
-                .Min();
+
+            if (firmy.Count() == 0)
+                this.Hint.PocetDniOdZalozeniFirmy = 9999;
+            else
+                this.Hint.PocetDniOdZalozeniFirmy = (int)firmy
+                    .Select(f => (this.datumUzavreni - (f.Datum_Zapisu_OR ?? new DateTime(1990, 1, 1))).TotalDays)
+                    .Min();
 
             this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.Neni;
             if (firmy.Any(f => f.IsSponzorBefore(this.datumUzavreni)))
