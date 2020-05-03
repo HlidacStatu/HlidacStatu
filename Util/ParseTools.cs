@@ -9,6 +9,21 @@ namespace HlidacStatu.Util
     public static class ParseTools
     {
 
+
+
+        public static bool EnoughExtractedTextCheck(long words, long lengthChars)
+        {
+            return !(lengthChars <= 20 || words <= 10);
+        }
+
+        public static bool EnoughExtractedTextCheck(string plaintext)
+        {
+            var words = ParseTools.CountWords(plaintext);
+            var length = plaintext?.Length ?? 0;
+            return (EnoughExtractedTextCheck(words, length));
+        }
+
+
         /// <summary>
         /// support simple LIKE syntaxt from T-SQL 
         /// %asdf 

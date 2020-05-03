@@ -28,6 +28,7 @@ namespace HlidacStatu.Lib.OCR.Api
 
         public enum MiningIntensity
         {
+            ForceOCR = -1,
             Maximum = 0,
             SkipOCR = 1
         }

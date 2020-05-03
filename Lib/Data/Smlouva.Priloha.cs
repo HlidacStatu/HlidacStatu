@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Data
             {
                 get
                 {
-                    return !(this.Lenght <= 20 || this.WordCount <= 10);
+                    return HlidacStatu.Util.ParseTools.EnoughExtractedTextCheck(this.WordCount,this.Lenght );
                 }
             }
 
