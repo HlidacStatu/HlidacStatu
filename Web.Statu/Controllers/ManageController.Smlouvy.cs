@@ -49,7 +49,7 @@ namespace HlidacStatu.Web.Controllers
 
             }
 
-            return RedirectToAction(nameof(HomeController.Detail),nameof(HomeController), new { Id = id});
+            return Redirect(smlouva.GetUrl(true));
         }
     }
 }

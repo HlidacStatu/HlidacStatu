@@ -88,6 +88,70 @@
 
     <div class="watcher-blocks__wrapper">
 
+        <!-- block Nezhasinat -->
+        @{
+            decimal miliarda = 1000000000m;
+            decimal prima = 9.4m * miliarda;
+            decimal zaruka = 3.9m * miliarda;
+            decimal neprima = 2.3m * miliarda;
+
+        }
+
+        @*<div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Nezhasínat!
+                    <img src="/content/img/rekonstrukce-statu.svg" style="height:25px;width:auto;" /><img src="/content/img/Hlidac-statu-ctverec-notext.svg" style="height:30px;width:auto;" />
+                </h2>
+            </div>
+            <div class="block-col">
+                <div>
+                    Ve spolupráci s Rekonstrukcí státu hlídáme, kolik stát <b>skutečně</b> vyplatil na podpoře podnikatelům.
+                </div>
+            </div>
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Slíbeno
+                </div>
+                <div class="block-table">
+                    <div class="table-row">
+                        <div class="table-col" style="margin-right:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">1000&nbsp;mld.</span></div>
+                        <div class="table-col" style="line-height:40px;" ">Slíbená podpora ekonomice</div>
+                    </div>
+                </div>
+                <div class="block-subtitle">
+                    Skutečně vyplaceno
+                </div>
+                <div class="block-table">
+                    <div class="table-row">
+                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(prima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
+                        <div class="table-col" style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(zaruka, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
+                        <div class="table-col" style="padding-left:20px;">Záruka za půjčku/úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</div>
+                    </div>
+                    <div class="table-row" style="border-bottom:#ff525b 2px double ">
+                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(neprima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
+                        <div class="table-col" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(prima + zaruka + neprima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
+                        <div class="table-col" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/report/26" class="btn btn-default btn-default-new">Podrobnosti</a>
+            </div>
+        </div>*@
+
+
+
+
         <!-- block 1 -->
         <div class="watcher-block">
             <div class="watcher__title">
@@ -134,7 +198,7 @@
                     </a>
                     <a href="/data/Index/rejstrik-trestu-pravnickych-osob" class="tag">
                         Rejstřík trestů právnických osob
-                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rejstrik-trestu-pravnickych-osob")?.NumberOfRecords() ?? 0 ))
+                        (@HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rejstrik-trestu-pravnickych-osob")?.NumberOfRecords() ?? 0))
                     </a>
                     <a href="/data/Index/stav-mostu" class="tag">
                         Stav Mostů v ČR
@@ -168,14 +232,14 @@
 
                 @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts
                     .Get()
-                    .Where(m => m.Date > new DateTime(2020, 1, 25) && m.Categories.Contains(246)==false) //not tipy
-                    .OrderByDescending(m=>m.Date)
+                    .Where(m => m.Date > new DateTime(2020, 1, 25) && m.Categories.Contains(246) == false) //not tipy
+                    .OrderByDescending(m => m.Date)
                     .Take(5)
                     )
                 {
                     <span class="tag">
                         <a href="@wp.Link">
-                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered,55)
+                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered, 55)
                         </a>
                     </span>
 
