@@ -83,10 +83,12 @@ namespace HlidacStatu.Lib.OCR.Api
                         pi.SetProgressInPercent(1).Progress
                         , url.ToString());
                     var fn = Lib.OCR.DocTools.GetFilename(url.LocalPath) + FixedOrigFileExtension;
+                    logger.Debug($"starting OCR from {url.AbsoluteUri}");
                     res = await HlidacStatu.Lib.OCR.Api.Client.TextFromUrlAsync(apikey, url, this.Client,
                             this.Priority, this.Intensity,
                             fn, this.MaxWaitingTimeOfOneFile,
                             this.RestartTaskIn);
+                    logger.Debug($"DONE OCR from {url.AbsoluteUri}");
                     AddProgress(
                         pi.SetProgressInPercent(100).Progress
                         , url.ToString());
@@ -95,12 +97,12 @@ namespace HlidacStatu.Lib.OCR.Api
                 }
                 catch (ApiException e)
                 {
-                    logger.Error("TextFromFileAsync error", e);
+                    logger.Error($"TextFromURLAsync {url.AbsoluteUri} API error", e);
                     return new Tuple<Uri, Result>(url,new Result() { Id=res?.Id,  IsValid = Result.ResultStatus.Invalid, Error = e.ToString() });
                 }
                 catch (Exception e)
                 {
-                    logger.Error("TextFromFileAsync error", e);
+                    logger.Error($"TextFromURLAsync {url.AbsoluteUri} error", e);
                     return new Tuple<Uri, Result>(url, new Result() { Id = res?.Id, IsValid = Result.ResultStatus.Invalid, Error = e.ToString() });
 
                     //throw;

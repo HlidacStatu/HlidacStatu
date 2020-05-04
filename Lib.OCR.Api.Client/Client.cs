@@ -120,6 +120,8 @@ namespace HlidacStatu.Lib.OCR.Api
                         + "&restartIn=" + (int)(restartTaskAfterTime?.TotalSeconds ?? 0)
                         + "&callbackData=" + System.Net.WebUtility.UrlEncode(callBackDataString);
 
+                    logger.Debug($"TextFromUrlAsync calling OCR API for {url.AbsoluteUri} ");
+
                     fullUrl = ApiUrl + "addTask.ashx?" + param;
                     resbyte = await wc.DownloadDataTaskAsync(fullUrl);
                     res = System.Text.Encoding.UTF8.GetString(resbyte);
@@ -134,6 +136,7 @@ namespace HlidacStatu.Lib.OCR.Api
                         logger.Error($"ExtApi.TextFromUrlAsync API Exception\nUrl:{url.AbsoluteUri}\n content: " + res);
                         return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
                     }
+                    logger.Debug($"TextFromUrlAsync called OCR API taskid:{taskId} for {url.AbsoluteUri} ");
 
                 }
 
