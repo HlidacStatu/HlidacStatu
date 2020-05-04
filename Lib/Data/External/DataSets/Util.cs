@@ -32,6 +32,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     jo["DocumentPlainText"] = null;
                 }
+                if (Data.External.DataSets.DataSet.AUDIOCommands.Contains(jo["HsProcessType"].Value<string>()))
+                {
+                    jo["DocumentPlainText"] = null;
+                }
             }
 
             return jobj;

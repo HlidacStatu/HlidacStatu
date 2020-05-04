@@ -587,6 +587,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     SubscribeToOCR(jpathObjs, finalId);
                 }
+                SubscribeToAudio(jpathObjs, finalId);
 
                 return finalId;
             }
@@ -700,7 +701,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// </summary>
         /// <param name="jpathObjs"></param>
         /// <param name="finalId"></param>
-        private void SubscribeToSpeech2Text(JContainer[] jpathObjs, string finalId)
+        private void SubscribeToAudio(JContainer[] jpathObjs, string finalId)
         {
 
             foreach (var jo in jpathObjs)
@@ -748,6 +749,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
             }
         }
+
 
         /// <summary>
         /// Checks if Json is valid. If not throws error
