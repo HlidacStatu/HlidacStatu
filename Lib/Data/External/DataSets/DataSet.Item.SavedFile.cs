@@ -19,6 +19,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     public string ContentType { get; set; }
                     public int Version { get; set; } = 0;
                     public long Size { get; set; }
+                    public string Filename { get; set; }
                 }
 
                 public DataSet Ds = null;
@@ -56,7 +57,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 public byte[] GetData(Uri url)
                 {
-                    var fullname = GetFullPath(url.LocalPath);
+                    var fullname = GetFullPath(url.PathAndQuery);
                     var fullnameAttrs = fullname + ".attrs";
 
                     var attrs = Newtonsoft.Json.JsonConvert.DeserializeObject<FileAttributes>(System.IO.File.ReadAllText(fullnameAttrs));
@@ -66,7 +67,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 private string NormalizeFilename(string filename)
                 {
-                    string validFilename = System.IO.Path.GetFileName(filename);
+                    string validFilename = HlidacStatu.Util.IOTools.MakeValidFileName(filename);
 
                     if (string.IsNullOrWhiteSpace(validFilename) || validFilename.Length < 3)
                         validFilename = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(filename);
@@ -101,14 +102,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         net.Tries = 3;
                         net.TimeInMsBetweenTries = 10000;
                         var data = net.GetBinary().Binary;
+                        var fn = net.ResponseParams.Headers["Content-Disposition"] ;
                         var attrs = new FileAttributes()
                         {
                             Downloaded = DateTime.UtcNow,
                             Source = url.AbsoluteUri,
                             ContentType = net.ContentType,
-                            Size = data.Length
+                            Size = data.Length,
+                            Filename = fn
                         };
-                        return Save(data, url.LocalPath, attrs);
+
+                        return Save(data, url.PathAndQuery, attrs);
                     }
                 }
 
