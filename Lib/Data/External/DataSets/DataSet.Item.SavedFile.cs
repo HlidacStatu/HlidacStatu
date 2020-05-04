@@ -96,7 +96,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         Size = fi.Length,
                         Downloaded = DateTime.UtcNow
                     };
-                    return SaveMeOnDisk(System.IO.File.ReadAllBytes(originalFilePath), this.GetFullPath(originalFilePath), fa);
+                    var data = System.IO.File.ReadAllBytes(originalFilePath);
+                    return SaveMeOnDisk(ref data, this.GetFullPath(originalFilePath), fa);
                 }
                 public bool Save(Uri url)
                 {
@@ -119,7 +120,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             Filename = fn
                         };
 
-                        return Save(data, url, attrs);
+                        return Save(ref data, url, attrs);
                     }
                 }
 
@@ -131,12 +132,12 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     else
                         return fullname + "." + version;
                 }
-                public bool Save(byte[] data, Uri url, FileAttributes attrs)
+                public bool Save(ref byte[] data, Uri url, FileAttributes attrs)
                 {
                     var fullname = this.GetFullPath(url);
-                    return SaveMeOnDisk(data, fullname, attrs);
+                    return SaveMeOnDisk(ref data, fullname, attrs);
                 }
-                private bool SaveMeOnDisk(byte[] data, string fullname, FileAttributes attrs)
+                private bool SaveMeOnDisk(ref byte[] data, string fullname, FileAttributes attrs)
                 {
 
                     var fullnameAttrs = fullname + ".attrs";
@@ -149,12 +150,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             System.IO.FileInfo fiLast = new System.IO.FileInfo(VersionedFilename(fullname, lastVersion));
                             if (HlidacStatu.Util.IO.BinaryCompare.FilesContentsAreEqual(fiLast, data))
                             {
+                                data = null;
                                 return true;
                             }
                             attrs.Version = nextVersion;
                         }
                         System.IO.File.WriteAllBytes(VersionedFilename(fullname, attrs.Version), data);
                         System.IO.File.WriteAllText(fullnameAttrs, Newtonsoft.Json.JsonConvert.SerializeObject(attrs));
+                        data = null;
                         return true;
                     }
                     catch (Exception)
