@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Q.Tasks
 {
-    public class DataSet : Base
+    public class DataSet : BaseTask
     {
         public string DatasetId { get; set; }
         public string Id { get; set; }

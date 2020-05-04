@@ -987,8 +987,8 @@ Global
 		{62846FD2-F286-434C-8CA3-54D4F6A021A8} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
