@@ -32,6 +32,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     filesystem = new IO.DatasetSavedFile(this.Ds);
                 }
 
+                private string GetFullPath(Uri url)
+                {
+                    return GetFullPath(url.PathAndQuery);
+                }
                 private string GetFullPath(string filename)
                 {
                     return filesystem.GetFullPath(this, NormalizeFilename(filename));
@@ -45,7 +49,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 public bool Exists(Uri url)
                 {
-                    var fullname = GetFullPath(url.LocalPath);
+                    var fullname = GetFullPath(url);
                     var fullnameAttrs = fullname + ".attrs";
                     if (!System.IO.File.Exists(fullnameAttrs))
                         return false;
@@ -57,7 +61,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 public byte[] GetData(Uri url)
                 {
-                    var fullname = GetFullPath(url.PathAndQuery);
+                    var fullname = GetFullPath(url);
                     var fullnameAttrs = fullname + ".attrs";
 
                     var attrs = Newtonsoft.Json.JsonConvert.DeserializeObject<FileAttributes>(System.IO.File.ReadAllText(fullnameAttrs));
@@ -80,7 +84,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
 
                 //private now, don't use
-                private bool Save(string originalFilePath)
+                private bool __Save(string originalFilePath)
                 {
 
                     System.IO.FileInfo fi = new System.IO.FileInfo(originalFilePath);
@@ -92,7 +96,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         Size = fi.Length,
                         Downloaded = DateTime.UtcNow
                     };
-                    return Save(System.IO.File.ReadAllBytes(originalFilePath), originalFilePath, fa);
+                    return SaveMeOnDisk(System.IO.File.ReadAllBytes(originalFilePath), this.GetFullPath(originalFilePath), fa);
                 }
                 public bool Save(Uri url)
                 {
@@ -102,7 +106,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         net.Tries = 3;
                         net.TimeInMsBetweenTries = 10000;
                         var data = net.GetBinary().Binary;
-                        var fn = net.ResponseParams.Headers["Content-Disposition"] ;
+                        var fn = net.ResponseParams.Headers["Content-Disposition"];
+                        if (!string.IsNullOrWhiteSpace(fn))
+                            fn = HlidacStatu.Util.ParseTools.GetRegexGroupValue(fn, "filename=\"(?<fn>.*)\"", "fn");
+
                         var attrs = new FileAttributes()
                         {
                             Downloaded = DateTime.UtcNow,
@@ -112,7 +119,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             Filename = fn
                         };
 
-                        return Save(data, url.PathAndQuery, attrs);
+                        return Save(data, url, attrs);
                     }
                 }
 
@@ -124,10 +131,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     else
                         return fullname + "." + version;
                 }
-                public bool Save(byte[] data, string filename, FileAttributes attrs)
+                public bool Save(byte[] data, Uri url, FileAttributes attrs)
+                {
+                    var fullname = this.GetFullPath(url);
+                    return SaveMeOnDisk(data, fullname, attrs);
+                }
+                private bool SaveMeOnDisk(byte[] data, string fullname, FileAttributes attrs)
                 {
 
-                    var fullname = this.GetFullPath(filename);
                     var fullnameAttrs = fullname + ".attrs";
                     try
                     {
