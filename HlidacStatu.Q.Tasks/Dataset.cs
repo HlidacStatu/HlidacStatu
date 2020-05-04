@@ -9,7 +9,7 @@ namespace HlidacStatu.Q.Tasks
     public class DataSet : BaseTask
     {
         public string DatasetId { get; set; }
-        public string Id { get; set; }
+        public string ItemId { get; set; }
         public bool Force { get; set; }
     }
 }

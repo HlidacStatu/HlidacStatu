@@ -10,7 +10,7 @@ namespace HlidacStatu.Q.Tasks
     public class TaskHandler
     {
 
-        public static Task Defaul<T>(T m, Func<T, bool> action)
+        public static Task Default<T>(T m, Func<T, bool> action)
             where T: BaseTask
         {
             return Task.Factory.StartNew(
