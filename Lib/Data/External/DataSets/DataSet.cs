@@ -1115,7 +1115,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     var first = this.SearchData("*", 1, 1, "DbCreated", exactNumOfResults: true);
                     var total = (int)first.Total;
                     var last = this.SearchData("*", 1, 1, "DbCreated desc");
-
+                    if (total == 0)
+                    {
+                        _infofacts = f.ToArray();
+                        return _infofacts;
+                    }
                     var itemFirstDate = (DateTime)first.Result.First().DbCreated;
                     var itemLastDate = (DateTime)last.Result.First().DbCreated;
 

@@ -161,7 +161,7 @@ namespace HlidacStatu.Util
             { "sz","Strana zelených" },
             { "zeleni","Strana zelených" },
             { "strana zelenych","Strana zelených" },
-            
+
             {"starostove a nezávisli","STAN" },
             {"starostové a nezávisli","STAN" },
 
@@ -422,7 +422,10 @@ namespace HlidacStatu.Util
             {
                 if (match.Success)
                 {
-                    return match.Groups[groupname].Value;
+                    if (match.Groups[groupname].Captures.Count > 1)
+                        return match.Groups[groupname].Captures[0].Value;
+                    else
+                        return match.Groups[groupname].Value;
                 }
             }
             return string.Empty;
@@ -442,7 +445,10 @@ namespace HlidacStatu.Util
             {
                 if (match.Success)
                 {
-                    results.Add(match.Groups[groupname].Value);
+                    if (match.Groups[groupname].Captures.Count > 1)
+                        results.Add(match.Groups[groupname].Captures[0].Value); //pokud nalezeno vice vyskytu, vem prvni
+                    else
+                        results.Add(match.Groups[groupname].Value);
                 }
             }
             return results.ToArray();

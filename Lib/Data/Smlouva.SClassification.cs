@@ -448,14 +448,14 @@ namespace HlidacStatu.Lib.Data
                     Devmasters.Net.Web.BinaryContentResult stems = null;
                     try
                     {
-                        Util.Consts.Logger.Debug("Getting stems from " + stem.Url);
+                        Util.Consts.Logger.Debug($"Getting stems for {smlouvaKeyId.ValueForData} from " + stem.Url);
 
                         stems = stem.GetBinary();
                         return stems.Binary;
                     }
                     catch (Exception e)
                     {
-                        Util.Consts.Logger.Error("Classification Stemmer API error " + stem.Url, e);
+                        Util.Consts.Logger.Error($"Classification Stemmer API error for {smlouvaKeyId.ValueForData} " + stem.Url, e);
                         throw;
                     }
                 }
@@ -467,7 +467,11 @@ namespace HlidacStatu.Lib.Data
                     return null;
                 var key = new KeyAndId() { ValueForData = s.Id, CacheNameOnDisk = $"stem_smlouva_{s.Id}" };
                 if (rewriteStems)
+                {
+                    Util.Consts.Logger.Debug("Deleting stems cache for " + s.Id);
+
                     stemCacheManager.Delete(key);
+                }
                 var data = stemCacheManager.Get(key);
                 if (data == null)
                     return null;
@@ -503,12 +507,12 @@ namespace HlidacStatu.Lib.Data
                     Devmasters.Net.Web.TextContentResult classifier = null;
                     try
                     {
-                        Util.Consts.Logger.Debug("Getting classification from " + classif.Url);
+                        Util.Consts.Logger.Debug($"Getting classification for {s.Id} from " + classif.Url);
                         classifier = classif.GetContent();
                     }
                     catch (Exception e)
                     {
-                        Util.Consts.Logger.Error("Classification Classifier API " + classif.Url, e);
+                        Util.Consts.Logger.Error($"Classification Classifier API for {s.Id} " + classif.Url, e);
                         throw;
                     }
 
@@ -523,12 +527,12 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Net.Web.TextContentResult res = null;
                         try
                         {
-                            Util.Consts.Logger.Debug("Getting classification finalizer from " + classif.Url);
+                            Util.Consts.Logger.Debug($"Getting classification finalizer  for {s.Id} from " + classif.Url);
                             res = fin.GetContent();
                         }
                         catch (Exception e)
                         {
-                            Util.Consts.Logger.Error("Classification finalizer API " + classif.Url, e);
+                            Util.Consts.Logger.Error($"Classification finalizer API  for {s.Id} " + classif.Url, e);
                             throw;
                         }
 
