@@ -14,7 +14,7 @@ namespace HlidacStatu.Q.Tasks
             where T: BaseTask
         {
             return Task.Factory.StartNew(
-                 async () =>
+                 () =>
                  {
                      Console.WriteLine($"start: {m.TaskID}");
                      HlidacStatu.Util.Consts.Logger.Debug($"Starting task {m.TaskID}");
