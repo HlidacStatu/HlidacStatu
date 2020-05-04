@@ -13,20 +13,19 @@ namespace HlidacStatu.Lib.Data
             Dataset,
             VerejnaZakazka
         }
-
+       
         private static IQueryable<ItemToOcrQueue> CreateQuery(DbEntities db, ItemToOcrType? itemType, string itemSubType)
         {
             IQueryable<ItemToOcrQueue> sql = null;
             sql = db.ItemToOcrQueue
-                .Where(m => m.done == null
-                        && m.started == null);
+                .Where(m => m.done.Equals(null)
+                        && m.started.Equals(null));
 
             if (itemType != null)
                 sql = sql.Where(m => m.itemType == itemType.ToString());
 
             if (!string.IsNullOrEmpty(itemSubType))
-                sql = db.ItemToOcrQueue
-                .Where(m => m.itemSubType == itemSubType);
+                sql = sql.Where(m => m.itemSubType == itemSubType);
 
             return sql;
         }
