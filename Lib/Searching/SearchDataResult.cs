@@ -105,6 +105,8 @@ namespace HlidacStatu.Lib.Searching
 
 
         #region ISocialInfo
+        public bool NotInterestingToShow() { return false; }
+
         public virtual string SocialInfoTitle()
         {
             return string.Empty;

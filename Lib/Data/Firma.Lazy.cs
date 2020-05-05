@@ -57,6 +57,7 @@ namespace HlidacStatu.Lib.Data
             {
                 return gf().InfoFacts();
             }
+            public bool NotInterestingToShow() { return gf().NotInterestingToShow(); }
 
             public string SocialInfoBody()
             {

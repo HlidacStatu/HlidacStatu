@@ -279,7 +279,7 @@
                 <!-- mobile menu items below -->
                 <li class="level2"><a href="/data">Další databáze<sup style="top:0;text-decoration:none;color:#777;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
                 <li class="level2"><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:#777;">@(PocetReportu)</sup></a></li>
-                <li class="level2"><a href="/texty">Komentáře</a></li>
+                <li class="level2"><a @Util.GAClick("ZjistiliJsmeMobile") href="/texty"><b>Zjistili jsme</b></a></li>
                 <li class="level2"><a href="https://www.hlidacstatu.cz/texty/series/tipy/" onclick="return trackOutLink(this,'headermobile');">Tipy „Jak používat Hlídače“</a></li>
 
                 <li class="level2">
@@ -319,7 +319,7 @@
                 <ul>
                     <li class=""><a href="/data">Další databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
                     <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
-                    <li class=""><a href="/texty">Komentáře</a></li>
+                    <li class=""><a  @Util.GAClick("ZjistiliJsme") href="/texty"><b>Zjistili jsme</b></a></li>
                     <li class=""><a href="https://www.hlidacstatu.cz/texty/series/tipy/" onclick="return trackOutLink(this,'header');">Tipy „Jak používat Hlídače“</a></li>
                 </ul>
                 <ul>

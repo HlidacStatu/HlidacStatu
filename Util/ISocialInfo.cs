@@ -8,6 +8,7 @@ namespace HlidacStatu.Util
 {
     public interface ISocialInfo
     {
+        bool NotInterestingToShow();
 
         string SocialInfoTitle();
         string SocialInfoSubTitle();

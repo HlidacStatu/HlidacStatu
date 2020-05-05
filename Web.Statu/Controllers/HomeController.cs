@@ -1337,26 +1337,28 @@ text zpravy: {txt}";
                 Firma fi = Firmy.Get(v);
                 if (fi.Valid)
                 {
-                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(fi, rat == "1x1", true);
+                    if (!fi.NotInterestingToShow())
+                        url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(fi, rat == "1x1", true);
                 }
             }
             else if (id?.ToLower() == "zakazka")
             {
                 VerejnaZakazka vz = VerejnaZakazka.LoadFromES(v);
                 if (vz != null)
-             try
-            {
+                 try
+                {
                 var path = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(id));
                 Framework.Visit.AddVisit(path,
                     Framework.Visit.IsCrawler(Request.UserAgent) ?
                         Visit.VisitChannel.Crawler : Visit.VisitChannel.Web);
-            }
-            catch (Exception e)
-            {
-                HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
-            }
+                }
+                catch (Exception e)
+                {
+                    HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
+                }
 
-               {
+                if (!vz.NotInterestingToShow())
+                {
                     url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(vz, rat == "1x1", true);
                 }
 
@@ -1366,7 +1368,8 @@ text zpravy: {txt}";
                 Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(v);
                 if (o != null)
                 {
-                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(o, rat == "1x1", true);
+                    if (!o.NotInterestingToShow())
+                        url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(o, rat == "1x1", true);
                 }
 
             }
@@ -1375,7 +1378,8 @@ text zpravy: {txt}";
                 Smlouva s = HlidacStatu.Lib.Data.Smlouva.Load(v);
                 if (s != null)
                 {
-                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
+                    if (!s.NotInterestingToShow())
+                        url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
                 }
 
             }
@@ -1384,7 +1388,8 @@ text zpravy: {txt}";
                 var s = HlidacStatu.Lib.Data.Insolvence.Insolvence.LoadFromES(v, false, true)?.Rizeni;
                 if (s != null)
                 {
-                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
+                    if (!s.NotInterestingToShow())
+                        url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
                 }
 
             }
@@ -1393,7 +1398,8 @@ text zpravy: {txt}";
                 Lib.Data.External.DataSets.DataSet s = Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(v);
                 if (s != null)
                 {
-                    url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
+                    if (!s.NotInterestingToShow())
+                        url = mainUrl + HlidacStatu.Util.RenderData.GetSocialBannerUrl(s, rat == "1x1", true);
                 }
 
             }

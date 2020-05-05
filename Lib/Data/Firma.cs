@@ -294,6 +294,14 @@ namespace HlidacStatu.Lib.Data
 
         }
 
+        public bool NotInterestingToShow()
+        {
+            return (this.MaVztahySeStatem() == false)
+                        && (this.IsNespolehlivyPlatceDPH() == false)
+                        && (this.MaVazbyNaPolitiky() == false);
+        }
+
+
         public string SocialInfoTitle()
         {
             return Devmasters.Core.TextUtil.ShortenText(this.Jmeno, 50);

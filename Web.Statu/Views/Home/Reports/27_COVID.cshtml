@@ -49,21 +49,6 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
 
 <div class="row">
     <div class="col-xs-12">
-        @UtilChart.RenderReportChart("Věcné oblasti",
-               UtilChart.SimpleBarChart(
-                    false, false,
-                    400, "xx", "Oblast", "Počet smluv",
-                    rds.Filter(new int[] { 0, 1 }, 15)))
-        <hr />
-
-        @UtilChart.RenderReportTable("Věcné oblasti", rds, @"{
-         'language': {
-            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-        },
-        'order': [],
-        'lengthChange': false,
-        'info': false,
-        }")
 
     </div>
 

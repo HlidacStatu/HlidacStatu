@@ -166,6 +166,7 @@ namespace HlidacStatu.Lib.Data
             return Events(m => true);
         }
 
+
         private static DateTime minBigSponzoringDate = new DateTime(DateTime.Now.Year - 10, 1, 1);
         private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
         private static decimal smallSponzoringThreshold = 10000;
@@ -1185,6 +1186,13 @@ namespace HlidacStatu.Lib.Data
         }
 
         Devmasters.Core.Vokativ _vokativ = null;
+
+
+        public bool NotInterestingToShow()
+        {
+            return this.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
+                    && this.MaVztahySeStatem() == false;
+        }
 
         public string SocialInfoTitle()
         {

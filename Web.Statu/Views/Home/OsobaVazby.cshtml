@@ -11,7 +11,9 @@
 @section metatags
 {
 
-    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower()))
+    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower())
+                || Model.NotInterestingToShow()
+)
     {
         <meta name="robots" content="noindex, noarchive">
     }

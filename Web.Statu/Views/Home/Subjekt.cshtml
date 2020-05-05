@@ -33,11 +33,7 @@
                 ;
 
 
-    bool showEmptyVersion =
-        (Model.firma.MaVztahySeStatem() == false)
-        && (Model.firma.IsNespolehlivyPlatceDPH() == false)
-        && (Model.firma.MaVazbyNaPolitiky() == false)
-        ;
+    bool showEmptyVersion = Model.firma.NotInterestingToShow();
 
 }
 @section metatags
@@ -54,7 +50,7 @@
               .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
         }
     }
-    @if (noIndex)
+    @if (noIndex || Model.firma.NotInterestingToShow())
     {
         <meta name="robots" content="noindex, noarchive">
     }

@@ -85,6 +85,12 @@
 
 }
 
+@helper GAClick(string btnName)
+{
+@Html.Raw($" onclick=\"ga('send', 'event', 'logoffBtn', 'click','{Util.CurrPageUrlPath}')\" ");
+}
+
+
 @helper HideFundingInFooter()
 {
     string s = @"

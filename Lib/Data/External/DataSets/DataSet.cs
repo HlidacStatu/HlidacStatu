@@ -1079,8 +1079,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return "";
         }
 
-        //var last = this.SearchData("*", 1, 1, "DbCreated desc");
-        long _numberOfRecords = -1;
+        public bool NotInterestingToShow() { return false; }
+        
+
+            //var last = this.SearchData("*", 1, 1, "DbCreated desc");
+            long _numberOfRecords = -1;
         public long NumberOfRecords()
         {
             if (_numberOfRecords == -1)

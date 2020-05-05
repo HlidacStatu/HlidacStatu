@@ -23,10 +23,7 @@
     bool noIndex = HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower());
 
     //TODO better analysis based on records in other dbs
-    bool noReasonToShow =
-        Model.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
-        && Model.MaVztahySeStatem() == false
-        ;
+    bool noReasonToShow = Model.NotInterestingToShow();
 
 
     ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear());
@@ -37,7 +34,10 @@
 @section metatags
 {
 
-    @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower()))
+    @if (
+        HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower())
+        || Model.NotInterestingToShow()
+        )
     {
         <meta name="robots" content="noindex, noarchive">
     }

@@ -816,6 +816,7 @@ namespace HlidacStatu.Lib.Data.VZ
         {
             return this.NazevZakazky;
         }
+        public bool NotInterestingToShow() { return false; }
 
         public string SocialInfoTitle()
         {

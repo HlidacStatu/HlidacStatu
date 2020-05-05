@@ -1,7 +1,7 @@
 ﻿<ul>
     <li class=""><a href="https://www.hlidacstatu.cz/data">Další databáze</a></li>
     <li class=""><a href="https://www.hlidacstatu.cz/reporty">Analýzy a reporty</a></li>
-    <li class=""><a href="https://www.hlidacstatu.cz/texty">Komentáře</a></li>
+    <li class=""><a href="https://www.hlidacstatu.cz/texty">Zjistili jsme</a></li>
     <li class=""><a href="https://www.hlidacstatu.cz/texty/series/tipy/" >Tipy „Jak používat Hlídače“</a></li>
 </ul>
 <ul>

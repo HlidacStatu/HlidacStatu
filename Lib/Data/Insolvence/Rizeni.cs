@@ -718,6 +718,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
             return this.SpisovaZnacka;
         }
 
+        public bool NotInterestingToShow() { return false; } //TODO
+
         public string SocialInfoTitle()
         {
             return BookmarkName();

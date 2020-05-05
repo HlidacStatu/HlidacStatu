@@ -931,6 +931,8 @@ namespace HlidacStatu.Lib.Data
                 return false;
         }
 
+        public bool NotInterestingToShow() { return false; }
+
         public string SocialInfoBody()
         {
             return "<ul>" +

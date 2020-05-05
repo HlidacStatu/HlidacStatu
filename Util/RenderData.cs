@@ -148,6 +148,10 @@ namespace HlidacStatu.Util
 
         public static string GetSocialBannerUrl(ISocialInfo si, bool ratio1x1 = false, bool localUrl = true)
         {
+            if (si.NotInterestingToShow())
+                return null;
+
+
             string url = "";
             if (localUrl == false)
                 url = "https://www.hlidacstatu.cz";
