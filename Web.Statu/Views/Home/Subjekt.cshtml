@@ -50,7 +50,7 @@
               .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
         }
     }
-    @if (noIndex || Model.firma.NotInterestingToShow())
+    @if (noIndex || Model.firma.Status == 6 )
     {
         <meta name="robots" content="noindex, noarchive">
     }
