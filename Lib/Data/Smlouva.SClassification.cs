@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -566,9 +567,54 @@ namespace HlidacStatu.Lib.Data
                 return data;
             }
 
-            
+            /// <summary>
+            /// Gets classification
+            /// </summary>
+            /// <param name="idSmlouvy"></param>
+            /// <returns>Classification json</returns>
+            public static string GetClassificationExplanation(string idSmlouvy)
+            {
+                if (string.IsNullOrWhiteSpace(idSmlouvy))
+                    return null;
+
+                Smlouva s = Smlouva.Load(idSmlouvy);
+
+                if (s == null)
+                    return null;
+
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new Util.FirstCaseLowercaseContractResolver();
+
+
+                using (Devmasters.Net.Web.URLContent explain = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/explain_json"))
+                {
+                    explain.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    explain.Tries = 3;
+                    explain.TimeInMsBetweenTries = 5000;
+                    explain.Timeout = 1000 * 60 * 10; //10min
+                    explain.ContentType = "application/json; charset=utf-8";
+                    explain.RequestParams.RawContent = JsonConvert.SerializeObject(s, settings);
+                    Devmasters.Net.Web.TextContentResult explanations = null;
+                    try
+                    {
+                        Util.Consts.Logger.Debug($"Getting explanation for {idSmlouvy} from " + explain.Url);
+
+                        explanations = explain.GetContent();
+                        string decodedExplanations = System.Text.RegularExpressions.Regex.Unescape(explanations.Text);
+
+                        return decodedExplanations;
+                    }
+                    catch (Exception e)
+                    {
+                        Util.Consts.Logger.Error($"Classification Explanation API error for {idSmlouvy} " + explain.Url, e);
+                        throw;
+                    }
+                }
+            }
 
         }
+
+        
 
         /// <summary>
         /// Sets new classification on smlouva. And saves data also to audit table []. 
