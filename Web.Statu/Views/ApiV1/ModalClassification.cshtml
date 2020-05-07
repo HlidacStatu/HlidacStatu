@@ -90,7 +90,7 @@
             alert("Vyplňte váš email, prosím.");
             return false;
         }
-        var text = "Navrhovaná clasifikace pro smlouvu";//$(prf + "InputTxt").val();
+        var text = "Navrhovaná klasifikace pro smlouvu";//$(prf + "InputTxt").val();
         var url = $(prf + "Url").val();
         var adddata = $(prf + "data").val();
 
@@ -101,7 +101,7 @@
             console.log($(chkbxs[k]).val());
         } 
 
-        $.get("/sendFeedbackMail", { typ: typ, email: email, txt: text, url: url, data: adddata, auth: false })
+        $.get("/ClassificationFeedback", { typ: typ, email: email, txt: text, url: url, data: adddata, auth: false })
             .fail(function () {
                 alert("Při odeslání formuláře došlo k chybě.");
             })

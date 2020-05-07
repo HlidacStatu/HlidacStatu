@@ -392,17 +392,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     try
                     {
-                        using (var smtp = new System.Net.Mail.SmtpClient())
-                        {
-                            System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage("podpora@hlidacstatu.cz", to);
-                            if (to != "michal@michalblaha.cz")
-                                msg.Bcc.Add("michal@michalblaha.cz");
-                            msg.Subject = subject;
-                            msg.ReplyTo = new System.Net.Mail.MailAddress(email);
-                            msg.IsBodyHtml = false;
-                            msg.BodyEncoding = System.Text.Encoding.UTF8;
-                            msg.SubjectEncoding = System.Text.Encoding.UTF8;
-                            msg.Body = $@"
+                        string body = $@"
 Zpráva z hlidacstatu.cz.
 
 Typ zpravy:{typ}
@@ -410,9 +400,7 @@ Od uzivatele:{email}
 ke stránce:{url}
 
 text zpravy: {txt}";
-
-                            smtp.Send(msg);
-                        }
+                        SendMailToPodpora(subject, email, body);
 
                     }
                     catch (Exception ex)
@@ -425,6 +413,62 @@ text zpravy: {txt}";
             }
             return Content("");
         }
+
+        public ActionResult ClassificationFeedback(string typ, string email, string txt, string url, string data)
+        {
+            // create a task, so user doesn't have to wait for anything
+            System.Threading.Tasks.Task.Run(() => {
+                string classificationExplanation = Smlouva.SClassification.GetClassificationExplanation(data);
+
+                try
+                {
+                    string subject = "Zprava z HlidacStatu.cz: " + typ;
+                    string body = $@"
+Návrh na opravu klasifikace.
+
+Od uzivatele:{email} 
+ke stránce:{url}
+
+text zpravy: {txt}
+
+explain result: {classificationExplanation} ";
+
+                    SendMailToPodpora(subject, email, body);
+                }
+                catch (Exception ex)
+                {
+                    Util.Consts.Logger.Fatal(string.Format("{0}|{1}|{2}", email, url, txt, ex));
+                }
+
+                
+
+            });
+
+            return Content("");
+        }
+
+
+        private void SendMailToPodpora(string subject, string replyTo, string body)
+        {
+            string from = "podpora@hlidacstatu.cz";
+            string to = "podpora@hlidacstatu.cz";
+            
+            using (var smtp = new System.Net.Mail.SmtpClient())
+            {
+                System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage(from, to);
+                msg.Bcc.Add("michal@michalblaha.cz");
+                msg.Subject = subject;
+                if (!string.IsNullOrEmpty(replyTo) && TextUtil.IsValidEmail(replyTo))
+                    msg.ReplyToList.Add(new System.Net.Mail.MailAddress(replyTo));
+                msg.IsBodyHtml = false;
+                msg.BodyEncoding = System.Text.Encoding.UTF8;
+                msg.SubjectEncoding = System.Text.Encoding.UTF8;
+                msg.Body = body;
+
+                smtp.Send(msg);
+            }
+        }
+
         public ActionResult TextSmlouvy(string Id, string hash, string secret)
         {
             if (string.IsNullOrEmpty(Id) || string.IsNullOrEmpty(hash))
