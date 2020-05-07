@@ -1,0 +1,116 @@
+﻿@model Tuple<string, string>
+
+@using System;
+@using System.Linq;
+@{
+    Layout = null;
+    string smlouvaId = Model.Item1;
+
+    string modalId = Model.Item2;
+
+    var smlouva = HlidacStatu.Lib.Data.Smlouva.Load(smlouvaId);
+
+    bool? platnyZaznam = null;
+
+    bool zmeneno =false;
+    if (smlouva != null)
+    {
+        platnyZaznam = smlouva.PlatnostZaznamuVRS();
+    }
+    
+
+    if (platnyZaznam.HasValue)
+    {
+        zmeneno = smlouva.platnyZaznam != platnyZaznam;
+        smlouva.ZmenStavSmlouvyNa(platnyZaznam.Value);
+    }
+
+}
+
+<!-- Modal Header -->
+<div class="modal-header" style="text-align:left;">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" id="@(modalId)Title">
+        Ověření zneplatnění smlouvy
+    </h4>
+</div>
+
+<!-- Modal Body -->
+<form class="form-horizontal" role="form">
+    <input type="hidden" id="@(modalId)data" name="@(modalId)data" value="@smlouvaId">
+    <div class="modal-body" style="text-align:left;">
+
+        <input type="hidden" name="@(modalId)Url" id="@(modalId)Url" value="https://www.hlidacstatu.cz/Detail/@smlouvaId">
+        <input type="hidden" name="@(modalId)InputTyp" id="@(modalId)InputTyp" value="classification">
+
+        @if (platnyZaznam == null)
+        {
+            <h3>Mimořádná kontrola smlouvy nebyla úspěšná</h3>
+            <p class="bg-warning" style="padding:10px;">
+                Registr smluv nám neodpověděl a nemohli jsme proto v tuto chvíli ověřit, zda je smlouva v registru smluv platná či nikoliv.
+                <b>Zkuste to později, prosím.</b>
+            </p>
+            <p class="text-info" style="padding:10px;">
+                Poznámka ze zákulisí:<br />
+                Kontrolu neplatnosti smluv provádíme pravidelně každý víkend, protože registr smluv
+                informace o zneplatněných smlouvách neuvádí a my musíme zkontrolovat všech
+                @(HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] + HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1]) smluv.
+            </p>
+        }
+        else if (platnyZaznam == true)
+        {
+            <h3>Mimořádná kontrola smlouvy byla úspěšná</h3>
+            <p class="bg-success" style="padding:10px;">
+                V registru smluv je smlouva v tuto chvíli vedena jako platná. 
+                @if (zmeneno)
+                {
+                    <b>Údaj o platnosti smlouvy jsme v Hlídači opravili.</b>
+                }
+            </p>
+            <p class="text-info" style="padding:10px;">
+                Poznámka ze zákulisí:<br/>
+                Kontrolu neplatnosti smluv provádíme pravidelně každý víkend, protože registr smluv
+                informace o zneplatněných smlouvách neuvádí a my musíme zkontrolovat všech
+                @HlidacStatu.Util.RenderData.ShortNiceNumber((decimal)(HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] + HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1])) smluv.
+            </p>
+
+        }
+        else
+        {
+            <h3>Mimořádná kontrola smlouvy byla úspěšná</h3>
+            <p class="gb-warning" style="padding:10px;">
+                V registru smluv je smlouva v tuto chvíli vedena jako zneplatněná.
+                @if (zmeneno)
+                {
+                    <b>Údaj o platnosti smlouvy jsme v Hlídači opravili.</b>
+                }
+            </p>
+            <p class="text-info" style="padding:10px;">
+                Poznámka ze zákulisí:<br />
+                Kontrolu neplatnosti smluv provádíme pravidelně každý víkend, protože registr smluv
+                informace o zneplatněných smlouvách neuvádí a my musíme zkontrolovat všech
+                @(HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] + HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1]) smluv.
+            </p>
+
+        }
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="confirm@(modalId)();" data-dismiss="modal">
+            OK
+        </button>
+    </div>
+</form>
+
+<script>
+    function confirm@(modalId)() {
+        var prf = '#@(modalId)';
+        var url = $(prf + "Url").val();
+        window.location.reload();
+    }
+</script>

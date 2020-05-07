@@ -8,52 +8,91 @@ namespace Newton.SpeechToText.Cloud.FileAPI
     {
         private AccessToken accessToken = null;
         private NtxToken ntxToken = null;
+        private string mp3file = null;
+
+        private bool converted = false;
 
 
-        public VoiceToText(string username, string password, string taskId, string taskLabel, string audience = "https://newton.nanogrid.cloud/")
+        public VoiceToText(string fullPathToMP3File,
+            string username, string password,
+            string taskId, string taskLabel, string audience = "https://newton.nanogrid.cloud/")
         {
             accessToken = AccessToken.Login(username, password, audience);
-            ntxToken = NtxToken.GetToken(accessToken, taskId, taskLabel);           
+            ntxToken = NtxToken.GetToken(accessToken, taskId, taskLabel);
+            mp3file = fullPathToMP3File;
         }
 
-        public VoiceToText(AccessToken accessToken, NtxToken ntxToken)
+        public VoiceToText(string fullPathToMP3File, AccessToken accessToken, NtxToken ntxToken)
         {
             this.accessToken = accessToken;
             this.ntxToken = ntxToken;
+            mp3file = fullPathToMP3File;
         }
 
-        public string FromMp3ToRaw(string fullPathToMP3File)
+        public bool Convert()
         {
             using (RESTCall wc = new RESTCall())
             {
                 string url = this.accessToken.Audience + "api/v1/file/v2t";
                 wc.Headers.Add("ntx-token", ntxToken.ntxToken);
-                var resbyte = wc.UploadFile(url, "POST", fullPathToMP3File);
+                var resbyte = wc.UploadFile(url, "POST", this.mp3file);
                 var res = System.Text.Encoding.UTF8.GetString(resbyte);
-
-                return res;
+                converted = true;
+                this.Raw = res;
+                this.Chunks = RawToChunks(this.Raw);
+                this.Terms = ChunksToTerms(this.Chunks);
             }
+            return true;
         }
 
-        public IEnumerable<Term> FromMp3ToTerms(string fullPathToMP3File)
+        private string _raw;
+        public string Raw
         {
-            return ChunksToTerms(
-                RawToChunks(
-                    FromMp3ToRaw(fullPathToMP3File)
-                    )
-                );
+            get
+            {
+                if (converted == false)
+                    throw new ApplicationException("Start Conversion with Convert() method first.");
+                else return _raw;
+            }
+            private set => _raw = value;
         }
 
-        public string FromMp3ToText(string fullPathToMP3File)
+        private IEnumerable<ChunkLine> _chunks;
+        public IEnumerable<ChunkLine> Chunks
         {
-            return TermsToText(FromMp3ToTerms(fullPathToMP3File));
+            get
+            {
+                if (converted == false)
+                    throw new ApplicationException("Start Conversion with Convert() method first.");
+                else return _chunks;
+            }
+            private set => _chunks = value;
+        }
+
+        private IEnumerable<Term> _terms;
+        public IEnumerable<Term> Terms
+        {
+            get
+            {
+                if (converted == false)
+                    throw new ApplicationException("Start Conversion with Convert() method first.");
+                else return _terms;
+            }
+
+            private set => _terms = value;
+        }
+
+        public string Text(bool withParagraphs)
+        {
+            return TermsToText(this.Terms, withParagraphs);
         }
 
 
         static decimal minDelay = 0.8m;
+
         public static string TermsToText(IEnumerable<Term> terms, bool withParagraphs = false)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(5*terms.Count());
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(5 * terms.Count());
             var lTerms = terms.ToList();
             for (int i = 0; i < lTerms.Count; i++)
             {
@@ -80,7 +119,7 @@ namespace Newton.SpeechToText.Cloud.FileAPI
                             if (i > 0)
                                 delay = t.Timestamp - lTerms[i - 1].Timestamp;
 
-                            if (delay> minDelay) //ticho mezi slovy
+                            if (delay > minDelay) //ticho mezi slovy
                                 sb.AppendLine();
                         }
                         sb.Append(t.Value);
@@ -92,7 +131,7 @@ namespace Newton.SpeechToText.Cloud.FileAPI
                 }
 
             }
-            var rawText= sb.ToString().ReplaceDuplicates("\n").ReplaceDuplicates("\r").ReplaceDuplicates("\r\n").ReplaceDuplicates(" ");
+            var rawText = sb.ToString().ReplaceDuplicates("\n").ReplaceDuplicates("\r").ReplaceDuplicates("\r\n").ReplaceDuplicates(" ");
             return rawText;
         }
 
@@ -102,18 +141,18 @@ namespace Newton.SpeechToText.Cloud.FileAPI
                 return terms[forItemNum].Timestamp;
 
             decimal noiseEnd = terms[forItemNum].Timestamp;
-            if (terms.Count>forItemNum+1)
-                noiseEnd = terms[forItemNum+1].Timestamp;
+            if (terms.Count > forItemNum + 1)
+                noiseEnd = terms[forItemNum + 1].Timestamp;
 
             decimal noiseStart = terms[forItemNum].Timestamp;
-            for (int i = forItemNum-1; i > 0; i--)
+            for (int i = forItemNum - 1; i > 0; i--)
             {
                 if (terms[i].Character == Term.TermCharacter.Noise
                     //|| terms[i].Character == Term.TermCharacter.SpeakersNoise
                     )
                     noiseStart = terms[i].Timestamp;
                 else
-                    break; 
+                    break;
             }
 
 
@@ -127,7 +166,7 @@ namespace Newton.SpeechToText.Cloud.FileAPI
             foreach (var ch in chunks)
             {
                 var chTerms = ch?.push?.events?.ToTerms(prev);
-                if (chTerms != null && chTerms.Count>0)
+                if (chTerms != null && chTerms.Count > 0)
                 {
                     terms.AddRange(chTerms);
                     prev = chTerms.Last();

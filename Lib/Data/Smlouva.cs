@@ -988,6 +988,59 @@ namespace HlidacStatu.Lib.Data
             return (b || platnyZaznam == false);
         }
 
+        public void ZmenStavSmlouvyNa(bool platnyZaznam)
+        {
+            var issueTypeId = -1;
+            var issue = new Lib.Issues.Issue(null, issueTypeId, "Smlouva byla znepřístupněna", "Na žádost subjektu byla tato smlouva znepřístupněna.", Lib.Issues.ImportanceLevel.Formal, permanent: true);
+
+            if (platnyZaznam && this.znepristupnenaSmlouva())
+            {
+                this.platnyZaznam = platnyZaznam;
+                //zmen na platnou
+                if (this.Issues.Any(m => m.IssueTypeId == issueTypeId))
+                {
+                    this.Issues = this.Issues
+                        .Where(m => m.IssueTypeId != issueTypeId)
+                        .ToArray();
+
+                }
+                this.Save();
+            }
+            else if (platnyZaznam == false && this.znepristupnenaSmlouva() == false)
+            {
+                this.platnyZaznam = platnyZaznam;
+                if (!this.Issues.Any(m => m.IssueTypeId == -1))
+                    this.AddSpecificIssue(issue);
+                this.Save();
+            }
+        }
+
+        public bool? PlatnostZaznamuVRS()
+        {
+            if (this.IsPartOfRegistrSmluv())
+            {
+                try
+                {
+
+                    using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(this.odkaz))
+                    {
+                        net.Timeout = 3000;
+                        string html = net.GetContent().Text;
+                        bool platna = html?.Contains("Smlouva byla znepřístupněna") == false;
+                        return platna ;
+                    }
+                }
+                catch (Exception e)
+                {
+                    HlidacStatu.Util.Consts.Logger.Error($"checking StavSmlouvyVRS id:{this.Id} {this.odkaz}", e);
+                    return null;
+                }
+            }
+            else //pokud nespada pod RS, pak je vzdy platna
+                return true;
+
+        }
+
         internal SClassification.Classification[] relevantClassif(SClassification.Classification[] types)
         {
             types = types ?? new SClassification.Classification[] { };

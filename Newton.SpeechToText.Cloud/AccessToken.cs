@@ -13,11 +13,11 @@ namespace Newton.SpeechToText.Cloud
                 Validate();
                 return _accessToken;
             }
-            private set { _accessToken = value; }
+            set { _accessToken = value; }
         }
 
 
-        public long expiresAt { get; private set; }
+        public long expiresAt { get; set; }
         public DateTime Expiration() { return Util.FromEpochTimeToUTC(this.expiresAt); }
 
         private string username;
@@ -25,7 +25,7 @@ namespace Newton.SpeechToText.Cloud
 
         public void Validate()
         {
-            if ((this.Expiration() - DateTime.Now).TotalSeconds < 60)
+            if (this.expiresAt > 0 && (this.Expiration() - DateTime.Now).TotalSeconds < 60)
 
             {
                 var at = call(this.username, this.password, this.Audience);
@@ -38,7 +38,7 @@ namespace Newton.SpeechToText.Cloud
         public string Audience
         {
             get { return _audience; }
-            private set
+            set
             {
                 var s = value;
                 if (Uri.TryCreate(s, UriKind.Absolute, out Uri uri))
@@ -67,7 +67,8 @@ namespace Newton.SpeechToText.Cloud
                                     }
                     );
 
-                var accessToken = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(wc.UploadString(audience + "login/access-token", data));
+                var res = wc.UploadString(audience + "login/access-token", data);
+                var accessToken = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(res);
                 accessToken.Audience = audience;
                 accessToken.username = username;
                 accessToken.password = password;

@@ -19,6 +19,13 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
+        public ActionResult ModalZneplatnenaSmlouva(string _id, string modalId)
+        {
+            string id = _id;
+
+            return View(new Tuple<string, string>(id, modalId));
+        }
+
     }
 }
 

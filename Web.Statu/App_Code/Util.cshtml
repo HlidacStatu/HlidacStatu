@@ -267,23 +267,27 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     </span>
 }
 
-@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null)
+@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null, 
+    string loadingText = null, string style = null)
 {
-    if (!dynamicContentRelUrl.EndsWith("&"))
+loadingText = loadingText ?? "Nahrávám formulář";
+style = style ?? "";
+if (!dynamicContentRelUrl.EndsWith("&"))
+{
+    if (dynamicContentRelUrl.Contains("?"))
     {
-        if (dynamicContentRelUrl.Contains("?"))
-        {
-            dynamicContentRelUrl += "&";
-        }
-        else
-        {
-            dynamicContentRelUrl += "?";
-        }
+        dynamicContentRelUrl += "&";
     }
-    nazevOdkazu = nazevOdkazu ?? "Opravit";
-    _class = _class ?? "btn btn-link";
-    string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
-    <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class">
+    else
+    {
+        dynamicContentRelUrl += "?";
+    }
+}
+nazevOdkazu = nazevOdkazu ?? "Opravit";
+_class = _class ?? "btn btn-link";
+string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
+
+    <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class" style="@style">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>@(nazevOdkazu)
     </a>
     <div class="modal fade" id="@(modalId)Form" tabindex="-1" role="dialog" aria-labelledby="@(modalId)Title" aria-hidden="true">
@@ -294,7 +298,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     </div>
     <script>
         $('#btn@(modalId)').on('click', function () {
-            $('#@(modalId)content').html('<div class="loader2">Nahrávám formulář</div>');
+            $('#@(modalId)content').html('<div class="loader2">@(loadingText)</div>');
             $('#@(modalId)content').load('@(dynamicContentRelUrl)modalId=@(modalId)', function () {
                 $('#@(modalId)Form').modal({ show: true });
             });

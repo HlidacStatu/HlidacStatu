@@ -84,7 +84,7 @@
 
 
 
-<div class="dontembed">
+<td class="dontembed">
 
     <h3>
         @Util.AddBookmark(this.User, Model)
@@ -101,11 +101,34 @@
                     {
                         if (Model.OtherVersions().Length == 0)
                         {
-                            <div class="alert alert-danger">Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy. Nenašli jsme v registru smluv platnou verzi této smlouvy, tato smlouva byla nejspíše odstraněna bez náhrady.</div>
+                            <div class="alert alert-danger">
+                                <table style="padding:0;margin:0;width:100%">
+                                    <tr>
+                                        <td style="width:70%;padding:0;margin:0;line-height:13px;">
+                                            Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy. Nenašli jsme v registru smluv platnou verzi této smlouvy, tato smlouva byla nejspíše odstraněna bez náhrady.
+                                        </td>
+                                        <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
+                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
                         }
                         else
                         {
-                            <div class="alert alert-warning">Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy.</div>
+                            <div class="alert alert-warning">
+                                <table style="padding:0;margin:0;width:100%">
+                                    <tr>
+                                        <td style="width:70%;padding:0;margin:0;line-height:13px;">
+                                            Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy.
+                                        </td>
+                                        <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
+                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                             if (Model.OtherVersions().Any(m => m.platnyZaznam))
                             {
                                 <div class="alert alert-info"><a href="/Detail/@(Model.OtherVersions().Where(m => m.platnyZaznam).First().Id)">Ukázat platnou verzi této smlouvy</a></div>
@@ -123,17 +146,34 @@
                         if (Model.Issues.Any(m => m.Importance == HlidacStatu.Lib.Issues.ImportanceLevel.Fatal))
                         {
                             <div class="alert alert-danger">
-
-                                Tato smlouva je formálně v registru smluv platná, ale <b>
-                                    obsahuje tak závažné
-                                    nedostatky v rozporu se zákonem
-                                </b>, že ve skutečnosti platná velmi pravděpodobně není!
+                                <table style="padding:0;margin:0;width:100%">
+                                    <tr>
+                                        <td style="width:70%;padding:0;margin:0;line-height:13px;">
+                                            Tato smlouva je formálně v registru smluv platná, ale <b>
+                                                obsahuje tak závažné
+                                                nedostatky v rozporu se zákonem
+                                            </b>, že ve skutečnosti platná velmi pravděpodobně není!
+                                        </td>
+                                        <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
+                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                        </td>
+                                    </tr>
+                                </table>
 
                             </div>
                         }
                         else
                         {
-                            <div class="alert alert-success">Toto je platná smlouva</div>
+                            <div class="alert alert-success">
+                                <table style="padding:0;margin:0;width:100%">
+                                    <tr>
+                                        <td style="width:50%;padding:0;margin:0;line-height:13px;">Toto je platná smlouva</td>
+                                        <td style="width:50%;padding:0;margin:0;line-height:13px;text-align:right">
+                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         }
 
                     }
@@ -186,7 +226,7 @@
             {
                 <tr>
                     <td>
-                        
+
 
                         Oblast@((Model.GetRelevantClassification().Count() > 1) ? "i" : "") smlouvy
                     </td>
@@ -207,13 +247,13 @@
                                         @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
                                     </div>
                                 }
-                            <div>
-                                @Util.DynamicModal("/api/v1/modalclassification/"+Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.","btn btn-link")
-                                <br/>
-                                <span class="small">
-                                    Zatřídění do oblastí dělá stroj a někdy se může splést. Každá vaše oprava našeho robota zpřesní. Díky.
-                                </span>
-                            </div>
+                                <div>
+                                    @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.", "btn btn-link")
+                                    <br />
+                                    <span class="small">
+                                        Zatřídění do oblastí dělá stroj a někdy se může splést. Každá vaše oprava našeho robota zpřesní. Díky.
+                                    </span>
+                                </div>
                             </div>
 
                         </div>
@@ -434,34 +474,34 @@
 
     @Html.Partial("_Symbols", Model)
 
-</div>
+    </div>
 
-@*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })*@
+    @*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })*@
 
 
 
-@section onlyembed
+    @section onlyembed
 {
-    @Html.Action("CachedAction_Child_2H", new { model = Model, NameOfView = "Detail_Child_embed", auth = this.User.Identity.IsAuthenticated, key = Model.Id })
-    @*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child_embed" })*@
+        @Html.Action("CachedAction_Child_2H", new { model = Model, NameOfView = "Detail_Child_embed", auth = this.User.Identity.IsAuthenticated, key = Model.Id })
+        @*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child_embed" })*@
 
-}
+    }
 
-@section footerscripts
+    @section footerscripts
 {
-    <style>
-        /* Popover */
-        /* Popover Header */
-        .popover-title {
-            background-color: #fcf8e3;
-        }
-        /* Popover Body */
-        .popover-content {
-            font-size: 80%;
-        }
-    </style>
+        <style>
+            /* Popover */
+            /* Popover Header */
+            .popover-title {
+                background-color: #fcf8e3;
+            }
+            /* Popover Body */
+            .popover-content {
+                font-size: 80%;
+            }
+        </style>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
         SocialShareKit.init({
             url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))',
             twitter: {
@@ -477,65 +517,65 @@
                 content: "Jedná se o naši kopii zveřejněné smlouvy. Nemusí se jednat o stejný, správný či úplný dokument."
             });
         });
-    </script>
-}
+        </script>
+    }
 
 
 
-@helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt, int typSubjektu)
-{
-    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
-    <p>
-        <a href="/subjekt/@subjekt.ico">
-            <b>@subjekt.nazev</b>
-        </a>&nbsp;&nbsp;&nbsp;@Util.FirmaMoreInfoLinks(subjekt.ico)
+    @helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt, int typSubjektu)
+    {
+        HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
+        <p>
+            <a href="/subjekt/@subjekt.ico">
+                <b>@subjekt.nazev</b>
+            </a>&nbsp;&nbsp;&nbsp;@Util.FirmaMoreInfoLinks(subjekt.ico)
 
-        <br />
-        @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
-
-        @subjekt.adresa<br />
-        @if (!string.IsNullOrEmpty(subjekt.ico))
-        {
-            <text>
-                ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
-            </text>
-        }
-        @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
-        {
-            <text>
-                &nbsp;dat.schránka @subjekt.datovaSchranka
-            </text>
-        }
-
-
-        @if (typSubjektu == 1)
-        {
-            <text>
-                <br />Plátce peněz
-            </text>
-        }
-        else if (typSubjektu == 2)
-        {
-            <text>
-                <br />Příjemce peněz
-                <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
-            </text>
-        }
-        else if (typSubjektu == 3) //vkladatel do rejstriku
-        {
-            <text>
-            </text>
-        }
-        @if (firma != null && firma.IsNespolehlivyPlatceDPH())
-        {
-            <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
-        }
-
-
-        @if (!string.IsNullOrEmpty(subjekt.ico))
-        {
             <br />
-        }
-    </p>
-}
+            @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+
+            @subjekt.adresa<br />
+            @if (!string.IsNullOrEmpty(subjekt.ico))
+            {
+                <text>
+                    ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
+                </text>
+            }
+            @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
+            {
+                <text>
+                    &nbsp;dat.schránka @subjekt.datovaSchranka
+                </text>
+            }
+
+
+            @if (typSubjektu == 1)
+            {
+                <text>
+                    <br />Plátce peněz
+                </text>
+            }
+            else if (typSubjektu == 2)
+            {
+                <text>
+                    <br />Příjemce peněz
+                    <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
+                </text>
+            }
+            else if (typSubjektu == 3) //vkladatel do rejstriku
+            {
+                <text>
+                </text>
+            }
+            @if (firma != null && firma.IsNespolehlivyPlatceDPH())
+            {
+                <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
+            }
+
+
+            @if (!string.IsNullOrEmpty(subjekt.ico))
+            {
+                <br />
+            }
+        </p>
+    }
 

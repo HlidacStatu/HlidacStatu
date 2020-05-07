@@ -12,15 +12,15 @@ namespace Newton.SpeechToText.Cloud
                 Validate();
                 return _ntxToken;
             }
-            private set { _ntxToken = value; }
+            set { _ntxToken = value; }
         }
-        public long expiresAt { get; private set; }
+        public long expiresAt { get; set; }
         public DateTime Expiration() { return Util.FromEpochTimeToUTC(this.expiresAt); }
 
-        public string TaskId { get; private set; }
-        public string TaskLabel { get; private set; }
+        public string TaskId { get; set; }
+        public string TaskLabel { get; set; }
 
-        public AccessToken accessToken { get; private set; }
+        public AccessToken accessToken { get; set; }
 
         public void Validate()
         {

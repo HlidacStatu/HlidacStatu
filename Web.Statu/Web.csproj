@@ -1535,6 +1535,7 @@
     <Content Include="Views\Home\ZobrazD.cshtml" />
     <Content Include="Views\Manage\EditClassification.cshtml" />
     <Content Include="Views\Home\Reports\27_COVID.cshtml" />
+    <Content Include="Views\ApiV1\ModalZneplatnenaSmlouva.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
