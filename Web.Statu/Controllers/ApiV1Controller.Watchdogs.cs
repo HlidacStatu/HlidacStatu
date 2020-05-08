@@ -45,7 +45,7 @@ namespace HlidacStatu.Web.Controllers
                     )
                     return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
 
-                var wdName = WatchDogProcessor.APIID_Prefix + dataid;
+                var wdName = WatchDog.APIID_Prefix + dataid;
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
 

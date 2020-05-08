@@ -510,7 +510,6 @@
     <Compile Include="Data\External\DataSets\Search.cs" />
     <Compile Include="Data\External\DataSets\Serialization.cs" />
     <Compile Include="Data\External\DataSets\Util.cs" />
-    <Compile Include="Data\External\DataSets\Watchdog.Dataset.cs" />
     <Compile Include="Data\External\ProfilZadavatelu\Parser.cs" />
     <Compile Include="Data\External\ProfilZadavatelu\Profil_Zadavatele_134_2016_SchemaVZ.Designer.cs" />
     <Compile Include="Data\External\ProfilZadavatelu\Tool.cs" />
@@ -606,11 +605,7 @@
     <Compile Include="Data\VZ\ProfilZadavatele.cs" />
     <Compile Include="Data\VZ\VerejnaZakazka.WatchdogProcessor.cs" />
     <Compile Include="Data\VZ\VerejnaZakazka.Search.cs" />
-    <Compile Include="Data\Watchdog.partial.Send.cs" />
     <Compile Include="Data\Watchdog.partial.cs" />
-    <Compile Include="Data\Watchdog.Insolvence.cs" />
-    <Compile Include="Data\Watchdog.VerejnaZakazka.cs" />
-    <Compile Include="Data\Watchdog.Smlouva.cs" />
     <Compile Include="Emails\EmailMessageFromTemplate.cs" />
     <Compile Include="Emails\Templates\FoundZakazkyItem.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
@@ -688,7 +683,6 @@
     <Compile Include="Data\WatchDog.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\WatchdogProcessor.cs" />
     <Compile Include="DateInterval.cs" />
     <Compile Include="DateRange.cs" />
     <Compile Include="DirectDB.cs" />

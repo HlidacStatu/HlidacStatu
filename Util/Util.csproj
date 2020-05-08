@@ -167,6 +167,7 @@
     <Compile Include="ProcessExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderData.Vysledky.cs" />
+    <Compile Include="SMTPTools.cs" />
     <Compile Include="StringTools.cs" />
     <Compile Include="UtilDateConverter.cs" />
     <Compile Include="SingletonManager.cs" />

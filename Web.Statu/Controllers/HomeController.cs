@@ -400,7 +400,7 @@ Od uzivatele:{email}
 ke stránce:{url}
 
 text zpravy: {txt}";
-                        SendMailToPodpora(subject, email, body);
+                        HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
 
                     }
                     catch (Exception ex)
@@ -433,7 +433,7 @@ text zpravy: {txt}
 
 explain result: {classificationExplanation} ";
 
-                    SendMailToPodpora(subject, email, body);
+                    HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
                 }
                 catch (Exception ex)
                 {
@@ -448,26 +448,7 @@ explain result: {classificationExplanation} ";
         }
 
 
-        private void SendMailToPodpora(string subject, string replyTo, string body)
-        {
-            string from = "podpora@hlidacstatu.cz";
-            string to = "podpora@hlidacstatu.cz";
-            
-            using (var smtp = new System.Net.Mail.SmtpClient())
-            {
-                System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage(from, to);
-                msg.Bcc.Add("michal@michalblaha.cz");
-                msg.Subject = subject;
-                if (!string.IsNullOrEmpty(replyTo) && TextUtil.IsValidEmail(replyTo))
-                    msg.ReplyToList.Add(new System.Net.Mail.MailAddress(replyTo));
-                msg.IsBodyHtml = false;
-                msg.BodyEncoding = System.Text.Encoding.UTF8;
-                msg.SubjectEncoding = System.Text.Encoding.UTF8;
-                msg.Body = body;
-
-                smtp.Send(msg);
-            }
-        }
+     
 
         public ActionResult TextSmlouvy(string Id, string hash, string secret)
         {

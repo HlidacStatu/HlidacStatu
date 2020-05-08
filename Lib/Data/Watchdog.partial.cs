@@ -8,6 +8,8 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class WatchDog
     {
+        public static string APIID_Prefix = "APIID:";
+
         public static string AllDbDataType = "#ALL#";
 
         [Devmasters.Core.ShowNiceDisplayName()]
@@ -188,29 +190,6 @@ namespace HlidacStatu.Lib.Data
 
             }
             //throw new System.NotImplementedException();
-            return res;
-        }
-        public static List<WatchDogProcessor> GetWatchDogBase(WatchDog wd)
-        {
-            var res = new List<WatchDogProcessor>();
-
-            if (wd.dataType == WatchDog.AllDbDataType)
-            {                                                     //add all datasets
-                foreach (var ds in External.DataSets.DataSetDB.ProductionDataSets.Get())
-                {
-                    res.Add(new External.DataSets.WatchdogDataset(wd, ds));
-                }
-
-            }
-
-            if (wd.dataType == typeof(Smlouva).Name || wd.dataType == WatchDog.AllDbDataType)
-                res.Add(new WatchdogSmlouva(wd));
-            if (wd.dataType == typeof(VZ.VerejnaZakazka).Name || wd.dataType == WatchDog.AllDbDataType)
-                res.Add(new WatchdogVerejnaZakazka(wd));
-            if (wd.dataType == typeof(Rizeni).Name || wd.dataType == WatchDog.AllDbDataType)
-                res.Add(new WatchdogInsolvence(wd));
-            if (wd.dataType.StartsWith(typeof(Lib.Data.External.DataSets.DataSet).Name))
-                res.Add(new Lib.Data.External.DataSets.WatchdogDataset(wd));
             return res;
         }
 
