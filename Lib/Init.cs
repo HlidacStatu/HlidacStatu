@@ -30,7 +30,7 @@ namespace HlidacStatu.Lib
             {
                 //TelemetryConfiguration.Active.InstrumentationKey = " your key ";
 
-                Newtonsoft.Json.Schema.License.RegisterLicense("3728-aXgQGUPNIz8WRCA03NPy/apAQzh/a4yTHV1hw0iy8OsMCJKFfDxWGsXYD4qEpbMX8SxHOVTqkRBfsCytaxOh/TYUR6BBOhGLClH58ubzG9nBh3C3mnLEk7XwwhLAKxo+UPDe0e8Z4DniQVNnQsKY0KTYDorpMTVOBtSfyquZu457IklkIjozNzI4LCJFeHBpcnlEYXRlIjoiMjAxOS0wOS0xMFQxMjozMzowMi4yMzgxMjEyWiIsIlR5cGUiOiJKc29uU2NoZW1hSW5kaWUifQ==");
+                Newtonsoft.Json.Schema.License.RegisterLicense(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense"));
 
                 if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
                 {

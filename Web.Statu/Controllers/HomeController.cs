@@ -1044,7 +1044,7 @@ explain result: {classificationExplanation} ";
                     return NotFound("/Politici", "Pokračovat na seznamu politiků");
             }
 
-            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.NameId == Id).FirstOrDefault();
+            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
 
             if (aktualnost.HasValue == false)
                 aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
