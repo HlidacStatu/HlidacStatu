@@ -171,7 +171,12 @@ namespace HlidacStatu.Web.Controllers
 
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    var config = new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture);
+                    config.HasHeaderRecord = true; 
+                    config.Delimiter = model.GetValidDelimiter();
+
+
+                    var csv = new CsvHelper.CsvReader(r, config);
                     csv.Read(); csv.ReadHeader();
                     model.Headers = csv.Context.HeaderRecord.Where(m=> !string.IsNullOrEmpty(m?.Trim())).ToArray();
 
@@ -371,7 +376,7 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.ApiResponseError = status;
                 return View(model);
             }
-            model.DatasetId = ((Registration)status.value).datasetId;
+            model.DatasetId = ((DataSet)status.value).DatasetId;
             model.Save(pathModels);
             return RedirectToAction("createSimple3", model);
         }

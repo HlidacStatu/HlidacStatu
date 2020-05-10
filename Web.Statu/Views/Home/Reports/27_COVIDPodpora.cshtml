@@ -1,0 +1,98 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+@using Nest;
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+@functions { 
+    public class pomoc {
+        public string resort { get; set; }
+        public string typ { get; set; }
+        public string jmeno { get; set; }
+        public decimal celkovaVyse { get; set; }
+        public decimal vyplaceno { get; set; }
+        public decimal pocetSubj { get; set; }
+        public DateTime keDni { get; set; }
+        public string poznamka { get; set; }
+    }
+
+    string sdata = @"
+Ministerstvo	Typ pomoci	Program	Odhadovaná celková výše (v mld. Kč)	Vyplacená	Počet subjektů	Údaj ke dni	Poznamka
+Ministerstvo financí	Přímá podpora	Pětadvacítka' pro OSVČ	31,1	10,7	444603	5.5.2020	od 9.4.2020
+Ministerstvo financí	Nepřímá podpora	Liberační balíček I a II (souhrn daňových úlev a opatření)	42,7	0	0	5.5.2020	
+Ministerstvo financí	Přímá podpora	Kompenzační bonus pro malé s.r.o.	15	0	0	5.5.2020	Připravuje se (žádosti od března zpětně)
+Ministerstvo práce a sociálních věcí	Přímá podpora	Ošetřovné zaměstnancům	0	0	0	5.5.2020	
+Ministerstvo práce a sociálních věcí	Přímá podpora	Program Antivirus	32,7	1,9	29000	5.5.2020	od 6.4.2020
+Ministerstvo práce a sociálních věcí	Přímá podpora	Odpouští minimální povinné platby na důchodové pojištění	25	0	0	5.5.2020	od března
+Ministerstvo průmyslu a obchodu 	Přímá podpora	Ošetřovné OSVČ	1	0,18	25000	5.5.2020	od 1.4.2020
+Ministerstvo průmyslu a obchodu 	Přímá podpora	Czech Rise Up – Chytrá opatření proti COVID-19.	0,2	0	4	5.5.2020	možno žádat od 1. týdnu v 4/2020
+Ministerstvo průmyslu a obchodu 	Přímá podpora	Technologie COVID 19	0,3	0	0	5.5.2020	od 27.4.2020
+ČMZRB, a.s.	Záruka za úvěr	COVID I	5	1	195	4.5.2020	od 16.3. - 20.3.2020 (pozastaven)
+ČMZRB, a.s.	Záruka za úvěr	COVID II	35	1,7	835	4.5.2020	od 2.4.2020
+ČMZRB, a.s.	Záruka za úvěr	COVID III	150			5.5.2020	Spuštěno koncem května
+ČMZRB, a.s.	Záruka za úvěr	COVID Praha	1,8	0,132	34	4.5.2020	
+Ministerstvo zemědělství	Přímá podpora	Investice do zemědělských podniků a na Zpracování a uvádění na trh zemědělských produktů	3,40	0	0	4.5.2020	bude spuštěno 14.7.- 4.8. (příjem žádostí)
+Ministerstvo zemědělství	Přímá podpora	Navýšení rozpočtu Podpůrného a garančního rolnického a lesnického fondu	1	0	0	4.5.2020	
+Ministerstvo zemědělství	Přímá podpora	program PROVOZ 2020 – snížení jistiny úvěru	0	0	0	4.5.2020	Připravuje se
+Ministerstvo zemědělství / PGRLF	Nepřímá podpora	Pomoc pro epidemií postižené zemědělce	1	0	0	5.5.2020	K dispozici od dubna
+Ministerstvo zemědělství	Přímá podpora	Navýšení PRV (Program rozvoje venkova) na podporu soběstačnosti 	3,3	0	0	5.5.2020	K dispozici od dubna
+Ministerstvo kultury	Přímá podpora	Dotace na záchranu kultury	1,07	0	0	5.5.2020	Dosud nevyhlášen
+Ministerstvo zdravotnictví	Nepřímá podpora	Odpuštěny povinné platby na zdravotní pojištění	8	0	0	5.5.2020	
+Exportní garanční a pojišťovací společnost	Záruka za úvěr	Záruka za úvěry u komerčních bank kvůli koronaviru.	142	0	0	5.5.2020	Připravuje se
+EGAP (MF+ MPO..) 	Záruka za úvěr	Podpora vývozců (+ Fast track)	0	0	0	5.5.2020	Připravuje se
+";
+
+
+}
+@{
+    decimal mld = 1000000000m;
+//https://twitter.com/HelenaHorska/status/1255496055782887424/photo/1
+https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bilion-realne-poslala-jen-par-miliard
+
+    var podpora = new List<Tuple<string, int, decimal, decimal>>() {
+        //nazev, typ, schvalena podpora, vyplacena podpora
+        new Tuple<string, int,decimal,decimal>("Pětadvacítka (MF)", 1, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Liberační balíček I a II (MF)", 3, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Ošetřovné (MPO)", 1, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Program ANTIVIRUS (MPSV)", 1, 32.7m*mld, 0.929m*mld),
+
+        new Tuple<string, int,decimal,decimal>("Odpuštění zdravotního a důchodové pojištění (MZdr,MPSV)", 1, 0*mld, 0*mld),
+        new Tuple<string, int,decimal,decimal>("COVID I (ČMZRB)", 2, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("COVID II (ČMZRB)", 2, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("COVID III (ČMZRB)", 2, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("COVID Praha (ČMZRB)", 2, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Program rozvoje venkova (MZ)", 1, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Navýšení podpory PGRLF (MZ)",1, 32.7m*mld, 0.929m*mld),
+
+        new Tuple<string, int,decimal,decimal>("Záchrana kultury (MK)",1, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Záruky EGAP",2, 32.7m*mld, 0.929m*mld),
+        new Tuple<string, int,decimal,decimal>("Podpora vývozců (EGAP)",2, 32.7m*mld, 0.929m*mld),
+    };
+}
+<div class="bs-callout bs-callout-primary">
+    <h4>V jakých oborech uzavírá stát nejvíce smluv?</h4>
+    <div>
+        Stát uzavírá různé smlouvy z mnoha důvodů, pro různé typy služeb, prací, zboží. <b>Každou smlouvu se pokoušíme zařadit do jedné až dvou oborů (kategorií) ze celkem 140.</b>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-12">
+
+    </div>
+
+</div>
+
+
+
+

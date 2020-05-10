@@ -62,7 +62,7 @@ namespace HlidacStatu.Web.Models
         static string[] validDelimiters = new string[] { ",", ";", "\t" };
         public static string GetValidDelimiter(string del)
         {
-            string delimiter = del?.Trim() ?? ",";
+            string delimiter = del ?? ",";
             if (!validDelimiters.Contains(delimiter))
             {
                 if (delimiter == "\\t")
