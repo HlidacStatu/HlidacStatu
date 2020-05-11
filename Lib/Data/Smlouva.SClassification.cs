@@ -1,4 +1,5 @@
-﻿using Devmasters.Core;
+﻿using com.sun.org.apache.bcel.@internal.generic;
+using Devmasters.Core;
 using Elastic.Apm.Api;
 using HlidacStatu.Util.Cache;
 using Newtonsoft.Json;
@@ -438,7 +439,7 @@ namespace HlidacStatu.Lib.Data
                 settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
 
 
-                using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/stemmer"))
+                using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/stemmer?doc_id={smlouvaKeyId.ValueForData}"))
                 {
                     stem.Method = Devmasters.Net.Web.MethodEnum.POST;
                     stem.Tries = 3;
@@ -452,7 +453,16 @@ namespace HlidacStatu.Lib.Data
                         Util.Consts.Logger.Debug($"Getting stems for {smlouvaKeyId.ValueForData} from " + stem.Url);
 
                         stems = stem.GetBinary();
+
+                        // test if json is complete
+                        var jtoken = JToken.Parse(Encoding.UTF8.GetString(stems.Binary));
+
                         return stems.Binary;
+                    }
+                    catch (JsonReaderException e)
+                    {
+                        Util.Consts.Logger.Error($"Stemmer returned incomplete json for {smlouvaKeyId.ValueForData} " + stem.Url, e);
+                        throw;
                     }
                     catch (Exception e)
                     {
@@ -481,9 +491,9 @@ namespace HlidacStatu.Lib.Data
 
             }
 
-            public static Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> GetClassificationFromServer(Smlouva s, bool rewriteStems = false)
+            public static Dictionary<ClassificationsTypes, decimal> GetClassificationFromServer(Smlouva s, bool rewriteStems = false)
             {
-                Dictionary<Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> data = new Dictionary<Smlouva.SClassification.ClassificationsTypes, decimal>();
+                Dictionary<ClassificationsTypes, decimal> data = new Dictionary<ClassificationsTypes, decimal>();
                 if (s.Prilohy.All(m => m.EnoughExtractedText) == false)
                     return null;
 
@@ -497,27 +507,38 @@ namespace HlidacStatu.Lib.Data
                 }
                     
 
-                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/classifier"))
+                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/classifier?doc_id={s.Id}"))
                 {
-                    classif.Method = Devmasters.Net.Web.MethodEnum.POST;
-                    classif.Tries = 3;
-                    classif.TimeInMsBetweenTries = 5000;
-                    classif.Timeout = 180000;
-                    classif.ContentType = "application/json; charset=utf-8";
-                    classif.RequestParams.RawContent = stems;
                     Devmasters.Net.Web.TextContentResult classifier = null;
-                    try
+                    for (int retries = 1; retries >= 0; retries--)
                     {
-                        Util.Consts.Logger.Debug($"Getting classification for {s.Id} from " + classif.Url);
-                        classifier = classif.GetContent();
-                    }
-                    catch (Exception e)
-                    {
-                        Util.Consts.Logger.Error($"Classification Classifier API for {s.Id} " + classif.Url, e);
-                        throw;
+                        classif.Method = Devmasters.Net.Web.MethodEnum.POST;
+                        classif.Tries = 3;
+                        classif.TimeInMsBetweenTries = 5000;
+                        classif.Timeout = 180000;
+                        classif.ContentType = "application/json; charset=utf-8";
+                        classif.RequestParams.RawContent = stems;
+                        try
+                        {
+                            Util.Consts.Logger.Debug($"Getting classification for {s.Id} from " + classif.Url);
+                            classifier = classif.GetContent();
+                        }
+                        catch (Exception e)
+                        {
+                            if (retries > 0)
+                            {
+                                stems = GetRawStems(s, true);
+                            }
+                            else
+                            {
+                                Util.Consts.Logger.Error($"Classification Classifier API for {s.Id} " + classif.Url, e);
+                                throw;
+                            }
+                        }
+
                     }
 
-                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/finalizer"))
+                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/finalizer?doc_id={s.Id}"))
                     {
                         fin.Method = Devmasters.Net.Web.MethodEnum.POST;
                         fin.Tries = 3;
