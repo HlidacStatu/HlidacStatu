@@ -438,38 +438,21 @@ namespace HlidacStatu.Lib.Data
                 var settings = new JsonSerializerSettings();
                 settings.ContractResolver = new HlidacStatu.Util.FirstCaseLowercaseContractResolver();
 
-
-                using (Devmasters.Net.Web.URLContent stem = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/stemmer?doc_id={smlouvaKeyId.ValueForData}"))
+                string stemmerResponse = CallEndpoint("stemmer",
+                            JsonConvert.SerializeObject(s, settings),
+                            s.Id,
+                            1000 * 60 * 30);
+                try
                 {
-                    stem.Method = Devmasters.Net.Web.MethodEnum.POST;
-                    stem.Tries = 3;
-                    stem.TimeInMsBetweenTries = 5000;
-                    stem.Timeout = 1000*60*30; //30min
-                    stem.ContentType = "application/json; charset=utf-8";
-                    stem.RequestParams.RawContent = Newtonsoft.Json.JsonConvert.SerializeObject(s, settings);
-                    Devmasters.Net.Web.BinaryContentResult stems = null;
-                    try
-                    {
-                        Util.Consts.Logger.Debug($"Getting stems for {smlouvaKeyId.ValueForData} from " + stem.Url);
-
-                        stems = stem.GetBinary();
-
-                        // test if json is complete
-                        var jtoken = JToken.Parse(Encoding.UTF8.GetString(stems.Binary));
-
-                        return stems.Binary;
-                    }
-                    catch (JsonReaderException e)
-                    {
-                        Util.Consts.Logger.Error($"Stemmer returned incomplete json for {smlouvaKeyId.ValueForData} " + stem.Url, e);
-                        throw;
-                    }
-                    catch (Exception e)
-                    {
-                        Util.Consts.Logger.Error($"Classification Stemmer API error for {smlouvaKeyId.ValueForData} " + stem.Url, e);
-                        throw;
-                    }
+                    var jtoken = JToken.Parse(stemmerResponse);
                 }
+                catch (JsonReaderException e)
+                {
+                    Util.Consts.Logger.Error($"Stemmer returned incomplete json for {smlouvaKeyId.ValueForData}", e);
+                    throw;
+                }
+
+                return Encoding.UTF8.GetBytes(stemmerResponse);
             }
 
             public static string GetRawStems(Smlouva s, bool rewriteStems = false)
@@ -505,86 +488,52 @@ namespace HlidacStatu.Lib.Data
                 {
                     return data;
                 }
-                    
 
-                using (Devmasters.Net.Web.URLContent classif = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/classifier?doc_id={s.Id}"))
+                string classifierResponse = "";
+                try
                 {
-                    Devmasters.Net.Web.TextContentResult classifier = null;
-                    for (int retries = 1; retries >= 0; retries--)
-                    {
-                        classif.Method = Devmasters.Net.Web.MethodEnum.POST;
-                        classif.Tries = 3;
-                        classif.TimeInMsBetweenTries = 5000;
-                        classif.Timeout = 180000;
-                        classif.ContentType = "application/json; charset=utf-8";
-                        classif.RequestParams.RawContent = stems;
-                        try
-                        {
-                            Util.Consts.Logger.Debug($"Getting classification for {s.Id} from " + classif.Url);
-                            classifier = classif.GetContent();
-                        }
-                        catch (Exception e)
-                        {
-                            if (retries > 0)
-                            {
-                                stems = GetRawStems(s, true);
-                            }
-                            else
-                            {
-                                Util.Consts.Logger.Error($"Classification Classifier API for {s.Id} " + classif.Url, e);
-                                throw;
-                            }
-                        }
-
-                    }
-
-                    using (Devmasters.Net.Web.URLContent fin = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/finalizer?doc_id={s.Id}"))
-                    {
-                        fin.Method = Devmasters.Net.Web.MethodEnum.POST;
-                        fin.Tries = 3;
-                        fin.TimeInMsBetweenTries = 5000;
-                        fin.Timeout = 30000;
-                        fin.ContentType = "application/json; charset=utf-8";
-                        fin.RequestParams.RawContent = classifier.Text;
-                        Devmasters.Net.Web.TextContentResult res = null;
-                        try
-                        {
-                            Util.Consts.Logger.Debug($"Getting classification finalizer  for {s.Id} from " + classif.Url);
-                            res = fin.GetContent();
-                        }
-                        catch (Exception e)
-                        {
-                            Util.Consts.Logger.Error($"Classification finalizer API  for {s.Id} " + classif.Url, e);
-                            throw;
-                        }
-
-
-                        var jsonData = Newtonsoft.Json.Linq.JObject.Parse(res.Text);
-
-                        foreach (JProperty item in jsonData.Children())
-                        {
-
-                            string key = item.Name.Replace("-", "_").Replace("_generic","_obecne");// jsonData[i][0].Value<string>().Replace("-", "_");
-                            decimal prob = HlidacStatu.Util.ParseTools.ToDecimal(item.Value.ToString()) ?? 0;
-                            if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
-                            {
-                                if (!data.ContainsKey(typ))
-                                    data.Add(typ, prob);
-                                else if (typ == SClassification.ClassificationsTypes.OSTATNI)
-                                    Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
-
-
-                            }
-                            else
-                            {
-                                Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
-                                data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
-                            }
-                        }
-
-                    }
-
+                    classifierResponse = CallEndpoint("classifier",
+                            stems,
+                            s.Id,
+                            180000);
                 }
+                catch
+                {
+                    //retry once with new stems
+                    stems = GetRawStems(s, true);
+                    classifierResponse = CallEndpoint("classifier",
+                            stems,
+                            s.Id,
+                            180000);
+                }
+
+                string finalizerResponse = CallEndpoint("finalizer",
+                        classifierResponse,
+                        s.Id,
+                        30000);
+
+                var jsonData = Newtonsoft.Json.Linq.JObject.Parse(finalizerResponse);
+
+                foreach (JProperty item in jsonData.Children())
+                {
+
+                    string key = item.Name.Replace("-", "_").Replace("_generic","_obecne");// jsonData[i][0].Value<string>().Replace("-", "_");
+                    decimal prob = HlidacStatu.Util.ParseTools.ToDecimal(item.Value.ToString()) ?? 0;
+                    if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
+                    {
+                        if (!data.ContainsKey(typ))
+                            data.Add(typ, prob);
+                        else if (typ == SClassification.ClassificationsTypes.OSTATNI)
+                            Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
+
+                    }
+                    else
+                    {
+                        Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
+                        data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                    }
+                }
+              
                 return data;
             }
 
@@ -606,36 +555,41 @@ namespace HlidacStatu.Lib.Data
                 var settings = new JsonSerializerSettings();
                 settings.ContractResolver = new Util.FirstCaseLowercaseContractResolver();
 
+                var response = CallEndpoint("explain_json",
+                        JsonConvert.SerializeObject(s, settings),
+                        idSmlouvy,
+                        1000 * 60 * 10);
+                return System.Text.RegularExpressions.Regex.Unescape(response);
+            }
 
-                using (Devmasters.Net.Web.URLContent explain = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + "/explain_json"))
+            private static string CallEndpoint(string endpoint, string content, string id, int timeoutMs)
+            {
+                using (Devmasters.Net.Web.URLContent request = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/{endpoint}?doc_id={id}"))
                 {
-                    explain.Method = Devmasters.Net.Web.MethodEnum.POST;
-                    explain.Tries = 3;
-                    explain.TimeInMsBetweenTries = 5000;
-                    explain.Timeout = 1000 * 60 * 10; //10min
-                    explain.ContentType = "application/json; charset=utf-8";
-                    explain.RequestParams.RawContent = JsonConvert.SerializeObject(s, settings);
-                    Devmasters.Net.Web.TextContentResult explanations = null;
+                    request.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    request.Tries = 3;
+                    request.TimeInMsBetweenTries = 5000;
+                    request.Timeout = timeoutMs;
+                    request.ContentType = "application/json; charset=utf-8";
+                    request.RequestParams.RawContent = content;
+                    Devmasters.Net.Web.TextContentResult response = null;
                     try
                     {
-                        Util.Consts.Logger.Debug($"Getting explanation for {idSmlouvy} from " + explain.Url);
+                        Util.Consts.Logger.Debug($"Calling classifier endpoint [{endpoint}] for {id} from " + request.Url);
 
-                        explanations = explain.GetContent();
-                        string decodedExplanations = System.Text.RegularExpressions.Regex.Unescape(explanations.Text);
+                        response = request.GetContent();
 
-                        return decodedExplanations;
+                        return response.Text;
                     }
                     catch (Exception e)
                     {
-                        Util.Consts.Logger.Error($"Classification Explanation API error for {idSmlouvy} " + explain.Url, e);
+                        Util.Consts.Logger.Error($"Classification {endpoint} API error for {id} " + request.Url, e);
                         throw;
                     }
                 }
             }
 
         }
-
-        
 
         /// <summary>
         /// Sets new classification on smlouva. And saves data also to audit table []. 
