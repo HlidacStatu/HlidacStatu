@@ -50,5 +50,42 @@ namespace HlidacStatu.Lib.Data.Dotace
             return result.Errors;
         }
 
+        public IEnumerable<Dotace> YieldAllDotace(string scrollTimeout = "2m", int scrollSize = 1000)
+        {
+            ISearchResponse<Dotace> initialResponse = _esClient.Search<Dotace>
+                (scr => scr.From(0)
+                     .Take(scrollSize)
+                     .MatchAll()
+                     .Scroll(scrollTimeout));
+
+            if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
+                throw new Exception(initialResponse.ServerError.Error.Reason);
+
+            if (initialResponse.Documents.Any())
+                foreach (var dotace in initialResponse.Documents)
+                {
+                    yield return dotace;
+                }
+
+            string scrollid = initialResponse.ScrollId;
+            bool isScrollSetHasData = true;
+            while (isScrollSetHasData)
+            {
+                ISearchResponse<Dotace> loopingResponse = _esClient.Scroll<Dotace>(scrollTimeout, scrollid);
+                if (loopingResponse.IsValid)
+                {
+                    foreach (var dotace in loopingResponse.Documents)
+                    {
+                        yield return dotace;
+                    }
+                    scrollid = loopingResponse.ScrollId;
+                }
+                isScrollSetHasData = loopingResponse.Documents.Any();
+            }
+
+            _esClient.ClearScroll(new ClearScrollRequest(scrollid));
+
+        }
+
     }
 }

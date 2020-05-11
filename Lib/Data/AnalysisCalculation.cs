@@ -693,5 +693,28 @@ namespace HlidacStatu.Lib.Data
 
             return badF;
         }
+
+        public static IEnumerable<(string idDotace, string ico, int ageInDays )> CompanyAgeDuringSubsidy()
+        {
+            var dotSer = new Dotace.DotaceService();
+
+            foreach (var dotace in dotSer.YieldAllDotace())
+            {
+                bool missingEssentialData = string.IsNullOrWhiteSpace(dotace.Prijemce?.Ico)
+                    || !dotace.DatumPodpisu.HasValue;
+
+                if (missingEssentialData)
+                    continue;
+
+                Firma firma = Firmy.Get(dotace.Prijemce.Ico);
+
+                if (!firma.Datum_Zapisu_OR.HasValue)
+                    continue;
+
+                var companyAgeInDays = (dotace.DatumPodpisu.Value - firma.Datum_Zapisu_OR.Value).Days;
+
+                yield return (idDotace: dotace.IdDotace, ico: firma.ICO, ageInDays: companyAgeInDays);
+            }
+        }
     }
 }
