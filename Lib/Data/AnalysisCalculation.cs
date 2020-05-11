@@ -708,7 +708,10 @@ namespace HlidacStatu.Lib.Data
 
                 Firma firma = Firmy.Get(dotace.Prijemce.Ico);
 
-                if (!firma.Datum_Zapisu_OR.HasValue)
+                if (firma.PatrimStatu()) //nechceme státní firmy
+                    continue;
+
+                if (!firma.Datum_Zapisu_OR.HasValue) //nechceme firmy s chybějící hodnotou data zapisu do OR
                     continue;
 
                 var companyAgeInDays = (dotace.DatumPodpisu.Value - firma.Datum_Zapisu_OR.Value).Days;
