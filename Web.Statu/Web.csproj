@@ -458,6 +458,7 @@
     <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />
     <Compile Include="Framework\Html2Png.cs" />
+    <Compile Include="Framework\Report\covid_pomoc.cs" />
     <Compile Include="Framework\RobotFromIP.cs" />
     <Compile Include="Framework\Shared\Data.cs" />
     <Compile Include="Framework\LimitedAccess.cs" />

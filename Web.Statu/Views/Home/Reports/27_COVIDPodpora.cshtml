@@ -12,33 +12,15 @@
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
 @using HlidacStatu.Lib.Render
+@using HlidacStatu.Web.Framework.Report;
 
-@functions {
-
-    public class pomoc
-    {
-        public float id { get; set; }
-        public string ministerstvo { get; set; }
-        public string typ_pomoci { get; set; }
-        public string program { get; set; }
-        public decimal odhadovana_celkova_vyse_v_mld_kc { get; set; }
-        public decimal vyplacena { get; set; }
-        public decimal pocet_subjektu { get; set; }
-        public DateTime udaj_ke_dni { get; set; }
-        public string poznamka { get; set; }
-    }
-
-
-}
 @{
-    decimal mld = 1000000000m;
 
 //https://twitter.com/HelenaHorska/status/1255496055782887424/photo/1
 https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bilion-realne-poslala-jen-par-miliard
 
-
     var ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("pomoc-covid");
-    var data = ds.GetAllData<pomoc>();
+    var data = covid_pomoc.VsechnaPomoc();
 
     string sprima = "Přímá podpora";
     string sneprima = "Nepřímá podpora";
@@ -60,7 +42,7 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
 <p>
     Dopady pandemie koronaviru a restart ekonomiky by měli politici řešit rychle, jednoduše a účinně. Sliby politiků jsme slyšeli,
     pojďme se kouknout na skutečnou pomoc.
-    Jde o součást projektu <a href="https://www.neshasinat.cz">„NEZHASÍNAT!”</a>, ve které dodávame politikům sadu doporučení, jak se popasovat s krizí v mezích zákonů a rozjet ekonomiku efektivně a transparentně.
+    Jde o součást společného projektu s Rekonstrukcí státu <a target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/">„NEZHASÍNAT!”</a>, ve které dodáváme politikům sadu doporučení, jak se popasovat s krizí v mezích zákonů a rozjet ekonomiku efektivně a transparentně.
 </p>
 
 <hr style="margin:50px 100px 50px 100px" />
@@ -158,6 +140,7 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
             <table>
                 <tbody>
                     <tr>
+                        <th></th>
                         <th>Garant</th>
                         <th>Program pomoci</th>
                         <th>Odhadovaná celková výše</th>
@@ -173,27 +156,49 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
                         foreach (var item in data
                                 .Where(m => m.typ_pomoci == typ)
                                 .OrderBy(m => m.ministerstvo)
-                                .ThenByDescending(m => m.odhadovana_celkova_vyse_v_mld_kc)
+                                .ThenBy(m => m.program)
                                 )
                         {
                             <tr>
+                                <td><a href="/data/Detail/pomoc-covid/@item.id">Detail</a></td>
                                 <td>@item.ministerstvo</td>
-                                <td>@item.program</td>
                                 <td>
-                                    @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.odhadovana_celkova_vyse_v_mld_kc, mena: "mld. Kč", html: true))
+                                    <span>@item.program</span>
+                                    @if (!string.IsNullOrEmpty(item.url))
+                                    {
+                                        <a href="@item.url"><i class="fas fa-external-link"></i></a>
+                                    }
                                 </td>
-                                @if (!string.IsNullOrEmpty(item.poznamka) && item.vyplacena == 0 && item.pocet_subjektu == 0)
-                                {
-                                    <td colspan="3">@item.poznamka</td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.vyplacena, mena: "mld. Kč", html: true))
-                                    </td>
-                                    <td>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(item.pocet_subjektu, html: true)) subjektů</td>
-                                    <td>@item.poznamka</td>
-                                }
+                                <td>
+                                    @if (item.odhadovana_celkova_vyse_v_mld_kc > 0)
+                                    {
+                                        <span>@Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.odhadovana_celkova_vyse_v_mld_kc, mena: "mld. Kč", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show))</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Není známo</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.vyplacena > 0)
+                                    {
+                                        <span>@Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.vyplacena, mena: "mld. Kč", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show))</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.pocet_subjektu > 0)
+                                    {
+                                        <span>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(item.pocet_subjektu, html: true)) subjektů</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.poznamka))
+                                    {
+                                        
+                                        <a title="@item.poznamka" href="/data/Detail/pomoc-covid/@item.id"><i class="far fa-sticky-note"></i></a>
+                                    }
+
+                                </td>
                             </tr>
 
                         }

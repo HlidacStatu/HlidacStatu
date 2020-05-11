@@ -2,6 +2,7 @@
 @using HlidacStatu.Lib.Data.External.Zabbix;
 @using Devmasters.Core;
 @using HlidacStatu.Util;
+@using HlidacStatu.Web.Framework.Report;
 
 
 @{
@@ -17,6 +18,17 @@
     double neplatnych = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[1];
     double celkemKc = HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[2];
 
+    var data = covid_pomoc.VsechnaPomoc();
+
+    string sprima = "Přímá podpora";
+    string sneprima = "Nepřímá podpora";
+    string szaruka = "Záruka za úvěr";
+
+    DateTime keDni = data.OrderByDescending(m => m.udaj_ke_dni).Skip(2).First().udaj_ke_dni;
+
+    decimal vypl_prima = data.Where(m => m.typ_pomoci == sprima).Sum(m => m.vyplacena);
+    decimal vypl_neprima = data.Where(m => m.typ_pomoci == sneprima).Sum(m => m.vyplacena);
+    decimal vypl_zaruka = data.Where(m => m.typ_pomoci == szaruka).Sum(m => m.vyplacena);
 
 }
 @section scripts
@@ -24,9 +36,6 @@
     <script>
         _showFAD = false;
     </script>
-    <script src="/Scripts/typeahead.jquery.min.js"></script>
-    <script src="/Scripts/bloodhound.min.js"></script>
-    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
 
     <script type="text/javascript">
         window.smartlook || (function (d) {
@@ -89,19 +98,18 @@
     <div class="watcher-blocks__wrapper">
 
         <!-- block Nezhasinat -->
-        @{
-            decimal miliarda = 1000000000m;
-            decimal prima = 9.4m * miliarda;
-            decimal zaruka = 3.9m * miliarda;
-            decimal neprima = 2.3m * miliarda;
 
-        }
-
-        @*<div class="watcher-block">
-            <div class="watcher__title">
-                <img src="/Content/img/icon-person-watcher.svg">
+        <div class="watcher-block" >
+            <div class="watcher__title" style="padding:10px 10px 20px 10px;/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fde54c+0,fde54c+59,ffffff+100 */
+background: #fde54c; /* Old browsers */
+background: -moz-linear-gradient(top,  #fde54c 0%, #fde54c 59%, #ffffff 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  #fde54c 0%,#fde54c 59%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  #fde54c 0%,#fde54c 59%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+">
+                <a target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/"><img src="/Content/img/icon-person-watcher.svg"></a>
                 <h2 class="new-title">
-                    Nezhasínat!
+                    <a target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/" style="color:black">Nezhasínat!</a>
                     <img src="/content/img/rekonstrukce-statu.svg" style="height:25px;width:auto;" /><img src="/content/img/Hlidac-statu-ctverec-notext.svg" style="height:30px;width:auto;" />
                 </h2>
             </div>
@@ -113,42 +121,45 @@
 
             <div class="block-col block-part">
                 <div class="block-subtitle">
-                    Slíbeno
+                    Slíbená podpora ekonomice
                 </div>
                 <div class="block-table">
-                    <div class="table-row">
-                        <div class="table-col" style="margin-right:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">1000&nbsp;mld.</span></div>
-                        <div class="table-col" style="line-height:40px;" ">Slíbená podpora ekonomice</div>
-                    </div>
+                    <table class="table-row">
+                        <tr>
+                            <td class="table-col" style="margin-right:20px;line-height:40px;width:100%;">
+
+                            <span id="covid-counter" style="font-size:30px;font-weight:bold;color:#ff525b">1&nbsp;190 miliard Kč</span>
+                                <sup>(<a href="/report/27">zdroj</a>}</sup>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="block-subtitle">
-                    Skutečně vyplaceno
+                    Skutečně vyplaceno (k @(keDni.ToString("d.M.yyyy")))
                 </div>
-                <div class="block-table">
-                    <div class="table-row">
-                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(prima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
-                        <div class="table-col" style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(zaruka, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
-                        <div class="table-col" style="padding-left:20px;">Záruka za půjčku/úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</div>
-                    </div>
-                    <div class="table-row" style="border-bottom:#ff525b 2px double ">
-                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(neprima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
-                        <div class="table-col" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-col" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(prima + zaruka + neprima, true, exactScale: RenderData.MaxScale.Miliarda))</span></div>
-                        <div class="table-col" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></div>
-                    </div>
+                <table>
+                    <tr>
+                        <td style="width:150px;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
+                        <td style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</td>
+                    </tr>
+                    <tr >
+                        <td class="" style="width:auto;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_neprima, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
+                        <td class="" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</td>
+                    </tr>
+                    <tr  style="border-bottom:#ff525b 2px double ">
+                        <td class="" style="width:auto;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
+                        <td class="" style="padding-left:20px;">Záruka za půjčku/úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
+                    </tr>
+                    <tr >
+                        <td class="" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima + vypl_neprima + vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
+                        <td class="" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></td>
+                    </tr>
+                </table>
+                <div class="block-button-wrapper">
+                    <a href="/report/27" class="btn btn-default btn-default-new">Podrobnosti o podporách</a>
                 </div>
             </div>
-
-            <div class="block-button-wrapper">
-                <a href="/report/26" class="btn btn-default btn-default-new">Podrobnosti</a>
-            </div>
-        </div>*@
-
+        </div>
 
 
 
