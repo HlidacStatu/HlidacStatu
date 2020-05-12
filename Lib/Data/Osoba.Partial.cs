@@ -216,8 +216,10 @@ namespace HlidacStatu.Lib.Data
                         || ev.AddInfo == "předseda strany"
                         || ev.AddInfo == "předsedkyně strany"
                         || ev.AddInfo == "místopředseda strany"
-                        || ev.AddInfo == "místopředsedkyně strany"
-                        ))
+                        || ev.AddInfo == "místopředsedkyně strany")
+                    && (!ev.DatumDo.HasValue 
+                        || ev.DatumDo >= DateTime.Now)
+                    )
                 .OrderByDescending(ev => ev.DatumOd)
                 .Select(ev => ev.Organizace)
                 .FirstOrDefault();
