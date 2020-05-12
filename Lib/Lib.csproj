@@ -551,6 +551,7 @@
     <Compile Include="Data\ItemToOcrQueue.Partial.cs" />
     <Compile Include="Data\Osoba.Searching.cs" />
     <Compile Include="Data\Osoba.Searching.Politici.cs" />
+    <Compile Include="Data\OsobaES.cs" />
     <Compile Include="Data\Review.Partial.cs" />
     <Compile Include="Data\Audit.Partial.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />

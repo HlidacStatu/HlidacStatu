@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -21,6 +22,15 @@ namespace HlidacStatu.Web.Controllers
             public int? RokUmrti { get; set; }
             public string Aktpolstr { get; set; }
             public int? Pocet { get; set; }
+        }
+
+        class StatementDTO
+        {
+            public string Type { get; set; }
+            public DateTime FromDate { get; set; }
+            public DateTime ToDate { get; set; }
+            public dynamic LegalBusinessAssociates { get; set; }
+            public dynamic OrganizationMember { get; set; }
         }
 
         public ActionResult NasiPolitici_GetList()
@@ -141,10 +151,22 @@ namespace HlidacStatu.Web.Controllers
                     })
                     .ToArray();
 
-                var registrOznameni = o.Events(m => 
-                        m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni
-                        && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
-                    .Select(m => m.AddInfo).ToList();
+                string registrOznameni = o.Events(m => 
+                            m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni
+                            && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
+                        .Select(m => m.AddInfo).FirstOrDefault();
+
+                List<StatementDTO> statements = null;
+                if (!string.IsNullOrWhiteSpace(registrOznameni))
+                {
+
+                    var ds = DataSet.CachedDatasets.Get("centralniregistroznameni");
+                    var value = ds.GetDataObj(registrOznameni);
+
+
+                    //StatementDTO[] statements = (StatementDTO[])value.statements;
+                    statements = value.statements.ToObject<List<StatementDTO>>();
+                }
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
                 //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
@@ -225,7 +247,8 @@ namespace HlidacStatu.Web.Controllers
                     photo = photo,
                     description = statDescription,
                     companyConnection = angazovanost,
-                    notificationRegister = registrOznameni,
+                    notificationRegisterId = registrOznameni,
+                    notificationRegisterStatements = statements,
                     //funkce = funkceOsoba,
                     roles = roleOsoba,
                     insolvencyPerson = insPerson,

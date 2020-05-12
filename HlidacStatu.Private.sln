@@ -116,6 +116,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Q.Tasks", "Hlid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newton.SpeechToText.Cloud", "Newton.SpeechToText.Cloud\Newton.SpeechToText.Cloud.csproj", "{1346D530-B4D5-48B4-B1D2-0130D20EDFBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleLoader", "PeopleLoader\PeopleLoader.csproj", "{32B52012-6743-4560-86BE-0B3629F23AB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -984,6 +986,30 @@ Global
 		{1346D530-B4D5-48B4-B1D2-0130D20EDFBF}.x86Only|x64.Build.0 = Debug|Any CPU
 		{1346D530-B4D5-48B4-B1D2-0130D20EDFBF}.x86Only|x86.ActiveCfg = Debug|Any CPU
 		{1346D530-B4D5-48B4-B1D2-0130D20EDFBF}.x86Only|x86.Build.0 = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|x64.Build.0 = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Debug|x86.Build.0 = Debug|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|x64.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|x64.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|x86.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Release|x86.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|x64.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|x64.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|x86.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.Stage|x86.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|Any CPU.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|Any CPU.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|x64.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|x64.Build.0 = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|x86.ActiveCfg = Release|Any CPU
+		{32B52012-6743-4560-86BE-0B3629F23AB3}.x86Only|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1012,10 +1038,11 @@ Global
 		{143CBA2C-CEED-44FF-9214-30E7BD2D3396} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 		{62846FD2-F286-434C-8CA3-54D4F6A021A8} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 		{1346D530-B4D5-48B4-B1D2-0130D20EDFBF} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
+		{32B52012-6743-4560-86BE-0B3629F23AB3} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
