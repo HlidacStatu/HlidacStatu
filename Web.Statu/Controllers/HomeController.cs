@@ -418,12 +418,11 @@ text zpravy: {txt}";
         {
             // create a task, so user doesn't have to wait for anything
             System.Threading.Tasks.Task.Run(() => {
-                string classificationExplanation = Smlouva.SClassification.GetClassificationExplanation(data);
 
                 try
                 {
                     string subject = "Zprava z HlidacStatu.cz: " + typ;
-                    string body = $@"
+                string body = $@"
 Návrh na opravu klasifikace.
 
 Od uzivatele:{email} 
@@ -431,9 +430,16 @@ ke stránce:{url}
 
 text zpravy: {txt}
 
-explain result: {classificationExplanation} ";
+";
+                HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
 
-                    HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
+                string classificationExplanation = Smlouva.SClassification.GetClassificationExplanation(data);
+
+                    string explain = $"explain result: {classificationExplanation} ";
+
+                    HlidacStatu.Util.SMTPTools.SendEmail(subject, "",body+ explain,"michal@michalblaha.cz");
+                    HlidacStatu.Util.SMTPTools.SendEmail(subject, "", body + explain, "petr@hlidacstatu.cz");
+                    HlidacStatu.Util.SMTPTools.SendEmail(subject, "", body + explain, "lenka@hlidacstatu.cz");
                 }
                 catch (Exception ex)
                 {
