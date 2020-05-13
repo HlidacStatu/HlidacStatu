@@ -537,6 +537,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public virtual string AddData(string data, string id, string createdBy, bool validateSchema = true, bool skipOCR = false)
         {
+
+            if (this.Registration().allowWriteAccess == false && createdBy != "michal@michalblaha.cz")
+            {
+                if (this.Registration().createdBy != createdBy)
+                    throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetNoPermision);
+            }
+
             Newtonsoft.Json.Linq.JObject obj = Newtonsoft.Json.Linq.JObject.Parse(data);
             dynamic objDyn = Newtonsoft.Json.Linq.JObject.Parse(data);
 

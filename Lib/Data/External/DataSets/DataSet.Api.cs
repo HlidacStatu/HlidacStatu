@@ -15,7 +15,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
     {
         public static class Api
         {
-            public static string[] SuperUsers = new string[] {"michal@michalblaha.cz","rpliva@seznam.cz" };
+            public static string[] SuperUsers = new string[] {"michal@michalblaha.cz" };
             public static ApiResponseStatus Update(Registration dataset, string updatedBy)
             {
                 try
