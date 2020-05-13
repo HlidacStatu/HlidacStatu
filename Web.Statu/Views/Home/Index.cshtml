@@ -24,7 +24,7 @@
     string sneprima = "Nepřímá podpora";
     string szaruka = "Záruka za úvěr";
 
-    DateTime keDni = data.OrderByDescending(m => m.udaj_ke_dni).Skip(2).First().udaj_ke_dni;
+    DateTime keDni = data.OrderByDescending(m => m.udaj_ke_dni).First().udaj_ke_dni;
 
     decimal vypl_prima = data.Where(m => m.typ_pomoci == sprima).Sum(m => m.vyplacena);
     decimal vypl_neprima = data.Where(m => m.typ_pomoci == sneprima).Sum(m => m.vyplacena);
