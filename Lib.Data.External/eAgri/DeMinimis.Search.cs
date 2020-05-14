@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -20,16 +21,17 @@ namespace HlidacStatu.Lib.Data.External.eAgri
   #BODY#
 </SOAP:Envelope>";
 
+        //dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF""
         static string searchSubReq = @"<SOAP:Body>
     <vOKO:Request vOKOid=""RDM_SUS01A"" xmlns:vOKO=""http://www.pds.eu/vOKO/v0200"">
-      <vOKO:UIDkey dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF"" />
+      <vOKO:UIDkey userID=""99michalblaha"" dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF"" />
       <vOKO:TimeStamp type=""base"">#TIME#+01:00</vOKO:TimeStamp>
       <vOKO:AppInfo>
-        <vOKO:AppModule id=""vOKOSCom.dll"" version=""4.2.2.0"" />
+        <vOKO:AppModule id=""hlidacstatu"" version=""1"" />
       </vOKO:AppInfo>
       <vOKO:RequestHeader>
         <vOKO:RequestID>STRNAD-test/2010/RDM_SUS01A</vOKO:RequestID>
-        <vOKO:Subject subjectID=""1001803473"" />
+        <vOKO:Subject subjectID=""1011816014"" />
         <vOKO:RequestType code="""">
         </vOKO:RequestType>
       </vOKO:RequestHeader>
@@ -50,13 +52,40 @@ namespace HlidacStatu.Lib.Data.External.eAgri
             string req = enveloReq.Replace("#BODY#",
                     searchSubReq.Replace("#TIME#", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")).Replace("#IC#", ico)
                     );
-            string token = _sign("wMaXmTH69qD0VCGsF6Eh", req);
+            string token = _sign("2ahKpoxgvuQRgFVsPUCX", req);
             req = req.Replace("#TOKEN#", token);
 
-            System.Net.WebClient net = new System.Net.WebClient();
+            Soap net = new Soap();
             var resp = net.UploadString(url, req);
         }
 
+
+        class Soap : System.Net.WebClient
+        {
+            public int Timeout { get; set; }
+            public Soap() : this(60 * 1000) { } //1min
+
+            public Soap(int timeout)
+            {
+                this.Timeout = timeout;
+                this.Encoding = System.Text.Encoding.UTF8;
+            }
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+
+                var request = base.GetWebRequest(address);
+                request.ContentType = "text/xml";
+                if (request != null)
+                {
+                    ((HttpWebRequest)request).KeepAlive = false;
+                    ((HttpWebRequest)request).ReadWriteTimeout = Timeout;
+                    request.Timeout = this.Timeout;
+                }
+                return request;
+            }
+
+        }
 
         /// <summary>
         /// Vytvoří autentitační token pro volání služby

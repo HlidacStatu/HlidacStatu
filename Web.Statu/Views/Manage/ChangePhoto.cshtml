@@ -11,7 +11,7 @@
 {
 
     @if (o != null && HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(o.NameId.ToLower())
-                || Model.NotInterestingToShow() 
+                || (o != null && o.NotInterestingToShow() )
         )
     {
         <meta name="robots" content="noindex, noarchive">
