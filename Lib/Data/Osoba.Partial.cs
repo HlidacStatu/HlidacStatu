@@ -329,7 +329,7 @@ namespace HlidacStatu.Lib.Data
                 else
                 {
                     return string.Format(template,
-                        evs.Aggregate((f, s) => f + "\n" + s)
+                        evs.Aggregate((f, s) => f + itemDelimeter + s)
                         );
                 }
             }
