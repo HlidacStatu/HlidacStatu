@@ -421,6 +421,10 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="vOKOsCom, Version=5.2.0.48607, Culture=neutral, PublicKeyToken=31204d55c91e542b, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\vOKO\vOKOsCom.dll</HintPath>
+    </Reference>
     <Reference Include="ZedGraph, Version=5.1.7.430, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.dll</HintPath>
     </Reference>
@@ -436,6 +440,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Connected Services\eAgri.DeMinimis.WS\HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\eAgri.DeMinimis.WS\HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\eAgri.DeMinimis.WS\RDM_INF01B.wsdl" />
     <None Include="DatoveSchranky\descriptor.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -485,9 +496,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connected Services\eAgri.DeMinimis.WS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="DatoveSchranky\descriptor.Designer.cs" />
     <Compile Include="DatoveSchranky\ISDS.cs" />
     <Compile Include="Discourse.cs" />
+    <Compile Include="eAgri\DeMinimis.Search.cs" />
     <Compile Include="RequestLimiter.cs" />
     <Compile Include="Vazby\FromGraphDb.cs" />
     <Compile Include="Zabbix\ZabAvailability.cs" />
@@ -505,10 +522,22 @@
     <Compile Include="Zabbix\ZabTools.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Connected Services\eAgri.DeMinimis.WS\configuration91.svcinfo" />
+    <None Include="Connected Services\eAgri.DeMinimis.WS\configuration.svcinfo" />
+    <None Include="Connected Services\eAgri.DeMinimis.WS\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="K_Index\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\eAgri.DeMinimis.WS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
