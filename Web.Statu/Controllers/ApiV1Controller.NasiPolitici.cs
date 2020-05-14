@@ -26,6 +26,7 @@ namespace HlidacStatu.Web.Controllers
 
         class StatementDTO
         {
+            public string Id { get; set; }
             public string Type { get; set; }
             public DateTime FromDate { get; set; }
             public DateTime ToDate { get; set; }
