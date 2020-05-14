@@ -5,7 +5,7 @@
 @using Devmasters.Core;
 @{
     ViewBag.ShowBookmarkUrl = true;
-
+    string viewCache = "12H";
     switch (Model)
     {
         case 1:
@@ -128,6 +128,18 @@ XINTEXT (0->0.7mld),
                     + "<meta property=\"og:image:type\" content=\"image/png\" />"
                     ;
             break;
+        case 27:
+            ViewBag.Title = "Jaká je slibovaná a jaká je skutečná pomoc státu v dobách koronavirové epidemie?";
+            ViewBag.SocialShareText = "Jaká je slibovaná a jaká je skutečná pomoc státu v dobách koronavirové epidemie? Ve spolupráci s Rekonstrukcí státu hlídáme, kolik stát skutečně vyplatil na podpoře podnikatelům a občanům.";
+            ViewBag.SubTitle = "";
+            ViewBag.SocialShareTitle = "Jaká je skutečná pomoc státu v dobách koronavirové epidemie?";
+            ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/page?d={DateTime.Now.ToString("d.M.yy")}&v=" + Url.Encode(Request.Url.AbsoluteUri);
+            ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                    + "<meta property=\"og:image:height\" content=\"1080\" />"
+                    + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                    ;
+            viewCache = "0H";
+            break;
         default:
             break;
     }
@@ -176,7 +188,7 @@ XINTEXT (0->0.7mld),
         data.Add("nameOfView", view);
     }
 }
-@Html.Action("Report_child", new { routedata = data })
+@Html.Action("Report_child_"+viewCache, new { routedata = data })
 
 @Util.FeedbackModal("Poslat opravu či připomínku")
 
