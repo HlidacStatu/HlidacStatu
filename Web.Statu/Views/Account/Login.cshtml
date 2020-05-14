@@ -19,7 +19,7 @@
                         Pro přístup na požadovanou stránku musíte být přihlášeni pod svým uživatelským účtem.
                     </div>
                 }
-                <h4>Přihlášení do Hlídače smluv.</h4>
+                <h4>Přihlášení do Hlídače státu.</h4>
                 <p>Pokud účet ještě nemáte, @Html.ActionLink("tady se snadno a zdarma zaregistrujte", "Register", new { nextUrl = ViewBag.ReturnUrl }).</p>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <input type="submit" value="Přihlásit se do Hlídače smluv" class="btn btn-primary" />
+                        <input type="submit" value="Přihlásit se do Hlídače státu" class="btn btn-primary" />
                         <a class="btn btn-default" href="@Url.Action("ForgotPassword")" role="button">Nepamatuji si heslo</a>
                         @Html.HoneyPotInput()
 
