@@ -24,7 +24,7 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
 
     string sprima = "Přímá podpora";
     string sneprima = "Nepřímá podpora";
-    string szaruka = "Záruka za úvěr";
+    string szaruka = "Úvěr či záruka za úvěr";
 
     DateTime keDni = data.OrderByDescending(m => m.udaj_ke_dni).First().udaj_ke_dni;
 
@@ -123,7 +123,7 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
                                 @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(vypl_zaruka, mena: "mld. Kč", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show))
                             </span>
                         </td>
-                        <td>Záruka za půjčku/úvěr</td>
+                        <td>Úvěr či záruka za úvěr</td>
                     </tr>
                 </tbody>
             </table>

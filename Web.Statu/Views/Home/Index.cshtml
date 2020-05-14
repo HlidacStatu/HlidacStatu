@@ -22,7 +22,7 @@
 
     string sprima = "Přímá podpora";
     string sneprima = "Nepřímá podpora";
-    string szaruka = "Záruka za úvěr";
+    string szaruka = "Úvěr či záruka za úvěr";
 
     DateTime keDni = data.OrderByDescending(m => m.udaj_ke_dni).First().udaj_ke_dni;
 
@@ -148,7 +148,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                     </tr>
                     <tr  style="border-bottom:#ff525b 2px double ">
                         <td class="" style="width:auto;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
-                        <td class="" style="padding-left:20px;">Záruka za půjčku/úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
+                        <td class="" style="padding-left:20px;">Úvěr či záruka za úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
                     </tr>
                     <tr >
                         <td class="" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima + vypl_neprima + vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
