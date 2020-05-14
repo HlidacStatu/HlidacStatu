@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Watchdogs
     {
         public static bool SendEmail(string toEmail, string subject, RenderedContent content, string fromEmail = "podpora@hlidacstatu.cz")
         {
-            return HlidacStatu.Util.SMTPTools.SendEmail(toEmail, subject, content.ContentText, content.ContentHtml, fromEmail, false);
+            return HlidacStatu.Util.SMTPTools.SendEmail( subject, content.ContentHtml, content.ContentText, toEmail, fromEmail, false);
         }
     }
 }
