@@ -45,6 +45,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             if (result.Errors)
             {
                 var a = result.DebugInformation;
+                Util.Consts.Logger.Error($"Error when bulkSaving dotace to ES: {a}");
             }
 
             return result.Errors;

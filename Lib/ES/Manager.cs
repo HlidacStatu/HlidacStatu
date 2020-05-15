@@ -31,7 +31,8 @@ namespace HlidacStatu.Lib.ES
             //DataSourceDb,
             DataSource,
             Insolvence,
-            Dotace
+            Dotace,
+            Osoby
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -50,6 +51,7 @@ namespace HlidacStatu.Lib.ES
         //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
         public static string defaultIndexName_Insolvence = "insolvencnirestrik";
         public static string defaultIndexName_Dotace = "dotace";
+        public static string defaultIndexName_Osoby = "osoby";
 
 
         private static object _clientLock = new object();
@@ -131,6 +133,11 @@ namespace HlidacStatu.Lib.ES
         public static ElasticClient GetESClient_Dotace(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Dotace, timeOut, connectionLimit, IndexType.Dotace);
+        }
+
+        public static ElasticClient GetESClient_Osoby(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_Osoby, timeOut, connectionLimit, IndexType.Osoby);
         }
 
         public static ElasticClient GetESClient_Firmy(int timeOut = 60000, int connectionLimit = 80)
@@ -445,6 +452,13 @@ namespace HlidacStatu.Lib.ES
                        .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
+                       );
+                    break;
+                case IndexType.Osoby:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Map<Data.OsobyES.OsobaES>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
 

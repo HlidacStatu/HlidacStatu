@@ -551,7 +551,7 @@
     <Compile Include="Data\ItemToOcrQueue.Partial.cs" />
     <Compile Include="Data\Osoba.Searching.cs" />
     <Compile Include="Data\Osoba.Searching.Politici.cs" />
-    <Compile Include="Data\OsobaES.cs" />
+    <Compile Include="Data\OsobyES\OsobaES.cs" />
     <Compile Include="Data\Review.Partial.cs" />
     <Compile Include="Data\Audit.Partial.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />
@@ -841,6 +841,7 @@
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Text.cshtml" />
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Html.cshtml" />
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.cshtml" />
+    <Compile Include="Data\OsobyES\OsobyEsService.cs" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="xsd\dump_index.xsd">

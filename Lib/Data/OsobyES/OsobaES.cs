@@ -1,16 +1,16 @@
 ﻿using Nest;
 
-namespace HlidacStatu.Lib.Data
+namespace HlidacStatu.Lib.Data.OsobyES
 {
     [ElasticsearchType(IdProperty = nameof(OsobaId))]
-    class OsobaES
+    public class OsobaES
     {
         [Nest.Keyword]
         public string OsobaId { get; set; }
         [Nest.Text]
         public string FullName { get; set; }
         [Nest.Number]
-        public int BirthYear { get; set; }
+        public int? BirthYear { get; set; }
         [Nest.Text]
         public string[] PoliticalFunctions { get; set; }
         [Nest.Text]
