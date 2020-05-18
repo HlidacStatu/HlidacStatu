@@ -61,10 +61,30 @@ namespace HlidacStatu.Lib.Data
 
                 string modifQ = query;
 
+                string[] specifiedIcosInQuery = Util.ParseTools.GetRegexGroupValues(modifQ, @"(ico\w{0,11}\: \s? (?<ic>\d{3,8}))", "ic");
+                if (specifiedIcosInQuery != null && specifiedIcosInQuery.Length > 0)
+                {
+                    List<string> resIcos = new List<string>();
+                    foreach (var ic in specifiedIcosInQuery)
+                    {
+                        Firma f = Firmy.Get(ic);
+                        if (f.Valid)
+                        {
+                            ///nalezene ICO
+                            resIcos.Add(ic);
+                        }
+
+                    }
+                    if (resIcos.Count() > 0)
+                        return resIcos.ToArray();
+                }
+
+
+
                 //
                 modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(ico:|icoprijemce:|icoplatce:|icododavatel:|icozadavatel:)", "ico:", regexQueryOption);
 
-                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|icozadavatel:)", "jmeno:", regexQueryOption);
+                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|jmenozadavatel:)", "jmeno:", regexQueryOption);
 
                 //modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "\\s(AND|OR)\\s", " ", regexQueryOption);
 
