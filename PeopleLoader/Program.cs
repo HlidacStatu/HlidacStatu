@@ -20,11 +20,8 @@ namespace PeopleLoader
             using (DbEntities db = new DbEntities())
             {
                 var osoby = db.Osoba
-                    .Where(m =>
-                        m.NameId != null
-                        && (m.Status == (int)Osoba.StatusOsobyEnum.Politik
-                            || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
-                    ).ToList();
+                    .Where(m => m.Status > 0)
+                    .ToList();
                 
                 var osobyES = osoby.Select(os => new OsobaES()
                     {
@@ -32,7 +29,8 @@ namespace PeopleLoader
                         BirthYear = os.Narozeni.HasValue ? (int?) os.Narozeni.Value.Year : null,
                         FullName = os.FullName(false),
                         PoliticalParty = os.CurrentPoliticalParty(),
-                        Status = os.StatusOsoby().ToString("G"),
+                        StatusText = os.StatusOsoby().ToString("G"),
+                        Status = os.Status,
                         PoliticalFunctions = os.Events(ev => ev.Type == (int)OsobaEvent.Types.VolenaFunkce)
                             .Select(ev => ev.AddInfo).ToArray()
                     }).ToList();

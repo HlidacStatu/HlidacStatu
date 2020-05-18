@@ -16,6 +16,8 @@ namespace HlidacStatu.Lib.Data.OsobyES
         [Nest.Text]
         public string PoliticalParty { get; set; }
         [Nest.Text]
-        public string Status { get; set; }
+        public string StatusText { get; set; }
+        [Nest.Number]
+        public int Status { get; set; }
     }
 }
