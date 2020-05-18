@@ -32,6 +32,7 @@ namespace HlidacStatu.Web.Controllers
             public DateTime ToDate { get; set; }
             public dynamic LegalBusinessAssociates { get; set; }
             public dynamic OrganizationMember { get; set; }
+            public string Visibility { get; set; }
         }
 
         public ActionResult NasiPolitici_GetList()
