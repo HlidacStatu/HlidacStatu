@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data.OsobyES
 {
-    public class OsobyEsService
+    public static partial class OsobyEsService
     {
-        private readonly Nest.ElasticClient _esClient = ES.Manager.GetESClient_Osoby();
+        private static readonly Nest.ElasticClient _esClient = ES.Manager.GetESClient_Osoby();
 
-        public OsobaES Get(string idOsoby)
+        public static OsobaES Get(string idOsoby)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
             }
         }
 
-        public void BulkSave(List<OsobaES> osoby)
+        public static void BulkSave(List<OsobaES> osoby)
         {
             var result = _esClient.IndexMany<OsobaES>(osoby);
 

@@ -13,8 +13,6 @@ namespace PeopleLoader
     {
         static void Main(string[] args)
         {
-            var osobyService = new OsobyEsService();
-
             //List<OsobaES> osoby = null;
 
             using (DbEntities db = new DbEntities())
@@ -42,12 +40,12 @@ namespace PeopleLoader
                     batch.Add(osoba);
                     if(++i == 1000)
                     {
-                        osobyService.BulkSave(batch);
+                        OsobyEsService.BulkSave(batch);
                         batch.Clear();
                         i = 0;
                     }
                 }
-                osobyService.BulkSave(batch);
+                OsobyEsService.BulkSave(batch);
             }
         }
     }
