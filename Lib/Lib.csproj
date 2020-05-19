@@ -552,6 +552,7 @@
     <Compile Include="Data\Osoba.Searching.cs" />
     <Compile Include="Data\Osoba.Searching.Politici.cs" />
     <Compile Include="Data\OsobyES\OsobaES.cs" />
+    <Compile Include="Data\OsobyES\OsobyEsService.Search.cs" />
     <Compile Include="Data\Review.Partial.cs" />
     <Compile Include="Data\Audit.Partial.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />
@@ -699,6 +700,7 @@
     <Compile Include="Render\ScribanT.cs" />
     <Compile Include="Render\ScribanT.Functions.Private.cs" />
     <Compile Include="Render\ScribanT.Functions.cs" />
+    <Compile Include="Searching\OsobaEsSearchResult.cs" />
     <Compile Include="Searching\DotaceSearchResult.cs" />
     <Compile Include="Searching\Highlighter.cs" />
     <Compile Include="Searching\OsobaSearchResult.cs" />
