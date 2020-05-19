@@ -48,7 +48,13 @@ namespace HlidacStatu.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Osoba.GetOrCreateNew(osoba.TitulPred, osoba.Jmeno, osoba.Prijmeni, osoba.TitulPo, osoba.Narozeni, (Osoba.StatusOsobyEnum)osoba.Status, this.User.Identity.Name, osoba.Umrti);
+                var person = Osoba.GetOrCreateNew(osoba.TitulPred, osoba.Jmeno, osoba.Prijmeni, 
+                    osoba.TitulPo, osoba.Narozeni, (Osoba.StatusOsobyEnum)osoba.Status, 
+                    this.User.Identity.Name, osoba.Umrti);
+
+                // set timestamp saying it was manually checked
+                Osoba.SetManualTimeStamp(person.InternalId, this.User.Identity.Name);
+
                 return RedirectToAction(nameof(FindPerson), 
                     new {
                         jmeno = osoba.Jmeno,
@@ -80,6 +86,9 @@ namespace HlidacStatu.Web.Controllers
             {
                 Osoba result = Osoba.Update(osoba, this.User.Identity.Name);
 
+                // set timestamp saying it was manually checked
+                Osoba.SetManualTimeStamp(osoba.InternalId, this.User.Identity.Name);
+
                 return RedirectToAction(nameof(FindPerson),
                     new
                     {
@@ -99,6 +108,8 @@ namespace HlidacStatu.Web.Controllers
             if(ModelState.IsValid)
             {
                 var result = OsobaEvent.CreateOrUpdate(osobaEvent, this.User.Identity.Name);
+                // set timestamp saying it was manually checked
+                Osoba.SetManualTimeStamp(osobaEvent.OsobaId, this.User.Identity.Name);
                 return Json(new { Success = true });
             }
 
@@ -124,7 +135,8 @@ namespace HlidacStatu.Web.Controllers
                 return new JsonResult() { Data = "Event neexistuje." };
             }
             osobaEvent.Delete(this.User.Identity.Name);
-
+            // set timestamp saying it was manually checked
+            Osoba.SetManualTimeStamp(osobaEvent.OsobaId, this.User.Identity.Name);
             return Json(new { Success = true });
         }
 

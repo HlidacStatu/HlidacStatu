@@ -992,6 +992,24 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static void SetManualTimeStamp(int osobaId, string author)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var osobaToUpdate = db.Osoba
+                .Where(m =>
+                    m.InternalId == osobaId
+                ).FirstOrDefault();
+
+                if(osobaToUpdate != null)
+                {
+                    osobaToUpdate.ManuallyUpdated = DateTime.Now;
+                    osobaToUpdate.ManuallyUpdatedBy = author;
+                }
+                db.SaveChanges();
+            }
+        }
+
         public static Osoba Update(Osoba osoba, string user)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())

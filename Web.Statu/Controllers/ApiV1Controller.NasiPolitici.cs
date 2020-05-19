@@ -238,6 +238,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     id = o.NameId,
                     lastUpdate = lastUpdate,
+                    lastManualUpdate = o.ManuallyUpdated,
                     namePrefix = o.TitulPred,
                     nameSuffix = o.TitulPo,
                     name = o.Jmeno,
