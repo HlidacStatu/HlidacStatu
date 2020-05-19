@@ -34,5 +34,7 @@ namespace HlidacStatu.Lib.Data
         public string JmenoAscii { get; set; }
         public string PrijmeniAscii { get; set; }
         public string PuvodniPrijmeniAscii { get; set; }
+        public Nullable<System.DateTime> ManuallyUpdated { get; set; }
+        public string ManuallyUpdatedBy { get; set; }
     }
 }
