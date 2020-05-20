@@ -71,7 +71,7 @@
     //TODO parallel
     foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic($"(ico:{item.Key}) AND ({Model.Query})"));
+        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic($"(icoplatce:{item.Key}) AND ({Model.Query})"));
     }
 
     if (platci.Count > 50)
@@ -162,13 +162,13 @@
 
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h4>Objem smluv pro jednotlivé plátce za poslední 2 roky</h4>
+        <h4>Objem smluv pro jednotlivé plátce za poslední 2 celé roky</h4>
         @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé plátce", ReportModel.QueueItem.types.chart,
                 UtilChart.SimpleBarChart(
                     false, false, 300, "chartinfo", "Plátci", "Kč",
                         new[] {
+                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
-                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2017" }, 10,"2017" ),
                     },
                     tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>",
                     loadEvents: @"function(event) {
@@ -200,6 +200,8 @@
                 UtilChart.SimpleBarChart(
                     false, false, 300, "chartinfoPocet", "Plátci", "Počet",
                         new[] {
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2020" }, 10,"2020" ),
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2019" }, 10,"2019" ),
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2018" }, 10,"2018" ),
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2017" }, 10,"2017" ),
                     },
@@ -216,7 +218,13 @@
 @Html.Raw(
     UtilChart.RenderReportTableT<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>("",
         coreRDS.Filter(
-            new string[] {"Title","Cena_Y_2018", "Cena_Y_2017", "CenaChangePercent_Y_2018", "CenaCelkem","Detail" }
+            new string[] {
+                "Title",
+                "Cena_Y_2020", "CenaChangePercent_Y_2020", 
+                "Cena_Y_2019", "CenaChangePercent_Y_2019", 
+                "Cena_Y_2018", "CenaChangePercent_Y_2018", "Cena_Y_2017",
+                "CenaCelkem","Detail"
+            }
             ,coreRDS.Data.Count), @"{
                  'language': {
                     'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'

@@ -46,7 +46,9 @@ namespace HlidacStatu.Web.Controllers
             return View("Analyza");
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "id;p;q;title;description;moreUrl;embed", Duration = 60 * 60 * 12)]
+#endif
         [ChildActionOnly]
         public ActionResult Analyza_Child(string id, string p, string q, string title, string description, string moreUrl)
         {
@@ -70,6 +72,9 @@ namespace HlidacStatu.Web.Controllers
             model.NameOfView = "Analyza" + id;
             return View(model.NameOfView, model);
         }
+
+
+
         public ActionResult Photo(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -818,6 +823,7 @@ text zpravy: {txt}
 
             return View(NameOfView, model);
         }
+
         public ActionResult Osoba(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
 

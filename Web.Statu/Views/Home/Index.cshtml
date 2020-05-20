@@ -99,7 +99,7 @@
 
         <!-- block Nezhasinat -->
 
-        <div class="watcher-block" >
+        <div class="watcher-block">
             <div class="watcher__title" style="padding:10px 10px 20px 10px;/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fde54c+0,fde54c+59,ffffff+100 */
 background: #fde54c; /* Old browsers */
 background: -moz-linear-gradient(top,  #fde54c 0%, #fde54c 59%, #ffffff 100%); /* FF3.6-15 */
@@ -107,9 +107,9 @@ background: -webkit-linear-gradient(top,  #fde54c 0%,#fde54c 59%,#ffffff 100%); 
 background: linear-gradient(to bottom,  #fde54c 0%,#fde54c 59%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 ">
-                <a target="_blank"  onclick="return trackOutLink(this,'Index');" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/"><img src="/Content/img/icon-person-watcher.svg"></a>
+                <a target="_blank" onclick="return trackOutLink(this,'Index');" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/"><img src="/Content/img/icon-person-watcher.svg"></a>
                 <h2 class="new-title">
-                    <a  onclick="return trackOutLink(this,'index');" target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/" style="color:black">Nezhasínat!</a>
+                    <a onclick="return trackOutLink(this,'index');" target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/" style="color:black">Nezhasínat!</a>
                     <img src="/content/img/rekonstrukce-statu.svg" style="height:25px;width:auto;" /><img src="/content/img/Hlidac-statu-ctverec-notext.svg" style="height:30px;width:auto;" />
                 </h2>
             </div>
@@ -128,7 +128,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                         <tr>
                             <td class="table-col" style="margin-right:20px;line-height:40px;width:100%;">
 
-                            <span id="covid-counter" style="font-size:30px;font-weight:bold;color:#ff525b">1&nbsp;190 miliard Kč</span>
+                                <span id="covid-counter" style="font-size:30px;font-weight:bold;color:#ff525b">1&nbsp;190 miliard Kč</span>
                                 <sup>(<a href="/report/27">zdroj</a>}</sup>
                             </td>
                         </tr>
@@ -142,15 +142,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                         <td style="width:150px;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
                         <td style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</td>
                     </tr>
-                    <tr >
+                    <tr>
                         <td class="" style="width:auto;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_neprima, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
                         <td class="" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</td>
                     </tr>
-                    <tr  style="border-bottom:#ff525b 2px double ">
+                    <tr style="border-bottom:#ff525b 2px double ">
                         <td class="" style="width:auto;line-height:40px;text-align:right;"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
                         <td class="" style="padding-left:20px;">Úvěr či záruka za úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
                     </tr>
-                    <tr >
+                    <tr>
                         <td class="" style="width:auto;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima + vypl_neprima + vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
                         <td class="" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></td>
                     </tr>
@@ -159,6 +159,80 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                     <a onclick="return trackOutLink(this,'Index');" href="/report/27" class="btn btn-default btn-default-new">Podrobnosti o podporách</a>
                 </div>
             </div>
+        </div>
+
+        <!-- block 1 -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-contracts.svg">
+                <h2 class="new-title">
+                    Hlídač kauz
+                </h2>
+            </div>
+            <div class="block-tags">
+
+                @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts
+                    .Get()
+                    .Where(m => m.Date > new DateTime(2020, 1, 25) && m.Categories.Contains(246) == false) //not tipy
+                    .OrderByDescending(m => m.Date)
+                    .Take(5)
+                    )
+                {
+                    <span class="tag">
+                        <a href="@wp.Link">
+                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered, 55)
+                        </a>
+                    </span>
+
+                }
+            </div>
+            <div class="block-col block-part">
+                <div class="block-subtitle" style="font-weight:bold;color:red;">
+                    Předražená zakázka na elektronické dálniční známky
+                </div>
+                <div class="block-tags">
+
+                    <span class="tag">
+                        <a href="https://www.hlidacstatu.cz/texty/neobvykle-obvykla-cena-is-pro-dalnicni-znamky-podle-znalce-je-zisk-643-milionu-ze-zakazky-za-98-milionu-obvykly/">
+                            Neobvykle obvyklá cena IS pro dálniční známky.
+                            <span class="glyphicon glyphicon-share"></span>
+                        </a>
+                    </span>
+
+                    <span class="tag">
+                        <a href="https://www.hlidacstatu.cz/texty/elektronicke-dalnicni-znamky-jsou-drazsi-nez-papirove/">
+                            Elektronické dálniční známky vyjdou dráž než papírové
+                            <span class="glyphicon glyphicon-share"></span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Další sledované kauzy
+                </div>
+                <div class="block-tags">
+                    <span class="tag">
+                        <a href="/Hledat?Q=%22elektronické%20mýto%22">
+                            Elektronické mýto
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="/Hledat?Q=icoPlatce:65993390%20AND%20(%20%22stavebn%C3%AD%20práce%20v%20užš%C3%ADm%20ř%C3%ADzen%C3%AD%22%20OR%20%22jednac%C3%AD%20ř%C3%ADzen%C3%AD%20bez%20uveřejněn%C3%AD%22)">
+                            Smlouvy ŘSD s omezenou soutěží
+                        </a>
+                    </span>
+                    <span class="tag">
+                        <a href="/Subjekt/03211223">
+                            ITS - prázdná schránka obchodující s ŘSD
+                        </a>
+                        <a href="https://domaci.ihned.cz/c7-66389160-ofaba-b8b64364b636a5b" target="_blank"><span class="glyphicon glyphicon-share"></span></a>
+                    </span>
+                </div>
+            </div>
+
         </div>
 
 
@@ -229,98 +303,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
             <div class="block-button-wrapper">
                 <a href="/data" class="btn btn-default btn-default-new">Ukázat další databáze</a>
             </div>
-        </div>
-
-        <!-- block 1 -->
-        <div class="watcher-block">
-            <div class="watcher__title">
-                <img src="/Content/img/icon-contracts.svg">
-                <h2 class="new-title">
-                    Hlídač kauz
-                </h2>
-            </div>
-            <div class="block-tags">
-
-                @foreach (var wp in HlidacStatu.Lib.StaticData.LastBlogPosts
-                    .Get()
-                    .Where(m => m.Date > new DateTime(2020, 1, 25) && m.Categories.Contains(246) == false) //not tipy
-                    .OrderByDescending(m => m.Date)
-                    .Take(5)
-                    )
-                {
-                    <span class="tag">
-                        <a href="@wp.Link">
-                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered, 55)
-                        </a>
-                    </span>
-
-                }
-            </div>
-            <div class="block-col block-part">
-                <div class="block-subtitle" style="font-weight:bold;color:red;">
-                    Předražená zakázka na elektronické dálniční známky
-                </div>
-                <div class="block-tags">
-
-                    <span class="tag">
-                        <a href="https://www.hlidacstatu.cz/texty/neobvykle-obvykla-cena-is-pro-dalnicni-znamky-podle-znalce-je-zisk-643-milionu-ze-zakazky-za-98-milionu-obvykly/">
-                            Neobvykle obvyklá cena IS pro dálniční známky.
-                            <span class="glyphicon glyphicon-share"></span>
-                        </a>
-                    </span>
-
-                    <span class="tag">
-                        <a href="https://www.hlidacstatu.cz/texty/elektronicke-dalnicni-znamky-jsou-drazsi-nez-papirove/">
-                            Elektronické dálniční známky vyjdou dráž než papírové
-                            <span class="glyphicon glyphicon-share"></span>
-                        </a>
-                    </span>
-                    <span class="tag">
-                        <a href="https://www.facebook.com/HlidacStatu/photos/a.633591106840230/1224880554377946/">
-                            Lžou premiérovi anebo premiér nám? Je to mediální hra?
-                            <span class="glyphicon glyphicon-share"></span>
-                        </a>
-                    </span>
-                    <span class="tag">
-                        <a href="https://www.facebook.com/HlidacStatu/photos/a.633591106840230/1224879147711420/">
-                            Kdo všechno o zakázce věděl?
-                            <span class="glyphicon glyphicon-share"></span>
-                        </a>
-                    </span>
-                    <span class="tag">
-                        <a href="https://www.hlidacstatu.cz/texty/system-elektronicke-dalnicni-znamky-za-401-milionu-se-zatim-nesmi-realizovat-zrusi-se/">
-                            Systém za 401 miliónu se zatím nesmí realizovat. Zruší se?
-                            <span class="glyphicon glyphicon-share"></span>
-                        </a>
-                    </span>
-                </div>
-            </div>
-
-
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Další sledované kauzy
-                </div>
-                <div class="block-tags">
-                    <span class="tag">
-                        <a href="/Hledat?Q=%22elektronické%20mýto%22">
-                            Elektronické mýto
-                        </a>
-                    </span>
-                    <span class="tag">
-                        <a href="/Hledat?Q=icoPlatce:65993390%20AND%20(%20%22stavebn%C3%AD%20práce%20v%20užš%C3%ADm%20ř%C3%ADzen%C3%AD%22%20OR%20%22jednac%C3%AD%20ř%C3%ADzen%C3%AD%20bez%20uveřejněn%C3%AD%22)">
-                            Smlouvy ŘSD s omezenou soutěží
-                        </a>
-                    </span>
-                    <span class="tag">
-                        <a href="/Subjekt/03211223">
-                            ITS - prázdná schránka obchodující s ŘSD
-                        </a>
-                        <a href="https://domaci.ihned.cz/c7-66389160-ofaba-b8b64364b636a5b" target="_blank"><span class="glyphicon glyphicon-share"></span></a>
-                    </span>
-                </div>
-            </div>
-
         </div>
 
         <!-- block 2 -->
