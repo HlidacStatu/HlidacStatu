@@ -2,11 +2,13 @@
 
 namespace HlidacStatu.Lib.Data.OsobyES
 {
-    [ElasticsearchType(IdProperty = nameof(OsobaId))]
+    [ElasticsearchType(IdProperty = nameof(NameId))]
     public class OsobaES
     {
         [Nest.Keyword]
-        public string OsobaId { get; set; }
+        public string NameId { get; set; }
+        [Nest.Text]
+        public string ShortName { get; set; }
         [Nest.Text]
         public string FullName { get; set; }
         [Nest.Number]
@@ -19,5 +21,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
         public string StatusText { get; set; }
         [Nest.Number]
         public int Status { get; set; }
+        [Nest.Keyword]
+        public string PhotoUrl { get; set; }
     }
 }

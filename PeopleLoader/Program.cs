@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using HlidacStatu.Lib.Data;
-using HlidacStatu.Lib.Data.OsobyES; 
+using HlidacStatu.Lib.Data.OsobyES;
 
 namespace PeopleLoader
 {
@@ -23,14 +19,17 @@ namespace PeopleLoader
                 
                 var osobyES = osoby.Select(os => new OsobaES()
                     {
-                        OsobaId = os.NameId,
+                        NameId = os.NameId,
                         BirthYear = os.Narozeni.HasValue ? (int?) os.Narozeni.Value.Year : null,
+                        ShortName = os.Jmeno + " " + os.Prijmeni,
                         FullName = os.FullName(false),
                         PoliticalParty = os.CurrentPoliticalParty(),
                         StatusText = os.StatusOsoby().ToString("G"),
                         Status = os.Status,
                         PoliticalFunctions = os.Events(ev => ev.Type == (int)OsobaEvent.Types.VolenaFunkce)
-                            .Select(ev => ev.AddInfo).ToArray()
+                            .Select(ev => ev.AddInfo).ToArray(),
+                        PhotoUrl = os.HasPhoto()? os.GetPhotoUrl() : null
+
                     }).ToList();
 
                 int i = 0;
