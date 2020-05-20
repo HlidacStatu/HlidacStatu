@@ -52,10 +52,12 @@ namespace HlidacStatu.Web.Controllers
         [ChildActionOnly]
         public ActionResult Analyza_Child(string id, string p, string q, string title, string description, string moreUrl)
         {
-            if (string.IsNullOrEmpty(id))
-                id = "platcu";
+            var model = new HlidacStatu.Lib.Analysis.TemplatedQuery() { Query = q, Text = title, Description = description };
 
-            HlidacStatu.Lib.Analysis.TemplatedQuery model = null;
+            if (string.IsNullOrEmpty(id))
+                return View("AnalyzaStart", model);
+            
+
             if (StaticData.Afery.ContainsKey(p?.ToLower() ?? ""))
                 model = StaticData.Afery[p.ToLower()];
             else

@@ -16,18 +16,18 @@
 
 
 @{
-    ViewBag.Title = Model.Text ?? "Analýza Hlídače státu";
+    Layout = null;
+    ViewBag.Title = Model.Text ?? "Hlídač státu: Analýza příjemců";
 }
 
 @{
-    Layout = null;
     var basicStat = Model.Data;
     var ratingStat = Model.Rating;
 
     Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsPerIco =
         new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
         .Terms("perIco", h => h
-            .Field("platce.ico")
+            .Field("prijemce.ico")
             .Aggregations(ag2 => ag2
                 .DateHistogram("x-agg", h2 => h2
                     .Field(f => f.datumUzavreni)
@@ -43,7 +43,7 @@
 
     var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
 
-    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> platci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> prijemci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
 
     int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
     int maxDateYear = DateTime.Now.Year;
@@ -62,24 +62,24 @@
             };
             perY.Add(val.Date.Year, bdata);
         }
-        platci.Add(ico, new HlidacStatu.Lib.Analysis.BasicDataPerYear(perY));
+        prijemci.Add(ico, new HlidacStatu.Lib.Analysis.BasicDataPerYear(perY));
 
     }
 
 
     var coreData = new Dictionary<string, HlidacStatu.Lib.Analysis.QueryStatistic>();
     //TODO parallel
-    foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
+    foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}",$"{Model.Query}")));
+        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}",$"{Model.Query}")));
     }
 
-    if (platci.Count > 50)
+    if (prijemci.Count > 50)
     {
-        foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
+        foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
         {
             var stat = new HlidacStatu.Lib.Analysis.QueryStatistic();
-            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")";
+            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}");
             stat.BasicStatPerYear = item.Value;
             stat.RatingPerYear = HlidacStatu.Lib.Analysis.RatingDataPerYear.Empty();
             coreData.Add(item.Key, stat);
@@ -87,7 +87,7 @@
     }
 
 
-    var topF = platci
+    var topF = prijemci
         .OrderByDescending(o => o.Value.Data[2018].CelkemCena)
         //.ThenByDescending(o => o.Value.Summary.Pocet)
         .ToArray();
@@ -163,10 +163,10 @@
 
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h4>Objem smluv pro jednotlivé plátce za poslední 2 celé roky</h4>
-        @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé plátce", ReportModel.QueueItem.types.chart,
+        <h4>Objem smluv pro jednotlivé příjemce za poslední 2 celé roky</h4>
+        @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
                 UtilChart.SimpleBarChart(
-                    false, false, 300, "chartinfo", "Plátci", "Kč",
+                    false, false, 300, "chartinfo", "Příjemci", "Kč",
                         new[] {
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
@@ -196,10 +196,10 @@
 
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h4>Počet smluv pro jednotlivé plátce za poslední 2 roky</h4>
-        @UtilChart.RenderReport("Počet smluv pro jednotlivé plátce", ReportModel.QueueItem.types.chart,
+        <h4>Počet smluv pro jednotlivé příjemce za poslední 2 roky</h4>
+        @UtilChart.RenderReport("Počet smluv pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
                 UtilChart.SimpleBarChart(
-                    false, false, 300, "chartinfoPocet", "Plátci", "Počet",
+                    false, false, 300, "chartinfoPocet", "Příjemci", "Počet",
                         new[] {
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2020" }, 10,"2020" ),
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2019" }, 10,"2019" ),
@@ -214,7 +214,7 @@
                 )
     </div>
 </div>
-<h3>Všechny nalezení plátci</h3>
+<h3>Všechny nalezení příjemci</h3>
 
 @Html.Raw(
     UtilChart.RenderReportTableT<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>("",
