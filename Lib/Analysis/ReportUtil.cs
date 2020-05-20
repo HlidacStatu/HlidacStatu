@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Analysis
                         string html = string.Format("<a href='{0}'>{1}</a>", f.GetUrl(false), f.Jmeno);
                         if (!string.IsNullOrEmpty(query))
                         {
-                            html += $" <a href='/hledat?q={System.Net.WebUtility.UrlEncode(Searching.Tools.ModifyQueryAND("ico:"+f.ICO ,query))}'><i class='far fa-file-search'></i>&nbsp;smlouvy</a>";
+                            html += $" /<span class='small'>ukázat&nbsp;<a href='/hledat?q={System.Net.WebUtility.UrlEncode(Searching.Tools.ModifyQueryAND("ico:"+f.ICO ,query))}'>smlouvy</a></span>/";
                         }
                         return html;
                     },
