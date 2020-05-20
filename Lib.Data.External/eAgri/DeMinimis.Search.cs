@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri
         //dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF""
         static string searchSubReq = @"<SOAP:Body>
     <vOKO:Request vOKOid=""RDM_SUS01A"" xmlns:vOKO=""http://www.pds.eu/vOKO/v0200"">
-      <vOKO:UIDkey userID=""99michalblaha"" dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF"" />
+      <vOKO:UIDkey userID=""99michalblaha"" dn=""cn=99michalblaha,cn=Farmar,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF"" />
       <vOKO:TimeStamp type=""base"">#TIME#+01:00</vOKO:TimeStamp>
       <vOKO:AppInfo>
         <vOKO:AppModule id=""hlidacstatu"" version=""1"" />
