@@ -100,7 +100,7 @@
            //scale = HlidacStatu.Util.RenderData.MaxScale.Miliarda; //manual settings
 
 
-    var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale);
+    var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
     coreColumns.Add(
     new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>.Column()
     {

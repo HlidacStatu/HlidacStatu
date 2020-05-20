@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Analysis
 
         public static List<ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<T>>>.Column>
             ComplexStatisticDefaultReportColumns<T>(HlidacStatu.Util.RenderData.MaxScale scale, 
-            int? minDateYear = null, int? maxDateYear = null)
+            int? minDateYear = null, int? maxDateYear = null, string query =null)
         {
             minDateYear = minDateYear ?? HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
             maxDateYear = maxDateYear ?? DateTime.Now.Year;
@@ -26,7 +26,12 @@ namespace HlidacStatu.Lib.Analysis
                     HtmlRender = (s) =>
                     {
                         var f = Firmy.Get(s.Key);
-                        return string.Format("<a href='{0}'>{1}</a>", f.GetUrl(false), f.Jmeno);
+                        string html = string.Format("<a href='{0}'>{1}</a>", f.GetUrl(false), f.Jmeno);
+                        if (!string.IsNullOrEmpty(query))
+                        {
+                            html += $" <a href='/hledat?q={System.Net.WebUtility.UrlEncode(Searching.Tools.ModifyQueryAND("ico:"+f.ICO ,query))}'><i class='far fa-file-search'></i>&nbsp;smlouvy</a>";
+                        }
+                        return html;
                     },
                     OrderValueRender = (s) => HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key),
                     ValueRender = (s) => HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key),
