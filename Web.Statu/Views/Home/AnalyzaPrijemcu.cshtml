@@ -17,7 +17,7 @@
 
 @{
     Layout = null;
-    ViewBag.Title = Model.Text ?? "Hlídač státu: Analýza příjemců";
+    ViewBag.Title = Model.Text ?? "Hlídač státu: Analýza příjemců peněz (vyhledanými smlouvami objednaných firem) ";
 }
 
 @{
@@ -98,7 +98,8 @@
             .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
             .Union(topF.Select(m => m.Value.Data[2019].CelkemCena))
         ); //calculate it
-           //scale = HlidacStatu.Util.RenderData.MaxScale.Miliarda; //manual settings
+    
+    scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
 
 
     var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
@@ -129,6 +130,7 @@
 
 }
 
+<h2>@ViewBag.Title</h2>
 @if (!string.IsNullOrEmpty(Model.Description))
 {
     <div class="jumbotron">
@@ -171,10 +173,7 @@
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
                     },
-                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>",
-                    loadEvents: @"function(event) {
-                            this.series.forEach(function(d,i){if(d.index==1)d.hide()})
-                        }"
+                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
                     ),""
                 )
     </div>
@@ -206,10 +205,7 @@
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2018" }, 10,"2018" ),
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2017" }, 10,"2017" ),
                     },
-                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>",
-                    loadEvents: @"function(event) {
-                            this.series.forEach(function(d,i){if(d.index==1)d.hide()})
-                        }"
+                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
                     ),""
                 )
     </div>

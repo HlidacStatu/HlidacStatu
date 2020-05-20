@@ -119,7 +119,7 @@ namespace HlidacStatu.Lib.Analysis
                 new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<T>>>.Column()
                 {
                     Id = "CenaCelkem",
-                    Name = $"Smlouvy 2016-18 v {scale.ToNiceDisplayName()} Kč",
+                    Name = $"Smlouvy 2016-{DateTime.Now.Year} v {scale.ToNiceDisplayName()} Kč",
                     HtmlRender = (s) => HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.BasicStatPerYear.Summary.CelkemCena, mena: "", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, exactScale: scale, hideSuffix: true),
                     OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.BasicStatPerYear.Summary.CelkemCena),
                     CssClass = "number"
