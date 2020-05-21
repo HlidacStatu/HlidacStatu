@@ -7,6 +7,6 @@
     }
   },
   "RabbitMQConnection": {
-    "ConnectionString": "host=10.10.10.10;username=username;password=password"
+    "ConnectionString": "host=hostip;username=username;password=password"
   }
 }

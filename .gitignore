@@ -366,3 +366,5 @@ Web.Statu/App_Data/dump/*
 
 ## HLIDACSTATU REPOZITORY .gitignore #
 3rd/Swashbuckle/
+
+HlidacStatu.Q.ClassificationRepair/appsettings.json

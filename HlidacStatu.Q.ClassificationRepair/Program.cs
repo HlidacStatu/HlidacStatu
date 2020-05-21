@@ -44,8 +44,11 @@ namespace HlidacStatu.Q.ClassificationRepair
             //})
             .ConfigureServices((hostContext, services) =>
             {
+                // rabbit configuration
                 services.Configure<RabbitMQOptions>(hostContext.Configuration.GetSection("RabbitMQConnection"));
+                // rabbit permanent connection - listener
                 services.AddHostedService<RabbitMQListenerService<ClassificationFeedback>>();
+
             });
     }
 }
