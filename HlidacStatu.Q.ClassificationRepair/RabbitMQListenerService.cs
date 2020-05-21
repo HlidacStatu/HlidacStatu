@@ -10,39 +10,61 @@ namespace HlidacStatu.Q.ClassificationRepair
 {
     public class RabbitMQListenerService<T> : IHostedService where T : class   
     {
+        private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger _logger;
         private readonly IMessageHandler<T> _messageHandler;
         private readonly RabbitMQOptions _options;
+        private IBus _rabbitBus;
+
         public RabbitMQListenerService(
+            IHostApplicationLifetime appLifetime,
             ILogger<RabbitMQListenerService<T>> logger,
             IMessageHandler<T> messageHandler,
             IOptionsMonitor<RabbitMQOptions> options )
         {
+            _appLifetime = appLifetime;
             _logger = logger;
             _messageHandler = messageHandler;
             _options = options.CurrentValue;
+            if (string.IsNullOrWhiteSpace(_options.ConnectionString))
+            {
+                _logger.LogError("RabbitMQ connection string is missing.");
+                throw new Exception("Missing connection string.");
+            }
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var bus = RabbitHutch.CreateBus(_options.ConnectionString))
+            _logger.LogInformation("Connecting to RabbitMQ.");
+            try
             {
-                bus.Subscribe<T>("test", _messageHandler.Handle);
-
-                _logger.LogInformation("Connected to queue. Listening started.");
-
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                    // todo: heart beat
-                }
+                _rabbitBus = RabbitHutch.CreateBus(_options.ConnectionString);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,"Connection failed.");
+                throw;
+            }
+            _logger.LogInformation("Connected.");
+            _appLifetime.ApplicationStarted.Register(SubscribeToQueue);
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Disconnected");
+            _logger.LogInformation("Disconnecting from RabbitMQ.");
+            _rabbitBus.Dispose();
+            _logger.LogInformation("Disconnected.");
             return Task.CompletedTask;
+        }
+
+        private void SubscribeToQueue()
+        {
+            _logger.LogInformation("Subscribing to Queue.");
+            _logger.LogInformation(_options.ToString());
+            _rabbitBus.SubscribeAsync<T>(_options.SubscriberName, _messageHandler.Handle, configure => {
+                configure.WithPrefetchCount(_options.PrefetchCount);
+            });
         }
     }
 }
