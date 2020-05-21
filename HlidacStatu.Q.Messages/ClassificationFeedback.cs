@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HlidacStatu.Q.Messages
+﻿namespace HlidacStatu.Q.Messages
 {
     public class ClassificationFeedback
     {

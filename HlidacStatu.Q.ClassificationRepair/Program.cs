@@ -1,4 +1,5 @@
 using HlidacStatu.Q.Messages;
+using HlidacStatu.Q.Subscriber;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,8 +48,8 @@ namespace HlidacStatu.Q.ClassificationRepair
                 // rabbit configuration
                 services.Configure<RabbitMQOptions>(hostContext.Configuration.GetSection("RabbitMQConnection"));
                 // rabbit permanent connection - listener
-                services.AddHostedService<RabbitMQListenerService<ClassificationFeedback>>();
-                services.AddScoped<IMessageHandler<ClassificationFeedback>, ProcessMessage>();
+                services.AddHostedService<RabbitMQListenerServiceAsync<ClassificationFeedback>>();
+                services.AddScoped<IMessageHandlerAsync<ClassificationFeedback>, ProcessClassificationFeedback>();
             });
     }
 }

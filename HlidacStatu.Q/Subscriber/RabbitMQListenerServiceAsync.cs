@@ -6,20 +6,20 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace HlidacStatu.Q.ClassificationRepair
+namespace HlidacStatu.Q.Subscriber
 {
-    public class RabbitMQListenerService<T> : IHostedService where T : class   
+    public class RabbitMQListenerServiceAsync<T> : IHostedService where T : class   
     {
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger _logger;
-        private readonly IMessageHandler<T> _messageHandler;
+        private readonly IMessageHandlerAsync<T> _messageHandler;
         private readonly RabbitMQOptions _options;
         private IBus _rabbitBus;
 
-        public RabbitMQListenerService(
+        public RabbitMQListenerServiceAsync(
             IHostApplicationLifetime appLifetime,
-            ILogger<RabbitMQListenerService<T>> logger,
-            IMessageHandler<T> messageHandler,
+            ILogger<RabbitMQListenerServiceAsync<T>> logger,
+            IMessageHandlerAsync<T> messageHandler,
             IOptionsMonitor<RabbitMQOptions> options )
         {
             _appLifetime = appLifetime;
@@ -62,7 +62,7 @@ namespace HlidacStatu.Q.ClassificationRepair
         {
             _logger.LogInformation("Subscribing to Queue.");
             _logger.LogInformation(_options.ToString());
-            _rabbitBus.SubscribeAsync<T>(_options.SubscriberName, _messageHandler.Handle, configure => {
+            _rabbitBus.SubscribeAsync<T>(_options.SubscriberName, _messageHandler.HandleAsync, configure => {
                 configure.WithPrefetchCount(_options.PrefetchCount);
             });
         }

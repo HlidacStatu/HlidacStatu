@@ -112,9 +112,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newton.SpeechToText.Cloud",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleLoader", "PeopleLoader\PeopleLoader.csproj", "{32B52012-6743-4560-86BE-0B3629F23AB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Q.Messages", "HlidacStatu.Q.Messages\HlidacStatu.Q.Messages.csproj", "{CB982580-DD8D-414E-AF2D-29D73A06A09D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HlidacStatu.Q.Messages", "HlidacStatu.Q.Messages\HlidacStatu.Q.Messages.csproj", "{CB982580-DD8D-414E-AF2D-29D73A06A09D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Q.ClassificationRepair", "HlidacStatu.Q.ClassificationRepair\HlidacStatu.Q.ClassificationRepair.csproj", "{1594788F-A169-4DC9-96CF-C2922574E9FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HlidacStatu.Q.ClassificationRepair", "HlidacStatu.Q.ClassificationRepair\HlidacStatu.Q.ClassificationRepair.csproj", "{1594788F-A169-4DC9-96CF-C2922574E9FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Q", "HlidacStatu.Q\HlidacStatu.Q.csproj", "{9BD61768-3817-4BC5-93BE-DF3977193A2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1008,6 +1010,30 @@ Global
 		{1594788F-A169-4DC9-96CF-C2922574E9FD}.x86Only|x64.Build.0 = Debug|Any CPU
 		{1594788F-A169-4DC9-96CF-C2922574E9FD}.x86Only|x86.ActiveCfg = Debug|Any CPU
 		{1594788F-A169-4DC9-96CF-C2922574E9FD}.x86Only|x86.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|x64.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Debug|x86.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|x64.Build.0 = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Release|x86.Build.0 = Release|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|x64.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|x64.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.Stage|x86.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|Any CPU.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|x64.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|x64.Build.0 = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|x86.ActiveCfg = Debug|Any CPU
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C}.x86Only|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1037,10 +1063,11 @@ Global
 		{32B52012-6743-4560-86BE-0B3629F23AB3} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 		{CB982580-DD8D-414E-AF2D-29D73A06A09D} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 		{1594788F-A169-4DC9-96CF-C2922574E9FD} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
+		{9BD61768-3817-4BC5-93BE-DF3977193A2C} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HlidacStatu.Q.Messages\HlidacStatu.Q.Messages.csproj" />
+    <ProjectReference Include="..\HlidacStatu.Q\HlidacStatu.Q.csproj" />
   </ItemGroup>
 
 
