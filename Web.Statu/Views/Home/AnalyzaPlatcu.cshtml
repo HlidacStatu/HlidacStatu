@@ -79,7 +79,7 @@
         foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
         {
             var stat = new HlidacStatu.Lib.Analysis.QueryStatistic();
-            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")";
+            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}");
             stat.BasicStatPerYear = item.Value;
             stat.RatingPerYear = HlidacStatu.Lib.Analysis.RatingDataPerYear.Empty();
             coreData.Add(item.Key, stat);
