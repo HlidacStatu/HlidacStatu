@@ -1,3 +1,4 @@
+using HlidacStatu.Q.Messages;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,7 +44,8 @@ namespace HlidacStatu.Q.ClassificationRepair
             //})
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddHostedService<LifetimeHostedService>();
+                services.Configure<RabbitMQOptions>(hostContext.Configuration.GetSection("RabbitMQConnection"));
+                services.AddHostedService<RabbitMQListenerService<ClassificationFeedback>>();
             });
     }
 }
