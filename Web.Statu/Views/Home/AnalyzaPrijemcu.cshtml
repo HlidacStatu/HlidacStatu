@@ -71,7 +71,7 @@
     //TODO parallel
     foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}",$"{Model.Query}")));
+        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
     }
 
     if (prijemci.Count > 50)
@@ -98,7 +98,7 @@
             .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
             .Union(topF.Select(m => m.Value.Data[2019].CelkemCena))
         ); //calculate it
-    
+
     scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
 
 
@@ -125,7 +125,7 @@
             );
     }
 
-    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query,1,5);
+    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query, 1, 5);
 
 
 }
@@ -158,9 +158,9 @@
         @UtilChart.RenderReport("Hodnota uzavřených smluv v Kč v jednotlivých letech", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_year_chart",
                      "Rok", "Kč",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Model.Query, Nest.DateInterval.Year),
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year),
                         xValueFormat: "{value:%Y}")
-                        ,""
+                        , ""
                     )
 
     </div>
@@ -174,7 +174,7 @@
                             coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
                     },
                     tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
-                    ),""
+                    ), ""
                 )
     </div>
 </div>
@@ -189,8 +189,8 @@
         <h4>Počet uzavřených smluv pro tento dotaz</h4>
         @UtilChart.RenderReport("Počet uzavřených smluv v jednotlivých letech", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_year_chart_pocet", "Rok", "Počet",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Model.Query, Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
-                        ,""
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+                        , ""
                     )
 
     </div>
@@ -206,10 +206,24 @@
                             coreRDS.Filter(new string[] { "Title", "Pocet_Y_2017" }, 10,"2017" ),
                     },
                     tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
-                    ),""
+                    ), ""
                 )
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 2 roky)</h4>
+        @UtilChart.RenderReport("Hodnota uzavřených smluv za poslední 2 roky po měsících", ReportModel.QueueItem.types.chart,
+                    UtilChart.SimpleBarChart(true, true, 360, "price_yearmonth_chart_pocet", "Měsíc a rok", "Hodnota smluv v Kč",
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: HlidacStatu.Util.DateTools.FirstDayOfMonth(DateTime.Now).AddYears(-2))
+                        //, xValueFormat: "{value:%Y}"
+                        )
+                        , ""
+                    )
+
+    </div>
+</div>
+
 <h3>Všechny nalezení příjemci</h3>
 
 @Html.Raw(
@@ -217,12 +231,12 @@
         coreRDS.Filter(
             new string[] {
                 "Title",
-                "Cena_Y_2020", "CenaChangePercent_Y_2020", 
-                "Cena_Y_2019", "CenaChangePercent_Y_2019", 
+                "Cena_Y_2020", "CenaChangePercent_Y_2020",
+                "Cena_Y_2019", "CenaChangePercent_Y_2019",
                 "Cena_Y_2018", "CenaChangePercent_Y_2018", "Cena_Y_2017",
                 "CenaCelkem","Detail"
             }
-            ,coreRDS.Data.Count), @"{
+            , coreRDS.Data.Count), @"{
                  'language': {
                     'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
                 },

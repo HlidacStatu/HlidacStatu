@@ -43,6 +43,8 @@
 
     var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
 
+
+
     Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> platci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
 
     int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
@@ -98,7 +100,7 @@
             .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
             .Union(topF.Select(m => m.Value.Data[2019].CelkemCena))
         ); //calculate it
-    
+
     scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
 
 
@@ -159,7 +161,7 @@
         @UtilChart.RenderReport("Hodnota uzavřených smluv v Kč v jednotlivých letech", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_year_chart",
                      "Rok", "Kč",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Model.Query, Nest.DateInterval.Year),
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year),
                         xValueFormat: "{value:%Y}")
                         , ""
                     )
@@ -190,7 +192,7 @@
         <h4>Počet uzavřených smluv pro tento dotaz</h4>
         @UtilChart.RenderReport("Počet uzavřených smluv v jednotlivých letech", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_year_chart_pocet", "Rok", "Počet",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Model.Query, Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
                         , ""
                     )
 
@@ -211,6 +213,20 @@
                 )
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 2 roky)</h4>
+        @UtilChart.RenderReport("Hodnota uzavřených smluv za poslední 2 roky po měsících", ReportModel.QueueItem.types.chart,
+                    UtilChart.SimpleBarChart(true, true, 360, "price_yearmonth_chart_pocet", "Měsíc a rok", "Hodnota smluv v Kč",
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: HlidacStatu.Util.DateTools.FirstDayOfMonth(DateTime.Now).AddYears(-2))
+                        //, xValueFormat: "{value:%Y}"
+                        )
+                        , ""
+                    )
+
+    </div>
+</div>
+
 <h3>Všechny nalezení plátci</h3>
 
 @Html.Raw(
