@@ -445,7 +445,6 @@ Global
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Debug|x86.Build.0 = Debug|Any CPU
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Release|x64.ActiveCfg = Release|Any CPU
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Release|x64.Build.0 = Release|Any CPU
 		{0CFFB433-12E2-43E9-9A56-9CAA5971E23D}.Release|x86.ActiveCfg = Release|Any CPU
@@ -994,7 +993,6 @@ Global
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Debug|x86.Build.0 = Debug|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x64.ActiveCfg = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x64.Build.0 = Release|Any CPU
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E}.Release|x86.ActiveCfg = Release|Any CPU
@@ -1042,8 +1040,8 @@ Global
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E} = {F4002F1A-7F3B-4004-B6D1-6E38A55E0E6B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
