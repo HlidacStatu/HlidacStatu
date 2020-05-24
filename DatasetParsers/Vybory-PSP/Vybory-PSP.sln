@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vybory-PSP", "Vybory-PSP.csproj", "{0705C384-17C7-42F1-B050-88BF22E21784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.OCR.Api.Client", "..\..\Lib.OCR.Api.Client\Lib.OCR.Api.Client.csproj", "{7609680C-3C9D-4735-8709-E64F7116AB70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0705C384-17C7-42F1-B050-88BF22E21784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0705C384-17C7-42F1-B050-88BF22E21784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0705C384-17C7-42F1-B050-88BF22E21784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0705C384-17C7-42F1-B050-88BF22E21784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7609680C-3C9D-4735-8709-E64F7116AB70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7609680C-3C9D-4735-8709-E64F7116AB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7609680C-3C9D-4735-8709-E64F7116AB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7609680C-3C9D-4735-8709-E64F7116AB70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE3DB860-4C4F-4D04-81B3-C2BFCE196F94}
+	EndGlobalSection
+EndGlobal
