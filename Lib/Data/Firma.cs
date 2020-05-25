@@ -36,6 +36,8 @@ namespace HlidacStatu.Lib.Data
         };
 
         /*
+         * https://wwwinfo.mfcr.cz/ares/aresPrFor.html.cz
+         * 
 301	Státní podnik
 302	Národní podnik
 312	Banka-státní peněžní ústav
