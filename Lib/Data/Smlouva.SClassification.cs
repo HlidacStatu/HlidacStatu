@@ -337,6 +337,8 @@ namespace HlidacStatu.Lib.Data
                 finance_poradenstvi = 11403,
                 [NiceDisplayName("Dotace")]
                 finance_dotace = 11404,
+                [NiceDisplayName("Bankovní služby, operace a poplatky")]
+                finance_bankovni = 11405,
 
                 [NiceDisplayName("Právní a realitní služby")]
                 legal_obecne = 11500,
@@ -367,7 +369,7 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
                 marketing_obecne = 11800,
-                [NiceDisplayName("Marketing a reklama")]
+                [NiceDisplayName("Reklama")]
                 marketing_reklama = 11801,
 
                 [NiceDisplayName("Jiné služby")]

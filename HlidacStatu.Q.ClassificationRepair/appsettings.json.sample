@@ -7,6 +7,8 @@
     }
   },
   "RabbitMQConnection": {
-    "ConnectionString": "host=hostip;username=username;password=password"
+    "ConnectionString": "host=hostip;username=username;password=password",
+    "SubscriberName": "test",
+    "PrefetchCount": 10
   }
 }

@@ -1,0 +1,318 @@
+﻿@model HlidacStatu.Lib.Analysis.TemplatedQuery
+@using Nest;
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+
+@{
+    Layout = null;
+    ViewBag.Title = Model.Text ?? "Hlídač státu: Analýza příjemců peněz (vyhledanými smlouvami objednaných firem) ";
+}
+
+@{
+    var basicStat = Model.Data;
+    var ratingStat = Model.Rating;
+
+    Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsPerIco =
+        new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+        .Terms("perIco", h => h
+            .Field("prijemce.ico")
+            .Aggregations(ag2 => ag2
+                .DateHistogram("x-agg", h2 => h2
+                    .Field(f => f.datumUzavreni)
+                    .CalendarInterval(Nest.DateInterval.Year)
+                    .Aggregations(agg => agg
+                        .Sum("sumincome", s => s
+                            .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                        )
+                    )
+                )
+            )
+        );
+
+    var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
+
+    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> prijemci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+
+    int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
+    int maxDateYear = DateTime.Now.Year;
+
+    foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.ElasticResults.Aggregations["perIco"]).Items)
+    {
+        var ico = (string)icoVal.Key;
+
+        Dictionary<int, HlidacStatu.Lib.Analysis.BasicData> perY = new Dictionary<int, HlidacStatu.Lib.Analysis.BasicData>();
+        foreach (Nest.DateHistogramBucket val in ((BucketAggregate)(icoVal.Values.First())).Items)
+        {
+            var bdata = new HlidacStatu.Lib.Analysis.BasicData()
+            {
+                Pocet = val.DocCount ?? 0,
+                CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0)
+            };
+            perY.Add(val.Date.Year, bdata);
+        }
+        prijemci.Add(ico, new HlidacStatu.Lib.Analysis.BasicDataPerYear(perY));
+
+    }
+
+
+    var coreData = new Dictionary<string, HlidacStatu.Lib.Analysis.QueryStatistic>();
+    //TODO parallel
+    foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
+    {
+        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
+    }
+
+    if (prijemci.Count > 50)
+    {
+        foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
+        {
+            var stat = new HlidacStatu.Lib.Analysis.QueryStatistic();
+            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}");
+            stat.BasicStatPerYear = item.Value;
+            stat.RatingPerYear = HlidacStatu.Lib.Analysis.RatingDataPerYear.Empty();
+            coreData.Add(item.Key, stat);
+        }
+    }
+
+
+    var topF = prijemci
+        .OrderByDescending(o => o.Value.Data[2018].CelkemCena)
+        //.ThenByDescending(o => o.Value.Summary.Pocet)
+        .ToArray();
+
+    var scale = HlidacStatu.Util.RenderData.GetBestScale(
+        topF
+            .Select(m => m.Value.Data[2017].CelkemCena)
+            .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
+            .Union(topF.Select(m => m.Value.Data[2019].CelkemCena))
+        ); //calculate it
+
+    scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
+
+
+    var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
+    coreColumns.Add(
+    new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>.Column()
+    {
+        Id = "detail",
+        Name = "Detaily",
+        HtmlRender = (s) =>
+        {
+            return string.Format("<a class='small' style='white-space:nowrap;' href='/hledatSmlouvy?q={0}'><span class='glyphicon glyphicon-link'></span>smlouvy</a><br/>" +
+                "<a class='small' style='white-space:nowrap;' href='/verejnezakazky/hledat?q={0}'><span class='glyphicon glyphicon-link'></span>zakázky</a>",
+                $"(ico:{s.Key}) AND ({Model.Query})");
+        }
+    });
+
+
+    var coreRDS = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>(coreColumns);
+    foreach (var i in coreData)
+    {
+        coreRDS.AddRow(
+            new KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>(i.Key, i.Value)
+            );
+    }
+
+    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query, 1, 5);
+
+
+}
+
+<h2>@ViewBag.Title</h2>
+@if (!string.IsNullOrEmpty(Model.Description))
+{
+    <div class="jumbotron">
+        <p>
+            @Model.Description
+        </p>
+        @if (Model.Links?.Count() > 0)
+        {
+            <p>
+                Inspirace pro tuto analýzu:<br />
+                @foreach (var url in Model.Links)
+                {
+                    <span>
+                        <span class="glyphicon glyphicon-link"></span>&nbsp;<a class="small" href="@url.Url">@url.Text</a><br />
+                    </span>
+                }
+            </p>
+        }
+    </div>
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <h4>Hodnota uzavřených smluv v Kč pro tento dotaz</h4>
+        @UtilChart.RenderReport("Hodnota uzavřených smluv v Kč v jednotlivých letech", ReportModel.QueueItem.types.chart,
+                    UtilChart.SimpleBarChart(true, true, 360, "price_year_chart",
+                     "Rok", "Kč",
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year),
+                        xValueFormat: "{value:%Y}")
+                        , ""
+                    )
+
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <h4>Objem smluv pro jednotlivé příjemce za poslední 2 celé roky</h4>
+        @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
+                UtilChart.SimpleBarChart(
+                    false, false, 300, "chartinfo", "Příjemci", "Kč",
+                        new[] {
+                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
+                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
+                    },
+                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
+                    ), ""
+                )
+    </div>
+</div>
+
+<h3>Počty smluv</h3>
+<p>
+    Průměrně 20% smluv nemá uvedenu cenu. Tyto smlouvy se proto neukáží v grafu nahoře. Někdy je cena skryta i u více než 80% smluv, proto uvádíme i přehledy s počty uzavřených smluv,
+    které vypovídají o intenzitě smluvního vztahu.
+</p>
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <h4>Počet uzavřených smluv pro tento dotaz</h4>
+        @UtilChart.RenderReport("Počet uzavřených smluv v jednotlivých letech", ReportModel.QueueItem.types.chart,
+                    UtilChart.SimpleBarChart(true, true, 360, "price_year_chart_pocet", "Rok", "Počet",
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Model.Query, Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+                        , ""
+                    )
+
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <h4>Počet smluv pro jednotlivé příjemce za poslední 2 roky</h4>
+        @UtilChart.RenderReport("Počet smluv pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
+                UtilChart.SimpleBarChart(
+                    false, false, 300, "chartinfoPocet", "Příjemci", "Počet",
+                        new[] {
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2020" }, 10,"2020" ),
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2019" }, 10,"2019" ),
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2018" }, 10,"2018" ),
+                            coreRDS.Filter(new string[] { "Title", "Pocet_Y_2017" }, 10,"2017" ),
+                    },
+                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
+                    ), ""
+                )
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 2 roky)</h4>
+        @UtilChart.RenderReport("Hodnota uzavřených smluv za poslední 2 roky po měsících", ReportModel.QueueItem.types.chart,
+                    UtilChart.SimpleBarChart(true, true, 360, "price_yearmonth_chart_pocet", "Měsíc a rok", "Hodnota smluv v Kč",
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: HlidacStatu.Util.DateTools.FirstDayOfMonth(DateTime.Now).AddYears(-2))
+                        //, xValueFormat: "{value:%Y}"
+                        )
+                        , ""
+                    )
+
+    </div>
+</div>
+
+<h3>Všechny nalezení příjemci</h3>
+
+@Html.Raw(
+    UtilChart.RenderReportTableT<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>("",
+        coreRDS.Filter(
+            new string[] {
+                "Title",
+                "Cena_Y_2020", "CenaChangePercent_Y_2020",
+                "Cena_Y_2019", "CenaChangePercent_Y_2019",
+                "Cena_Y_2018", "CenaChangePercent_Y_2018", "Cena_Y_2017",
+                "CenaCelkem","Detail"
+            }
+            , coreRDS.Data.Count), @"{
+                 'language': {
+                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                },
+                'order': [[1,'desc']],
+                'lengthChange': false,
+                'info': false,
+                }", "t1")
+        )
+
+
+<hr />
+<h2>Nalezené údaje v databázích pro tento dotaz</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="new-p new-p--big" style="margin-top: 10px;">
+            Analýzu jsme provedli pro dotaz <span class="emphasized small">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 690, "..."))</span>.
+        </div>
+    </div>
+</div>
+<div style="margin-top:20px"></div>
+<div class="row">
+    <div class="col-xs-12">
+        @Util.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny novinky o {Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")} v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))
+    </div>
+</div>
+<div style="margin-top:20px"></div>
+
+@if (globalSearch.HasResults)
+{
+    <div class="row">
+        <div class="col-xs-12">
+
+
+
+
+            <div class="searching__counters">
+                <span class="new-p new-p--big">Našli jsme také </span>
+
+                @if (globalSearch.HasSmlouvy)
+                {
+                    <div class="searching__counter">
+                        <a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", globalSearch.Smlouvy.ToRouteValues(1))">
+                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.Smlouvy.Total, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
+                        </a>
+                    </div>
+                }
+                @if (globalSearch.HasOsoby)
+                {
+                    <div class="searching__counter">
+                        <a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(globalSearch.Query)&ftx=@globalSearch.OsobaFtx.ToString()">
+                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.Osoby.Total, "jednoho politika", "{0} politiky", "{0} politiků")
+                        </a>
+                    </div>
+                }
+                @if (globalSearch.HasVZ)
+                {
+                    <div class="searching__counter">
+                        <a class="link--blue link--big" href="@Url.Action("Hledat", "VZ", globalSearch.VZ.ToRouteValues(1))">
+                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.VZ.Total, "jednu veřejnou zakázku", "{0} veřejné zakázky", "{0} veřejných zakázek")
+                        </a>
+                    </div>
+                }
+                @if (globalSearch.Datasets.HasResult)
+                {
+                    foreach (var rds in globalSearch.Datasets.Results
+                                        .Where(m => m.Total > 0)
+                                        .OrderByDescending(m => m.Total))
+                    {
+                        <div class="searching__counter">
+                            <a class="link--blue link--big" href="@Html.Raw(rds.DataSet.DatasetSearchUrl(Model.Query, true))">
+                                @rds.DataSet.Registration().name <span class="new-p">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(rds.Total)</span>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

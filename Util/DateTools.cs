@@ -127,7 +127,10 @@ namespace HlidacStatu.Util
         }
 
 
-
+        public static DateTime FirstDayOfMonth(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, 1,0,0,0, dt.Kind);
+        }
 
 
         // https://cs.wikipedia.org/wiki/Přestupný_rok

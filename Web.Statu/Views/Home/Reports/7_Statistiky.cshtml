@@ -20,23 +20,23 @@
     var model = new HlidacStatu.Lib.Render.ReportModel();
     model.Add("price_year_chart", "Hodnota uzavřených smluv v Kč v jednotlivých letech",
 UtilChart.SimpleBarChart(true, true, 400, "price_year_chart", "Rok", "Kč",
-HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
  );
     model.Add("year_chart", "Počet vložených smluv v jednotlivých letech",
 UtilChart.SimpleBarChart(true, true, 400, "year_chart", "Rok", "Počet smluv",
-HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
+HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Nest.DateInterval.Year), xValueFormat: "{value:%Y}")
 );
 
 
     model.Add("price_month_chart", "Hodnota uzavřených smluv v Kč po měsících",
 UtilChart.SimpleBarChart(true, true, 400, "price_month_chart", "Měsíc", "Kč",
-HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerZverejneni(Nest.DateInterval.Month))
+HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Nest.DateInterval.Month))
 );
 
 
     model.Add("month_chart", "Počet vložených smluv po měsících",
 UtilChart.SimpleBarChart(true, true, 400, "month_chart", "Měsíc", "Počet smluv",
-HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Month))
+HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Nest.DateInterval.Month))
 );
 
 
@@ -50,7 +50,7 @@ HlidacStatu.Web.Framework.Report.GlobalStatistics.SmlouvyPodleCeny())
 
     model.Add("week", "Počet vložených smluv po týdnech",
         UtilChart.SimpleBarChart(true, true, 400, "week_chart", "Týden", "Počet smluv",
-            HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerZverejneni(Nest.DateInterval.Week))
+            HlidacStatu.Web.Framework.Report.GlobalStatistics.PocetSmluvPerUzavreni(Nest.DateInterval.Week))
         );
 
 
