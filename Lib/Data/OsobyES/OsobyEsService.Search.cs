@@ -42,7 +42,6 @@ namespace HlidacStatu.Lib.Data.OsobyES
             string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
                                       //check invalid query ( tag: missing value)
 
-            //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
             var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.OsobyES.OsobaES>(query, irules);
 
             return qc;
@@ -67,11 +66,10 @@ namespace HlidacStatu.Lib.Data.OsobyES
                 PageSize = pagesize,
                 Order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order),
                 ExactNumOfResults = exactNumOfResults
-            }, withHighlighting, anyAggregation); ;
+            }); ;
         }
-        public static OsobaEsSearchResult SimpleSearch(OsobaEsSearchResult search,
-            bool withHighlighting = false,
-            AggregationContainerDescriptor<OsobaES> anyAggregation = null)
+        public static OsobaEsSearchResult SimpleSearch(OsobaEsSearchResult search
+            )
         {
 
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
@@ -88,25 +86,25 @@ namespace HlidacStatu.Lib.Data.OsobyES
                 res = _esClient //.MultiSearch<OsobaES>(s => s
                         .Search<OsobaES>(s => s
                         .Size(search.PageSize)
-                        .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
+                        //.ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
                         //.Query(q => GetSimpleQuery(search))
                         .Query(q => q.MultiMatch(c => c
                             .Fields(f=> f
                                 .Field(p=>p.FullName)
                                 .Field("fullName.*")
-                                .Field(p=>p.NameId)
-                                .Field(p=>p.PoliticalParty)
+                                //.Field(p=>p.NameId)
+                                //.Field(p=>p.PoliticalParty)
                                 //.Field(p=>p.BirthYear)
-                                .Field(p=>p.PoliticalFunctions)
+                                //.Field(p=>p.PoliticalFunctions)
                                 )
                             .Type(TextQueryType.MostFields)
                             .Fuzziness(Fuzziness.EditDistance(2))
                             .Query(search.Q)
                         ))
-                        .Sort(ss => GetSort(search.Order))
-                        .Aggregations(aggr => anyAggregation)
-                        .TrackTotalHits((search.ExactNumOfResults || page * search.PageSize == 0) ? true : (bool?)null)
+                        //.Sort(ss => GetSort(search.Order))
+                        //.Aggregations(aggr => anyAggregation)
+                        .TrackTotalHits(true)
                 );
 
             }
