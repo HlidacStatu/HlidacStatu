@@ -46,14 +46,18 @@ namespace HlidacStatu.Web.Controllers
             return View("Analyza");
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "id;p;q;title;description;moreUrl;embed", Duration = 60 * 60 * 12)]
+#endif
         [ChildActionOnly]
         public ActionResult Analyza_Child(string id, string p, string q, string title, string description, string moreUrl)
         {
-            if (string.IsNullOrEmpty(id))
-                id = "platcu";
+            var model = new HlidacStatu.Lib.Analysis.TemplatedQuery() { Query = q, Text = title, Description = description };
 
-            HlidacStatu.Lib.Analysis.TemplatedQuery model = null;
+            if (string.IsNullOrEmpty(id))
+                return View("AnalyzaStart", model);
+            
+
             if (StaticData.Afery.ContainsKey(p?.ToLower() ?? ""))
                 model = StaticData.Afery[p.ToLower()];
             else
@@ -70,6 +74,9 @@ namespace HlidacStatu.Web.Controllers
             model.NameOfView = "Analyza" + id;
             return View(model.NameOfView, model);
         }
+
+
+
         public ActionResult Photo(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -818,6 +825,7 @@ text zpravy: {txt}
 
             return View(NameOfView, model);
         }
+
         public ActionResult Osoba(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
 

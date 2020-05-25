@@ -11,7 +11,7 @@ namespace HlidacStatu.Web.Framework.Report
 {
     public static class GlobalStatistics
     {
-        public static HlidacStatu.Lib.Render.ReportDataSource PocetSmluvPerZverejneni(string query, Nest.DateInterval interval)
+        public static HlidacStatu.Lib.Render.ReportDataSource PocetSmluvPerUzavreni(string query, Nest.DateInterval interval)
         {
             DateTime minDate = new DateTime(2012, 1, 1);
             DateTime maxDate = DateTime.Now.Date.AddDays(1);
@@ -62,7 +62,7 @@ namespace HlidacStatu.Web.Framework.Report
 
             foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
             {
-                if (val.Date>= minDate && val.Date <= maxDate)
+                if (val.Date >= minDate && val.Date <= maxDate)
                     rds.AddRow(
                         val.Date,
                         val.DocCount
@@ -73,10 +73,10 @@ namespace HlidacStatu.Web.Framework.Report
             return rds;
         }
 
-        public static ReportDataSource HodnotaSmluvPerZverejneni(string query, DateInterval interval)
+        public static ReportDataSource HodnotaSmluvPerUzavreni(string query, DateInterval interval, DateTime? minDate=null, DateTime? maxDate=null)
         {
-            DateTime minDate = new DateTime(2012, 1, 1);
-            DateTime maxDate = DateTime.Now.Date.AddDays(1);
+            minDate = minDate ?? new DateTime(2012, 1, 1);
+            maxDate = maxDate ?? DateTime.Now.Date.AddDays(1);
 
             string datumFormat = "MMM yyyy";
             switch (interval)
@@ -120,13 +120,13 @@ namespace HlidacStatu.Web.Framework.Report
                                         },
                     OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((DateTime)s); },
                 },
-                new ReportDataSource.Column() { Name="Součet cen", 
+                new ReportDataSource.Column() { Name="Součet cen",
                     HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
                     OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double?)s); },
                 },
             });
 
-            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate) + "}", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
+            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("( " + query + " ) AND datumUzavreni:{" + HlidacStatu.Util.RenderData.ToElasticDate(minDate.Value) + " TO " + HlidacStatu.Util.RenderData.ToElasticDate(maxDate.Value) + "}", 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, anyAggregation: aggs, exactNumOfResults: true);
 
             foreach (Nest.DateHistogramBucket val in
                     ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items
@@ -144,13 +144,13 @@ namespace HlidacStatu.Web.Framework.Report
             return rdsPerIntervalSumPrice;
         }
 
-        public static HlidacStatu.Lib.Render.ReportDataSource PocetSmluvPerZverejneni(Nest.DateInterval interval)
+        public static HlidacStatu.Lib.Render.ReportDataSource PocetSmluvPerUzavreni(Nest.DateInterval interval)
         {
-            return PocetSmluvPerZverejneni("-id:pre* ", interval);
+            return PocetSmluvPerUzavreni("-id:pre* ", interval);
         }
-        public static ReportDataSource HodnotaSmluvPerZverejneni(DateInterval interval)
+        public static ReportDataSource HodnotaSmluvPerUzavreni(DateInterval interval)
         {
-            return HodnotaSmluvPerZverejneni("-id:pre* ", interval);
+            return HodnotaSmluvPerUzavreni("-id:pre* ", interval);
         }
 
 
@@ -189,7 +189,7 @@ namespace HlidacStatu.Web.Framework.Report
             foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.Aggregations["perIco"]).Items)
             {
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get((string)val.Key);
-                if (f != null &&  (!f.PatrimStatu() || platce))
+                if (f != null && (!f.PatrimStatu() || platce))
                 {
                     rdsPerIco.AddRow(
                         new Tuple<string, string>(HlidacStatu.Lib.Data.Firmy.GetJmeno((string)val.Key), (string)val.Key),
@@ -232,7 +232,7 @@ namespace HlidacStatu.Web.Framework.Report
                                         },
                     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
                 },
-                new ReportDataSource.Column() { Name="Součet cen", 
+                new ReportDataSource.Column() { Name="Součet cen",
                     HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
                     OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat((double?)s); }
                 },
@@ -260,7 +260,7 @@ namespace HlidacStatu.Web.Framework.Report
         {
             return SmlouvyPodleCeny("-id:pre* ");
         }
-            public static ReportDataSource SmlouvyPodleCeny(string query)
+        public static ReportDataSource SmlouvyPodleCeny(string query)
         {
             DateTime minDate = new DateTime(2012, 1, 1);
             DateTime maxDate = DateTime.Now.Date.AddDays(1);

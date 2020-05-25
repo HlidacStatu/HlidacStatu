@@ -1,0 +1,67 @@
+﻿@model HlidacStatu.Lib.Analysis.TemplatedQuery
+@using Nest;
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib
+
+@using Devmasters.Core
+@using System.Data
+@using System.Data.SqlClient
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Lib.Render
+
+
+@{
+    Layout = null;
+    ViewBag.Title = Model?.Text ?? "Hlídač státu: Analýza výsledků dotazu";
+}
+
+<div class="jumbotron">
+    <p>
+        Analýza výsledků dotazů. Nejlépe funguje na dotazy týkající se jedné firmy či holdinu
+    </p>
+    <p>
+        <b>
+            Příklady dotazů pro analýzu <i>příjemců peněz</i> z nalezených smluv
+        </b>
+        <ul>
+            <li>Analýza příjemců peněz (a objednaných firem) z marketingových smluv uzavřených VZP <code>icoplatce:41197518 AND oblast:marketing</code></li>
+            <li>Analýza příjemců peněz (a objednaných firem) ze smluv na  IT služby od Magistrát Praha a všech podřízených organizací <code>holdingplatce:00064581 AND oblast:IT</code></li>
+        </ul>
+    </p>
+    <p>
+        <b>
+            Příklady dotazů pro analýzu <i>plátců peněz</i> z nalezených smluv
+        </b>
+        <ul>
+            <li>Analýza objednatelů reklamních smluv u MAFRA a.s. <code>icoprijemce:45313351 AND oblast:marketing</code></li>
+            <li>Analýza objednatelů reklam na Parlamentních listech <code>oblast:marketing AND ("OUR MEDIA" OR "Parlamentní listy" OR "Parlamentnilisty.cz" OR ico:28876890 OR "KrajskeListy.cz" OR "Krajské listy" OR "Prvnizpravy.cz" OR icoPrijemce:24214868)</code></li>
+        </ul>
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Analyzovat <b>příjemce peněz</b> pro smlouvy nalezené pomocí dotazu:</h4>
+        <form method="get" action="/analyza/prijemcu" class="form-search__input-wrapper" role="form">
+            
+            <input class="form-search__input" id="Q" name="Q" value="@Model.Query" placeholder="hledaný výraz ..." style="max-width: none;" type="text">
+            <button class="form-search__btn" type="submit">Analyzovat příjemce peněz</button>
+        </form>
+    </div>
+</div>
+
+<hr style="width:40%" />
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Analyzovat <b>plátce peněz</b> pro smlouvy nalezené pomocí dotazu:</h4>
+        <form method="get" action="/analyza/platcu" class="form-search__input-wrapper" role="form">
+            <input class="form-search__input" id="Q" name="Q" value="@Model.Query" placeholder="hledaný výraz ..." style="max-width: none;" type="text">
+            <button class="form-search__btn" type="submit">Analyzovat plátce peněz</button>
+        </form>
+    </div>
+</div>

@@ -28,8 +28,8 @@ namespace HlidacStatu.Web.Controllers
         {
             public string Id { get; set; }
             public string Type { get; set; }
-            public DateTime FromDate { get; set; }
-            public DateTime ToDate { get; set; }
+            public DateTime? FromDate { get; set; }
+            public DateTime? ToDate { get; set; }
             public dynamic LegalBusinessAssociates { get; set; }
             public dynamic OrganizationMember { get; set; }
             public string Visibility { get; set; }
