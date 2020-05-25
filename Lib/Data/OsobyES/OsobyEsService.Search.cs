@@ -43,7 +43,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                       //check invalid query ( tag: missing value)
 
             //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
-            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
+            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.OsobyES.OsobaES>(query, irules);
 
             return qc;
 
@@ -84,36 +84,35 @@ namespace HlidacStatu.Lib.Data.OsobyES
             ISearchResponse<OsobaES> res = null;
             try
             {
-                res = _esClient
+
+                res = _esClient //.MultiSearch<OsobaES>(s => s
                         .Search<OsobaES>(s => s
                         .Size(search.PageSize)
                         .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
                         .From(page * search.PageSize)
-                        .Query(q => GetSimpleQuery(search))
+                        //.Query(q => GetSimpleQuery(search))
+                        .Query(q => q.MultiMatch(c => c
+                            .Fields(f=> f
+                                .Field(p=>p.FullName)
+                                .Field("fullName.*")
+                                .Field(p=>p.NameId)
+                                .Field(p=>p.PoliticalParty)
+                                //.Field(p=>p.BirthYear)
+                                .Field(p=>p.PoliticalFunctions)
+                                )
+                            .Type(TextQueryType.MostFields)
+                            .Fuzziness(Fuzziness.EditDistance(2))
+                            .Query(search.Q)
+                        ))
                         .Sort(ss => GetSort(search.Order))
-                        .Highlight(h => Lib.Searching.Tools.GetHighlight<OsobaES>(withHighlighting))
                         .Aggregations(aggr => anyAggregation)
                         .TrackTotalHits((search.ExactNumOfResults || page * search.PageSize == 0) ? true : (bool?)null)
                 );
-                if (res.IsValid && withHighlighting && res.Shards.Failed > 0) //if some error, do it again without highlighting
-                {
-                    res = _esClient
-                            .Search<OsobaES>(s => s
-                            .Size(search.PageSize)
-                            .ExpandWildcards(Elasticsearch.Net.ExpandWildcards.All)
-                            .From(page * search.PageSize)
-                            .Query(q => GetSimpleQuery(search))
-                            .Sort(ss => GetSort(search.Order))
-                            .Highlight(h => Lib.Searching.Tools.GetHighlight<OsobaES>(false))
-                            .Aggregations(aggr => anyAggregation)
-                            .TrackTotalHits(search.ExactNumOfResults || page * search.PageSize == 0 ? true : (bool?)null)
-                    );
-                }
 
             }
             catch (Exception e)
             {
-                Audit.Add(Audit.Operations.Search, "", "", "Dotace", "error", search.Q, null);
+                Audit.Add(Audit.Operations.Search, "", "", "OsobaES", "error", search.Q, null);
                 if (res != null && res.ServerError != null)
                 {
                     ES.Manager.LogQueryError<OsobaES>(res, "Exception, Orig query:"
@@ -130,7 +129,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
             }
             sw.Stop();
 
-            Audit.Add(Audit.Operations.Search, "", "", "Dotace", res.IsValid ? "valid" : "invalid", search.Q, null);
+            Audit.Add(Audit.Operations.Search, "", "", "OsobaES", res.IsValid ? "valid" : "invalid", search.Q, null);
 
             if (res.IsValid == false)
             {
