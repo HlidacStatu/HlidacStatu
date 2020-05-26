@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
+using HlidacStatu.Lib.Data.OsobyES;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -76,6 +77,23 @@ namespace HlidacStatu.Web.Controllers
                     return Content(osoby, "application/json");
                 }
 
+            }
+        }
+
+        public ActionResult NasiPolitici_GetPoliticians()
+        {
+            if (!Framework.ApiAuth.IsApiAuth(this)
+                .Authentificated)
+            {
+                Response.StatusCode = 401;
+                return Json(ApiResponseStatus.ApiUnauthorizedAccess, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var people = OsobyEsService.YieldAllPoliticians();
+                string osoby = JsonConvert.SerializeObject(people);
+
+                return Content(osoby, "application/json");
             }
         }
 

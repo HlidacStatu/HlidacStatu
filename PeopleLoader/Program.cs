@@ -22,6 +22,7 @@ namespace PeopleLoader
                     {
                         NameId = os.NameId,
                         BirthYear = os.Narozeni.HasValue ? (int?) os.Narozeni.Value.Year : null,
+                        DeathYear = os.Umrti.HasValue ? (int?) os.Umrti.Value.Year : null,
                         ShortName = os.Jmeno + " " + os.Prijmeni,
                         FullName = os.FullName(false),
                         PoliticalParty = os.CurrentPoliticalParty(),

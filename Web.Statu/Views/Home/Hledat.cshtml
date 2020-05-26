@@ -272,7 +272,7 @@ else if (Model.HasResults == false)
             }
             @if (Model.HasOsoby)
             {
-                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "Osoby", Model.Osoby.ToRouteValues(1))">Politici <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
+                <div class="searching__counter"><a class="link--blue link--big" href="@Url.Action("Hledat", "Osoby", Model.Osoby.ToRouteValues(1))">Osoby <span class="new-p new-p--gray">@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Osoby.Total)</span></a></div>
             }
             @if (Model.HasFirmy)
             {

@@ -13,6 +13,8 @@ namespace HlidacStatu.Lib.Data.OsobyES
         public string FullName { get; set; }
         [Nest.Number]
         public int? BirthYear { get; set; }
+        [Nest.Number]
+        public int? DeathYear { get; set; }
         [Nest.Text]
         public string[] PoliticalFunctions { get; set; }
         [Nest.Text]
