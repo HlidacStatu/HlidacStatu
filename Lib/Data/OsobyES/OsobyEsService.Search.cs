@@ -8,7 +8,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
     public static partial class OsobyEsService
     {
         
-        public static OsobaEsSearchResult FulltextSearch(string query, int page, int pageSize)
+        public static OsobaEsSearchResult FulltextSearch(string query, int page, int pageSize, int? status = null)
         {
 
             page = page - 1 < 0 ? 0 : page - 1;
@@ -20,8 +20,48 @@ namespace HlidacStatu.Lib.Data.OsobyES
             ISearchResponse<OsobaES> res = null;
             try
             {
+                if(status.HasValue)
+                {
+                    res = _esClient
+                        .Search<OsobaES>(s => s
+                        .Size(pageSize)
+                        .From(page * pageSize)
+                        .Query(_query => _query
+                            .Bool(_bool => _bool
+                                .Must(_must => _must
+                                    .Fuzzy(_fuzzy => _fuzzy
+                                        .Field(_field => _field.FullName)
+                                        .Value(query)
+                                        .Fuzziness(Fuzziness.EditDistance(2))
+                                    )
+                                    && _must.Term(_field => _field.Status, status.Value)
+                                )
+                                .Should(
+                                    _boostWomen => _boostWomen
+                                    .Match(_match => _match
+                                        .Field(_field => _field.FullName)
+                                        .Query(query)
+                                    ),
+                                    _boostExact => _boostExact
+                                    .Match(_match => _match
+                                        .Field("fullName.lower")
+                                        .Query(query)
+                                    ),
+                                    _boostAscii => _boostAscii
+                                    .Match(_match => _match
+                                        .Field("fullName.lowerascii")
+                                        .Query(query)
+                                    )
+                                )
+                            )
+                        )
+                        .TrackTotalHits(true)
+                );
+                }
+                else
+                {
 
-                res = _esClient //.MultiSearch<OsobaES>(s => s
+                    res = _esClient //.MultiSearch<OsobaES>(s => s
                         .Search<OsobaES>(s => s
                         .Size(pageSize)
                         .From(page * pageSize)
@@ -54,7 +94,8 @@ namespace HlidacStatu.Lib.Data.OsobyES
                             )
                         )
                         .TrackTotalHits(true)
-                );
+                    );
+                }
 
             }
             catch (Exception e)
