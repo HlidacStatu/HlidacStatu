@@ -353,27 +353,16 @@ namespace HlidacStatu.Lib.ES
             IndexSettings set = new IndexSettings();
             set.NumberOfReplicas = 2;
             set.NumberOfShards = 25;
-            // Create a Custom Analyzer ...
-            var an = new CustomAnalyzer();
-            an.Tokenizer = "standard";
-            // ... with Filters from the StandardAnalyzer
-            var filter = new List<string>();
-            filter.Add("lowercase");
-            filter.Add("czech_stop");
-            //an.Filter.Add("czech_keywords");
-            filter.Add("czech_stemmer");
-            filter.Add("asciifolding");
-            an.Filter = filter;
+            
             // Add the Analyzer with a name
             set.Analysis = new Nest.Analysis()
             {
                 Analyzers = new Analyzers(),
-                TokenFilters = new TokenFilters(),
+                TokenFilters = BasicTokenFilters(),
             };
 
-            set.Analysis.Analyzers.Add("default", an);
-            set.Analysis.TokenFilters.Add("czech_stop", new StopTokenFilter() { StopWords = new string[] { "_czech_" } });
-            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" });
+            set.Analysis.Analyzers.Add("default", DefaultAnalyzer());
+            
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
@@ -399,27 +388,16 @@ namespace HlidacStatu.Lib.ES
                 set.NumberOfShards = 4;
             else
                 set.NumberOfShards = 8;
-            // Create a Custom Analyzer ...
-            var an = new CustomAnalyzer();
-            an.Tokenizer = "standard";
-            // ... with Filters from the StandardAnalyzer
-            var filter = new List<string>();
-            filter.Add("lowercase");
-            filter.Add("czech_stop");
-            //an.Filter.Add("czech_keywords");
-            filter.Add("czech_stemmer"); //pouzit Hunspell
-            filter.Add("asciifolding");
-            an.Filter = filter;
+            
             // Add the Analyzer with a name
             set.Analysis = new Nest.Analysis()
             {
                 Analyzers = new Analyzers(),
-                TokenFilters = new TokenFilters(),
+                TokenFilters = BasicTokenFilters(),
             };
 
-            set.Analysis.Analyzers.Add("default", an);
-            set.Analysis.TokenFilters.Add("czech_stop", new StopTokenFilter() { StopWords = new string[] { "_czech_" } });
-            set.Analysis.TokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" }); //Humspell
+            set.Analysis.Analyzers.Add("default", DefaultAnalyzer());
+            
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
@@ -456,10 +434,44 @@ namespace HlidacStatu.Lib.ES
                     break;
                 case IndexType.Osoby:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i
-                           .InitializeUsing(idxSt)
-                           .Map<Data.OsobyES.OsobaES>(map => map.AutoMap().DateDetection(false))
-                       );
+                        .Create(client.ConnectionSettings.DefaultIndex, i => i
+                            .InitializeUsing(new IndexState()
+                            {
+                                Settings = new IndexSettings()
+                                {
+                                    NumberOfReplicas = 2,
+                                    NumberOfShards = 2,
+                                    Analysis = new Nest.Analysis()
+                                    {
+                                        TokenFilters = BasicTokenFilters(),
+                                        Analyzers = new Analyzers(new Dictionary<string, IAnalyzer>() 
+                                        { 
+                                            ["default"] = DefaultAnalyzer(),
+                                            ["lowercase"] = LowerCaseOnlyAnalyzer(),
+                                            ["lowercase_ascii"] = LowerCaseAsciiAnalyzer()
+                                        })                                       
+                                    }
+                                }
+                            })
+                            .Map<Data.OsobyES.OsobaES>(map => map
+                                .AutoMap()
+                                .Properties(p => p
+                                    .Text(t => t
+                                        .Name(n => n.FullName)
+                                        .Fields(ff => ff
+                                            .Text(tt => tt
+                                                .Name("lower")
+                                                .Analyzer("lowercase")
+                                            )
+                                            .Text(tt => tt
+                                                .Name("lowerascii")
+                                                .Analyzer("lowercase_ascii")
+                                            )
+                                        )
+                                    )
+                               )
+                            )
+                        );
                     break;
 
                 case IndexType.Smlouvy:
@@ -507,7 +519,50 @@ namespace HlidacStatu.Lib.ES
 
         }
 
+        private static ITokenFilters BasicTokenFilters()
+        {
+            var tokenFilters = new TokenFilters();
+            tokenFilters.Add("czech_stop", new StopTokenFilter() { StopWords = new string[] { "_czech_" } });
+            tokenFilters.Add("czech_stemmer", new StemmerTokenFilter() { Language = "czech" });
+            return tokenFilters;
+        }
 
+        private static IAnalyzer DefaultAnalyzer()
+        {
+            var analyzer = new CustomAnalyzer();
+            analyzer.Tokenizer = "standard";
+            analyzer.Filter = new List<string>
+            {
+                "lowercase",
+                "czech_stop",
+                "czech_stemmer",
+                "asciifolding"
+            };
+            return analyzer;
+        }
+
+        private static IAnalyzer LowerCaseOnlyAnalyzer()
+        {
+            var analyzer = new CustomAnalyzer();
+            analyzer.Tokenizer = "whitespace";
+            analyzer.Filter = new List<string>
+            {
+                "lowercase",
+            };
+            return analyzer;
+        }
+
+        private static IAnalyzer LowerCaseAsciiAnalyzer()
+        {
+            var analyzer = new CustomAnalyzer();
+            analyzer.Tokenizer = "whitespace";
+            analyzer.Filter = new List<string>
+            {
+                "lowercase",
+                "asciifolding"
+            };
+            return analyzer;
+        }
 
         public static void LogQueryError<T>(Nest.ISearchResponse<T> esReq, string text = "", System.Web.HttpContextBase httpContext = null, Exception ex = null)
             where T : class

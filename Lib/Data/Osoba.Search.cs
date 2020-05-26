@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using HlidacStatu.Lib.Data.Insolvence;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -86,43 +87,37 @@ namespace HlidacStatu.Lib.Data
                 var takeNum = page * pageSize;
                 if (takeNum > 100)
                     takeNum = 100;
-
-                IEnumerable<Osoba> resFtx = HlidacStatu.Lib.Data.Osoba.Searching.GetPolitikByNameFtx(query.Trim(), takeNum)
-                    .OrderPoliticiByImportance();
-
-                var res = new OsobaSearchResult();
-                res.Total = resFtx.Count();
+                //elastik hyr
                 
-                resFtx = resFtx
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize);
+                List<Osoba> foundPepole = new List<Osoba>();
 
-                //order by person importance
-                //resFtx.Result = res.ftx
-
-                var fixedQuery = Tools.FixInvalidQuery(query, new string[] { "osobaid:", "osoba:", "osobaid:", "osobaiddodavatel: ", "osobaidzadavatel:" }) ?? "";
-                var sq = SplittingQuery.SplitQuery(fixedQuery);
-                var foundOsoby = resFtx.ToList() ?? new List<Osoba>();
-                foreach (var prt in sq.Parts)
+                string regex = @"osoba\w{0,13}:\s?(?<osoba>[\w-]{3,25})";
+                List<string> peopleIds = Util.ParseTools.GetRegexGroupValues(query, regex, "osoba").ToList();
+                if (peopleIds is null || peopleIds.Count == 0)
                 {
-                    if (prt?.Prefix?.StartsWith("osoba") == true)
+                    var people = OsobyES.OsobyEsService.FulltextSearch(query, page, pageSize);
+                    peopleIds = people.Results.Select(r => r.NameId).ToList();
+                }
+                
+                foreach (var id in peopleIds)
+                {
+                    var foundPerson = Osoba.GetByNameId(id);
+                    if (foundPerson != null)
                     {
-                        if (!string.IsNullOrEmpty(prt?.Value) && Osoby.GetByNameId.Get(prt.Value) != null)
-                        {
-                            foundOsoby.Insert(0, Osoby.GetByNameId.Get(prt.Value));
-                            res.Total++;
-                        }
+                        foundPepole.Add(foundPerson);
                     }
                 }
 
-                res.Q = query;
-                res.ElasticResults = null; //TODO
-                res.Results = foundOsoby;
-                res.Page = page;
-                res.PageSize = pageSize;
-                res.Order = order.ToString();
-                res.IsValid = true;
-                return res;
+                var result = new OsobaSearchResult();
+                result.Total = foundPepole.Count();
+                result.Q = query;
+                result.ElasticResults = null; //TODO
+                result.Results = foundPepole;
+                result.Page = page;
+                result.PageSize = pageSize;
+                result.Order = order.ToString();
+                result.IsValid = true;
+                return result;
             }
 
 

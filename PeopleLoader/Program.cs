@@ -10,6 +10,7 @@ namespace PeopleLoader
         static void Main(string[] args)
         {
             //List<OsobaES> osoby = null;
+            //OsobyEsService.Get("aaa");
 
             using (DbEntities db = new DbEntities())
             {
