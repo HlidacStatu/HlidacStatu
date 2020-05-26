@@ -95,7 +95,7 @@ namespace HlidacStatu.Lib.Data
                 List<string> peopleIds = Util.ParseTools.GetRegexGroupValues(query, regex, "osoba").ToList();
                 if (peopleIds is null || peopleIds.Count == 0)
                 {
-                    var people = OsobyES.OsobyEsService.SimpleSearch(query, page, pageSize, ((int)order).ToString());
+                    var people = OsobyES.OsobyEsService.FulltextSearch(query, page, pageSize);
                     peopleIds = people.Results.Select(r => r.NameId).ToList();
                 }
                 
