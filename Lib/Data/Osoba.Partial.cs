@@ -1005,8 +1005,8 @@ namespace HlidacStatu.Lib.Data
                 {
                     osobaToUpdate.ManuallyUpdated = DateTime.Now;
                     osobaToUpdate.ManuallyUpdatedBy = author;
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
             }
         }
 

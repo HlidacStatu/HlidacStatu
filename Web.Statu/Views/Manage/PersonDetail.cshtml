@@ -41,11 +41,12 @@
             <dd>@(Model.Umrti?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
             <dt>@Html.DisplayNameFor(model => model.Status)</dt>
             <dd>@(((HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum)Model.Status).ToNiceDisplayName())</dd>
-            <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
-            <dd>@Model.LastUpdate</dd>
+            <dt>Naposledy zkontrolováno</dt>
+            <dd>@Model.ManuallyUpdated</dd>
         </dl>
         <p>
             @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = Model.InternalId }, new { @class = "btn btn-sm btn-primary btn-primary-new" })
+            @Html.ActionLink("Zkontrolováno", "SetTimestamp", new { id = Model.InternalId }, new { @class = "btn btn-sm btn-warning" })
         </p>
     </div>
     <div class="col-xs-12">
