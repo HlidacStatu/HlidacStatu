@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Publisher\" />
-  </ItemGroup>
-
 </Project>

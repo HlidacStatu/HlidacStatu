@@ -10,5 +10,13 @@
     "ConnectionString": "host=hostip;username=username;password=password",
     "SubscriberName": "test",
     "PrefetchCount": 10
-  }
+  },
+  "Smtp": {
+    "Server": "smtp.MyHost.com",
+    "Port": 25,
+    "FromAddress": "MyEmailAddress"
+  },
+  "ClassificatorUri": "http://hlidacstatu.heyhey.cz:8000/",
+  "HlidacApiUri": "https://www.hlidacstatu.cz/api/v2/",
+  "HlidacApiToken": "6a3fe7e2ede8eae9e70e9e17e2058d8e"
 }
