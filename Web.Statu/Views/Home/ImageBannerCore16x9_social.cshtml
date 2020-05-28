@@ -4,6 +4,9 @@
     Layout = "";
     string width = "1920px";
     string height = "1080px";
+
+    string accentColor = "#F6C074";
+    string textColor = "#FFFFFF";
 }
 
 <!DOCTYPE html>
@@ -15,6 +18,94 @@
     @*<link rel='stylesheet' href='~/Content/bootstrap.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />*@
     <link rel='stylesheet' href='~/Content/socialBanner.css?r=@(HlidacStatu.Util.Consts.Rnd.Next())' type='text/css' />
 
+    <style>
+
+        body, p, div, span {
+            font-family: 'Cabin', sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0;
+            padding: 0;
+            white-space: nowrap
+        }
+
+        .text-info {
+        }
+
+        .text-warning {
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+
+        p {
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+            li:before {
+                content: "●";
+                display: inline-block;
+                margin-left: 0;
+                width: 1.3em;
+                color: @textColor;
+            }
+
+
+        .mytxt {
+            margin: 0;
+            padding: 0;
+            color: @textColor;
+        }
+
+            .mytxt ul {
+                position: relative;
+                list-style: none;
+                margin-left: 0;
+                padding-left: 1.2em;
+            }
+
+                .mytxt ul li:before {
+                    content: "●";
+                    position: absolute;
+                    left: 0;
+                }
+
+            .mytxt b {
+                font-weight: 700;
+                color: @accentColor;
+            }
+
+            .mytxt strong {
+                font-style: normal;
+                font-weight: 700;
+            }
+
+            .mytxt i {
+                font-style: italic;
+            }
+
+            .mytxt hr.title {
+            border:2px solid @textColor; padding:0;margin:15px 0 20px 0;
+
+            }
+        .picture {
+            width: 110px;
+            height: 110px;
+            background-size: cover;
+            background-position: center center;
+            border-radius: 60px;
+            position: absolute;
+        }
+    </style>
 
 </head>
 <body style="width:@width;height:@height;background:url(/Content/Img/social-banner-16x9.png) no-repeat;">

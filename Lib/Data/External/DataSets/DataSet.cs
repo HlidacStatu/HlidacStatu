@@ -1073,7 +1073,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public string SocialInfoBody()
         {
-            return HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 1, true);
+            return HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 2, true, html:true);
         }
 
         public string SocialInfoFooter()
@@ -1136,7 +1136,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     var itemLastDate = (DateTime)last.Result.First().DbCreated;
 
                     dbCreated = new DateTime(Math.Min(dbCreated.Ticks, itemFirstDate.Ticks));
-                    var sCreated = "Databáze byla založena "+ Devmasters.Core.DateTimeUtil.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower(); 
+                    var sCreated = $"Databáze byla založena {Devmasters.Core.DateTimeUtil.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()}. "; 
                     string minMax ="";
                     if (total == 0)
                     {
