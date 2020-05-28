@@ -368,3 +368,5 @@ Web.Statu/App_Data/dump/*
 3rd/Swashbuckle/
 
 HlidacStatu.Q.ClassificationRepair/appsettings.json
+
+HlidacStatu.ClassificationRepair/appsettings.json

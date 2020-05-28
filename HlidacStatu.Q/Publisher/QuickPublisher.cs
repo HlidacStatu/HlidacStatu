@@ -2,7 +2,7 @@
 
 namespace HlidacStatu.Q.Publisher
 {
-    class QuickPublisher
+    public static class QuickPublisher
     {
         public static void Publish<T>(T msg, string connectionString, string topic = null)
             where T : class

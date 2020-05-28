@@ -1,6 +1,7 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models.Apiv2;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
@@ -99,6 +100,26 @@ namespace HlidacStatu.Web.Controllers
             var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin"), this.User.IsInRole("Admin"));
 
             return s;
+        }
+
+        [HttpGet, Route("text/{id?}")]
+        [AuthorizeAndAudit]
+        public IEnumerable<string> Text(string id = null)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota id chybí."));
+            }
+
+            var smlouva = Lib.Data.Smlouva.Load(id);
+            if (smlouva == null)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Smlouva nenalezena"));
+            }
+
+            var prilohy = smlouva.Prilohy.Select(p => p.PlainTextContent).ToList();
+
+            return prilohy;
         }
     }
 }

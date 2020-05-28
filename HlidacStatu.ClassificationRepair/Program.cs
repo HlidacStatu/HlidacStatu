@@ -1,12 +1,15 @@
 using HlidacStatu.Q.Messages;
 using HlidacStatu.Q.Subscriber;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Net.Http.Headers;
 
-namespace HlidacStatu.Q.ClassificationRepair
+namespace HlidacStatu.ClassificationRepair
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -47,9 +50,25 @@ namespace HlidacStatu.Q.ClassificationRepair
             {
                 // rabbit configuration
                 services.Configure<RabbitMQOptions>(hostContext.Configuration.GetSection("RabbitMQConnection"));
-                // rabbit permanent connection - listener
                 services.AddHostedService<RabbitMQListenerServiceAsync<ClassificationFeedback>>();
                 services.AddScoped<IMessageHandlerAsync<ClassificationFeedback>, ProcessClassificationFeedback>();
+
+                // email service
+                services.Configure<SmtpSettings>(hostContext.Configuration.GetSection("Smtp"));
+                services.AddTransient<IEmailService, EmailService>();
+
+                services.AddHttpClient<IStemmerService, StemmerService>(config =>
+                {
+                    config.BaseAddress = new Uri(hostContext.Configuration.GetValue<string>("ClassificatorUri"));
+                });
+
+                services.AddHttpClient<IHlidacService, HlidacService>(config =>
+                {
+                    config.BaseAddress = new Uri(hostContext.Configuration.GetValue<string>("HlidacApiUri"));
+                    config.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Token",
+                            hostContext.Configuration.GetValue<string>("HlidacApiToken"));
+                });
             });
     }
 }
