@@ -12,19 +12,42 @@
         return ((Smlouva.SClassification.ClassificationsTypes)(int.Parse(enumNumber) - int.Parse(enumNumber) % 100)).ToNiceDisplayName();
     }
 
-    List<SelectListItem> CreateClassificationList (int? classification)
+    List<SelectListItem> CreateClassificationList(int? classification)
     {
-        var typeList = Devmasters.Core.Enums
-                      .EnumToEnumerable(typeof(Smlouva.SClassification.ClassificationsTypes))
-                      .Select(m => new System.Web.Mvc.SelectListItem()
-                      {
-                          Value = m.Value,
-                          Text = $"{m.Key} <{GetNiceClassificationName(m.Value)}>",
-                          Selected = int.Parse(m.Value) == classification
-                      })
-                      .ToList();
-        typeList.Add(new System.Web.Mvc.SelectListItem() { Value = "", Text = " -Bez kategorie-", Selected = (classification is null) });
-        return typeList.OrderBy(it => it.Text).ToList();
+
+        List<SelectListItem> typeList = new List<SelectListItem>();
+        foreach (var main in Devmasters.Core.Enums
+                                    .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                                    .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                                    .Where(m => m.value % 100 == 0)
+                                    .OrderBy(m => m.key)
+                                )
+        {
+            var sl = new System.Web.Mvc.SelectListItem()
+            {
+                Value = main.value.ToString(),
+                Text = $"{main.key}",
+                Selected = main.value == classification
+            };
+            typeList.Add(sl);
+            foreach (var item in Devmasters.Core.Enums
+                .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                .Where(m => m.value % 100 != 0)
+                .Where(m => m.value - (m.value % 100) == main.value)
+                .OrderBy(m => m.key))
+            {
+                sl = new System.Web.Mvc.SelectListItem()
+                {
+                    Value = item.value.ToString(),
+                    Text = $"---{item.key}",
+                    Selected = item.value == classification
+                };
+                typeList.Add(sl);
+
+            }
+        }
+        return typeList;
 
     }
 
@@ -48,7 +71,7 @@
             První kategorie
             <div class="col-md-10">
                 <select class="form-control" id="typ1" name="typ1" onchange="drawSubtype(this.value);">
-                    @foreach(var item in typeList1)
+                    @foreach (var item in typeList1)
                     {
                         if (item.Selected)
                         {
@@ -81,11 +104,11 @@
                 </select>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Uložit" class="btn btn-primary" />
             </div>
         </div>
     </div>
-    }
+}
