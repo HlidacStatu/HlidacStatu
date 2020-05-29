@@ -1,0 +1,115 @@
+﻿@model CreateSimpleModel
+
+
+@using HlidacStatu.Web.Models;
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Import dat z CSV souboru";
+    ViewBag.SubTitle = "Hotovo";
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    DataSet ds = DataSet.CachedDatasets.Get(Model.DatasetId);
+
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Další databáze</a></li>
+        <li><a href="@ds.DatasetUrl()">@ds.Registration().name</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <h2>Jak na to?</h2>
+        <p>
+            Import dat do datasetu z CSV souboru je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+            neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
+            a tabulka má pro všechny řádky stejný počet sloupců.
+        </p>
+    </div>
+    <h3>1. krok</h3>
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <p>
+            Hlídač v tomto průvodci umí zpracovat data pouze <code>ve formátu CSV</code>, v prvním řádku s názvy sloupců a v UTF-8 kódování.
+            Takový export je možný <a onclick="return trackOutLink(this,'Dataset_CreateSimple');" href="https://www.extendoffice.com/cs/documents/excel/613-excel-export-to-csv-file.html#active_sheet_to_csv_utf8" target="_blank">přímo z Excelu</a>.
+            Pokud Vám Excel nevyhovuje nebo máte data v jiném formátu, můžete zkusit konverzi provést zdarma na některé z těchto anglických online služeb:
+            <a href="https://www.zamzar.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Zamzar</a>,
+            <a href="https://convertio.co" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Convertio</a>,
+            <a href="https://www.aconvert.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">AConvert</a>,
+            <a href="https://onlineconvertfree.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">OnlineConvertFree</a>
+            a <a href="https://www.google.com/search?client=safari&rls=en&q=excel+to+csv&ie=UTF-8&oe=UTF-8" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">další</a>.
+        </p>
+        <p>
+            <b>Souhrn požadavků</b><ul>
+                <li>Musí být v <a href="https://cs.wikipedia.org/wiki/CSV" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">CSV formátu</a>.</li>
+                <li>Musí mít v prvním řádku názvy sloupců</li>
+                <li>Musí být v <a href="https://cs.wikipedia.org/wiki/Unicode" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Unicode UTF-8 kódování</a> </li>
+                <li>Musí obsahovat nějaká data.</li>
+            </ul>
+        </p>
+        <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
+            <div class="form-group">
+                @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <input type="file" name="file" class="form-control" />
+                    <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <div class="radio" style="margin-left:20px;">
+                        <input checked="checked" type="radio" name="delimiter" value="," /><code>,</code> (čárka) <br />
+                        <input type="radio" name="delimiter" value=";" /><code>;</code> (středník) <br />
+                        <input type="radio" name="delimiter" value="\t" /><code>tab</code> (tabulátor) <br />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-warning btn">Nahrát soubor a pokračovat na další krok</button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); z-index: 102; cursor: no-drop;">
+    <div onclick="return false;" style="position: absolute; top: 50%; left: 50%; font-size: 50px; color: white; transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%);">
+        <i class="far fa-spinner fa-spin"></i> Importujeme data, čekejte
+    </div>
+</div>

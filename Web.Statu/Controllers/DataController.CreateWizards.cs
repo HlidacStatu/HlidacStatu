@@ -15,9 +15,9 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateAdv()
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
@@ -30,9 +30,9 @@ namespace HlidacStatu.Web.Controllers
         {
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
@@ -85,9 +85,9 @@ namespace HlidacStatu.Web.Controllers
             Registration reg = null;
             try
             {
-                 reg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(json);
+                reg = Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(json);
             }
-            catch  { }
+            catch { }
             if (reg == null)
                 ViewBag.ApiResponseError = ApiResponseStatus.Error(500, "Nekorektní záloha datasetu", "Nekorektní záloha datasetu");
 
@@ -102,16 +102,16 @@ namespace HlidacStatu.Web.Controllers
                 }
             }
 
-            return View("CreateFromBackup"+step, reg);
+            return View("CreateFromBackup" + step, reg);
         }
 
         [HttpGet]
         public ActionResult CreateSimple()
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
             return View();
@@ -121,9 +121,9 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple(string name, string delimiter, FormCollection form, HttpPostedFileBase file)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
@@ -155,9 +155,9 @@ namespace HlidacStatu.Web.Controllers
         {
 
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
@@ -172,13 +172,13 @@ namespace HlidacStatu.Web.Controllers
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
                     var config = new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture);
-                    config.HasHeaderRecord = true; 
+                    config.HasHeaderRecord = true;
                     config.Delimiter = model.GetValidDelimiter();
 
 
                     var csv = new CsvHelper.CsvReader(r, config);
                     csv.Read(); csv.ReadHeader();
-                    model.Headers = csv.Context.HeaderRecord.Where(m=> !string.IsNullOrEmpty(m?.Trim())).ToArray();
+                    model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
 
                     //read first lines with data and guest type
                     List<string[]> lines = new List<string[]>();
@@ -224,9 +224,9 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple2(CreateSimpleModel model, FormCollection form)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
-                
+
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
             }
 
@@ -386,7 +386,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult CreateSimple3(Guid? fileId)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -427,7 +427,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportData(string id, CreateSimpleModel model)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -451,7 +451,7 @@ namespace HlidacStatu.Web.Controllers
             if (ds.IsFlatStructure() == false)
             {
                 ViewBag.Mode = "notflat";
-                return View(model);
+                return View("ImportData.noflat", model);
             }
             if (model.FileId.HasValue)
             {
@@ -468,6 +468,7 @@ namespace HlidacStatu.Web.Controllers
                     csv.Read(); csv.ReadHeader();
                     model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
                 }
+                return View("ImportData.mapping", model);
 
             }
             else
@@ -476,10 +477,10 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportData(string id, string delimiter, FormCollection form, HttpPostedFileBase file)
+        public ActionResult ImportData(string id, string delimiter, string data, FormCollection form, HttpPostedFileBase file)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -499,17 +500,26 @@ namespace HlidacStatu.Web.Controllers
 
             Guid fileId = Guid.NewGuid();
             var uTmp = new Lib.IO.UploadedTmpFile();
-            if (file == null)
+            if (string.IsNullOrEmpty(data))
             {
-                ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Źádné CSV jste nenahráli");
+                if (file == null)
+                {
+                    ViewBag.ApiResponseError = ApiResponseStatus.Error(-99, "Źádné CSV jste nenahráli");
 
-                return View();
+                    return View();
+                }
+                else
+                {
+                    var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
+                    file.SaveAs(path);
+                    return RedirectToAction("ImportData", new { id = ds.DatasetId, fileId = fileId, delimiter = CreateSimpleModel.GetValidDelimiter(delimiter) });
+                }
             }
             else
             {
                 var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
-                file.SaveAs(path);
-                return RedirectToAction("ImportData", new { id = ds.DatasetId, fileId = fileId, delimiter = CreateSimpleModel.GetValidDelimiter(delimiter) });
+                System.IO.File.WriteAllText(path, data);
+                return RedirectToAction("ImportData", new { id = ds.DatasetId, fileId = fileId, delimiter = CreateSimpleModel.GetValidDelimiter("\t") });
             }
         }
 
@@ -517,7 +527,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ImportDataProcess(string id, CreateSimpleModel model, FormCollection form)
         {
             var email = Request?.RequestContext?.HttpContext?.User?.Identity?.Name;
-            if (Request.IsAuthenticated== false)
+            if (Request.IsAuthenticated == false)
             {
                 //https://www.hlidacstatu.cz/account/Login?returnUrl=%2F%3Frnd%3D0036bd9be9bc42d4bdf449492968846e
                 return RedirectToAction("Login", "Account", new { returnUrl = this.Request.Url.PathAndQuery });
@@ -558,7 +568,7 @@ namespace HlidacStatu.Web.Controllers
 
             string[] formsHeaders = form["sheaders"].Split('|');
             List<MappingCSV> mappingProps = new List<MappingCSV>();
-            for (int i = 0; i < formsHeaders.Length+3; i++) //+3 a little bit more, at least +1 for id column
+            for (int i = 0; i < formsHeaders.Length + 3; i++) //+3 a little bit more, at least +1 for id column
             {
                 if (!string.IsNullOrEmpty(form["source_" + i])
                     && !string.IsNullOrEmpty(form["target_" + i])
@@ -566,128 +576,137 @@ namespace HlidacStatu.Web.Controllers
                     )
                 {
                     mappingProps.Add(new MappingCSV()
-                            {
-                                sourceCSV = form["source_" + i],
-                                TargetJSON = form["target_" + i],
-                                Transform = form["transform_" + i]
-                            }
+                    {
+                        sourceCSV = form["source_" + i],
+                        TargetJSON = form["target_" + i],
+                        Transform = form["transform_" + i]
+                    }
                     );
                 }
             }
 
             System.Collections.Concurrent.ConcurrentBag<Exception> errors = new System.Collections.Concurrent.ConcurrentBag<Exception>();
 
-            List<Tuple<object,string>> items = new List<Tuple<object, string>>();
-
-            using (System.IO.StreamReader r = new System.IO.StreamReader(path))
+            List<Tuple<object, string>> items = new List<Tuple<object, string>>();
+            try
             {
-                var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
-                csv.Read(); csv.ReadHeader();
-                csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
 
-                while (csv.Read())
+                using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var newObj = rcb.CreateObject();
-                    for (int m = 0; m < mappingProps.Count; m++)
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    csv.Read(); csv.ReadHeader();
+                    csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
+
+                    while (csv.Read())
                     {
-                        Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].TargetJSON).FirstOrDefault().Value;
-                        object value = null;
-
-                        string[] specialValues = new string[] { "-skip-", "-gen-", "--" };
-                        if (specialValues.Contains(mappingProps[m].sourceCSV))
+                        var newObj = rcb.CreateObject();
+                        for (int m = 0; m < mappingProps.Count; m++)
                         {
-                            if (mappingProps[m].sourceCSV == "-gen-")
-                                value = Guid.NewGuid().ToString("N");
-                            else
-                                continue; // -skip- skip 
-                        }
-                        else
-                        {
-                            string svalue = csv.GetField(mappingProps[m].sourceCSV);
+                            Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].TargetJSON).FirstOrDefault().Value;
+                            object value = null;
 
-                            if (destType == typeof(string))
-                                value = svalue;
-                            else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                                value = Util.ParseTools.ToDateTime(svalue);
-                            else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                            string[] specialValues = new string[] { "-skip-", "-gen-", "--" };
+                            if (specialValues.Contains(mappingProps[m].sourceCSV))
                             {
-                                value = Util.ParseTools.ToDecimal(svalue);
-                                if (value == null)
-                                    value = Util.ParseTools.FromTextToDecimal(svalue);
-                            }
-                            else if (destType == typeof(long) || destType == typeof(long?)
-                                || destType == typeof(int) || destType == typeof(int?))
-                                value = Util.ParseTools.ToDate(svalue);
-                            else if (destType == typeof(bool) || destType == typeof(bool?))
-                            {
-                                if (bool.TryParse(svalue, out bool tryp))
-                                    value = tryp;
+                                if (mappingProps[m].sourceCSV == "-gen-")
+                                    value = Guid.NewGuid().ToString("N");
+                                else
+                                    continue; // -skip- skip 
                             }
                             else
-                                value = svalue;
-                        }
-                        if (mappingProps[m].Transform == "normalize"
-                            && destType == typeof(string)
-                            )
+                            {
+                                string svalue = csv.GetField(mappingProps[m].sourceCSV);
+
+                                if (destType == typeof(string))
+                                    value = svalue;
+                                else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
+                                    value = Util.ParseTools.ToDateTime(svalue);
+                                else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                                {
+                                    value = Util.ParseTools.ToDecimal(svalue);
+                                    if (value == null)
+                                        value = Util.ParseTools.FromTextToDecimal(svalue);
+                                }
+                                else if (destType == typeof(long) || destType == typeof(long?)
+                                    || destType == typeof(int) || destType == typeof(int?))
+                                    value = Util.ParseTools.ToDate(svalue);
+                                else if (destType == typeof(bool) || destType == typeof(bool?))
+                                {
+                                    if (bool.TryParse(svalue, out bool tryp))
+                                        value = tryp;
+                                }
+                                else
+                                    value = svalue;
+                            }
+                            if (mappingProps[m].Transform == "normalize"
+                                && destType == typeof(string)
+                                )
+                            {
+                                value = DataSet.NormalizeValueForId((string)value);
+                            }
+                            else if (mappingProps[m].Transform == "findico"
+                                && destType == typeof(string)
+                                )
+                            {
+                                value = Lib.Validators.IcosInText((string)value).FirstOrDefault();
+                            }
+                            else //copy
+                            { }
+                            rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
+
+                        } //for
+
+                        string idPropName = "id";
+                        string idVal = rcb.GetPropertyValue(newObj, "id")?.ToString();
+                        if (string.IsNullOrEmpty(idVal))
                         {
-                            value = DataSet.NormalizeValueForId((string)value);
+                            idVal = rcb.GetPropertyValue(newObj, "Id")?.ToString();
+                            idPropName = "Id";
                         }
-                        else if (mappingProps[m].Transform == "findico"
-                            && destType == typeof(string)
-                            )
+                        if (string.IsNullOrEmpty(idVal))
                         {
-                            value = Lib.Validators.IcosInText((string)value).FirstOrDefault();
+                            idVal = rcb.GetPropertyValue(newObj, "iD")?.ToString();
+                            idPropName = "iD";
                         }
-                        else //copy
-                        { }
-                        rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
+                        if (string.IsNullOrEmpty(idVal))
+                        {
+                            idVal = rcb.GetPropertyValue(newObj, "ID")?.ToString();
+                            idPropName = "ID";
+                        }
+                        try
+                        {
+                            //var debugJson = Newtonsoft.Json.JsonConvert.SerializeObject(newObj);
+                            //normalize ID
+                            idVal = DataSet.NormalizeValueForId(idVal);
+                            rcb.SetPropertyValue(newObj, idPropName, idVal);
 
-                    } //for
+                            items.Add(new Tuple<object, string>(newObj, idVal));
 
-                    string idPropName = "id";
-                    string idVal = rcb.GetPropertyValue(newObj, "id")?.ToString();
-                    if (string.IsNullOrEmpty(idVal))
-                    {
-                        idVal = rcb.GetPropertyValue(newObj, "Id")?.ToString();
-                        idPropName = "Id";
-                    }
-                    if (string.IsNullOrEmpty(idVal))
-                    {
-                        idVal = rcb.GetPropertyValue(newObj, "iD")?.ToString();
-                        idPropName = "iD";
-                    }
-                    if (string.IsNullOrEmpty(idVal))
-                    {
-                        idVal = rcb.GetPropertyValue(newObj, "ID")?.ToString();
-                        idPropName = "ID";
-                    }
-                    try
-                    {
-                        //var debugJson = Newtonsoft.Json.JsonConvert.SerializeObject(newObj);
-                        //normalize ID
-                        idVal = DataSet.NormalizeValueForId(idVal);
-                        rcb.SetPropertyValue(newObj, idPropName, idVal);
-
-                        items.Add(new Tuple<object, string>(newObj, idVal));
-
-                        model.NumOfRows++;
-                    }
-                    catch (DataSetException dex)
-                    {
-                        errors.Add(dex);
-                    }
-                    catch (Exception ex)
-                    {
-                        errors.Add(ex);
+                            model.NumOfRows++;
+                        }
+                        catch (DataSetException dex)
+                        {
+                            errors.Add(dex);
+                        }
+                        catch (Exception ex)
+                        {
+                            errors.Add(ex);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+
+                errors.Add(ex);
             }
 
             try
             {
 
                 Devmasters.Core.Batch.Manager.DoActionForAll<Tuple<object, string>>(items,
-                    (item) => {
+                    (item) =>
+                    {
 
                         try
                         {

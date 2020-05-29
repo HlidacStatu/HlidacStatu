@@ -26,20 +26,36 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public Annual(int rok) { this.Rok = rok; }
 
             public decimal PodilSmluvNaCelkovychNakupech { get; set; } //Podíl smluv na celkových nákupech
+
+            //r13
             public KoncentraceDodavateluIndexy CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
+            //r15
             public KoncentraceDodavateluIndexy KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
+            
+            //r20
             public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
+
+            //radek 11
             public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
+
+            //r23
             public decimal PercSmlouvySPolitickyAngazovanouFirmou { get; set; } //% smluv uzavřených s firmou navazanou na politicky aktivní osobu v předchozích 5 letechs
+
+            //r19
             public decimal PercSmluvUlimitu { get; set; } //% smluv těsně pod hranicí 2M Kč (zakázka malého rozsahu) a 6M (u stavebnictví)
+     
+            //r22
             public decimal PercUzavrenoOVikendu { get; set; } // % smluv uzavřených o víkendu či státním svátku
+
             public Dictionary<int, decimal> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
 
             public Lib.Analysis.BasicData Smlouvy { get; set; }
+            //radek 5
+            //
             public Lib.Analysis.RatingData Statistika { get; set; }
 
             public int Rok { get; set; }
-
+            //r12
             public FinanceData FinancniUdaje { get; set; }
         }
 

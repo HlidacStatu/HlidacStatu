@@ -1541,6 +1541,10 @@
     <Content Include="Views\ApiV1\ModalZneplatnenaSmlouva.cshtml" />
     <Content Include="Views\Home\AnalyzaPrijemcu.cshtml" />
     <Content Include="Views\Home\AnalyzaStart.cshtml" />
+    <Content Include="Views\Data\ImportDataCSV.cshtml" />
+    <Content Include="Views\Data\ImportData.noflat.cshtml" />
+    <Content Include="Views\Data\ImportData.mapping.cshtml" />
+    <Content Include="Views\Data\ImportDataExcel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

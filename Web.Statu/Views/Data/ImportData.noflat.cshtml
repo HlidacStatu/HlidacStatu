@@ -1,0 +1,68 @@
+﻿@model CreateSimpleModel
+
+
+@using HlidacStatu.Web.Models;
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Import dat z CSV souboru";
+    ViewBag.SubTitle = "Hotovo";
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    DataSet ds = DataSet.CachedDatasets.Get(Model.DatasetId);
+
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Další databáze</a></li>
+        <li><a href="@ds.DatasetUrl()">@ds.Registration().name</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <h2>Problém!</h2>
+        <p class="text-warning">
+            Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+            neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
+            a tabulka má pro všechny řádky stejný počet sloupců.
+        </p>
+        <p class="text-warning">
+            Tento dataset tuto podmínku nesplňuje a musíte pro nahrátí dat <a href="/api">použít API</a>.
+        </p>
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.Name })">Spravovat dataset</a>
+            <a class="btn btn-default" href="/">Zpět na titulku</a>
+
+        </p>
+    </div>
+</div>

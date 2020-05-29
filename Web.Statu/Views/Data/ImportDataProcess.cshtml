@@ -37,7 +37,7 @@
 </ol>
 }
 
-@if (errors != null && errors?.Count() > 1)
+@if (errors != null && errors?.Count() > 0)
 {
     <h3 class="text-danger">Chyba při importu dat do datasetu</h3>
     <p class="bg-danger">
@@ -48,7 +48,7 @@
             }
         </ol>
     </p>
-
+    
 }
 <div class="row">
     <div class="col-xs-12 ">

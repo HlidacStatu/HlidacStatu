@@ -66,31 +66,15 @@ namespace HlidacStatu.Lib.Data.OsobyES
                         .Size(pageSize)
                         .From(page * pageSize)
                         .Query(_query => _query
-                            .Bool(_bool => _bool
-                                .Must(_must => _must
-                                    .Fuzzy(_fuzzy => _fuzzy
-                                        .Field(_field => _field.FullName)
-                                        .Value(query)
-                                        .Fuzziness(Fuzziness.EditDistance(2))
-                                    )
+                                .MultiMatch(c => c
+                            .Fields(f => f
+                                .Field(p => p.FullName)
+                                .Field("fullName.lower",2)
+                                .Field("fullName.lowerascii",1.5)
                                 )
-                                .Should(
-                                    _boostWomen => _boostWomen
-                                    .Match(_match => _match
-                                        .Field(_field => _field.FullName)
-                                        .Query(query)
-                                    ),
-                                    _boostExact => _boostExact
-                                    .Match(_match => _match
-                                        .Field("fullName.lower")
-                                        .Query(query)
-                                    ),
-                                    _boostAscii => _boostAscii
-                                    .Match(_match => _match
-                                        .Field("fullName.lowerascii")
-                                        .Query(query)
-                                    )
-                                )
+                            .Type(TextQueryType.MostFields)
+                            .Fuzziness(Fuzziness.EditDistance(2))
+                            .Query(query)
                             )
                         )
                         .TrackTotalHits(true)

@@ -11,8 +11,8 @@
 @using System.Text.RegularExpressions;
 @{
 
-    ViewBag.Title = "Import dat z CSV souboru";
-    ViewBag.SubTitle = "Hotovo";
+    ViewBag.Title = "Nahrátí dat do databáze";
+    //ViewBag.SubTitle = "";
 
     ApiResponseStatus err = ViewBag.ApiResponseError;
 
@@ -47,242 +47,114 @@
     </p>
 
 }
-@if (ViewBag.Mode == "notflat")
-{<div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-11">
-            <h2>Problém!</h2>
-            <p class="text-warning">
-                Nahrání dat do datasetu je možné pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
-                neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
-                a tabulka má pro všechny řádky stejný počet sloupců.
-            </p>
-            <p class="text-warning">
-                Tento dataset tuto podmínku nesplňuje a musíte pro nahrátí dat <a href="/api">použít API</a>.
-            </p>
-            <p>
-                <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.Name })">Spravovat dataset</a>
-                <a class="btn btn-default" href="/">Zpět na titulku</a>
 
-            </p>
-        </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-11">
+        <h2>Jak na to?</h2>
+        <p>
+            Import dat do databáze je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
+            neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
+            a tabulka má pro všechny řádky stejný počet sloupců.
+        </p>
     </div>
-}
-else if (ViewBag.Mode == "upload")
-{
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-11">
-            <h2>Jak na to?</h2>
-            <p>
-                Import dat do datasetu z CSV souboru je možný pouze v případech, kdy máte jednoduchou (plochou)s strukturu dat,
-                neboli když se data dají zobrazit v Excelu ve formě jedné tabulky
-                a tabulka má pro všechny řádky stejný počet sloupců.
-            </p>
-        </div>
-        <h3>1. krok</h3>
-        <div class="col-xs-12 col-sm-offset-1 col-sm-11">
-            <p>
-                Hlídač v tomto průvodci umí zpracovat data pouze <code>ve formátu CSV</code>, v prvním řádku s názvy sloupců a v UTF-8 kódování.
-                Takový export je možný <a onclick="return trackOutLink(this,'Dataset_CreateSimple');" href="https://www.extendoffice.com/cs/documents/excel/613-excel-export-to-csv-file.html#active_sheet_to_csv_utf8" target="_blank">přímo z Excelu</a>.
-                Pokud Vám Excel nevyhovuje nebo máte data v jiném formátu, můžete zkusit konverzi provést zdarma na některé z těchto anglických online služeb:
-                <a href="https://www.zamzar.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Zamzar</a>,
-                <a href="https://convertio.co" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Convertio</a>,
-                <a href="https://www.aconvert.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">AConvert</a>,
-                <a href="https://onlineconvertfree.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">OnlineConvertFree</a>
-                a <a href="https://www.google.com/search?client=safari&rls=en&q=excel+to+csv&ie=UTF-8&oe=UTF-8" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">další</a>.
-            </p>
-            <p>
-                <b>Souhrn požadavků</b><ul>
-                    <li>Musí být v <a href="https://cs.wikipedia.org/wiki/CSV" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">CSV formátu</a>.</li>
-                    <li>Musí mít v prvním řádku názvy sloupců</li>
-                    <li>Musí být v <a href="https://cs.wikipedia.org/wiki/Unicode" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Unicode UTF-8 kódování</a> </li>
-                    <li>Musí obsahovat nějaká data.</li>
-                </ul>
-            </p>
-            <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
-                <div class="form-group">
-                    @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
-                    <div class="col-sm-10">
-                        <input type="file" name="file" class="form-control" />
-                        <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
-                    <div class="col-sm-10">
-                        <div class="radio" style="margin-left:20px;">
-                            <input checked="checked" type="radio" name="delimiter" value="," /><code>,</code> (čárka) <br />
-                            <input type="radio" name="delimiter" value=";" /><code>;</code> (středník) <br />
-                            <input type="radio" name="delimiter" value="\t" /><code>tab</code> (tabulátor) <br />
-                        </div>
-                    </div>
-                </div>
+    <h3>1. krok - nahrátí dat</h3>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-warning btn">Nahrát soubor a pokračovat na další krok</button>
-
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-
-}
-else
-{
-    string delimiter = ViewBag.Delimiter;
-
-    string[] properties = ds.GetPropertyNamesFromSchema();
-
-
-    <div class="row">
-        <div class="col-xs-12 ">
-            <h2>Krok 2</h2>
-            <p>
-                Nahráli jste nám CSV soubor. Na první, rychlý pohled vypadá, že je v pořádku. Abychom mohli data nahrát do Hlídače,
-                potřebujeme se od vás dozvědět, který sloupec nahraného souboru pasuje na který sloupec datasetu.
-            </p>
-        </div>
-
-        <h3>Propojení sloupců</h3>
-        <div class="col-xs-12">
-            <form id="mapForm" action="@Url.Action("importDataProcess",new {id = Model.DatasetId })" method="post" class="form-horizontal form-control-new--small">
-                @Html.HiddenFor(m => m.Delimiter)
-                @Html.HiddenFor(m => m.FileId)
-                @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
-                @Html.Hidden("sproperties", properties.Aggregate((f, s) => f + "|" + s))
-
-                <script type="text/javascript">
-
-                    function isMappingOK() {
-                        var btn = $("#btnSubmit");
-                        var hasError = false;
-                        $("select.form-control").each(
-                            function () {
-                                var selectedIdx = this.selectedIndex;
-                                if (selectedIdx == 0) {
-                                    $(this).parent().removeClass("has-success").addClass("has-error");
-                                    hasError = true;
-                                }
-                                else {
-                                    $(this).parent().addClass("has-success").removeClass("has-error");
-                                }
-
-                            }
-                        );
-                        if (hasError)
-                            $("#mappingAlert").show()
-                        else
-                            $("#mappingAlert").hide()
-
-                        if (!hasError) {
-                            btn.attr("disabled", "disabled");
-                            btn.text("Importuji data, trpělivě čekejte!");
-                            alert('Import dat může trvat i několiv minut. Nenačítejte stránku znovu, buďte trpělivý/á');
-                            //code before the pause
-                            setTimeout(function () {
-                                $("#overlay").show();
-                                $("#mapForm").submit();
-                            }, 200);
-                        }
-                        return false;
-                    }
-
-                </script>
-
-                <table class="table table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th> </th>
-                            <th>
-                                Jméno cílového sloupce v datasetu
-                            </th>
-                            <th>
-                                Název sloupce v CSV, odkud bereme data
-                            </th>
-                            <th>Transformace dat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int ip = 0; ip < properties.Length; ip++)
-                        {
-                            bool rowselected = false;
-                            var normName = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(properties[ip]);
-
-                            <tr>
-                                <td style="font-size:1.3em;font-weight:bold">@(ip + 1)</td>
-                                <td style="vertical-align: middle;">
-                                    @properties[ip]
-                                    @Html.Hidden("target_" + ip, properties[ip])
-                                </td>
-                                <td>
-                                    <div class="form-group-sm">
-                                        <select style="width:200px;font-size:1em;line-height:normal" class="form-control" name="source_@ip">
-                                            <option value="--">(vyberte)</option>
-                                            @if (properties[ip].ToLower() == "id")
-                                            {
-                                                <option style="height:18px;font-style:italic" value="-gen-">Generovat unikátní klíč</option>
-                                            }
-                                            @for (int ih = 0; ih < Model.Headers.Length; ih++)
-                                            {
-                                                bool selected = false;
-                                                var normHead = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(Model.Headers[ih]);
-                                                if (normName == normHead)
-                                                {
-                                                    selected = true;
-                                                }
-                                                else if (!rowselected && HlidacStatu.Lib.Validators.LevenshteinDistanceCompute(normName, normHead) < 3)
-                                                {
-                                                    selected = true;
-                                                }
-                                                <option @Util.IfExists(selected, " selected=\"selected\" ") value="@Model.Headers[ih]">@Model.Headers[ih]</option>
-
-                                            }
-                                            <option value="-skip-">Ignorovat</option>
-
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="radio">
-                                        @if (properties[ip].ToLower() == "id")
-                                        {
-                                            <text>
-                                                <input checked="checked" type="radio" name="transform_@ip" value="normalize">Upravit na platné ID <br />
-                                            </text>
-                                        }
-                                        else
-                                        {
-                                            <text>
-                                                <input checked="checked" type="radio" name="transform_@ip" value="copy">Zkopírovat bez úprav<br>
-                                                <input type="radio" name="transform_@ip" value="findico">Najít a použít IČO z textu<br>
-                                            </text>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-
-                        }
-                    </tbody>
-                </table>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="alert alert-danger" role="alert" id="mappingAlert" style="display:none">
-                            Nepropojili jste všechny sloupce! Červeně označená pole je nutné vybrat.
+    <div class="col-xs-12 col-sm-11">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class='active'>
+                <a href="#import1" aria-controls="import1" role="tab" data-toggle="tab">Zkopírovat z Excelu/GSheet/Numbers</a>
+            </li>
+            <li role="presentation">
+                <a href="#import2" id="tab2btn" aria-controls="import2" role="tab" data-toggle="tab">Data v CSV souboru</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="import1">
+                <div class="col-xs-12" style="padding:20px;background-color:#f2f5f7;border:1px solid #E0E6ED">
+                    <p>Hlídač v tomto průvodci umí zpracovat data zkopírovaná z tabulkového procesoru, jako Excel, Numbers, Google Spreadsheet, Office 365 a podobné.</p>
+                    <p>Data zkopírujte do textového pole níže</p>
+                    <p>
+                        Zkopírovaná data po zkopírování obvykle vypadají tak, že každý zkopírovaný řádek je na samostatném řádku ve formuláři
+                        a jednotlivé sloupce jsou odděleny tabelátorem (neviditelnou mezerou)
+                    </p>
+                    <p>
+                        Pokud Vám toto zkopírování nefunguje nebo náš průvodce hlásí chyby, vyexportujete data do CSV souboru a zkuste druhou variantu importu dat přes CSV soubor
+                        (viz <a href="#import2" onclick="$('#tab2btn').click(); return false;">Data v CSV souboru</a>).
+                    </p>
+                    <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
+                        <div class="form-group">
+                            @Html.Label("data", "Zkopírovaná data z tabulkového procesoru", new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <textarea id="data" name="data" class="form-control" rows="15" style="width:99%"></textarea>
+                            </div>
                         </div>
 
-                        <a href="createSimple" class="btn btn-default btn">Zpět</a>
-                        <button type="submit" id="btnSubmit" class="btn btn-warning btn" onclick="return isMappingOK();">Pokračovat na další krok</button>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-warning btn">Odeslat data a pokračovat na další krok</button>
 
-                    </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="import2">
+                <div class="col-xs-12" style="padding:20px;background-color:#f2f5f7;border:1px solid #E0E6ED">
+                    <p>
+                        Hlídač v tomto průvodci umí zpracovat data pouze <code>ve formátu CSV</code>, v prvním řádku s názvy sloupců a v UTF-8 kódování.
+                        Takový export je možný <a onclick="return trackOutLink(this,'Dataset_CreateSimple');" href="https://www.extendoffice.com/cs/documents/excel/613-excel-export-to-csv-file.html#active_sheet_to_csv_utf8" target="_blank">přímo z Excelu</a>.
+                        Pokud Vám Excel nevyhovuje nebo máte data v jiném formátu, můžete zkusit konverzi provést zdarma na některé z těchto anglických online služeb:
+                        <a href="https://www.zamzar.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Zamzar</a>,
+                        <a href="https://convertio.co" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Convertio</a>,
+                        <a href="https://www.aconvert.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">AConvert</a>,
+                        <a href="https://onlineconvertfree.com" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">OnlineConvertFree</a>
+                        a <a href="https://www.google.com/search?client=safari&rls=en&q=excel+to+csv&ie=UTF-8&oe=UTF-8" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">další</a>.
+                    </p>
+                    <p>
+                        <b>Souhrn požadavků</b><ul>
+                            <li>Musí být v <a href="https://cs.wikipedia.org/wiki/CSV" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">CSV formátu</a>.</li>
+                            <li>Musí mít v prvním řádku názvy sloupců</li>
+                            <li>Musí být v <a href="https://cs.wikipedia.org/wiki/Unicode" target="_blank" onclick="return trackOutLink(this,'Dataset_CreateSimple');">Unicode UTF-8 kódování</a> </li>
+                            <li>Musí obsahovat nějaká data.</li>
+                        </ul>
+                    </p>
+                    <form method="post" class="form-horizontal form-control-new--small" enctype="multipart/form-data">
+                        <div class="form-group">
+                            @Html.Label("data", "CSV soubor v UTF-8 kódování", new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <input type="file" name="file" class="form-control" />
+                                <span class="help-block">Omezení: Soubor může být veliký maximálně 50MB.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("delimiter", "Oddělovač položek (sloupců) v CSV", new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="radio" style="margin-left:20px;">
+                                    <input checked="checked" type="radio" name="delimiter" value="," /><code>,</code> (čárka) <br />
+                                    <input type="radio" name="delimiter" value=";" /><code>;</code> (středník) <br />
+                                    <input type="radio" name="delimiter" value="\t" /><code>tab</code> (tabulátor) <br />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-warning btn">Nahrát soubor a pokračovat na další krok</button>
+
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
 
-            </form>
+            </div>
         </div>
+
+
     </div>
 
-}
+</div>
 
     <div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); z-index: 102; cursor: no-drop;">
         <div onclick="return false;" style="position: absolute; top: 50%; left: 50%; font-size: 50px; color: white; transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%);">

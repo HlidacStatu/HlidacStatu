@@ -9,6 +9,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class FinanceData
     {
+        //r12
         public decimal? OvlivnitelneNakladyCinnosti { get; set; } = null;
         public Dictionary<string, decimal> Ukazatele { get; set; } = new Dictionary<string, decimal>();
 
@@ -19,6 +20,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public int Rok { get; set; }
 
         public string Ico { get; set; }
+
+
         static object lockObj = new object();
         static Dictionary<int, int> obdobi = null;
         static FinanceDataCalculator()

@@ -1,0 +1,208 @@
+﻿@model CreateSimpleModel
+
+
+@using HlidacStatu.Web.Models;
+
+@using Nest;
+@using HlidacStatu.Lib;
+@using System.Linq;
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Data.External.DataSets;
+@using System.Text.RegularExpressions;
+@{
+
+    ViewBag.Title = "Import dat z CSV souboru";
+    ViewBag.SubTitle = "Hotovo";
+
+    ApiResponseStatus err = ViewBag.ApiResponseError;
+
+    DataSet ds = DataSet.CachedDatasets.Get(Model.DatasetId);
+
+
+}
+@section scripts
+{
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Další databáze</a></li>
+        <li><a href="@ds.DatasetUrl()">@ds.Registration().name</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (err != null)
+{
+    <h3 class="text-danger">Chyba při ukládání datasetu</h3>
+    <p class="bg-danger">
+        <b>Chyba</b>: @(err.error?.description)<br />
+        Hodnota: @(err.value?.ToString())<br />
+        ErrorNumber: @(err.error?.number)<br />
+        ErrorDetail: @(err.error?.errorDetail)<br />
+    </p>
+
+}
+@{
+    string delimiter = ViewBag.Delimiter;
+
+    string[] properties = ds.GetPropertyNamesFromSchema();
+}
+
+<div class="row">
+    <div class="col-xs-12 ">
+        <h2>Krok 2</h2>
+        <p>
+            Nahráli jste nám CSV soubor. Na první, rychlý pohled vypadá, že je v pořádku. Abychom mohli data nahrát do Hlídače,
+            potřebujeme se od vás dozvědět, který sloupec nahraného souboru pasuje na který sloupec datasetu.
+        </p>
+    </div>
+
+    <h3>Propojení sloupců</h3>
+    <div class="col-xs-12">
+        <form id="mapForm" action="@Url.Action("importDataProcess",new {id = Model.DatasetId })" method="post" class="form-horizontal form-control-new--small">
+            @Html.HiddenFor(m => m.Delimiter)
+            @Html.HiddenFor(m => m.FileId)
+            @Html.Hidden("sheaders", Model.Headers.Aggregate((f, s) => f + "|" + s))
+            @Html.Hidden("sproperties", properties.Aggregate((f, s) => f + "|" + s))
+
+            <script type="text/javascript">
+
+                function isMappingOK() {
+                    var btn = $("#btnSubmit");
+                    var hasError = false;
+                    $("select.form-control").each(
+                        function () {
+                            var selectedIdx = this.selectedIndex;
+                            if (selectedIdx == 0) {
+                                $(this).parent().removeClass("has-success").addClass("has-error");
+                                hasError = true;
+                            }
+                            else {
+                                $(this).parent().addClass("has-success").removeClass("has-error");
+                            }
+
+                        }
+                    );
+                    if (hasError)
+                        $("#mappingAlert").show()
+                    else
+                        $("#mappingAlert").hide()
+
+                    if (!hasError) {
+                        btn.attr("disabled", "disabled");
+                        btn.text("Importuji data, trpělivě čekejte!");
+                        alert('Import dat může trvat i několiv minut. Nenačítejte stránku znovu, buďte trpělivý/á');
+                        //code before the pause
+                        setTimeout(function () {
+                            $("#overlay").show();
+                            $("#mapForm").submit();
+                        }, 200);
+                    }
+                    return false;
+                }
+
+            </script>
+
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th>
+                            Jméno cílového sloupce v datasetu
+                        </th>
+                        <th>
+                            Název sloupce v CSV, odkud bereme data
+                        </th>
+                        <th>Transformace dat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int ip = 0; ip < properties.Length; ip++)
+                    {
+                        bool rowselected = false;
+                        var normName = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(properties[ip]);
+
+                        <tr>
+                            <td style="font-size:1.3em;font-weight:bold">@(ip + 1)</td>
+                            <td style="vertical-align: middle;">
+                                @properties[ip]
+                                @Html.Hidden("target_" + ip, properties[ip])
+                            </td>
+                            <td>
+                                <div class="form-group-sm">
+                                    <select style="width:200px;font-size:1em;line-height:normal" class="form-control" name="source_@ip">
+                                        <option value="--">(vyberte)</option>
+                                        @if (properties[ip].ToLower() == "id")
+                                        {
+                                            <option style="height:18px;font-style:italic" value="-gen-">Generovat unikátní klíč</option>
+                                        }
+                                        @for (int ih = 0; ih < Model.Headers.Length; ih++)
+                                        {
+                                            bool selected = false;
+                                            var normHead = HlidacStatu.Web.Models.CreateSimpleModel.Column.Normalize(Model.Headers[ih]);
+                                            if (normName == normHead)
+                                            {
+                                                selected = true;
+                                            }
+                                            else if (!rowselected && HlidacStatu.Lib.Validators.LevenshteinDistanceCompute(normName, normHead) < 3)
+                                            {
+                                                selected = true;
+                                            }
+                                            <option @Util.IfExists(selected, " selected=\"selected\" ") value="@Model.Headers[ih]">@Model.Headers[ih]</option>
+
+                                        }
+                                        <option value="-skip-">Ignorovat</option>
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    @if (properties[ip].ToLower() == "id")
+                                    {
+                                        <text>
+                                            <input checked="checked" type="radio" name="transform_@ip" value="normalize">Upravit na platné ID <br />
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <input checked="checked" type="radio" name="transform_@ip" value="copy">Zkopírovat bez úprav<br>
+                                            <input type="radio" name="transform_@ip" value="findico">Najít a použít IČO z textu<br>
+                                        </text>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="alert alert-danger" role="alert" id="mappingAlert" style="display:none">
+                        Nepropojili jste všechny sloupce! Červeně označená pole je nutné vybrat.
+                    </div>
+
+                    <a href="createSimple" class="btn btn-default btn">Zpět</a>
+                    <button type="submit" id="btnSubmit" class="btn btn-warning btn" onclick="return isMappingOK();">Pokračovat na další krok</button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+<div id="overlay" onclick="return false;" style=" position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); z-index: 102; cursor: no-drop;">
+    <div onclick="return false;" style="position: absolute; top: 50%; left: 50%; font-size: 50px; color: white; transform: translate(-50%,-50%); -ms-transform: translate(-50%,-50%);">
+        <i class="far fa-spinner fa-spin"></i> Importujeme data, čekejte
+    </div>
+</div>
