@@ -63,6 +63,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     dataset.jsonSchema = oldReg.jsonSchema;
                     dataset.datasetId = oldReg.datasetId;
                     dataset.created = DateTime.Now;
+                    bool skipallowWriteAccess = SuperUsers.Contains(updatedBy);
 
                     //pokud se lisi autor (byl pri updatu zmodifikovan), muze to udelat pouze superUser nebo orig autor
                     if (dataset.createdBy != oldReg.createdBy)
@@ -99,7 +100,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         }
                     }
 
-                    DataSetDB.Instance.AddData(dataset, updatedBy);
+                    DataSetDB.Instance.AddData(dataset, updatedBy, skipallowWriteAccess: skipallowWriteAccess);
 
                     //HlidacStatu.Web.Framework.TemplateVirtualFileCacheManager.InvalidateTemplateCache(oldReg.datasetId);
 

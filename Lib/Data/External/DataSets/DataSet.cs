@@ -530,15 +530,15 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return schema;
             }
         }
-        public virtual string AddData(object data, string id, string createdBy, bool validateSchema = true)
+        public virtual string AddData(object data, string id, string createdBy, bool validateSchema = true, bool skipallowWriteAccess = false)
         {
-            return AddData(Newtonsoft.Json.JsonConvert.SerializeObject(data), id, createdBy, validateSchema);
+            return AddData(Newtonsoft.Json.JsonConvert.SerializeObject(data), id, createdBy, validateSchema, skipallowWriteAccess: skipallowWriteAccess);
         }
 
-        public virtual string AddData(string data, string id, string createdBy, bool validateSchema = true, bool skipOCR = false)
+        public virtual string AddData(string data, string id, string createdBy, bool validateSchema = true, bool skipOCR = false, bool skipallowWriteAccess = false)
         {
 
-            if (this.Registration().allowWriteAccess == false && createdBy != "michal@michalblaha.cz")
+            if (this.Registration().allowWriteAccess == false && createdBy != "michal@michalblaha.cz" && skipallowWriteAccess == false)
             {
                 if (this.Registration().createdBy != createdBy)
                     throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetNoPermision);

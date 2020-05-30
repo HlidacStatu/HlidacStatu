@@ -519,7 +519,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var path = uTmp.GetFullPath(fileId.ToString(), fileId.ToString() + ".csv");
                 System.IO.File.WriteAllText(path, data);
-                return RedirectToAction("ImportData", new { id = ds.DatasetId, fileId = fileId, delimiter = CreateSimpleModel.GetValidDelimiter("\t") });
+                return RedirectToAction("ImportData", new { id = ds.DatasetId, fileId = fileId, delimiter = "auto" });
             }
         }
 
@@ -593,7 +593,19 @@ namespace HlidacStatu.Web.Controllers
 
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
-                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
+                    if (model.Delimiter == "auto")
+                    {
+                        model.Delimiter = Util.IOTools.DetectCSVDelimiter(r);
+                    }
+
+                    var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture)
+                    {
+                        HasHeaderRecord = true
+                        ,
+                        Delimiter = model.GetValidDelimiter()
+                        //,MissingFieldFound = null 
+                    }
+                    );
                     csv.Read(); csv.ReadHeader();
                     csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
 
@@ -615,45 +627,57 @@ namespace HlidacStatu.Web.Controllers
                             }
                             else
                             {
-                                string svalue = csv.GetField(mappingProps[m].sourceCSV);
 
-                                if (destType == typeof(string))
-                                    value = svalue;
-                                else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                                    value = Util.ParseTools.ToDateTime(svalue);
-                                else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                                string svalue = null;
+                                try
                                 {
-                                    value = Util.ParseTools.ToDecimal(svalue);
-                                    if (value == null)
-                                        value = Util.ParseTools.FromTextToDecimal(svalue);
-                                }
-                                else if (destType == typeof(long) || destType == typeof(long?)
-                                    || destType == typeof(int) || destType == typeof(int?))
-                                    value = Util.ParseTools.ToDate(svalue);
-                                else if (destType == typeof(bool) || destType == typeof(bool?))
-                                {
-                                    if (bool.TryParse(svalue, out bool tryp))
-                                        value = tryp;
-                                }
-                                else
-                                    value = svalue;
-                            }
-                            if (mappingProps[m].Transform == "normalize"
-                                && destType == typeof(string)
-                                )
-                            {
-                                value = DataSet.NormalizeValueForId((string)value);
-                            }
-                            else if (mappingProps[m].Transform == "findico"
-                                && destType == typeof(string)
-                                )
-                            {
-                                value = Lib.Validators.IcosInText((string)value).FirstOrDefault();
-                            }
-                            else //copy
-                            { }
-                            rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
+                                    svalue = csv.GetField(mappingProps[m].sourceCSV);
+                                    if (destType == typeof(string))
+                                        value = svalue;
+                                    else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
+                                        value = Util.ParseTools.ToDateTime(svalue);
+                                    else if (destType == typeof(decimal) || destType == typeof(decimal?))
+                                    {
+                                        value = Util.ParseTools.ToDecimal(svalue);
+                                        if (value == null)
+                                            value = Util.ParseTools.FromTextToDecimal(svalue);
+                                    }
+                                    else if (destType == typeof(long) || destType == typeof(long?)
+                                        || destType == typeof(int) || destType == typeof(int?))
+                                        value = Util.ParseTools.ToDate(svalue);
+                                    else if (destType == typeof(bool) || destType == typeof(bool?))
+                                    {
+                                        if (bool.TryParse(svalue, out bool tryp))
+                                            value = tryp;
+                                    }
+                                    else
+                                        value = svalue;
 
+                                    if (mappingProps[m].Transform == "normalize"
+                                        && destType == typeof(string)
+                                        )
+                                    {
+                                        value = DataSet.NormalizeValueForId((string)value);
+                                    }
+                                    else if (mappingProps[m].Transform == "findico"
+                                        && destType == typeof(string)
+                                        )
+                                    {
+                                        value = Lib.Validators.IcosInText((string)value).FirstOrDefault();
+                                    }
+                                    else //copy
+                                    { }
+                                    rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
+
+
+                                }
+                                catch (Exception mex)
+                                {
+                                    errors.Add(mex);
+                                }
+
+
+                            }
                         } //for
 
                         string idPropName = "id";
@@ -739,6 +763,7 @@ namespace HlidacStatu.Web.Controllers
 
             return View(model);
         }
+
 
 
         private string GuestBestCSVValueType(string value)

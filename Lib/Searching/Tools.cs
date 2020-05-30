@@ -93,7 +93,8 @@ namespace HlidacStatu.Lib.Searching
             {
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
-            var textParts = Searching.SplittingQuery.SplitQueryToParts(newquery, '\"');
+
+            var textParts = Util.StringTools.SplitStringToPartsWithQuotes(newquery, '\"');
             //make operator UpperCase and space around '(' and ')'
             if (textParts.Count > 0)
             {

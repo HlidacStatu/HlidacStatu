@@ -53,22 +53,24 @@ namespace HlidacStatu.Lib.Issues
                     {
                     }
                 }
-
-
                 
                 var typeI = typeof(IIssueAnalyzer);
                 List<System.Type> types = null;
-                var t = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => p.FullName.StartsWith("HlidacStatu.Plugin.IssueAnalyzers")).ToList();
+                var t = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => p.FullName.StartsWith("HlidacStatu.Plugin.IssueAnalyzers"))
+                    .ToList();
+
                 try
                 {
                     types = AppDomain.CurrentDomain.GetAssemblies()
-.Union(dlls)
-.SelectMany(s => s.GetTypes())
-.Where(p =>
-    typeI.IsAssignableFrom(p)
-    && p.IsAbstract == false
-    )
-.ToList();
+                        .Union(dlls)
+                        .SelectMany(s => s.GetTypes())
+                        .Where(p =>
+                            typeI.IsAssignableFrom(p)
+                            && p.IsAbstract == false
+                            )
+                        .ToList();
 
                 }
                 catch (System.Reflection.ReflectionTypeLoadException lex)

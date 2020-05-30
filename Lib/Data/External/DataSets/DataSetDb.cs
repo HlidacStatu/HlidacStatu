@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
 
-        public virtual string AddData(Registration reg, string user)
+        public virtual string AddData(Registration reg, string user,bool skipallowWriteAccess = false)
         {
             if (reg.jsonSchema == null)
                 throw new DataSetException(this.datasetId, ApiResponseStatus.DatasetJsonSchemaMissing);
@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else
                 Audit.Add<Registration>(Audit.Operations.Update, user, reg, oldReg);
 
-            var addDataResult = base.AddData(reg, reg.datasetId, reg.createdBy);
+            var addDataResult = base.AddData(reg, reg.datasetId, reg.createdBy, skipallowWriteAccess:skipallowWriteAccess);
             DataSet.CachedDatasets.Delete(reg.datasetId);
 
             //check orderList

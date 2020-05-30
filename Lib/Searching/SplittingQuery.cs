@@ -181,7 +181,7 @@ namespace HlidacStatu.Lib.Searching
 
             List<Part> tmpParts = new List<Part>();
             //prvni rozdelit podle ""
-            var fixTxts = SplitQueryToParts(query, '\"');
+            var fixTxts = Util.StringTools.SplitStringToPartsWithQuotes(query, '\"');
 
 
             //spojit a rozdelit podle mezer
@@ -294,54 +294,6 @@ namespace HlidacStatu.Lib.Searching
 
 
             return parts.Where(m => m.ToQueryString.Length > 0).ToArray();
-        }
-
-
-        public static List<Tuple<string, bool>> SplitQueryToParts(string query, char delimiter)
-        {
-            //split newquery into part based on ", mark "xyz" parts
-            //string , bool = true ...> part withint ""
-            List<Tuple<string, bool>> textParts = new List<Tuple<string, bool>>();
-            int[] found = CharacterPositionsInString(query, delimiter);
-            if (found.Length > 0 && found.Length % 2 == 0)
-            {
-                int start = 0;
-                bool withIn = false;
-                foreach (var idx in found)
-                {
-                    int startIdx = start;
-                    int endIdx = idx;
-                    if (withIn)
-                        endIdx++;
-                    textParts.Add(new Tuple<string, bool>(query.Substring(startIdx, endIdx - startIdx), withIn));
-                    start = endIdx;
-                    withIn = !withIn;
-                }
-                if (start < query.Length)
-                    textParts.Add(new Tuple<string, bool>(query.Substring(start), withIn));
-            }
-            else
-            {
-                textParts.Add(new Tuple<string, bool>(query, false));
-            }
-            return textParts;
-        }
-
-        public static int[] CharacterPositionsInString(string text, char lookingFor)
-        {
-            if (string.IsNullOrEmpty(text))
-                return new int[] { };
-
-            char[] textarray = text.ToCharArray();
-            List<int> found = new List<int>();
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (textarray[i].Equals(lookingFor))
-                {
-                    found.Add(i);
-                }
-            }
-            return found.ToArray();
         }
 
 

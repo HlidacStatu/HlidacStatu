@@ -1,12 +1,45 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace HlidacStatu.Util
 {
     public static class IOTools
     {
+
+        public static string DetectCSVDelimiter(StreamReader reader)
+        {
+            // assume one of following delimiters
+
+            var headerLine = reader.ReadLine();
+
+            // reset the reader to initial position for outside reuse
+            // Eg. Csv helper won't find header line, because it has been read in the Reader
+            reader.BaseStream.Position = 0;
+            reader.DiscardBufferedData();
+
+            return DetectCSVDelimiter(headerLine);
+        }
+
+        public static string DetectCSVDelimiter(string headerLine)
+        {
+            var possibleDelimiters = new char[] { ',', ';', '\t', '|' };
+
+            Dictionary<char, int> counts = new Dictionary<char, int>();
+            var parts = HlidacStatu.Util.StringTools.SplitStringToPartsWithQuotes(headerLine, '\"');
+
+            var textWithoutQuotes = string.Join("", parts.Where(m => m.Item2 == false).Select(m=>m.Item1));
+
+            foreach (var possibleDelimiter in possibleDelimiters)
+            {
+                counts.Add(possibleDelimiter, textWithoutQuotes.Count(c => c == possibleDelimiter) );
+            }
+
+            return counts.OrderByDescending(k=>k.Value).First().Key.ToString();
+        }
 
         /// <summary>
         /// Strip illegal chars and reserved words from a candidate filename (should not include the directory path)
