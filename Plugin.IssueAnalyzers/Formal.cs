@@ -105,7 +105,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             //simple vztahy 
             // publikujici strana = jedina strana smlouvy
             if (
-                item.Prijemce.Count() == 1 && item.Prijemce.Any(m => m.ico == item.Platce.ico || m.datovaSchranka == item.Platce.datovaSchranka)
+                item.Prijemce.Count() == 1 && item.Prijemce.Any(m => m.ico == item.Platce.ico )
                 )
                 issues.Add(new Issue(this, (int)IssueType.IssueTypes.Stejne_strany_smlouvy, "Stejné strany smlouvy", string.Format("Dodavatel i objednatel jsou stejní '{0}'", item.Platce.nazev)));
             else if (
