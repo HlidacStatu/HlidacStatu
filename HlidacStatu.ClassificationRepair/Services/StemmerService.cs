@@ -4,19 +4,27 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.ClassificationRepair
 {
     public interface IStemmerService
     {
-        Task<string> ExplainCategories(string text);
+        Task<IEnumerable<Explanation>> ExplainCategories(string text);
 
         Task<IEnumerable<string>> GetBullshitStems();
 
         Task<IEnumerable<string>> GetAllStems();
 
         Task<IEnumerable<string>> Stem(string text);
+    }
+
+    public class Explanation
+    {
+        public int Prediction { get; set; }
+        public string Tag { get; set; }
+        public IEnumerable<string> Words { get; set; }
     }
 
     public class StemmerService : IStemmerService
@@ -30,17 +38,21 @@ namespace HlidacStatu.ClassificationRepair
             _logger = logger;
         }
 
-        public async Task<string> ExplainCategories(string text)
+        public async Task<IEnumerable<Explanation>> ExplainCategories(string text)
         {
-            var uri = new Uri("explain_json", UriKind.Relative);
-            string jsonText = System.Text.Json.JsonSerializer.Serialize<string>(text);
+            var uri = new Uri("/explain_text_json", UriKind.Relative);
+            string jsonText = JsonSerializer.Serialize<string>(text);
             using HttpContent content = new StringContent(jsonText, Encoding.UTF8, MediaTypeNames.Application.Json);
 
             var response = await _httpClient.PostAsync(uri, content).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return json;
+                var result = JsonSerializer.Deserialize<IEnumerable<Explanation>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                return result;
             }
             _logger.LogError($"Failed getting response from: {response.RequestMessage.RequestUri}. Klasifikator responded with statusCode=[{response.StatusCode}].");
             throw new HttpRequestException($"Klasifikator responded with statusCode=[{response.StatusCode}].");
@@ -49,14 +61,14 @@ namespace HlidacStatu.ClassificationRepair
         public async Task<IEnumerable<string>> Stem(string text)
         {
             var uri = new Uri("/text_stemmer_ngrams?ngrams=3", UriKind.Relative);
-            string jsonText = System.Text.Json.JsonSerializer.Serialize<string>(text);
+            string jsonText = JsonSerializer.Serialize<string>(text);
             using HttpContent content = new StringContent(jsonText, Encoding.UTF8, MediaTypeNames.Application.Json);
 
             var response = await _httpClient.PostAsync(uri, content).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return System.Text.Json.JsonSerializer.Deserialize<IEnumerable<string>>(json);
+                return JsonSerializer.Deserialize<IEnumerable<string>>(json);
             }
             _logger.LogError($"Failed getting response from: {response.RequestMessage.RequestUri}. Klasifikator responded with statusCode=[{response.StatusCode}].");
             throw new HttpRequestException($"Klasifikator responded with statusCode=[{response.StatusCode}].");
@@ -68,7 +80,7 @@ namespace HlidacStatu.ClassificationRepair
             try
             {
                 var json = await _httpClient.GetStringAsync(uri).ConfigureAwait(false);
-                return System.Text.Json.JsonSerializer.Deserialize<IEnumerable<string>>(json);
+                return JsonSerializer.Deserialize<IEnumerable<string>>(json);
             }
             catch (Exception ex)
             {
@@ -83,7 +95,7 @@ namespace HlidacStatu.ClassificationRepair
             try
             {
                 var json = await _httpClient.GetStringAsync(uri).ConfigureAwait(false);
-                return System.Text.Json.JsonSerializer.Deserialize<IEnumerable<string>>(json);
+                return JsonSerializer.Deserialize<IEnumerable<string>>(json);
             }
             catch (Exception ex)
             {

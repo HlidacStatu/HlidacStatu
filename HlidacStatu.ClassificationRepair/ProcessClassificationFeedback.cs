@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.ClassificationRepair
@@ -36,13 +37,13 @@ namespace HlidacStatu.ClassificationRepair
 
                 string textSmlouvy = string.Join('\n', textySmlouvy);
 
-                //var explainTask = _stemmer.ExplainCategories(textSmlouvy); todo: čekám až kuba dodělá endpoint
+                var explainTask = _stemmer.ExplainCategories(textSmlouvy);
                 var documentNgramTask = _stemmer.Stem(textSmlouvy);
                 var bullshitNgramsTask = _stemmer.GetBullshitStems();
                 var allNgramsTask = _stemmer.GetAllStems();
 
-                //await Task.WhenAll(explainTask, documentNgramTask, bullshitNgramsTask, allNgramsTask); todo: čekám až kuba dodělá endpoint
-                await Task.WhenAll(documentNgramTask, bullshitNgramsTask, allNgramsTask);
+                await Task.WhenAll(explainTask, documentNgramTask, bullshitNgramsTask, allNgramsTask);
+                //await Task.WhenAll(documentNgramTask, bullshitNgramsTask, allNgramsTask);
 
                 var missingNgrams = documentNgramTask.Result
                     .Except(bullshitNgramsTask.Result)
@@ -50,7 +51,7 @@ namespace HlidacStatu.ClassificationRepair
 
                 // poslat mail
                 await SendMail(message.FeedbackEmail, message.IdSmlouvy,
-                    message.ProposedCategories, "",
+                    message.ProposedCategories, explainTask.Result,
                     missingNgrams);
                 _logger.LogInformation($"Message with idSmlouvy={message.IdSmlouvy} processed.");
             }
@@ -62,15 +63,29 @@ namespace HlidacStatu.ClassificationRepair
         }
 
         private async Task SendMail(string feedbackMail, string idSmlouvy,
-            string proposedCategories, string explainResult, IEnumerable<string> missingNgrams)
+            string proposedCategories, IEnumerable<Explanation> explainResult, IEnumerable<string> missingNgrams)
         {
             _logger.LogInformation($"Sending email.");
             string[] recipients = new string[]
             {
-                //"michal@michalblaha.cz",
+                "michal@michalblaha.cz",
                 "petr@hlidacstatu.cz",
-                //"lenka@hlidacstatu.cz"
+                "lenka@hlidacstatu.cz"
             };
+
+            StringBuilder tableHead = new StringBuilder();
+            StringBuilder tableBody = new StringBuilder();
+            foreach (Explanation explanation in explainResult)
+            {
+                tableHead.Append($"<th style=\"border:1px solid black\">{explanation.Tag} - ({explanation.Prediction})</th>");
+                string words = string.Join("<br />", explanation.Words);
+                tableBody.Append($"<td style=\"border:1px solid black\">{words}</td>");
+            }
+
+            string htmlExplain = $"<table style=\"border:1px solid black;border-collapse:collapse;\">" +
+                $"<tr style=\"vertical-align:top\">{tableHead.ToString()}</tr>" +
+                $"<tr style=\"vertical-align:top\">{tableBody.ToString()}</tr>" +
+                $"</table>";
 
             string subject = "Zprava z HlidacStatu.cz: Změna kategorie klasifikace";
             string body = $@"Návrh na opravu klasifikace od uživatele: {feedbackMail}: <br />
@@ -78,7 +93,7 @@ namespace HlidacStatu.ClassificationRepair
                 navrhované kategorie: {proposedCategories} <br />
                 <br />
                 Explain: <br />
-                {explainResult} <br />
+                {htmlExplain} <br />
                 <br />
                 Missing N-grams: <br />
                 {string.Join("<br />", missingNgrams)} <br />
