@@ -10,7 +10,9 @@ COPY ["HlidacStatu.ClassificationRepair/HlidacStatu.ClassificationRepair.csproj"
 COPY ["HlidacStatu.Q.Messages/HlidacStatu.Q.Messages.csproj", "HlidacStatu.Q.Messages/"]
 COPY ["HlidacStatu.Q/HlidacStatu.Q.csproj", "HlidacStatu.Q/"]
 RUN dotnet restore "HlidacStatu.ClassificationRepair/HlidacStatu.ClassificationRepair.csproj"
-COPY . .
+COPY "HlidacStatu.Q.Messages" "HlidacStatu.Q.Messages"
+COPY "HlidacStatu.Q" "HlidacStatu.Q"
+COPY "HlidacStatu.ClassificationRepair" "HlidacStatu.ClassificationRepair"
 WORKDIR "/src/HlidacStatu.ClassificationRepair"
 COPY ["HlidacStatu.ClassificationRepair/appsettings.json.sample", "appsettings.json"]
 RUN dotnet build "HlidacStatu.ClassificationRepair.csproj" -c Release -o /app/build
