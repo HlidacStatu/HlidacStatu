@@ -58,6 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_deploy", "_deploy", "{58A6
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		..\PrivateInternals\.gitignore = ..\PrivateInternals\.gitignore
+		..\PrivateInternals\_deployGH\buildClassificationRepair.bat = ..\PrivateInternals\_deployGH\buildClassificationRepair.bat
 		..\PrivateInternals\_deployGH\buildWeb.bat = ..\PrivateInternals\_deployGH\buildWeb.bat
 		..\PrivateInternals\_deployGH\deployAll.bat = ..\PrivateInternals\_deployGH\deployAll.bat
 		..\PrivateInternals\_deployGH\deployDownloader.bat = ..\PrivateInternals\_deployGH\deployDownloader.bat
@@ -1068,8 +1069,8 @@ Global
 		{01F5CEF0-2640-46CC-923E-80C3297C279B} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
