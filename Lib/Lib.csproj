@@ -701,6 +701,7 @@
     <Compile Include="Render\ScribanT.cs" />
     <Compile Include="Render\ScribanT.Functions.Private.cs" />
     <Compile Include="Render\ScribanT.Functions.cs" />
+    <Compile Include="Searching\ExportDataFormat.cs" />
     <Compile Include="Searching\OsobaEsSearchResult.cs" />
     <Compile Include="Searching\DotaceSearchResult.cs" />
     <Compile Include="Searching\Highlighter.cs" />

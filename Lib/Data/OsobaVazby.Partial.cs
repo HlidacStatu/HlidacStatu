@@ -56,9 +56,9 @@ namespace HlidacStatu.Lib.Data
                     
                     if (existing.podil != share)
                         existing.podil = share;
-                    if (existing.DatumOd != fromDate && fromDate.HasValue)
+                    if (existing.DatumOd != fromDate)
                         existing.DatumOd = fromDate;
-                    if (existing.DatumDo != toDate && toDate.HasValue)
+                    if (existing.DatumDo != toDate)
                         existing.DatumDo = toDate;
                     existing.LastUpdate = DateTime.Now;
                 }
@@ -122,9 +122,9 @@ namespace HlidacStatu.Lib.Data
                     existing.PojmenovaniVazby = funkce;
                     if (existing.podil != share)
                         existing.podil = share;
-                    if (existing.DatumOd != fromDate && fromDate.HasValue)
+                    if (existing.DatumOd != fromDate)
                         existing.DatumOd = fromDate;
-                    if (existing.DatumDo != toDate && toDate.HasValue)
+                    if (existing.DatumDo != toDate)
                         existing.DatumDo = toDate;
                     existing.LastUpdate = DateTime.Now;
                 }

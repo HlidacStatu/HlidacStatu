@@ -1027,7 +1027,7 @@ namespace HlidacStatu.Lib.Data
                         net.Timeout = 3000;
                         string html = net.GetContent().Text;
                         bool platna = html?.Contains("Smlouva byla znepřístupněna") == false;
-                        return platna ;
+                        return platna;
                     }
                 }
                 catch (Exception e)
@@ -1187,6 +1187,62 @@ namespace HlidacStatu.Lib.Data
                 return res.Exists;
 
         }
+
+        public static System.Text.StringBuilder ExportData(string query, int count, string order, 
+            Lib.Searching.ExportDataFormat format, out string contenttype)
+        {
+            //TODO ignored format
+
+            contenttype = "text/tab-separated-values";
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (count > 10000)
+                count = 10000;
+
+            Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc =
+                (size, page) =>
+            {
+                return Lib.ES.Manager.GetESClient().Search<Lib.Data.Smlouva>(a => a
+                            .Size(size)
+                            .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
+                            .From(page * size)
+                            .Query(q => Lib.Data.Smlouva.Search.GetSimpleQuery(query))
+                            .Scroll("1m")
+                            );
+            };
+
+            sb.AppendLine("URL\tID smlouvy\tPodepsána\tZveřejněna\tHodnota smlouvy\tPředmět smlouvy\tPlátce\tPlatce IC\tDodavatele a jejich ICO");
+            int c = 0;
+            Searching.Tools.DoActionForQuery<Lib.Data.Smlouva>(Lib.ES.Manager.GetESClient(),
+                searchFunc, (hit, param) =>
+                {
+                    var s = hit.Source;
+                    sb.AppendLine(
+                        s.GetUrl(false) + "\t"
+                        + s.Id + "\t"
+                        + s.datumUzavreni.ToString("dd.MM.yyyy") + "\t"
+                        + s.casZverejneni.ToString("dd.MM.yyyy") + "\t"
+                        + s.CalculatedPriceWithVATinCZK.ToString(Util.Consts.czCulture) + "\t"
+                        + Devmasters.Core.TextUtil.NormalizeToBlockText(s.predmet) + "\t"
+                        + s.Platce.nazev + "\t"
+                        + s.Platce.ico + "\t"
+                        + ((s.Prijemce?.Count() > 0) ?
+                            s.Prijemce.Select(p => p.nazev + "\t" + p.ico).Aggregate((f, sec) => f + "\t" + sec)
+                            : "")
+                        );
+
+                    Console.Write(c++);
+                    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                }, null, null, null, false);
+
+
+
+
+
+            return sb;
+        }
+
 
         public static Smlouva Export(Smlouva smlouva, bool allData = false, bool docsContent = false)
         {

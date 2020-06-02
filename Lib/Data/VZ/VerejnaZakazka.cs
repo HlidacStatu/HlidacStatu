@@ -361,26 +361,25 @@ namespace HlidacStatu.Lib.Data.VZ
             return false;
         }
 
-        public void UpdatePosledniZmena()
+        public void UpdatePosledniZmena(bool force = false, bool save = false)
         {
-            bool save = false;
-            if (this.PosledniZmena.HasValue)
+            DateTime? prevVal = this.PosledniZmena;
+            bool changed = false;
+            if (this.PosledniZmena.HasValue && force == false)
                 return;
             else if (this.LastestFormular() != null)
             {
                 this.PosledniZmena = this.LastestFormular().Zverejnen;
-                save = true;
             }
             else if (this.DatumUverejneni.HasValue)
             {
                 this.PosledniZmena = DatumUverejneni;
-                save = true;
             }
             else
             {
                 return;
             }
-            if (save)
+            if (this.PosledniZmena != prevVal && save)
                 this.Save();
         }
 
