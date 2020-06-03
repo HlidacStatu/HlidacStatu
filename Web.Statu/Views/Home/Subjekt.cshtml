@@ -161,7 +161,8 @@
         @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })*@
     }
 
-    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_OtherDB", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_OtherDB", auth = this.User.Identity.IsAuthenticated, 
+    key = Model.firma.ICO, param1 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User) })
 
 </div>
 

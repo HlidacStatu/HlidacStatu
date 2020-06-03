@@ -16,7 +16,8 @@
 
     List<string> tabs = new List<string>();
     List<string> results = new List<string>();
-    var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
+    var insRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("ico:" + Model.ICO, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, 
+        false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
     var resVZ = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + Model.ICO, null, 1, 5, "1");
 
     if (insRes.IsValid && insRes.Total > 0)
