@@ -15,6 +15,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace HlidacStatu.Web.Controllers
 {
     [RobotFromIP]
@@ -453,6 +454,25 @@ text zpravy: {txt}
                     Util.Consts.Logger.Fatal(string.Format("{0}|{1}|{2}", email, url, txt, ex));
                 }
 
+                try
+                {
+                    string connectionString = Devmasters.Core.Util.Config.GetConfigValue("RabbitMqConnectionString");
+                    if (string.IsNullOrWhiteSpace(connectionString))
+                        throw new Exception("Missing RabbitMqConnectionString");
+
+                    var message = new Q.Messages.ClassificationFeedback()
+                    {
+                        FeedbackEmail = email,
+                        IdSmlouvy = data,
+                        ProposedCategories = txt
+                    };
+
+                    Q.Publisher.QuickPublisher.Publish(message, connectionString);
+                }
+                catch (Exception ex)
+                {
+                    Util.Consts.Logger.Fatal($"Problem sending data to ClassificationFeedback queue. Message={ex}");
+                }
                 
 
             });

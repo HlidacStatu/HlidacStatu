@@ -72,6 +72,9 @@
     <Reference Include="Devmasters.Net, Version=1.472.3.24, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Net.1.472.3.24\lib\Net45\Devmasters.Net.dll</HintPath>
     </Reference>
+    <Reference Include="EasyNetQ, Version=5.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyNetQ.5.1.1\lib\net461\EasyNetQ.dll</HintPath>
+    </Reference>
     <Reference Include="Elastic.Apm, Version=1.0.1.0, Culture=neutral, PublicKeyToken=ae7400d2c189cf22, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.dll</HintPath>
@@ -193,6 +196,9 @@
     </Reference>
     <Reference Include="Postal">
       <HintPath>..\3rd\binaries\Postal.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.6.0.0\lib\net461\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
@@ -1572,6 +1578,14 @@
     <ProjectReference Include="..\..\PrivateInternals\HlidacWebu.CustomMonitors\HlidacWebu.CustomMonitors.csproj">
       <Project>{dda06de1-d9ac-4cff-92d8-a7d051779cff}</Project>
       <Name>HlidacWebu.CustomMonitors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HlidacStatu.Q.Messages\HlidacStatu.Q.Messages.csproj">
+      <Project>{cb982580-dd8d-414e-af2d-29d73a06a09d}</Project>
+      <Name>HlidacStatu.Q.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HlidacStatu.Q\HlidacStatu.Q.csproj">
+      <Project>{9bd61768-3817-4bc5-93be-df3977193a2c}</Project>
+      <Name>HlidacStatu.Q</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>

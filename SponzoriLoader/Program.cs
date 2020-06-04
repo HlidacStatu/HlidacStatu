@@ -60,9 +60,6 @@ namespace SponzoriLoader
             UploadCompanyDonations(companyDonations);
 
             #endregion
-            // loop to upload events
-
-
         }
 
         public static async Task<dynamic> LoadIndexAsync(string url)
