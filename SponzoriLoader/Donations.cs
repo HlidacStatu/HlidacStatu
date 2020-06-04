@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SponzoriLoader
 {
     class Donations
     {
-        public Dictionary<Donor,List<Gift>> AllDonations { get; private set; }
+        private Dictionary<Donor,List<Gift>> AllDonations { get; set; }
 
-        public Donations()
+        public Donations(IEqualityComparer<Donor> equalityComparer)
         {
-            AllDonations = new Dictionary<Donor, List<Gift>>(new DonorEqualityComparer());
+            AllDonations = new Dictionary<Donor, List<Gift>>(equalityComparer);
         }
 
         public void AddDonation(Donor donor, Gift gift)
@@ -22,6 +18,11 @@ namespace SponzoriLoader
                 AllDonations.Add(donor, new List<Gift>());
             }
             AllDonations[donor].Add(gift);
+        }
+
+        public Dictionary<Donor, List<Gift>> GetDonations()
+        {
+            return AllDonations;
         }
 
     }

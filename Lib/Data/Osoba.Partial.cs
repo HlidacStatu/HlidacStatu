@@ -389,27 +389,6 @@ namespace HlidacStatu.Lib.Data
             }
             else
             {
-                bool changed = false;
-                if (exiO.TitulPred != p.TitulPred)
-                {
-                    changed = true;
-                    exiO.TitulPred = p.TitulPred;
-                }
-                if (exiO.TitulPo != p.TitulPo)
-                {
-                    changed = true;
-                    exiO.TitulPo = p.TitulPo;
-                }
-                if (exiO.Status < (int)status)
-                {
-                    changed = true;
-                    exiO.Status = (int)status;
-                }
-                if (changed)
-                {
-                    exiO.Save();
-                    Audit.Add(Audit.Operations.Update, user, exiO, Osoba.Get(exiO.InternalId));
-                }
                 return exiO;
             }
 

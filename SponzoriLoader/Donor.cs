@@ -1,38 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SponzoriLoader
 {
-    public class Donor : IEquatable<Donor>
+    public class Donor
     {
+        public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string TitleBefore { get; set; }
         public string TitleAfter { get; set; }
         public string City { get; set; }
         public DateTime? DateOfBirth { get; set; }
-
-        public bool Equals(Donor other)
-        {
-            return this.Name == other.Name
-                && this.Surname == other.Surname
-                && this.DateOfBirth == other.DateOfBirth;
-        }
     }
 
-    public class DonorEqualityComparer : IEqualityComparer<Donor>
+    public class PersonDonorEqualityComparer : IEqualityComparer<Donor>
     {
         public bool Equals(Donor x, Donor y)
         {
-            return x.Equals(y);
+            return x.Name == y.Name
+                && x.Surname == y.Surname
+                && x.DateOfBirth == y.DateOfBirth;
         }
 
         public int GetHashCode(Donor obj)
         {
             return (obj.Name, obj.Surname, obj.DateOfBirth).GetHashCode();
+        }
+    }
+
+    public class CompanyDonorEqualityComparer : IEqualityComparer<Donor>
+    {
+        public bool Equals(Donor x, Donor y)
+        {
+            return x.CompanyId == y.CompanyId;
+        }
+
+        public int GetHashCode(Donor obj)
+        {
+            return obj.CompanyId.GetHashCode();
         }
     }
 }
