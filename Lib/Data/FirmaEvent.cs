@@ -25,5 +25,6 @@ namespace HlidacStatu.Lib.Data
         public Nullable<decimal> AddInfoNum { get; set; }
         public System.DateTime Created { get; set; }
         public string Zdroj { get; set; }
+        public string Note { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using HlidacStatu.Lib.Data;
+using HlidacStatu.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using HlidacStatu.Lib.Data;
-using HlidacStatu.Util;
 
 namespace SponzoriLoader
 {
@@ -42,14 +41,14 @@ namespace SponzoriLoader
                     IEnumerable<dynamic> files = party.files;
                     // osoby
                     string penizeFoUrl = files.Where(f => f.subject == "penizefo").Select(f => f.url).FirstOrDefault();
-                    await LoadDonorsPersonAsync(penizeFoUrl, peopleDonations, party, year);
+                    await LoadPeopleDonationsAsync(penizeFoUrl, peopleDonations, party, year);
                     string nepenizeFoUrl = files.Where(f => f.subject == "bupfo").Select(f => f.url).FirstOrDefault();
-                    await LoadDonorsPersonAsync(nepenizeFoUrl, peopleDonations, party, year);
+                    await LoadPeopleDonationsAsync(nepenizeFoUrl, peopleDonations, party, year);
                     //firmy
                     string penizePoUrl = files.Where(f => f.subject == "penizepo").Select(f => f.url).FirstOrDefault();
-                    await LoadDonorsCompanyAsync(penizePoUrl, companyDonations, party, year);
+                    await LoadCompanyDonationsAsync(penizePoUrl, companyDonations, party, year);
                     string nepenizePoUrl = files.Where(f => f.subject == "buppo").Select(f => f.url).FirstOrDefault();
-                    await LoadDonorsCompanyAsync(nepenizePoUrl, companyDonations, party, year);
+                    await LoadCompanyDonationsAsync(nepenizePoUrl, companyDonations, party, year);
                 }
 
 
@@ -58,6 +57,7 @@ namespace SponzoriLoader
 
             #region saving to db
             UploadPeopleDonations(peopleDonations);
+            UploadCompanyDonations(companyDonations);
 
             #endregion
             // loop to upload events
@@ -73,14 +73,14 @@ namespace SponzoriLoader
         }
 
         /// <summary>
-        /// Loads all donations from web
+        /// Loads all people donations from web
         /// </summary>
         /// <param name="url"></param>
         /// <param name="donations"></param>
         /// <param name="party"></param>
         /// <param name="year"></param>
         /// <returns></returns>
-        public static async Task LoadDonorsPersonAsync(string url, Donations donations, dynamic party, int year)
+        public static async Task LoadPeopleDonationsAsync(string url, Donations donations, dynamic party, int year)
         {
             dynamic donationRecords = await LoadIndexAsync(url);
             foreach (var record in donationRecords)
@@ -102,22 +102,44 @@ namespace SponzoriLoader
                     Description = record.description,
                     Date = record.date ?? new DateTime(year, 1, 1)
                 };
-                
+
                 donations.AddDonation(donor, gift);
             }
         }
 
-        public static async Task LoadDonorsCompanyAsync(string url, Donations donations, dynamic party, int year)
+        /// <summary>
+        /// Loads all company donations from web
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="donations"></param>
+        /// <param name="party"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public static async Task LoadCompanyDonationsAsync(string url, Donations donations, dynamic party, int year)
         {
             dynamic donationRecords = await LoadIndexAsync(url);
             foreach (var record in donationRecords)
             {
-                Donor donor = new Donor()
+                Donor donor = null;
+                try
                 {
-                    City = record.addrCity,
-                    Name = record.company,
-                    CompanyId = record.companyId
-                };
+                    donor = new Donor()
+                    {
+                        City = record.addrCity,
+                        Name = record.company,
+                        CompanyId = record.companyId
+                    };
+                }
+                catch (Exception)
+                {
+                    donor = new Donor()
+                    {
+                        City = record.addrCity,
+                        Name = record.company,
+                    };
+                    Console.WriteLine($"Špatný formát IČO: [{record.companyId}], url:[{url}]");
+                }
+
                 Gift gift = new Gift()
                 {
                     Amount = record.money ?? record.value,
@@ -146,7 +168,6 @@ namespace SponzoriLoader
 
                 var osobaEvents = osoba.NoFilteredEvents(ev => ev.Type == (int)OsobaEvent.Types.Sponzor).ToList();
 
-                
                 foreach (var donation in personDonations.Value)
                 {
                     var eventToRemove = osobaEvents.Where(oe => oe.AddInfoNum == donation.Amount
@@ -174,6 +195,61 @@ namespace SponzoriLoader
 
                 }
 
+            }
+        }
+
+        /// <summary>
+        /// Uploads new donations to FirmaEvent table
+        /// </summary>
+        /// <param name="donations"></param>
+        public static void UploadCompanyDonations(Donations donations)
+        {
+            foreach (var companyDonations in donations.GetDonations())
+            {
+                var donor = companyDonations.Key;
+
+                Firma firma = null;
+                try
+                {
+                    firma = Firma.FromIco(donor.CompanyId);
+                }
+                catch (Exception)
+                {
+                }
+                
+                if (firma is null)
+                {
+                    Console.WriteLine($"Chybějící firma v db - ICO: {donor.CompanyId}, nazev: {donor.Name}");
+                    continue;
+                }
+
+                var firmaEvents = firma.Events(ev => ev.Type == (int)FirmaEvent.Types.Sponzor).ToList();
+
+                foreach (var donation in companyDonations.Value)
+                {
+                    var eventToRemove = firmaEvents.Where(oe => oe.AddInfoNum == donation.Amount
+                                            && oe.Description == donation.ICO
+                                            && oe.DatumOd.HasValue
+                                            && oe.DatumOd.Value.Year == donation.Date.Year).FirstOrDefault();
+                    if (eventToRemove is null)
+                    {
+                        // add event
+                        var newEvent = new FirmaEvent()
+                        {
+                            AddInfo = ParseTools.NormalizaceStranaShortName(donation.Party),
+                            DatumOd = donation.Date,
+                            AddInfoNum = donation.Amount,
+                            Description = donation.ICO,
+                            Zdroj = _user,
+                            Note = donation.Description
+                        };
+                        firma.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
+                    }
+                    else
+                    {
+                        firmaEvents.Remove(eventToRemove);
+                    }
+                }
             }
         }
 

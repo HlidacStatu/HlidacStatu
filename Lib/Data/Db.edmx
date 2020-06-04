@@ -111,6 +111,7 @@
           <Property Name="AddInfoNum" Type="decimal" Precision="18" Scale="9" />
           <Property Name="Created" Type="datetime" Nullable="false" />
           <Property Name="Zdroj" Type="nvarchar(max)" />
+          <Property Name="Note" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="FirmaHint">
           <Key>
@@ -801,6 +802,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="AddInfoNum" Type="Decimal" Precision="18" Scale="9" />
           <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="InvoiceItems">
           <Key>
@@ -1214,6 +1216,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySetMapping Name="FirmaEvent">
             <EntityTypeMapping TypeName="FirmyModel.FirmaEvent">
               <MappingFragment StoreEntitySet="FirmaEvent">
+                <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="AddInfoNum" ColumnName="AddInfoNum" />
