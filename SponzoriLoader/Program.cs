@@ -181,7 +181,8 @@ namespace SponzoriLoader
                             AddInfoNum = donation.Amount,
                             AddInfo = donation.ICO,
                             Zdroj = _user,
-                            Note = donation.Description
+                            Note = donation.Description,
+                            Type = (int)OsobaEvent.Types.Sponzor
                         };
                         osoba.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
                     }
@@ -238,7 +239,9 @@ namespace SponzoriLoader
                             AddInfoNum = donation.Amount,
                             Description = donation.ICO,
                             Zdroj = _user,
-                            Note = donation.Description
+                            Note = donation.Description,
+                            Type = (int)FirmaEvent.Types.Sponzor
+                            
                         };
                         firma.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
                     }
