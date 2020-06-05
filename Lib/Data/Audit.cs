@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace HlidacStatu.Lib.Data
 {
 
-    
+
     public partial class Audit
     {
         [Nest.Keyword]
-        public string Id { get; set; } = Guid.NewGuid().ToString("N");   
+        public string Id { get; set; } = Guid.NewGuid().ToString("N");
         [Nest.Date]
         public System.DateTime date { get; set; }
         [Nest.Keyword]
@@ -78,10 +78,13 @@ namespace HlidacStatu.Lib.Data
                 a.valueBefore = prevObjSer;
                 a.valueAfter = newObjSer ?? "";
 
-
+                if (operation == Operations.Search)
+                {
+                    return a;
+                }
 
                 var res = HlidacStatu.Lib.ES.Manager.GetESClient_Audit()
-                    .Index<Audit>(a, m=>m.Id(a.Id));
+                .Index<Audit>(a, m => m.Id(a.Id));
 
                 return a;
             }
