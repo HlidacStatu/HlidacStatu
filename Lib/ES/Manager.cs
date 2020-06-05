@@ -32,7 +32,8 @@ namespace HlidacStatu.Lib.ES
             DataSource,
             Insolvence,
             Dotace,
-            Osoby
+            Osoby,
+            Audit,
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -52,6 +53,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_Insolvence = "insolvencnirestrik";
         public static string defaultIndexName_Dotace = "dotace";
         public static string defaultIndexName_Osoby = "osoby";
+        public static string defaultIndexName_Audit = "audit";
 
 
         private static object _clientLock = new object();
@@ -122,6 +124,11 @@ namespace HlidacStatu.Lib.ES
         public static ElasticClient GetESClient_Logs(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Logs, timeOut, connectionLimit, IndexType.Logs
+                );
+        }
+        public static ElasticClient GetESClient_Audit(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_Audit, timeOut, connectionLimit, IndexType.Audit
                 );
         }
 
@@ -500,6 +507,21 @@ namespace HlidacStatu.Lib.ES
                        .Create(client.ConnectionSettings.DefaultIndex, i => i 
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Logs.ProfilZadavateleDownload>(map => map.AutoMap(maxRecursion: 1))
+                       );
+                    break;
+                case IndexType.Audit:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(new IndexState()
+                                   {
+                                       Settings = new IndexSettings()
+                                       {
+                                           NumberOfReplicas = 1,
+                                           NumberOfShards = 2
+                                       }
+                                   }
+                           )
+                           .Map<Lib.Data.Audit>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.VerejneZakazkyNaProfiluRaw:

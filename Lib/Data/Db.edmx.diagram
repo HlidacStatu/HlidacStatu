@@ -21,7 +21,6 @@
         <EntityTypeShape EntityType="FirmyModel.InvoiceItems" Width="1.5" PointX="3.125" PointY="1.5" />
         <EntityTypeShape EntityType="FirmyModel.Invoices" Width="1.5" PointX="0.75" PointY="1.125" />
         <AssociationConnector Association="FirmyModel.FK_InvoiceItems_Invoices" />
-        <EntityTypeShape EntityType="FirmyModel.Audit" Width="1.5" PointX="0.75" PointY="12.75" />
         <EntityTypeShape EntityType="FirmyModel.NespolehlivyPlatceDPH" Width="1.5" PointX="11.625" PointY="0.5" />
         <EntityTypeShape EntityType="FirmyModel.Review" Width="1.5" PointX="3.375" PointY="13.75" />
         <EntityTypeShape EntityType="FirmyModel.Bookmark" Width="1.5" PointX="14.375" PointY="3.75" />

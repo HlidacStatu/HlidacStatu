@@ -40,20 +40,6 @@
           <Property Name="LastAccess" Type="datetime" />
           <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Audit">
-          <Key>
-            <PropertyRef Name="pk" />
-          </Key>
-          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="date" Type="datetime" Nullable="false" />
-          <Property Name="userId" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="operation" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="objectType" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="objectId" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="valueBefore" Type="nvarchar(max)" />
-          <Property Name="valueAfter" Type="nvarchar(max)" />
-          <Property Name="IP" Type="nvarchar" MaxLength="15" />
-        </EntityType>
         <EntityType Name="Bookmarks">
           <Key>
             <PropertyRef Name="Id" />
@@ -462,7 +448,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserTokens" EntityType="Self.AspNetUserTokens" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bookmarks" EntityType="Self.Bookmarks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClassificationOverride" EntityType="Self.ClassificationOverride" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
@@ -593,7 +578,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
             <End Role="Invoices" EntitySet="Invoices" />
             <End Role="InvoiceItems" EntitySet="InvoiceItems" />
           </AssociationSet>
-          <EntitySet Name="Audit" EntityType="FirmyModel.Audit" />
           <EntitySet Name="NespolehlivyPlatceDPH" EntityType="FirmyModel.NespolehlivyPlatceDPH" />
           <EntitySet Name="Review" EntityType="FirmyModel.Review" />
           <EntitySet Name="Bookmark" EntityType="FirmyModel.Bookmark" />
@@ -857,20 +841,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Audit">
-          <Key>
-            <PropertyRef Name="pk" />
-          </Key>
-          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="userId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="operation" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="objectType" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="objectId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="valueBefore" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="valueAfter" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IP" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="NespolehlivyPlatceDPH">
           <Key>
             <PropertyRef Name="Ico" />
@@ -1269,21 +1239,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="ID_Customer" ColumnName="ID_Customer" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Audit">
-            <EntityTypeMapping TypeName="FirmyModel.Audit">
-              <MappingFragment StoreEntitySet="Audit">
-                <ScalarProperty Name="IP" ColumnName="IP" />
-                <ScalarProperty Name="valueAfter" ColumnName="valueAfter" />
-                <ScalarProperty Name="valueBefore" ColumnName="valueBefore" />
-                <ScalarProperty Name="objectId" ColumnName="objectId" />
-                <ScalarProperty Name="objectType" ColumnName="objectType" />
-                <ScalarProperty Name="operation" ColumnName="operation" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="date" ColumnName="date" />
-                <ScalarProperty Name="pk" ColumnName="pk" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

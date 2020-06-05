@@ -472,9 +472,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Data\Audit.cs">
-      <DependentUpon>Db.tt</DependentUpon>
-    </Compile>
     <Compile Include="Data\Bookmark.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
@@ -555,7 +552,7 @@
     <Compile Include="Data\OsobyES\OsobaES.cs" />
     <Compile Include="Data\OsobyES\OsobyEsService.Search.cs" />
     <Compile Include="Data\Review.Partial.cs" />
-    <Compile Include="Data\Audit.Partial.cs" />
+    <Compile Include="Data\Audit.cs" />
     <Compile Include="Data\Logs\ILogs.cs" />
     <Compile Include="Data\NespolehlivyPlatceDPH.partial.cs" />
     <Compile Include="Data\InvoiceItem.Partial.cs" />

@@ -41,7 +41,6 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<FirmaEvent> FirmaEvent { get; set; }
         public virtual DbSet<InvoiceItems> InvoiceItems { get; set; }
         public virtual DbSet<Invoices> Invoices { get; set; }
-        public virtual DbSet<Audit> Audit { get; set; }
         public virtual DbSet<NespolehlivyPlatceDPH> NespolehlivyPlatceDPH { get; set; }
         public virtual DbSet<Review> Review { get; set; }
         public virtual DbSet<Bookmark> Bookmark { get; set; }

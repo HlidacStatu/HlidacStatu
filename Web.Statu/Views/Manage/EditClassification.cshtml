@@ -23,6 +23,8 @@
                                     .OrderBy(m => m.key)
                                 )
         {
+            typeList.Add(new System.Web.Mvc.SelectListItem() { Value = "", Text = " -Bez kategorie-", Selected = (classification is null) });
+
             var sl = new System.Web.Mvc.SelectListItem()
             {
                 Value = main.value.ToString(),
