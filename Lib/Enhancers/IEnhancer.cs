@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Enhancers
     {
         string Name { get; }
         string Description { get; }
-        void Update(ref Data.Smlouva item);
+        bool Update(ref Data.Smlouva item);
 
         void SetInstanceData(object data);
     }

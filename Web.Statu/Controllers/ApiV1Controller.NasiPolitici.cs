@@ -283,7 +283,7 @@ namespace HlidacStatu.Web.Controllers
                     sourceInsolvency = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaid:{o.NameId}",
                     sourceSponzor = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
                     sourceRegisterStatements = string.IsNullOrWhiteSpace(registrOznameni) 
-                            ? "" : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}",
+                            ? "https://www.hlidacstatu.cz" : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}",
                     sourceRoles = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
 
 

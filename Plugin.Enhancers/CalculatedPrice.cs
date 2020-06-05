@@ -32,19 +32,21 @@ namespace HlidacStatu.Plugin.Enhancers
         {
         }
 
-        public void Update(ref Lib.Data.Smlouva item)
+        public bool Update(ref Lib.Data.Smlouva item)
         {
             Base.Logger.Debug("Starting CalculatedPrice for " + item.Id);
-
+            bool changed = false;
             if (item.hodnotaVcetneDph.HasValue && item.hodnotaVcetneDph > 0)
             {
                 item.CalculatedPriceWithVATinCZK = item.hodnotaVcetneDph.Value;
                 item.CalcutatedPriceQuality = DataQualityEnum.Exact;
+                changed = true;
             }
             else if (item.hodnotaBezDph.HasValue && item.hodnotaBezDph > 0)
             {
                 item.CalculatedPriceWithVATinCZK = item.hodnotaBezDph.Value * 1.21m;
                 item.CalcutatedPriceQuality = DataQualityEnum.Calculated;
+                changed = true;
             }
             else if (item.ciziMena != null && item.ciziMena.hodnota > 0)
             {
@@ -53,6 +55,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     item.CalculatedPriceWithVATinCZK = item.ciziMena.hodnota;
                     item.CalcutatedPriceQuality = DataQualityEnum.Exact;
+                    changed = true;
                 }
                 else
                 {
@@ -63,6 +66,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         item.CalculatedPriceWithVATinCZK = item.ciziMena.hodnota * exr;
                         item.CalcutatedPriceQuality = DataQualityEnum.Calculated;
                         item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Dopočítána cena v CZK ze zahraniční měny", "","", "", "", this));
+                        changed = true;
                     }
                     else
                         Base.Logger.Warning("Date: " + date.ToShortDateString() + " " + item.ciziMena.mena + " is unknown");
@@ -70,6 +74,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 }
 
             }
+            return changed;
         }
 
 

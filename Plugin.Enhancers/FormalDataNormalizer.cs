@@ -36,8 +36,10 @@ namespace HlidacStatu.Plugin.Enhancers
             if (test != null)
                 ciziStaty = test;
         }
-        public void Update(ref Lib.Data.Smlouva item)
+        bool changed = false;
+        public bool Update(ref Lib.Data.Smlouva item)
         {
+
 
             if (item.Platce != null)
                 item.Platce.ico = GetNormalizedIco(item.Platce.ico, "platce.ico", ref item);
@@ -50,7 +52,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 }
             }
 
-
+            return changed;
         }
 
         private string GetNormalizedIco(string ico,string parametrName, ref Lib.Data.Smlouva item)
@@ -61,6 +63,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 if (newIco != ico && Util.DataValidators.CheckCZICO(newIco))
                 {
                     item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Normalizováno IČO", "", parametrName, ico, newIco, this));
+                    changed = true;
                     return newIco;
                 }
             }

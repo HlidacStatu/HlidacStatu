@@ -36,23 +36,25 @@ namespace HlidacStatu.Plugin.Enhancers
         public void SetInstanceData(object data) { }
 
 
-        public void Update(ref Smlouva item)
+        public bool Update(ref Smlouva item)
         {
             //return; //DOTO
             //check missing DS/ICO
+            bool changed = false;
 
-            UpdateSubj(item.Platce, item, "platce");
-            UpdateSubj(item.VkladatelDoRejstriku, item, "platce");
+            changed = changed | UpdateSubj(item.Platce, item, "platce");
+            changed = changed | UpdateSubj(item.VkladatelDoRejstriku, item, "platce");
             for (int i = 0; i < item.Prijemce.Count(); i++)
             {
-                UpdateSubj(item.Prijemce[i], item, $"platce[{i}]");
+                changed = changed | UpdateSubj(item.Prijemce[i], item, $"platce[{i}]");
             }
+            return changed;
         }
 
-        public void UpdateSubj(Smlouva.Subjekt subj, Smlouva _item, string path)
+        public bool UpdateSubj(Smlouva.Subjekt subj, Smlouva _item, string path)
         {
-            //return; //DOTO
-            //check missing DS/ICO
+
+            bool changed = false;
             var zahr = Util.DataValidators.ZahranicniAdresa(subj.adresa);
             if (!string.IsNullOrEmpty(zahr) && !string.IsNullOrEmpty(subj.ico))
             {
@@ -63,6 +65,7 @@ namespace HlidacStatu.Plugin.Enhancers
                     string newico = zahr + "-" + subj.ico;
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněno zahraniční ID subjektu. Doplněn prefix před ID firmy", "", path + ".ico", newico, subj.ico, this));
                     subj.ico = newico;
+                    changed = true;
                 }
                 else if (currPref != zahr)
                 {
@@ -70,9 +73,18 @@ namespace HlidacStatu.Plugin.Enhancers
                     string newico = zahr + subj.ico.Substring(2);
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Upraveno zahraniční ID subjektu. Doplněn prefix před ID firmy", "", path + ".ico", zahr + "-" + subj.ico, subj.ico, this));
                     subj.ico = newico;
+                    changed = true;
                 }
             }
-
+            else
+            {
+                var currPref2 = Util.ParseTools.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
+                if (!string.IsNullOrEmpty(currPref2) && subj.ico != null)
+                {
+                    subj.ico = subj.ico.Replace(currPref2, "");
+                    changed = true;
+                }
+            }
             //check formal valid ICO
             string ico = subj.ico;
             if (!string.IsNullOrEmpty(ico)
@@ -86,6 +98,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Opraveno IČO subjektu", "", path + ".ico", subj.ico, ico, this));
                     subj.ico = ico;
+                    changed = true;
                 }
             }
 
@@ -99,6 +112,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     subj.ico = f.ICO;
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněno IČO subjektu", "", path + ".ico", "", f.ICO, this));
+                    changed = true;
                 }
             }
             else if (!string.IsNullOrEmpty(subj.ico) && string.IsNullOrEmpty(subj.datovaSchranka))
@@ -108,6 +122,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     subj.datovaSchranka = f.DatovaSchranka[0];
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna datová schránka subjektu", "", path + ".datovaScranka", "", f.DatovaSchranka[0], this));
+                    changed = true;
                 }
             }
             else if (string.IsNullOrEmpty(subj.ico)
@@ -128,6 +143,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněno IČO subjektu", "", path + ".ico", "", f.ICO, this));
                         if (f.DatovaSchranka.Length > 0)
                             _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna datová schránka subjektu", "", path +".datovaSchranka", "", f.DatovaSchranka[0], this));
+                        changed = true;
                     }
                     else
                     {
@@ -143,6 +159,7 @@ namespace HlidacStatu.Plugin.Enhancers
                             _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněno IČO subjektu", "", path +".ico", "", f.ICO, this));
                             if (f.DatovaSchranka.Length > 0)
                                 _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna datová schránka subjektu", "", path + ".datovaSchranka", "", f.DatovaSchranka[0], this));
+                            changed = true;
 
                         }
                     }
@@ -156,6 +173,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     subj.nazev = f.Jmeno;
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněn Název subjektu", "", path + ".nazev", "", f.ICO, this));
+                    changed = true;
                 }
             }
             if (string.IsNullOrEmpty(subj.adresa) && !string.IsNullOrEmpty(subj.ico))
@@ -166,10 +184,11 @@ namespace HlidacStatu.Plugin.Enhancers
                 {
                     subj.adresa = fm.address.street + " " + fm.address.number + ", " + fm.address.municipality;
                     _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna adresa subjektu", "", path + ".nazev", "", subj.ico, this));
+                    changed = true;
                 }
             }
 
-
+            return changed;
         }
 
 

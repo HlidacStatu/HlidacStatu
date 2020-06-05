@@ -1,6 +1,8 @@
 ﻿using Devmasters.Core.Collections;
+
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Enhancers;
+
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -58,11 +60,12 @@ namespace HlidacStatu.Plugin.Enhancers
                 return "TextMiner";
             }
         }
+        bool changed = false;
 
 
         DateTime history = new DateTime(2016, 1, 1);
 
-        public void Update(ref Lib.Data.Smlouva item)
+        public bool Update(ref Lib.Data.Smlouva item)
         {
 
             if (item.Prilohy != null)
@@ -153,6 +156,7 @@ namespace HlidacStatu.Plugin.Enhancers
                                             item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Text přílohy extrahován z obsahu dokumentu ", "", "item.Prilohy[" + i.ToString() + "].PlainTextContent", "", "", this));
 
                                     }
+                                    changed = true;
                                 }
                             }
 
@@ -169,8 +173,8 @@ namespace HlidacStatu.Plugin.Enhancers
 
                 }
             }
+            return changed;
         }
-
 
 
 

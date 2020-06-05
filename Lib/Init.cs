@@ -29,8 +29,8 @@ namespace HlidacStatu.Lib
             lock (lockObj)
             {
                 //TelemetryConfiguration.Active.InstrumentationKey = " your key ";
-
-                Newtonsoft.Json.Schema.License.RegisterLicense(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense"));
+                if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense")))
+                    Newtonsoft.Json.Schema.License.RegisterLicense(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense"));
 
                 if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
                 {

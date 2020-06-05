@@ -232,9 +232,9 @@ namespace HlidacStatu.Util
                 foreach (var o in czobce)
                 {
                     //(\s|,|;)mexiko($|\s)
-                    string reg = "(\\s|,|;)" + o.Replace(" ", "\\s{1,3}") + "($|\\s)";
+                    string reg = "(\\s|,|;|.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|.|$|\\s)";
 
-                    if (Regex.IsMatch(adresa, reg, Consts.DefaultRegexQueryOption))
+                    if (Regex.IsMatch(dadresa, reg, Consts.DefaultRegexQueryOption))
                         return o;
                 }
             }
@@ -247,9 +247,9 @@ namespace HlidacStatu.Util
             if (!string.IsNullOrEmpty(adresa))
             {
                 string dadresa = Devmasters.Core.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
-                foreach (var o in czobce)
+                foreach (var o in skobce)
                 {
-                    if (adresa.Contains(o))
+                    if (dadresa.Contains(o))
                         return o;
                 }
             }

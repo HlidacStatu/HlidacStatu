@@ -33,12 +33,12 @@ namespace HlidacStatu.Plugin.Enhancers
         {
         }
 
-        public void Update(ref Lib.Data.Smlouva item)
+        public bool Update(ref Lib.Data.Smlouva item)
         {
-
+            return false;
         }
 
-        public void UpdateSmluvniStrany(ref Lib.Data.Smlouva item, Lib.Data.Smlouva.Subjekt platce, Lib.Data.Smlouva.Subjekt[] prijemce )
+        public bool UpdateSmluvniStrany(ref Lib.Data.Smlouva item, Lib.Data.Smlouva.Subjekt platce, Lib.Data.Smlouva.Subjekt[] prijemce )
         {
             item.Enhancements = item.Enhancements.AddOrUpdate(
                 new Enhancement("Ruční nastavení smluvních stran", "Ručně nastaven plátce", "item.Platce", Ser(item.Platce), Ser(platce), this)
@@ -49,6 +49,8 @@ namespace HlidacStatu.Plugin.Enhancers
                 new Enhancement("Ruční nastavení smluvních stran", "Ručně nastaven příjemce", "item.Prijemce", Ser(item.Prijemce), Ser(prijemce), this)
                 );
             item.Prijemce = prijemce;
+
+            return true;
         }
 
 
