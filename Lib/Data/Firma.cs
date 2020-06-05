@@ -37,6 +37,7 @@ namespace HlidacStatu.Lib.Data
 
         /*
          * https://wwwinfo.mfcr.cz/ares/aresPrFor.html.cz
+         * KOD_PF
          * 
 301	Státní podnik
 302	Národní podnik
@@ -476,6 +477,20 @@ namespace HlidacStatu.Lib.Data
             return JsemOVM() == false && JsemStatniFirma() == false;
         }
 
+
+        static int[] Neziskovky_KOD_PF = new int[] {116,117,118,141,161,422,423,671,701,706,736 };
+        public bool JsemNeziskovka()
+        {
+            if (JsemSoukromaFirma() == false)
+                return false;
+            else if (this.Kod_PF.HasValue == false)
+                return false;
+            else
+            {
+                return Neziskovky_KOD_PF.Contains(this.Kod_PF.Value);
+
+            }
+        }
 
         public bool PatrimStatu()
         {

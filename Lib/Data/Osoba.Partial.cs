@@ -1,6 +1,8 @@
 ﻿using Devmasters.Core;
+
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -217,7 +219,7 @@ namespace HlidacStatu.Lib.Data
                         || ev.AddInfo == "předsedkyně strany"
                         || ev.AddInfo == "místopředseda strany"
                         || ev.AddInfo == "místopředsedkyně strany")
-                    && (!ev.DatumDo.HasValue 
+                    && (!ev.DatumDo.HasValue
                         || ev.DatumDo >= DateTime.Now)
                     )
                 .OrderByDescending(ev => ev.DatumOd)
@@ -980,7 +982,7 @@ namespace HlidacStatu.Lib.Data
                     m.InternalId == osobaId
                 ).FirstOrDefault();
 
-                if(osobaToUpdate != null)
+                if (osobaToUpdate != null)
                 {
                     osobaToUpdate.ManuallyUpdated = DateTime.Now;
                     osobaToUpdate.ManuallyUpdatedBy = author;
@@ -1116,12 +1118,30 @@ namespace HlidacStatu.Lib.Data
                     if (stat.StatniFirmy.Count > 0)
                         statDesc += $"Angažoval se v {Devmasters.Core.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě", "{0} státních firmách", "{0} státních firmách")}. ";
                     if (stat.SoukromeFirmy.Count > 0)
-                        statDesc += $"Angažoval se {(statDesc.Length > 0 ? "také" : "")} v {Devmasters.Core.Lang.Plural.Get(stat.SoukromeFirmy.Count, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}, "
-                            + $"tyto firmy získaly od státu od 2016 celkem "
+                    {
+                        //neziskovky
+                        int neziskovkyCount = stat.SoukromeFirmy.Select(m => Firmy.Get(m.Key)).Where(ff => ff.JsemNeziskovka()).Count();
+                        //ostatni
+                        statDesc += $"Angažoval se {(stat.StatniFirmy.Count > 0 ? "také" : "")} v ";
+                        if (neziskovkyCount == stat.SoukromeFirmy.Count && neziskovkyCount > 0)
+                        {
+                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                        }
+                        else if (neziskovkyCount > 0)
+                        {
+                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                            statDesc += $"a {Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
+                        }
+                        else
+                        {
+                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
+                        }
+
+                        statDesc += $". Tyto subjekty mají se státem od 2016 celkem "
                             + Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                             + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true)
                             + ". ";
-                    ;
+                    }
 
                     if (statDesc.Length > 0)
                         f.Add(new InfoFact(statDesc, InfoFact.ImportanceLevel.Stat));
@@ -1153,7 +1173,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             string ss = "";
                             if (stat.BasicStatPerYear[rok].CelkemCena == 0)
-                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
+                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jeden firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")
                                     + $" zakázky v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, $"Jedna firma, ve které se angažuje, v&nbsp;roce {rok} získala", $"{{0}} firmy, ve kterých se angažuje, v&nbsp;roce {rok} získaly", $"{{0}} firem, ve kterých se angažuje, v&nbsp;roce {rok} získaly")

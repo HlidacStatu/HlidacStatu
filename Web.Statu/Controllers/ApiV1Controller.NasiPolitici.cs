@@ -278,7 +278,15 @@ namespace HlidacStatu.Web.Controllers
                     sponsor = sponzorstvi,
                     currentParty = o.CurrentPoliticalParty(),
                     contacts = o.GetSocialContact(),
-                    connections = vazby
+                    connections = vazby,
+                    //sources
+                    sourceInsolvency = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaid:{o.NameId}",
+                    sourceSponzor = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
+                    sourceRegisterStatements = string.IsNullOrWhiteSpace(registrOznameni) 
+                            ? "" : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}",
+                    sourceRoles = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
+
+
                 };
 
                 return Content(JsonConvert.SerializeObject(result), "application/json");
