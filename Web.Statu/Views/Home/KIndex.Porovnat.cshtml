@@ -1,0 +1,351 @@
+﻿@model List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData>
+@using System
+@using System.Collections.Generic
+@using System.Linq
+
+@using HlidacStatu.Util
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (Model.Count() == 0)
+{
+    <div class="jumbotron">
+        <h1>K-Index</h1>
+        <p>Indexy korupčního rizika nebyly pro tyto subjekty dosud spočítány</p>
+    </div>
+    return;
+}
+
+@{
+    int fromY = Model.First().roky.Min(m => m.Rok);
+    int toY = Model.First().roky.Max(m => m.Rok);
+    int rok = HlidacStatu.Util.ParseTools.ToInt(Request.QueryString["rok"]) ?? toY;
+    if (rok < fromY)
+    {
+        rok = fromY;
+    }
+    if (rok > toY)
+    {
+        rok = toY;
+    }
+
+}
+
+
+<div class="jumbotron">
+    <h1>K-Index pro @rok</h1>
+    <p>
+        Porovnání indexu korupčního rizika pro <b>
+            @(Model.Select(m => HlidacStatu.Lib.Data.Firmy.Get(m.Ico).Jmeno).Aggregate((f, s) => f + ", " + s))
+        </b>
+    </p>
+</div>
+
+<h2>
+    K-Index pro rok
+    @for (int i = fromY; i <= toY; i++)
+    {
+        if (i == rok)
+        {
+            <span>&nbsp;&nbsp;@i</span>
+        }
+        else
+        {
+            <span>&nbsp;&nbsp;<a href="/KIndex/porovnat?ico=@(Model.Select(m => m.Ico).Aggregate((f, s) => f + "," + s))&rok=@i">@i</a></span>
+        }
+    }
+</h2>
+
+
+@{
+    HlidacStatu.Util.Graphics.Gradient grad = new HlidacStatu.Util.Graphics.Gradient(
+            new HlidacStatu.Util.Graphics.RGB("00b300")
+            , new HlidacStatu.Util.Graphics.RGB("FFA500")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+        );
+    decimal min = 0;
+    decimal max = 0;
+    decimal val = 0;
+
+    var xx = grad.Color(25, 20, 40);
+}
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+            <tbody>
+                <tr>
+                    <td>
+                        Subjekt
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            <b>@HlidacStatu.Lib.Data.Firmy.Get(ki.Ico).Jmeno</b>
+                        </td>
+                    }
+                </tr>
+                <!--
+                <tr>
+                    <td>
+                        Druh účetní jednotky
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            <b>@ki.UcetniJednotka.DruhUcetniJednotkyPopis()</b>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Forma účetní jednotky
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            <b>@ki.UcetniJednotka.FormaUcetniJednotkyPopis()</b>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Institucionální sektor
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            <b>@ki.UcetniJednotka.InstitucionalniSektorPopis()</b>
+                        </td>
+                    }
+                </tr>
+                    -->
+                <tr>
+                    <td>
+                        % smluv s nově<br />založenými firmami
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PercNovaFirmaDodavatel);
+                        max = Model.Max(m => m.ForYear(rok).PercNovaFirmaDodavatel);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PercNovaFirmaDodavatel;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv se<br />zásadním nedostatkem
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PercSeZasadnimNedostatkem);
+                        max = Model.Max(m => m.ForYear(rok).PercSeZasadnimNedostatkem);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PercSeZasadnimNedostatkem;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+
+                </tr>
+                <tr>
+                    <td>
+                        % smluv s firmami<br />s vazbou na politiky
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PercSmlouvySPolitickyAngazovanouFirmou);
+                        max = Model.Max(m => m.ForYear(rok).PercSmlouvySPolitickyAngazovanouFirmou);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PercSmlouvySPolitickyAngazovanouFirmou;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv s cenou<br />u limitu VZ
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PercSmluvUlimitu);
+                        max = Model.Max(m => m.ForYear(rok).PercSmluvUlimitu);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PercSmluvUlimitu;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv uzavřených<br />o víkendu
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PercUzavrenoOVikendu);
+                        max = Model.Max(m => m.ForYear(rok).PercUzavrenoOVikendu);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PercUzavrenoOVikendu;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv bez<br />uvedené ceny
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).Statistika.PercentBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentBezCeny);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).Statistika.PercentBezCeny;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+
+                <tr>
+                    <td>
+                        Koncentrace dodavatelů
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_IndexNormalized
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
+                        <br />&nbsp;&nbsp;&nbsp;Hall_Tideman_Index
+                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index);
+                        max = Model.Max(m => m.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Normalized)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Hall_Tideman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Koncentrace dodavatelů<br />bez uvedené ceny
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_IndexNormalized
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
+                        <br />&nbsp;&nbsp;&nbsp;Hall_Tideman_Index
+                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index);
+                        max = Model.Max(m => m.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Normalized)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Hall_Tideman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
+                            </span>
+                        </td>
+                    }
+                </tr>
+
+                <tr>
+                    <td>
+                        Podil Smluv<br />Na Celkovych Nakupech
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).PodilSmluvNaCelkovychNakupech);
+                        max = Model.Max(m => m.ForYear(rok).PodilSmluvNaCelkovychNakupech);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).PodilSmluvNaCelkovychNakupech;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).PodilSmluvNaCelkovychNakupech)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Ovlivnitelné náklady<br />činnosti
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePrice(ki.ForYear(rok).FinancniUdaje.OvlivnitelneNakladyCinnosti ?? 0)
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+

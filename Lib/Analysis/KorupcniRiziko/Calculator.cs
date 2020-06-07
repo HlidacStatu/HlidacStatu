@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using HlidacStatu.Lib.Data;
+
 using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
@@ -12,7 +14,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public partial class Calculator
     {
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
-
+        const int minPocetSmluvKoncentraceDodavatelu = 1;
 
         private Firma urad = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
@@ -39,14 +41,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 if (kindex == null)
                 {
-                    kindex = Calculate();
+                    kindex = CalculateSourceData();
                 }
             }
 
             return kindex;
         }
 
-        private KIndexData Calculate()
+        private KIndexData CalculateSourceData()
         {
             this.InitData();
             foreach (var year in CalculationYears)
@@ -97,12 +99,35 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             string query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
-            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavatelu(query);
+            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(query);
             if (ret.CelkovaKoncentraceDodavatelu != null)
-                ret.KoncentraceDodavateluBezUvedeneCeny 
-                    = KoncentraceDodavatelu(query + " AND cena:0",ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
-            ret.KoncetraceDodavateluObory = null;
+                ret.KoncentraceDodavateluBezUvedeneCeny
+                    = KoncentraceDodavateluCalculator(query + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
+
+            Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
+                .AllTypes
+                .Where(m=>m.MainType)
+                .OrderBy(m=>m.Value)
+                .ToDictionary(k => k.Value, v => v.SearchShortcut);
+
+            ret.KoncetraceDodavateluObory = new List<KoncentraceDodavateluObor>();
+
+            Devmasters.Core.Batch.Manager.DoActionForAll<int>(obory.Keys,
+                (oborid) =>
+                {
+
+                    query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
+                    var k = KoncentraceDodavateluCalculator(query);
+                    if (k!= null)
+                        ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor() {
+                         OborId = oborid,
+                         OborName = obory[oborid],
+                         Koncentrace = k
+                        });
+                    return new Devmasters.Core.Batch.ActionOutputData();
+                }, true
+                );
 
             return ret;
         }
@@ -116,7 +141,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
         }
-        private KIndexData.KoncentraceDodavateluIndexy KoncentraceDodavatelu(string query, decimal? prumHodnotaSmlouvy = null)
+        private KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = (size, page) =>
                 {
@@ -166,7 +191,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     return new Devmasters.Core.Batch.ActionOutputData();
                 }, null,
                 null, null,
-                false, 100);
+                false, blockSize: 100);
 
             IEnumerable<SmlouvyForIndex> smlouvy = smlStat
                 .Select(m => new SmlouvyForIndex(m.IcoDodavatele, prumHodnotaSmlouvy ?? m.CastkaSDPH))
@@ -176,14 +201,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (smlouvy.Count() == 0)
                 return null;
+            if (smlouvy.Count() < minPocetSmluvKoncentraceDodavatelu)
+                return null;
 
-            var ret = new KIndexData.KoncentraceDodavateluIndexy();
+            var ret = new KoncentraceDodavateluIndexy();
+            ret.PocetSmluv = smlouvy.Count();
+            ret.PocetSmluvBezCeny = smlouvy.Count(m=>m.HodnotaSmlouvy == 0);
             ret.PrumernaHodnotaSmluv = smlouvy
                                 .Where(m => m.HodnotaSmlouvy != 0)
                                 .Count() == 0 ? 0 : smlouvy
                                                         .Where(m => m.HodnotaSmlouvy != 0)
                                                         .Select(m => Math.Abs(m.HodnotaSmlouvy))
                                                         .Average();
+            ret.CelkovaHodnotaSmluv = smlouvy.Sum(m => m.HodnotaSmlouvy);
+            ret.Query = query;
+
 
             ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy);
             ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy);

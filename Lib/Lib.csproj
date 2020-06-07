@@ -460,6 +460,8 @@
     <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
     <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluIndexy.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluObor.cs" />
     <Compile Include="Analysis\OsobaStatistic.cs" />
     <Compile Include="Analysis\ComplexStatistic.cs" />
     <Compile Include="Analysis\RatingData.cs" />

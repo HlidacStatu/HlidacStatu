@@ -138,6 +138,7 @@
     <Compile Include="Cache\AutoUpdateCouchbaseCache.cs" />
     <Compile Include="Cache\AutoUpdateCouchbaseCacheManager.cs" />
     <Compile Include="Cache\CouchbaseCacheProvider.cs" />
+    <Compile Include="ColorGradient.cs" />
     <Compile Include="ConnectionProviders\CouchbaseManager.cs" />
     <Compile Include="DataValidators.cs" />
     <Compile Include="EnumTools.cs" />
@@ -152,6 +153,10 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Cache\Manager.cs" />
     <Compile Include="Cache\MemoryCacheManager.cs" />
+    <Compile Include="Graphics\Gradient.cs" />
+    <Compile Include="Graphics\RGB.cs" />
+    <Compile Include="Graphics\RGBA.cs" />
+    <Compile Include="Graphics\Tools.cs" />
     <Compile Include="InfinitiveTask.cs" />
     <Compile Include="IO\BinaryCompare.cs" />
     <Compile Include="IO\SimpleZipArchive.cs" />

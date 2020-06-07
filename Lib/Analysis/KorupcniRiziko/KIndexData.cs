@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
@@ -9,17 +9,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     [Nest.ElasticsearchType(IdProperty = nameof(Ico))]
     public partial class KIndexData
     {
-        public class KoncentraceDodavateluIndexy
-        {
-            public decimal Herfindahl_Hirschman_Index { get; set; }
-            public decimal Herfindahl_Hirschman_Normalized { get; set; }
-            public decimal Herfindahl_Hirschman_Modified { get; set; }
-            public decimal Comprehensive_Industrial_Concentration_Index { get; set; }
-            public decimal Hall_Tideman_Index { get; set; }
-            public decimal Kwoka_Dominance_Index { get; set; }
-
-            public decimal PrumernaHodnotaSmluv { get; set; } //pouze tech s hodnotou vyssi nez 0 Kc
-        }
         public class Annual
         {
             protected Annual() { }
@@ -47,7 +36,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //r22
             public decimal PercUzavrenoOVikendu { get; set; } // % smluv uzavřených o víkendu či státním svátku
 
-            public Dictionary<int, decimal> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
+            public List<KoncentraceDodavateluObor> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
 
             public Lib.Analysis.BasicData Smlouvy { get; set; }
             //radek 5
@@ -57,9 +46,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             //r12
             public FinanceData FinancniUdaje { get; set; }
+
+            public decimal? KIndex { get; set; }
         }
 
         public List<Annual> roky { get; set; } = new List<Annual>();
+
+        public Annual ForYear(int year)
+        {
+            return roky.Where(m => m.Rok == year).FirstOrDefault();
+        }
 
         public string Ico { get; set; }
         public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();

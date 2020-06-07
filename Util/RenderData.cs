@@ -367,6 +367,19 @@ namespace HlidacStatu.Util
             Show = 1,
             AsNeeded = -1,
         }
+        public static string NicePercent(decimal number, bool html = false)
+        {
+            var s = number.ToString("P2");
+
+            if (html)
+            {
+                return String.Format("<span title=\"{1}\">{0}</span>",
+                    Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ').Replace(" ", "&nbsp;"), s);
+
+            }
+            return s;
+
+        }
 
         public static string NiceNumber(decimal number, bool html = false, ShowDecimalVal showDecimal = ShowDecimalVal.AsNeeded)
         {

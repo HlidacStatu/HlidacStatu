@@ -1,14 +1,18 @@
 ﻿using Devmasters.Core;
+
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Data.VZ;
 using HlidacStatu.Lib.Render;
 using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models;
+
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+
 using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +46,33 @@ namespace HlidacStatu.Web.Controllers
         {
         }
 
+        public ActionResult KIndex(string id, string ico = "", int? rok = null)
+        {
+            if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
+            {
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);
+                return View(kdata);
+            }
+            else if (id?.ToLower() == "porovnat")
+            {
+                List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData> kdata = new List<Lib.Analysis.KorupcniRiziko.KIndexData>();
+
+                foreach (var i in ico.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var f = Firmy.Get(i);
+                    if (f.Valid)
+                    {
+                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(i);
+                        if (kidx != null)
+                            kdata.Add(kidx);
+                    }
+                }
+                return View("KIndex.Porovnat", kdata);
+            }
+            else
+                return Error404();
+        }
+
         public ActionResult Analyza(string id, string p, string q, string title, string description, string moreUrl)
         {
             return View("Analyza");
@@ -57,7 +88,7 @@ namespace HlidacStatu.Web.Controllers
 
             if (string.IsNullOrEmpty(id))
                 return View("AnalyzaStart", model);
-            
+
 
             if (StaticData.Afery.ContainsKey(p?.ToLower() ?? ""))
                 model = StaticData.Afery[p.ToLower()];
@@ -425,12 +456,13 @@ text zpravy: {txt}";
         public ActionResult ClassificationFeedback(string typ, string email, string txt, string url, string data)
         {
             // create a task, so user doesn't have to wait for anything
-            System.Threading.Tasks.Task.Run(() => {
+            System.Threading.Tasks.Task.Run(() =>
+            {
 
                 try
                 {
                     string subject = "Zprava z HlidacStatu.cz: " + typ;
-                string body = $@"
+                    string body = $@"
 Návrh na opravu klasifikace.
 
 Od uzivatele:{email} 
@@ -439,13 +471,13 @@ ke stránce:{url}
 text zpravy: {txt}
 
 ";
-                HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
+                    HlidacStatu.Util.SMTPTools.SendSimpleMailToPodpora(subject, body, email);
 
-                string classificationExplanation = Smlouva.SClassification.GetClassificationExplanation(data);
+                    string classificationExplanation = Smlouva.SClassification.GetClassificationExplanation(data);
 
                     string explain = $"explain result: {classificationExplanation} ";
 
-                    HlidacStatu.Util.SMTPTools.SendEmail(subject, "",body+ explain,"michal@michalblaha.cz");
+                    HlidacStatu.Util.SMTPTools.SendEmail(subject, "", body + explain, "michal@michalblaha.cz");
                     HlidacStatu.Util.SMTPTools.SendEmail(subject, "", body + explain, "petr@hlidacstatu.cz");
                     HlidacStatu.Util.SMTPTools.SendEmail(subject, "", body + explain, "lenka@hlidacstatu.cz");
                 }
@@ -473,7 +505,7 @@ text zpravy: {txt}
                 {
                     Util.Consts.Logger.Fatal($"Problem sending data to ClassificationFeedback queue. Message={ex}");
                 }
-                
+
 
             });
 
@@ -481,7 +513,7 @@ text zpravy: {txt}
         }
 
 
-     
+
 
         public ActionResult TextSmlouvy(string Id, string hash, string secret)
         {
@@ -1189,7 +1221,7 @@ text zpravy: {txt}
             if (Request.IsAuthenticated && UserManager.IsInRole(Request?.RequestContext?.HttpContext?.User?.Identity.GetUserId(), "BetaTester") == true)
                 showBeta = true;
 
-            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, Lib.Searching.SearchDataResult<object>.DefaultPageSizeGlobal, showBeta,order); 
+            var res = HlidacStatu.Lib.Data.Search.GeneralSearch(q, 1, Lib.Searching.SearchDataResult<object>.DefaultPageSizeGlobal, showBeta, order);
             Lib.Data.Audit.Add(
                     Lib.Data.Audit.Operations.UserSearch
                     , this.User?.Identity?.Name
@@ -1218,7 +1250,7 @@ text zpravy: {txt}
                 }
             }
             string viewName = "Hledat";
-            return View(viewName,res);
+            return View(viewName, res);
         }
 
         public ActionResult Novinky()
@@ -1404,17 +1436,17 @@ text zpravy: {txt}
             {
                 VerejnaZakazka vz = VerejnaZakazka.LoadFromES(v);
                 if (vz != null)
-                 try
-                {
-                var path = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(id));
-                Framework.Visit.AddVisit(path,
-                    Framework.Visit.IsCrawler(Request.UserAgent) ?
-                        Visit.VisitChannel.Crawler : Visit.VisitChannel.Web);
-                }
-                catch (Exception e)
-                {
-                    HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
-                }
+                    try
+                    {
+                        var path = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(id));
+                        Framework.Visit.AddVisit(path,
+                            Framework.Visit.IsCrawler(Request.UserAgent) ?
+                                Visit.VisitChannel.Crawler : Visit.VisitChannel.Web);
+                    }
+                    catch (Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Info("VisitImg base64 encoding error", e);
+                    }
 
                 if (!vz.NotInterestingToShow())
                 {

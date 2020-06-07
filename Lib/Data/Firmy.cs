@@ -45,17 +45,26 @@ namespace HlidacStatu.Lib.Data
         }
         public static Firma Get(string ICO)
         {
-            if (ICO == null)
-                ICO = string.Empty;
+            if (string.IsNullOrEmpty(ICO))
+                return Firma.LoadError;
+            var f =  instanceByIco.Get(ICO);
+            if (f == null)
+                return Firma.LoadError;
+            else
+                return f;
 
-            return instanceByIco.Get(ICO);
         }
         public static Firma GetByDS(string ds)
         {
             if (ds == null)
                 ds = string.Empty;
 
-            return instanceByDS.Get(ds);
+            var f =  instanceByDS.Get(ds);
+            if (f == null)
+                return Firma.LoadError;
+            else
+                return f;
+
         }
 
     }

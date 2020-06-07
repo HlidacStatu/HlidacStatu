@@ -232,7 +232,7 @@ namespace HlidacStatu.Util
                 foreach (var o in czobce)
                 {
                     //(\s|,|;)mexiko($|\s)
-                    string reg = "(\\s|,|;|.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|.|$|\\s)";
+                    string reg = "(\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
 
                     if (Regex.IsMatch(dadresa, reg, Consts.DefaultRegexQueryOption))
                         return o;

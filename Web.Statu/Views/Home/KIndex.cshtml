@@ -1,0 +1,266 @@
+﻿@model HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData
+@using System
+@using System.Collections.Generic
+@using System.Linq
+
+@using Devmasters.Core
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@if (Model == null)
+{
+    <div class="jumbotron">
+        <h1>K-Index</h1>
+        <p>Index korupčního rizika nebyl pro tento subjekt dosud spočítán</p>
+    </div>
+    return;
+}
+
+@{
+    int fromY = Model.roky.Min(m => m.Rok);
+    int toY = Model.roky.Max(m => m.Rok);
+    int pocetRoku = (toY - fromY) + 1;
+
+    HlidacStatu.Util.Graphics.Gradient grad = new HlidacStatu.Util.Graphics.Gradient(
+            new HlidacStatu.Util.Graphics.RGB("00b300")
+            , new HlidacStatu.Util.Graphics.RGB("00b300")
+            , new HlidacStatu.Util.Graphics.RGB("FFA500")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+        );
+
+}
+
+
+<div class="jumbotron">
+    <h1>K-Index</h1>
+    <p>Index korupčního rizika pro <b>@(HlidacStatu.Lib.Data.Firmy.Get(Model.Ico)?.Jmeno) (@Model.Ico)</b> </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
+            <tbody>
+                <tr>
+                    <td>
+                        Základní informace
+                    </td>
+                    <td colspan="@(pocetRoku)">
+                        <p>
+                            Druh účetní jednotky: @Model.UcetniJednotka.DruhUcetniJednotkyPopis()
+                        </p>
+                        <p>
+                            Forma účetní jednotky: @Model.UcetniJednotka.FormaUcetniJednotkyPopis()
+                        </p>
+                        <p>
+                            Institucionální sektor: @Model.UcetniJednotka.InstitucionalniSektorPopis()
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b>Rok</b>
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            <b>@y</b>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv s nově založenými firmami
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercNovaFirmaDodavatel)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv se zásadním nedostatkem
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSeZasadnimNedostatkem)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv s firmami s vazbou na politiky
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmlouvySPolitickyAngazovanouFirmou)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv s cenou u limitu VZ
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmluvUlimitu)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv uzavřených o víkendu
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercUzavrenoOVikendu)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        % smluv bez uvedené ceny
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentBezCeny)
+                        </td>
+                    }
+                </tr>
+
+                <tr>
+                    <td>
+                        Koncentrace dodavatelů
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_IndexNormalized
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
+                        <br />&nbsp;&nbsp;&nbsp;Hall_Tideman_Index
+                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            <span style="color:@(grad.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Normalized).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Normalized)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
+                            </span>
+                            <span style="">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Hall_Tideman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Koncentrace dodavatelů bez uvedené ceny
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_IndexNormalized
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
+                        <br />&nbsp;&nbsp;&nbsp;Hall_Tideman_Index
+                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Normalized).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Normalized)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+                            </span>
+                            <span style="">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Hall_Tideman_Index)
+                            </span>
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index).ToHex())">
+                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
+                            </span>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Koncentrace dodavatelů podle oborů HH/HHM/KWO
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman /HH/
+                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified /HHM/
+                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index /KWO/
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
+                            </span> /
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+                            </span> /
+                            <span style="color:@(grad.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
+                            </span>
+                        </td>
+                    }
+                </tr>
+
+                <tr>
+                    <td>
+                        Podil Smluv Na Celkovych Nakupech organizace
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PodilSmluvNaCelkovychNakupech)
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td>
+                        Ovlivnitelné náklady činnosti
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).FinancniUdaje.OvlivnitelneNakladyCinnosti ?? 0)
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+

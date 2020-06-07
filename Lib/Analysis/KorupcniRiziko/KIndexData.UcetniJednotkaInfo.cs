@@ -100,7 +100,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             private static Dictionary<int, string> GetCiselnik(string propertyPrefix)
             {
-                string url = $"https://monitor.statnipokladna.cz/data/{propertyPrefix}.xml";
+                string url = $"https://monitor.statnipokladna.cz/data/xml/{propertyPrefix}.xml";
                 try
                 {
                     using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
