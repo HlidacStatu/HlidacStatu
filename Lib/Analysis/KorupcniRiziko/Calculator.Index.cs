@@ -100,7 +100,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public static decimal Herfindahl_Hirschman_Modified(
             IEnumerable<SmlouvyForIndex> individualContractDodavatelCena)
         {
-            decimal idealHI = Herfindahl_Hirschman_Index(individualContractDodavatelCena.Select(m=>m.HodnotaSmlouvy));
+            //idealni HHI je, pokud jsou smlouvy rovnomerne mezi jednotlivymi dodavateli a kazdy ma 1 smluvu
+
+            if (individualContractDodavatelCena.Count() == 0)
+                return 0;
+            if (individualContractDodavatelCena.Count() == 1)
+                return 1;
+
+            decimal idealHI = Herfindahl_Hirschman_Index(Enumerable.Repeat<decimal>(1m,individualContractDodavatelCena.Count()));
 
             var groupedPerDodavatel = individualContractDodavatelCena
                 .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })

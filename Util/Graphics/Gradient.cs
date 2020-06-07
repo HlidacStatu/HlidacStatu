@@ -14,18 +14,18 @@ namespace HlidacStatu.Util.Graphics
             this.colors = colors.Select(m => new RGBA(m)).ToArray();
         }
 
-        public RGB Color(decimal val, decimal minvalue, decimal maxvalue)
+        public RGB Color(decimal? val, decimal minvalue, decimal maxvalue)
         {
-            if (minvalue == maxvalue)
+            if (minvalue == maxvalue || val.HasValue == false)
                 return Color(0m);
             //100 - 200
             // 150
-            decimal perc = (val - minvalue) / (maxvalue - minvalue);
+            decimal perc = (val.Value - minvalue) / (maxvalue - minvalue);
             return Color(perc);
         }
-        public RGB Color(decimal percent)
+        public RGB Color(decimal? percent)
         {
-            return Tools.GetGradientColor(percent, this.colors);
+            return Tools.GetGradientColor(percent ?? 0, this.colors);
         }
 
     }

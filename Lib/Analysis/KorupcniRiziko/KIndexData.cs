@@ -38,6 +38,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public List<KoncentraceDodavateluObor> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
 
+            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(int oborId)
+            {
+                return KoncetraceDodavateluObory.FirstOrDefault(m => m.OborId == oborId);
+            }
+            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(string searchShortcut)
+            {
+                return KoncetraceDodavateluObory.FirstOrDefault(m => m.OborName == searchShortcut);
+            }
+            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(Lib.Data.Smlouva.SClassification.ClassificationsTypes type)
+            {
+                return KoncetraceDodavateluProObor((int)type);
+            }
+
+
             public Lib.Analysis.BasicData Smlouvy { get; set; }
             //radek 5
             //
@@ -48,6 +62,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public FinanceData FinancniUdaje { get; set; }
 
             public decimal? KIndex { get; set; }
+
+
         }
 
         public List<Annual> roky { get; set; } = new List<Annual>();

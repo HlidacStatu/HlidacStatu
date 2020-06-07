@@ -141,7 +141,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
         }
-        private KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null)
+        public KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = (size, page) =>
                 {

@@ -14,10 +14,10 @@ namespace HlidacStatu.Lib.Data
         : Audit.IAuditable //, IValidatableObject
     {
 
-        private static ObjectsComparer.Comparer<OsobaEvent> comparer = new ObjectsComparer.Comparer<OsobaEvent>();
+        //private static ObjectsComparer.Comparer<OsobaEvent> comparer = new ObjectsComparer.Comparer<OsobaEvent>();
         static OsobaEvent()
         {
-            comparer.AddComparerOverride("pk", ObjectsComparer.DoNotCompareValueComparer.Instance);
+            //comparer.AddComparerOverride("pk", ObjectsComparer.DoNotCompareValueComparer.Instance);
         }
         public OsobaEvent()
         {
@@ -377,7 +377,15 @@ namespace HlidacStatu.Lib.Data
 
         public static bool Compare(OsobaEvent a, OsobaEvent b)
         {
-            return comparer.Compare(a, b);
+            return a.AddInfo == b.AddInfo
+                && a.AddInfoNum == b.AddInfoNum
+                && a.DatumDo == b.DatumDo
+                && a.DatumOd == b.DatumOd
+                && a.Organizace == b.Organizace
+                && a.OsobaId == b.OsobaId
+                && a.Status == b.Status
+                && a.Title == b.Title
+                && a.Type == b.Type;
         }
 
     }

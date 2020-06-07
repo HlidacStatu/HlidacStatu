@@ -48,6 +48,16 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult KIndex(string id, string ico = "", int? rok = null)
         {
+            if (!(this.User.Identity.IsAuthenticated == true))
+            {
+                return Redirect("/");
+            }
+            if (this.User.IsInRole("Admin") == false)
+            {
+                return Redirect("/");
+            }
+
+
             if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
             {
                 HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);

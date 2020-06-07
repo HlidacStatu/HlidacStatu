@@ -367,9 +367,12 @@ namespace HlidacStatu.Util
             Show = 1,
             AsNeeded = -1,
         }
-        public static string NicePercent(decimal number, bool html = false)
+        public static string NicePercent(decimal? number, int decimalPlaces = 2, bool html = false, string noValue = "")
         {
-            var s = number.ToString("P2");
+            if (number.HasValue == false)
+                return noValue;
+
+            var s = number.Value.ToString("P"+decimalPlaces);
 
             if (html)
             {
