@@ -1175,40 +1175,40 @@ namespace HlidacStatu.Lib.Data
                             string ss = "";
                             if (stat.BasicStatPerYear[rok].CelkemCena == 0)
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
-                                        $"Jeden subjekt, ve kterém se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získal", 
-                                        $"{{0}} subjekty, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získaly", 
-                                        $"{{0}} subjektů, ve kterých se angažuval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získaly"
+                                        $"Jeden subjekt, ve kterém se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřel", 
+                                        $"{{0}} subjekty, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
+                                        $"{{0}} subjektů, ve kterých se angažuval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
                                         )
-                                    + $" zakázky v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
+                                    + $" smlouvy v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
-                                            $"Jedna firma, ve které se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získala", 
-                                            $"{{0}} firmy, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získaly", 
-                                            $"{{0}} firem, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} získaly"
+                                            $"Jedna firma, ve které se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřela", 
+                                            $"{{0}} firmy, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
+                                            $"{{0}} firem, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
                                         )
-                                        + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>. ";
+                                        + $" smlouvy za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>. ";
 
                             f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium));
                         }
                         else if (ostat.BasicStatPerYear[rok - 1].Pocet > 0)
                         {
                             string ss = "";
-                            if (stat.BasicStatPerYear[rok].CelkemCena == 0)
+                            if (stat.BasicStatPerYear[rok-1].CelkemCena == 0)
                                 ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
                                 Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
-                                        $"jednom subjektu, která v&nbsp;roce {rok - 1} získala", 
-                                        $"{{0}} subjektech, které v&nbsp;roce {rok} získaly", 
-                                        $"{{0}} subjektech, které v&nbsp;roce {rok - 1} získaly"
+                                        $"jednom subjektu, která v&nbsp;roce {rok - 1} uzavřela", 
+                                        $"{{0}} subjektech, které v&nbsp;roce {rok} uzavřely", 
+                                        $"{{0}} subjektech, které v&nbsp;roce {rok - 1} uzavřely"
                                     )
-                                + $" zakázky  v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
+                                + $" smlouvy v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
                                 ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
                                     Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
-                                        $"jednom subjektu, která v&nbsp;roce {rok - 1} získala", 
-                                        $"{{0}} subjektech, které v&nbsp;roce {rok} získaly", 
-                                        $"{{0}} subjektech, které v&nbsp;roce {rok - 1} získaly"
+                                        $"jednom subjektu, která v&nbsp;roce {rok - 1} uzavřela", 
+                                        $"{{0}} subjektech, které v&nbsp;roce {rok} uzavřely", 
+                                        $"{{0}} subjektech, které v&nbsp;roce {rok - 1} uzavřely"
                                         )
-                                + $" zakázky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
+                                + $" smlouvy za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
 
                             f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium)
                             );
