@@ -1189,7 +1189,7 @@ namespace HlidacStatu.Lib.Data
         }
 
         public static System.Text.StringBuilder ExportData(string query, int count, string order, 
-            Lib.Searching.ExportDataFormat format, out string contenttype)
+            Lib.Searching.ExportDataFormat format, bool withPlainText, out string contenttype)
         {
             //TODO ignored format
 

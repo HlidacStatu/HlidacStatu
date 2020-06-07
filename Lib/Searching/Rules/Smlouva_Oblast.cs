@@ -24,24 +24,18 @@ namespace HlidacStatu.Lib.Searching.Rules
         private static Dictionary<string, string> GetOblastiValues()
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            Type ot = typeof(Lib.Data.Smlouva.SClassification.ClassificationsTypes);
-            var vals = System.Enum.GetValues(typeof(Lib.Data.Smlouva.SClassification.ClassificationsTypes)) 
-                as Lib.Data.Smlouva.SClassification.ClassificationsTypes[];
+            
 
-            foreach (int v in vals)
+
+            foreach (var v in Lib.Data.Smlouva.SClassification.AllTypes)
             {
-                string sval = v.ToString();
-                var name = (Lib.Data.Smlouva.SClassification.ClassificationsTypes)v;
-                string sname = name.ToString().ToLower();
-
-                if (sname.EndsWith("_obecne"))
+                if (v.MainType)
                 {
-                    string range = $"[{sval.Substring(0, 3)}00 TO {sval.Substring(0, 3)}99]";
-                    ret.Add(sname.Replace("_obecne", ""), range);
-                    ret.Add(sname, range);
+                    ret.Add(v.SearchShortcut, v.SearchExpression);
+                    ret.Add(v.SearchShortcut+"_obecne", v.SearchExpression);
                 }
                 else
-                    ret.Add(sname, sval);
+                    ret.Add(v.SearchShortcut, v.SearchExpression);
 
             }
 

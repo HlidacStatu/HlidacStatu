@@ -151,23 +151,9 @@
                         <kbd>oblast:hodnota</kbd> - prohledává smlouvy, které jsme klasifikovali do některé z oblastí.<br />
                         Seznam hodnot a oblastí:
                             <ul>
-                                @foreach (var kv in HlidacStatu.Lib.Searching.Rules.Smlouva_Oblast.AllValues)
+                                @foreach (var v in HlidacStatu.Lib.Data.Smlouva.SClassification.AllTypes)
                                 {
-                                    bool gap = false;
-                                    string niceName = "";
-                                    HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes found;
-                                    if (Enum.TryParse<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes>(kv.Key, out found ))
-                                    {
-                                        niceName = found.ToNiceDisplayName();
-                                        gap = false;
-                                    }
-                                    else
-                                    {
-                                        Enum.TryParse<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes>(kv.Key+"_obecne", out found);
-                                        niceName = $"Všechny oblasti v '{found.ToNiceDisplayName()}'";
-                                        gap = true;
-                                    }
-                                    <li style='@(gap ? "padding-top:10px;" : "")'><kbd>oblast:@kv.Key</kbd> - @(niceName)</li>
+                                    <li style='@(v.MainType ? "padding-top:10px;" : "" )'><kbd>oblast:@v.SearchShortcut</kbd> - @(v.MainType ? "Všechny oblasti v " : "" )@(v.Fullname)</li>
                                 }
                             </ul>
 

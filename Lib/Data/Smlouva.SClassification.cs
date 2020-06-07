@@ -1,9 +1,14 @@
 ﻿using com.sun.org.apache.bcel.@internal.generic;
+
 using Devmasters.Core;
+
 using Elastic.Apm.Api;
+
 using HlidacStatu.Util.Cache;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +22,63 @@ namespace HlidacStatu.Lib.Data
     {
         public class SClassification
         {
+            public class ClassifField
+            {
+                public ClassificationsTypes ClassifType { get; set; }
+                public int Value { get; set; }
+                public string SearchExpression { get; set; }
+                public string SearchShortcut { get; set; }
+                public string Fullname { get; set; }
+                public bool MainType { get; set; }
+            }
+
+
+            static object lockInit = new object();
+            static SClassification()
+            {
+                lock (lockInit)
+                {
+                    if (AllTypes == null)
+                    {
+                        AllTypes = new List<ClassifField>();
+                        var vals = System.Enum.GetValues(typeof(Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                                as Lib.Data.Smlouva.SClassification.ClassificationsTypes[];
+
+                        foreach (int v in vals)
+                        {
+                            ClassifField cf = new ClassifField();
+                            cf.Value = v;
+                            cf.ClassifType = (Lib.Data.Smlouva.SClassification.ClassificationsTypes)v;
+                            cf.Fullname = cf.ClassifType.ToNiceDisplayName();
+
+                            string sval = v.ToString();
+                            var name = (Lib.Data.Smlouva.SClassification.ClassificationsTypes)v;
+                            string sname = name.ToString().ToLower();
+
+                            if (sname.EndsWith("_obecne"))
+                            {
+                                string range = $"[{sval.Substring(0, 3)}00 TO {sval.Substring(0, 3)}99]";
+                                cf.SearchExpression = range;
+                                cf.SearchShortcut = sname.Replace("_obecne", "");
+                                cf.MainType = true;
+                            }
+                            else
+                            {
+                                cf.SearchExpression = sval;
+                                cf.SearchShortcut = sname;
+                                cf.MainType = false;
+                            }
+                            AllTypes.Add(cf);
+                        }
+
+
+                    }
+                }
+            }
+
+
+            public static List<ClassifField> AllTypes = null;
+
             public const decimal MinAcceptableProbability = 0.5m;
 
             public SClassification() { }
@@ -26,7 +88,7 @@ namespace HlidacStatu.Lib.Data
                 this.LastUpdate = DateTime.Now;
                 this.Types = types;
             }
-            
+
 
 
             public class Classification
@@ -47,7 +109,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     ClassificationsTypes t;
                     if (Enum.TryParse(value.ToString(), out t))
-                    { 
+                    {
                         if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
                         {
                             Util.Consts.Logger.Warning("Missing Classification value" + value);
@@ -111,6 +173,10 @@ namespace HlidacStatu.Lib.Data
 
 
             }
+
+
+
+
             [ShowNiceDisplayName()]
             public enum ClassificationsTypes
             {
@@ -243,7 +309,7 @@ namespace HlidacStatu.Lib.Data
                 bezpecnost_obecne = 10700,
                 [NiceDisplayName("Kamerové systémy")]
                 bezpecnost_kamery = 10701,
-                [NiceDisplayName("Hasičské vybavení, požární ochrana")] 
+                [NiceDisplayName("Hasičské vybavení, požární ochrana")]
                 bezpecnost_hasici = 10702,
                 [NiceDisplayName("Zbraně")]
                 bezpecnost_zbrane = 10703,
@@ -330,7 +396,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Finance")]
                 finance_obecne = 11400,
                 [NiceDisplayName("Pojišťovací služby")]
-                finance_pojisteni= 11401,
+                finance_pojisteni = 11401,
                 [NiceDisplayName("Účetní, revizní a peněžní služby")]
                 finance_ucetni = 11402,
                 [NiceDisplayName("Podnikatelské a manažerské poradenství a související služby")]
@@ -418,17 +484,17 @@ namespace HlidacStatu.Lib.Data
             private static string classificationBaseUrl()
             {
                 string[] baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url")
-                    .Split(',',';');
+                    .Split(',', ';');
                 //Dictionary<string, DateTime> liveEndpoints = new Dictionary<string, DateTime>();
 
                 return baseUrl[Util.Consts.Rnd.Next(baseUrl.Length)];
-            
+
             }
 
             private static volatile FileCacheManager stemCacheManager
                 = FileCacheManager.GetSafeInstance("SmlouvyStems",
                     smlouvaKeyId => getRawStemsFromServer(smlouvaKeyId),
-                    TimeSpan.FromDays(365*10)); //10 years
+                    TimeSpan.FromDays(365 * 10)); //10 years
 
             private static byte[] getRawStemsFromServer(KeyAndId smlouvaKeyId)
             {
@@ -519,7 +585,7 @@ namespace HlidacStatu.Lib.Data
                 foreach (JProperty item in jsonData.Children())
                 {
 
-                    string key = item.Name.Replace("-", "_").Replace("_generic","_obecne");// jsonData[i][0].Value<string>().Replace("-", "_");
+                    string key = item.Name.Replace("-", "_").Replace("_generic", "_obecne");// jsonData[i][0].Value<string>().Replace("-", "_");
                     decimal prob = HlidacStatu.Util.ParseTools.ToDecimal(item.Value.ToString()) ?? 0;
                     if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
                     {
@@ -535,7 +601,7 @@ namespace HlidacStatu.Lib.Data
                         data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
                     }
                 }
-              
+
                 return data;
             }
 
