@@ -401,13 +401,13 @@ namespace HlidacStatu.Lib.Data
             if (this.InternalId == duplicated.InternalId)
                 return this;
 
-            OsobaEvent[] dEvs = duplicated.Events().ToArray();
+            OsobaEvent[] dEvs = duplicated.NoFilteredEvents().ToArray();
             OsobaExternalId[] dEids = duplicated.ExternalIds().Where(m => m.ExternalSource != (int)OsobaExternalId.Source.HlidacSmluvGuid).ToArray();
 
             foreach (var dEv in dEvs)
             {
                 bool exists = false;
-                foreach (var ev in this.Events())
+                foreach (var ev in this.NoFilteredEvents())
                 {
                     exists = exists || OsobaEvent.Compare(ev, dEv);
                 }
@@ -459,8 +459,6 @@ namespace HlidacStatu.Lib.Data
             if (this.Status < duplicated.Status)
                 this.Status = duplicated.Status;
 
-            if (duplicated.InternalId != 0)
-                duplicated.Delete(user);
 
             //obrazek
             if (this.HasPhoto() == false && duplicated.HasPhoto())
@@ -475,6 +473,8 @@ namespace HlidacStatu.Lib.Data
             }
             this.Save(addExternalIds.ToArray());
 
+            if (duplicated.InternalId != 0)
+                duplicated.Delete(user);
 
             return this;
         }
@@ -1226,8 +1226,14 @@ namespace HlidacStatu.Lib.Data
 
         public bool NotInterestingToShow()
         {
-            return this.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
+            var res = this.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
                     && this.MaVztahySeStatem() == false;
+
+            res = res || (this.StatusOsoby() == StatusOsobyEnum.Sponzor
+                    && this.IsSponzor() == false
+                );
+
+            return res;
         }
 
         public string SocialInfoTitle()
