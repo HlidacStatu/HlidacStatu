@@ -40,11 +40,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public KoncentraceDodavateluObor KoncetraceDodavateluProObor(int oborId)
             {
-                return KoncetraceDodavateluObory.FirstOrDefault(m => m.OborId == oborId);
+                return KoncetraceDodavateluObory.Where(m=>m!=null).FirstOrDefault(m => m.OborId == oborId);
             }
             public KoncentraceDodavateluObor KoncetraceDodavateluProObor(string searchShortcut)
             {
-                return KoncetraceDodavateluObory.FirstOrDefault(m => m.OborName == searchShortcut);
+                return KoncetraceDodavateluObory.Where(m => m != null).FirstOrDefault(m => m.OborName == searchShortcut);
             }
             public KoncentraceDodavateluObor KoncetraceDodavateluProObor(Lib.Data.Smlouva.SClassification.ClassificationsTypes type)
             {

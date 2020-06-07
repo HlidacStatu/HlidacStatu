@@ -126,7 +126,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                          Koncentrace = k
                         });
                     return new Devmasters.Core.Batch.ActionOutputData();
-                }, true
+                },null,null, true, maxDegreeOfParallelism:10
                 );
 
             return ret;

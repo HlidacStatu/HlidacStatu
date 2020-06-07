@@ -43,13 +43,15 @@
     }
 
     HlidacStatu.Util.Graphics.Gradient gradIndex = new HlidacStatu.Util.Graphics.Gradient(
-        new HlidacStatu.Util.Graphics.RGB("00b300")
-        , new HlidacStatu.Util.Graphics.RGB("00b300")
-        , new HlidacStatu.Util.Graphics.RGB("FFA500")
+        new HlidacStatu.Util.Graphics.RGB("00b300") //10%
+        , new HlidacStatu.Util.Graphics.RGB("FFA500") //20%
+        , new HlidacStatu.Util.Graphics.RGB("FF0000") //30%
+        , new HlidacStatu.Util.Graphics.RGB("FF0000")
+        , new HlidacStatu.Util.Graphics.RGB("FF0000") //50%
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
+        , new HlidacStatu.Util.Graphics.RGB("FF0000") //90%
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
     );
 
@@ -105,44 +107,129 @@
                     {
                         <td>
                             <b>@HlidacStatu.Lib.Data.Firmy.Get(ki.Ico).Jmeno</b>
+                            <a href="/kindex/@ki.Ico"><i class="fas fa-chart-line"></i></a>
                         </td>
                     }
                 </tr>
                 <!--
+    <tr>
+        <td>
+            Druh účetní jednotky
+        </td>
+        @foreach (var ki in Model)
+        {
+            <td>
+                <b>@ki.UcetniJednotka.DruhUcetniJednotkyPopis()</b>
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>
+            Forma účetní jednotky
+        </td>
+        @foreach (var ki in Model)
+        {
+            <td>
+                <b>@ki.UcetniJednotka.FormaUcetniJednotkyPopis()</b>
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>
+            Institucionální sektor
+        </td>
+        @foreach (var ki in Model)
+        {
+            <td>
+                <b>@ki.UcetniJednotka.InstitucionalniSektorPopis()</b>
+            </td>
+        }
+    </tr>
+        -->
                 <tr>
                     <td>
-                        Druh účetní jednotky
+                        Celkový počet smluv
                     </td>
                     @foreach (var ki in Model)
                     {
+                        val = ki.ForYear(rok).Smlouvy.Pocet;
                         <td>
-                            <b>@ki.UcetniJednotka.DruhUcetniJednotkyPopis()</b>
+                            <span style="color:black">
+                                @HlidacStatu.Util.RenderData.NiceNumber(val)
+                            </span>
                         </td>
                     }
                 </tr>
                 <tr>
                     <td>
-                        Forma účetní jednotky
+                        Celková hodnota smluv
                     </td>
                     @foreach (var ki in Model)
                     {
+                        val = ki.ForYear(rok).Smlouvy.CelkemCena;
                         <td>
-                            <b>@ki.UcetniJednotka.FormaUcetniJednotkyPopis()</b>
+                            <span style="color:black">
+                                @HlidacStatu.Util.RenderData.NicePrice(val, shortFormat:true)
+                            </span>
+                        </td>
+                    }
+                </tr>
+
+                <tr>
+                    <td>
+                        Počet smluv bez<br />uvedené ceny
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).Statistika.NumBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.NumBezCeny);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).Statistika.NumBezCeny;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NiceNumber(val)
+                            </span>
                         </td>
                     }
                 </tr>
                 <tr>
                     <td>
-                        Institucionální sektor
+                        % smluv bez<br />uvedené ceny
                     </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).Statistika.PercentBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentBezCeny);
+                    }
                     @foreach (var ki in Model)
                     {
+                        val = ki.ForYear(rok).Statistika.PercentBezCeny;
                         <td>
-                            <b>@ki.UcetniJednotka.InstitucionalniSektorPopis()</b>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
                         </td>
                     }
                 </tr>
-                    -->
+                <tr>
+                    <td>
+                        % smluv s firmou<br />navázanou na politiky
+                    </td>
+                    @{
+                        min = Model.Min(m => m.ForYear(rok).Statistika.PercentSPolitiky);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentSPolitiky);
+                    }
+                    @foreach (var ki in Model)
+                    {
+                        val = ki.ForYear(rok).Statistika.PercentSPolitiky;
+                        <td>
+                            <span style="color:@(grad.Color(val,min,max).ToHex())">
+                                @HlidacStatu.Util.RenderData.NicePercent(val)
+                            </span>
+                        </td>
+                    }
+                </tr>
+
                 <tr>
                     <td>
                         % smluv s nově<br />založenými firmami
@@ -234,24 +321,6 @@
                         </td>
                     }
                 </tr>
-                <tr>
-                    <td>
-                        % smluv bez<br />uvedené ceny
-                    </td>
-                    @{
-                        min = Model.Min(m => m.ForYear(rok).Statistika.PercentBezCeny);
-                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentBezCeny);
-                    }
-                    @foreach (var ki in Model)
-                    {
-                        val = ki.ForYear(rok).Statistika.PercentBezCeny;
-                        <td>
-                            <span style="color:@(grad.Color(val,min,max).ToHex())">
-                                @HlidacStatu.Util.RenderData.NicePercent(val)
-                            </span>
-                        </td>
-                    }
-                </tr>
 
                 <tr>
                     <td>
@@ -264,13 +333,13 @@
                     {
                         val = ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index;
                         <td>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
+                            <span style="color:@(gradIndex.Color(val).ToHex())">
                                 <br />@HlidacStatu.Util.RenderData.NicePercent(val)
                             </span>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
+                            <span style="color:@(gradIndex.Color(val).ToHex())">
                                 <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
                             </span>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
+                            <span style="color:@(gradIndex.Color(val).ToHex())">
                                 <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index)
                             </span>
                         </td>
@@ -285,17 +354,20 @@
                     </td>
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index;
+                        val = ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Index ?? 0;
                         <td>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
-                            </span>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
-                            </span>
-                            <span style="color:@(gradIndex.Color(val,min,max).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
-                            </span>
+                            @if (ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny != null)
+                            {
+                                <span style="color:@(gradIndex.Color(val).ToHex())">
+                                    <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
+                                </span>
+                                <span style="color:@(gradIndex.Color(val).ToHex())">
+                                    <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+                                </span>
+                                <span style="color:@(gradIndex.Color(val).ToHex())">
+                                    <br />@HlidacStatu.Util.RenderData.NicePercent(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
+                                </span>
+                            }
                         </td>
                     }
                 </tr>
@@ -307,6 +379,17 @@
                         Kwoka_Dominance_Index
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    @foreach (var ki in Model)
+                    {
+                        <td>
+                            <b>@HlidacStatu.Lib.Data.Firmy.Get(ki.Ico).Jmeno</b>
+                        </td>
+                    }
+                </tr>
                 @foreach (var cl in HlidacStatu.Lib.Data.Smlouva.SClassification.AllTypes.Where(m => m.MainType))
                 {
                     <tr>
@@ -315,7 +398,7 @@
                         </td>
                         @foreach (var ki in Model)
                         {
-                            <td>
+                            <td style="min-width:150px;border-left:dotted 2px #E0E6ED">
                                 <p>
                                     @if (ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value) != null)
                                     {
@@ -332,8 +415,9 @@
                                             <br />
                                             @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.CelkovaHodnotaSmluv),
                                             @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluv) smluv,
-                                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluv) bez ceny
+                                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCeny) bez ceny
                                         </span>
+                                        <span><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)"><i class="fas fa-search"></i></a></span>
                                     }
 
                                 </p>
