@@ -1244,7 +1244,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static Smlouva Export(Smlouva smlouva, bool allData = false, bool docsContent = false)
+        public static Smlouva Export(Smlouva smlouva, bool allData = false, bool docsContent = true)
         {
             Smlouva s = (Smlouva)smlouva.MemberwiseClone();
             if (s == null)

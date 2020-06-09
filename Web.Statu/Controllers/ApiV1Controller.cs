@@ -638,7 +638,7 @@ namespace HlidacStatu.Web.Controllers
                 {
 
                     var filtered = res.Results
-                                    .Select(m =>  HlidacStatu.Lib.Data.Smlouva.Export(m,false, apires.ApiCall.UserRoles.Contains("Admin")))
+                                    .Select(m =>  HlidacStatu.Lib.Data.Smlouva.Export(m,apires.ApiCall.UserRoles.Contains("Admin"),false))
                                     .ToArray();
 
                     return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = res.Total, items = filtered }, Newtonsoft.Json.Formatting.None), "application/json");
@@ -668,7 +668,7 @@ namespace HlidacStatu.Web.Controllers
                 }
                 var smodel = Smlouva.Export(model, 
                     allData: apires.ApiCall.UserRoles.Contains("Admin"),
-                    docsContent: apires.ApiCall.UserRoles.Contains("Admin")
+                    docsContent: true
                     );
                 var s = Newtonsoft.Json.JsonConvert.SerializeObject(
                                     smodel,
