@@ -78,7 +78,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 decimal bezDPH = item.hodnotaBezDph.Value;
                 decimal sDPH = item.hodnotaVcetneDph.Value;
 
-                if (bezDPH > sDPH)
+                if (bezDPH > sDPH && (bezDPH>0 && sDPH>0))
                 {
                     issues.Add(
                         new Issue(this, (int)IssueType.IssueTypes.Neplatna_cena, "Neplatná cena", "Cena bez DPH je větší než cena s DPH.", null, new { hodnotaVcetneDph = item.hodnotaVcetneDph, hodnotaBezDph = item.hodnotaBezDph })

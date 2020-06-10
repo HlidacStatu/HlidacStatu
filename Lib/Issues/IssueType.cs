@@ -97,7 +97,6 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.bezDPH_x_DPH:
                     case IssueTypes.Neplatna_cena_vypocetDPH:
                         return ImportanceLevel.NeedHumanReview;
-
                     default:
                         throw new NotImplementedException();
                         break;
