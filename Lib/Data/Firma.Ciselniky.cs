@@ -12,6 +12,8 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class Firma
     {
+        //https://wwwinfo.mfcr.cz/ares/nace/ares_nace.html.cz
+
         public static Dictionary<string, string> NACEKody = new Dictionary<string, string>()
         {
             {"00","Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona"},
@@ -1713,6 +1715,8 @@ namespace HlidacStatu.Lib.Data
 {"99000","Činnosti exteritoriálních organizací a orgánů"}
         };
 
+
+        //https://wwwinfo.mfcr.cz/ares/aresPrFor.html.cz
         public static Dictionary<int, string> PravniFormy = new Dictionary<int, string>() {
 {100,"Podnikající osoba tuzemská"},
 {101,"Fyzická osoba podnikající dle živnostenského zákona nezapsaná v obchodním rejstříku"},

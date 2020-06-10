@@ -128,7 +128,12 @@ namespace HlidacStatu.Lib.Data
             }
         }
         public string JmenoAscii { get; set; }
+
+        // https://wwwinfo.mfcr.cz/ares/aresPrFor.html.cz
+
         public int? Kod_PF { get; set; }
+
+        // https://wwwinfo.mfcr.cz/ares/nace/ares_nace.html.cz
         public string[] NACE { get; set; } = new string[] { };
         public int VersionUpdate { get; set; }
 

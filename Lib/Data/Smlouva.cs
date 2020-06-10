@@ -727,22 +727,22 @@ namespace HlidacStatu.Lib.Data
             //U limitu
             this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.OK;
             if (
-                    ((this.hodnotaBezDph - Analysis.KorupcniRiziko.Consts.IntervalOkolo > Analysis.KorupcniRiziko.Consts.Limit1bezDPH)
+                    ((this.hodnotaBezDph  > Analysis.KorupcniRiziko.Consts.Limit1bezDPH - Analysis.KorupcniRiziko.Consts.IntervalOkolo)
                     && (this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH))
                 ||
                 (
-                    ((this.CalculatedPriceWithVATinCZK - Analysis.KorupcniRiziko.Consts.IntervalOkolo) > Analysis.KorupcniRiziko.Consts.Limit1bezDPH * 1.21m)
+                    ((this.CalculatedPriceWithVATinCZK ) > (Analysis.KorupcniRiziko.Consts.Limit1bezDPH * 1.21m - Analysis.KorupcniRiziko.Consts.IntervalOkolo*1.21m))
                     && (this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH * 1.21m))
                 )
                 this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit2M;
 
             if (
-                    ((this.hodnotaBezDph - Analysis.KorupcniRiziko.Consts.IntervalOkolo > Analysis.KorupcniRiziko.Consts.Limit2bezDPH)
+                    ((this.hodnotaBezDph  > Analysis.KorupcniRiziko.Consts.Limit2bezDPH - Analysis.KorupcniRiziko.Consts.IntervalOkolo)
                     && (this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH)
                 )
                 ||
                 (
-                    ((this.CalculatedPriceWithVATinCZK - Analysis.KorupcniRiziko.Consts.IntervalOkolo) > Analysis.KorupcniRiziko.Consts.Limit2bezDPH * 1.21m)
+                    (this.CalculatedPriceWithVATinCZK  > Analysis.KorupcniRiziko.Consts.Limit2bezDPH * 1.21m - Analysis.KorupcniRiziko.Consts.IntervalOkolo*1.21m)
                     && (this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH * 1.21m)
                 )
                 )

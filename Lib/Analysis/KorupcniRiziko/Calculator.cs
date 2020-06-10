@@ -53,7 +53,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             this.InitData();
             foreach (var year in CalculationYears)
             {
-                kindex.roky.Add(CalculateForYear(year));
+                KIndexData.Annual data_rok = CalculateForYear(year);
+                CalculateKIndex( ref data_rok);
+                kindex.roky.Add(data_rok);
             }
             return kindex;
         }
@@ -104,11 +106,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.KoncentraceDodavateluBezUvedeneCeny
                     = KoncentraceDodavateluCalculator(query + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
+            if (ret.PercSmluvUlimitu>0)
+                ret.KoncentraceDodavateluCenyULimitu
+                    = KoncentraceDodavateluCalculator(query + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
             Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                 .AllTypes
-                .Where(m=>m.MainType)
-                .OrderBy(m=>m.Value)
+                .Where(m => m.MainType)
+                .OrderBy(m => m.Value)
                 .ToDictionary(k => k.Value, v => v.SearchShortcut);
 
             ret.KoncetraceDodavateluObory = new List<KoncentraceDodavateluObor>();
@@ -119,19 +124,94 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                     query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
                     var k = KoncentraceDodavateluCalculator(query);
-                    if (k!= null)
-                        ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor() {
-                         OborId = oborid,
-                         OborName = obory[oborid],
-                         Koncentrace = k
+                    if (k != null)
+                        ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
+                        {
+                            OborId = oborid,
+                            OborName = obory[oborid],
+                            Koncentrace = k
                         });
                     return new Devmasters.Core.Batch.ActionOutputData();
-                },null,null, true, maxDegreeOfParallelism:10
+                }, null, null, true, maxDegreeOfParallelism: 10
                 );
+
+
+
+
+
 
             return ret;
         }
 
+        public decimal CalculateKIndex(ref KIndexData.Annual datayear)
+        {
+
+            decimal smlouvyPod50kprumer = 0;
+            decimal smlouvyAllCount = 0;
+            decimal smlouvyPod50kCount = 0;
+            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
+                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+            if (res.IsValid)
+                smlouvyAllCount = res.Total;
+            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"cena:>0 AND cena:<=50000 AND datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
+                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+            if (res.IsValid)
+                smlouvyPod50kCount = res.Total;
+
+            if (smlouvyAllCount > 0)
+                smlouvyPod50kprumer = smlouvyPod50kCount / smlouvyAllCount;
+
+            datayear.TotalAveragePercSmlouvyPod50k = smlouvyPod50kprumer;
+
+            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.Ico} cena:>0 AND cena:<=50000 AND datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
+                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+            if (res.IsValid && datayear.Smlouvy.Pocet > 0)
+                datayear.PercSmlouvyPod50k = (decimal)(res.Total) / datayear.Smlouvy.Pocet;
+
+            decimal bonus = SmlouvyPod50kBonus(datayear.PercSmlouvyPod50k, datayear.TotalAveragePercSmlouvyPod50k);
+
+            //https://docs.google.com/spreadsheets/d/1FhaaXOszHORki7t5_YEACWFZUya5QtqUnNVPAvCArGQ/edit#gid=0
+
+
+            decimal val =
+            //r5
+            datayear.Statistika.PercentBezCeny * 0.1m
+            //r11
+            + datayear.PercSeZasadnimNedostatkem * 0.02m
+            //r13
+            + datayear.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified * 0.2m
+            //r15
+            + datayear.KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified * 0.1m
+            //r17
+            + datayear.PercSmluvUlimitu * 0.1m
+            //r18 - bonus!
+            - bonus* 0.1m
+            //r19
+            //TODO
+            + datayear.KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified * 0.1m
+            //r20
+            + datayear.PercNovaFirmaDodavatel * 0.02m
+            //r22
+            + datayear.PercUzavrenoOVikendu * 0.02m
+            //r23
+            + datayear.PercSmlouvySPolitickyAngazovanouFirmou * 0.02m
+            ;
+            //
+
+            return val;
+
+        }
+
+        public static decimal SmlouvyPod50kBonus(decimal icoPodil, decimal vsePodil)
+        {
+            if (icoPodil > vsePodil * 1.75m)
+                return 0.75m;
+            else if (icoPodil > vsePodil * 1.5m)
+                return 0.5m;
+            if (icoPodil > vsePodil * 1.25m)
+                return 0.25m;
+            return 0m;
+        }
 
         class smlouvaStat
         {
@@ -206,7 +286,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             var ret = new KoncentraceDodavateluIndexy();
             ret.PocetSmluv = smlouvy.Count();
-            ret.PocetSmluvBezCeny = smlouvy.Count(m=>m.HodnotaSmlouvy == 0);
+            ret.PocetSmluvBezCeny = smlouvy.Count(m => m.HodnotaSmlouvy == 0);
             ret.PrumernaHodnotaSmluv = smlouvy
                                 .Where(m => m.HodnotaSmlouvy != 0)
                                 .Count() == 0 ? 0 : smlouvy

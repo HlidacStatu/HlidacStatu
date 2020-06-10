@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
@@ -20,11 +21,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public KoncentraceDodavateluIndexy CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
             //r15
             public KoncentraceDodavateluIndexy KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
-            
+            //r15
+            public KoncentraceDodavateluIndexy KoncentraceDodavateluCenyULimitu { get; set; } //Koncentrace dodavatelů u smluv u limitu VZ
+
+
+            //r16
+            public decimal PercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000
+            //r16
+            public decimal TotalAveragePercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000 prumerny pres vsechny smlouvy v roce
+
+
             //r20
             public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
 
-            //radek 11
+            //r11
             public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
 
             //r23
@@ -62,6 +72,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public FinanceData FinancniUdaje { get; set; }
 
             public decimal? KIndex { get; set; }
+
 
 
         }
