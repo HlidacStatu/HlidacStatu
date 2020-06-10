@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Util.Cache;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,21 @@ namespace HlidacStatu.Lib.Analysis
 
         public Dictionary<string, SubjectStatistic> StatniFirmy { get; set; } = new Dictionary<string, SubjectStatistic>();
         public Dictionary<string, SubjectStatistic> SoukromeFirmy { get; set; } = new Dictionary<string, SubjectStatistic>();
+
+        int _neziskovkyCount = -1;
+        public int NeziskovkyCount()
+        {
+            if (_neziskovkyCount < 0)
+                _neziskovkyCount = this.SoukromeFirmy.Select(m => Data.Firmy.Get(m.Key)).Where(ff => ff.JsemNeziskovka()).Count();
+            return _neziskovkyCount;
+        }
+
+        public int KomercniFirmyCount()
+        {
+            return this.SoukromeFirmy.Count - NeziskovkyCount();
+        }
+
+
 
         public Data.Relation.AktualnostType Aktualnost { get; set; }
 
@@ -55,7 +71,7 @@ namespace HlidacStatu.Lib.Analysis
         }
         private OsobaStatisticQuery osq = null;
 
-        protected override BasicDataPerYear getBasicStat() => StatPerYearSoukrome(); 
+        protected override BasicDataPerYear getBasicStat() => StatPerYearSoukrome();
         protected override RatingDataPerYear getRating() => RatingPerYearSoukrome();
 
         Tuple<Dictionary<string, SubjectStatistic>, Dictionary<string, SubjectStatistic>> statData = null;
@@ -90,7 +106,7 @@ namespace HlidacStatu.Lib.Analysis
         {
             if (_statPerYearSoukrome == null)
             {
-                _statPerYearSoukrome = new BasicDataPerYear(this.SoukromeFirmy.Select(m => m.Value.BasicStatPerYear).Where(m=>m != null));
+                _statPerYearSoukrome = new BasicDataPerYear(this.SoukromeFirmy.Select(m => m.Value.BasicStatPerYear).Where(m => m != null));
             }
             return _statPerYearSoukrome;
         }
@@ -175,9 +191,9 @@ namespace HlidacStatu.Lib.Analysis
                 .Select(v => v.To)
                 .Distinct(new HlidacStatu.Lib.Data.Graph.NodeComparer())
                 .Select(f => new { ico = f.Id, ss = new Analysis.SubjectStatistic(f.Id) });
-                //.OrderByDescending(or => or.ss.BasicStatPerYear.Summary.CelkemCena)
-                //.ThenByDescending(or => or.ss.BasicStatPerYear.Summary.Pocet)
-                //.ToDictionary(k => k.ico, v => v.ss);
+            //.OrderByDescending(or => or.ss.BasicStatPerYear.Summary.CelkemCena)
+            //.ThenByDescending(or => or.ss.BasicStatPerYear.Summary.Pocet)
+            //.ToDictionary(k => k.ico, v => v.ss);
 
             Dictionary<string, SubjectStatistic> statni = new Dictionary<string, SubjectStatistic>();
             Dictionary<string, SubjectStatistic> soukr = new Dictionary<string, SubjectStatistic>();

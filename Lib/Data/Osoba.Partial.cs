@@ -1118,20 +1118,19 @@ namespace HlidacStatu.Lib.Data
                     var statDesc = "";
                     if (stat.StatniFirmy.Count > 0)
                         statDesc += $"Angažoval se v {Devmasters.Core.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě", "{0} státních firmách", "{0} státních firmách")}. ";
+                    //neziskovky
                     if (stat.SoukromeFirmy.Count > 0)
                     {
-                        //neziskovky
-                        int neziskovkyCount = stat.SoukromeFirmy.Select(m => Firmy.Get(m.Key)).Where(ff => ff.JsemNeziskovka()).Count();
                         //ostatni
                         statDesc += $"Angažoval se {(stat.StatniFirmy.Count > 0 ? "také" : "")} v ";
-                        if (neziskovkyCount == stat.SoukromeFirmy.Count && neziskovkyCount > 0)
+                        if (stat.NeziskovkyCount()>0 && stat.KomercniFirmyCount() == 0)
                         {
-                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
                         }
-                        else if (neziskovkyCount > 0)
+                        else if (stat.NeziskovkyCount() > 0)
                         {
-                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(neziskovkyCount, "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
-                            statDesc += $" a {Devmasters.Core.Lang.Plural.Get(stat.SoukromeFirmy.Count - neziskovkyCount, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
+                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                            statDesc += $" a {Devmasters.Core.Lang.Plural.Get(stat.KomercniFirmyCount(), "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
                         }
                         else
                         {
@@ -1173,6 +1172,13 @@ namespace HlidacStatu.Lib.Data
                         if (ostat.BasicStatPerYear[rok].Pocet > 0)
                         {
                             string ss = "";
+                            //neziskovky a firmy
+                            //string typy = "";
+                            //if (ostat.NeziskovkyCount() > 0 && ostat.KomercniFirmyCount())
+                            //{
+                            //    typy = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count,
+                            //}
+
                             if (stat.BasicStatPerYear[rok].CelkemCena == 0)
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
                                         $"Jeden subjekt, ve kterém se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřel", 
@@ -1182,9 +1188,9 @@ namespace HlidacStatu.Lib.Data
                                     + $" smlouvy v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
                                 ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
-                                            $"Jedna firma, ve které se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřela", 
-                                            $"{{0}} firmy, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
-                                            $"{{0}} firem, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
+                                            $"Jeden subjekt, ve které se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřela", 
+                                            $"{{0}} subjekty, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
+                                            $"{{0}} subjektů, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
                                         )
                                         + $" smlouvy za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>. ";
 
