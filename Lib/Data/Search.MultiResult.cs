@@ -189,7 +189,7 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
                         sw.Start();
 
-                        res.Firmy = new GeneralResult<string>(query,Firma.Search.FindAllIco(query, 50));
+                        res.Firmy = new GeneralResult<string>(query,Firma.Search.SimpleSearch(query, 0, 50));
                         sw.Stop();
                         res.Firmy.ElapsedTime = sw.Elapsed;
                     }

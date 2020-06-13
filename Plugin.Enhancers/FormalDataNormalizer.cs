@@ -44,6 +44,9 @@ namespace HlidacStatu.Plugin.Enhancers
             if (item.Platce != null)
                 item.Platce.ico = GetNormalizedIco(item.Platce.ico, "platce.ico", ref item);
 
+            if (item.VkladatelDoRejstriku != null)
+                item.VkladatelDoRejstriku.ico = GetNormalizedIco(item.VkladatelDoRejstriku.ico, "vkladatelDoRejstriku.ico", ref item);
+
             if (item.Prijemce != null)
             {
                 foreach (var p in item.Prijemce)
@@ -60,6 +63,7 @@ namespace HlidacStatu.Plugin.Enhancers
             if (!string.IsNullOrEmpty(ico))
             {
                 var newIco = System.Text.RegularExpressions.Regex.Replace(ico, @"[^0-9]", string.Empty);
+                newIco = Util.ParseTools.NormalizeIco(newIco);
                 if (newIco != ico && Util.DataValidators.CheckCZICO(newIco))
                 {
                     item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Normalizováno IČO", "", parametrName, ico, newIco, this));

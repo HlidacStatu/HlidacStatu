@@ -109,7 +109,7 @@ namespace HlidacStatu.Lib.Data
 
                 var firmy = alreadyFoundFirmyIcos;
                 if (firmy == null)
-                    firmy = Firma.Search.FindAllIco(jmeno, maxNumOfResults * 10);
+                    firmy = Firma.Search.SimpleSearch(jmeno, 0,maxNumOfResults * 10);
 
                 if (firmy != null && firmy.Count() > 0)
                 {

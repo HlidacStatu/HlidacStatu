@@ -21,6 +21,9 @@ namespace HlidacStatu.Lib.Searching
         {
             SplittingQuery finalSq = new SplittingQuery();
 
+            if (rules.Count() == 0)
+                finalSq = sq;
+
             Dictionary<int, Rules.RuleResult> queryPartResults = new Dictionary<int, Rules.RuleResult>();
             for (int qi = 0; qi < sq.Parts.Length; qi++)
             {
@@ -29,7 +32,7 @@ namespace HlidacStatu.Lib.Searching
 
                 //aplikuju na nej jednotliva pravidla, nasledujici na vysledek predchoziho
                 SplittingQuery.Part[] qToProcess = null;
-                List<Rules.RuleResult> qpResults = null;
+                List<Rules.RuleResult> qpResults = new List<Rules.RuleResult>();
                 foreach (var rule in rules)
                 {
                     qToProcess = qToProcess ?? new SplittingQuery.Part[] { sq.Parts[qi] };
@@ -52,7 +55,7 @@ namespace HlidacStatu.Lib.Searching
 
                 } //rules
 
-                queryPartResults[qi] = new Rules.RuleResult(new SplittingQuery(qToProcess), qpResults.Last().NextStep);
+                queryPartResults[qi] = new Rules.RuleResult(new SplittingQuery(qToProcess), qpResults.LastOrDefault()?.NextStep ?? Rules.NextStepEnum.Finished);
 
             } //qi all query parts
 

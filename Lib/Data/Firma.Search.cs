@@ -1,4 +1,5 @@
 ﻿using Nest;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace HlidacStatu.Lib.Data
     {
         public class Search
         {
+            public const int MaxResultWindow = 10000;
 
             [ElasticsearchType(IdProperty = nameof(Ico))]
             public class FirmaInElastic
@@ -56,7 +58,7 @@ namespace HlidacStatu.Lib.Data
             "AND","OR"
         };
 
-            public static IEnumerable<string> FindAllIco(string query, int limit)
+            public static IEnumerable<string> SimpleSearch(string query, int page, int size)
             {
 
                 string modifQ = query;
@@ -91,20 +93,32 @@ namespace HlidacStatu.Lib.Data
                 List<string> found = new List<string>();
 
 
-                var qc = new QueryContainerDescriptor<Lib.Data.Smlouva>()
-                    .QueryString(qs => qs
-                        .Query(modifQ)
-                        .DefaultOperator(Operator.And)
-                    );
+
+                page = page - 1;
+                if (page < 0)
+                    page = 0;
+
+                if (page * size >= MaxResultWindow) //elastic limit
+                {
+                    page = 0; size = 0; //return nothing
+                }
+
+
+                var qc = GetSimpleQuery(query);
+                //var qc = new QueryContainerDescriptor<Lib.Data.Smlouva>()
+                //    .QueryString(qs => qs
+                //        .Query(modifQ)
+                //        .DefaultOperator(Operator.And)
+                //    );
 
                 ISearchResponse<FirmaInElastic> res = null;
                 try
                 {
                     res = ES.Manager.GetESClient_Firmy()
                        .Search<FirmaInElastic>(s => s
-                           .Size(limit)
-                           .From(0)
-                            .TrackTotalHits(limit == 0 ? true : (bool?)null)
+                            .Size(size)
+                            .From(page * size)
+                            .TrackTotalHits(size == 0 ? true : (bool?)null)
                             .Query(q => qc)
                        );
 
@@ -117,29 +131,37 @@ namespace HlidacStatu.Lib.Data
                         return found;
                     }
                     else
-                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res,query);
+                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res, query);
                 }
                 catch (Exception e)
                 {
 
                     if (res != null && res.ServerError != null)
-                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res,query);
+                        Lib.ES.Manager.LogQueryError<FirmaInElastic>(res, query);
                     else
                         HlidacStatu.Util.Consts.Logger.Error("", e);
                     throw;
                 }
                 return found;
             }
+
+            public static QueryContainer GetSimpleQuery(string query)
+            {
+                var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<FirmaInElastic>(query, new Searching.Rules.IRule[] { });
+                return qc;
+            }
+
+
             public static IEnumerable<Firma> FindAll(string query, int limit)
             {
-                return FindAllIco(query, limit)
+                return SimpleSearch(query, 0,limit)
                     .Select(m => Firmy.Get(m));
             }
 
 
             public static IEnumerable<Firma> FindAllInMemory(string query, int limit)
             {
-                return FindAllIco(query, limit)
+                return SimpleSearch(query,0, limit)
                     .Select(m => Firmy.Get(m));
             }
 

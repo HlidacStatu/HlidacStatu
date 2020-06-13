@@ -406,14 +406,7 @@ namespace HlidacStatu.Lib.Data
 
             foreach (var dEv in dEvs)
             {
-                bool exists = false;
-                foreach (var ev in this.NoFilteredEvents())
-                {
-                    exists = exists || OsobaEvent.Compare(ev, dEv);
-                }
-                if (!exists)
-                    this.AddOrUpdateEvent(dEv, user);
-
+                this.AddOrUpdateEvent(dEv, user, checkDuplicates:true);
             }
 
             List<OsobaExternalId> addExternalIds = new List<OsobaExternalId>();
@@ -904,7 +897,8 @@ namespace HlidacStatu.Lib.Data
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd
                                         && m.DatumDo == ev.DatumDo
-                                        && m.Zdroj == ev.Zdroj
+                                        && m.Status == ev.Status
+                                        && m.Title == ev.Title
                                 );
 
                     if (exists != null)
