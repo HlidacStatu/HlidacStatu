@@ -1189,7 +1189,7 @@ text zpravy: {txt}
 
         public ActionResult HledatFirmy(string q)
         {
-            var model = new Lib.Data.Search.GeneralResult<string>(q, Firma.Search.FindAllIco(q, 50));
+            var model = new Lib.Data.Search.GeneralResult<string>(q, Firma.Search.SimpleSearch(q, 50));
             return View(model);
         }
 
