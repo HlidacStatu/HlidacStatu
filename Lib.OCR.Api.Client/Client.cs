@@ -39,8 +39,8 @@ namespace HlidacStatu.Lib.OCR.Api
             Low = 5,
             Standard = 10,
             High = 20,
-            Critical = 50,
             Immediate = 100,
+            Critical = 999,
         }
 
         public static Devmasters.Core.Logging.Logger logger = new Devmasters.Core.Logging.Logger("HlidacStatu.Lib.OCR.Api.Client");

@@ -142,6 +142,7 @@
     <Compile Include="ConnectionProviders\CouchbaseManager.cs" />
     <Compile Include="DataValidators.cs" />
     <Compile Include="EnumTools.cs" />
+    <Compile Include="ExecutionTime.cs" />
     <Compile Include="FirstCaseLowercaseContractResolver.cs" />
     <Compile Include="ArrayTools.cs" />
     <Compile Include="Cache\Core.cs" />

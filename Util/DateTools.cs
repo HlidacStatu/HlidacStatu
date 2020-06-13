@@ -129,7 +129,7 @@ namespace HlidacStatu.Util
 
         public static DateTime FirstDayOfMonth(DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month, 1,0,0,0, dt.Kind);
+            return new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, dt.Kind);
         }
 
 
@@ -436,6 +436,22 @@ namespace HlidacStatu.Util
                 return true;
             else
                 return false; ;
+
+        }
+
+        public static void ExecutionTime(
+        Action codeToExecute,
+        Action<Devmasters.Core.StopWatchEx> processResult)
+        {
+            if (codeToExecute == null)
+                throw new ArgumentNullException("codeToExecute");
+
+            var sw = new Devmasters.Core.StopWatchEx();
+            sw.Start();
+            codeToExecute();
+            sw.Stop();
+            if (processResult != null)
+                processResult(sw);
 
         }
     }
