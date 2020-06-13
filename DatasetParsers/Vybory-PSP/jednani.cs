@@ -54,6 +54,7 @@ namespace Vybory_PSP
 
         public static jednani Merge(jednani prim, jednani sec, out bool changed)
         {
+            Console.WriteLine($"Merging {prim.cisloJednani} with {sec.cisloJednani}");
             changed = false;
             if (!string.IsNullOrEmpty(sec.vec) && prim.vec != sec.vec)
             {

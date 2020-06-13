@@ -69,11 +69,13 @@ namespace Vybory_PSP
             if (komplexni && lastJednani > 0 && !string.IsNullOrEmpty(jednaniUrlTemplate))
             {
                 //parse HP jednani
-                for (int cisloJednani = lastJednani; cisloJednani > 0; cisloJednani--)
+                //for (int cisloJednani = lastJednani; cisloJednani > 0; cisloJednani--)
+                Devmasters.Core.Batch.Manager.DoActionForAll<int>(Enumerable.Range(1, lastJednani).Reverse(),
+                    (cisloJednani) =>
                 {
                     var jednani = JednaniKomplexni(vyborId, cisloJednani, string.Format(jednaniUrlTemplate, cisloJednani));
                     if (jednani == null)
-                        continue;
+                        return new Devmasters.Core.Batch.ActionOutputData();
                     //add usneseni
                     var docFromUsneseni = vsechnausneseni
                         .Where(m => m.datum == jednani.datum)
@@ -103,8 +105,8 @@ namespace Vybory_PSP
 
                     bool changed = true;
                     if (exists != null)
-                        jednani = jednani.Merge(exists,jednani, out changed);
-                    
+                        jednani = jednani.Merge(exists, jednani, out changed);
+
                     //add OCR
                     Devmasters.Core.Batch.Manager.DoActionForAll<jednani.dokument>(jednani.dokumenty,
                         d =>
@@ -124,10 +126,14 @@ namespace Vybory_PSP
                                     d.DocumentPlainText = ocrRes.MergedDocuments().Text;
                                     changed = true;
                                 }
+                                else
+                                {
+                                    Console.WriteLine($"Invalid OCR {d.DocumentUrl} - {ocrRes.Error}");
+                                }
                             }
                             return new Devmasters.Core.Batch.ActionOutputData();
 
-                        }, true);
+                        }, null,null, true, prefix:$"Jednani {cisloJednani} OCR:");
 
 
                     string jedn = "zápis";
@@ -143,7 +149,9 @@ namespace Vybory_PSP
                     if (changed)
                         id = dsc.AddItemToDataset(datasetname, jednani, DatasetConnector.AddItemMode.Rewrite).Result;
                     Console.WriteLine($"Saved vybor {jednani.vybor} jednani {jednani.Id} id {id}");
-                }
+                    return new Devmasters.Core.Batch.ActionOutputData();
+
+                }, null, null, true, maxDegreeOfParallelism:5, prefix: "cisloJednani: ");
             }
 
         }
@@ -340,13 +348,25 @@ namespace Vybory_PSP
 
         private static XPath GetPage(string url)
         {
-            string html = "";
-            using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+            try
             {
-                net.Timeout = 60000; net.Tries = 5;
-                html = net.GetContent().Text;
+                string html = "";
+                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                {
+                    net.IgnoreHttpErrors = false;
+                    //Console.WriteLine($"Downloading {url} ");
+                    net.Timeout = 60000; 
+                    net.Tries = 5;
+                    html = net.GetContent().Text;
+                }
+                return new XPath(html);
+
             }
-            return new XPath(html);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{url} - {ex.Message}");
+                throw ex;
+            }
 
         }
 
