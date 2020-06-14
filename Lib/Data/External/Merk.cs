@@ -152,32 +152,32 @@ namespace HlidacStatu.Lib.Data.External
             public IList<object> twitter { get; set; }
             public object vzp_debt { get; set; }
             public IList<object> linkedin { get; set; }
-            public int active_licenses_count { get; set; }
+            public int? active_licenses_count { get; set; }
             public bool is_unreliable_vatpayer { get; set; }
             public bool is_vatpayer { get; set; }
-            public int regno { get; set; }
+            public int? regno { get; set; }
             public IList<SecondaryIndustry> secondary_industries { get; set; }
             public object salutation { get; set; }
-            public DateTime updated_src { get; set; }
-            public int years_in_business { get; set; }
+            public DateTime? updated_src { get; set; }
+            public int? years_in_business { get; set; }
             public IList<TurnoverHistory> turnover_history { get; set; }
             public object taxno { get; set; }
             public Court court { get; set; }
             public Profit profit { get; set; }
-            public DateTime updated_from_src { get; set; }
+            public DateTime? updated_from_src { get; set; }
             public object vat_registration_type { get; set; }
             public BankAccountsBalance bank_accounts_balance { get; set; }
             public Ebidta ebidta { get; set; }
             public object esi { get; set; }
             public Gps gps { get; set; }
             public Body body { get; set; }
-            public DateTime updated { get; set; }
+            public DateTime? updated { get; set; }
             public IList<Contract> contracts { get; set; }
             public bool is_active { get; set; }
             public object government_grants { get; set; }
             public LegalForm legal_form { get; set; }
             public string link { get; set; }
-            public int business_premises_count { get; set; }
+            public int? business_premises_count { get; set; }
             public object trademarks { get; set; }
 
             public Address address { get; set; }
@@ -193,20 +193,20 @@ namespace HlidacStatu.Lib.Data.External
             public Magnitude magnitude { get; set; }
             public IList<Mobile> mobiles { get; set; }
             public object insolvency_cases { get; set; }
-            public DateTime vat_registration_date { get; set; }
+            public DateTime? vat_registration_date { get; set; }
             public IList<object> facebook { get; set; }
-            public DateTime estab_date { get; set; }
+            public DateTime? estab_date { get; set; }
             public Turnover turnover { get; set; }
             public class Status
             {
                 public string text { get; set; }
-                public int id { get; set; }
+                public int? id { get; set; }
             }
 
             public class OwningType
             {
                 public string text { get; set; }
-                public int id { get; set; }
+                public int? id { get; set; }
             }
 
             public class BankAccount
@@ -217,7 +217,7 @@ namespace HlidacStatu.Lib.Data.External
 
             public class Phone
             {
-                public DateTime acc { get; set; }
+                public DateTime? acc { get; set; }
                 public string score { get; set; }
                 public string number { get; set; }
             }
@@ -230,8 +230,8 @@ namespace HlidacStatu.Lib.Data.External
 
             public class TurnoverHistory
             {
-                public int turnover_id { get; set; }
-                public int year { get; set; }
+                public int? turnover_id { get; set; }
+                public int? year { get; set; }
             }
 
             public class Court
@@ -243,25 +243,25 @@ namespace HlidacStatu.Lib.Data.External
             public class Profit
             {
                 public object amount { get; set; }
-                public int year { get; set; }
+                public int? year { get; set; }
             }
 
             public class BankAccountsBalance
             {
                 public object amount { get; set; }
-                public int year { get; set; }
+                public int? year { get; set; }
             }
 
             public class Ebidta
             {
                 public object amount { get; set; }
-                public int year { get; set; }
+                public int? year { get; set; }
             }
 
             public class Gps
             {
-                public double lat { get; set; }
-                public double lon { get; set; }
+                public double? lat { get; set; }
+                public double? lon { get; set; }
             }
 
             public class Address
@@ -274,7 +274,7 @@ namespace HlidacStatu.Lib.Data.External
                 public string municipality_first { get; set; }
                 public string street_fixed { get; set; }
                 public string street { get; set; }
-                public int postal_code { get; set; }
+                public int? postal_code { get; set; }
                 public string number_orientation { get; set; }
                 public string country_code { get; set; }
             }
@@ -285,29 +285,29 @@ namespace HlidacStatu.Lib.Data.External
                 public string last_name { get; set; }
                 public string company_role { get; set; }
                 public string gender { get; set; }
-                public int age { get; set; }
+                public int? age { get; set; }
                 public string degree_after { get; set; }
                 public string link { get; set; }
                 public string country_code { get; set; }
                 public Address address { get; set; }
                 public string salutation { get; set; }
                 public string degree_before { get; set; }
-                public int company_role_id { get; set; }
+                public int? company_role_id { get; set; }
             }
 
             public class Body
             {
                 public IList<Person> persons { get; set; }
-                public int average_age { get; set; }
+                public int? average_age { get; set; }
             }
 
             public class Contract
             {
                 public string url { get; set; }
                 public string payer_name { get; set; }
-                public DateTime contract_date { get; set; }
-                public int payer_regno { get; set; }
-                public DateTime published_date { get; set; }
+                public DateTime? contract_date { get; set; }
+                public int? payer_regno { get; set; }
+                public DateTime? published_date { get; set; }
                 public double price_with_vat { get; set; }
                 public bool has_multiple_contractors { get; set; }
                 public string subject { get; set; }
@@ -316,25 +316,25 @@ namespace HlidacStatu.Lib.Data.External
             public class LegalForm
             {
                 public string text { get; set; }
-                public int id { get; set; }
+                public int? id { get; set; }
             }
 
             public class Email
             {
-                public DateTime acc { get; set; }
+                public DateTime? acc { get; set; }
                 public string score { get; set; }
                 public string email { get; set; }
             }
 
             public class MagnitudeHistory
             {
-                public int magnitude_id { get; set; }
-                public int year { get; set; }
+                public int? magnitude_id { get; set; }
+                public int? year { get; set; }
             }
 
             public class Web
             {
-                public DateTime acc { get; set; }
+                public DateTime? acc { get; set; }
                 public string url { get; set; }
                 public string score { get; set; }
             }
@@ -349,14 +349,14 @@ namespace HlidacStatu.Lib.Data.External
             {
                 public string trend { get; set; }
                 public string lower_bound { get; set; }
-                public int id { get; set; }
+                public int? id { get; set; }
                 public string upper_bound { get; set; }
                 public string text { get; set; }
             }
 
             public class Mobile
             {
-                public DateTime acc { get; set; }
+                public DateTime? acc { get; set; }
                 public string score { get; set; }
                 public string number { get; set; }
             }
@@ -365,7 +365,7 @@ namespace HlidacStatu.Lib.Data.External
             {
                 public string trend { get; set; }
                 public string lower_bound { get; set; }
-                public int id { get; set; }
+                public int? id { get; set; }
                 public string upper_bound { get; set; }
                 public string text { get; set; }
             }
@@ -407,14 +407,14 @@ namespace HlidacStatu.Lib.Data.External
                 public string[] phones { get; set; }
                 public object[] twitter { get; set; }
                 public Secondary_Industries[] secondary_industries { get; set; }
-                public int vzp_debt { get; set; }
+                public int? vzp_debt { get; set; }
                 public object[] linkedin { get; set; }
                 public bool is_unreliable_vatpayer { get; set; }
                 public bool is_vatpayer { get; set; }
-                public int regno { get; set; }
+                public int? regno { get; set; }
                 public string databox_id { get; set; }
                 public object salutation { get; set; }
-                public int years_in_business { get; set; }
+                public int? years_in_business { get; set; }
                 public Turnover_History[] turnover_history { get; set; }
                 public object taxno { get; set; }
                 public Court court { get; set; }
@@ -429,7 +429,7 @@ namespace HlidacStatu.Lib.Data.External
                 public bool is_active { get; set; }
                 public Legal_Form legal_form { get; set; }
                 public string link { get; set; }
-                public int business_premises_count { get; set; }
+                public int? business_premises_count { get; set; }
                 public Trademark[] trademarks { get; set; }
                 public Address address { get; set; }
                 public Email[] emails { get; set; }
@@ -443,7 +443,7 @@ namespace HlidacStatu.Lib.Data.External
                 public Phone[] mobiles { get; set; }
                 public object insolvency_cases { get; set; }
                 public object[] facebook { get; set; }
-                public DateTime estab_date { get; set; }
+                public DateTime? estab_date { get; set; }
                 public Turnover turnover { get; set; }
 
                 public class Phone
@@ -466,7 +466,7 @@ namespace HlidacStatu.Lib.Data.External
                 public class Body
                 {
                     public Person[] persons { get; set; }
-                    public int average_age { get; set; }
+                    public int? average_age { get; set; }
                 }
 
                 public class Person
@@ -475,7 +475,7 @@ namespace HlidacStatu.Lib.Data.External
                     public string last_name { get; set; }
                     public string company_role { get; set; }
                     public string gender { get; set; }
-                    public int age { get; set; }
+                    public int? age { get; set; }
                     public string link { get; set; }
                     public string country_code { get; set; }
                     public string degree_after { get; set; }
@@ -486,7 +486,7 @@ namespace HlidacStatu.Lib.Data.External
                 public class Owning_Type
                 {
                     public string text { get; set; }
-                    public int id { get; set; }
+                    public int? id { get; set; }
                 }
 
                 public class Court
@@ -509,20 +509,20 @@ namespace HlidacStatu.Lib.Data.External
 
                 public class Gps
                 {
-                    public float lat { get; set; }
-                    public float lon { get; set; }
+                    public float? lat { get; set; }
+                    public float? lon { get; set; }
                 }
 
                 public class Status
                 {
                     public string text { get; set; }
-                    public int id { get; set; }
+                    public int? id { get; set; }
                 }
 
                 public class Legal_Form
                 {
                     public string text { get; set; }
-                    public int id { get; set; }
+                    public int? id { get; set; }
                 }
 
                 public class Address
@@ -536,7 +536,7 @@ namespace HlidacStatu.Lib.Data.External
                     public string municipality_first { get; set; }
                     public string street_fixed { get; set; }
                     public string street { get; set; }
-                    public int postal_code { get; set; }
+                    public int? postal_code { get; set; }
                     public string number_orientation { get; set; }
                     public string country_code { get; set; }
                 }
@@ -563,7 +563,7 @@ namespace HlidacStatu.Lib.Data.External
                 {
                     public string trend { get; set; }
                     public string lower_bound { get; set; }
-                    public int id { get; set; }
+                    public int? id { get; set; }
                     public string upper_bound { get; set; }
                     public string text { get; set; }
                 }
@@ -572,7 +572,7 @@ namespace HlidacStatu.Lib.Data.External
                 {
                     public string trend { get; set; }
                     public string lower_bound { get; set; }
-                    public int id { get; set; }
+                    public int? id { get; set; }
                     public string upper_bound { get; set; }
                     public string text { get; set; }
                 }
@@ -591,58 +591,58 @@ namespace HlidacStatu.Lib.Data.External
 
                 public class Turnover_History
                 {
-                    public int turnover_id { get; set; }
-                    public int year { get; set; }
+                    public int? turnover_id { get; set; }
+                    public int? year { get; set; }
                 }
 
                 public class Esi
                 {
                     public string status { get; set; }
-                    public DateTime allocation_date { get; set; }
+                    public DateTime? allocation_date { get; set; }
                     public string project_name { get; set; }
                     public string esi_program { get; set; }
-                    public DateTime iterim_payment_date { get; set; }
-                    public int allocation_amount { get; set; }
+                    public DateTime? iterim_payment_date { get; set; }
+                    public int? allocation_amount { get; set; }
                     public string eu_fund { get; set; }
-                    public int total_paid_from_project_start { get; set; }
+                    public int? total_paid_from_project_start { get; set; }
                 }
 
                 public class Contract
                 {
                     public string url { get; set; }
                     public string gov_name { get; set; }
-                    public DateTime published_date { get; set; }
-                    public DateTime contract_date { get; set; }
+                    public DateTime? published_date { get; set; }
+                    public DateTime? contract_date { get; set; }
                     public string price_foreign_currency { get; set; }
-                    public int gov_regno { get; set; }
-                    public float price { get; set; }
+                    public int? gov_regno { get; set; }
+                    public float? price { get; set; }
                     public bool has_multiple_contractors { get; set; }
                     public string subject { get; set; }
-                    public float price_vat { get; set; }
+                    public float? price_vat { get; set; }
                 }
 
                 public class Trademark
                 {
                     public string status { get; set; }
                     public string tm_type { get; set; }
-                    public DateTime stamp_renewed { get; set; }
+                    public DateTime? stamp_renewed { get; set; }
                     public string url { get; set; }
-                    public int nr_application { get; set; }
+                    public int? nr_application { get; set; }
                     public string nr_register { get; set; }
                     public string product_or_service_classes { get; set; }
                     public string source { get; set; }
-                    public DateTime stamp_application { get; set; }
+                    public DateTime? stamp_application { get; set; }
                     public string reproduction { get; set; }
                     public string image_classes { get; set; }
-                    public DateTime stamp_registered { get; set; }
+                    public DateTime? stamp_registered { get; set; }
                     public string url_doc { get; set; }
                     public string wording { get; set; }
                 }
 
                 public class Magnitude_History
                 {
-                    public int magnitude_id { get; set; }
-                    public int year { get; set; }
+                    public int? magnitude_id { get; set; }
+                    public int? year { get; set; }
                 }
 
             }
