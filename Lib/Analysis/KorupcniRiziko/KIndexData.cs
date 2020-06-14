@@ -81,7 +81,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public Annual ForYear(int year)
         {
-            return roky.Where(m => m.Rok == year).FirstOrDefault();
+            return roky.Where(m => m != null && m.Rok == year).FirstOrDefault();
         }
 
         public string Ico { get; set; }

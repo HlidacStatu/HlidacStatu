@@ -84,8 +84,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private KIndexData.Annual CalculateForYear(int year)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
-            if (smlouvyZaRok < 100)
-                return null;
 
             KIndexData.Annual ret = new KIndexData.Annual(year);
             var fc = new FinanceDataCalculator(this.Ico, year);
@@ -108,7 +106,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.KoncentraceDodavateluBezUvedeneCeny
                     = KoncentraceDodavateluCalculator(query + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
-            if (ret.PercSmluvUlimitu>0)
+            if (ret.PercSmluvUlimitu > 0)
                 ret.KoncentraceDodavateluCenyULimitu
                     = KoncentraceDodavateluCalculator(query + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
@@ -164,8 +162,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             decimal bonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
 
 
-
-            ret.KIndex = CalculateKIndex(bonus, ref ret);
+            if (smlouvyZaRok < Consts.MinSmluvPerYear)
+                ret.KIndex = 0;
+            else
+                ret.KIndex = CalculateKIndex(bonus, ref ret);
 
 
             return ret;
@@ -189,9 +189,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //r17
             + datayear.PercSmluvUlimitu * 0.1m
             //r18 - bonus!
-            - bonus* 0.1m
+            - bonus * 0.1m
             //r19
-            //TODO
             + datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 0.1m ?? 0
             //r20
             + datayear.PercNovaFirmaDodavatel * 0.02m
