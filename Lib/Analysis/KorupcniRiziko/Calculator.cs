@@ -54,7 +54,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             foreach (var year in CalculationYears)
             {
                 KIndexData.Annual data_rok = CalculateForYear(year);
-                CalculateKIndex( ref data_rok);
                 kindex.roky.Add(data_rok);
             }
             return kindex;
@@ -85,6 +84,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private KIndexData.Annual CalculateForYear(int year)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
+            if (smlouvyZaRok < 100)
+                return null;
+
             KIndexData.Annual ret = new KIndexData.Annual(year);
             var fc = new FinanceDataCalculator(this.Ico, year);
             ret.FinancniUdaje = fc.GetData();
@@ -137,23 +139,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-
-
-
-            return ret;
-        }
-
-        public decimal CalculateKIndex(ref KIndexData.Annual datayear)
-        {
-
             decimal smlouvyPod50kprumer = 0;
             decimal smlouvyAllCount = 0;
             decimal smlouvyPod50kCount = 0;
-            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
+            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
                 , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
             if (res.IsValid)
                 smlouvyAllCount = res.Total;
-            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"cena:>0 AND cena:<=50000 AND datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
+            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"cena:>0 AND cena:<=50000 AND datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
                 , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
             if (res.IsValid)
                 smlouvyPod50kCount = res.Total;
@@ -161,14 +154,25 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (smlouvyAllCount > 0)
                 smlouvyPod50kprumer = smlouvyPod50kCount / smlouvyAllCount;
 
-            datayear.TotalAveragePercSmlouvyPod50k = smlouvyPod50kprumer;
+            ret.TotalAveragePercSmlouvyPod50k = smlouvyPod50kprumer;
 
-            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.Ico} cena:>0 AND cena:<=50000 AND datumUzavreni:[{datayear.Rok}-01-01 TO {datayear.Rok + 1}-01-01}}"
-                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
-            if (res.IsValid && datayear.Smlouvy.Pocet > 0)
-                datayear.PercSmlouvyPod50k = (decimal)(res.Total) / datayear.Smlouvy.Pocet;
+            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.Ico} cena:>0 AND cena:<=50000 AND datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
+    , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+            if (res.IsValid && ret.Smlouvy.Pocet > 0)
+                ret.PercSmlouvyPod50k = (decimal)(res.Total) / ret.Smlouvy.Pocet;
 
-            decimal bonus = SmlouvyPod50kBonus(datayear.PercSmlouvyPod50k, datayear.TotalAveragePercSmlouvyPod50k);
+            decimal bonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
+
+
+
+            ret.KIndex = CalculateKIndex(bonus, ref ret);
+
+
+            return ret;
+        }
+
+        public decimal CalculateKIndex(decimal bonus, ref KIndexData.Annual datayear)
+        {
 
             //https://docs.google.com/spreadsheets/d/1FhaaXOszHORki7t5_YEACWFZUya5QtqUnNVPAvCArGQ/edit#gid=0
 
@@ -181,14 +185,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //r13
             + datayear.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified * 0.2m
             //r15
-            + datayear.KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified * 0.1m
+            + datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 0.1m
             //r17
             + datayear.PercSmluvUlimitu * 0.1m
             //r18 - bonus!
             - bonus* 0.1m
             //r19
             //TODO
-            + datayear.KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified * 0.1m
+            + datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 0.1m ?? 0
             //r20
             + datayear.PercNovaFirmaDodavatel * 0.02m
             //r22
