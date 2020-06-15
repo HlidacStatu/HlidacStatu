@@ -348,7 +348,7 @@ MORATORIUM =
             {
                 return Lib.ES.Manager.GetESClient_Insolvence().Search<Lib.Data.Insolvence.Rizeni>(a => a
                            .Size(size)
-                           .Source(ss1 => ss1.ExcludeAll())
+                           .Source(false)
                            .From(page * size)
                            .Query(q => q.MatchAll())
                            .Scroll("1m")

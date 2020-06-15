@@ -528,7 +528,7 @@ namespace HlidacStatu.Lib.Searching
                 {
                     return client.Search<T>(a => a
                                 .Index(indexes ?? client.ConnectionSettings.DefaultIndex)
-                                .Source(ss => ss.ExcludeAll())
+                                .Source(false)
                                 //.Fields(f => f.Field("Id"))
                                 .Size(size)
                                 .From(page * size)

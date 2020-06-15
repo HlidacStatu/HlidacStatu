@@ -156,7 +156,9 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
+#if (!DEBUG)
         [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
+#endif
         public ActionResult PorovnatSubjekty(string id, string ico, string ds, string title, int? width, string specialtype, string specialvalue, string part)
         {
             if (id == "special")

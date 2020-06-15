@@ -49,7 +49,7 @@ namespace HlidacStatu.Lib.Data
             var res = Lib.ES.Manager.GetESClient()
                     .Search<Subject>(s => s
                         .Size(1)
-                        .Source(ss => ss.ExcludeAll())
+                        .Source(false)
                         .Query(q => q
                              .Term(f => f.ICO, subj.ICO)
                         )

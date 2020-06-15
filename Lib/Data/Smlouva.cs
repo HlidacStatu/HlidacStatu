@@ -1103,7 +1103,7 @@ namespace HlidacStatu.Lib.Data
                     return client.Search<Smlouva>(a => a
                                 .Size(size)
                                 .From(page * size)
-                                .Source(ss => ss.ExcludeAll())
+                                .Source(false)
                                 .Query(q => q.Term(t => t.Field(f => f.platnyZaznam).Value(deleted ? false : true)))
                                 .Scroll("1m")
                                 );
