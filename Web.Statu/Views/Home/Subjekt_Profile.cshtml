@@ -475,9 +475,13 @@ else
             @if (Model.IsNespolehlivyPlatceDPH())
             {
                 <tr>
-                    <th id="_nespolehlivy_platce_dph"><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma jako nespolehlivý plátce DPH</span></th>
+                    <th id="_nespolehlivy_platce_dph">
+                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                            <span class='@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue, "","glyphicon glyphicon-exclamation-sign")'></span> Firma jako nespolehlivý plátce DPH
+                        </span>
+                    </th>
                     <td>
-                        <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
+                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
                             @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
                             { 
                             <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>
