@@ -475,9 +475,14 @@ else
             @if (Model.IsNespolehlivyPlatceDPH())
             {
                 <tr>
-                    <th id="_nespolehlivy_platce_dph"><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma je nespolehlivý plátce DPH</span></th>
+                    <th id="_nespolehlivy_platce_dph"><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Firma jako nespolehlivý plátce DPH</span></th>
                     <td>
-                        <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")</span>
+                        <span class="text-danger">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
+                            @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
+                            { 
+                            <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>
+                            }
+                            </span>
                     </td>
                 </tr>
 
@@ -493,7 +498,9 @@ else
                                     if (Model.NespolehlivyPlatceDPH().FromDate.HasValue)
                                     {
                                         DateTime toDate = Model.NespolehlivyPlatceDPH().ToDate.HasValue ? Model.NespolehlivyPlatceDPH().ToDate.Value : DateTime.Now.AddDays(1);
-                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]", Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"), toDate.ToString("yyyy-MM-dd")
+                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]", 
+                                            Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"), 
+                                            toDate.ToString("yyyy-MM-dd")
                                             ); //podepsano:[2016-01-01 TO 2016-12-31]
                                     }
                                     <li>

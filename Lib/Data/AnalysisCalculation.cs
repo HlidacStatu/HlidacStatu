@@ -71,13 +71,13 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        private static List<Lib.Data.Smlouva> SimpleSmlouvyForIco(string ico, DateTime? from)
+        private static List<Lib.Data.Smlouva> SimpleSmlouvyForIco(string ico, DateTime? from, DateTime? to)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = searchFunc = (size, page) =>
             {
                 var sdate = "";
                 if (from.HasValue)
-                    sdate = string.Format(" AND podepsano:[{0} TO {1}]", from.Value.ToString("yyyy-MM-dd"), DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")); //podepsano:[2016-01-01 TO 2016-12-31]
+                    sdate = $" AND podepsano:[{from?.ToString("yyyy-MM-dd") ?? "*"} TO {from?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")}]"; //podepsano:[2016-01-01 TO 2016-12-31]
 
                 
                 return Lib.ES.Manager.GetESClient().Search<Lib.Data.Smlouva>(a => a
@@ -120,7 +120,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     var nespolehlivaFirma = Firmy.Get(nf.Ico);
                     var ico = nf.Ico;
-                    var smlouvy = SimpleSmlouvyForIco(ico, nf.FromDate);
+                    var smlouvy = SimpleSmlouvyForIco(ico, nf.FromDate, nf.ToDate);
                     foreach (var s in smlouvy)
                     {
                         var allIco = new List<string>(
