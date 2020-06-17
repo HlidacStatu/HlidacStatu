@@ -39,11 +39,11 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.35\lib\net461\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.1.472.20.1\lib\net40\Devmasters.Cache.dll</HintPath>
+    <Reference Include="Devmasters.Cache, Version=1.472.20.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.1.472.20.2\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.20\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.20.1\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>

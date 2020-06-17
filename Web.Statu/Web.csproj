@@ -60,11 +60,11 @@
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.15.0.5\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.1.472.20.1\lib\net40\Devmasters.Cache.dll</HintPath>
+    <Reference Include="Devmasters.Cache, Version=1.472.20.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.1.472.20.2\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.20\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.20.1\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Imaging, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Imaging.1.472.1.1\lib\net40\Devmasters.Imaging.dll</HintPath>
