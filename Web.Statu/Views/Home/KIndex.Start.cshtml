@@ -1,0 +1,50 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using Devmasters.Core
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko
+
+
+@{
+
+    ViewBag.Title = "Index korupčního rizika.";
+
+}
+@section scripts
+{
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>K-Index</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>K-Index pro jednu organizaci</h4>
+        <form method="get" action="/kindex" class="form-search__input-wrapper" role="form">
+
+            <input class="form-search__input" id="id" name="id" value="" placeholder="IČO organizace " style="max-width: none;" type="text">
+            <button class="form-search__btn" type="submit">K-Index pro jednu organizaci</button>
+        </form>
+    </div>
+</div>
+
+<hr style="width:40%" />
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <h4>Porovnat K-Index pro více organizací</h4>
+        <form method="get" action="/kindex/porovnat" class="form-search__input-wrapper" role="form">
+
+            <input class="form-search__input" id="ico" name="ico" value="" placeholder="IČ organizací, oddelené čárkami, mezerou, středníkem " style="max-width: none;" type="text">
+            <button class="form-search__btn" type="submit">Porovnat K-Index pro více organizací</button>
+        </form>
+    </div>
+</div>

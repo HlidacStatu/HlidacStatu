@@ -6,7 +6,7 @@
 @using Devmasters.Core
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
 @{
-    var f = HlidacStatu.Lib.Data.Firmy.Get(Model.Ico);
+    var f = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
     ViewBag.Title = "Index korupčního rizika pro " + f.Jmeno;
 
 }

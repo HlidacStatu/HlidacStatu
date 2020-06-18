@@ -1553,6 +1553,7 @@
     <Content Include="Views\Data\ImportDataExcel.cshtml" />
     <Content Include="Views\Home\KIndex.cshtml" />
     <Content Include="Views\Home\KIndex.Porovnat.cshtml" />
+    <Content Include="Views\Home\KIndex.Start.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

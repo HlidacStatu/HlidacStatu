@@ -59,10 +59,15 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
+            if (string.IsNullOrEmpty(id))
+            {
+                return View("KIndex.Start");
+            }
 
             if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
             {
                 HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);
+                ViewBag.ICO = id;
                 return View(kdata);
             }
             else if (id?.ToLower() == "porovnat")
