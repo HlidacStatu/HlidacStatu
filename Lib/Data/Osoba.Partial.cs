@@ -178,8 +178,8 @@ namespace HlidacStatu.Lib.Data
                                 ||
                                 (m.Type == (int)OsobaEvent.Types.Sponzor
                                 && (
-                                    (m.AddInfoNum >= smallSponzoringThreshold && m.DatumOd >= minBigSponzoringDate)
-                                    || (m.AddInfoNum < smallSponzoringThreshold && m.DatumOd >= minSmallSponzoringDate)
+                                    (m.AddInfoNum > smallSponzoringThreshold && m.DatumOd >= minBigSponzoringDate)
+                                    || (m.AddInfoNum <= smallSponzoringThreshold && m.DatumOd >= minSmallSponzoringDate)
                                     )
                                 )
                             );
