@@ -52,7 +52,9 @@ namespace HlidacStatu.Web.Controllers
             {
                 return Redirect("/");
             }
-            if (this.User.IsInRole("Admin") == false)
+            if (
+                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester") )
+                )
             {
                 return Redirect("/");
             }
