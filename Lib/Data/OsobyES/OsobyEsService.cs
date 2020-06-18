@@ -9,6 +9,18 @@ namespace HlidacStatu.Lib.Data.OsobyES
     {
         private static readonly Nest.ElasticClient _esClient = ES.Manager.GetESClient_Osoby();
 
+        public static bool DeleteAll()
+        {
+            try
+            {
+                var response = _esClient.DeleteByQuery<OsobaES>(m=>m.MatchAll());
+                return response.IsValid;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public static OsobaES Get(string idOsoby)
         {
             try
@@ -25,7 +37,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
             }
         }
 
-        public static void BulkSave(List<OsobaES> osoby)
+        public static void BulkSave(IEnumerable<OsobaES> osoby)
         {
             var result = _esClient.IndexMany<OsobaES>(osoby);
 
