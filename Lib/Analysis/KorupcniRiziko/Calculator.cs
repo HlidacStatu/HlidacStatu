@@ -100,15 +100,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.Statistika = this.urad.Statistic().RatingPerYear[year];
 
 
-            string query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
-            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(query);
+            string queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
+            //string queryAll = $"ico:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
+
+            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce);
             if (ret.CelkovaKoncentraceDodavatelu != null)
                 ret.KoncentraceDodavateluBezUvedeneCeny
-                    = KoncentraceDodavateluCalculator(query + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
+                    = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
             if (ret.PercSmluvUlimitu > 0)
                 ret.KoncentraceDodavateluCenyULimitu
-                    = KoncentraceDodavateluCalculator(query + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
+                    = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
             Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                 .AllTypes
@@ -122,8 +124,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 (oborid) =>
                 {
 
-                    query = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
-                    var k = KoncentraceDodavateluCalculator(query);
+                    queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
+                    var k = KoncentraceDodavateluCalculator(queryPlatce);
                     if (k != null)
                         ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
                         {
@@ -136,39 +138,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 );
 
 
-
-            decimal smlouvyPod50kprumer = 0;
-            decimal smlouvyAllCount = 0;
-            decimal smlouvyPod50kCount = 0;
-            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
-                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
-            if (res.IsValid)
-                smlouvyAllCount = res.Total;
-            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"cena:>0 AND cena:<=50000 AND datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
-                , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
-            if (res.IsValid)
-                smlouvyPod50kCount = res.Total;
-
-            if (smlouvyAllCount > 0)
-                smlouvyPod50kprumer = smlouvyPod50kCount / smlouvyAllCount;
-
-            ret.TotalAveragePercSmlouvyPod50k = smlouvyPod50kprumer;
-
-            res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{this.Ico} cena:>0 AND cena:<=50000 AND datumUzavreni:[{ret.Rok}-01-01 TO {ret.Rok + 1}-01-01}}"
-    , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
-            if (res.IsValid && ret.Smlouvy.Pocet > 0)
-                ret.PercSmlouvyPod50k = (decimal)(res.Total) / ret.Smlouvy.Pocet;
-
-            decimal bonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
-
-
             if (smlouvyZaRok < Consts.MinSmluvPerYear)
                 ret.KIndex = 0;
             else
-                ret.KIndex = CalculateKIndex(bonus, ref ret);
-
+                ret.KIndex = CalculateKIndex(ref ret);
 
             return ret;
+        }
+
+        public decimal CalculateKIndex(ref KIndexData.Annual datayear)
+        {
+            datayear.TotalAveragePercSmlouvyPod50k = TotalAveragePercSmlouvyPod50k(datayear.Rok);
+
+            datayear.PercSmlouvyPod50k = AveragePercSmlouvyPod50k(this.Ico, datayear.Rok, datayear.Smlouvy.Pocet);
+            decimal bonus = SmlouvyPod50kBonus(datayear.PercSmlouvyPod50k, datayear.TotalAveragePercSmlouvyPod50k);
+
+            return CalculateKIndex(bonus, ref datayear);
         }
 
         public decimal CalculateKIndex(decimal bonus, ref KIndexData.Annual datayear)
@@ -179,32 +164,77 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal val =
             //r5
-            datayear.Statistika.PercentBezCeny * 0.1m
+            datayear.Statistika.PercentBezCeny * 10m;   //=10
             //r11
-            + datayear.PercSeZasadnimNedostatkem * 0.02m
+            val += datayear.PercSeZasadnimNedostatkem * 10m;  //=20
             //r13
-            + datayear.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified * 0.2m
+            val += datayear.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified * 20m; //=40
             //r15
-            + datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 0.1m
+            val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 20m ?? 0; //60
             //r17
-            + datayear.PercSmluvUlimitu * 0.1m
-            //r18 - bonus!
-            - bonus * 0.1m
+            val += datayear.PercSmluvUlimitu * 10m;  //70
             //r19
-            + datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 0.1m ?? 0
+            val += datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 10m ?? 0; //80
             //r20
-            + datayear.PercNovaFirmaDodavatel * 0.02m
+            val += datayear.PercNovaFirmaDodavatel * 2m; //82
             //r22
-            + datayear.PercUzavrenoOVikendu * 0.02m
+            val += datayear.PercUzavrenoOVikendu * 2m; //84
             //r23
-            + datayear.PercSmlouvySPolitickyAngazovanouFirmou * 0.02m
+            val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 2m; //86
             ;
             //
+            //r18 - bonus!
+            val -= bonus * 10m;
 
             return val;
 
         }
+        public static decimal AveragePercSmlouvyPod50k(string ico, int year, long pocetSmluvCelkem)
+        {
+            if (pocetSmluvCelkem == 0)
+                return 0;
 
+            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{ico} cena:>0 AND cena:<=50000 AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}"
+, 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+
+            decimal perc = (decimal)(res.Total) / (decimal)pocetSmluvCelkem;
+            return perc;
+        }
+
+
+        static Dictionary<int, decimal> totalsAvg50k = new Dictionary<int, decimal>();
+        static object totalsAvg50kLock = new object();
+        public static decimal TotalAveragePercSmlouvyPod50k(int year)
+        {
+            if (!totalsAvg50k.ContainsKey(year))
+            {
+                lock (totalsAvg50kLock)
+                {
+                    if (!totalsAvg50k.ContainsKey(year))
+                    {
+                        decimal smlouvyAllCount = 0;
+                        decimal smlouvyPod50kCount = 0;
+                        var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}"
+                            , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+                        if (res.IsValid)
+                            smlouvyAllCount = res.Total;
+                        res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"cena:>0 AND cena:<=50000 AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}"
+                            , 1, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, null, exactNumOfResults: true);
+                        if (res.IsValid)
+                            smlouvyPod50kCount = res.Total;
+
+
+                        decimal smlouvyPod50kperc = 0;
+
+                        if (smlouvyAllCount > 0)
+                            smlouvyPod50kperc = smlouvyPod50kCount / smlouvyAllCount;
+
+                        totalsAvg50k.Add(year, smlouvyPod50kperc);
+                    }
+                }
+            }
+            return totalsAvg50k[year];
+        }
         public static decimal SmlouvyPod50kBonus(decimal icoPodil, decimal vsePodil)
         {
             if (icoPodil > vsePodil * 1.75m)
