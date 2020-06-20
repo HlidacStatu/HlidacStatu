@@ -30,6 +30,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     uji.FormaUcetniJednotky = i.forma_id ?? 0;
                     uji.InstitucionalniSektor = i.isektor_id ?? 0;
                     uji.PocetObyvatelObce = i.pocob ?? 0;
+                    uji.LastUpdated = DateTime.Now;
                     return uji;
 
                 }
@@ -76,6 +77,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public int PocetObyvatelObce { get; set; } = 0;
 
+
+            [Nest.Date]
+            public DateTime LastUpdated { get; set; }
 
             static private object lockObj = new object();
             static Dictionary<string, Dictionary<int, string>> _popisy = new Dictionary<string, Dictionary<int, string>>();

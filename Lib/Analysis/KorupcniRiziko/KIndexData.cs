@@ -13,6 +13,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public class Annual
         {
             protected Annual() { }
+
+            [Nest.Date]
+            public DateTime LastUpdated { get; set; }
+
             public Annual(int rok) { this.Rok = rok; }
 
             public decimal PodilSmluvNaCelkovychNakupech { get; set; } //Podíl smluv na celkových nákupech
@@ -74,7 +78,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public decimal? KIndex { get; set; }
 
 
-
         }
 
         public List<Annual> roky { get; set; } = new List<Annual>();
@@ -87,10 +90,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Ico { get; set; }
         public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();
 
+        [Nest.Date]
+        public DateTime LastSaved { get; set; }
+
         public void Save()
         {
             //calculate fields before saving
-
+            this.LastSaved = DateTime.Now;
             var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {

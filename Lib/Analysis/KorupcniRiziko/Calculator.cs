@@ -89,6 +89,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var fc = new FinanceDataCalculator(this.Ico, year);
             ret.FinancniUdaje = fc.GetData();
 
+
             ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
             ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
 
@@ -142,6 +143,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.KIndex = 0;
             else
                 ret.KIndex = CalculateKIndex(ref ret);
+
+            ret.LastUpdated = DateTime.Now;
 
             return ret;
         }
@@ -337,6 +340,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.Comprehensive_Industrial_Concentration_Index = Comprehensive_Industrial_Concentration_Index(smlouvy);
             ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy);
             ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy);
+            ret.LastUpdated = DateTime.Now;
             return ret;
         }
 

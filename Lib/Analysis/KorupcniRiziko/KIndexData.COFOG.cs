@@ -33,6 +33,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 throw new ArgumentException("invalid cofog:" + cofog);
             }
 
+
+            [Nest.Date]
+            public DateTime LastUpdated { get; set; }
+
             public int Oddil { get; set; }
             public int Skupina { get; set; } = 0;
             public int Trida { get; set; } = 0;

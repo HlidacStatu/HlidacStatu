@@ -1,7 +1,12 @@
-﻿namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
+﻿using System;
+
+namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class KoncentraceDodavateluIndexy
     {
+        [Nest.Date]
+        public DateTime LastUpdated { get; set; }
+
         public decimal Herfindahl_Hirschman_Index { get; set; }
         public decimal Herfindahl_Hirschman_Normalized { get; set; }
         public decimal Herfindahl_Hirschman_Modified { get; set; }

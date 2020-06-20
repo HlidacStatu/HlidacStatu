@@ -14,6 +14,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public Dictionary<string, decimal> Ukazatele { get; set; } = new Dictionary<string, decimal>();
 
         public bool NeuplnyRok { get; set; }
+
+        [Nest.Date]
+        public DateTime LastUpdated { get; set; }
+
+
     }
     public class FinanceDataCalculator 
     {
@@ -104,7 +109,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 }
             }
             data.OvlivnitelneNakladyCinnosti = A + BI;
-
+            data.LastUpdated = DateTime.Now;
             return data;
         }
 
