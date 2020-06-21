@@ -513,6 +513,8 @@ namespace HlidacStatu.Lib
                 {
                     Urady_OVM.Add(ico);
                 }
+                //dalsi vyjimky
+                Urady_OVM.Add("00832227");//Euroregion Neisse - Nisa - Nysa
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                 SponzorisVazbouNaStat = new Devmasters.Cache.V20.File.FileCache<List<KeyValuePair<Osoba, Analysis.BasicData<string>>>>(
@@ -565,6 +567,9 @@ namespace HlidacStatu.Lib
                     .ReadAllLines(StaticData.App_Data_Path + "mistni_firmy_ico.txt")
                     .Where(s => !string.IsNullOrEmpty(s.Trim()))
                     .ToHashSet();
+                VsechnyStatniMestskeFirmy.Add("60193913");//Pražská energetika
+                foreach (var ic in "25054040,48592307,27376516,06714366,25677063,27234835,28880757,28537319,29202311,28080378,28923405,27831248,27966216,02065801,06532438,44794274".Split(','))
+                    VsechnyStatniMestskeFirmy.Add("60193913");//porizenky Pražská energetika
 
 
 

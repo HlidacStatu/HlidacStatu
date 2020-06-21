@@ -19,16 +19,16 @@
         HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, platnyZaznam: true,
         anyAggregation:
         new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
-            .Min("min", m => m
+            .Min("xmin", m => m
                 .Field(ff => ff.datumUzavreni)
             )
-            .Max("max", m => m
+            .Max("xmax", m => m
                 .Field(ff => ff.datumUzavreni)
             )
     );
 
-    var aggMin = minMaxDate.ElasticResults.Aggregations["min"] as Nest.ValueAggregate;
-    var aggMax = minMaxDate.ElasticResults.Aggregations["max"] as Nest.ValueAggregate;
+    var aggMin = minMaxDate.ElasticResults.Aggregations["xmin"] as Nest.ValueAggregate;
+    var aggMax = minMaxDate.ElasticResults.Aggregations["xmax"] as Nest.ValueAggregate;
 
     double? minEpoch = aggMin?.Value;
     double? maxEpoch = aggMax?.Value;
