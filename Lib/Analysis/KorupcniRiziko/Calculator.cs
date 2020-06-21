@@ -140,7 +140,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             if (smlouvyZaRok < Consts.MinSmluvPerYear)
+            {
                 ret.KIndex = Consts.MinSmluvPerYearKIndexValue;
+                ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok." };
+            }
             else
                 ret.KIndex = CalculateKIndex(ref ret);
 

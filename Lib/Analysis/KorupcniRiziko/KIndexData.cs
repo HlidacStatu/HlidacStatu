@@ -77,6 +77,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public decimal? KIndex { get; set; }
 
+            public string[] KIndexIssues { get; set; }
 
         }
 
