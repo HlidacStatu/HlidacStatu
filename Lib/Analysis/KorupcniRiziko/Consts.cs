@@ -17,5 +17,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
         public const int MinSmluvPerYear = 100;
+        public const decimal MinSmluvPerYearKIndexValue = -10000m;
     }
 }

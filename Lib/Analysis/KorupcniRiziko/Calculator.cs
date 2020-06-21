@@ -140,7 +140,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             if (smlouvyZaRok < Consts.MinSmluvPerYear)
-                ret.KIndex = 0;
+                ret.KIndex = Consts.MinSmluvPerYearKIndexValue;
             else
                 ret.KIndex = CalculateKIndex(ref ret);
 
