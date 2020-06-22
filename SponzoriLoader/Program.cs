@@ -23,6 +23,7 @@ namespace SponzoriLoader
         };
 
         private static readonly string _user = "sponzorLoader";
+        private static readonly string _zdroj = "https://www.udhpsh.cz/vyrocni-financni-zpravy-stran-a-hnuti";
 
         static async Task Main(string[] args)
         {
@@ -180,7 +181,7 @@ namespace SponzoriLoader
                             DatumOd = donation.Date,
                             AddInfoNum = donation.Amount,
                             AddInfo = donation.ICO,
-                            Zdroj = _user,
+                            Zdroj = _zdroj,
                             Note = donation.Description,
                             Type = (int)OsobaEvent.Types.Sponzor
                         };
@@ -238,7 +239,7 @@ namespace SponzoriLoader
                             DatumOd = donation.Date,
                             AddInfoNum = donation.Amount,
                             Description = donation.ICO,
-                            Zdroj = _user,
+                            Zdroj = _zdroj,
                             Note = donation.Description,
                             Type = (int)FirmaEvent.Types.Sponzor
                             
