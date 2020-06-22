@@ -467,7 +467,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                 <div class="block-table">
                     @{
                         foreach (var sponzor in
-                            HlidacStatu.Web.Framework.Shared.Data.TopSponzoriOsoby
+                            HlidacStatu.Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby
                             .Get()
                             .GroupBy(g => g.Strana, sp => sp, (g, sp) => sp.OrderByDescending(o => o.CastkaCelkem).First())
                             .Where(w => HlidacStatu.Lib.Data.Sponsors.TopStrany.Contains(w.Strana))

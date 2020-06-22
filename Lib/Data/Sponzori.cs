@@ -217,7 +217,7 @@ namespace HlidacStatu.Lib.Data
                             .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
                             .OrderByDescending(o => o.oe.AddInfoNum)
                             .ToArray()
-                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumDo.Value.Year, strana = g.oe.Organizace }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
+                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumOd.Value.Year, strana = g.oe.Organizace }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
                             {
                                 Sponzor = o.osoba,
                                 CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
@@ -245,7 +245,7 @@ namespace HlidacStatu.Lib.Data
                         .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
                         .OrderByDescending(o => o.AddInfoNum)
                         .ToArray()
-                        .GroupBy(g => new { Ico = g.ICO, rok = g.DatumDo.Value.Year, strana = g.AddInfo }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
+                        .GroupBy(g => new { Ico = g.ICO, rok = g.DatumOd.Value.Year, strana = g.AddInfo }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
                         {
                             Sponzor = new Firma.Lazy(o.Ico),
                             CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
