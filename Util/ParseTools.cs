@@ -162,8 +162,7 @@ namespace HlidacStatu.Util
             { "zeleni","Strana zelených" },
             { "strana zelenych","Strana zelených" },
 
-            {"starostove a nezávisli","STAN" },
-            {"starostové a nezávisli","STAN" },
+            {"starostove a nezavisli","STAN" },
 
             {"top09","TOP 09" },
             {"pirati","Česká pirátská strana" },
@@ -177,10 +176,13 @@ namespace HlidacStatu.Util
 
             {"obcanska demokraticka strana","ODS" },
 
-            {"spo","Strana Práv Občanů" },
+            {"spo","Strana Práv Občanů ZEMANOVCI" },
+            {"spoz","Strana Práv Občanů ZEMANOVCI" },
+            {"strana prav obcanu","Strana Práv Občanů ZEMANOVCI" },
+            {"strana prav obcanu zemanovci","Strana Práv Občanů ZEMANOVCI" },
 
-            {"Svoboda a přímá demokracie", "SPD" },
-            { "spd","SPD" },
+            {"svoboda a prima demokracie","SPD" },
+            {"spd","SPD" },
             {"svoboda a prima demokracie*","SPD" },
 
             {"strana svobodnych obcanu","Svobodní" },
@@ -188,7 +190,7 @@ namespace HlidacStatu.Util
             {"usvit-narodni koalice","Úsvit" },
 
             {"komunisticka strana cech a moravy","KSČM" },
-            {"lev 21","LEV21" },
+            {"lev 21","Národní socialisté" },
             {"*rozumni*","ROZUMNÍ" },
             {"vv","Věci veřejné" },
             {"veci verejne","Věci veřejné" },

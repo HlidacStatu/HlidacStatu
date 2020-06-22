@@ -68,8 +68,8 @@
 
             <div class="block-row block-part">
                 @{
-                    string[] topStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Piráti","KSČM",
-                                                                                                                        "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09" };
+                    string[] topStrany = new string[] { "ANO", "ODS", "ČSSD", "Česká pirátská strana","KSČM",
+                        "SPD", "STAN","KDU-ČSL","TOP 09" };
                     var data = topStrany
                             .Select(s => HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(s))
                             .Select(s => s.Where(m => m.Rok == lastYear).FirstOrDefault() ?? new HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear() { Strana = s.First().Strana })

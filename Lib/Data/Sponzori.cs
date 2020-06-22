@@ -8,8 +8,8 @@ namespace HlidacStatu.Lib.Data
 {
     public class Sponsors
     {
-        public static string[] VelkeStrany = new string[] { "ANO 2011", "ODS", "ČSSD", "Česká pirátská strana","KSČM",
-                            "Svoboda a přímá demokracie", "Starostové a nezávislí","KDU-ČSL","TOP 09",
+        public static string[] VelkeStrany = new string[] { "ANO", "ODS", "ČSSD", "Česká pirátská strana","KSČM",
+                            "SPD", "STAN","KDU-ČSL","TOP 09",
                             "Svobodní","Strana zelených"
                         };
         public static string[] TopStrany = VelkeStrany.Take(9).ToArray();
