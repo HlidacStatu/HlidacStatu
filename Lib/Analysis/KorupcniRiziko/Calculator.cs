@@ -111,7 +111,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (ret.PercSmluvUlimitu > 0)
                 ret.KoncentraceDodavateluCenyULimitu
-                    = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
+                    = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0);
 
             Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                 .AllTypes
@@ -174,7 +174,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //r11
             val += datayear.PercSeZasadnimNedostatkem * 10m;  //=20
             //r13
-            val += datayear.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified * 20m; //=40
+            val += datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified * 20m ?? 0; //=40
             //r15
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 20m ?? 0; //60
             //r17

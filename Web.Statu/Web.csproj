@@ -432,6 +432,7 @@
     <Compile Include="Controllers\ApiV2\ApiV2DatasetyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2Controller.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2OsobyController.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2InsolvenceController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2VZController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2SmlouvyController.cs" />
     <Compile Include="Controllers\DataController.CreateWizards.cs" />

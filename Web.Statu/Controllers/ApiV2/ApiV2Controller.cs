@@ -15,6 +15,8 @@ namespace HlidacStatu.Web.Controllers
     [RoutePrefix("api/v2")]
     public class ApiV2Controller : ApiV2AuthController
     {
+        public const int DefaultResultPageSize = 25;
+        public const int MaxResultsFromES = 5000;
 
         /*
         Atributy pro API

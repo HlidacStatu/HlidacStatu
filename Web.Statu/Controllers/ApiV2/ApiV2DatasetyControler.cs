@@ -65,11 +65,12 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet, Route("{datasetId}/hledat")]
         public SearchResultDTO<object> DatasetSearch(string datasetId, [FromUri]string dotaz = null, [FromUri]int? strana = null, [FromUri]string sort = null, [FromUri]string desc = "0")
         {
-            if (strana is null || strana < 1)
+            strana = strana ?? 1;
+            if (strana < 1)
                 strana = 1;
-            if (strana > 200)
+            if (strana * ApiV2Controller.DefaultResultPageSize > ApiV2Controller.MaxResultsFromES)
             {
-                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota page nemůže být větší než 200"));
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota 'strana' nemůže být větší než {ApiV2Controller.MaxResultsFromES / ApiV2Controller.DefaultResultPageSize}"));
             }
 
             try
@@ -81,7 +82,7 @@ namespace HlidacStatu.Web.Controllers
                 }
 
                 bool bDesc = (desc == "1" || desc?.ToLower() == "true");
-                var res = ds.SearchData(dotaz, strana.Value, 50, sort + (bDesc ? " desc" : ""));
+                var res = ds.SearchData(dotaz, strana.Value, ApiV2Controller.DefaultResultPageSize, sort + (bDesc ? " desc" : ""));
                 res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
                 return new SearchResultDTO<object>(res.Total, res.Page, res.Result);

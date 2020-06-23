@@ -57,6 +57,13 @@ namespace HlidacStatu.Web.Controllers
         {
             strana = strana ?? 1;
             razeni = razeni ?? 0;
+            if (strana < 1)
+                strana = 1;
+            if (strana * ApiV2Controller.DefaultResultPageSize > ApiV2Controller.MaxResultsFromES)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota 'strana' nemůže být větší než {ApiV2Controller.MaxResultsFromES / ApiV2Controller.DefaultResultPageSize}"));
+            }
+
             Lib.Searching.VerejnaZakazkaSearchData result = null;
 
             if (string.IsNullOrWhiteSpace(dotaz))
@@ -65,7 +72,7 @@ namespace HlidacStatu.Web.Controllers
             }
 
             result = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch(dotaz, null, strana.Value,
-                Lib.Data.Smlouva.Search.DefaultPageSize,
+                ApiV2Controller.DefaultResultPageSize,
                 razeni.Value.ToString());
 
             if (result.IsValid == false)

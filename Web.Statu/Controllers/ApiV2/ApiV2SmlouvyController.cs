@@ -35,8 +35,13 @@ namespace HlidacStatu.Web.Controllers
         [AuthorizeAndAudit]
         public SearchResultDTO<Lib.Data.Smlouva> Hledat([FromUri] string dotaz = null, [FromUri] int? strana = null, [FromUri] int? razeni = null)
         {
-            strana = strana ?? 1;
-            razeni = razeni ?? 0;
+            if (strana < 1)
+                strana = 1;
+            if (strana * ApiV2Controller.DefaultResultPageSize > ApiV2Controller.MaxResultsFromES)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota 'strana' nemůže být větší než {ApiV2Controller.MaxResultsFromES / ApiV2Controller.DefaultResultPageSize}"));
+            }
+
             Lib.Searching.SmlouvaSearchResult result = null;
 
             if (string.IsNullOrWhiteSpace(dotaz))
@@ -57,7 +62,7 @@ namespace HlidacStatu.Web.Controllers
                 platnyzaznam = null;
 
             result = Lib.Data.Smlouva.Search.SimpleSearch(dotaz, strana.Value,
-                Lib.Data.Smlouva.Search.DefaultPageSize,
+                ApiV2Controller.DefaultResultPageSize,
                 (Lib.Data.Smlouva.Search.OrderResult)razeni.Value,
                 platnyZaznam: platnyzaznam);
 
