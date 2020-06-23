@@ -74,9 +74,11 @@ namespace HlidacStatu.Web.Controllers
             {
                 var filtered = result.ElasticResults.Hits
                     .Select(m => 
-                        Lib.Data.Smlouva.Export(m.Source, 
-                            this.User.IsInRole("Admin"),
-                            this.User.IsInRole("Admin")))
+                        Lib.Data.Smlouva.Export(m.Source,
+                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin"),
+                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
+                            )
+                        )
                     .ToArray();
 
                 return new SearchResultDTO<Lib.Data.Smlouva>(result.Total, result.Page, filtered);

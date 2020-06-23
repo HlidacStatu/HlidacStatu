@@ -49,9 +49,9 @@ namespace HlidacStatu.Web.Controllers
             }
 
             bool isLimited = !(
-                    this.User.IsInRole("novinar")
+                    this.ApiAuth.ApiCall.UserRoles.Contains("novinar")
                     ||
-                    this.User.IsInRole("Admin")
+                    this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
                     );
 
             result = Lib.Data.Insolvence.Insolvence.SimpleSearch(dotaz, strana.Value,
@@ -67,7 +67,8 @@ namespace HlidacStatu.Web.Controllers
                     .Select(m=>m.Source)
                     .ToArray();
 
-                return new SearchResultDTO<Lib.Data.Insolvence.Rizeni>(result.Total, result.Page, filtered);
+                var ret = new SearchResultDTO<Lib.Data.Insolvence.Rizeni>(result.Total, result.Page, filtered);
+                return ret;
             }
         }
 
@@ -85,9 +86,9 @@ namespace HlidacStatu.Web.Controllers
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota id chybí."));
             }
             bool isLimited = !(
-                    this.User.IsInRole("novinar")
+                    this.ApiAuth.ApiCall.UserRoles.Contains("novinar")
                     ||
-                    this.User.IsInRole("Admin")
+                    this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
                     );
 
             var ins = Lib.Data.Insolvence.Insolvence.LoadFromES(id,true,isLimited);

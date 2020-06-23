@@ -212,7 +212,7 @@ namespace HlidacStatu.Web.Controllers
                 insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
                 insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
 
-                var photo = o.GetPhotoUrl(false);
+                var photo = o.GetPhotoUrl(false) + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=photo";
 
                 var sponzorstvi = o.Events(m => 
                         m.Type == (int)OsobaEvent.Types.Sponzor
@@ -229,21 +229,28 @@ namespace HlidacStatu.Web.Controllers
                 var insPerson = new
                 {
                     debtorCount = oinsDluznik.Total,
-                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=dluznici.osobaId:{o.NameId}",
+                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=dluznici.osobaId:{o.NameId}"
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=dluznikosoba",
                     creditorCount = oinsVeritel.Total,
-                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=veritele.osobaId:{o.NameId}",
+                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=veritele.osobaId:{o.NameId}" 
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=veritelosoba",
                     bailiffCount = oinsSpravce.Total,
                     bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=spravci.osobaId:{o.NameId}"
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=spravceosoba",
                 };
 
                 var insCompany = new
                 {
                     debtorCount = insDluznik.Total,
-                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaiddluznik:{o.NameId}",
+                    debtorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaiddluznik:{o.NameId}"
+                                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=dluznikfirma",
                     creditorCount = insVeritel.Total,
-                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidveritel:{o.NameId}",
+                    creditorLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidveritel:{o.NameId}" 
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=veritelfirma",
+
                     bailiffCount = insSpravce.Total,
                     bailiffLink = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaidspravce:{o.NameId}"
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=spravcefirma",
                 };
 
                 var lastUpdate = o.Events(m => true)
@@ -280,11 +287,14 @@ namespace HlidacStatu.Web.Controllers
                     contacts = o.GetSocialContact(),
                     connections = vazby,
                     //sources
-                    sourceInsolvency = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaid:{o.NameId}",
-                    sourceSponzor = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
+                    sourceInsolvency = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaid:{o.NameId}" 
+                        + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
+                    sourceSponzor = $"https://www.hlidacstatu.cz/osoba/{o.NameId}"
+                                            + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
                     sourceRegisterStatements = string.IsNullOrWhiteSpace(registrOznameni) 
-                            ? "https://www.hlidacstatu.cz" : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}",
-                    sourceRoles = $"https://www.hlidacstatu.cz/osoba/{o.NameId}",
+                            ? "https://www.hlidacstatu.cz" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba"
+                            : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
+                    sourceRoles = $"https://www.hlidacstatu.cz/osoba/{o.NameId}" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
 
 
                 };
