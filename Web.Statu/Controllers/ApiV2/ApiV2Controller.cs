@@ -27,6 +27,7 @@ namespace HlidacStatu.Web.Controllers
 
 
 
+
         // /api/v2/{id}
         [AuthorizeAndAudit]
         [HttpGet, Route("ping/{text}")]

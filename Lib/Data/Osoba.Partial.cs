@@ -344,7 +344,7 @@ namespace HlidacStatu.Lib.Data
                 db.Osoba.Attach(this);
                 db.Entry(this).State = System.Data.Entity.EntityState.Deleted;
 
-                foreach (var oe in this.Events())
+                foreach (var oe in this.NoFilteredEvents())
                 {
                     oe.Delete(user);
                 }
@@ -403,12 +403,29 @@ namespace HlidacStatu.Lib.Data
 
             OsobaEvent[] dEvs = duplicated.NoFilteredEvents().ToArray();
             OsobaExternalId[] dEids = duplicated.ExternalIds().Where(m => m.ExternalSource != (int)OsobaExternalId.Source.HlidacSmluvGuid).ToArray();
-
-            foreach (var dEv in dEvs)
+            using (DbEntities db = new Data.DbEntities())
             {
-                this.AddOrUpdateEvent(dEv, user, checkDuplicates:true);
-            }
 
+                foreach (var dEv in dEvs)
+                {
+                    //check duplicates
+                    var exists = this.NoFilteredEvents()
+                        .Any(m =>
+                        m.OsobaId == this.InternalId
+                        && m.Type == dEv.Type
+                        && m.AddInfo == dEv.AddInfo
+                        && m.Organizace == dEv.Organizace
+                        && m.AddInfoNum == dEv.AddInfoNum
+                        && m.DatumOd == dEv.DatumOd
+                        && m.DatumDo == dEv.DatumDo
+                        && m.Status == dEv.Status
+                        );
+                    if (exists == false)
+                    {
+                        this.AddOrUpdateEvent(dEv, user, checkDuplicates: false);
+                    }
+                }
+            }
             List<OsobaExternalId> addExternalIds = new List<OsobaExternalId>();
             foreach (var dEid in dEids)
             {
