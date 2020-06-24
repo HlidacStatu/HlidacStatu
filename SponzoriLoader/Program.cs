@@ -25,8 +25,11 @@ namespace SponzoriLoader
         private static readonly string _user = "sponzorLoader";
         private static readonly string _zdroj = "https://www.udhpsh.cz/vyrocni-financni-zpravy-stran-a-hnuti";
 
+        private static Dictionary<string, string> _partyNames;
+
         static async Task Main(string[] args)
         {
+            _partyNames = LoadPartyNames();
             var peopleDonations = new Donations(new PersonDonorEqualityComparer());
             var companyDonations = new Donations(new CompanyDonorEqualityComparer());
 
@@ -68,6 +71,24 @@ namespace SponzoriLoader
             string response = await _client.GetStringAsync(url);
             dynamic json = JsonConvert.DeserializeObject(response);
             return json;
+        }
+
+        public static Dictionary<string,string> LoadPartyNames()
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                return db.ZkratkaStrany.ToDictionary(ks => ks.ICO, es => es.KratkyNazev);
+            }
+        }
+
+        public static string NormalizePartyName(string name, string ico)
+        {
+            if (_partyNames.TryGetValue(ico, out string normalizedName))
+            {
+                return normalizedName;
+            }
+            return ParseTools.NormalizaceStranaShortName(name);
+
         }
 
         /// <summary>
@@ -177,7 +198,7 @@ namespace SponzoriLoader
                         // add event
                         var newEvent = new OsobaEvent()
                         {
-                            Organizace = ParseTools.NormalizaceStranaShortName(donation.Party),
+                            Organizace = NormalizePartyName(donation.Party, donation.ICO),
                             DatumOd = donation.Date,
                             AddInfoNum = donation.Amount,
                             AddInfo = donation.ICO,
@@ -235,7 +256,7 @@ namespace SponzoriLoader
                         // add event
                         var newEvent = new FirmaEvent()
                         {
-                            AddInfo = ParseTools.NormalizaceStranaShortName(donation.Party),
+                            AddInfo = NormalizePartyName(donation.Party, donation.ICO),
                             DatumOd = donation.Date,
                             AddInfoNum = donation.Amount,
                             Description = donation.ICO,

@@ -608,6 +608,9 @@
     <Compile Include="Data\VZ\VerejnaZakazka.WatchdogProcessor.cs" />
     <Compile Include="Data\VZ\VerejnaZakazka.Search.cs" />
     <Compile Include="Data\Watchdog.partial.cs" />
+    <Compile Include="Data\ZkratkaStrany.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="Emails\EmailMessageFromTemplate.cs" />
     <Compile Include="Emails\Templates\FoundZakazkyItem.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
