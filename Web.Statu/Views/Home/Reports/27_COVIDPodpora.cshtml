@@ -19,6 +19,9 @@
 //https://twitter.com/HelenaHorska/status/1255496055782887424/photo/1
 https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bilion-realne-poslala-jen-par-miliard
 
+    int pocetDomacnosti = 4347840;
+    int pocetPracujicich = 5731376 + 160474; // https://www.czso.cz/documents/10180/45709978/300002171132.pdf/8fe48ed6-1480-47f4-b340-a9cef22e9715?version=1.0
+
     var ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("pomoc-covid");
     var data = covid_pomoc.VsechnaPomoc();
 
@@ -38,7 +41,7 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
 }
 
 <h1>Slíbeno 1 190 miliard Kč</h1>
-<h2>Jaká je slibovaná a jaká je skutečná pomoc státu v dobách koronavirové epidemie?</h2>
+<h2>Jaká je slibovaná a jaká je skutečná pomoc státu podnikatelům z peněz daňových poplatníků v dobách koronavirové epidemie?</h2>
 <p>
     Dopady pandemie koronaviru a restart ekonomiky by měli politici řešit rychle, jednoduše a účinně. Sliby politiků jsme slyšeli,
     pojďme se kouknout na skutečnou pomoc.
@@ -52,7 +55,9 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
             Do @(keDni.ToString("d. MMMM yyyy")) bylo vyplaceno celkem
             <div class="text-danger" style="font-size:130%">
                 @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(vypl_prima + vypl_neprima + vypl_zaruka, mena: "mld. Kč", html: true))
+                z peněz daňových poplatníků.
             </div>
+            @*To je @HlidacStatu.Util.RenderData.NicePrice(((vypl_prima + vypl_neprima + vypl_zaruka)*1000000000)/pocetDomacnosti) na jednu domácnost.*@
         </div>
     </div>
     <div class="col-xs-12 col-sm-9">
@@ -66,16 +71,24 @@ https://www.echo24.cz/a/Skptx/pomoc-firmam-je-extremne-pomala-vlada-slibila-bili
                     <b class="text-danger">1,19 bilionu korun</b>. Z toho přímá podpora je 216 miliard korun a záruky na úvěry 951,5 miliardy
                     korun.
                 </span>
+
             </p>
             <footer>Ministryně financí Alena Schillerová <cite title="Česká televize"><a onclick="return trackOutLink(this,'Report27');" href="https://www.ceskatelevize.cz/ivysilani/1097181328-udalosti/220411000100422/obsah/763721-podpora-ekonomiky">21. dubna 2020 v České televizi</a></cite></footer>
             <div style="clear:both;"></div>
         </blockquote>
+        <h3>Pro podporu ekonomiky vláda plánuje zadlužení státu v roce 2020 ve výši  
+            <span class="text-danger"><b>500 miliard Kč</b></span>. 
+        To je <b class="text-danger">dluh @HlidacStatu.Util.RenderData.NicePrice((500m * 1000000000m) / pocetDomacnosti)</b> 
+        na pro každou českou domácnost.
+        </h3>
     </div>
 </div>
 
 <hr style="margin:50px 100px 50px 100px" />
 
 <h2>Skutečně vyplacená pomoc <small> ke dni @(keDni.ToString("d. MMMM yyyy"))</small></h2>
+
+
 <div class="row">
     <div class="col-xs-12">
         <div class="table-new table-new--dotted table-new--wider">
