@@ -126,6 +126,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HlidacStatu.ClassificationR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SponzoriLoader", "SponzoriLoader\SponzoriLoader.csproj", "{18FD0A87-E369-438E-915A-C15D6167D66D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.ExportData", "HlidacStatu.ExportData\HlidacStatu.ExportData.csproj", "{912AAE41-60A4-4579-BD7D-FA13FBC423F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1065,6 +1067,30 @@ Global
 		{18FD0A87-E369-438E-915A-C15D6167D66D}.x86Only|x64.Build.0 = Release|Any CPU
 		{18FD0A87-E369-438E-915A-C15D6167D66D}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{18FD0A87-E369-438E-915A-C15D6167D66D}.x86Only|x86.Build.0 = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|x64.Build.0 = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Release|x86.Build.0 = Release|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|x64.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|x64.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.Stage|x86.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|Any CPU.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|x64.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|x64.Build.0 = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|x86.ActiveCfg = Debug|Any CPU
+		{912AAE41-60A4-4579-BD7D-FA13FBC423F5}.x86Only|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1097,8 +1123,8 @@ Global
 		{18FD0A87-E369-438E-915A-C15D6167D66D} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
