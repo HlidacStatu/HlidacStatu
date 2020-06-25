@@ -185,7 +185,7 @@ namespace HlidacStatu.Web.Controllers
 
 
                     //StatementDTO[] statements = (StatementDTO[])value.statements;
-                    statements = value.statements.ToObject<List<StatementDTO>>();
+                    statements = value?.statements?.ToObject<List<StatementDTO>>();
                 }
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
