@@ -44,12 +44,14 @@ namespace HlidacStatu.ExportData
                 Row r = new Row();
                 foreach (var col in this.Columns)
                 {
-                    Type t = vals[col.Name].GetType();
                     object v = vals[col.Name];
                     if (v == null)
                         r.Values.Add(null);
                     else
-                        r.Values.Add( Convert.ChangeType( vals[col.Name],t) );
+                    {
+                        Type t = vals[col.Name].GetType();
+                        r.Values.Add(Convert.ChangeType(vals[col.Name], t));
+                    }
                 }
                 this.Rows.Add(r);
             }

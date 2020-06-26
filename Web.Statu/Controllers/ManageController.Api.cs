@@ -1,6 +1,8 @@
 ﻿using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Data.VZ;
+
 using Microsoft.AspNet.Identity;
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -50,7 +52,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int num = 1000 )
+        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int num = 1000)
         {
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -67,11 +69,6 @@ namespace HlidacStatu.Web.Controllers
             }
 
 
-            string contentType = "application/vnd.ms-excel";
-            if (ct == "numbers")
-                contentType = "application/vnd.apple.numbers";
-            if (ct == "txt")
-                contentType = "text/tab-separated-values";
 
             int numOfRecords = 1000;
             if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
@@ -81,45 +78,50 @@ namespace HlidacStatu.Web.Controllers
             {
                 numOfRecords = num;
             }
+
+            byte[] rawData = null;
+            string contentType = "";
+            string filename = "";
+            List<dynamic> data = new List<dynamic>();
+
+
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(q) || string.IsNullOrEmpty(h))
-                return File(System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici"), "text/plain", "export.txt");
-            if (id == "smlouvy" && HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h))
             {
-                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, num,
-              (HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)(Util.ParseTools.ToInt(o) ?? 0),
-              logError: false);
+                rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                contentType = "text/plain";
+                filename = "chyba.txt";
+                return File(rawData,contentType,filename);
+            }
+            else if (id == "smlouvy" && HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h))
+            {
+                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, num, o, logError: false);
+                foreach (var m in sres.Results)
+                {
+                    dynamic v = new System.Dynamic.ExpandoObject();
+                    v.url = m.GetUrl(false);
+                    v.id = m.Id;
+                    v.datumUzavreni = m.datumUzavreni;
+                    v.casZverejneni = m.casZverejneni;
+                    v.hodnotaSmlouvy_sDPH = m.CalculatedPriceWithVATinCZK;
+                    v.platceJmeno = m.Platce.nazev;
+                    v.platceIco = m.Platce.ico;
+                    for (int i = 0; i < m.Prijemce.Count(); i++)
+                    {
+                        ((IDictionary<String, Object>)v).Add($"prijemceJmeno_{i}", m.Prijemce[i].nazev);
+                        ((IDictionary<String, Object>)v).Add($"prijemceIco_{i}", m.Prijemce[i].ico);
+                    }
+                    data.Add(v);
+                }
 
                 if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
                 {
                     HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledej", this.HttpContext);
-                    return File(System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to"), "text/plain", "export.txt");
+                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    contentType = "text/plain";
+                    filename = "export.txt";
+                    return File(rawData, contentType, filename);
                 }
-                else
-                {
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    //header
-                    sb.AppendLine("URL\tID smlouvy\tPodepsána\tZveřejněna\tHodnota smlouvy\tPředmět smlouvy\tPlátce\tPlatce IC\tDodavatele a jejich ICO");
-                    foreach (var item in sres.ElasticResults.Hits)
-                    {
-                        var s = item.Source;
-                        sb.AppendLine(
-                            s.GetUrl(false) + "\t"
-                            + s.Id + "\t"
-                            + s.datumUzavreni.ToString("dd.MM.yyyy") + "\t"
-                            + s.casZverejneni.ToString("dd.MM.yyyy") + "\t"
-                            + s.CalculatedPriceWithVATinCZK.ToString(Util.Consts.czCulture) + "\t"
-                            + Devmasters.Core.TextUtil.NormalizeToBlockText(s.predmet) + "\t"
-                            + s.Platce.nazev + "\t"
-                            + s.Platce.ico + "\t"
-                            + ((s.Prijemce?.Count() > 0) ?
-                                s.Prijemce.Select(p => p.nazev + "\t" + p.ico).Aggregate((f, sec) => f + "\t" + sec)
-                                : "")
-                            );
-                    }
-                    return File(System.Text.Encoding.UTF8.GetBytes(sb.ToString()), contentType, "smlouvy-export.tabdelimited.txt");
-
-                }
-            }
+            } //smlouvy
             else if (id == "zakazky" && HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h))
             {
 
@@ -130,39 +132,77 @@ namespace HlidacStatu.Web.Controllers
 
                 if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
                 {
-                    return File(System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to"), "text/plain", "export.txt");
+                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    contentType = "text/plain";
+                    filename = "export.txt";
+                    return File(rawData, contentType, filename);
                 }
                 else
                 {
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    //header
-                    sb.AppendLine("URL\tČíslo zakázky\tPoslední změna\tLhůta pro nabídky\tKonečná cena bez DPH"
-                        + "\tOdhadovaná cena bez DPH\tNázev zakázky\tPopis\tZadavatel\tZadavatel IC\tDodavatele a jejich ICO");
-                    foreach (var item in sres.ElasticResults.Hits)
+
+                    foreach (var s in sres.Results)
                     {
-                        var s = item.Source;
-                        sb.AppendLine(
-                            s.GetUrl(false) + "\t"
-                            + s.EvidencniCisloZakazky + "\t"
-                            + s.PosledniZmena?.ToString("dd.MM.yyyy") + "\t"
-                            + (s.LhutaDoruceni?.ToString("dd.MM.yyyy") ?? "neuvedena") + "\t"
-                            + (s.KonecnaHodnotaBezDPH?.ToString(Util.Consts.czCulture) ?? "") + "\t"
-                            + (s.OdhadovanaHodnotaBezDPH?.ToString(Util.Consts.czCulture) ?? "") + "\t"
-                            + Devmasters.Core.TextUtil.NormalizeToBlockText(s.NazevZakazky) + "\t"
-                            + Devmasters.Core.TextUtil.NormalizeToBlockText(s.PopisZakazky) + "\t"
-                            + s.Zadavatel?.Jmeno + "\t"
-                            + s.Zadavatel?.ICO + "\t"
-                            + ((s.Dodavatele?.Count() > 0) ?
-                                s.Dodavatele.Select(p => p.Jmeno + "\t" + p.ICO).Aggregate((f, sec) => f + "\t" + sec)
-                                : "")
-                            );
+                        dynamic v = new System.Dynamic.ExpandoObject();
+                        v.Url = s.GetUrl(false);
+                        v.CisloZakazky = s.EvidencniCisloZakazky;
+
+                        v.PosledniZmena = s.PosledniZmena;
+                        v.LhutaDoruceni = s.LhutaDoruceni;
+                        v.KonecnaHodnotaBezDPH = s.KonecnaHodnotaBezDPH;
+                        v.OdhadovanaHodnotaBezDPH = s.OdhadovanaHodnotaBezDPH;
+                        v.NazevZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(s.NazevZakazky);
+                        v.PopisZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(s.PopisZakazky);
+                        v.ZadavatelJmeno = s.Zadavatel?.Jmeno;
+                        v.ZadavatelIco = s.Zadavatel?.ICO;
+
+                        for (int i = 0; i < s.Dodavatele?.Count(); i++)
+                        {
+                            ((IDictionary<String, Object>)v).Add($"DodavatelJmeno_{i}", s.Dodavatele[i].Jmeno);
+                            ((IDictionary<String, Object>)v).Add($"DodavatelIco_{i}", s.Dodavatele[i].ICO);
+                        }
+                        data.Add(v);
+
                     }
-                    return File(System.Text.Encoding.UTF8.GetBytes(sb.ToString()), contentType, "zakazky-export.tabdelimited.txt");
                 }
             }
+            if (data.Count == 0)
+            {
+                rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                contentType = "text/plain";
+                filename = "chyba.txt";
+            }
+            else
+            {
+                if (ct == "tab")
+                {
+                    rawData = new HlidacStatu.ExportData.TabDelimited().ExportData(new ExportData.Data(data));
+                    contentType = "text/tab-separated-values";
+                    filename = "smlouvy-export.tabdelimited.txt";
+                }
+                else if (ct == "csv")
+                {
+                    rawData = new HlidacStatu.ExportData.Csv().ExportData(new ExportData.Data(data));
+                    contentType = "text/csv";
+                    filename = "smlouvy-export.csv";
+                }
+                else if (ct == "numbers")
+                {
+                    rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
+                    contentType = "application/vnd.apple.numbers";
+                    filename = "smlouvy-export.numbers";
+                }
+                else
+                {
+                    rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
+                    contentType = "application/vnd.ms-excel";
+                    filename = "smlouvy-export.xlsx";
 
-            return File(System.Text.Encoding.UTF8.GetBytes("žádná data"), "text/plain", "export.txt");
+                }
+
+            }
+            return File(rawData, contentType, filename);
         }
+
 
         public ActionResult RemoveBookmark(string id, int type)
         {

@@ -1139,31 +1139,33 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 </div>
                 <div class="modal-body">
                     <p>
-                        Export výsledků hledání do Excelu. Export obsahuje prvních 1000 záznamů od první stránky v aktuálním třídění.
-                        Více záznamů není možné vyexportovat.
+                        Export výsledků hledání. Export obsahuje obvykle prvních 1000 záznamů od první stránky v aktuálním třídění.
+                        Více záznamů není možné vyexportovat, pokud k tomu nemáte speciální oprávnění.
                     </p>
                     <p class="small text-muted">
-                        Exportujeme textový soubor, <a href="https://cs.wikipedia.org/wiki/TSV_(datový_formát)" target="_blank">tab delimited (TSV)</a> formát, kódováný v UTF-8.
-                        Tento soubor snadno načtete do všech tabulkových procesorů jako Excel, Number, Open Office a dalších.
-                        Je také snadno čitelný v textových editorech.
+                        CSV a Tab delimited souboury jsou kódováné v UTF-8.
                     </p>
                     @if (user?.Identity?.IsAuthenticated == true)
                     {
-                        <p>
-                            <a role="button" class="btn btn-primary btn-sm" target="_blank"
-                               onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
-                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
-                                Export do Excelu
-                            </a>
-                            @*<a role="button" class="btn btn-default btn-sm" target="_blank"
-                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
-                                    Do Numbers
-                                </a>
-                                <a role="button" class="btn btn-default btn-sm" target="_blank"
-                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=txt&@(moreParams)">
-                                    Do text.souboru
-                                </a>*@
-                        </p>
+                <p>
+                    <a role="button" class="btn btn-primary btn-sm" target="_blank"
+                       onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
+                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
+                        Export do Excelu
+                    </a>
+                    <a role="button" class="btn btn-default btn-sm" target="_blank"
+                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
+                        Do Apple Numbers
+                    </a>
+                    <a role="button" class="btn btn-default btn-sm" target="_blank"
+                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=csv&@(moreParams)">
+                        Do CSV
+                    </a>
+                    <a role="button" class="btn btn-default btn-sm" target="_blank"
+                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=tab&@(moreParams)">
+                        Do Tab delimited
+                    </a>
+                </p>
                     }
                     else
                     {
