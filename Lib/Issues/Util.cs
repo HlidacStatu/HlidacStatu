@@ -53,19 +53,46 @@ namespace HlidacStatu.Lib.Issues
                     {
                     }
                 }
-                
+
                 var typeI = typeof(IIssueAnalyzer);
                 List<System.Type> types = null;
-                var t = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(s => s.GetTypes())
-                    .Where(p => p.FullName.StartsWith("HlidacStatu.Plugin.IssueAnalyzers"))
-                    .ToList();
+                //var t = AppDomain.CurrentDomain.GetAssemblies()
+                //    .SelectMany(s =>
+                //    {
+                //        Type[] tt = null;
+                //        try
+                //        {
+                //            tt = s.GetTypes();
+                //        }
+                //        catch (Exception e)
+                //        {
+                //        }
+                //        if (tt != null)
+                //            return tt.Where(m => m != null).ToArray();
+                //        else 
+                //        return new Type[] { };
+                //    })
+                //    .Where(p => p.FullName.StartsWith("HlidacStatu.Plugin.IssueAnalyzers"))
+                //    .ToList();
 
                 try
                 {
                     types = AppDomain.CurrentDomain.GetAssemblies()
                         .Union(dlls)
-                        .SelectMany(s => s.GetTypes())
+                        .SelectMany(s => {
+                            Type[] tt = null;
+                            try
+                            {
+                                tt = s.GetTypes();
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                            if (tt != null)
+                                return tt.Where(m => m != null).ToArray();
+                            else
+                                return new Type[] { };
+                        })
                         .Where(p =>
                             typeI.IsAssignableFrom(p)
                             && p.IsAbstract == false
