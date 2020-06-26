@@ -44,13 +44,18 @@ namespace HlidacStatu.ExportData
                 Row r = new Row();
                 foreach (var col in this.Columns)
                 {
-                    object v = vals[col.Name];
-                    if (v == null)
+                    if (vals.ContainsKey(col.Name) == false)
                         r.Values.Add(null);
                     else
                     {
-                        Type t = vals[col.Name].GetType();
-                        r.Values.Add(Convert.ChangeType(vals[col.Name], t));
+                        object v = vals[col.Name];
+                        if (v == null)
+                            r.Values.Add(null);
+                        else
+                        {
+                            Type t = vals[col.Name].GetType();
+                            r.Values.Add(Convert.ChangeType(vals[col.Name], t));
+                        }
                     }
                 }
                 this.Rows.Add(r);
