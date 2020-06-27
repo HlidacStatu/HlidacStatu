@@ -52,7 +52,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int num = 1000)
+        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int? num = null)
         {
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -68,16 +68,14 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-
-
             int numOfRecords = 1000;
             if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
                 numOfRecords = 100;
-
-            if (this.User.IsInRole("Admin"))
+            if (this.User.IsInRole("Admin") || this.User.IsInRole("novinar"))
             {
-                numOfRecords = num;
+                num = 10000;
             }
+
 
             byte[] rawData = null;
             string contentType = "";
@@ -101,7 +99,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else if (id == "smlouvy")
             {
-                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, num, o, logError: false);
+                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, numOfRecords, o, logError: false);
 
                 if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
                 {

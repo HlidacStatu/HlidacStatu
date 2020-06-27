@@ -1153,10 +1153,10 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                        href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
                         Export do Excelu
                     </a>
-                    <a role="button" class="btn btn-default btn-sm" target="_blank"
+                    @*<a role="button" class="btn btn-default btn-sm" target="_blank"
                        href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
                         Do Apple Numbers
-                    </a>
+                    </a>*@
                     <a role="button" class="btn btn-default btn-sm" target="_blank"
                        href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=csv&@(moreParams)">
                         Do CSV

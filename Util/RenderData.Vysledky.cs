@@ -80,6 +80,12 @@ namespace HlidacStatu.Util
                     Devmasters.Core.Lang.Plural.GetWithZero((int)pocet, "nebyl nalezen žádný výsledek", "byl nalezen jeden výsledek", "byly nalezeny {0:### ### ##0} výsledky", "bylo nalezeno {0:### ### ##0} výsledků")
                     , style);
             }
+            public static string JsmeNasliVysledky(long pocet, CapitalizationStyle style = CapitalizationStyle.NoChange)
+            {
+                return Capitalize(
+                    Devmasters.Core.Lang.Plural.GetWithZero((int)pocet, "jsme nenašli žádný výsledek", "jsme našli jeden výsledek", "jsme našli {0} výsledky", "jsme našli {0:### ### ##0} výsledků")
+                    , style);
+            }
             public static string NasliJsmeVysledky(long pocet, CapitalizationStyle style = CapitalizationStyle.NoChange)
             {
                 return Capitalize(
