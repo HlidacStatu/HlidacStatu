@@ -4,6 +4,7 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -13,7 +14,7 @@ namespace HlidacStatu.Lib.Data.VZ
 {
     [Description("Struktura verejne zakazky v Hlidaci Statu")]
     public partial class VerejnaZakazka
-        : Bookmark.IBookmarkable, ISocialInfo
+        : Bookmark.IBookmarkable, ISocialInfo, IFlattenedExport
     {
         public const string Pre2016Dataset = "VVZ-2006";
         public const string Post2016Dataset = "VVZ-2016";
@@ -1104,6 +1105,29 @@ namespace HlidacStatu.Lib.Data.VZ
             }
             vz.RawHtml = "";
             return vz;
+        }
+
+        public ExpandoObject FlatExport()
+        {
+            dynamic v = new System.Dynamic.ExpandoObject();
+            v.Url = this.GetUrl(false);
+            v.CisloZakazky = this.EvidencniCisloZakazky;
+
+            v.PosledniZmena = this.PosledniZmena;
+            v.LhutaDoruceni = this.LhutaDoruceni;
+            v.KonecnaHodnotaBezDPH = this.KonecnaHodnotaBezDPH;
+            v.OdhadovanaHodnotaBezDPH = this.OdhadovanaHodnotaBezDPH;
+            v.NazevZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(this.NazevZakazky);
+            v.PopisZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(this.PopisZakazky);
+            v.ZadavatelJmeno = this.Zadavatel?.Jmeno;
+            v.ZadavatelIco = this.Zadavatel?.ICO;
+
+            for (int i = 0; i < this.Dodavatele?.Count(); i++)
+            {
+                ((IDictionary<String, Object>)v).Add($"DodavatelJmeno_{i}", this.Dodavatele[i].Jmeno);
+                ((IDictionary<String, Object>)v).Add($"DodavatelIco_{i}", this.Dodavatele[i].ICO);
+            }
+            return v;
         }
     }
 }

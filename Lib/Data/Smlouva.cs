@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -13,7 +14,7 @@ namespace HlidacStatu.Lib.Data
 {
 
     public partial class Smlouva
-        : Bookmark.IBookmarkable, ISocialInfo
+        : Bookmark.IBookmarkable, ISocialInfo, IFlattenedExport
     {
 
         public tIdentifikator identifikator;
@@ -1404,6 +1405,25 @@ namespace HlidacStatu.Lib.Data
         public static string ShortNicePrice(decimal number, string mena = "Kč", bool html = false, bool shortFormat = false)
         {
             return HlidacStatu.Util.RenderData.ShortNicePrice(number, mena: mena, html: html);
+        }
+
+        public ExpandoObject FlatExport()
+        {
+            dynamic v = new System.Dynamic.ExpandoObject();
+            v.url = this.GetUrl(false);
+            v.id = this.Id;
+            v.predmet = this.predmet;
+            v.datumUzavreni = this.datumUzavreni;
+            v.casZverejneni = this.casZverejneni;
+            v.hodnotaSmlouvy_sDPH = this.CalculatedPriceWithVATinCZK;
+            v.platceJmeno = this.Platce.nazev;
+            v.platceIco = this.Platce.ico;
+            for (int i = 0; i < this.Prijemce.Count(); i++)
+            {
+                ((IDictionary<String, Object>)v).Add($"prijemceJmeno_{i+1}", this.Prijemce[i].nazev);
+                ((IDictionary<String, Object>)v).Add($"prijemceIco_{i+1}", this.Prijemce[i].ico);
+            }
+            return v;
         }
 
         static HashSet<string> ico_s_VazbouPolitik = new HashSet<string>(

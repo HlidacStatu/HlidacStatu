@@ -128,6 +128,10 @@ else
                         @Html.ActionLink("Následující »", "hledat", "dotace", Model.ToRouteValues(page + 1), null)
                     </li>
                 }
+                <li>
+                    @Util.ExportButton(this.User, "dotace", Model.Q, Model.Order)
+                   )
+                </li>
             </ul>
         </div>
 

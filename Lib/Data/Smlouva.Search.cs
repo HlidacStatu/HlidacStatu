@@ -314,6 +314,41 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
                             .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
                     );
+                    if (res.IsValid == false && res.ServerError.Status == 429)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        res = client
+                            .Search<Lib.Data.Smlouva>(s => s
+                                .Index(indexes)
+                                .Size(pageSize)
+                                .From(page * pageSize)
+                                .Query(q => query)
+                                .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
+                                .Sort(ss => GetSort(order))
+                                .Aggregations(aggrFunc)
+                                .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
+                                .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
+                        );
+                        if (res.IsValid == false && res.ServerError.Status == 429)
+                        {
+                            System.Threading.Thread.Sleep(200);
+                            res = client
+                                .Search<Lib.Data.Smlouva>(s => s
+                                    .Index(indexes)
+                                    .Size(pageSize)
+                                    .From(page * pageSize)
+                                    .Query(q => query)
+                                    .Source(m => m.Excludes(e => e.Field(o => o.Prilohy)))
+                                    .Sort(ss => GetSort(order))
+                                    .Aggregations(aggrFunc)
+                                    .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
+                                    .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
+                            );
+
+                        }
+
+                    }
+
                     if (withHighlighting && res.Shards != null && res.Shards.Failed > 0) //if some error, do it again without highlighting
                     {
                         res = client

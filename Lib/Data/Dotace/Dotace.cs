@@ -1,12 +1,13 @@
 ﻿using Nest;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Dotace
 {
     [ElasticsearchType(IdProperty = nameof(IdDotace))]
-    public partial class Dotace : Bookmark.IBookmarkable
+    public partial class Dotace : Bookmark.IBookmarkable, IFlattenedExport
     {
         [Nest.Keyword]
         public string IdDotace { get; set; }
@@ -128,5 +129,23 @@ namespace HlidacStatu.Lib.Data.Dotace
          
         }
 
+        public ExpandoObject FlatExport()
+        {
+            dynamic v = new System.Dynamic.ExpandoObject();
+            v.Url = this.GetUrl(false);
+            v.idDotace = this.IdDotace;
+            v.prijmenceJmeno = this.Prijemce?.Jmeno;
+            v.prijmenceIco = this.Prijemce?.Ico;
+            v.prijmenceJmeno = this.Prijemce.Jmeno;
+            v.prijmenceJmenoAktualni = this.Prijemce.HlidacJmeno;
+            v.obec = this.Prijemce.Obec;
+            v.nazevProjektu = this.GetNazevDotace();
+            v.dotacniProgram = this.Program?.Kod ?? "neuveden";
+            v.datumPodpisu = this.DatumPodpisu;
+            v.dotace = this.DotaceCelkem;
+            v.vratnaDotace = this.PujckaCelkem;
+
+            return v;
+        }
     }
 }
