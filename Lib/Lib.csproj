@@ -536,6 +536,7 @@
     <Compile Include="Data\Graphs\Graph.Node.cs" />
     <Compile Include="Data\Graphs\Graph.NodeComparer.cs" />
     <Compile Include="Data\Graphs\Graph.Shortest.Dijkstras.cs" />
+    <Compile Include="Data\IFlattenedExport.cs" />
     <Compile Include="Data\Insolvence\Dokument.cs" />
     <Compile Include="Data\Insolvence\Insolvence.Search.cs" />
     <Compile Include="Data\Insolvence\Insolvence.cs" />
