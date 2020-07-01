@@ -190,20 +190,22 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("IT Hardware")]
                 it_hw = 10001,
-                [NiceDisplayName("IT Software")]
+                [NiceDisplayName("IT Software (krabicový SW, licence, …)")]
                 it_sw = 10002,
-                [NiceDisplayName("Informační systémy a servery")]
-                it_servery = 10003,
-                [NiceDisplayName("Opravy a údržba osobních počítačů")]
-                it_opravy = 10004,
-                [NiceDisplayName("Informační technologie: poradenství, vývoj programového vybavení, internet a podpora")]
+                //[NiceDisplayName("Informační systémy a servery")]
+                //it_servery = 10003,
+                [NiceDisplayName("Opravy, údržba a počítačové sítě")]
+                it_site_opravy = 10004,
+                [NiceDisplayName("IT Vývoj (na zakázku, včetně možné následné podpory)")]
                 it_vyvoj = 10005,
-                [NiceDisplayName("SW Systémové poradenské služby")]
-                it_system = 10006,
-                [NiceDisplayName("SW sluzby")]
-                it_sw_sluzby = 10007,
-                [NiceDisplayName("Internetové služby a počítačové sítě")]
-                it_site = 10008,
+                [NiceDisplayName("Konzultace a poradenství")]
+                it_konzultace = 10006,
+                //[NiceDisplayName("SW sluzby")]
+                //it_sw_sluzby = 10007,
+                [NiceDisplayName("Internetové služby, servery, cloud")]
+                it_sluzby_servery = 10008,
+                [NiceDisplayName("IT Bezpečnost")]
+                it_bezpecnost = 10008,
 
                 [NiceDisplayName("Stavebnictví")]
                 stav_obecne = 10100,
@@ -344,10 +346,10 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Zemědělství")] //mozna 
                 agro_obecne = 11000,
-                [NiceDisplayName("Lesnictví")]
+                [NiceDisplayName("Lesnictví a těžba dřeva")]
                 agro_les = 11001,
-                [NiceDisplayName("Těžba dřeva")]
-                agro_tezba = 11002,
+                //[NiceDisplayName("Těžba dřeva")]
+                //agro_tezba = 11002,
                 [NiceDisplayName("Zahradnické služby")]
                 agro_zahrada = 11003,
 
@@ -379,10 +381,10 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Sociální služby")]
                 social_obecne = 11300,
-                [NiceDisplayName("Vzdělávání")]
+                [NiceDisplayName("Vzdělávání a školení")]
                 social_vzdelavani = 11301,
-                [NiceDisplayName("Školení")]
-                social_skoleni = 11302,
+                //[NiceDisplayName("Školení")]
+                //social_skoleni = 11302,
                 [NiceDisplayName("Zdravotní péče")]
                 social_zdravotni = 11303,
                 [NiceDisplayName("Sociální péče")]
@@ -707,6 +709,7 @@ namespace HlidacStatu.Lib.Data
             var idsmlouvy = this.Id;
 
             this.Classification.Types = newClassification.ToArray();
+            this.Classification.LastUpdate = DateTime.Now;
             this.Save();
         }
     }
