@@ -205,7 +205,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Internetové služby, servery, cloud")]
                 it_sluzby_servery = 10008,
                 [NiceDisplayName("IT Bezpečnost")]
-                it_bezpecnost = 10008,
+                it_bezpecnost = 10009,
 
                 [NiceDisplayName("Stavebnictví")]
                 stav_obecne = 10100,
