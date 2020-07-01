@@ -598,7 +598,8 @@ namespace HlidacStatu.Lib.Data
                     else
                     {
                         Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
-                        data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                        if (!data.ContainsKey(Smlouva.SClassification.ClassificationsTypes.OSTATNI))
+                            data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
                     }
                 }
 
