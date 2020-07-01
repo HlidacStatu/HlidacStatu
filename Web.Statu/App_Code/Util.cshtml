@@ -743,10 +743,10 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
     {
         <text>
             @Html.Raw(preBtnText)
-            <a href="#" onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'anonym');" class="@btnCss" role="button" data-toggle="modal" data-target="#addWDhelp@(uid)">
-                @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
-                @btnText
-            </a>
+<a href="#" onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'anonym');" class="@btnCss" role="button" data-toggle="modal" data-target="#addWDhelp@(uid)">
+    @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
+    <span class="btn-emphasized">@Html.Raw(btnText)</span>
+</a>
             @Html.Raw(postBtnText)
             <!-- Modal -->
             <div class="modal fade" id="addWDhelp@(uid)" tabindex="-1" role="dialog">
