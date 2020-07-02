@@ -454,6 +454,8 @@ namespace HlidacStatu.Lib.Data
                 jine_pruzkum = 11905,
                 [NiceDisplayName("Opravy a údržba")]
                 jine_opravy = 11906,
+                [NiceDisplayName("Překladatelské a tlumočnické služby")]
+                jine_preklady = 11907,
             }
 
 
