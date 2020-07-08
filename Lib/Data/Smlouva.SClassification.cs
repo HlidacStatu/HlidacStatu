@@ -343,6 +343,8 @@ namespace HlidacStatu.Lib.Data
                 energie_jina = 10903,
                 [NiceDisplayName("Veřejné služby pro energie")]
                 energie_sluzby = 10904,
+                [NiceDisplayName("Voda")]
+                energie_voda = 10905,
 
                 [NiceDisplayName("Zemědělství")] //mozna 
                 agro_obecne = 11000,
