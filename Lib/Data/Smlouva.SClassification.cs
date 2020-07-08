@@ -192,7 +192,7 @@ namespace HlidacStatu.Lib.Data
                 it_hw = 10001,
                 [NiceDisplayName("IT Software (krabicový SW, licence, …)")]
                 it_sw = 10002,
-                //[NiceDisplayName("Informační systémy a servery")]
+                //[NiceDisplayName("Informační systémy a servery")] // sloučeno se servery a cloudem
                 //it_servery = 10003,
                 [NiceDisplayName("Opravy, údržba a počítačové sítě")]
                 it_site_opravy = 10004,
@@ -200,7 +200,7 @@ namespace HlidacStatu.Lib.Data
                 it_vyvoj = 10005,
                 [NiceDisplayName("Konzultace a poradenství")]
                 it_konzultace = 10006,
-                //[NiceDisplayName("SW sluzby")]
+                //[NiceDisplayName("SW sluzby")] //sloučeno se servery a cloudem
                 //it_sw_sluzby = 10007,
                 [NiceDisplayName("Internetové služby, servery, cloud")]
                 it_sluzby_servery = 10008,
@@ -350,7 +350,7 @@ namespace HlidacStatu.Lib.Data
                 agro_obecne = 11000,
                 [NiceDisplayName("Lesnictví a těžba dřeva")]
                 agro_les = 11001,
-                //[NiceDisplayName("Těžba dřeva")]
+                //[NiceDisplayName("Těžba dřeva")]  //sloučeno s lesnictvím
                 //agro_tezba = 11002,
                 [NiceDisplayName("Zahradnické služby")]
                 agro_zahrada = 11003,
@@ -385,7 +385,7 @@ namespace HlidacStatu.Lib.Data
                 social_obecne = 11300,
                 [NiceDisplayName("Vzdělávání a školení")]
                 social_vzdelavani = 11301,
-                //[NiceDisplayName("Školení")]
+                //[NiceDisplayName("Školení")] // sloučeno se vzděláváním
                 //social_skoleni = 11302,
                 [NiceDisplayName("Zdravotní péče")]
                 social_zdravotni = 11303,
@@ -432,15 +432,15 @@ namespace HlidacStatu.Lib.Data
                 techsluzby_uklid = 11603,
 
 
-                [NiceDisplayName("Výzkum a vývoj a související služby")]
-                vyzkum_obecne = 11700,
-                [NiceDisplayName("Výzkum a vývoj")]
-                vyzkum_vyvoj = 11701,
+                //[NiceDisplayName("Výzkum a vývoj a související služby")]
+                //vyzkum_obecne = 11700,
+                //[NiceDisplayName("Výzkum a vývoj")]
+                //vyzkum_vyvoj = 11701,
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
                 marketing_obecne = 11800,
-                [NiceDisplayName("Reklama")]
-                marketing_reklama = 11801,
+                //[NiceDisplayName("Reklama")]
+                //marketing_reklama = 11801,
 
                 [NiceDisplayName("Jiné služby")]
                 jine_obecne = 11900,
@@ -458,6 +458,9 @@ namespace HlidacStatu.Lib.Data
                 jine_opravy = 11906,
                 [NiceDisplayName("Překladatelské a tlumočnické služby")]
                 jine_preklady = 11907,
+
+                [NiceDisplayName("Dary a dotace")]
+                dary_obecne = 12000,
             }
 
 
