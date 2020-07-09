@@ -264,7 +264,7 @@ namespace HlidacStatu.Lib.Data
                 doprava_opravy = 10210,
                 [NiceDisplayName("Služby silniční dopravy")]
                 doprava_sluzby = 10211,
-                [NiceDisplayName("Poštovní a telekomunikační služby")]
+                [NiceDisplayName("Poštovní služby")]
                 doprava_posta = 10212,
 
                 [NiceDisplayName("Stroje a zařízení")]
