@@ -506,6 +506,14 @@
     <Compile Include="Discourse.cs" />
     <Compile Include="eAgri\DeMinimis.Search.cs" />
     <Compile Include="RequestLimiter.cs" />
+    <Compile Include="RPP\osobaros.cs" />
+    <Compile Include="RPP\OVMFull.cs" />
+    <Compile Include="RPP\ResultList.cs" />
+    <Compile Include="RPP\KategorieOVM.cs" />
+    <Compile Include="RPP\OVMSimple.cs" />
+    <Compile Include="RPP\RPP.cs" />
+    <Compile Include="RPP\seznamkatprirazenychkovm.cs" />
+    <Compile Include="RPP\tmp.cs" />
     <Compile Include="Vazby\FromGraphDb.cs" />
     <Compile Include="Zabbix\ZabAvailability.cs" />
     <Compile Include="Zabbix\ZabAvailabilityInterval.cs" />
@@ -530,9 +538,7 @@
     </None>
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="K_Index\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>

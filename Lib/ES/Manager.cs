@@ -34,6 +34,8 @@ namespace HlidacStatu.Lib.ES
             Dotace,
             Osoby,
             Audit,
+            RPP_Kategorie,
+            RPP_OVM,
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -55,6 +57,8 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_Osoby = "osoby";
         public static string defaultIndexName_Audit = "audit";
 
+        public static string defaultIndexName_RPP_Kategorie = "rpp_kategorie";
+        public static string defaultIndexName_RPP_OVM= "rpp_ovm";
 
         private static object _clientLock = new object();
         private static Dictionary<string, ElasticClient> _clients = new Dictionary<string, ElasticClient>();
@@ -131,6 +135,16 @@ namespace HlidacStatu.Lib.ES
             return GetESClient(defaultIndexName_Audit, timeOut, connectionLimit, IndexType.Audit
                 );
         }
+        public static ElasticClient GetESClient_RPP_OVM(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_RPP_OVM, timeOut, connectionLimit, IndexType.RPP_OVM
+                );
+        }
+        public static ElasticClient GetESClient_RPP_Kategorie(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_RPP_Kategorie, timeOut, connectionLimit, IndexType.RPP_Kategorie
+                );
+        }
 
         public static ElasticClient GetESClient_Insolvence(int timeOut = 60000, int connectionLimit = 80)
         {
@@ -182,29 +196,7 @@ namespace HlidacStatu.Lib.ES
 
         }
 
-        private static IndexType GetIndexTypeForDefaultIndexName(string indexName)
-        {
-            if (indexName == defaultIndexName
-                || indexName == defaultIndexName_Sneplatne
-                //|| indexName == defaultIndexName_SAll
-                )
-                return IndexType.Smlouvy;
-            else if (indexName == defaultIndexName_Firmy)
-                return IndexType.Firmy;
-            else if (indexName == defaultIndexName_KIndex)
-                return IndexType.KIndex;
-            else if (indexName == defaultIndexName_VerejneZakazky)
-                return IndexType.VerejneZakazky;
-            else if (indexName == defaultIndexName_ProfilZadavatele)
-                return IndexType.ProfilZadavatele;
-            else if (indexName == defaultIndexName_VerejneZakazkyRaw)
-                return IndexType.VerejneZakazkyRaw;
-            else if (indexName == defaultIndexName_VerejneZakazkyNaProfiluRaw)
-                return IndexType.VerejneZakazkyNaProfiluRaw;
-            else
-                return IndexType.DataSource;
-
-        }
+        
         public static ConnectionSettings GetElasticSearchConnectionSettings(string indexName, int timeOut = 60000, int? connectionLimit = null)
         {
 
@@ -535,6 +527,36 @@ namespace HlidacStatu.Lib.ES
                                         .Date(k => k.Name(n => n.LastUpdate))
                                 )
                             )
+                       );
+                    break;
+                case IndexType.RPP_Kategorie:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(new IndexState()
+                           {
+                               Settings = new IndexSettings()
+                               {
+                                   NumberOfReplicas = 2,
+                                   NumberOfShards = 2
+                               }
+                           }
+                           )
+                           .Map<Lib.Data.External.RPP.KategorieOVM>(map => map.AutoMap(maxRecursion: 1))
+                       );
+                    break;
+                case IndexType.RPP_OVM:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(new IndexState()
+                           {
+                               Settings = new IndexSettings()
+                               {
+                                   NumberOfReplicas = 2,
+                                   NumberOfShards = 2
+                               }
+                           }
+                           )
+                           .Map<Lib.Data.External.RPP.OVMFull>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
             }
