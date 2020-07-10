@@ -12,8 +12,10 @@ namespace HlidacStatu.Plugin.Enhancers
 {
 
 
+
     public class ManualChanges : IEnhancer
     {
+        public const string NastaveniSmluvnichStran = "Ruční nastavení smluvních stran";
         public string Description
         {
             get
@@ -41,12 +43,12 @@ namespace HlidacStatu.Plugin.Enhancers
         public bool UpdateSmluvniStrany(ref Lib.Data.Smlouva item, Lib.Data.Smlouva.Subjekt platce, Lib.Data.Smlouva.Subjekt[] prijemce )
         {
             item.Enhancements = item.Enhancements.AddOrUpdate(
-                new Enhancement("Ruční nastavení smluvních stran", "Ručně nastaven plátce", "item.Platce", Ser(item.Platce), Ser(platce), this)
+                new Enhancement(NastaveniSmluvnichStran, "Ručně nastaven plátce", "item.Platce", Ser(item.Platce), Ser(platce), this)
                 );
             item.Platce = platce;
 
             item.Enhancements = item.Enhancements.AddOrUpdate(
-                new Enhancement("Ruční nastavení smluvních stran", "Ručně nastaven příjemce", "item.Prijemce", Ser(item.Prijemce), Ser(prijemce), this)
+                new Enhancement(NastaveniSmluvnichStran, "Ručně nastaven příjemce", "item.Prijemce", Ser(item.Prijemce), Ser(prijemce), this)
                 );
             item.Prijemce = prijemce;
 

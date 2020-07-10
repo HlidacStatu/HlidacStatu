@@ -903,38 +903,47 @@ namespace HlidacStatu.Lib.Data
 
         public bool SetClassification(bool rewrite = false, bool rewriteStems = false) //true if changed
         {
-            if (rewrite
+            if (this.Prilohy != null
+                    &&
+                    this.Prilohy.Any(m => m.EnoughExtractedText))
+            {
+
+                if (rewrite
                 || rewriteStems
                 || this.Classification?.LastUpdate == null
                 || (this.Classification?.Types != null && this.Classification.Types.Count() == 0)
 
                 )
-            {
-                var types = SClassification.GetClassificationFromServer(this, rewriteStems);
-                if (types == null)
                 {
-                    this.Classification = null;
-                }
-                else
-                {
-                    SClassification.Classification[] newClass = types
-                                            .Select(m => new SClassification.Classification()
-                                            {
-                                                TypeValue = (int)m.Key,
-                                                ClassifProbability = m.Value
-                                            }
-                                            )
-                                            .ToArray();
+                    var types = SClassification.GetClassificationFromServer(this, rewriteStems);
+                    if (types == null)
+                    {
+                        this.Classification = null;
+                    }
+                    else
+                    {
+                        SClassification.Classification[] newClass = types
+                                                .Select(m => new SClassification.Classification()
+                                                {
+                                                    TypeValue = (int)m.Key,
+                                                    ClassifProbability = m.Value
+                                                }
+                                                )
+                                                .ToArray();
 
-                    var newClassRelevant = relevantClassif(newClass);
-                    this.Classification = new SClassification(newClassRelevant);
-                    this.Classification.LastUpdate = DateTime.Now;
-                }
-                return true;
-            }
-            else
+                        var newClassRelevant = relevantClassif(newClass);
+                        this.Classification = new SClassification(newClassRelevant);
+                        this.Classification.LastUpdate = DateTime.Now;
+                    }
+                    return true;
+                } //class
+                else
+                    return false;
+            } //prilohy
+            else 
                 return false;
         }
+        
 
         public bool NotInterestingToShow() { return false; }
 
