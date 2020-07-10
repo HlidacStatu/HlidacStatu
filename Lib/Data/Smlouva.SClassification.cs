@@ -439,8 +439,9 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
                 marketing_obecne = 11800,
-                //[NiceDisplayName("Reklama")]
-                //marketing_reklama = 11801,
+                [NiceDisplayName("Reklamní a marketingové služby")]
+                [Disabled()]
+                marketing_reklama = 11801, //TODO remove
 
                 [NiceDisplayName("Jiné služby")]
                 jine_obecne = 11900,
