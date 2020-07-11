@@ -13,6 +13,8 @@ namespace HlidacStatu.Lib.Searching
 {
     public static class Tools
     {
+        public const int MaxResultWindow = 10000;
+
         static string regexInvalidQueryTemplate = @"(^|\s|[(])(?<q>$operator$\s{1} (?<v>(\w{1,})) )($|\s|[)])";
         static RegexOptions regexQueryOption = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline;
 

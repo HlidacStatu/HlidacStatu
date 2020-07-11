@@ -58,8 +58,9 @@ namespace HlidacStatu.Lib.Data
             "AND","OR"
         };
 
-            public static IEnumerable<string> SimpleSearch(string query, int page, int size)
+            public static Lib.Data.Search.GeneralResult<Firma> SimpleSearch(string query, int page, int size)
             {
+                List<Firma> found = new List<Firma>();
 
                 string modifQ = Lib.Searching.SimpleQueryCreator
                     .GetSimpleQuery(query, new Searching.Rules.IRule[] { new Searching.Rules.Firmy_OVMKategorie() })
@@ -68,19 +69,18 @@ namespace HlidacStatu.Lib.Data
                 string[] specifiedIcosInQuery = Util.ParseTools.GetRegexGroupValues(modifQ, @"(ico\w{0,11}\: \s? (?<ic>\d{3,8}))", "ic");
                 if (specifiedIcosInQuery != null && specifiedIcosInQuery.Length > 0)
                 {
-                    List<string> resIcos = new List<string>();
-                    foreach (var ic in specifiedIcosInQuery)
+                    foreach (var ic in specifiedIcosInQuery.Skip((page-1)*size).Take(size))
                     {
                         Firma f = Firmy.Get(ic);
                         if (f.Valid)
                         {
                             ///nalezene ICO
-                            resIcos.Add(ic);
+                            found.Add(f);
                         }
 
                     }
-                    if (resIcos.Count() > 0)
-                        return resIcos.ToArray();
+                    if (found.Count() > 0)
+                        return new Data.Search.GeneralResult<Firma>(query, specifiedIcosInQuery.Count(), found, size,true) { Page = page };
                 }
 
 
@@ -91,10 +91,6 @@ namespace HlidacStatu.Lib.Data
                 modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|jmenozadavatel:)", "jmeno:", regexQueryOption);
 
                 //modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "\\s(AND|OR)\\s", " ", regexQueryOption);
-
-                List<string> found = new List<string>();
-
-
 
                 page = page - 1;
                 if (page < 0)
@@ -128,12 +124,15 @@ namespace HlidacStatu.Lib.Data
                     {
                         foreach (var i in res.Hits)
                         {
-                            found.Add(i.Source.Ico);
+                            found.Add(Firmy.Get(i.Source.Ico));
                         }
-                        return found;
+                        return new Data.Search.GeneralResult<Firma>(query, specifiedIcosInQuery.Count(), found, size,true) { Page = page };
                     }
                     else
+                    {
                         Lib.ES.Manager.LogQueryError<FirmaInElastic>(res, query);
+                        return new Data.Search.GeneralResult<Firma>(query, 0, found, size,false) { Page = page };
+                    }
                 }
                 catch (Exception e)
                 {
@@ -144,7 +143,7 @@ namespace HlidacStatu.Lib.Data
                         HlidacStatu.Util.Consts.Logger.Error("", e);
                     throw;
                 }
-                return found;
+                return new Data.Search.GeneralResult<Firma>(query, 0, found, size, false) { Page = page };
             }
 
             public static QueryContainer GetSimpleQuery(string query)
@@ -157,14 +156,14 @@ namespace HlidacStatu.Lib.Data
             public static IEnumerable<Firma> FindAll(string query, int limit)
             {
                 return SimpleSearch(query, 0,limit)
-                    .Select(m => Firmy.Get(m));
+                    .Result;
             }
 
 
             public static IEnumerable<Firma> FindAllInMemory(string query, int limit)
             {
                 return SimpleSearch(query,0, limit)
-                    .Select(m => Firmy.Get(m));
+                    .Result;
             }
 
         }

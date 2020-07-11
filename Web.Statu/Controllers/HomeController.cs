@@ -1196,9 +1196,9 @@ text zpravy: {txt}
             return View(model);
         }
 
-        public ActionResult HledatFirmy(string q)
+        public ActionResult HledatFirmy(string q, int? page = 1)
         {
-            var model = new Lib.Data.Search.GeneralResult<string>(q, Firma.Search.SimpleSearch(q,1, 50));
+            var model = Firma.Search.SimpleSearch(q,page.Value,50);
             return View(model);
         }
 

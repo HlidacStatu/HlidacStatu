@@ -18,7 +18,6 @@ namespace HlidacStatu.Lib.Data
         public static class Search
         {
             public const int DefaultPageSize = 40;
-            public const int MaxResultWindow = 10000;
 
 
             [Devmasters.Core.ShowNiceDisplayName()]
@@ -277,7 +276,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                 if (page < 0)
                     page = 0;
 
-                if (page * pageSize >= MaxResultWindow) //elastic limit
+                if (page * pageSize >= Searching.Tools.MaxResultWindow) //elastic limit
                 {
                     page = 0; pageSize = 0; //return nothing
                 }

@@ -200,9 +200,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             page = page - 1;
             if (page < 0)
                 page = 0;
-            if (page * pageSize > Lib.Data.Smlouva.Search.MaxResultWindow)
+            if (page * pageSize > Lib.Searching.Tools.MaxResultWindow)
             {
-                page = (Lib.Data.Smlouva.Search.MaxResultWindow / pageSize) - 1;
+                page = (Lib.Searching.Tools.MaxResultWindow / pageSize) - 1;
             }
 
             //exclude big properties from result

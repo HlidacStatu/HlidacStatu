@@ -14,6 +14,8 @@ namespace HlidacStatu.Lib.Data
             public bool IsValid { get { return Results.All(m => m.IsValid || Exceptions.Any()); } }
             public bool HasResult { get { return IsValid && this.Total > 0; } }
             public string DataSource { get; set; }
+            public int PageSize { get; set; }
+            public int Page { get; set; }
 
             public System.Collections.Concurrent.ConcurrentBag<External.DataSets.DataSearchResult> Results { get; set; }
                 = new System.Collections.Concurrent.ConcurrentBag<External.DataSets.DataSearchResult>();

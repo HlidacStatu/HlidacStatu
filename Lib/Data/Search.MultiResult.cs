@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.Data
             public Lib.Searching.VerejnaZakazkaSearchData VZ { get; set; } = null;
             public OsobaSearchResult Osoby { get; set; } = null;
             public bool OsobaFtx = false;
-            public GeneralResult<string> Firmy { get; set; } = null;
+            public GeneralResult<Firma> Firmy { get; set; } = null;
             public DatasetMultiResult Datasets { get; set; }
 			public InsolvenceSearchResult Insolvence { get; set; } = null;
             public DotaceSearchResult Dotace { get; set; } = null;
@@ -189,7 +189,7 @@ namespace HlidacStatu.Lib.Data
                         Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
                         sw.Start();
 
-                        res.Firmy = new GeneralResult<string>(query,Firma.Search.SimpleSearch(query, 0, 50));
+                        res.Firmy = Firma.Search.SimpleSearch(query, 0, 50);
                         sw.Stop();
                         res.Firmy.ElapsedTime = sw.Elapsed;
                     }

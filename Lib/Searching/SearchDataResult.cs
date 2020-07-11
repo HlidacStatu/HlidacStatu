@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Searching
 
         public const int DefaultPageSizeGlobal = 25;
         public virtual int DefaultPageSize() { return DefaultPageSizeGlobal; }
-        public virtual int MaxResultWindow() { return  Lib.Data.Smlouva.Search.MaxResultWindow; }
+        public virtual int MaxResultWindow() { return  Lib.Searching.Tools.MaxResultWindow; }
 
 
 

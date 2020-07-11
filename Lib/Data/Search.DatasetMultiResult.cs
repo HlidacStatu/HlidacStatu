@@ -11,8 +11,8 @@ namespace HlidacStatu.Lib.Data
         public class DatasetSumGeneralResult : GeneralResult<string>
         {
             public Lib.Data.External.DataSets.DataSet Dataset { get; set; }
-            public DatasetSumGeneralResult(string query, long total, IEnumerable<string> results, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
-                : base(query, total, results, true)
+            public DatasetSumGeneralResult(string query, long total, IEnumerable<string> results, int pageSize, External.DataSets.DataSet dataset, TimeSpan searchElapsedTime)
+                : base(query, total, results,pageSize, true)
             {
                 this.Dataset = dataset;
                 this.DataSource = "Dataset." + this.Dataset.DatasetId;
@@ -30,6 +30,8 @@ namespace HlidacStatu.Lib.Data
             public bool HasResult { get { return IsValid && this.Total > 0; } }
             public string DataSource { get; set; }
             public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
+            public int PageSize { get; set; }
+            public int Page { get; set; }
 
             public System.Collections.Concurrent.ConcurrentBag<DataSearchResult> Results { get; set; }
                 = new System.Collections.Concurrent.ConcurrentBag<DataSearchResult>();

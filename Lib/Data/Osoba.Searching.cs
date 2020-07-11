@@ -103,26 +103,26 @@ namespace HlidacStatu.Lib.Data
                 return res;
             }
 
-            public static IEnumerable<Osoba> GetPolitikByQueryFromFirmy(string jmeno, int maxNumOfResults = 50, IEnumerable<string> alreadyFoundFirmyIcos = null)
+            public static IEnumerable<Osoba> GetPolitikByQueryFromFirmy(string jmeno, int maxNumOfResults = 50, IEnumerable<Firma> alreadyFoundFirmyIcos = null)
             {
                 var res = new Osoba[] { };
 
                 var firmy = alreadyFoundFirmyIcos;
                 if (firmy == null)
-                    firmy = Firma.Search.SimpleSearch(jmeno, 0,maxNumOfResults * 10);
+                    firmy = Firma.Search.SimpleSearch(jmeno, 0,maxNumOfResults * 10).Result;
 
                 if (firmy != null && firmy.Count() > 0)
                 {
                     Dictionary<int, int> osoby = new Dictionary<int, int>();
                     bool skipRest = false;
-                    foreach (var fico in firmy)
+                    foreach (var f in firmy)
                     {
                         if (skipRest)
                             break;
 
-                        if (StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(fico))
+                        if (StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(f.ICO))
                         {
-                            foreach (var osobaId in StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[fico])
+                            foreach (var osobaId in StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy[f.ICO])
                             {
                                 if (osoby.ContainsKey(osobaId))
                                     osoby[osobaId]++;
@@ -139,7 +139,7 @@ namespace HlidacStatu.Lib.Data
 
                         if (skipRest == false)
                         {
-                            var fvazby = Firmy.Get(fico).AktualniVazby(Relation.AktualnostType.Nedavny);
+                            var fvazby = f.AktualniVazby(Relation.AktualnostType.Nedavny);
                             foreach (var fv in fvazby)
                             {
                                 if (fv.To.Type == Graph.Node.NodeType.Company)

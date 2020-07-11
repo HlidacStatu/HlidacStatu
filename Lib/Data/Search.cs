@@ -17,21 +17,34 @@ namespace HlidacStatu.Lib.Data
             public string Query { get; set; }
             public IEnumerable<T> Result { get; private set; }
             public long Total { get; private set; }
+            public int PageSize { get; private set; }
+            public int Page { get; set; }
             public bool IsValid { get; private set; }
             public bool HasResult { get { return IsValid && Total > 0; } }
             public string DataSource { get; set; }
             public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
 
-            public GeneralResult(string query, IEnumerable<T> result)
-                : this(query, result?.Count() ?? 0, result, true)
+            public GeneralResult(string query, IEnumerable<T> result, int pageSize)
+                : this(query, result?.Count() ?? 0, result, pageSize, true)
             { }
 
-            public GeneralResult(string query, long total, IEnumerable<T> result, bool isValid = true)
+            public GeneralResult(string query, long total, IEnumerable<T> result, int pageSize, bool isValid = true)
             {
                 this.Query = query;
                 this.Result = result;
                 this.Total = total;
                 this.IsValid = isValid;
+                this.PageSize = PageSize;
+            }
+
+
+            public object ToRouteValues(int page)
+            {
+                return new
+                {
+                    Q = this.Query,
+                    Page = page
+                };
             }
 
         }

@@ -885,9 +885,8 @@ else if (Model.HasResults == false)
             @SearchResults.FirmyHead(false)
             <tbody>
 
-                @foreach (var item in Model.Firmy.Result)
+                @foreach (var f in Model.Firmy.Result)
                 {
-                    var f = HlidacStatu.Lib.Data.Firmy.Get(item);
                     if (f.Valid)
                     {
                         @SearchResults.FirmyRow(this.User, f, false)

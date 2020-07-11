@@ -14,7 +14,8 @@ namespace HlidacStatu.Lib.Data
             long Total { get; }
             bool IsValid { get; }
             bool HasResult { get; }
-
+            int PageSize { get; }
+            int Page { get; }
             string DataSource { get; set; }
 
             TimeSpan ElapsedTime { get; set; }
