@@ -38,22 +38,6 @@ namespace HlidacStatu.Lib.Data.External.RPP
         public Adresaruian adresaRuian { get; set; }
     }
 
-    public class Adresaruian
-    {
-        public int adresniMistoKod { get; set; }
-        public int cisloDomovni { get; set; }
-        public int cisloOrientacni { get; set; }
-        public DateTime datumPosledniZmeny { get; set; }
-        public int id { get; set; }
-        public int okresKod { get; set; }
-        public bool platnostVZr { get; set; }
-        public Ruiancastobce ruianCastObce { get; set; }
-        public Ruianmop ruianMop { get; set; }
-        public Ruianobec ruianObec { get; set; }
-        public Ruianobjekt ruianObjekt { get; set; }
-        public Ruianposta ruianPosta { get; set; }
-        public Ruianulice ruianUlice { get; set; }
-    }
 
     public class Ruiancastobce
     {

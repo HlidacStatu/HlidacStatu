@@ -109,6 +109,23 @@ else
                     <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
                 </tr>
             }
+            @if (Model.KategorieOVM().Count() > 0)
+            {
+                <tr>
+                    <th>Kategorie OVM</th>
+                    <td>
+                        <div class="low-box" style="max-height:@(100)px">
+                            <div class="low-box-line" style="top:@(100-55)px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@("/" + Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped))'); return true;" class="more"></a></div>
+                            <div class="low-box-content">
+                                @foreach (var cat in Model.KategorieOVM())
+                                {
+                                    <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
             @if (Model.Vazby()?.Count() > 0)
             {
                 <tr>
@@ -118,12 +135,6 @@ else
                     </td>
                 </tr>
             }
-            <tr>
-                <th>Další informace o subjektu</th>
-                <td>
-                    @Util.FirmaMoreInfoLinks(Model.ICO)
-                </td>
-            </tr>
             @if (firstInRS.HasValue)
             {
                 <tr>
@@ -481,12 +492,13 @@ else
                         </span>
                     </th>
                     <td>
-                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
+                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                            od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
                             @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
-                            { 
-                            <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>
+                            {
+                                <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>
                             }
-                            </span>
+                        </span>
                     </td>
                 </tr>
 
@@ -502,8 +514,8 @@ else
                                     if (Model.NespolehlivyPlatceDPH().FromDate.HasValue)
                                     {
                                         DateTime toDate = Model.NespolehlivyPlatceDPH().ToDate.HasValue ? Model.NespolehlivyPlatceDPH().ToDate.Value : DateTime.Now.AddDays(1);
-                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]", 
-                                            Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"), 
+                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]",
+                                            Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"),
                                             toDate.ToString("yyyy-MM-dd")
                                             ); //podepsano:[2016-01-01 TO 2016-12-31]
                                     }

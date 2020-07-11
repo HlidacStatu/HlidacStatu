@@ -61,8 +61,10 @@ namespace HlidacStatu.Lib.Data
             public static IEnumerable<string> SimpleSearch(string query, int page, int size)
             {
 
-                string modifQ = query;
-
+                string modifQ = Lib.Searching.SimpleQueryCreator
+                    .GetSimpleQuery(query, new Searching.Rules.IRule[] { new Searching.Rules.Firmy_OVMKategorie() })
+                    .FullQuery();
+                
                 string[] specifiedIcosInQuery = Util.ParseTools.GetRegexGroupValues(modifQ, @"(ico\w{0,11}\: \s? (?<ic>\d{3,8}))", "ic");
                 if (specifiedIcosInQuery != null && specifiedIcosInQuery.Length > 0)
                 {

@@ -59,7 +59,15 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
                 "PUT"
                 ).Result;
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<KategorieOVM>>(json);
+            var res =Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<KategorieOVM>>(json);
+
+            var prefSeznam = res.seznam.ToArray();
+            for (int i = 0; i < prefSeznam.Count(); i++)
+            {
+                prefSeznam[i].hlidac_preferred = External.RPP.KategorieOVM.preferredIds.Contains(prefSeznam[i].id);
+            }
+            res.seznam = prefSeznam.ToArray();
+            return res;
         }
 
         public ResultList<OVMSimple> OVM_v_KategoriiOVM(KategorieOVM katOVM)
@@ -92,11 +100,83 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
                 seznam = ovms
             };
         }
-        public OVMFull FullOVM(OVMSimple ovm)
+
+        public ResultList<ISVS> ISVSList()
         {
-            return FullOVM(ovm.id);
+            List<ISVS> ovms = new List<ISVS>();
+
+            int step = 100;
+            int from = 0;
+            do
+            {
+                var json = CallAsync(root + $"/AISP/rest/verejne/isvs?start={from}&pocet={step}&razeni=-datumPosledniZmeny,-id",
+                    "{\"stav\":[\"SCHVALENO\",\"UKONCENO\"],\"omezitPodlePrihlaseneho\":false,\"primarni\":false}",
+                    "PUT"
+                    ).Result;
+
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS>>(json);
+                if (res.seznam.Count() == 0)
+                    break;
+                ovms.AddRange(res.seznam);
+
+                if (res.pocetCelkem < step)
+                    break;
+
+                from = from + step;
+            } while (true);
+
+            return new ResultList<ISVS>()
+            {
+                pocetCelkem = ovms.Count,
+                seznam = ovms
+            };
         }
-        public OVMFull FullOVM(int ovmId)
+
+        public ISVS ISVSDetail(int isvsId)
+        {
+            var json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}",
+                "",
+                "GET"
+                ).Result;
+            var isvs = Newtonsoft.Json.JsonConvert.DeserializeObject<ISVS>(json);
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/vypisvyuziti").Result;
+            isvs.vyuzitiIS = Newtonsoft.Json.JsonConvert.DeserializeObject<ISVS.vypisvyuziti>(json);
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/polozkystruktury").Result;
+            isvs.aplikacniCleneni = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS.aplikacnicleneni>>(json)?.seznam?.ToArray();
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/pp").Result;
+            isvs.pravniPredpisy = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS.pravnipredpisy>>(json)?.seznam?.ToArray();
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/milniky").Result;
+            isvs.milnikyZivotnihoCyklu = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS.milniky>>(json)?.seznam?.ToArray();
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/gdpr").Result;
+            isvs.Gdpr = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS.gdpr>>(json)?.seznam?.ToArray();
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/finance").Result;
+            isvs.financniUdaje = Newtonsoft.Json.JsonConvert.DeserializeObject<ISVS.finance>(json);
+
+            json = CallAsync(root + $"/AISP/rest/verejne/isvs/{isvsId}/subjekty").Result;
+            var subj = Newtonsoft.Json.JsonConvert.DeserializeObject<ResultList<ISVS.Subjekt>>(json)?.seznam?.ToArray();
+            if (subj != null)
+            {
+                isvs.Dodavatele = subj.Where(m => m.typSubjektu.ToUpper() == "DODAVATEL").ToArray();
+                isvs.Spravci = subj.Where(m => m.typSubjektu.ToUpper() == "SPRAVCE").ToArray();
+                isvs.Provozovatele = subj.Where(m => m.typSubjektu.ToUpper() == "PROVOZOVATEL").ToArray();
+            }
+
+
+            return isvs;
+        }
+
+
+        public OVMFull OVMDetail(OVMSimple ovm)
+        {
+            return OVMDetail(ovm.id);
+        }
+        public OVMFull OVMDetail(int ovmId)
         {
             var json = CallAsync(root + $"/AISP/rest/verejne/ovm/{ovmId}/hlavniatributy",
                 "",
@@ -127,7 +207,7 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
             var osobaros = Newtonsoft.Json.JsonConvert.DeserializeObject<osobaros>(json);
             ovm.kodPravnihoStavu = osobaros?.kodPravnihoStavu ?? 0;
             ovm.nazevPravnihoStavu = osobaros?.nazevPravnihoStavu;
-            ovm.verejnaProspesnost = osobaros?.verejnaProspesnost ?? false ;
+            ovm.verejnaProspesnost = osobaros?.verejnaProspesnost ?? false;
             ovm.angazovaneOsoby = osobaros?.angazovaneOsoby;
 
             json = CallAsync(root + $"/AISP/rest/verejne/ovm/{ovmId}/seznamkatprirazenychkovm?start=0&pocet=1000&razeni=-id,-id",
@@ -142,7 +222,7 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
 
             return ovm;
         }
-        public async Task<string> CallAsync(string url, string body, string method)
+        public async Task<string> CallAsync(string url, string body = null, string method = "GET")
         {
             method = method.ToUpper();
 
@@ -150,7 +230,9 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
             try
             {
                 HttpResponseMessage response = null;
-                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                StringContent content = null;
+                if (!string.IsNullOrEmpty(body))
+                    content = new StringContent(body, Encoding.UTF8, "application/json");
 
                 if (method == "GET")
                     response = await wc.GetAsync(url);

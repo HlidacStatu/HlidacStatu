@@ -36,6 +36,7 @@ namespace HlidacStatu.Lib.ES
             Audit,
             RPP_Kategorie,
             RPP_OVM,
+            RPP_ISVS
         }
 
         public static string defaultIndexName = "hlidacsmluv";
@@ -59,6 +60,7 @@ namespace HlidacStatu.Lib.ES
 
         public static string defaultIndexName_RPP_Kategorie = "rpp_kategorie";
         public static string defaultIndexName_RPP_OVM= "rpp_ovm";
+        public static string defaultIndexName_RPP_ISVS = "rpp_isvs";
 
         private static object _clientLock = new object();
         private static Dictionary<string, ElasticClient> _clients = new Dictionary<string, ElasticClient>();
@@ -138,6 +140,11 @@ namespace HlidacStatu.Lib.ES
         public static ElasticClient GetESClient_RPP_OVM(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_RPP_OVM, timeOut, connectionLimit, IndexType.RPP_OVM
+                );
+        }
+        public static ElasticClient GetESClient_RPP_ISVS(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_RPP_ISVS, timeOut, connectionLimit, IndexType.RPP_ISVS
                 );
         }
         public static ElasticClient GetESClient_RPP_Kategorie(int timeOut = 60000, int connectionLimit = 80)
@@ -557,6 +564,21 @@ namespace HlidacStatu.Lib.ES
                            }
                            )
                            .Map<Lib.Data.External.RPP.OVMFull>(map => map.AutoMap(maxRecursion: 1))
+                       );
+                    break;
+                case IndexType.RPP_ISVS:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(new IndexState()
+                           {
+                               Settings = new IndexSettings()
+                               {
+                                   NumberOfReplicas = 2,
+                                   NumberOfShards = 2
+                               }
+                           }
+                           )
+                           .Map<Lib.Data.External.RPP.ISVS>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
             }

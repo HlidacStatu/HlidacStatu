@@ -1,5 +1,7 @@
 ﻿using Devmasters.Core;
+
 using HlidacStatu.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -110,11 +112,13 @@ namespace HlidacStatu.Lib.Data
                 if (_firmaHint == null)
                 {
                     _firmaHint = FirmaHint.Load(this.ICO);
-                    
+
                 }
                 return _firmaHint;
             }
         }
+
+
 
 
         private string _jmeno = string.Empty;
@@ -212,6 +216,29 @@ namespace HlidacStatu.Lib.Data
                 }
             }
             return false;
+        }
+
+        Lib.Data.External.RPP.KategorieOVM[] _kategorieOVM = null;
+        public Lib.Data.External.RPP.KategorieOVM[] KategorieOVM()
+        {
+            if (_kategorieOVM == null)
+            {
+                var res = Lib.ES.Manager.GetESClient_RPP_Kategorie().Search<Lib.Data.External.RPP.KategorieOVM>(
+                     s => s
+                     .Query(q => q.QueryString(qs => qs.Query($"oVM_v_kategorii.kodOvm:{this.ICO}")))
+                     .Source(so => so.Excludes(ex => ex.Field("oVM_v_kategorii")))
+                     .Size(150)
+                     );
+                if (res.IsValid)
+                    _kategorieOVM = res.Hits
+                        .Select(m => m.Source)
+                        .OrderByDescending(m=>m.hlidac_preferred ? 1 : 0 )
+                        .ThenBy(m=>m.nazev)
+                        .ToArray();
+                else
+                    _kategorieOVM = new External.RPP.KategorieOVM[] { };
+            }
+            return _kategorieOVM;
         }
 
         public bool MaVazbyNaPolitiky()
@@ -483,7 +510,7 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        static int[] Neziskovky_KOD_PF = new int[] {116,117,118,141,161,422,423,671,701,706,736 };
+        static int[] Neziskovky_KOD_PF = new int[] { 116, 117, 118, 141, 161, 422, 423, 671, 701, 706, 736 };
         public bool JsemNeziskovka()
         {
             if (JsemSoukromaFirma() == false)
