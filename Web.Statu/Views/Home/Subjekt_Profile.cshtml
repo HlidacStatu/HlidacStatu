@@ -114,8 +114,8 @@ else
                 <tr>
                     <th>Kategorie OVM</th>
                     <td>
-                        <div class="low-box" style="max-height:@(100)px">
-                            <div class="low-box-line" style="top:@(100-55)px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@("/" + Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped))'); return true;" class="more"></a></div>
+                        <div class="low-box" style="max-height:100px">
+                            <div class="low-box-line" style="top:45px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@("/" + Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped))'); return true;" class="more"></a></div>
                             <div class="low-box-content">
                                 @foreach (var cat in Model.KategorieOVM())
                                 {
