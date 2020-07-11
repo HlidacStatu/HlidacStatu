@@ -5,8 +5,13 @@
 @using Devmasters.Core
 @using HlidacStatu.Web.Framework;
 @{
-    ViewBag.Title = "Hledání firem";
+    ViewBag.Title = "Hledání subjektů";
     ViewBag.ShowBookmarkUrl = true;
+    string subTitle = "";
+    if (!string.IsNullOrEmpty(Request.QueryString["subtitle"]))
+    {
+        subTitle = Request.QueryString["subtitle"];
+    }
 
 }
 @section scripts
@@ -17,7 +22,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>Hledání firem</li>
+        <li>Hledání subjektů</li>
         <li class="active">@Model.Query</li>
     </ol>
 }
@@ -47,7 +52,7 @@
             <div class="watcher__title">
                 <img src="/Content/img/icon-person-watcher.svg">
                 <h2 class="new-title">
-                    Nalezené firmy
+                    Nalezené subjekty
                 </h2>
                 <span>@HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(Model.Total)</span>
             </div>
@@ -55,7 +60,7 @@
     </div>
 </div>
 
-<h4>Nejvíce relevantní nalezené firmy</h4>
+<h4>@(subTitle)</h4>
 <div class="row" style="">
     <table class="table table-hover">
         @SearchResults.FirmyHead(false)
