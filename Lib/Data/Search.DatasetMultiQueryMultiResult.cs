@@ -16,6 +16,21 @@ namespace HlidacStatu.Lib.Data
             public string DataSource { get; set; }
             public int PageSize { get; set; }
             public int Page { get; set; }
+            public string Order { get; set; }
+
+            public string Query { get; set; }
+
+            public virtual int MaxResultWindow() { return Lib.Searching.Tools.MaxResultWindow; }
+
+            public virtual object ToRouteValues(int page)
+            {
+                return new
+                {
+                    Q = Query ,
+                    Page = page,
+                };
+            }
+
 
             public System.Collections.Concurrent.ConcurrentBag<External.DataSets.DataSearchResult> Results { get; set; }
                 = new System.Collections.Concurrent.ConcurrentBag<External.DataSets.DataSearchResult>();

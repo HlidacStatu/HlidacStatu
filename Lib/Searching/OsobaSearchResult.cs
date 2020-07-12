@@ -13,12 +13,16 @@ namespace HlidacStatu.Lib.Searching
 
         public IEnumerable<Data.Osoba> Results { get; set; }
 
+        public override int MaxResultWindow()
+        {
+            return 100;
+        }
 
         public object ToRouteValues(int page)
 		{
 			return new
 			{
-				Q = string.IsNullOrEmpty(Q) ? OrigQuery : Q,
+				Q = Query,
 				Page = page,
 			};
 		}

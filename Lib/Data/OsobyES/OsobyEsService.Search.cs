@@ -10,6 +10,9 @@ namespace HlidacStatu.Lib.Data.OsobyES
         
         public static OsobaEsSearchResult FulltextSearch(string query, int page, int pageSize, int? status = null)
         {
+            string modifQ = Lib.Searching.SimpleQueryCreator
+                .GetSimpleQuery(query, new Searching.Rules.IRule[] { new Searching.Rules.RemoveAllOperators() })
+                .FullQuery();
 
             page = page - 1 < 0 ? 0 : page - 1;
 
@@ -31,7 +34,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                 .Must(_must => _must
                                     .Fuzzy(_fuzzy => _fuzzy
                                         .Field(_field => _field.FullName)
-                                        .Value(query)
+                                        .Value(modifQ)
                                         .Fuzziness(Fuzziness.EditDistance(2))
                                     )
                                     && _must.Term(_field => _field.Status, status.Value)
@@ -40,17 +43,17 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                     _boostWomen => _boostWomen
                                     .Match(_match => _match
                                         .Field(_field => _field.FullName)
-                                        .Query(query)
+                                        .Query(modifQ)
                                     ),
                                     _boostExact => _boostExact
                                     .Match(_match => _match
                                         .Field("fullName.lower")
-                                        .Query(query)
+                                        .Query(modifQ)
                                     ),
                                     _boostAscii => _boostAscii
                                     .Match(_match => _match
                                         .Field("fullName.lowerascii")
-                                        .Query(query)
+                                        .Query(modifQ)
                                     )
                                 )
                             )
@@ -74,7 +77,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                 )
                             .Type(TextQueryType.MostFields)
                             .Fuzziness(Fuzziness.EditDistance(2))
-                            .Query(query)
+                            .Query(modifQ)
                             )
                         )
                         .TrackTotalHits(true)
@@ -89,7 +92,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                 {
                     ES.Manager.LogQueryError<OsobaES>(res, "Exception, Orig query:"
                         + query + "   query:"
-                        + query
+                        + modifQ
                         , ex: e);
                 }
                 else

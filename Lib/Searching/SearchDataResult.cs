@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +9,31 @@ using System.Threading.Tasks;
 namespace HlidacStatu.Lib.Searching
 {
     public class SearchDataResult<T> : Lib.Data.Search.ISearchResult, ISocialInfo
-        where T : class 
+        where T : class
     {
 
         public const int DefaultPageSizeGlobal = 25;
         public virtual int DefaultPageSize() { return DefaultPageSizeGlobal; }
-        public virtual int MaxResultWindow() { return  Lib.Searching.Tools.MaxResultWindow; }
+        public virtual int MaxResultWindow() { return Lib.Searching.Tools.MaxResultWindow; }
+        public string Query { get; set; }
 
+        public object ToRouteValues(int page)
+        {
+            return new
+            {
+                Q = Query,
+                Page = page,
+            };
+        }
 
 
         public int Page { get; set; }
-        public int PageSize { get; set; } 
-        public string Q { get; set; }
+        public int PageSize { get; set; }
+        public string Q
+        {
+            get { return this.Query; }
+            set { this.Query = value; }
+        }
         public string OrigQuery { get; set; }
         public bool IsValid { get; set; }
         public long Total { get; set; }
@@ -29,12 +43,14 @@ namespace HlidacStatu.Lib.Searching
         private string _order = "0";
         public string Order
         {
-            get {
+            get
+            {
                 return _order;
             }
 
-            set {
-                this._order = string.IsNullOrWhiteSpace(value) ? "0" : value ;
+            set
+            {
+                this._order = string.IsNullOrWhiteSpace(value) ? "0" : value;
 
                 if (OrderList == null)
                     InitOrderList();
@@ -48,8 +64,8 @@ namespace HlidacStatu.Lib.Searching
                             item.Selected = false;
                     }
                 }
-                         
-               
+
+
             }
         }
 

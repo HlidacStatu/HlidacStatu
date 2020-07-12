@@ -58,12 +58,12 @@ else
                     </small>
                 </h3>
                 @*@if (Model.Result.Aggregations != null && Model.Result.Aggregations.ContainsKey("sumKc"))
-            {
-                double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;
-                <h4>
-                    Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
-                </h4>
-            }*@
+                    {
+                        double? sum = ((Nest.ValueAggregate)Model.Result.Aggregations["sumKc"]).Value;
+                        <h4>
+                            Celková cena nalezených smluv @Html.Raw(HlidacStatu.Lib.Data.Smlouva.ShortNicePrice(Convert.ToDecimal(sum.Value), html: true))
+                        </h4>
+                    }*@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <br />
@@ -83,50 +83,9 @@ else
             </tbody>
         </table>
 
+        @SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, "Hledat", "VZ", new string[] { "nameOfView", "routeData" },
+    null, true, "zakazky", this.User)
 
-        <div class="text-center">
-            <ul class="pagination pagination-lg">
-                @{
-
-                    int page = Model.Page;
-                    string firstPageClass = "";
-                    string lastPageClass = "";
-
-                    if (page <= 1)
-                    {
-                        page = 1;
-                    }
-                    if (page == 1)
-                    {
-                        firstPageClass = "disabled";
-                    }
-                    if (Model.ElasticResults.Total < page * Model.DefaultPageSize())
-                    {
-                        lastPageClass = "disabled";
-                    }
-                    //Model.Page = page;
-
-                }
-                @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
-                {
-                    <li class="@firstPageClass">
-                        @Html.ActionLink("« Předchozí", "hledat","VZ",Model.ToRouteValues(page - 1),null)
-                    </li>
-                }
-                @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
-                {
-                    <li class="@lastPageClass">
-                        @Html.ActionLink("Následující »", "hledat","VZ",Model.ToRouteValues(page + 1),null)
-                    </li>
-                }
-                <li>
-                    @Util.ExportButton(this.User, "zakazky", Model.Q, Model.Order,
-                           moreParams: "zahajeny=" + ((Model.Zahajeny) ? "1" : "0")
-                           + ((Model.CPV?.Count() > 0) ? "&cpv=" + Model.CPV.Aggregate((f,s)=>f+","+s) : "")
-                   )
-                </li>
-            </ul>
-        </div>
 
 
     }

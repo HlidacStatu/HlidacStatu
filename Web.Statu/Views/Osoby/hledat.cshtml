@@ -45,6 +45,12 @@
 
 @SearchResults.OsobaTableResult(this.User, this.Request, Model.PageSize, Model)
 
+
+
+@SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, "Hledat", "Osoby", new string[] { "nameOfView", "routeData" }, null)
+
+
+
 @Util.FeedbackModal("Poslat opravu či připomínku")
 
 @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)

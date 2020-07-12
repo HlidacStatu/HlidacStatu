@@ -93,10 +93,13 @@ namespace HlidacStatu.Lib.Data
 
                 string regex = @"osoba\w{0,13}:\s?(?<osoba>[\w-]{3,25})";
                 List<string> peopleIds = Util.ParseTools.GetRegexGroupValues(query, regex, "osoba").ToList();
+                long total = peopleIds.LongCount();
+
                 if (peopleIds is null || peopleIds.Count == 0)
                 {
                     var people = OsobyES.OsobyEsService.FulltextSearch(query, page, pageSize);
                     peopleIds = people.Results.Select(r => r.NameId).ToList();
+                    total = total + people.Total;
                 }
                 
                 foreach (var id in peopleIds)
@@ -106,10 +109,12 @@ namespace HlidacStatu.Lib.Data
                     {
                         foundPepole.Add(foundPerson);
                     }
+                    else
+                        total = total - 1; // odecti neplatne osoby
                 }
 
                 var result = new OsobaSearchResult();
-                result.Total = foundPepole.Count();
+                result.Total = total;
                 result.Q = query;
                 result.ElasticResults = null; //TODO
                 result.Results = foundPepole;

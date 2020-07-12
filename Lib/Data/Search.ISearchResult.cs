@@ -16,7 +16,13 @@ namespace HlidacStatu.Lib.Data
             bool HasResult { get; }
             int PageSize { get; }
             int Page { get; }
+            string Order { get; set; }
             string DataSource { get; set; }
+            string Query { get; set; }
+
+            int MaxResultWindow();
+
+            object ToRouteValues(int page);
 
             TimeSpan ElapsedTime { get; set; }
         }

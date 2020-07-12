@@ -32,7 +32,7 @@ namespace HlidacStatu.Web.Controllers
                     return Redirect(o.GetUrl(false));
             }
 
-            var res = Lib.Data.Osoba.Search.SimpleSearch(q, 1, 50, Osoba.Search.OrderResult.Relevance);
+            var res = Lib.Data.Osoba.Search.SimpleSearch(q, 1, 25, Osoba.Search.OrderResult.Relevance);
             return View(res);
         }
 

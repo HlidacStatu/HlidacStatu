@@ -32,6 +32,19 @@ namespace HlidacStatu.Lib.Data
             public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
             public int PageSize { get; set; }
             public int Page { get; set; }
+            public string Order { get; set; }
+
+            public virtual int MaxResultWindow() { return Lib.Searching.Tools.MaxResultWindow; }
+
+            public object ToRouteValues(int page)
+            {
+                return new
+                {
+                    Q = Query,
+                    Page = page,
+                };
+            }
+
 
             public System.Collections.Concurrent.ConcurrentBag<DataSearchResult> Results { get; set; }
                 = new System.Collections.Concurrent.ConcurrentBag<DataSearchResult>();

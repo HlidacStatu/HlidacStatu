@@ -2,6 +2,8 @@
 @using System.Web.Mvc;
 @using Devmasters.Core;
 @using HlidacStatu.Web.Models;
+@using HlidacStatu.Web
+@using HlidacStatu.Web.Framework;
 
 @functions
 {
@@ -591,4 +593,72 @@
 
         </td>
     </tr>
+}
+
+@helper Pagination(HttpRequestBase request, HlidacStatu.Lib.Data.Search.ISearchResult result, string resultPageViewName,
+    string controllerName, string[] ignoreRouteValues = null, object htmlAttributes = null,
+    bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
+{
+    @Pagination(Url.RequestContext.HttpContext.Request.QueryString["page"], result, resultPageViewName,controllerName,
+    ignoreRouteValues, htmlAttributes,showExport, exportType,user, exportMoreParams);
+}
+
+@helper Pagination(string page, HlidacStatu.Lib.Data.Search.ISearchResult result, string resultPageViewName,
+    string controllerName, string[] ignoreRouteValues = null, object htmlAttributes = null,
+    bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
+{
+int ipage = 1;
+if (Devmasters.Core.TextUtil.IsNumeric(page))
+{
+    ipage = HlidacStatu.Util.ParseTools.ToInt(page) ?? 1;
+}
+
+    @Pagination(ipage, result, resultPageViewName, controllerName, ignoreRouteValues, htmlAttributes, showExport, exportType, user, exportMoreParams);
+}
+
+@helper Pagination(int page, HlidacStatu.Lib.Data.Search.ISearchResult result, string resultPageViewName, string controllerName,
+    string[] ignoreRouteValues = null, object htmlAttributes = null,
+    bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
+{
+    string firstPageClass = "";
+    string lastPageClass = "";
+
+    <div class="text-center">
+        <ul class="pagination pagination-lg">
+            @{
+                if (page == 1)
+                {
+                    firstPageClass = "disabled";
+                }
+                if (result.Total < page * result.PageSize
+                    || page * result.PageSize >= result.MaxResultWindow()
+                    )
+                {
+                    lastPageClass = "disabled";
+                }
+
+            }
+            @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
+            {
+                <li class="@firstPageClass">
+                    @Html.CurrentLink("« Předchozí", resultPageViewName, controllerName, result.ToRouteValues(page - 1), htmlAttributes, ignoreRouteValues)
+                </li>
+            }
+            @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
+            {
+                <li class="@lastPageClass">
+                    @Html.CurrentLink("Následující »", resultPageViewName, controllerName, result.ToRouteValues(page + 1), htmlAttributes, ignoreRouteValues)
+                </li>
+            }
+
+            @if (showExport)
+            {
+                <li>
+                    @Util.ExportButton(user, exportType, result.Query, result.Order,moreParams:exportMoreParams)
+                </li>
+            }
+        </ul>
+    </div>
+
+
 }

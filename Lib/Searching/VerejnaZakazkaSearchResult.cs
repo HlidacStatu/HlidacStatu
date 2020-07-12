@@ -173,7 +173,7 @@ namespace HlidacStatu.Lib.Searching
         {
             return new
             {
-                Q = string.IsNullOrEmpty(this.Q) ? this.OrigQuery : this.Q,
+                Q = this.Query,
                 Page = page,
                 Order = this.Order,
                 Zahajeny = this.Zahajeny,

@@ -19,10 +19,13 @@ namespace HlidacStatu.Lib.Data
             public long Total { get; private set; }
             public int PageSize { get; private set; }
             public int Page { get; set; }
+            public string Order { get; set; }
             public bool IsValid { get; private set; }
             public bool HasResult { get { return IsValid && Total > 0; } }
             public string DataSource { get; set; }
             public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
+
+            public virtual int MaxResultWindow() { return Lib.Searching.Tools.MaxResultWindow; }
 
             public GeneralResult(string query, IEnumerable<T> result, int pageSize)
                 : this(query, result?.Count() ?? 0, result, pageSize, true)

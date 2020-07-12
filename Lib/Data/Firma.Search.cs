@@ -126,7 +126,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             found.Add(Firmy.Get(i.Source.Ico));
                         }
-                        return new Data.Search.GeneralResult<Firma>(query, specifiedIcosInQuery.Count(), found, size,true) { Page = page };
+                        return new Data.Search.GeneralResult<Firma>(query, res.Total, found, size,true) { Page = page };
                     }
                     else
                     {

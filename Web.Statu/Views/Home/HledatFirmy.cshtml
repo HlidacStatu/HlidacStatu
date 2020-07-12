@@ -77,52 +77,5 @@
     </table>
 </div>
 
+@SearchResults.Pagination(Url.RequestContext.HttpContext.Request,Model, "HledatFirmy","Home", new string[] { "nameOfView", "routeData" }, null)
 
-<div class="text-center">
-    <ul class="pagination pagination-lg">
-        @{
-            string qid = Url.RequestContext.HttpContext.Request.QueryString["Page"] as string;
-            int page = 0;
-            string firstPageClass = "";
-            string lastPageClass = "";
-
-            if (!Devmasters.Core.TextUtil.IsNumeric(qid))
-            {
-                firstPageClass = "disabled";
-                page = 1;
-            }
-            else
-            {
-                page = HlidacStatu.Util.ParseTools.ToInt(qid) ?? 1;
-                if (page <= 1)
-                {
-                    page = 1;
-                }
-            }
-            if (page == 1)
-            {
-                firstPageClass = "disabled";
-            }
-            if (Model.Total < page * Model.PageSize
-                || page * Model.PageSize >= HlidacStatu.Lib.Searching.Tools.MaxResultWindow
-                )
-            {
-                lastPageClass = "disabled";
-            }
-
-        }
-        @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
-        {
-            <li class="@firstPageClass">
-                @Html.CurrentLink("« Předchozí", "HledatFirmy", "Home", Model.ToRouteValues(page - 1), null, new string[] { "nameOfView" })
-            </li>
-        }
-        @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
-        {
-            <li class="@lastPageClass">
-                @Html.CurrentLink("Následující »", "HledatFirmy", "Home", Model.ToRouteValues(page + 1), null, new string[] { "nameOfView", "routeData" })
-            </li>
-        }
-
-    </ul>
-</div>

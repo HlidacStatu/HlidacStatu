@@ -92,50 +92,12 @@ else
             </tbody>
         </table>
 
+        @SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, "Hledat", "Dotace", new string[] { "nameOfView", "routeData" },
+    null, true, "dotace", this.User)
 
-        <div class="text-center">
-            <ul class="pagination pagination-lg">
-                @{
-
-                    int page = Model.Page;
-                    string firstPageClass = "";
-                    string lastPageClass = "";
-
-                    if (page <= 1)
-                    {
-                        page = 1;
-                    }
-                    if (page == 1)
-                    {
-                        firstPageClass = "disabled";
-                    }
-                    if (Model.ElasticResults.Total < page * Model.DefaultPageSize())
-                    {
-                        lastPageClass = "disabled";
-                    }
-                    Model.Page = page;
-
-                }
-                @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
-                {
-                    <li class="@firstPageClass">
-                        @Html.ActionLink("« Předchozí", "hledat", "dotace", Model.ToRouteValues(page - 1), null)
-                    </li>
-                }
-                @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
-                {
-                    <li class="@lastPageClass">
-                        @Html.ActionLink("Následující »", "hledat", "dotace", Model.ToRouteValues(page + 1), null)
-                    </li>
-                }
-                <li>
-                    @Util.ExportButton(this.User, "dotace", Model.Q, Model.Order)
-                   
-                </li>
-            </ul>
-        </div>
 
         
+
 
     }
 }

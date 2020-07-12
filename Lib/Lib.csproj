@@ -712,6 +712,7 @@
     <Compile Include="Searching\InsolvenceSearchResult.cs" />
     <Compile Include="ES\Manager.cs" />
     <Compile Include="Searching\Rule.cs" />
+    <Compile Include="Searching\Rules\RemoveAllOperators.cs" />
     <Compile Include="Searching\Rules\Firmy_OVMKategorie.cs" />
     <Compile Include="Searching\Rules\TransformPrefixSimple.cs" />
     <Compile Include="Searching\Rules\VZ_CPV.cs" />

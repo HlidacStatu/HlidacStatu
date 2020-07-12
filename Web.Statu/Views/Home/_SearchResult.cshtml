@@ -95,7 +95,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         }
     </div>
     <div class="col-xs-12 col-sm-6">
-        <br/>
+        <br />
         @if (Model.Chyby)
         {
             @Html.CheckBoxFor(m => m.Chyby, new { @onchange = "changeChyby(this);" }) @Html.LabelFor(m => m.Chyby, "Ukázat chyby")
@@ -106,14 +106,14 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 <div style="height:32px;"></div>
 <table class="table table-hover">
     <thead>
-        @SearchResults.SmlouvyHead(this.User, small:Model.SmallRender)
+        @SearchResults.SmlouvyHead(this.User, small: Model.SmallRender)
     </thead>
     <tbody>
         @foreach (var item in Model?.ElasticResults.Hits)
         {
             var rec = item.Source;
 
-            @SearchResults.SmlouvyRow(this.User, rec, Model,small: Model.SmallRender)
+            @SearchResults.SmlouvyRow(this.User, rec, Model, small: Model.SmallRender)
 
             if (Model.Chyby)
             {
@@ -127,67 +127,6 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
     </tbody>
 </table>
 
-<div class="text-center">
-    <ul class="pagination pagination-lg">
-        @{
-            string qid = Url.RequestContext.HttpContext.Request.QueryString["Page"] as string;
-            int page = 0;
-            string firstPageClass = "";
-            string lastPageClass = "";
+@SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, "HledatSmlouvy", "Home", new string[] { "nameOfView", "routeData" }, 
+    null, true, "smlouvy", this.User)
 
-            if (!Devmasters.Core.TextUtil.IsNumeric(qid))
-            {
-                firstPageClass = "disabled";
-                page = 1;
-            }
-            else
-            {
-                page = HlidacStatu.Util.ParseTools.ToInt(qid) ?? 1;
-                if (page <= 1)
-                {
-                    page = 1;
-                }
-            }
-            if (page == 1)
-            {
-                firstPageClass = "disabled";
-            }
-            if (Model.ElasticResults.Total < page * Model.PageSize
-                || page * Model.PageSize >= Model.MaxResultWindow()
-                )
-            {
-                lastPageClass = "disabled";
-            }
-            Model.Page = page;
-
-        }
-        @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
-        {
-            <li class="@firstPageClass">
-                @Html.CurrentLink("« Předchozí","HledatSmlouvy","Home", Model.ToRouteValues(page - 1),null, new string[] { "nameOfView" })
-            </li>
-        }
-        @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
-        {
-            <li class="@lastPageClass">
-                @Html.CurrentLink("Následující »", "HledatSmlouvy","Home", Model.ToRouteValues(page + 1), null,new string[] { "nameOfView", "routeData" })
-            </li>
-        }
-
-        @if (ViewBag.HideExportButton == "")
-        {
-            @Html.Raw("")
-        }
-        else
-        {
-            if (
-                !(string.IsNullOrEmpty(Model.Q) || Model.Q == "*")
-                )
-            {
-                <li>
-                    @Util.ExportButton(this.User, "smlouvy", Model.Q, Model.Order)
-                </li>
-            }
-        }
-    </ul>
-</div>
