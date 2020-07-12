@@ -1029,6 +1029,7 @@
     <Content Include="Scripts\highlight\styles\xt256.css" />
     <Content Include="Scripts\highlight\styles\zenburn.css" />
     <Content Include="Scripts\hlidac.v1.7.js" />
+    <Content Include="Scripts\hlidac.v1.8.js" />
     <Content Include="App_Code\SearchResults.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

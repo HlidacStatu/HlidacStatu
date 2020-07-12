@@ -51,33 +51,6 @@
                 }
             });
     }
-    string zakonRegexStr = @"
-(§ \s{0,3} (?<parag>\d{1,5}[)a-zA-Z]{0,5} ) .{0,20} )?
-
-
-(?<zakon>(\d{1,4}))
- \s{0,2} / \s{0,2} 
- (?<rok>((19|20)(\d{2}))) \s* Sb
-";
-    var zakonRegex = new System.Text.RegularExpressions.Regex(zakonRegexStr, HlidacStatu.Util.Consts.DefaultRegexQueryOption );
-    plainText = zakonRegex.Replace(plainText,
-        (m) =>
-        {
-            if (m.Success)
-            {
-                var parag = m.Groups["parag"]?.Value;
-                if (!string.IsNullOrEmpty(parag))
-                {
-                    parag = "#p" + parag;
-                }
-                string url = $"https://www.zakonyprolidi.cz/cs/{m.Groups["rok"].Value}-{m.Groups["zakon"].Value}{parag}";
-                return $"<a href='{url}'  onclick=\"return trackOutLink(this,'textSmlouvy');\" target='_blank'>" + m.Value + "</a>";
-            }
-            else
-            {
-                return m.Value;
-            }
-        });
 
 
 
@@ -88,6 +61,14 @@
 
     }
 }
+@section scripts {
+    <script src="https://linker.zakonyprolidi.cz/lib/lite.js"></script>
+    <script>
+        $(function () {
+            zpl_linker.ProcessNode(document.getElementById('processZPL'));
+        });
+    </script>
+}
 
 
 @section footerscripts
@@ -97,7 +78,7 @@
         <script>
             var first = document.getElementById("found1");
             if (first != null)
-                first.scrollIntoView();   //Even IE6 supports this
+            first.scrollIntoView();   //Even IE6 supports this
         </script>
     }
 }
@@ -130,7 +111,7 @@
             <hr />
             <div class="row">
                 <div class="col-xs-12">
-                    <pre>
+                    <pre id="processZPL">
                         @Html.Raw(plainText)
                     </pre>
                 </div>

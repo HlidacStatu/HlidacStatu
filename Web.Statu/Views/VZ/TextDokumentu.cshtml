@@ -23,6 +23,14 @@
         plainText = System.Text.RegularExpressions.Regex.Replace(plainText, "^(\\s)*", "");
     }
 }
+@section scripts {
+    <script src="https://linker.zakonyprolidi.cz/lib/lite.js"></script>
+    <script>
+        $(function () {
+            zpl_linker.ProcessNode(document.getElementById('processZPL'));
+        });
+    </script>
+}
 
 
 @section footerscripts
@@ -74,7 +82,7 @@ else
         <hr />
         <div class="row">
             <div class="col-xs-12">
-                <pre>
+                <pre id="processZPL">
                 @Html.Raw(plainText)
             </pre>
             </div>

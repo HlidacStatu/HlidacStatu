@@ -496,7 +496,7 @@ namespace HlidacStatu.Lib.Data.VZ
             {
                 get
                 {
-                    return !(this.Lenght <= 20 || this.WordCount <= 10);
+                    return !string.IsNullOrEmpty(this.PlainText) && (this.Lenght >= 20 || this.WordCount >= 10);
                 }
             }
 
