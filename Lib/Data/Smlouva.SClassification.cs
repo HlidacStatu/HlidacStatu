@@ -209,16 +209,16 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Stavebnictví")]
                 stav_obecne = 10100,
-                [NiceDisplayName("Stavební konstrukce a materiály")]
-                stav_materialy = 10101,
-                [NiceDisplayName("Stavební práce")]
-                stav_prace = 10102,
-                [NiceDisplayName("Bytová výstavba")]
-                stav_byty = 10103,
+                //[NiceDisplayName("Stavební konstrukce a materiály")]
+                //stav_materialy = 10101,
+                //[NiceDisplayName("Stavební práce")]
+                //stav_prace = 10102,
+                //[NiceDisplayName("Bytová výstavba")]
+                //stav_byty = 10103,
                 [NiceDisplayName("Konstrukční a stavební práce")]
                 stav_konstr = 10104,
-                [NiceDisplayName("Stavební úpravy mostů a tunelů")]
-                stav_mosty = 10105,
+                //[NiceDisplayName("Stavební úpravy mostů a tunelů")]
+                //stav_mosty = 10105,
                 [NiceDisplayName("Stavební práce pro potrubní, telekomunikační a elektrické vedení")]
                 stav_vedeni = 10106,
                 [NiceDisplayName("Výstavba, zakládání a povrchové práce pro silnice")]
@@ -227,18 +227,18 @@ namespace HlidacStatu.Lib.Data
                 stav_zeleznice = 10108,
                 [NiceDisplayName("Výstavba vodních děl")]
                 stav_voda = 10109,
-                [NiceDisplayName("Stavební montážní práce")]
-                stav_montaz = 10110,
+                //[NiceDisplayName("Stavební montážní práce")]
+                //stav_montaz = 10110,
                 [NiceDisplayName("Práce při dokončování budov")]
                 stav_dokonceni = 10111,
-                [NiceDisplayName("Opravy a údržba technických stavebních zařízení")]
-                stav_technik = 10112,
-                [NiceDisplayName("Instalační a montážní služby")]
-                stav_instal = 10113,
-                [NiceDisplayName("Architektonické, stavební, technické a inspekční služby")]
-                stav_inspekce = 10114,
-                [NiceDisplayName("Technicko_inženýrské služby")]
-                stav_inzenyr = 10115,
+                //[NiceDisplayName("Opravy a údržba technických stavebních zařízení")]
+                //stav_technik = 10112,
+                //[NiceDisplayName("Instalační a montážní služby")]
+                //stav_instal = 10113,
+                [NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
+                stav_sluzby = 10114,
+                [NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
+                stav_sluzba = 10115,
 
                 [NiceDisplayName("Doprava")]
                 doprava_obecne = 10200,
@@ -278,8 +278,8 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Telco")]
                 telco_obecne = 10400,
-                [NiceDisplayName("TV")]
-                telco_tv = 10401,
+                //[NiceDisplayName("TV")]
+                //telco_tv = 10401,
                 [NiceDisplayName("Sítě a přenos dat")]
                 telco_site = 10402,
                 [NiceDisplayName("Telekomunikační služby")]
