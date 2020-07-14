@@ -260,7 +260,7 @@ namespace HlidacStatu.Web.Controllers
                     o.Save();
                 }
 
-                var oe = o.AddSponsoring(strana, Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
+                var oe = o.AddSponsoring(strana,null, Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
                 return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { ok = true }), "application/json");
 
             }
@@ -454,7 +454,7 @@ namespace HlidacStatu.Web.Controllers
                     return new HttpStatusCodeResult(500, "ICO not found.");
                 }
 
-                f.AddSponsoring(strana, Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
+                f.AddSponsoring(strana, null,Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
                 return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { ok = true }), "application/json");
 
             }
