@@ -462,8 +462,15 @@ namespace HlidacStatu.Web.Controllers
                 if (!System.IO.File.Exists(path))
                     return RedirectToAction("ImportData", new { id = model.DatasetId });
 
+
                 using (System.IO.StreamReader r = new System.IO.StreamReader(path))
                 {
+                    if (model.Delimiter == "auto")
+                    {
+                        model.Delimiter = Util.IOTools.DetectCSVDelimiter(r);
+                    }
+
+
                     var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
                     model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
