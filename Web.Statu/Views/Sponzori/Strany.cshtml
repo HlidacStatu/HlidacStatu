@@ -103,7 +103,7 @@
                         rokyTable.Clear();
                         for (int i = lastYear - 9; i <= lastYear; i++)
                         {
-                            rokyTable.AddRow(new Tuple<int, decimal>(i, HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, i).TotalKc));
+                            rokyTable.AddRow(new Tuple<int, decimal>(i, HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, i).TotalKc ?? 0));
                         }
                     }
                     @UtilChart.RenderReportChart("Sponzoring pro " + strana,

@@ -72,8 +72,8 @@
                         "SPD", "STAN","KDU-ČSL","TOP 09" };
                     var data = topStrany
                             .Select(s => HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(s))
-                            .Select(s => s.Where(m => m.Rok == lastYear).FirstOrDefault() ?? new HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear() { Strana = s.First().Strana })
-                            .OrderByDescending(o => o.TotalKc)
+                            .Select(s => s.Where(m => m.Rok == lastYear).FirstOrDefault() ?? new HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYear() { Strana = s.First().Strana, Firmy = null, Osoby = null, Rok = lastYear })
+                            .OrderByDescending(o => o.TotalKc ?? 0)
                             .Chunk(5);
 
                     foreach (var chd in data)
@@ -89,7 +89,13 @@
                                             </a>
                                         </div>
                                         <div class="table-col">
-                                            @HlidacStatu.Util.RenderData.ShortNicePrice(dat.TotalKc, exactScale: HlidacStatu.Util.RenderData.MaxScale.Milion)
+                                            @if (dat.TotalKc.HasValue)
+                                            {
+                                            @HlidacStatu.Util.RenderData.ShortNicePrice(dat.TotalKc.Value, exactScale: HlidacStatu.Util.RenderData.MaxScale.Milion)
+                                            }
+                                            else { 
+                                            <span>neznámé</span>
+                                            }
                                         </div>
                                     </div>
                                 }

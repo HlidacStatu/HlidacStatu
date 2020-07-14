@@ -45,7 +45,7 @@ namespace HlidacStatu.Lib.Data
 
                 public AggSum Firmy { get; set; } = new AggSum();
 
-                public decimal TotalKc { get { return Osoby.Sum + Firmy.Sum; } }
+                public decimal? TotalKc { get { return Osoby?.Sum + Firmy?.Sum; } }
 
 
                 public class PerYearStranaEquality : IEqualityComparer<StranaPerYear>
