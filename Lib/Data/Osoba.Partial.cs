@@ -914,8 +914,8 @@ namespace HlidacStatu.Lib.Data
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd
                                         && m.DatumDo == ev.DatumDo
-                                        && m.Status == ev.Status
-                                        && m.Title == ev.Title
+                                        //&& m.Status == ev.Status
+                                        //&& m.Title == ev.Title
                                 );
 
                     if (exists != null)
@@ -950,7 +950,7 @@ namespace HlidacStatu.Lib.Data
                 }
             }
         }
-        public OsobaEvent AddSponsoring(string strana, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
+        public OsobaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
         {
             var t = OsobaEvent.Types.Sponzor;
 
@@ -961,6 +961,7 @@ namespace HlidacStatu.Lib.Data
             OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Sponzor {0}", strana), "", t);
             oe.AddInfoNum = castka;
             oe.Organizace = strana;
+            oe.AddInfo = stranaico;
             oe.Zdroj = zdroj;
             oe.SetYearInterval(rok);
             return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);

@@ -594,7 +594,7 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public FirmaEvent AddSponsoring(string strana, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
+        public FirmaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
         {
             strana = ParseTools.NormalizaceStranaShortName(strana);
             var t = FirmaEvent.Types.Sponzor;
@@ -604,9 +604,11 @@ namespace HlidacStatu.Lib.Data
             FirmaEvent oe = new FirmaEvent(this.ICO, string.Format("Sponzor {0}", strana), "", t);
             oe.AddInfoNum = castka;
             oe.Zdroj = zdroj;
+            oe.Description = stranaico;
             oe.SetYearInterval(rok);
             oe.AddInfo = strana;
-            return AddOrUpdateEvent(oe, user, checkDuplicates: false);
+            oe.Created = DateTime.Now;
+            return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);
 
         }
 
@@ -641,7 +643,7 @@ namespace HlidacStatu.Lib.Data
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd
                                         && m.DatumDo == ev.DatumDo
-                                        && m.Zdroj == ev.Zdroj
+                                        //&& m.Zdroj == ev.Zdroj
                                 );
                     if (exists != null)
                         ev.pk = exists.pk;
@@ -668,7 +670,7 @@ namespace HlidacStatu.Lib.Data
                     ev.pk = exists.pk;
                     db.FirmaEvent.Attach(ev);
                     db.Entry(ev).State = System.Data.Entity.EntityState.Modified;
-                    Audit.Add(Audit.Operations.Create, user, ev, exists);
+                    Audit.Add(Audit.Operations.Update, user, ev, exists);
                     db.SaveChanges();
                     return ev;
                 }
