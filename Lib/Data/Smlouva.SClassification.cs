@@ -422,7 +422,7 @@ namespace HlidacStatu.Lib.Data
                 legal_pozemky = 11504,
 
 
-                [NiceDisplayName("Kanalizace a odpady")]
+                [NiceDisplayName("Technické služby")]
                 techsluzby_obecne = 11600,
                 [NiceDisplayName("Odpady")]
                 techsluzby_odpady = 11601,
