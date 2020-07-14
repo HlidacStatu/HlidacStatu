@@ -4,12 +4,13 @@
 @using HlidacStatu.Lib
 @using System.Linq;
 @using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib.Render;
 
 @{
 
     ViewBag.Title = "Sponzoři " + ViewBag.Strana;
     int count = 0;
-    int maxSponzori = 4;
+    int maxSponzori = 10;
     string[] vsechnyStrany =
         HlidacStatu.Lib.Data.Sponsors.VelkeStrany
         .Union(
@@ -17,11 +18,34 @@
             .Get()
             .Select(m => m.Strana)
             .Distinct()
-            .Where(m=> !HlidacStatu.Lib.Data.Sponsors.VelkeStrany.Contains(m))
-            .OrderBy(m=>m)
+            .Where(m => !HlidacStatu.Lib.Data.Sponsors.VelkeStrany.Contains(m))
+            .OrderBy(m => m)
         )
         .ToArray()
         ;
+
+
+
+    ReportDataSource rokyTable = new ReportDataSource(new ReportDataSource.Column[]
+  {
+                    new ReportDataSource.Column() { Name="Rok",
+                        HtmlRender = (s) => {
+                            return ((Tuple<int, decimal>)s).Item1.ToString();
+                            }
+                        ,ValueRender = (s) => {
+                                int dt = ((Tuple<int, decimal>)s).Item1;
+                                return new DateTime(dt, 1, 1);
+                            }
+                    }
+                ,
+                new ReportDataSource.Column() { Name="Sponzoring celkem",
+                    HtmlRender = (s) => {
+                                return HlidacStatu.Util.RenderData.ShortNiceNumber(((Tuple<int, decimal>)s).Item2);
+                            }
+                        ,ValueRender = (s)=>((Tuple<int, decimal>)s).Item2
+                        }
+
+                                              }); ;
 
 }
 @section scripts
@@ -29,8 +53,9 @@
     <script src="/Scripts/typeahead.jquery.min.js"></script>
     <script src="/Scripts/bloodhound.min.js"></script>
     <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
 }
 
 @section breadcrumb
@@ -46,51 +71,96 @@
     @foreach (var strana in vsechnyStrany)
     {
         count++;
-        int year = DateTime.Now.AddMonths(-7).Year - 4;
-        var topSponzori = HlidacStatu.Lib.Data.Sponsors.AllTimeTopSponzorsPerStrana(strana, maxSponzori);
+
+        var lastYear = HlidacStatu.Lib.Data.Sponsors.DefaultLastSponzoringYear;
+
+        int year = lastYear - 3;
+        var topSponzoriAll = HlidacStatu.Lib.Data.Sponsors.AllTimeTopSponzorsPerStrana(strana, maxSponzori, DateTime.Now.Year - 10);
+        var topSponzoriYear = HlidacStatu.Lib.Data.Sponsors.AllTimeTopSponzorsPerStrana(strana, maxSponzori, year);
 
         <div class="col-xs-12 col-sm-6">
             <h3><a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">@strana</a></h3>
-            
+
             <table class="table table-hover table-new table-new--dotted table-striped">
-                <thead>
-                    <tr>
-                        <th>Dary v @year</th>
-                        <th>@(year + 1)</th>
-                        <th>@(year + 2)</th>
-                        <th>@(year + 3)</th>
-                    </tr>
-                </thead>
+                @*<thead>
+                        <tr>
+                            <th>Dary v @year</th>
+                            <th>@(year + 1)</th>
+                            <th>@(year + 2)</th>
+                            <th>@(year + 3)</th>
+                        </tr>
+                    </thead>*@
                 <tbody>
-                    <tr>
-                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year).TotalKc)</td>
-                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 1).TotalKc)</td>
-                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 2).TotalKc)</td>
-                        <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 3).TotalKc)</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            @if (topSponzori.Count() > 0)
-                            {
-                                <text>
-                                    Top sponzoři:
-                                    @foreach (var sponzor in topSponzori)
-                                    {
-                                        <span>
-                                            <a href="@(sponzor.Sponzor.GetUrl(true))">@(sponzor.Sponzor.BookmarkName())</a>
-                                            (@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))) ,
-                                        </span>
-                                    }
-                                </text>
-                                if (topSponzori.Count() == maxSponzori)
+                    @*<tr>
+                            <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year).TotalKc)</td>
+                            <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 1).TotalKc)</td>
+                            <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 2).TotalKc)</td>
+                            <td class="number">@HlidacStatu.Util.RenderData.ShortNicePrice(HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, year + 3).TotalKc)</td>
+                        </tr>*@
+                <td colspan="1">
+                    @{
+                        //HlidacStatu.Lib.Render.ReportDataSource data = new HlidacStatu.Lib.Render.ReportDataSource("Dary za rok", "Celková částka");
+                        rokyTable.Clear();
+                        for (int i = lastYear - 9; i <= lastYear; i++)
+                        {
+                            rokyTable.AddRow(new Tuple<int, decimal>(i, HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana, i).TotalKc));
+                        }
+                    }
+                    @UtilChart.RenderReportChart("Sponzoring pro " + strana,
+                               UtilChart.SimpleBarChart(true, true, 260, "price_year_chart_pocet" + Guid.NewGuid().ToString("N"), "Rok", "Sponzoring Kč",
+                                  rokyTable, xValueFormat: "{value:%Y}"))
+                </td>
+                <tr>
+                    <td colspan="1">
+                        @if (topSponzoriYear.Count() > 0)
+                        {
+                            <div>
+                                Top sponzoři od @year:
+                                @using (Html.LowBox(80))
                                 {
-                                    <text>
-                                    a <a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">všichni ostatní sponzoři</a>.
-                                    </text>
+                                    <ol>
+                                        @foreach (var sponzor in topSponzoriYear)
+                                        {
+                                            <li>
+                                                <a href="@(sponzor.Sponzor.GetUrl(true))">@(sponzor.Sponzor.BookmarkName())</a>
+                                                (@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))) ,
+                                            </li>
+                                        }
+                                    </ol>
                                 }
+                            </div>
+                        }
+                        @if (topSponzoriAll.Count() > 0)
+                        {
+                            if (topSponzoriYear.Count() > 0)
+                            {
+                                <hr />
                             }
-                        </td>
-                    </tr>
+                            <div>
+                                Top sponzoři od @(DateTime.Now.Year - 10):
+                                @using (Html.LowBox(80))
+                                {
+                                    <ol>
+                                        @foreach (var sponzor in topSponzoriAll)
+                                        {
+                                            <li>
+                                                <a href="@(sponzor.Sponzor.GetUrl(true))">@(sponzor.Sponzor.BookmarkName())</a>
+                                                (@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))) ,
+                                            </li>
+                                        }
+                                    </ol>
+                                }
+                            </div>
+                        }
+                        @if (topSponzoriAll.Count() == maxSponzori)
+                        {
+                            <text>
+                                <br /><a href="@HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)">Všichni ostatní sponzoři</a>.
+                            </text>
+                        }
+
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

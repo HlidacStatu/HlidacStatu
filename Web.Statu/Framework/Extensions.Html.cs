@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -96,6 +97,40 @@ namespace HlidacStatu.Web.Framework
                 }
             return self.ActionLink(linkText, actionName, controllerName, routeValues, htmlAttributes);
         }
+        public static IDisposable LowBox(this HtmlHelper htmlHelper, int width = 120, string gaPageEventId = null)
+        {
+            return new DisposableHelper(
+                () => {
+                    var html = $@"<div class='low-box' style='max-height:{width}px'>
+        <div class='low-box-line' style='top:{width-55}px'><a href='#' onclick='ga('send', 'event', 'btnLowBoxMore', 'showMore','{gaPageEventId}'); return true;' class='more'></a></div>
+        <div class='low-box-content'>";
+                    htmlHelper.ViewContext.Writer.Write(html);
+                },
+                () => {
+                    var html = $@"</div></div>";
+                    htmlHelper.ViewContext.Writer.Write(html);
+                }
+            );
+        }
 
+    }
+
+    class DisposableHelper : IDisposable
+    {
+        private Action end;
+
+        // When the object is created, write "begin" function
+        public DisposableHelper(Action begin, Action end)
+        {
+            this.end = end;
+            begin();
+        }
+
+        // When the object is disposed (end of using block), write "end" function
+        public void Dispose()
+        {
+            end();
         }
     }
+
+}

@@ -16,6 +16,14 @@ namespace HlidacStatu.Lib.Data
 
         public static int DefaultLastSponzoringYear = DateTime.Now.AddMonths(-7).AddYears(-1).Year;
 
+        static Sponsors()
+        {
+            var maxYear = VelkeStrany.Select(
+                    strana => HlidacStatu.Lib.Data.Sponsors.Strany.StranaPerYears(strana).Max(m => m.Rok)
+                )
+                .Max();
+            DefaultLastSponzoringYear = maxYear;
+        }
         public class Strany
         {
             public class AggSum
@@ -162,20 +170,22 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public static IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> AllTimeTopSponzorsPerStrana(string strana, int top = int.MaxValue)
+        public static IEnumerable<Sponsors.Sponzorstvi<Bookmark.IBookmarkable>> AllTimeTopSponzorsPerStrana(string strana, int top = int.MaxValue, int? minYear = null)
         {
-            var o = AllTimeTopSponzorsPerStranaOsoby(strana, top * 50);
-            var f = AllTimeTopSponzorsPerStranaFirmy(strana, top * 50);
+
+            var o = AllTimeTopSponzorsPerStranaOsoby(strana, top * 50,minYear);
+            var f = AllTimeTopSponzorsPerStranaFirmy(strana, top * 50,minYear);
 
             return o.Select(m=> (Sponzorstvi<Bookmark.IBookmarkable>)m)
                     .Union(f.Select(m=> (Sponzorstvi<Bookmark.IBookmarkable>)m))
                     .OrderByDescending(m => m.CastkaCelkem)
                     .Take(top);
         }
-        public static IEnumerable<Sponsors.Sponzorstvi<Osoba>> AllTimeTopSponzorsPerStranaOsoby(string strana, int top = int.MaxValue)
+        public static IEnumerable<Sponsors.Sponzorstvi<Osoba>> AllTimeTopSponzorsPerStranaOsoby(string strana, int top = int.MaxValue, int? minYear = null)
         {
+            minYear = minYear ?? DateTime.Now.Year - 10;
             return AllSponzorsPerYearPerStranaOsoby.Get()
-                .Where(m => m.Strana == strana)
+                .Where(m => m.Strana == strana && m.Rok>=minYear)
                 .GroupBy(k => k.Sponzor, sp => sp, (k, sp) => new Sponzorstvi<Osoba>()
                 {
                     Sponzor = k,
@@ -188,10 +198,12 @@ namespace HlidacStatu.Lib.Data
                 ;
 
         }
-        public static IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>> AllTimeTopSponzorsPerStranaFirmy(string strana, int top = int.MaxValue)
+        public static IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>> AllTimeTopSponzorsPerStranaFirmy(string strana, int top = int.MaxValue, int? minYear = null)
         {
+            minYear = minYear ?? DateTime.Now.Year - 10;
+
             return AllSponzorsPerYearPerStranaFirmy.Get()
-                .Where(m => m.Strana == strana)
+                .Where(m => m.Strana == strana && m.Rok >= minYear)
                 .GroupBy(k => k.Sponzor, sp => sp, (k, sp) => new Sponzorstvi<Firma.Lazy>()
                 {
                     Sponzor = k,

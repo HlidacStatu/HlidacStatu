@@ -124,6 +124,10 @@ namespace HlidacStatu.Lib.Render
 
         public Type GetGenericType() { return typeof(T); }
 
+        public virtual void Clear()
+        {
+            Data.Clear();
+        }
 
         public virtual void AddRow(T value)
         {
