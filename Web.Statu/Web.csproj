@@ -1544,7 +1544,7 @@
     <Content Include="Views\Data\CreateFromBackup1.cshtml" />
     <Content Include="Views\Data\Promo\behind_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
-    <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
+    <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
@@ -1564,6 +1564,7 @@
     <Content Include="Views\Home\KIndex.cshtml" />
     <Content Include="Views\Home\KIndex.Porovnat.cshtml" />
     <Content Include="Views\Home\KIndex.Start.cshtml" />
+    <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
