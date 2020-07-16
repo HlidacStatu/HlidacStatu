@@ -432,8 +432,8 @@ namespace HlidacStatu.Lib.Data
                 techsluzby_uklid = 11603,
 
 
-                //[NiceDisplayName("Výzkum a vývoj a související služby")]
-                //vyzkum_obecne = 11700,
+                [NiceDisplayName("Věda, výzkum a vývoj")]
+                vyzkum_obecne = 11700,
                 //[NiceDisplayName("Výzkum a vývoj")]
                 //vyzkum_vyvoj = 11701,
 
@@ -591,6 +591,12 @@ namespace HlidacStatu.Lib.Data
                         30000);
 
                 var jsonData = Newtonsoft.Json.Linq.JObject.Parse(finalizerResponse);
+
+                if (jsonData.Children().Count() == 0)
+                {
+                    data.Add(ClassificationsTypes.OSTATNI, 0.6M);
+                    return data;
+                }
 
                 foreach (JProperty item in jsonData.Children())
                 {
