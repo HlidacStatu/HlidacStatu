@@ -167,7 +167,7 @@
 {
 
     <div class="jumbotron">
-        <h1 style="padding-bottom:40px;" class="text-center">Které strany a hnutí v ČR dominují? Na jakém resortu je která strana nejdéle?</h1>
+        <h1 style="padding-bottom:40px;" class="text-center">Na jakém resortu je která strana nejdéle?</h1>
         @{
             foreach (var r in resorty)
             {
@@ -228,7 +228,7 @@
     }
     <div class="col-xs-12">
         <h3>@resort</h3>
-        <div class="col-xs-12">
+        <div class="col-xs-12" style="padding-bottom:30px;">
             <div id='timeline-embed' style="width: 100%; height: 300px"></div>
             <script type="text/javascript">
                 // The TL.Timeline constructor takes at least two arguments:
@@ -244,19 +244,19 @@
             </script>
         </div>
         <div class="col-xs-6">
-            <h4>Nejdéle působící strany</h4>
+            <h4>Nejdéle působící strany na @resort</h4>
             <ol>
                 @foreach (var vl in vladnuti)
                 {
                     var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
                     <li>
-                        <b>@vl.Strana</b> na <b>@vl.Resort</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
+                        <b>@vl.Strana</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
                         <br />nepřetržitě @HlidacStatu.Util.RenderData.NiceNumber(vl.Days) dní
                         @if (vl.Days < celkemD)
                         {
                             <span>
                                 (<i>
-                                    celkem @HlidacStatu.Util.RenderData.NiceNumber(celkemD) dní
+                                    a celkem @HlidacStatu.Util.RenderData.NiceNumber(celkemD) dní
                                 </i>)
                             </span>
                         }

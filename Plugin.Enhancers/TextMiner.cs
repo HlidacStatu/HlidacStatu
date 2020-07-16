@@ -4,6 +4,7 @@ using HlidacStatu.Lib;
 using HlidacStatu.Lib.Enhancers;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -70,6 +71,8 @@ namespace HlidacStatu.Plugin.Enhancers
 
             if (item.Prilohy != null)
             {
+
+                List<Lib.Data.Smlouva.Priloha> newPrilohy = new List<Lib.Data.Smlouva.Priloha>();
                 for (int i = 0; i < item.Prilohy.Count(); i++)
                 {
 
@@ -78,7 +81,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         continue;
                     if (!this.forceAlreadyMined && att.PlainTextContentQuality != DataQualityEnum.Unknown) //already parsed
                     {
-                        att.LastUpdate = DateTime.Now.AddDays(-7);
+                        //att.LastUpdate = DateTime.Now.AddDays(-7);
                         continue;
                     }
                     Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id}");
@@ -134,7 +137,53 @@ namespace HlidacStatu.Plugin.Enhancers
                             {
                                 if (res.Documents.Count > 1)
                                 {
-                                    Base.Logger.Error("More documents inside attachment");
+                                    //first
+                                    att.PlainTextContent = HlidacStatu.Util.ParseTools.NormalizePrilohaPlaintextText(res.Documents[0].Text);
+                                    att.Lenght = att.PlainTextContent.Length;
+                                    att.WordCount = HlidacStatu.Util.ParseTools.CountWords(att.PlainTextContent);
+                                    if (res.Documents[0].UsedOCR)
+                                        att.PlainTextContentQuality = DataQualityEnum.Estimated;
+                                    else
+                                        att.PlainTextContentQuality = DataQualityEnum.Parsed;
+
+                                    att.LastUpdate = DateTime.Now;
+
+                                    if (att.EnoughExtractedText)
+                                    {
+                                        if (att.PlainTextContentQuality == DataQualityEnum.Estimated)
+                                            item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Text přílohy extrahován z OCR dokumentu ", "", "item.Prilohy[" + i.ToString() + "].PlainTextContent", "", "", this));
+                                        else
+                                            item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Text přílohy extrahován z obsahu dokumentu ", "", "item.Prilohy[" + i.ToString() + "].PlainTextContent", "", "", this));
+
+                                    }
+                                    changed = true;
+
+                                    for (int ii = 1; ii < res.Documents.Count; ii++)
+                                    {
+
+                                        var att1 = new Lib.Data.Smlouva.Priloha();
+                                        att1.PlainTextContent = HlidacStatu.Util.ParseTools.NormalizePrilohaPlaintextText(res.Documents[ii].Text);
+                                        att1.Lenght = att1.PlainTextContent.Length;
+                                        att1.WordCount = HlidacStatu.Util.ParseTools.CountWords(att1.PlainTextContent);
+                                        if (res.Documents[ii].UsedOCR)
+                                            att1.PlainTextContentQuality = DataQualityEnum.Estimated;
+                                        else
+                                            att1.PlainTextContentQuality = DataQualityEnum.Parsed;
+
+                                        att1.LastUpdate = DateTime.Now;
+
+                                        if (att1.EnoughExtractedText)
+                                        {
+                                            if (att1.PlainTextContentQuality == DataQualityEnum.Estimated)
+                                                item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Text přílohy extrahován z OCR dokumentu ", "", "item.Prilohy[" + (item.Prilohy.Count()+ii).ToString() + "].PlainTextContent", "", "", this));
+                                            else
+                                                item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Text přílohy extrahován z obsahu dokumentu ", "", "item.Prilohy[" + (item.Prilohy.Count() + ii).ToString() + "].PlainTextContent", "", "", this));
+
+                                        }
+                                        newPrilohy.Add(att1);
+                                    }
+                                    //others
+
                                 }
                                 else if (res.Documents.Count == 1)
                                 {
@@ -159,6 +208,8 @@ namespace HlidacStatu.Plugin.Enhancers
                                     changed = true;
                                 }
                             }
+                            if (newPrilohy.Count > 0)
+                                item.Prilohy = item.Prilohy.Concat(newPrilohy).ToArray();
 
                             Base.Logger.Debug("Done TextMiner Client.TextFromFile Id:" + item.Id + " att:" + att.nazevSouboru);
 
@@ -173,6 +224,7 @@ namespace HlidacStatu.Plugin.Enhancers
 
                 }
             }
+
             return changed;
         }
 
