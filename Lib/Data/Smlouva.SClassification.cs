@@ -592,6 +592,12 @@ namespace HlidacStatu.Lib.Data
 
                 var jsonData = Newtonsoft.Json.Linq.JObject.Parse(finalizerResponse);
 
+                if (jsonData.Children().Count() == 0)
+                {
+                    data.Add(ClassificationsTypes.OSTATNI, 0.6M);
+                    return data;
+                }
+
                 foreach (JProperty item in jsonData.Children())
                 {
 
