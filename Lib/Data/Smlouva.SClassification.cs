@@ -237,34 +237,34 @@ namespace HlidacStatu.Lib.Data
                 //stav_instal = 10113,
                 [NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
                 stav_sluzby = 10114,
-                [NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
-                stav_sluzba = 10115,
+                //[NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
+                //stav_sluzba = 10115,
 
                 [NiceDisplayName("Doprava")]
                 doprava_obecne = 10200,
                 [NiceDisplayName("Osobní vozidla")]
                 doprava_osobni = 10201,
-                [NiceDisplayName("Specializovaná vozidla")]
+                [NiceDisplayName("Nákladní nebo speciální vozidla (army, těžká technika, příslušenství)")]
                 doprava_special = 10202,
-                [NiceDisplayName("Motorová vozidla pro přepravu více než 10 lidí")]
+                [NiceDisplayName("Hromadná autobusová doprava")]
                 doprava_lidi = 10203,
-                [NiceDisplayName("Nakladní vozy")]
-                doprava_nakladni = 10204,
-                [NiceDisplayName("Vozidla silniční údržby")]
+                //[NiceDisplayName("Nakladní vozy")]
+                //doprava_nakladni = 10204,
+                [NiceDisplayName("Vozidla silniční údržby a příslušenství")]
                 doprava_udrzba = 10205,
-                [NiceDisplayName("Nákladní vozidla pro pohotovostní služby")]
+                [NiceDisplayName("Sanitní a zdravotnická vozidla")]
                 doprava_pohotovost = 10206,
-                [NiceDisplayName("Díly a příslušenství k motorovým vozidlům")]
-                doprava_dily = 10207,
+                //[NiceDisplayName("Díly a příslušenství k motorovým vozidlům")]
+                //doprava_dily = 10207,
                 [NiceDisplayName("Železniční a tramvajové lokomotivy a vozidla")]
                 doprava_koleje = 10208,
-                [NiceDisplayName("Silniční zařízení")]
-                doprava_silnice = 10209,
-                [NiceDisplayName("Opravy a údržba vozidel a příslušenství k nim a související služby")]
+                //[NiceDisplayName("Silniční zařízení")]
+                //doprava_silnice = 10209,
+                [NiceDisplayName("Servis a oprava vozidel včetně náhradních dílů a příslušenství")]
                 doprava_opravy = 10210,
-                [NiceDisplayName("Služby silniční dopravy")]
-                doprava_sluzby = 10211,
-                [NiceDisplayName("Poštovní služby")]
+                //[NiceDisplayName("Služby silniční dopravy")]
+                //doprava_sluzby = 10211,
+                [NiceDisplayName("Poštovní a kurýrní služby")]
                 doprava_posta = 10212,
 
                 [NiceDisplayName("Stroje a zařízení")]
@@ -439,9 +439,9 @@ namespace HlidacStatu.Lib.Data
 
                 [NiceDisplayName("Reklamní a marketingové služby")]
                 marketing_obecne = 11800,
-                [NiceDisplayName("Reklamní a marketingové služby")]
-                [Disabled()]
-                marketing_reklama = 11801, //TODO remove
+                //[NiceDisplayName("Reklamní a marketingové služby")]
+                //[Disabled()]
+                //marketing_reklama = 11801, //TODO remove
 
                 [NiceDisplayName("Jiné služby")]
                 jine_obecne = 11900,
