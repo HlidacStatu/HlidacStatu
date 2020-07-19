@@ -14,6 +14,26 @@
 @using HlidacStatu.Lib.Render
 
 @functions {
+    //string[] colors = new[] { "#050F57", "#ED561B", "#F1CE46", "#a0a0a0", "#d0d0d0", "#1A428F", "#75B259", "#DA3732", "#054E0C", "#060606" };
+    string[] colors = "#360735,#AC0F46,#E35D02,#F6BC00,#6B800D,#FBA7F5,#8CA6E7,#DA1570,#050F57,#ED561B,#F1CE46,#a0a0a0,#d0d0d0,#1A428F,#75B259,#DA3732,#054E0C,#060606".Split(',');
+
+
+    public string GetColor(int poradi)
+    {
+        if (poradi == 0)
+        {
+            poradi = 1;
+        }
+        if (poradi < 1)
+        {
+            return GetColor(colors.Count() + poradi);
+        }
+        if (poradi > colors.Count())
+        {
+            return GetColor(poradi - colors.Count());
+        }
+        return colors[poradi - 1];
+    }
 
     public class ministr
     {
@@ -42,7 +62,7 @@
     {
         var allO = new List<odpovednost>();
         odpovednost o = null;
-        foreach (var i in data.Where(m => (m.Resort == resort || resort == null)).OrderBy(m => m.Zacatek))
+        foreach (var i in data.Where(m => m.Resort == resort).OrderBy(m => m.Zacatek))
         {
             if (o?.Strana != i.Strana)
             {
@@ -101,6 +121,7 @@
 }
 
 @{
+
     var ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("ministri");
 
     Dictionary<int, Tuple<DateTime, string>> obdobi = new Dictionary<int, Tuple<DateTime, string>>()
@@ -116,6 +137,7 @@
     DateTime startDate = DateTime.MinValue;
     string startVladaDesc = "";
     string resort = Request.QueryString["resort"];
+
 
     string[] ignore = new string[] { "Předseda vlády", "Místopředseda", "Ministr bez portfeje" };
 
@@ -153,7 +175,12 @@
                             .OrderBy(o => o.Key)
                             .Select(m => m.Key)
                             .ToList();
-    string[] colors = new[] { "#050F57", "#ED561B", "#F1CE46", "#a0a0a0", "#d0d0d0", "#1A428F", "#75B259", "#DA3732", "#054E0C", "#060606" };
+
+    if (!resorty.Contains(resort))
+    {
+        resort = "";
+    }
+
 
     int count = 0;
 
@@ -163,6 +190,10 @@
 <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
 <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
 
+<link rel="stylesheet" src="/scripts/jquery.timeline.min.css">
+
+<script src="/scripts/jquery.timeline.min.js"></script>
+
 @if (string.IsNullOrEmpty(resort))
 {
 
@@ -171,7 +202,9 @@
         @{
             foreach (var r in resorty)
             {
+                <div>
                     <a class="btn btn-primary btn-sm" href="/report/28?resort=@r" role="button" style="padding:3px 10px">@r</a>
+                </div>
             }
 
         }
@@ -203,32 +236,35 @@
         </div>
     </div>
 
-                return;
-            }
+    return;
+}
 
 
 
 <h2 style="padding-top:20px;">Nejdelší politická zodpovědnost stran za @resort</h2>
 
+<h4><a href="/report/28">Stejná statistika pro ostatní ministerstva</a></h4>
 <div class="row">
     @{
         count++;
         var vladnuti = DelkyVladnuti(ministri, resort);
-        var json = new {
+        var json = new
+        {
             title = new { headline = "Ministři na " + resort },
             events = ministri.Where(m => (m.Resort == resort)).OrderBy(m => m.Zacatek)
-                .Select(m => new {
+                .Select(m => new
+                {
                     start_date = new { year = m.Zacatek.Year, month = m.Zacatek.Month, day = m.Zacatek.Day },
                     end_date = new { year = m.Konec.Year, month = m.Konec.Month, day = m.Konec.Day },
                     group = m.Strana,
                     text = new { headline = m.Jmeno },
-                    unique_id = "id"+m.Id
+                    unique_id = "id" + m.Id
                 })
         };
     }
     <div class="col-xs-12">
         <h3>@resort</h3>
-        <div class="col-xs-12" style="padding-bottom:30px;">
+        <div class="col-xs-12" style="padding-bottom:30px;display:none">
             <div id='timeline-embed' style="width: 100%; height: 300px"></div>
             <script type="text/javascript">
                 // The TL.Timeline constructor takes at least two arguments:
@@ -239,9 +275,52 @@
                 // optionally, a third argument with configuration options can be passed.
                 // See below for more about options.
                 var timeline_json = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(json));
-               
-                timeline = new TL.Timeline('timeline-embed', timeline_json, { start_at_end: true, initial_zoom:1});
+
+                //timeline = new TL.Timeline('timeline-embed', timeline_json, { start_at_end: true, initial_zoom:1});
             </script>
+        </div>
+        <div class="col-xs-12">
+
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+                google.charts.load("current", { packages: ["timeline"] });
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    var container = document.getElementById('resortTimeline');
+                    var chart = new google.visualization.Timeline(container);
+                    var dataTable = new google.visualization.DataTable();
+
+                    dataTable.addColumn({ type: 'string', id: 'Resort' });
+                    dataTable.addColumn({ type: 'string', id: 'Jmeno' });
+                    dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
+                    dataTable.addColumn({ type: 'date', id: 'Start' });
+                    dataTable.addColumn({ type: 'date', id: 'End' });
+                    dataTable.addRows([
+                        //['President', 'John Adams', new Date(1797, 2, 4), new Date(1801, 2, 4)],
+                        //['President', 'Thomas Jefferson', new Date(1801, 2, 4), new Date(1809, 2, 4)]]
+                            @Html.Raw(
+                                  ministri.Where(m => (m.Resort == resort)).OrderBy(m => m.Zacatek)
+                                    .Select(m => "["
+                                    + $"'{m.Resort}',"
+                                    + $"'{m.Jmeno} ({m.Strana})',"
+                                    + $"'color: {GetColor(strany.IndexOf(m.Strana))}',"
+                                    + $"new Date({m.Zacatek.ToString("yyyy,M,d")}),"
+                                    + $"new Date({m.Konec.ToString("yyyy,M,d")})"
+                                    + "]")
+                                    .Aggregate((f,s)=>f+",\n"+s)
+                                )
+                    ]);
+
+                    var options = {
+                        timeline: {
+                            groupByRowLabel: true }
+                    };
+
+                    chart.draw(dataTable, options);
+                }
+            </script>
+            <div id='resortTimeline'></div>
+
         </div>
         <div class="col-xs-6">
             <h4>Nejdéle působící strany na @resort</h4>
@@ -279,4 +358,7 @@
     </div>
 
 </div>
+
+<h4><a href="/report/28">Stejná statistika pro ostatní ministerstva</a></h4>
+
 
