@@ -104,40 +104,42 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             string queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
             //string queryAll = $"ico:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
 
-            ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce);
-            if (ret.CelkovaKoncentraceDodavatelu != null)
-                ret.KoncentraceDodavateluBezUvedeneCeny
-                    = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
+            if (smlouvyZaRok >= minPocetSmluvKoncentraceDodavatelu)
+            {
+                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce);
+                if (ret.CelkovaKoncentraceDodavatelu != null)
+                    ret.KoncentraceDodavateluBezUvedeneCeny
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
 
-            if (ret.PercSmluvUlimitu > 0)
-                ret.KoncentraceDodavateluCenyULimitu
-                    = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0);
+                if (ret.PercSmluvUlimitu > 0)
+                    ret.KoncentraceDodavateluCenyULimitu
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0);
 
-            Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
-                .AllTypes
-                .Where(m => m.MainType)
-                .OrderBy(m => m.Value)
-                .ToDictionary(k => k.Value, v => v.SearchShortcut);
+                Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
+                    .AllTypes
+                    .Where(m => m.MainType)
+                    .OrderBy(m => m.Value)
+                    .ToDictionary(k => k.Value, v => v.SearchShortcut);
 
-            ret.KoncetraceDodavateluObory = new List<KoncentraceDodavateluObor>();
+                ret.KoncetraceDodavateluObory = new List<KoncentraceDodavateluObor>();
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<int>(obory.Keys,
-                (oborid) =>
-                {
+                Devmasters.Core.Batch.Manager.DoActionForAll<int>(obory.Keys,
+                    (oborid) =>
+                    {
 
-                    queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
-                    var k = KoncentraceDodavateluCalculator(queryPlatce);
-                    if (k != null)
-                        ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
-                        {
-                            OborId = oborid,
-                            OborName = obory[oborid],
-                            Koncentrace = k
-                        });
-                    return new Devmasters.Core.Batch.ActionOutputData();
-                }, null, null, true, maxDegreeOfParallelism: 10
-                );
-
+                        queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
+                        var k = KoncentraceDodavateluCalculator(queryPlatce);
+                        if (k != null)
+                            ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
+                            {
+                                OborId = oborid,
+                                OborName = obory[oborid],
+                                Koncentrace = k
+                            });
+                        return new Devmasters.Core.Batch.ActionOutputData();
+                    }, null, null, true, maxDegreeOfParallelism: 10
+                    );
+            }
 
             if (smlouvyZaRok < Consts.MinSmluvPerYear)
             {
@@ -293,7 +295,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             if (string.IsNullOrWhiteSpace(dodavatel))
                                 dodavatel = prij.nazev;
                             if (string.IsNullOrWhiteSpace(dodavatel))
-                                dodavatel = "neznami";
+                                dodavatel = "neznamy";
 
                             smlStat.Add(new smlouvaStat()
                             {

@@ -160,7 +160,7 @@ namespace HlidacStatu.Lib.Data
         Graph.Edge[] _vazby = null;
         public Graph.Edge[] Vazby(bool refresh = false)
         {
-            if (_vazby == null)
+            if (_vazby == null || refresh == true)
             {
                 updateVazby(refresh);
             }
