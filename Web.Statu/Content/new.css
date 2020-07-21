@@ -131,7 +131,7 @@ h1 {
     color: #303b47;
 }
 
-.new-title {
+h2.new-title {
     color: #28313B;
     font-size: 40px;
     font-weight: 700;
@@ -139,7 +139,7 @@ h1 {
     letter-spacing: 0.6px;
 }
 
-.new-title--smaller {
+.new-title--smaller, h3.new-title {
     font-size: 36px;
     font-weight: 700;
     line-height: 48px;
@@ -1493,7 +1493,10 @@ select {
     font-weight: 400;
     line-height: 28px;
     letter-spacing: 0.36px;
-    color: #818C99;
+    color: #2f2f2f;
+}
+.watcher-block .block-list li {
+    margin-top: 15px ;
 }
 
 .watcher-block .block-status-list {
@@ -2049,6 +2052,7 @@ select {
         margin: 0 16px 0 0;
         line-height: 40px;
     }
+
 
     .watcher__title span {
         margin-bottom: 1px;
@@ -2930,4 +2934,17 @@ a.form-search__hint:active:focus {
         line-height: 1.6em;
         word-break: break-word
     }
+}
+
+
+.exclusive {
+    color: #FFDF00;
+    font-weight: 200;
+    border-radius: 4px;
+    border: 1px solid #101010;
+    background: #101010;
+    padding: 3px 4px;
+    display: inline-block;
+    line-height: 1em;
+    white-space:nowrap;
 }

@@ -314,7 +314,7 @@
                 <ul>
                     <li class=""><a href="/data">Další databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
                     <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
-                    <li class=""><a  @Util.GAClick("ZjistiliJsme") href="/texty"><b>Zjistili jsme</b></a></li>
+                    <li class=""><a @Util.GAClick("ZjistiliJsme") href="/texty"><b>Zjistili jsme</b></a></li>
                     <li class=""><a href="https://www.hlidacstatu.cz/texty/series/tipy/" onclick="return trackOutLink(this,'header');">Tipy „Jak používat Hlídače“</a></li>
                 </ul>
                 <ul>
@@ -328,10 +328,19 @@
             <!-- desktop menu items only -->
 
             <div class="header__search">
-                <label class="label" for="Q">Prohledat všechny Hlídače státu:</label>
-                <form class="header__search__input-wrapper" action="/hledat" method="get">
+                <form class="header__search__input-wrapper" method="get">
                     <input value="@ViewBag.Query" id="Q" name="Q" type="text" class="header__search__input" placeholder="Smluvní strana, Název instituce, Jméno osoby, IČO, téma smlouvy …">
-                    <button class="header__search__btn">Hledat</button>
+                    @if (ViewBag.AdditionalForm != null && false)
+                    {
+                        HlidacStatu.Web.Framework.DoubleForm dform = (HlidacStatu.Web.Framework.DoubleForm)ViewBag.AdditionalForm;
+                        <button class="form-search__btn" style="max-width: 200px; white-space:normal; word-break: break-word; line-height: 1.2em;" formaction="@dform.SecondaryAction">@dform.SecondaryActionLabel</button>
+                        <button class="header__search__btn" formaction="@dform.PrimaryAction">@dform.PrimaryActionLabel</button>
+
+                    }
+                    else
+                    {
+                        <button class="header__search__btn" formaction="/hledat">Hledat</button>
+                    }
                 </form>
                 <div>
                     <a class="header__search__hint" style="padding-top:2px;font-size:15px;text-decoration:none;padding-top:2px;font-size:15px;text-decoration:none;" href="/napoveda">

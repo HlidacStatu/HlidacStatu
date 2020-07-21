@@ -4,6 +4,7 @@
 @using HlidacStatu.Lib;
 @using System.Linq;
 @using Devmasters.Core;
+@using System.Collections.Generic;
 
 @{
     ViewBag.Title = "Hlídač státu";
@@ -15,6 +16,7 @@
     int count = 0;
 
     bool shownFirstBeta = false;
+    List<string> alreadyRendered = new List<string>();
 }
 
 
@@ -27,6 +29,406 @@
         <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
     </ol>
 }
+
+<div class="watcher-blocks">
+
+    <div class="watcher-blocks__wrapper">
+
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Vyjádření politiků
+                </h3>
+            </div>
+            @{
+                alreadyRendered.AddRange(new string[] {
+                    "vyjadreni-politiku",
+                    "jednani-vlady",
+                    "stenozaznamy-psp",
+                    "tiskove-konference-vlady",
+                    "vybory-psp",
+                });
+            }
+            <div class="block-col ">
+                <p>
+                    Snadno fulltextově dohledatelná vyjádření politiků, která najdete
+                    <span class="exclusive">exkluzívně pouze na <img style="height:14px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                </p>
+            </div>
+
+            <div class="block-col ">
+                <ul class="block-list">
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/vyjadreni-politiku" class="tag">Vyjádření 100+ politiků na sociálních sítích</a>
+                            <i class="fab fa-facebook-square"></i> <i class="fab fa-twitter-square"></i> <i class="fab fa-youtube"></i>
+                        </span>  <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        <div class="small" style="padding-left:1em;">
+                            @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("vyjadreni-politiku")?.NumberOfRecords() ?? 0) statusů,
+                            stovky videí převedených do textu.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/stenozaznamy-psp" class="tag">Kompletní přepis poslaneckých proslovů</a>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Stenozáznamy projevů v Poslanecké sněmovně, od 2008 do @(DateTime.Now.Year).
+                            <span style="white-space:nowrap">
+                                @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("stenozaznamy-psp")?.NumberOfRecords() ?? 0) vystoupení,
+                            </span> propojení politiků, přehled kdo o tom mluvil.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/jednani-vlady" class="tag">Programy jednání vlády</a>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Plánovaná jednání, aktuální i archív od 2007.
+                            <span style="white-space:nowrap">
+                                @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("jednani-vlady")?.NumberOfRecords() ?? 0) záznamů,
+                            </span> milióny podkladových dokumentů, kompletní fulltextové prohledávání jejich obsahu, provázání na eKLEP.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/tiskove-konference-vlady" class="tag">Tiskové konference vlády</a>
+                            <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Kompletní přepis obsahu tiskových konferecí na úřadu vlády, od 2006 do @(DateTime.Now.Year).
+                            <span style="white-space:nowrap">
+                                @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("tiskove-konference-vlady")?.NumberOfRecords() ?? 0) tiskovek,
+                            </span> kompletní fulltextové prohledávání jejich obsahu.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/vybory-psp" class="tag">Jednání výborů PSP</a>
+                            <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Kompletní přepis obsahu parlamentních výborů Poslanecké sněmovny Parlamentu ČR.
+                            <span style="white-space:nowrap">
+                                @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("vybory-psp")?.NumberOfRecords() ?? 0) tiskovek,
+                            </span> kompletní fulltextové prohledávání zápisů z jednání a audio záznamů převedených do textu.
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Veřejná správa
+                </h3>
+            </div>
+
+            @{
+                alreadyRendered.AddRange(new string[] {
+                    "fond-hejtmanky-pokorne-jermanove",
+                    "rozhodnuti-uohs",
+                    "veklep",
+                });
+            }
+            <div class="block-col ">
+                <ul class="block-list">
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/veklep" class="tag">VeKLEP</a>
+                            Elektronická knihovna legislativního procesu
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Eklep pro veřejnost (zkratka VeKLEP) zpřístupňuje vládní dokumenty z elektronická knihovna legislativního procesu. Jsou to dokumenty
+                            legislativní povahy, které se nacházejí ve schvalovacím procesu státní správy. Najdete zde návrhy zákonů, novel, připomínky úřadů a vypořádání připomínek.
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("veklep")?.NumberOfRecords() ?? 0) záznamů.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/fond-hejtmanky-pokorne-jermanove" class="tag">
+                                Dotace z fondu hejtmanky Pokorné-Jermanové
+                            </a>
+                            <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Sbírka rozhodnutí Úřadu pro ochranu hospodářské soutěže od roku 1999 v oblastech hospodářské soutěže, veřejných zakázek,
+                            veřejné podpory a v oblasti významné tržní síly.
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("fond-hejtmanky-pokorne-jermanove")?.NumberOfRecords() ?? 0) rozhodnutí.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/fond-hejtmanky-pokorne-jermanove" class="tag">
+                                Rozhodnutí ÚOHS
+                            </a>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Schválené a neschválené a žádosti o dotaci z fondu hejtmanky ing. Jaroslavy Pokorné Jermanové od roku 2017.
+                            Zdrojové údaje získány žádostí dle 106/1999 Sb.
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("fond-hejtmanky-pokorne-jermanove")?.NumberOfRecords() ?? 0) rozhodnutí.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Ekonomika
+                </h3>
+            </div>
+
+            @{
+                alreadyRendered.AddRange(new string[] {
+                    "narodni-investicni-plan",
+                    "pomoc-covid",
+                    "prijemci-podpory-covid-programu",
+                    "ministry-invoices",
+                });
+            }
+            <div class="block-col ">
+                <ul class="block-list">
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/narodni-investicni-plan" class="tag">
+                                Národní investiční plán
+                            </a> <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Národní investiční plán České republiky do roku 2050. Zdrojem jsou oficiální podklady o Ministerstva pro místní rozvoj.
+                            Pokud položka obsahovala rozsah investice od-do, použili jsme tu vyšší. Souhrnné položky (u dopravy) následované jednotlivými položkami jsme vyřadili a ponechali jen jednotlivé položky.
+                            @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("narodni-investicni-plan")?.NumberOfRecords() ?? 0) plánů.
+                        </div>
+                    </li>
+
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/prijemci-podpory-covid-programu" class="tag">
+                                Příjemci podpory COVID programů
+                            </a> <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Seznam právnických a fyzických osob, které dostali podporu z některého z programů COVID. Jde o data sbíraná z různých zdrojů a od jednotlivých bank.
+                            @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("prijemci-podpory-covid-programu")?.NumberOfRecords() ?? 0) podpor.
+                        </div>
+                    </li>
+
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/pomoc-covid" class="tag">
+                                Skutečně vydaná pomoc vlády v rámci COVID podpor
+                            </a> <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Dopady pandemie koronaviru a restart ekonomiky by měli politici řešit rychle a podle pravidel. Hlídač státu spolu s Rekonstrukcí státu analyzuje státní pomoc ekonomice a zde jsou zdrojová data.
+                            Jde o součást projektu „NEZHASÍNAT!”,
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("pomoc-covid")?.NumberOfRecords() ?? 0) sledovaných programů.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/ministry-invoices" class="tag">
+                                Faktury ministerstev ČR
+                            </a> <span class="exclusive small">exkluzívně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Faktury ministerstev České republiky zpracované OpenDataLab.cz. Autor neručí za aktuálnost, správnost, úplnost a kvalitu předávaných informací.
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("ministry-invoices")?.NumberOfRecords() ?? 0) faktur od roku 2009.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Rejstříky
+                </h3>
+            </div>
+
+            @{
+                alreadyRendered.AddRange(new string[] {
+                    "centralniregistroznameni",
+                    "kvalifikovanidodavatele",
+                    "rejstrik-trestu-pravnickych-osob",
+                    "seznam-politickych-stran",
+                });
+            }
+            <div class="block-col ">
+                <ul class="block-list">
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/rejstrik-trestu-pravnickych-osob" class="tag">Rejstřík trestů právnických osob</a>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Seznam firem, které byly pravomocně odsouzeny podle zákona o trestní odpovědnosti právnických osob
+                            a řízení proti nim.
+                            Evidujeme @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rejstrik-trestu-pravnickych-osob")?.NumberOfRecords() ?? 0) záznamů.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/centralniregistroznameni" class="tag">Majetková přiznání politiků a úředníků</a>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Centrální registr oznámení byl zřízen k 1.9.2017 podle zákona o střetu zájmů.
+                            do registru jsou ukládány oznámení o majetku, příjmech, darech a závazcích veřejných funkcionářů.
+                            Za správnost zodpovídá povinná osoba - oznamovatel do registru.
+
+                            Sledujeme @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("centralniregistroznameni")?.NumberOfRecords() ?? 0) záznamů.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/seznam-politickych-stran" class="tag">
+                                Seznam politických stran a hnutí
+                            </a>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Rejstřík politických stran a politických hnutí vedený Ministerstvem vnitra
+                            od 1. ledna 2001 na základě zákona o sdružování v politických stranách a v politických hnutích.
+                            Obsahuje i osoby v orgánech strany.
+
+
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("seznam-politickych-stran")?.NumberOfRecords() ?? 0) stran.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/kvalifikovanidodavatele" class="tag">
+                                Kvalifikovani dodavatelé
+                            </a>
+
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Dodavatelé veřejných zakázek, kteří splnili kvalifikaci podle § 74 (základní způsobilost) a § 77 (profesní způsobilost) zákona o zadávání veřejných zakázek
+                            a splnění kvalifikace doložili ministerstvu příslušnými doklady a současně zaplatili správní poplatek
+
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("kvalifikovanidodavatele")?.NumberOfRecords() ?? 0) dodavatelů.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Další databáze
+                </h3>
+            </div>
+
+            <div class="block-col ">
+                <ul class="block-list">
+                    @foreach (var ds in Model
+                        .Where(m => m.Ds.betaversion == false)
+                        .Where(m => alreadyRendered.Contains(m.Ds.id) == false)
+                        .OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id))
+                    {
+
+                        <li>
+                            <span style="white-space:nowrap">
+                                <a href="/data/Index/@ds.Ds.id" class="tag">@ds.Ds.name</a>
+
+                            </span>
+                            <div class="small" style="padding-left:1em;">
+                                @ds.Ds.description
+
+                                Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.Ds.id)?.NumberOfRecords() ?? 0) záznamů.
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h3 class="new-title">
+                    Databáze v betě
+                </h3>
+            </div>
+            <div class="block-col ">
+                <p>
+                    Mohou být nefunkční, obsahovat zkušební, neúplná či testovací data.
+                </p>
+            </div>
+
+
+            <div class="block-col ">
+                <ul class="block-list">
+                    @foreach (var ds in Model
+                        .Where(m => m.Ds.betaversion == true)
+                        .Where(m => alreadyRendered.Contains(m.Ds.id) == false)
+                        .OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id))
+                    {
+
+                        <li>
+                            <span style="white-space:nowrap">
+                                <a href="/data/Index/@ds.Ds.id" class="tag">@ds.Ds.name</a>
+
+                            </span>
+                            <div class="small" style="padding-left:1em;">
+                                @ds.Ds.description
+
+                                Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.Ds.id)?.NumberOfRecords() ?? 0) záznamů.
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+
+    @*@RenderDatasets2(Model.Where(m => m.Ds.betaversion == false).OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id), email)*@
+</div>
+
+<hr />
+
 
 <div class="bs-callout bs-callout-primary">
     <h4>Další databáze na Hlídači státu</h4>
@@ -43,28 +445,6 @@
     </div>
 </div>
 
-<div class="row">
-
-    @RenderDatasets2(Model.Where(m => m.Ds.betaversion == false).OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id), email)
-</div>
-
-<hr />
-
-<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h3 class="panel-title">Databáze v testovacím provozu</h3>
-            </div>
-            <div class="panel-body">
-                Mohou být nefunkční, obsahovat zkušební, neúplná či testovací data.
-            </div>
-        </div>
-
-    </div>
-    <div style="padding-top:15px;"></div>
-    @RenderDatasets2(Model.Where(m => m.Ds.betaversion == true).OrderBy(r => r.Ds.name).ThenBy(r => r.Ds.id), email)
-</div>
 
 @Html.Partial("_new")
 
@@ -107,8 +487,8 @@
                     <b>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(dss.RecordNum, true))</b>&nbsp;záznamů
                     @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dss.RecordNumWeek, "", ", jeden&nbsp;nový", ", {0}&nbsp;nové", ", {0:### ### ###}&nbsp;nových"))
                     @if (dss.LastRecord.HasValue)
-                    { 
-                    <span>Poslední:@(dss.LastRecord.Value.ToString("d.M.yyyy H:mm"))</span>
+                    {
+                        <span>Poslední:@(dss.LastRecord.Value.ToString("d.M.yyyy H:mm"))</span>
                     }
                 </div>
 

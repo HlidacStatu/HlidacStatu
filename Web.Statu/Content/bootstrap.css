@@ -1300,9 +1300,9 @@ p {
     font-size: 21px;
   }
 }
-small,
-.small {
-  font-size: 85%;
+small, .small {
+    font-size: 85%;
+    line-height: 1.5em;
 }
 mark,
 .mark {

@@ -15,24 +15,20 @@
 
 @functions {
     //string[] colors = new[] { "#050F57", "#ED561B", "#F1CE46", "#a0a0a0", "#d0d0d0", "#1A428F", "#75B259", "#DA3732", "#054E0C", "#060606" };
-    string[] colors = "#360735,#AC0F46,#E35D02,#F6BC00,#6B800D,#FBA7F5,#8CA6E7,#DA1570,#050F57,#ED561B,#F1CE46,#a0a0a0,#d0d0d0,#1A428F,#75B259,#DA3732,#054E0C,#060606".Split(',');
+    string[] colors = new[] { "#208eb7", "#93e0f0", "#19477d", "#7cee4d", "#8731c2", "#5cdd9f", "#871d32", "#f1cbd5", "#1e7b20", "#f764de", "#c3de9b", "#683c00", "#f2945a", "#334d37", "#f3d426" };
 
 
     public string GetColor(int poradi)
     {
-        if (poradi == 0)
-        {
-            poradi = 1;
-        }
-        if (poradi < 1)
+        if (poradi < 0)
         {
             return GetColor(colors.Count() + poradi);
         }
-        if (poradi > colors.Count())
+        if (poradi >= colors.Count())
         {
             return GetColor(poradi - colors.Count());
         }
-        return colors[poradi - 1];
+        return colors[poradi];
     }
 
     public class ministr
@@ -196,20 +192,65 @@
 
 @if (string.IsNullOrEmpty(resort))
 {
-
-    <div class="jumbotron">
-        <h1 style="padding-bottom:40px;" class="text-center">Na jakém resortu je která strana nejdéle?</h1>
+<div class="jumbotron">
+    <h1 style="padding-bottom:40px;" class="text-center">Na jakém resortu je která strana nejdéle?</h1>
+    <div>
         @{
-            foreach (var r in resorty)
-            {
-                <div>
-                    <a class="btn btn-primary btn-sm" href="/report/28?resort=@r" role="button" style="padding:3px 10px">@r</a>
-                </div>
-            }
+
+
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+                google.charts.load("current", { packages: ["timeline"] });
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    var container = document.getElementById('resortTimeline');
+                    var chart = new google.visualization.Timeline(container);
+                    var dataTable = new google.visualization.DataTable();
+
+                    dataTable.addColumn({ type: 'string', id: 'Resort' });
+                    dataTable.addColumn({ type: 'string', id: 'Jmeno' });
+                    dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
+                    dataTable.addColumn({ type: 'date', id: 'Start' });
+                    dataTable.addColumn({ type: 'date', id: 'End' });
+                    dataTable.addRows([
+                        //['President', 'John Adams', new Date(1797, 2, 4), new Date(1801, 2, 4)],
+                        //['President', 'Thomas Jefferson', new Date(1801, 2, 4), new Date(1809, 2, 4)]]
+                            @Html.Raw(
+                                  ministri.OrderBy(m => m.Zacatek)
+                                    .Select(m => "["
+                                    + $"'{m.Resort}',"
+                                    + $"'{m.Jmeno} ({m.Strana})',"
+                                    + $"'color: {GetColor(strany.IndexOf(m.Strana))}',"
+                                    + $"new Date({m.Zacatek.ToString("yyyy,M,d")}),"
+                                    + $"new Date({m.Konec.ToString("yyyy,M,d")})"
+                                    + "]")
+                                    .Aggregate((f,s)=>f+",\n"+s)
+                                )
+                    ]);
+
+                    var options = { height:1500,
+                        timeline: {
+                            groupByRowLabel: true }
+                    };
+
+                    chart.draw(dataTable, options);
+                }
+            </script>
+            <div id='resortTimeline'></div>
 
         }
-        <p><a class="btn btn-success btn-sm" href="/report/25" role="button">Ukázat přehled za různá období</a></p>
     </div>
+    <div>
+        @{ foreach (var r in resorty)
+            {
+                <span style="padding-right:20px">
+                    <a class="btn btn-primary btn-sm" href="/report/28?resort=@r" role="button" style="padding:3px 10px">@r</a>
+                </span>
+            }
+        }
+    </div>
+    <p><a class="btn btn-success btn-sm" href="/report/25" role="button">Ukázat přehled za různá období</a></p>
+</div>
 
     <meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>")" />
     <meta property="og:hlidac_footer" content="podrobné analýzy najdete v článku" />

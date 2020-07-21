@@ -39,6 +39,11 @@
     string behindPromoViewName = $"~/Views/Data/Promo/behind_{reg.datasetId}.cshtml";
 
 
+    ViewBag.AdditionalForm = new HlidacStatu.Web.Framework.DoubleForm() {
+        SecondaryAction = $"/data/Hledat/{Model.DatasetId}",
+        SecondaryActionLabel = $"Hledat pouze v {Devmasters.Core.TextUtil.ShortenText(Model.Registration().name, 40)}"
+    };
+
 }
 @section scripts
 {

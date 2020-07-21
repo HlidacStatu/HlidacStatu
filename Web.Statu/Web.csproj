@@ -470,6 +470,7 @@
     <Compile Include="Framework\Api\Dumps.cs" />
     <Compile Include="Framework\Api\IAuthenticableController.cs" />
     <Compile Include="Framework\ControllerExtensions.cs" />
+    <Compile Include="Framework\DoubleForm.cs" />
     <Compile Include="Framework\InsolvenceLimitedView.cs" />
     <Compile Include="Framework\RemoteUrlWebCacheManager.cs" />
     <Compile Include="Framework\Html2Png.cs" />

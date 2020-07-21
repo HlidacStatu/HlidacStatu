@@ -22,7 +22,6 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>Seznam datastů</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route()]
-        [SwaggerOperation(Tags = new[] { "Beta" })]
         public SearchResultDTO<Registration> GetAll()
         {
             var result = DataSetDB.AllDataSets.Get();
