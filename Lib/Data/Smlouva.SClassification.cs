@@ -79,7 +79,9 @@ namespace HlidacStatu.Lib.Data
 
             public static List<ClassifField> AllTypes = null;
 
-            public const decimal MinAcceptableProbability = 0.5m;
+            public const int MinAcceptablePoints = 2;
+            public const int MinAcceptablePointsSecond = 6;
+            public const int MinAcceptablePointsThird = 9;
 
             public SClassification() { }
 
@@ -105,6 +107,13 @@ namespace HlidacStatu.Lib.Data
                     return ClassifTypeName(this.TypeValue);
                 }
 
+                public bool RootClassification
+                {
+                    get
+                    {
+                        return (this.TypeValue % 100) == 0;
+                    }
+                }
                 public static string ClassifTypeName(int value)
                 {
                     ClassificationsTypes t;
@@ -585,12 +594,12 @@ namespace HlidacStatu.Lib.Data
                             180000);
                 }
 
-                string finalizerResponse = CallEndpoint("finalizer",
-                        classifierResponse,
-                        s.Id,
-                        30000);
+                //string finalizerResponse = CallEndpoint("finalizer",
+                //        classifierResponse,
+                //        s.Id,
+                //        30000);
 
-                var jsonData = Newtonsoft.Json.Linq.JObject.Parse(finalizerResponse);
+                var jsonData = Newtonsoft.Json.Linq.JObject.Parse(classifierResponse);
 
                 if (jsonData.Children().Count() == 0)
                 {
@@ -603,19 +612,22 @@ namespace HlidacStatu.Lib.Data
 
                     string key = item.Name.Replace("-", "_").Replace("_generic", "_obecne");// jsonData[i][0].Value<string>().Replace("-", "_");
                     decimal prob = HlidacStatu.Util.ParseTools.ToDecimal(item.Value.ToString()) ?? 0;
-                    if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
+                    if (prob > 0)
                     {
-                        if (!data.ContainsKey(typ))
-                            data.Add(typ, prob);
-                        else if (typ == SClassification.ClassificationsTypes.OSTATNI)
-                            Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
+                        if (Enum.TryParse<Smlouva.SClassification.ClassificationsTypes>(key, out var typ))
+                        {
+                            if (!data.ContainsKey(typ))
+                                data.Add(typ, prob);
+                            else if (typ == SClassification.ClassificationsTypes.OSTATNI)
+                                Util.Consts.Logger.Warning($"Classification type lookup failure : { key }");
 
-                    }
-                    else
-                    {
-                        Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
-                        if (!data.ContainsKey(Smlouva.SClassification.ClassificationsTypes.OSTATNI))
-                            data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                        }
+                        else
+                        {
+                            Util.Consts.Logger.Warning("Classification type lookup failure - Invalid key " + key);
+                            if (!data.ContainsKey(Smlouva.SClassification.ClassificationsTypes.OSTATNI))
+                                data.Add(Smlouva.SClassification.ClassificationsTypes.OSTATNI, prob);
+                        }
                     }
                 }
 

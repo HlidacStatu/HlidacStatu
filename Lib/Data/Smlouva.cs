@@ -1059,19 +1059,23 @@ namespace HlidacStatu.Lib.Data
         {
             types = types ?? new SClassification.Classification[] { };
             var firstT = types.OrderByDescending(m => m.ClassifProbability)
-                //.Where(m => m.ClassifProbability >= SClassification.MinAcceptableProbability)
+                .Where(m => m.ClassifProbability >= SClassification.MinAcceptablePoints)
                 .FirstOrDefault();
             if (firstT == null)
                 return new SClassification.Classification[] { };
             var secondT = types.OrderByDescending(m => m.ClassifProbability)
                 .Skip(1)
-                .Where(m => m.ClassifProbability >= (firstT.ClassifProbability * 0.75m))
+                .Where(m => m.ClassifProbability >= SClassification.MinAcceptablePointsSecond)
                 .FirstOrDefault();
 
-            if (secondT == null)
-                return new SClassification.Classification[] { firstT };
-            else
-                return new SClassification.Classification[] { firstT, secondT };
+            var thirdT = types.OrderByDescending(m => m.ClassifProbability)
+                .Skip(2)
+                .Where(m => m.ClassifProbability >= SClassification.MinAcceptablePointsThird)
+                .FirstOrDefault();
+
+            
+                SClassification.Classification[] vals = new SClassification.Classification[] { firstT, secondT, thirdT };
+                return vals.Where(m=>m!=null).ToArray();
 
         }
         private decimal GetConfidenceValue()
