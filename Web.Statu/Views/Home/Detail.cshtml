@@ -222,44 +222,51 @@
                 </td>
 
             </tr>
-            @if (Model.GetRelevantClassification().Count() > 0)
-            {
-                <tr>
-                    <td>
-
-
-                        Oblast@((Model.GetRelevantClassification().Count() > 1) ? "i" : "") smlouvy
-                    </td>
-                    <td>
-                        <div class="row">
-                            @if (this.User?.IsInRole("canEditData") == true)
+            <tr>
+                <td>
+                    Oblast@((Model.GetRelevantClassification().Count() > 1) ? "i" : "") smlouvy
+                </td>
+                <td>
+                    <div class="row">
+                        @if (this.User?.IsInRole("canEditData") == true)
+                        {
+                            <div class="col-xs-1">
+                                <a href="/manage/EditClassification/@Model.Id" style="font-size:2em">
+                                    <i class="far fa-axe"></i>
+                                </a>
+                            </div>
+                        }
+                        <div class="col-xs-11">
+                            @if (Model.GetRelevantClassification().Count() == 0)
                             {
-                                <div class="col-xs-1">
-                                    <a href="/manage/EditClassification/@Model.Id" style="font-size:2em">
-                                        <i class="far fa-axe"></i>
-                                    </a>
+                                <div>Nepodařilo se nám správně zatřídit do kategorií tuto smlouvu.</div>
+                            }
+                            @foreach (var classif in Model.GetRelevantClassification())
+                            {
+                                <div>
+                                    @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
                                 </div>
                             }
-                            <div class="col-xs-11">
-                                @foreach (var classif in Model.GetRelevantClassification())
-                                {
-                                    <div>
-                                        @(classif.ClassifTypeName()) <span class="text-muted">(<a class="text-muted" href="/HledatSmlouvy?Q=oblast:@(classif.ClassifSearchQuery())">najít smlouvy ze stejného oboru</a>)</span>
-                                    </div>
-                                }
-                                <div>
-                                    @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.", "btn btn-link")
-                                    <br />
-                                    <span class="small">
-                                        Zatřídění do oblastí dělá stroj a někdy se může splést. Každá vaše oprava našeho robota zpřesní. Díky.
-                                    </span>
-                                </div>
-                            </div>
-
+                        <div>
+                            @if (Model.GetRelevantClassification().Count() == 0)
+                            {
+                                @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Pomozte nám se správnou klasifikací, prosím.", "btn btn-link")
+                            }
+                            else
+                            {
+                                @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.", "btn btn-link")
+                            }
+                            <br />
+                            <span class="small">
+                                Zatřídění do oblastí dělá stroj a někdy se může splést. Každá vaše oprava našeho robota zpřesní. Díky.
+                            </span>
                         </div>
-                    </td>
-                </tr>
-            }
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+           
             <tr>
                 <td>Hodnota smlouvy</td>
                 <td>

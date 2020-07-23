@@ -411,7 +411,7 @@ namespace HlidacStatu.Lib.Data
         {
             this.Classification = this.Classification ?? new SClassification();
             var types = this.Classification?.Types ?? new SClassification.Classification[] { };
-            return relevantClassif(types);
+            return types;
         }
 
         public string GetUrl(bool local = true)

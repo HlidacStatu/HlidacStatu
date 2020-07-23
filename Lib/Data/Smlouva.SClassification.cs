@@ -79,9 +79,9 @@ namespace HlidacStatu.Lib.Data
 
             public static List<ClassifField> AllTypes = null;
 
-            public const int MinAcceptablePoints = 2;
-            public const int MinAcceptablePointsSecond = 6;
-            public const int MinAcceptablePointsThird = 9;
+            public const int MinAcceptablePoints = 5;
+            public const int MinAcceptablePointsSecond = 10;
+            public const int MinAcceptablePointsThird = 15;
 
             public SClassification() { }
 
@@ -255,7 +255,7 @@ namespace HlidacStatu.Lib.Data
                 doprava_osobni = 10201,
                 [NiceDisplayName("Nákladní nebo speciální vozidla (army, těžká technika, příslušenství)")]
                 doprava_special = 10202,
-                [NiceDisplayName("Hromadná autobusová doprava")]
+                [NiceDisplayName("Hromadná autobusová a vlaková doprava")]
                 doprava_lidi = 10203,
                 //[NiceDisplayName("Nakladní vozy")]
                 //doprava_nakladni = 10204,
@@ -275,6 +275,8 @@ namespace HlidacStatu.Lib.Data
                 //doprava_sluzby = 10211,
                 [NiceDisplayName("Poštovní a kurýrní služby")]
                 doprava_posta = 10212,
+                [NiceDisplayName("Letecká přeprava")]
+                doprava_letadla = 10213,
 
                 [NiceDisplayName("Stroje a zařízení")]
                 stroje_obecne = 10300,
@@ -368,11 +370,11 @@ namespace HlidacStatu.Lib.Data
                 kancelar_obecne = 11100,
                 [NiceDisplayName("Tisk")]
                 kancelar_tisk = 11101,
-                [NiceDisplayName("Kancelářské stroje (mimo počítače a nábytek)")]
-                kancelar_stroje = 11102,
+                [NiceDisplayName("Kancelářské potřeby (tiskárny, skenery, papírnické potřeby)")]
+                kancelar_potreby = 11102,
                 [NiceDisplayName("Nábytek")]
                 kancelar_nabytek = 11103,
-                [NiceDisplayName("Domácí spotřebiče")]
+                [NiceDisplayName("Kancelářské a domácí spotřebiče (klimatizace, myčka, lednička, sporák, …)")]
                 kancelar_spotrebice = 11104,
                 [NiceDisplayName("Čisticí výrobky")]
                 kancelar_cisteni = 11105,
@@ -414,8 +416,8 @@ namespace HlidacStatu.Lib.Data
                 finance_ucetni = 11402,
                 [NiceDisplayName("Podnikatelské a manažerské poradenství a související služby")]
                 finance_poradenstvi = 11403,
-                [NiceDisplayName("Dotace")]
-                finance_dotace = 11404,
+                //[NiceDisplayName("Dotace")]
+                //finance_dotace = 11404,
                 [NiceDisplayName("Bankovní služby, operace a poplatky")]
                 finance_bankovni = 11405,
 
