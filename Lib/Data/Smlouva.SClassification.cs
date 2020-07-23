@@ -80,8 +80,8 @@ namespace HlidacStatu.Lib.Data
             public static List<ClassifField> AllTypes = null;
 
             public const int MinAcceptablePoints = 5;
-            public const int MinAcceptablePointsSecond = 10;
-            public const int MinAcceptablePointsThird = 15;
+            public const int MinAcceptablePointsSecond = 12;
+            public const int MinAcceptablePointsThird = 24;
 
             public SClassification() { }
 
