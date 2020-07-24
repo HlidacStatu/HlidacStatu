@@ -1,6 +1,8 @@
 ﻿using Nest;
+
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -42,7 +44,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName = "hlidacsmluv";
         public static string defaultIndexName_Sneplatne = "hlidacsmluvneplatne";
         public static string defaultIndexName_SAll = defaultIndexName + "," + defaultIndexName_Sneplatne;
-        
+
         public static string defaultIndexName_VerejneZakazky = "verejnezakazky";
         public static string defaultIndexName_ProfilZadavatele = "profilzadavatele";
         public static string defaultIndexName_VerejneZakazkyRaw2006 = "verejnezakazkyraw2006";
@@ -59,7 +61,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_Audit = "audit";
 
         public static string defaultIndexName_RPP_Kategorie = "rpp_kategorie";
-        public static string defaultIndexName_RPP_OVM= "rpp_ovm";
+        public static string defaultIndexName_RPP_OVM = "rpp_ovm";
         public static string defaultIndexName_RPP_ISVS = "rpp_isvs";
 
         private static object _clientLock = new object();
@@ -184,14 +186,19 @@ namespace HlidacStatu.Lib.ES
             {
                 if (idxType == IndexType.DataSource)
                     indexName = dataSourceIndexNamePrefix + indexName;
-
+                else if (indexName == defaultIndexName_Audit)
+                {
+                    //audit_Year-weekInYear
+                    DateTime d = DateTime.Now;
+                    indexName = $"{indexName}_{d.Year}-{System.Globalization.CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(d, CalendarWeekRule.FirstDay, DayOfWeek.Monday)}";
+                }
                 string cnnset = string.Format("{0}|{1}|{2}", indexName, timeOut, connectionLimit);
                 ConnectionSettings sett = GetElasticSearchConnectionSettings(indexName, timeOut, connectionLimit);
                 if (!_clients.ContainsKey(cnnset))
                 {
                     //if (idxType.HasValue == false)
                     //    idxType = GetIndexTypeForDefaultIndexName(indexName);
-                    
+
                     var _client = new ElasticClient(sett);
                     if (init)
                         InitElasticSearchIndex(_client, idxType);
@@ -203,7 +210,7 @@ namespace HlidacStatu.Lib.ES
 
         }
 
-        
+
         public static ConnectionSettings GetElasticSearchConnectionSettings(string indexName, int timeOut = 60000, int? connectionLimit = null)
         {
 
@@ -359,7 +366,7 @@ namespace HlidacStatu.Lib.ES
             IndexSettings set = new IndexSettings();
             set.NumberOfReplicas = 2;
             set.NumberOfShards = 25;
-            
+
             // Add the Analyzer with a name
             set.Analysis = new Nest.Analysis()
             {
@@ -368,12 +375,12 @@ namespace HlidacStatu.Lib.ES
             };
 
             set.Analysis.Analyzers.Add("default", DefaultAnalyzer());
-            
+
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
             var res = client.Indices
-                .Create(client.ConnectionSettings.DefaultIndex, i => i  
+                .Create(client.ConnectionSettings.DefaultIndex, i => i
                     .InitializeUsing(idxSt)
                     .Map(mm => mm
                     .Properties(ps => ps
@@ -381,7 +388,7 @@ namespace HlidacStatu.Lib.ES
                         .Keyword(psn => psn.Name("DbCreatedBy"))
                         )
                     )
-                    
+
                 );
 
         }
@@ -394,7 +401,7 @@ namespace HlidacStatu.Lib.ES
                 set.NumberOfShards = 4;
             else
                 set.NumberOfShards = 8;
-            
+
             // Add the Analyzer with a name
             set.Analysis = new Nest.Analysis()
             {
@@ -403,7 +410,7 @@ namespace HlidacStatu.Lib.ES
             };
 
             set.Analysis.Analyzers.Add("default", DefaultAnalyzer());
-            
+
             IndexState idxSt = new IndexState();
             idxSt.Settings = set;
 
@@ -426,14 +433,14 @@ namespace HlidacStatu.Lib.ES
                     break;
                 case IndexType.Insolvence:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Insolvence.Rizeni>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Dotace:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Data.Dotace.Dotace>(map => map.AutoMap().DateDetection(false))
                        );
@@ -450,12 +457,12 @@ namespace HlidacStatu.Lib.ES
                                     Analysis = new Nest.Analysis()
                                     {
                                         TokenFilters = BasicTokenFilters(),
-                                        Analyzers = new Analyzers(new Dictionary<string, IAnalyzer>() 
-                                        { 
+                                        Analyzers = new Analyzers(new Dictionary<string, IAnalyzer>()
+                                        {
                                             ["default"] = DefaultAnalyzer(),
                                             ["lowercase"] = LowerCaseOnlyAnalyzer(),
                                             ["lowercase_ascii"] = LowerCaseAsciiAnalyzer()
-                                        })                                       
+                                        })
                                     }
                                 }
                             })
@@ -482,14 +489,14 @@ namespace HlidacStatu.Lib.ES
 
                 case IndexType.Smlouvy:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Smlouva>(map => map.AutoMap().DateDetection(false))
                        );
                     break;
                 case IndexType.Firmy:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Data.Firma.Search.FirmaInElastic>(map => map.AutoMap(maxRecursion: 1))
                        );
@@ -503,7 +510,7 @@ namespace HlidacStatu.Lib.ES
                     break;
                 case IndexType.Logs:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Lib.Data.Logs.ProfilZadavateleDownload>(map => map.AutoMap(maxRecursion: 1))
                        );
@@ -512,20 +519,20 @@ namespace HlidacStatu.Lib.ES
                     res = client.Indices
                        .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(new IndexState()
-                                   {
-                                       Settings = new IndexSettings()
-                                       {
-                                           NumberOfReplicas = 1,
-                                           NumberOfShards = 2
-                                       }
-                                   }
+                           {
+                               Settings = new IndexSettings()
+                               {
+                                   NumberOfReplicas = 1,
+                                   NumberOfShards = 2
+                               }
+                           }
                            )
                            .Map<Lib.Data.Audit>(map => map.AutoMap(maxRecursion: 1))
                        );
                     break;
                 case IndexType.VerejneZakazkyNaProfiluRaw:
                     res = client.Indices
-                       .Create(client.ConnectionSettings.DefaultIndex, i => i 
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
                             .InitializeUsing(idxSt)
                             .Map<Lib.Data.External.ProfilZadavatelu.ZakazkaRaw>(map => map
                                     .Properties(p => p
