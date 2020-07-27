@@ -2936,6 +2936,13 @@ a.form-search__hint:active:focus {
     }
 }
 
+#data-detail-content pre {
+    white-space: pre-wrap !important;
+    font-size: 90%;
+    background: none;
+    line-height: 1.6em;
+    word-break: break-word
+}
 
 .exclusive {
     color: #FFDF00;
