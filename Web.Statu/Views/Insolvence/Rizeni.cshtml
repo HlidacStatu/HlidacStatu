@@ -63,7 +63,11 @@
 }
 else
 {
-    if (!Model.Rizeni.OnRadar)
+    if (Model.Rizeni.Odstraneny)
+    {
+        @Html.Partial("_OdstranenoZIR")
+    }
+    else if (!Model.Rizeni.OnRadar)
     {
         @Html.Partial("_OnRadarInfo")
     }
@@ -208,20 +212,7 @@ else
             <tr>
                 <td>Zdroj dat</td>
                 <td>
-                    @{
-                        if (!string.IsNullOrEmpty(Model.Rizeni.Url) && !Model.Rizeni.Vyskrtnuto.HasValue)
-                        {
-                            var url = Model.Rizeni.Url.Contains("evidence_upadcu_detail")
-                                ? Model.Rizeni.Url
-                                : Model.Rizeni.Url.Replace("https://isir.justice.cz/isir/ueu/", "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=");
-                            <a href="@url" target="_blank"><code>@url</code></a>
-                        }
-                        else
-                        {
-                            var parts = Model.Rizeni.SpisovaZnacka.Split(new[] { " ", "/" }, StringSplitOptions.None);
-                            <a href="https://isir.justice.cz/isir/ueu/vysledek_lustrace.do?bc_vec=@(parts[1])&rocnik=@(parts[2])&aktualnost=AKTUALNI_I_UKONCENA" target="_blank">Vyhledat v insolvenčním rejstříku</a>
-                        }
-                    }
+                    <a href="@Model.Rizeni.UrlInIR()" target="_blank">Vyhledat v insolvenčním rejstříku</a>
                 </td>
             </tr>
         </tbody>

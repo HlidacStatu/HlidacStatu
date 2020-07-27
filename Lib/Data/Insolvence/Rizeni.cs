@@ -53,6 +53,22 @@ namespace HlidacStatu.Lib.Data.Insolvence
         [Nest.Boolean]
         public bool OnRadar { get; set; } = false;
 
+        bool _odstraneny = false;
+        [Nest.Boolean]
+        public bool Odstraneny
+        {
+            get
+            {
+                return _odstraneny;
+            }
+            set
+            {
+                _odstraneny = value;
+                if (_odstraneny == true)
+                    OnRadar = false;
+            }
+        }
+
         public string UrlId() => SpisovaZnacka.Replace(" ", "_").Replace("/", "-");
 
         public void PrepareForSave(bool skipOsobaIdLink = false)
@@ -126,7 +142,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 }
             }
 
-            if (Dluznici.Any(m => !(m.Typ == "F" || m.Typ== "PODNIKATEL")))
+            if (Dluznici.Any(m => !(m.Typ == "F" || m.Typ == "PODNIKATEL")))
                 this.OnRadar = true;
             else
             {
@@ -180,6 +196,53 @@ namespace HlidacStatu.Lib.Data.Insolvence
         public static string GetUrlFromId(string spisovaZnacka)
         {
             return $"/Insolvence/Rizeni/{spisovaZnacka.Replace(" ", "_").Replace("/", "-")}";
+        }
+
+        public string UrlInIR()
+        {
+            if (!string.IsNullOrEmpty(this.Url) && !this.Vyskrtnuto.HasValue)
+            {
+                var url = this.Url.Contains("evidence_upadcu_detail")
+                    ? this.Url
+                    : this.Url.Replace("https://isir.justice.cz/isir/ueu/", "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=");
+                return url;
+            }
+            else
+            {
+                var parts = this.SpisovaZnacka.Split(new[] { " ", "/" }, StringSplitOptions.None);
+                string url = $"https://isir.justice.cz/isir/ueu/vysledek_lustrace.do?bc_vec={parts[1]}&rocnik={parts[2]}&aktualnost=AKTUALNI_I_UKONCENA";
+                return url;
+            }
+
+        }
+        public bool OdstranenoZInsolvencnihoRejstriku()
+        {
+            return OdstranenoZInsolvencnihoRejstriku(UrlInIR());
+        }
+
+        public static bool OdstranenoZInsolvencnihoRejstriku(string url)
+        {
+            try
+            {
+                string html = "";
+                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                {
+                    html = net.GetContent().Text;
+                }
+                XPath doc = new XPath(html);
+                var spocet = doc.GetNodeText("//table[@class='vysledekLustrace']//tr//td[contains(text(),'POČET')]/following-sibling::*")?.Trim();
+                var pocet = Util.ParseTools.ToInt(spocet);
+                if (pocet.HasValue && pocet.Value == 0)
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Util.Consts.Logger.Error("", e);
+            }
+            return false;
         }
 
 
@@ -576,7 +639,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         }
 
-        public void Save(ElasticClient client = null)
+        public void Save(ElasticClient client = null, bool? forceOnRadarValue = null)
         {
             if (this.IsFullRecord == false)
                 throw new ApplicationException("Cannot save partial Insolvence document");
@@ -584,6 +647,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
             if (client == null)
                 client = ES.Manager.GetESClient_Insolvence();
             this.PrepareForSave();
+            if (forceOnRadarValue.HasValue)
+                this.OnRadar = forceOnRadarValue.Value;
+
             var res = client.Index<Rizeni>(this, o => o.Id(this.SpisovaZnacka.ToString())); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
