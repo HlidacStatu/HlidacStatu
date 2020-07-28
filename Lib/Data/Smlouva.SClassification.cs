@@ -341,8 +341,8 @@ namespace HlidacStatu.Lib.Data
                 prirodnizdroj_pisky = 10801,
                 [NiceDisplayName("Chemické výrobky")]
                 prirodnizdroj_chemie = 10802,
-                [NiceDisplayName("Jiné přírodní zdroje")]
-                prirodnizdroj_vse = 10803,
+                //[NiceDisplayName("Jiné přírodní zdroje")]
+                //prirodnizdroj_vse = 10803,
 
                 [NiceDisplayName("Energie")]
                 energie_obecne = 10900,
