@@ -460,7 +460,7 @@ namespace HlidacStatu.Lib.Data
                 jine_pohostinstvi = 11901,
                 [NiceDisplayName("Služby závodních jídelen")]
                 jine_jidelny = 11902,
-                [NiceDisplayName("Administrativní služby")]
+                [NiceDisplayName("Administrativní služby, stravenky")]
                 jine_admin = 11903,
                 [NiceDisplayName("Zajišťování služeb pro veřejnost")]
                 jine_verejnost = 11904,
