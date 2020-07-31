@@ -14,6 +14,19 @@ namespace HlidacStatu.Lib.Data.OsobyES
                 .GetSimpleQuery(query, new Searching.Rules.IRule[] { new Searching.Rules.RemoveAllOperators() })
                 .FullQuery();
 
+            if (string.IsNullOrWhiteSpace(modifQ))
+            {
+                return new OsobaEsSearchResult()
+                {
+                    OrigQuery = query,
+                    Total = 0,
+                    IsValid = true,
+                    ElasticResults = null,
+                    ElapsedTime = TimeSpan.Zero
+                };
+
+            }
+
             page = page - 1 < 0 ? 0 : page - 1;
 
             var sw = new StopWatchEx();
