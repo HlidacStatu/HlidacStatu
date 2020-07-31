@@ -139,12 +139,11 @@ namespace HlidacStatu.Plugin.Enhancers
                                 {
                                     //first
                                     att.PlainTextContent = HlidacStatu.Util.ParseTools.NormalizePrilohaPlaintextText(res.Documents[0].Text);
-                                    att.Lenght = att.PlainTextContent.Length;
-                                    att.WordCount = HlidacStatu.Util.ParseTools.CountWords(att.PlainTextContent);
                                     if (res.Documents[0].UsedOCR)
                                         att.PlainTextContentQuality = DataQualityEnum.Estimated;
                                     else
                                         att.PlainTextContentQuality = DataQualityEnum.Parsed;
+                                    att.UpdateStatistics();
 
                                     att.LastUpdate = DateTime.Now;
 
@@ -163,12 +162,11 @@ namespace HlidacStatu.Plugin.Enhancers
 
                                         var att1 = new Lib.Data.Smlouva.Priloha();
                                         att1.PlainTextContent = HlidacStatu.Util.ParseTools.NormalizePrilohaPlaintextText(res.Documents[ii].Text);
-                                        att1.Lenght = att1.PlainTextContent.Length;
-                                        att1.WordCount = HlidacStatu.Util.ParseTools.CountWords(att1.PlainTextContent);
                                         if (res.Documents[ii].UsedOCR)
                                             att1.PlainTextContentQuality = DataQualityEnum.Estimated;
                                         else
                                             att1.PlainTextContentQuality = DataQualityEnum.Parsed;
+                                        att1.UpdateStatistics();
 
                                         att1.LastUpdate = DateTime.Now;
 
@@ -188,12 +186,12 @@ namespace HlidacStatu.Plugin.Enhancers
                                 else if (res.Documents.Count == 1)
                                 {
                                     att.PlainTextContent = HlidacStatu.Util.ParseTools.NormalizePrilohaPlaintextText(res.Documents[0].Text);
-                                    att.Lenght = att.PlainTextContent.Length;
-                                    att.WordCount = HlidacStatu.Util.ParseTools.CountWords(att.PlainTextContent);
                                     if (res.Documents[0].UsedOCR)
                                         att.PlainTextContentQuality = DataQualityEnum.Estimated;
                                     else
                                         att.PlainTextContentQuality = DataQualityEnum.Parsed;
+
+                                    att.UpdateStatistics();
 
                                     att.LastUpdate = DateTime.Now;
 

@@ -1,8 +1,11 @@
 ﻿using HlidacStatu.Lib.XSD;
 using HlidacStatu.Util;
+
 using Nest;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -734,7 +737,7 @@ namespace HlidacStatu.Lib.Data
                     )
                 ||
                     (
-                        this.CalculatedPriceWithVATinCZK  > Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From*1.21m
+                        this.CalculatedPriceWithVATinCZK > Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From * 1.21m
                         && this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_To * 1.21m
                     )
                 )
@@ -752,6 +755,12 @@ namespace HlidacStatu.Lib.Data
                     )
                 )
                 this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit6M;
+
+            if (this.Prilohy != null)
+            {
+                foreach (var p in this.Prilohy)
+                    p.UpdateStatistics();
+            }
 
         }
 
@@ -940,10 +949,10 @@ namespace HlidacStatu.Lib.Data
                 else
                     return false;
             } //prilohy
-            else 
+            else
                 return false;
         }
-        
+
 
         public bool NotInterestingToShow() { return false; }
 
@@ -1073,9 +1082,9 @@ namespace HlidacStatu.Lib.Data
                 .Where(m => m.ClassifProbability >= SClassification.MinAcceptablePointsThird)
                 .FirstOrDefault();
 
-            
-                SClassification.Classification[] vals = new SClassification.Classification[] { firstT, secondT, thirdT };
-                return vals.Where(m=>m!=null).ToArray();
+
+            SClassification.Classification[] vals = new SClassification.Classification[] { firstT, secondT, thirdT };
+            return vals.Where(m => m != null).ToArray();
 
         }
         private decimal GetConfidenceValue()
@@ -1206,7 +1215,7 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public static System.Text.StringBuilder ExportData(string query, int count, string order, 
+        public static System.Text.StringBuilder ExportData(string query, int count, string order,
             Lib.Searching.ExportDataFormat format, bool withPlainText, out string contenttype)
         {
             //TODO ignored format
@@ -1433,8 +1442,8 @@ namespace HlidacStatu.Lib.Data
             v.platceIco = this.Platce.ico;
             for (int i = 0; i < this.Prijemce.Count(); i++)
             {
-                ((IDictionary<String, Object>)v).Add($"prijemceJmeno_{i+1}", this.Prijemce[i].nazev);
-                ((IDictionary<String, Object>)v).Add($"prijemceIco_{i+1}", this.Prijemce[i].ico);
+                ((IDictionary<String, Object>)v).Add($"prijemceJmeno_{i + 1}", this.Prijemce[i].nazev);
+                ((IDictionary<String, Object>)v).Add($"prijemceIco_{i + 1}", this.Prijemce[i].ico);
             }
             return v;
         }

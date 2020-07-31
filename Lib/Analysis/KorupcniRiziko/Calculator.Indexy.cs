@@ -100,7 +100,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public static decimal Herfindahl_Hirschman_Modified(
             IEnumerable<SmlouvyForIndex> individualContractDodavatelCena)
         {
-            //idealni HHI je, pokud jsou smlouvy rovnomerne mezi jednotlivymi dodavateli a kazdy ma 1 smluvu
+            //idealni HHI je, pokud jsou smlouvy rovnomerne mezi jednotlivymi dodavateli a kazdy ma 1 smluvu na stejnou castku
 
             if (individualContractDodavatelCena.Count() == 0)
                 return 0;

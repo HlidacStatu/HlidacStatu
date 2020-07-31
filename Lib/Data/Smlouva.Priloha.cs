@@ -34,11 +34,18 @@ namespace HlidacStatu.Lib.Data
                 set
                 {
                     _plainTextContent = value;
-                    this.Lenght = this.PlainTextContent?.Length ?? 0;
-                    this.WordCount = ParseTools.CountWords(this.PlainTextContent);
                 }
             }
 
+            public void UpdateStatistics()
+            {
+                this.Lenght = this.PlainTextContent?.Length ?? 0;
+                this.WordCount = ParseTools.CountWords(this.PlainTextContent);
+                var variance = Util.StringTools.WordsVarianceInText(this.PlainTextContent);
+                this.UniqueWordsCount = variance.Item2;
+                this.WordsVariance = variance.Item1;
+
+            }
 
             public DataQualityEnum PlainTextContentQuality { get; set; } = DataQualityEnum.Unknown;
 
@@ -51,6 +58,9 @@ namespace HlidacStatu.Lib.Data
             public string ContentType { get; set; }
             public int Lenght { get; set; }
             public int WordCount { get; set; }
+            public long UniqueWordsCount { get; set; }
+            public decimal WordsVariance { get; set; }
+
             public int Pages { get; set; }
 
 

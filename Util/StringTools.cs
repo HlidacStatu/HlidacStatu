@@ -9,6 +9,23 @@ namespace HlidacStatu.Util
     public static class StringTools
     {
 
+        public static Tuple<decimal,long> WordsVarianceInText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new Tuple<decimal, long>(0,0);
+
+            var words = text.Split( new char[] {
+                ' ','\t', '\n','\r','\v','\b', // regex \s
+                ';',',',';','.','!',
+                '(',')','<','>','{','}','[',']','_','-','~','|','=','&','#' }, StringSplitOptions.RemoveEmptyEntries )
+                .Select(m=>m.ToLower());
+
+            var wordNums = words
+                .GroupBy(w => w, w => w, (w1, w2) => new { w = w1, c = (decimal)w2.Count() })
+                .ToDictionary(k => k.w, v => v.c);
+
+            return new Tuple<decimal, long>(MathTools.Herfindahl_Hirschman_Index(wordNums.Values), wordNums.LongCount());
+        }
 
         public static List<Tuple<string, bool>> SplitStringToPartsWithQuotes(string query, char quoteDelimiter)
         {
@@ -59,14 +76,21 @@ namespace HlidacStatu.Util
 
 
 
-        public static string[] SplitWithSeparators(this string s, char[] separators, StringSplitOptions splitOptions = StringSplitOptions.None)
+        public static string[] SplitWithSeparators(this string s, StringSplitOptions splitOptions = StringSplitOptions.None, params char[] separators)
         {
-            return SplitWithSeparators(s, separators.Select(m => m.ToString()).ToArray(), splitOptions);
+            return SplitWithSeparators(s, splitOptions, StringComparison.OrdinalIgnoreCase , separators.Select(m => m.ToString()).ToArray());
         }
-
-        public static string[] SplitWithSeparators(this string s, string[] separators,
-            StringSplitOptions splitOptions = StringSplitOptions.None,
-            StringComparison comparisonType = StringComparison.Ordinal)
+        public static string[] SplitWithSeparators(this string s,
+            StringSplitOptions splitOptions,
+            StringComparison comparisonType,
+            params char[] separators)
+        {
+            return SplitWithSeparators(s, splitOptions, StringComparison.OrdinalIgnoreCase, separators.Select(m => m.ToString()).ToArray());
+        }
+        public static string[] SplitWithSeparators(this string s, 
+            StringSplitOptions splitOptions, 
+            StringComparison comparisonType,
+            params string[] separators)
         {
             if (string.IsNullOrEmpty(s))
                 return new string[] { };
