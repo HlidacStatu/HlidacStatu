@@ -33,11 +33,21 @@ namespace HlidacStatu.Util
             if (items.Count() == 1)
                 return 1;
             decimal H = Herfindahl_Hirschman_Index(items.Values.Select(m=> (decimal)m));
-            decimal N = (decimal)items.Count();
-            decimal hindexNorm = (H - 1 / N) / (1 - 1 / N);
-            return hindexNorm;
-        }
 
+            return Herfindahl_Hirschman_IndexNormalized_FromHHI(H, items.LongCount());
+            //return hindexNorm;
+        }
+        public static decimal Herfindahl_Hirschman_IndexNormalized_FromHHI(decimal HHI, long itemsCount)
+        {
+            decimal N = (decimal)itemsCount;
+            decimal hindexNorm = (HHI - 1 / N) / (1 - 1 / N);
+            if (hindexNorm < 0)
+                hindexNorm = 0;
+            if (hindexNorm > 1)
+                hindexNorm = 1;
+            return hindexNorm;
+
+        }
         /// <summary>
         /// 0 - trh
         /// 1 - monopol

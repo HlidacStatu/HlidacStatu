@@ -13,7 +13,13 @@ namespace HlidacStatu.Util
 
         public static bool EnoughExtractedTextCheck(long words, long lengthChars, long uniqueWordsCount, decimal wordsVariance)
         {
-            return !(lengthChars <= 20 || words <= 10 || uniqueWordsCount<7 || wordsVariance > 0.8m  );
+
+            return !(lengthChars <= 20 || words <= 10 ||                
+                (
+                    uniqueWordsCount<7 || (uniqueWordsCount >=7 && wordsVariance > 0.7m  )
+                )
+                
+            );
         }
 
         public static bool EnoughExtractedTextCheck(string plaintext)

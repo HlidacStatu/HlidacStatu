@@ -566,7 +566,7 @@ namespace HlidacStatu.Lib.Data
             public static Dictionary<ClassificationsTypes, decimal> GetClassificationFromServer(Smlouva s, bool rewriteStems = false)
             {
                 Dictionary<ClassificationsTypes, decimal> data = new Dictionary<ClassificationsTypes, decimal>();
-                if (s.Prilohy.All(m => m.EnoughExtractedText) == false)
+                if (s.Prilohy.Any(m => m.EnoughExtractedText) == false)
                     return null;
 
                 var settings = new JsonSerializerSettings();

@@ -21,10 +21,12 @@ namespace HlidacStatu.Util
                 .Select(m=>m.ToLower());
 
             var wordNums = words
-                .GroupBy(w => w, w => w, (w1, w2) => new { w = w1, c = (decimal)w2.Count() })
+                .GroupBy(w => w, w => w, (w1, w2) => new { w = w1, c = w2.LongCount() })
                 .ToDictionary(k => k.w, v => v.c);
 
-            return new Tuple<decimal, long>(MathTools.Herfindahl_Hirschman_Index(wordNums.Values), wordNums.LongCount());
+            //var idxNorm = MathTools.Herfindahl_Hirschman_IndexNormalized(wordNums);
+            var idx = MathTools.Herfindahl_Hirschman_Index(wordNums.Values.Select(m => (decimal)m));
+            return new Tuple<decimal, long>(idx, wordNums.LongCount());
         }
 
         public static List<Tuple<string, bool>> SplitStringToPartsWithQuotes(string query, char quoteDelimiter)
