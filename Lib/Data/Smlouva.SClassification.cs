@@ -551,15 +551,22 @@ namespace HlidacStatu.Lib.Data
                 var key = new KeyAndId() { ValueForData = s.Id, CacheNameOnDisk = $"stem_smlouva_{s.Id}" };
                 if (rewriteStems)
                 {
-                    Util.Consts.Logger.Debug("Deleting stems cache for " + s.Id);
-
-                    stemCacheManager.Delete(key);
+                    InvalidateStemCache(s.Id);
                 }
                 var data = stemCacheManager.Get(key);
                 if (data == null)
                     return null;
 
                 return System.Text.Encoding.UTF8.GetString(data);
+
+            }
+
+            public static void InvalidateStemCache(string smlouvaId)
+            {
+                var key = new KeyAndId() { ValueForData = smlouvaId, CacheNameOnDisk = $"stem_smlouva_{smlouvaId}" };
+                Util.Consts.Logger.Debug("Deleting stems cache for " + smlouvaId);
+
+                stemCacheManager.Delete(key);
 
             }
 
