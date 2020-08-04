@@ -160,19 +160,23 @@ namespace HlidacStatu.Lib.Data
                         {
                             try
                             {
-                                byte[] data = null;
-                                Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
-                                using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
+                                if (Uri.TryCreate(att.odkaz, UriKind.Absolute, out var urlTmp))
                                 {
-                                    web.Tries = 5;
-                                    web.IgnoreHttpErrors = true;
-                                    web.TimeInMsBetweenTries = 1000;
-                                    web.Timeout = web.Timeout * 20;
-                                    data = web.GetBinary().Binary;
-                                    System.IO.File.WriteAllBytes(tmpFn, data);
+                                    byte[] data = null;
+                                    Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
+                                    using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
+                                    {
+                                        web.Tries = 5;
+                                        web.IgnoreHttpErrors = true;
+                                        web.TimeInMsBetweenTries = 1000;
+                                        web.Timeout = web.Timeout * 20;
+                                        data = web.GetBinary().Binary;
+                                        System.IO.File.WriteAllBytes(tmpFn, data);
+                                    }
+                                    Consts.Logger.Debug($"Second try: Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
+                                    return tmpFn;
                                 }
-                                Consts.Logger.Debug($"Second try: Downloaded priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
-                                return tmpFn;
+                                return null;
                             }
                             catch (Exception e)
                             {

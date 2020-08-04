@@ -105,6 +105,31 @@
                     }
                 </tr>
 
+                <tr>
+                    <td>
+                        KINDEX
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
+                        </td>
+                    }
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Počet smluv
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                        <td>
+                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Smlouvy.Pocet)
+                        </td>
+                    }
+                </tr>
+
 
                 <tr>
                     <td>
@@ -149,17 +174,6 @@
                     {
                         <td>
                             @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentBezCeny)
-                        </td>
-                    }
-                </tr>
-                <tr>
-                    <td>
-                        % smluv se firmou navázanou na politiky
-                    </td>
-                    @for (int y = fromY; y <= toY; y++)
-                    {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentSPolitiky)
                         </td>
                     }
                 </tr>
