@@ -760,7 +760,9 @@ namespace HlidacStatu.Lib.Data
                 return "";
 
             string basic = Devmasters.Core.TextUtil.ShortenText(this.JmenoAscii, 23) + "-" + Devmasters.Core.TextUtil.ShortenText(this.PrijmeniAscii, 23).Trim();
-            basic = basic.ToLowerInvariant().Replace(" ", "-");
+            basic = basic.ToLowerInvariant().NormalizeToPureTextLower();
+            basic = Devmasters.Core.TextUtil.ReplaceDuplicates(basic, ' ').Trim();
+            basic = basic.Replace(" ", "-");
             Osoba exists = null;
             int num = 0;
             string checkUniqueName = basic;
