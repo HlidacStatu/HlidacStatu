@@ -9,12 +9,15 @@
 
 <h2>Current time: @(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff"))</h2>
 
-<h3>Is admin @Util.CurrUserInRole("Admin")</h3>
 
-@using (Html.IfInRoles(this.User,"Admin"))
+@using (Html.IfInRoles(this.User, "Admin"))
 {
     <b>xxx</b>
 }
+
+<img src="~/Content/kindex/iconD.svg" style="height:30px" />
+<br />
+<img src="~/Content/kindex/iconD.svg" style="height:130px" />
 
 @Html.Action("CachedAction_Child_debug", new { model = "", NameOfView = "tmp_child", key = "1", auth = this.User.Identity.IsAuthenticated })
 
