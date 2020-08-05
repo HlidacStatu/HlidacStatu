@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
@@ -100,21 +102,85 @@ namespace HlidacStatu.Web.Framework
         public static IDisposable LowBox(this HtmlHelper htmlHelper, int width = 120, string gaPageEventId = null)
         {
             return new DisposableHelper(
-                () => {
+                () =>
+                {
                     var html = $@"<div class='low-box' style='max-height:{width}px'>
-        <div class='low-box-line' style='top:{width-55}px'><a href='#' onclick='ga('send', 'event', 'btnLowBoxMore', 'showMore','{gaPageEventId}'); return true;' class='more'></a></div>
+        <div class='low-box-line' style='top:{width - 55}px'><a href='#' onclick='ga('send', 'event', 'btnLowBoxMore', 'showMore','{gaPageEventId}'); return true;' class='more'></a></div>
         <div class='low-box-content'>";
                     htmlHelper.ViewContext.Writer.Write(html);
                 },
-                () => {
+                () =>
+                {
                     var html = $@"</div></div>";
                     htmlHelper.ViewContext.Writer.Write(html);
                 }
             );
         }
 
-    }
+        public static Restricted IfInRoles(this HtmlHelper self, System.Security.Principal.IPrincipal user, params string[] roles)
+        {
+            bool show = false;
+            if (roles.Count() > 0)
+            {
+                if (user?.Identity?.IsAuthenticated == true)
+                {
+                    foreach (var r in roles)
+                    {
+                        if (user.IsInRole(r))
+                        {
+                            show = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                show = true;
+            return new Restricted(self, show);
+        }
 
+    }
+    public class Restricted : IDisposable
+    {
+        public bool Allow { get; set; }
+
+        private StringBuilder _stringBuilderBackup;
+        private StringBuilder _stringBuilder;
+        private readonly HtmlHelper _htmlHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Restricted"/> class.
+        /// </summary>
+        public Restricted(HtmlHelper htmlHelper, bool allow)
+        {
+            Allow = allow;
+            _htmlHelper = htmlHelper;
+            if (!allow) BackupCurrentContent();
+        }
+
+        private void BackupCurrentContent()
+        {
+            // make backup of current buffered content
+            _stringBuilder = ((System.IO.StringWriter)_htmlHelper.ViewContext.Writer).GetStringBuilder();
+            _stringBuilderBackup = new StringBuilder().Append(_stringBuilder);
+        }
+
+        private void DenyContent()
+        {
+            // restore buffered content backup (destroying any buffered content since Restricted object initialization)
+            _stringBuilder.Length = 0;
+            _stringBuilder.Append(_stringBuilderBackup);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!Allow)
+                DenyContent();
+        }
+    }
     class DisposableHelper : IDisposable
     {
         private Action end;
