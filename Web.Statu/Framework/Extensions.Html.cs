@@ -117,6 +117,16 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
+        public static Restricted KIndexLimited(this HtmlHelper self, System.Security.Principal.IPrincipal user)
+        {
+            if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+            {
+                return IfInRoles(self, user, "Admin");
+            }
+            else
+                return new Restricted(self, true);
+        }
+
         public static Restricted IfInRoles(this HtmlHelper self, System.Security.Principal.IPrincipal user, params string[] roles)
         {
             bool show = false;

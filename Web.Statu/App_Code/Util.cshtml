@@ -41,6 +41,36 @@
         get { return (WebViewPage)CurrentPage; }
     }
 
+
+    private static System.Security.Principal.IPrincipal CurrUser
+    {
+        get { return CurrPage.User; }
+    }
+
+    private static bool UserInRole(params string[] roles)
+    {
+        bool show = false;
+        if (roles.Count() > 0)
+        {
+            if (CurrUser?.Identity?.IsAuthenticated == true)
+            {
+                foreach (var r in roles)
+                {
+                    if (CurrUser.IsInRole(r))
+                    {
+                        show = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+            show = true;
+
+        return show;
+    }
+
+
     public static string GetSearchUrl(string url, string query)
     {
         if (query != null)
@@ -87,7 +117,7 @@
 
 @helper GAClick(string btnName)
 {
-@Html.Raw($" onclick=\"ga('send', 'event', 'logoffBtn', 'click','{Util.CurrPageUrlPath}')\" ");
+    @Html.Raw($" onclick=\"ga('send', 'event', 'logoffBtn', 'click','{Util.CurrPageUrlPath}')\" ");
 }
 
 
@@ -267,25 +297,25 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     </span>
 }
 
-@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null, 
+@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null,
     string loadingText = null, string style = null)
 {
-loadingText = loadingText ?? "Nahrávám formulář";
-style = style ?? "";
-if (!dynamicContentRelUrl.EndsWith("&"))
-{
-    if (dynamicContentRelUrl.Contains("?"))
+    loadingText = loadingText ?? "Nahrávám formulář";
+    style = style ?? "";
+    if (!dynamicContentRelUrl.EndsWith("&"))
     {
-        dynamicContentRelUrl += "&";
+        if (dynamicContentRelUrl.Contains("?"))
+        {
+            dynamicContentRelUrl += "&";
+        }
+        else
+        {
+            dynamicContentRelUrl += "?";
+        }
     }
-    else
-    {
-        dynamicContentRelUrl += "?";
-    }
-}
-nazevOdkazu = nazevOdkazu ?? "Opravit";
-_class = _class ?? "btn btn-link";
-string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
+    nazevOdkazu = nazevOdkazu ?? "Opravit";
+    _class = _class ?? "btn btn-link";
+    string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
 
     <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class" style="@style">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>@(nazevOdkazu)
@@ -471,6 +501,20 @@ string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
     if (item != null)
     {
         AddBookmark(user, item, css);
+    }
+}
+@helper KIndexLimitedRaw(string html)
+{
+    if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+    {
+        if (UserInRole("Admin"))
+        {
+            @Html.Raw(html);
+        }
+    }
+    else
+    {
+        @Html.Raw(html);
     }
 }
 
@@ -743,10 +787,10 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
     {
         <text>
             @Html.Raw(preBtnText)
-<a href="#" onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'anonym');" class="@btnCss" role="button" data-toggle="modal" data-target="#addWDhelp@(uid)">
-    @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
-    <span class="btn-emphasized">@Html.Raw(btnText)</span>
-</a>
+            <a href="#" onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'anonym');" class="@btnCss" role="button" data-toggle="modal" data-target="#addWDhelp@(uid)">
+                @Html.Raw(Util.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
+                <span class="btn-emphasized">@Html.Raw(btnText)</span>
+            </a>
             @Html.Raw(postBtnText)
             <!-- Modal -->
             <div class="modal fade" id="addWDhelp@(uid)" tabindex="-1" role="dialog">
@@ -1147,25 +1191,25 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                     </p>
                     @if (user?.Identity?.IsAuthenticated == true)
                     {
-                <p>
-                    <a role="button" class="btn btn-primary btn-sm" target="_blank"
-                       onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
-                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
-                        Export do Excelu
-                    </a>
-                    @*<a role="button" class="btn btn-default btn-sm" target="_blank"
-                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
-                        Do Apple Numbers
-                    </a>*@
-                    <a role="button" class="btn btn-default btn-sm" target="_blank"
-                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=csv&@(moreParams)">
-                        Do CSV
-                    </a>
-                    <a role="button" class="btn btn-default btn-sm" target="_blank"
-                       href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=tab&@(moreParams)">
-                        Do Tab delimited
-                    </a>
-                </p>
+                        <p>
+                            <a role="button" class="btn btn-primary btn-sm" target="_blank"
+                               onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
+                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
+                                Export do Excelu
+                            </a>
+                            @*<a role="button" class="btn btn-default btn-sm" target="_blank"
+                                   href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
+                                    Do Apple Numbers
+                                </a>*@
+                            <a role="button" class="btn btn-default btn-sm" target="_blank"
+                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=csv&@(moreParams)">
+                                Do CSV
+                            </a>
+                            <a role="button" class="btn btn-default btn-sm" target="_blank"
+                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=tab&@(moreParams)">
+                                Do Tab delimited
+                            </a>
+                        </p>
                     }
                     else
                     {
