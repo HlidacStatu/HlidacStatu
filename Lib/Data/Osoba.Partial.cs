@@ -259,6 +259,7 @@ namespace HlidacStatu.Lib.Data
                 //sponzoring z navazanych firem kdyz byl statutar
                 IEnumerable<OsobaEvent> firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
                     .AsQueryable()
+                    .Where(_sponzoringLimitsPredicate)
                     .Where(predicate)
                     .ToArray()
                     ;
