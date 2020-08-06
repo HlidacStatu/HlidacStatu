@@ -214,7 +214,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         || (m.Koncentrace.PocetSmluv == m.Koncentrace.PocetSmluvBezCeny && m.Koncentrace.PocetSmluv > datayear.Statistika.NumBezCeny * 0.02m )
                         )
                 .ToArray(); //for debug;
-            decimal avg = oboryKoncentrace.WeightedAverage(m => m.Combined_Herfindahl_Hirschman_Modified(), w => w.Koncentrace.CelkovaHodnotaSmluv);
+            decimal avg = oboryKoncentrace.WeightedAverage(m => m.Combined_Herfindahl_Hirschman_Modified(), 
+                w => w.Koncentrace.CelkovaHodnotaSmluv //todo
+                );
             val += avg * 14m; //100
 
 
