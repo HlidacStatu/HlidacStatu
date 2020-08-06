@@ -29,6 +29,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public Calculator(string ico)
         {
             this.Ico = ico;
+
+            this.urad = Firmy.Get(this.Ico);
+            if (urad.Valid == false)
+                throw new ArgumentOutOfRangeException("invalid ICO");
+
             kindex = KIndexData.Get(ico);
         }
 
@@ -62,9 +67,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private void InitData()
         {
 
-            this.urad = Firmy.Get(this.Ico);
-            if (urad.Valid == false)
-                throw new ArgumentOutOfRangeException("invalid ICO");
 
             kindex = new KIndexData();
             kindex.Ico = urad.ICO;
@@ -141,30 +143,35 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     );
             }
 
+            ret.TotalAveragePercSmlouvyPod50k = TotalAveragePercSmlouvyPod50k(ret.Rok);
+
+            ret.PercSmlouvyPod50k = AveragePercSmlouvyPod50k(this.Ico, ret.Rok, ret.Smlouvy.Pocet);
+            ret.PercSmlouvyPod50kBonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
+
+
+            ret = FinalCalculationKIdx(ret);
+
+            return ret;
+        }
+
+        public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret)
+        {
+            decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
+
             if (smlouvyZaRok < Consts.MinSmluvPerYear)
             {
                 ret.KIndex = Consts.MinSmluvPerYearKIndexValue;
                 ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok." };
             }
             else
-                ret.KIndex = CalculateKIndex(ref ret);
+                ret.KIndex = CalculateKIndex(ret);
 
             ret.LastUpdated = DateTime.Now;
 
             return ret;
         }
 
-        public decimal CalculateKIndex(ref KIndexData.Annual datayear)
-        {
-            datayear.TotalAveragePercSmlouvyPod50k = TotalAveragePercSmlouvyPod50k(datayear.Rok);
-
-            datayear.PercSmlouvyPod50k = AveragePercSmlouvyPod50k(this.Ico, datayear.Rok, datayear.Smlouvy.Pocet);
-            decimal bonus = SmlouvyPod50kBonus(datayear.PercSmlouvyPod50k, datayear.TotalAveragePercSmlouvyPod50k);
-
-            return CalculateKIndex(bonus, ref datayear);
-        }
-
-        public decimal CalculateKIndex(decimal bonus, ref KIndexData.Annual datayear)
+        public decimal CalculateKIndex(KIndexData.Annual datayear)
         {
 
             //https://docs.google.com/spreadsheets/d/1FhaaXOszHORki7t5_YEACWFZUya5QtqUnNVPAvCArGQ/edit#gid=0
@@ -192,8 +199,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ;
             //
             //r18 - bonus!
-            val -= bonus * 10m;
+            val -= datayear.PercSmlouvyPod50kBonus * 2m;
 
+            if (val < 0)
+                val = 0;
             return val;
 
         }

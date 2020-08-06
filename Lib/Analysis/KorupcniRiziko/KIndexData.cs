@@ -31,6 +31,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //r16
             public decimal PercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000
+
+            //r16
+            public decimal PercSmlouvyPod50kBonus { get; set; } 
+
             //r16
             public decimal TotalAveragePercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000 prumerny pres vsechny smlouvy v roce
 
