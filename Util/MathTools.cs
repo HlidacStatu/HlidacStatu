@@ -9,6 +9,9 @@ namespace HlidacStatu.Util
     public static class MathTools
     {
 
+
+
+
         /// <summary>
         /// Nabyva hodnoty 0-1
         /// 0 - idealni distribuce, rovnomerna

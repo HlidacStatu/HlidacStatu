@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HlidacStatu.Lib.Data;
+using HlidacStatu.Util;
 
 using Nest;
 
@@ -131,13 +132,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                         queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
                         var k = KoncentraceDodavateluCalculator(queryPlatce);
+                        KoncentraceDodavateluIndexy kbezCeny = null;
                         if (k != null)
+                        {
+                            if (k.PocetSmluvBezCeny > 0)
+                            {
+                                kbezCeny = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", k.PrumernaHodnotaSmluv == 0 ? 1 : k.PrumernaHodnotaSmluv);
+                            }
                             ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
                             {
                                 OborId = oborid,
                                 OborName = obory[oborid],
-                                Koncentrace = k
+                                Koncentrace = k,
+                                KoncentraceBezUvedeneCeny = kbezCeny
                             });
+                        };
                         return new Devmasters.Core.Batch.ActionOutputData();
                     }, null, null, true, maxDegreeOfParallelism: 10
                     );
@@ -196,8 +205,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             val += datayear.PercUzavrenoOVikendu * 2m; //84
             //r22
             val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 2m; //86
+
             //oborova koncentrace
-            ;
+            var oboryKoncentrace = datayear.KoncetraceDodavateluObory
+                .Where(m =>
+                        m.Koncentrace.CelkovaHodnotaSmluv > (datayear.Smlouvy.CelkemCena * 0.05m)
+                        || m.Koncentrace.PocetSmluv > (datayear.Smlouvy.Pocet * 0.05m)
+                        || (m.Koncentrace.PocetSmluv == m.Koncentrace.PocetSmluvBezCeny && m.Koncentrace.PocetSmluv > datayear.Statistika.NumBezCeny * 0.02m )
+                        )
+                .ToArray(); //for debug;
+            decimal avg = oboryKoncentrace.WeightedAverage(m => m.Combined_Herfindahl_Hirschman_Modified(), w => w.Koncentrace.CelkovaHodnotaSmluv);
+            val += avg * 14m; //100
+
 
             //
             //r16 - bonus!

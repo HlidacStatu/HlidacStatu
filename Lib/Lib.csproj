@@ -454,6 +454,7 @@
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\KorupcniRiziko\AdvancedQuery.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndex.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.COFOG.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />

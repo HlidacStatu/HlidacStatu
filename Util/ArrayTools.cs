@@ -9,6 +9,38 @@ namespace HlidacStatu.Util
     public static class ArrayTools
     {
 
+        public static decimal WeightedAverage<T>(this IEnumerable<T> records, Func<T, decimal> value, Func<T, decimal> weight)
+        {
+            if (records == null)
+                throw new ArgumentNullException();
+            if (records.Count() == 0)
+                return 0m;
+
+            decimal weightedValueSum = records.Sum(x => value(x) * weight(x));
+            decimal weightSum = records.Sum(x => weight(x));
+
+            if (weightSum != 0)
+                return weightedValueSum / weightSum;
+            else
+                throw new DivideByZeroException();
+        }
+
+        public static double WeightedAverage<T>(this IEnumerable<T> records, Func<T, double> value, Func<T, double> weight)
+        {
+            if (records == null)
+                throw new ArgumentNullException();
+            if (records.Count() == 0)
+                return 0;
+
+            double weightedValueSum = records.Sum(x => value(x) * weight(x));
+            double weightSum = records.Sum(x => weight(x));
+
+            if (weightSum != 0)
+                return weightedValueSum / weightSum;
+            else
+                throw new DivideByZeroException();
+        }
+
 
         public static T[,] TrimArray<T>(int? rowToRemove, int? columnToRemove, T[,] originalArray)            
         {

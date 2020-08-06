@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int DruhUcetniJednotky { get; set; }
             public string DruhUcetniJednotkyPopis()
             {
-                return GetPopis("druhuj", this.DruhUcetniJednotky);
+                return GetPopis("druhuj", this.DruhUcetniJednotky.ToString());
             }
 
 
@@ -59,7 +59,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int FormaUcetniJednotky { get; set; }
             public string FormaUcetniJednotkyPopis()
             {
-                return GetPopis("forma", this.FormaUcetniJednotky);
+                return GetPopis("forma", this.FormaUcetniJednotky.ToString());
             }
 
 
@@ -67,7 +67,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int InstitucionalniSektor { get; set; }
             public string InstitucionalniSektorPopis()
             {
-                return GetPopis("isektor", this.InstitucionalniSektor);
+                return GetPopis("isektor", this.InstitucionalniSektor.ToString());
             }
 
             //KLASIFIKACE FUNKCÍ VLÁDNÍCH INSTITUCÍ
@@ -82,8 +82,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public DateTime LastUpdated { get; set; }
 
             static private object lockObj = new object();
-            static Dictionary<string, Dictionary<int, string>> _popisy = new Dictionary<string, Dictionary<int, string>>();
-            static private string GetPopis(string prefix, int value)
+            static Dictionary<string, Dictionary<string, string>> _popisy = new Dictionary<string, Dictionary<string, string>>();
+            static private string GetPopis(string prefix, string value)
             {
                 if (_popisy.ContainsKey(prefix) == false)
                 {
@@ -102,7 +102,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
 
 
-            private static Dictionary<int, string> GetCiselnik(string propertyPrefix)
+            private static Dictionary<string, string> GetCiselnik(string propertyPrefix)
             {
                 string url = $"https://monitor.statnipokladna.cz/data/xml/{propertyPrefix}.xml";
                 try
@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         return xe.Elements()
                             .Select(m => new
                             {
-                                k = Convert.ToInt32(m.Element($"{propertyPrefix}_id").Value),
+                                k = m.Element($"{propertyPrefix}_id").Value,
                                 v = m.Element($"{propertyPrefix}_nazev").Value
                             })
                             .ToDictionary(m => m.k, m => m.v);
