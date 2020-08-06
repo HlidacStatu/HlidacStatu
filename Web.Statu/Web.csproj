@@ -451,6 +451,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
+    <Compile Include="Controllers\KindexController.cs" />
     <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
     <Compile Include="Controllers\ManageController.Admin.cs" />
     <Compile Include="Controllers\ManageController.Smlouvy.cs" />
@@ -1566,6 +1567,7 @@
     <Content Include="Views\Home\KIndex.Porovnat.cshtml" />
     <Content Include="Views\Home\KIndex.Start.cshtml" />
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
+    <Content Include="Views\Kindex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
