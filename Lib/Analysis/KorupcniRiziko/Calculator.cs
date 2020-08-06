@@ -179,7 +179,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal val =
             //r5
-            datayear.Statistika.PercentBezCeny * 10m;   //=10
+            datayear.Statistika.PercentBezCeny * 10m;   //=10   C > 1  F > 2,5
             //r11
             val += datayear.PercSeZasadnimNedostatkem * 10m;  //=20
             //r13
@@ -188,17 +188,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 20m ?? 0; //60
             //r17
             val += datayear.PercSmluvUlimitu * 10m;  //70
-            //r19
+            //r18
             val += datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 10m ?? 0; //80
-            //r20
+            //r19
             val += datayear.PercNovaFirmaDodavatel * 2m; //82
-            //r22
+            //r21
             val += datayear.PercUzavrenoOVikendu * 2m; //84
-            //r23
+            //r22
             val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 2m; //86
+            //oborova koncentrace
             ;
+
             //
-            //r18 - bonus!
+            //r16 - bonus!
             val -= datayear.PercSmlouvyPod50kBonus * 2m;
 
             if (val < 0)
@@ -206,6 +208,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return val;
 
         }
+
+
+
         public static decimal AveragePercSmlouvyPod50k(string ico, int year, long pocetSmluvCelkem)
         {
             if (pocetSmluvCelkem == 0)
