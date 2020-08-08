@@ -111,10 +111,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            <span style="font-size:20px;font-weight:bold;padding:5px;color:@(Model.ForYear(y).KIndexLabelColor)">@Model.ForYear(y).KIndexLabel.ToNiceDisplayName()</span>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
-                        </td>
+                <td>
+                    <img src="@(Model.ForYear(y).KIndexLabelIconUrl())" style="width:25px" />
+                    @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
+                </td>
                     }
                 </tr>
                 <tr>

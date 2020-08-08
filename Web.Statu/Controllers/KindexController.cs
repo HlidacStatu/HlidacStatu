@@ -43,9 +43,9 @@ namespace HlidacStatu.Web.Controllers
                 return View("Debug.Start");
             }
 
-            if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
+            if (HlidacStatu.Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
                 return View("Debug", kdata);
             }
@@ -55,10 +55,10 @@ namespace HlidacStatu.Web.Controllers
 
                 foreach (var i in ico.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var f = Firmy.Get(i);
+                    var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
                     if (f.Valid)
                     {
-                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(i);
+                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(i));
                         if (kidx != null)
                             kdata.Add(kidx);
                     }

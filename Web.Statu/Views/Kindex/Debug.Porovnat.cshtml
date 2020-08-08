@@ -114,7 +114,7 @@
                         var kival = ki.ForYear(rok);
         <td>
             <span style="color:black">
-                <span style="font-size:20px;font-weight:bold;padding:5px;color:@(kival.KIndexLabelColor)">@kival.KIndexLabel.ToNiceDisplayName()</span>
+                <img src="@kival.KIndexLabelIconUrl()" style="width:25px" />
                 @HlidacStatu.Util.RenderData.NiceNumber(kival.KIndex.Value)
             </span>
         </td>}

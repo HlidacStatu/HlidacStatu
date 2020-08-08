@@ -81,11 +81,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public object KIndexVypocet { get; set; }
 
-            [Nest.Object( Ignore =true )]
+            [Nest.Object(Ignore = true)]
             public KIndexLabelValues KIndexLabel
             {
-                get {
-                    int[] limits = {0, 4,8,12,16,20};
+                get
+                {
+                    int[] limits = { 0, 4, 8, 12, 16, 20 };
                     KIndexLabelValues val = KIndexLabelValues.None;
                     for (int i = 0; i < limits.Length; i++)
                     {
@@ -124,6 +125,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 }
             }
 
+            public string KIndexLabelIconUrl(bool local = true)
+            {
+                string url = "";
+                if (local == false)
+                    url = "https://www.hlidacstatu.cz";
+                switch (this.KIndexLabel)
+                {
+                    case KIndexLabelValues.None:
+                        return url + "/Content/Img/1x1.png ";
+                    default:
+                        return url + $"/Content/kindex/icon{this.KIndexLabel.ToString()}.svg";
+
+                }
+            }
         }
 
     }
