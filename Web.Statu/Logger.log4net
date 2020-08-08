@@ -3,6 +3,8 @@
   <root>
   </root>
 
+  
+  
   <logger name="HlidacStatu.Lib.ES.Trace">
     <!-- <appender-ref ref="RollingLogFileESTrace" /> -->
     <level value="OFF" />
