@@ -13,105 +13,27 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         public enum KIndexLabelValues
         {
-            A, B, C, D, E, F
+            A = 0,
+            B = 1,
+            C = 2,
+            D = 3,
+            E = 4,
+            F = 5
         }
 
         public enum KIndexParts
         {
-            PercentBezCeny,
-            PercSeZasadnimNedostatkem,
-            CelkovaKoncentraceDodavatelu,
-            KoncentraceDodavateluBezUvedeneCeny,
-            PercSmluvUlimitu,
-            KoncentraceDodavateluCenyULimitu,
-            PercNovaFirmaDodavatel,
-            PercUzavrenoOVikendu,
-            PercSmlouvySPolitickyAngazovanouFirmou,
-            KoncentraceDodavateluObory
-        }
-
-
-        public class Annual
-        {
-            protected Annual() { }
-
-            [Nest.Date]
-            public DateTime LastUpdated { get; set; }
-
-            public Annual(int rok) { this.Rok = rok; }
-
-            public decimal PodilSmluvNaCelkovychNakupech { get; set; } //Podíl smluv na celkových nákupech
-
-            //r13
-            public KoncentraceDodavateluIndexy CelkovaKoncentraceDodavatelu { get; set; } //Koncentrace dodavatelů
-            //r15
-            public KoncentraceDodavateluIndexy KoncentraceDodavateluBezUvedeneCeny { get; set; } //Koncentrace dodavatelů u smluv bez uvedených cen
-            //r15
-            public KoncentraceDodavateluIndexy KoncentraceDodavateluCenyULimitu { get; set; } //Koncentrace dodavatelů u smluv u limitu VZ
-
-
-            //r16
-            public decimal PercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000
-
-            //r16
-            public decimal PercSmlouvyPod50kBonus { get; set; }
-
-            //r16
-            public decimal TotalAveragePercSmlouvyPod50k { get; set; } //% smluv s cenou pod 50000 prumerny pres vsechny smlouvy v roce
-
-
-            //r20
-            public decimal PercNovaFirmaDodavatel { get; set; } //% smluv s dodavatelem mladším 2 měsíců
-
-            //r11
-            public decimal PercSeZasadnimNedostatkem { get; set; } //% smluv s zásadním nedostatkem 
-
-            //r23
-            public decimal PercSmlouvySPolitickyAngazovanouFirmou { get; set; } //% smluv uzavřených s firmou navazanou na politicky aktivní osobu v předchozích 5 letechs
-
-            //r19
-            public decimal PercSmluvUlimitu { get; set; } //% smluv těsně pod hranicí 2M Kč (zakázka malého rozsahu) a 6M (u stavebnictví)
-
-            //r22
-            public decimal PercUzavrenoOVikendu { get; set; } // % smluv uzavřených o víkendu či státním svátku
-
-            public List<KoncentraceDodavateluObor> KoncetraceDodavateluObory { get; set; } //Koncentrace dodavatelů
-
-            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(int oborId)
-            {
-                return KoncetraceDodavateluObory.Where(m => m != null).FirstOrDefault(m => m.OborId == oborId);
-            }
-            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(string searchShortcut)
-            {
-                return KoncetraceDodavateluObory.Where(m => m != null).FirstOrDefault(m => m.OborName == searchShortcut);
-            }
-            public KoncentraceDodavateluObor KoncetraceDodavateluProObor(Lib.Data.Smlouva.SClassification.ClassificationsTypes type)
-            {
-                return KoncetraceDodavateluProObor((int)type);
-            }
-
-
-            public Lib.Analysis.BasicData Smlouvy { get; set; }
-            //radek 5
-            //
-            public Lib.Analysis.RatingData Statistika { get; set; }
-
-            public int Rok { get; set; }
-            //r12
-            public FinanceData FinancniUdaje { get; set; }
-
-            public decimal? KIndex { get; set; }
-
-            public string[] KIndexIssues { get; set; }
-
-            [Nest.Object( Ignore =true )]
-            public KIndexLabelValues KIndexLabel
-            {
-                get {
-                    return KIndexLabelValues.C; //TODO
-                }
-            }
-
+            PercentBezCeny = 0,
+            PercSeZasadnimNedostatkem = 1,
+            CelkovaKoncentraceDodavatelu = 2,
+            KoncentraceDodavateluBezUvedeneCeny = 3,
+            PercSmluvUlimitu = 4,
+            KoncentraceDodavateluCenyULimitu = 5,
+            PercNovaFirmaDodavatel = 6,
+            PercUzavrenoOVikendu = 7,
+            PercSmlouvySPolitickyAngazovanouFirmou = 8,
+            KoncentraceDodavateluObory = 9,
+            PercSmlouvyPod50kBonus = 10
         }
 
 
@@ -172,7 +94,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     else
                         return KIndexLabelValues.D;
                 default:
-                        throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

@@ -184,48 +184,133 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
 
             //https://docs.google.com/spreadsheets/d/1FhaaXOszHORki7t5_YEACWFZUya5QtqUnNVPAvCArGQ/edit#gid=0
-
+            KIndexData.VypocetDetail vypocet = new KIndexData.VypocetDetail();
+            var vradky = new List<KIndexData.VypocetDetail.Radek>();
 
             decimal val =
             //r5
             datayear.Statistika.PercentBezCeny * 10m;   //=10   C > 1  F > 2,5
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.PercentBezCeny,
+                datayear.Statistika.PercentBezCeny,
+                10m)
+            );
+
             //r11
             val += datayear.PercSeZasadnimNedostatkem * 10m;  //=20
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.PercSeZasadnimNedostatkem,
+                datayear.PercSeZasadnimNedostatkem,
+                10m)
+            );
+
+
             //r13
             val += datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified * 20m ?? 0; //=40
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu,
+                datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified ?? 0,
+                20m)
+            );
+
+
             //r15
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 20m ?? 0; //60
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny,
+                datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified ?? 0,
+                20m)
+            );
+
             //r17
             val += datayear.PercSmluvUlimitu * 10m;  //70
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.PercSmluvUlimitu,
+                datayear.PercSmluvUlimitu,
+                10m)
+            );
+
             //r18
             val += datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 10m ?? 0; //80
+            vradky.Add(
+                new KIndexData.VypocetDetail.Radek(
+                    KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu,
+                    datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified ?? 0,
+                10m)
+            );
+
             //r19
             val += datayear.PercNovaFirmaDodavatel * 2m; //82
+            vradky.Add(
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercNovaFirmaDodavatel, datayear.PercNovaFirmaDodavatel, 2m)
+                );
+
+
             //r21
             val += datayear.PercUzavrenoOVikendu * 2m; //84
+            vradky.Add(
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercUzavrenoOVikendu, datayear.PercUzavrenoOVikendu, 2m)
+            );
+
+
             //r22
             val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 2m; //86
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou, datayear.PercSmlouvySPolitickyAngazovanouFirmou, 2m
+                )
+            );
+
 
             //oborova koncentrace
             var oboryKoncentrace = datayear.KoncetraceDodavateluObory
                 .Where(m =>
                         m.Koncentrace.CelkovaHodnotaSmluv > (datayear.Smlouvy.CelkemCena * 0.05m)
                         || m.Koncentrace.PocetSmluv > (datayear.Smlouvy.Pocet * 0.05m)
-                        || (m.Koncentrace.PocetSmluv == m.Koncentrace.PocetSmluvBezCeny && m.Koncentrace.PocetSmluv > datayear.Statistika.NumBezCeny * 0.02m )
+                        || (m.Koncentrace.PocetSmluvBezCeny > datayear.Statistika.NumBezCeny * 0.02m)
                         )
                 .ToArray(); //for debug;
-            decimal avg = oboryKoncentrace.WeightedAverage(m => m.Combined_Herfindahl_Hirschman_Modified(), 
-                w => w.Koncentrace.CelkovaHodnotaSmluv //todo
-                );
+
+            decimal prumernaCenaSmluv = datayear.Smlouvy.CelkemCena / (decimal)datayear.Smlouvy.Pocet;
+            var oboryVahy = oboryKoncentrace
+                .Select(m => new KIndexData.VypocetOboroveKoncentrace.RadekObor()
+                {
+                    Obor = m.OborName,
+                    Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
+                    Vaha = m.Koncentrace.CelkovaHodnotaSmluv + (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluv * m.PodilSmluvBezCeny),
+                    PodilSmluvBezCeny = m.PodilSmluvBezCeny,
+                    CelkovaHodnotaSmluv = m.Koncentrace.CelkovaHodnotaSmluv,
+                    PocetSmluvCelkem = m.Koncentrace.PocetSmluv
+                })
+                .ToArray();
+            decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
             val += avg * 14m; //100
-
-
+            vradky.Add(
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 14m)
+                );
+            vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
+            vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
+            vypocet.OboroveKoncentrace.Radky = oboryVahy.ToArray();
             //
             //r16 - bonus!
             val -= datayear.PercSmlouvyPod50kBonus * 2m;
 
+            vradky.Add(new KIndexData.VypocetDetail.Radek(
+                KIndexData.KIndexParts.PercSmlouvyPod50kBonus, -1 * datayear.PercSmlouvyPod50kBonus, 2m
+                )
+            );
+            vypocet.Radky = vradky.ToArray();
+
             if (val < 0)
                 val = 0;
+
+            var kontrolniVypocet = vypocet.Vypocet();
+            if (val != kontrolniVypocet)
+                throw new ApplicationException("Nesedi vypocet");
+
+            vypocet.LastUpdated = DateTime.Now;
+            datayear.KIndexVypocet = vypocet;
+
+
             return val;
 
         }

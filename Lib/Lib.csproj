@@ -455,11 +455,13 @@
     <Compile Include="Analysis\KorupcniRiziko\AdvancedQuery.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndex.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.Annual.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.COFOG.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
     <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.VypocetDetail.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluIndexy.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluObor.cs" />

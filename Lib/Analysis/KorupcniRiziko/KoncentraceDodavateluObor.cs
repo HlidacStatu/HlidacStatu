@@ -18,15 +18,24 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (KoncentraceBezUvedeneCeny == null)
                 return Koncentrace.Herfindahl_Hirschman_Modified;
 
-            List<System.Tuple<int, decimal>> items = new List<System.Tuple<int, decimal>>{
-                new System.Tuple<int, decimal> (Koncentrace.PocetSmluv, Koncentrace.Herfindahl_Hirschman_Modified),
-                new System.Tuple<int, decimal> (KoncentraceBezUvedeneCeny.PocetSmluv, KoncentraceBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+            List<System.Tuple<decimal, int>> items = new List<System.Tuple<decimal, int>>{
+                new System.Tuple<decimal, int> ( Koncentrace.Herfindahl_Hirschman_Modified, Koncentrace.PocetSmluv),
+                new System.Tuple<decimal, int> (KoncentraceBezUvedeneCeny.Herfindahl_Hirschman_Modified, KoncentraceBezUvedeneCeny.PocetSmluv)
             };
 
-            return items.WeightedAverage(m => m.Item2, w => w.Item1);
+            return items.WeightedAverage(m => m.Item1, w => w.Item2);
 
         }
 
+        public decimal PodilSmluvBezCeny
+        { 
+            get  {
+                if (this.Koncentrace.PocetSmluv == 0)
+                    return 0m;
+
+                return (decimal)this.Koncentrace.PocetSmluvBezCeny / (decimal)this.Koncentrace.PocetSmluv;
+            }
+        }
     } 
 
 }
