@@ -75,13 +75,6 @@
     <Reference Include="EasyNetQ, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EasyNetQ.5.2.0\lib\net461\EasyNetQ.dll</HintPath>
     </Reference>
-    <Reference Include="Elastic.Apm, Version=1.0.1.0, Culture=neutral, PublicKeyToken=ae7400d2c189cf22, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.dll</HintPath>
-    </Reference>
-    <Reference Include="Elastic.Apm.AspNetFullFramework">
-      <HintPath>..\3rd\Elastic.Apm.AspNetFullFramework.bin\Elastic.Apm.AspNetFullFramework.dll</HintPath>
-    </Reference>
     <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\Elasticsearch.Net.7.7.1\lib\net461\Elasticsearch.Net.dll</HintPath>
     </Reference>
