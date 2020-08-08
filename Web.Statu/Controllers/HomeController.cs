@@ -46,7 +46,7 @@ namespace HlidacStatu.Web.Controllers
         {
         }
 
-        public ActionResult KIndex(string id, string ico = "", int? rok = null)
+        public ActionResult KIndexM(string id, string ico = "", int? rok = null)
         {
             if (!(this.User.Identity.IsAuthenticated == true))
             {
@@ -61,14 +61,14 @@ namespace HlidacStatu.Web.Controllers
 
             if (string.IsNullOrEmpty(id))
             {
-                return View("KIndex.Start");
+                return View("KIndexM.Start");
             }
 
             if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
             {
                 HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);
                 ViewBag.ICO = id;
-                return View(kdata);
+                return View("KindexM",kdata);
             }
             else if (id?.ToLower() == "porovnat")
             {
@@ -84,7 +84,7 @@ namespace HlidacStatu.Web.Controllers
                             kdata.Add(kidx);
                     }
                 }
-                return View("KIndex.Porovnat", kdata);
+                return View("KIndexM.Porovnat", kdata);
             }
             else
                 return Error404();
