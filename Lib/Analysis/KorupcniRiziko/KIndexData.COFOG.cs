@@ -19,6 +19,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         Oddil = Convert.ToInt32(cofog[0]),
                         Skupina = Convert.ToInt32(cofog[1]),
+                        Trida = 0,
+                    };
+
+                if (cofog.Length == 3)
+                    return new COFOG()
+                    {
+                        Oddil = Convert.ToInt32(cofog[0]),
+                        Skupina = Convert.ToInt32(cofog[1]),
                         Trida = Convert.ToInt32(cofog[2]),
                     };
 
@@ -30,7 +38,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         Trida = Convert.ToInt32(cofog[3]),
                     };
 
-                throw new ArgumentException("invalid cofog:" + cofog);
+                //throw new ArgumentException("invalid cofog:" + cofog);
+                return null;
             }
 
 

@@ -17,6 +17,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 }
 
                 public int Velicina { get; set; }
+                [Nest.Keyword]
                 public string VelicinaName { get; set; }
                 public decimal Hodnota { get; set; }
                 public decimal Koeficient { get; set; }
@@ -46,6 +47,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             public class RadekObor
             {
+                [Nest.Keyword]
                 public string Obor { get; set; }
                 public decimal Hodnota { get; set; }
                 public decimal Vaha { get; set; }

@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public string[] KIndexIssues { get; set; }
 
-            public object KIndexVypocet { get; set; }
+            public VypocetDetail KIndexVypocet { get; set; }
 
             [Nest.Object(Ignore = true)]
             public KIndexLabelValues KIndexLabel

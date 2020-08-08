@@ -105,18 +105,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             string queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
-            //string queryAll = $"ico:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
 
             if (smlouvyZaRok >= minPocetSmluvKoncentraceDodavatelu)
             {
                 ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce);
                 if (ret.CelkovaKoncentraceDodavatelu != null)
                     ret.KoncentraceDodavateluBezUvedeneCeny
-                        = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv);
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv, 2);
 
                 if (ret.PercSmluvUlimitu > 0)
                     ret.KoncentraceDodavateluCenyULimitu
-                        = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0);
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0, 2);
 
                 Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                     .AllTypes
@@ -187,6 +186,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexData.VypocetDetail vypocet = new KIndexData.VypocetDetail();
             var vradky = new List<KIndexData.VypocetDetail.Radek>();
 
+
             decimal val =
             //r5
             datayear.Statistika.PercentBezCeny * 10m;   //=10   C > 1  F > 2,5
@@ -215,11 +215,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             //r15
-            val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * 20m ?? 0; //60
+            decimal r15koef = 20m;
+            if (datayear.Statistika.PercentBezCeny < 0.05m)
+                r15koef = 10m;
+
+            val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * r15koef ?? 0; //60
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny,
                 datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified ?? 0,
-                20m)
+                r15koef)
             );
 
             //r17
@@ -382,7 +386,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
         }
-        public KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null)
+        public KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = (size, page) =>
                 {
@@ -444,6 +448,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return null;
             if (smlouvy.Count() < minPocetSmluvKoncentraceDodavatelu)
                 return null;
+            if (smlouvy.Count() < minPocetSmluvToCalculate)
+                return new KoncentraceDodavateluIndexy()
+                {
+                    Query = query,
+                    LastUpdated = DateTime.Now,
+                    PocetSmluv = smlouvy.Count()
+                };
+
 
             var ret = new KoncentraceDodavateluIndexy();
             ret.PocetSmluv = smlouvy.Count();

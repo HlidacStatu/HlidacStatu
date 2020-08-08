@@ -119,17 +119,6 @@
                 </tr>
                 <tr>
                     <td>
-                        KINDEX hodnota
-                    </td>
-                    @for (int y = fromY; y <= toY; y++)
-                    {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
-                        </td>
-                    }
-                </tr>
-                <tr>
-                    <td>
                         Počet smluv
                     </td>
                     @for (int y = fromY; y <= toY; y++)
@@ -233,21 +222,12 @@
                 <tr>
                     <td>
                         Koncentrace dodavatelů
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
-                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
                         <td>
-                            <span style="color:@(gradIndex.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Index)
-                            </span>
                             <span style="color:@(gradIndex.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified).ToHex())">
                                 <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
-                            </span>
-                            <span style="color:@(gradIndex.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Kwoka_Dominance_Index)
                             </span>
                         </td>
                     }
@@ -255,9 +235,6 @@
                 <tr>
                     <td>
                         Koncentrace dodavatelů bez uvedené ceny
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
-                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
@@ -265,17 +242,10 @@
                             @if (Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny != null)
                             {
                                 <span>
-                                    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluv)/@(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvBezCeny)/
-                                    za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.CelkovaHodnotaSmluv)
-                                </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Index)
+                                    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluv) smluv
                                 </span>
                                 <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
                                     <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
-                                </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Kwoka_Dominance_Index)
                                 </span>
                             }
                         </td>
@@ -284,9 +254,6 @@
                 <tr>
                     <td>
                         Koncentrace dodavatelů - ceny u limitu VZ
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified
-                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
@@ -297,14 +264,8 @@
                                     @(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluv)/@(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCeny)/
                                     za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.CelkovaHodnotaSmluv)
                                 </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Index).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Index)
-                                </span>
                                 <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified).ToHex())">
                                     <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified)
-                                </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Kwoka_Dominance_Index).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Kwoka_Dominance_Index)
                                 </span>
                             }
                         </td>
@@ -312,10 +273,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Koncentrace dodavatelů podle oborů HH/HHM/KWO
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman /HH/
-                        <br />&nbsp;&nbsp;&nbsp;Herfindahl_Hirschman_Modified /HHM/
-                        <br />&nbsp;&nbsp;&nbsp;Kwoka_Dominance_Index /KWO/
+                        Koncentrace dodavatelů podle oborů 
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
@@ -330,15 +288,9 @@
                                     else
                                     {
                                         <b><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)">@(cl.SearchShortcut)</a>:</b>
-                                        <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Index).ToHex())">
-                                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Index, 0)
-                                        </span> @("/")
                                         <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified).ToHex())">
                                             @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified, 0)
                                         </span> @("/")
-                                        <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Kwoka_Dominance_Index).ToHex())">
-                                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Kwoka_Dominance_Index, 0)
-                                        </span>
                                         <span>
                                             <br />
                                             @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.CelkovaHodnotaSmluv),

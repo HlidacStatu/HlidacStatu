@@ -20,6 +20,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public int PocetSmluvBezCeny { get; set; }
         [Nest.Keyword]
         public string Query { get; set; }
+
     }
 
 }
