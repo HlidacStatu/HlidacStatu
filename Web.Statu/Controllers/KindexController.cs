@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HlidacStatu.Lib.Data;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -22,5 +23,51 @@ namespace HlidacStatu.Web.Controllers
             }
             return View();
         }
+
+
+        public ActionResult Debug(string id, string ico = "", int? rok = null)
+        {
+            if (!(this.User.Identity.IsAuthenticated == true))
+            {
+                return Redirect("/");
+            }
+            if (
+                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester"))
+                )
+            {
+                return Redirect("/");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return View("Debug.Start");
+            }
+
+            if (HlidacStatu.Util.DataValidators.CheckCZICO(id))
+            {
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(id);
+                ViewBag.ICO = id;
+                return View("Debug", kdata);
+            }
+            else if (id?.ToLower() == "porovnat")
+            {
+                List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData> kdata = new List<Lib.Analysis.KorupcniRiziko.KIndexData>();
+
+                foreach (var i in ico.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var f = Firmy.Get(i);
+                    if (f.Valid)
+                    {
+                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(i);
+                        if (kidx != null)
+                            kdata.Add(kidx);
+                    }
+                }
+                return View("Debug.Porovnat", kdata);
+            }
+            else
+                return NotFound();
+        }
+
     }
 }

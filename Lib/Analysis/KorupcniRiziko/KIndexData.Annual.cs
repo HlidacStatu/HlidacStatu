@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 get {
                     int[] limits = {0, 4,8,12,16,20};
-                    KIndexLabelValues val = KIndexLabelValues.A;
+                    KIndexLabelValues val = KIndexLabelValues.None;
                     for (int i = 0; i < limits.Length; i++)
                     {
                         if (this.KIndex > limits[i])
@@ -94,6 +94,33 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     }
 
                     return val;
+                }
+            }
+            [Nest.Object(Ignore = true)]
+            public string KIndexLabelColor
+            {
+                get
+                {
+                    switch (this.KIndexLabel)
+                    {
+                        case KIndexLabelValues.None:
+                            return "#000000";
+                        case KIndexLabelValues.A:
+                            return "#00A5FF";
+                        case KIndexLabelValues.B:
+                            return "#0064B4";
+                        case KIndexLabelValues.C:
+                            return "#002D5A";
+                        case KIndexLabelValues.D:
+                            return "#9099A3";
+                        case KIndexLabelValues.E:
+                            return "#F2B41E";
+                        case KIndexLabelValues.F:
+                            return "#D44820";
+                        default:
+                            return "#000000";
+                    }
+
                 }
             }
 

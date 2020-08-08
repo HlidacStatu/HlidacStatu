@@ -11,8 +11,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     [Nest.ElasticsearchType(IdProperty = nameof(Ico))]
     public partial class KIndexData
     {
+        [Devmasters.Core.ShowNiceDisplayName()]
         public enum KIndexLabelValues
         {
+            [Devmasters.Core.NiceDisplayName("-")]
+            None = -1,
             A = 0,
             B = 1,
             C = 2,

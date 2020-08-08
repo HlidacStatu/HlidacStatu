@@ -1584,9 +1584,9 @@
     <Content Include="Views\Data\ImportData.noflat.cshtml" />
     <Content Include="Views\Data\ImportData.mapping.cshtml" />
     <Content Include="Views\Data\ImportDataExcel.cshtml" />
-    <Content Include="Views\Home\KIndexM.cshtml" />
-    <Content Include="Views\Home\KIndexM.Porovnat.cshtml" />
-    <Content Include="Views\Home\KIndexM.Start.cshtml" />
+    <Content Include="Views\Kindex\Debug.cshtml" />
+    <Content Include="Views\Kindex\Debug.Porovnat.cshtml" />
+    <Content Include="Views\Kindex\Debug.Start.cshtml" />
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
     <Content Include="Views\Kindex\Index.cshtml" />
   </ItemGroup>
