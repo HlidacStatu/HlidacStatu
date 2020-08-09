@@ -46,10 +46,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="smlouvy"></param>
         /// <returns></returns>
-        public static decimal Herfindahl_Hirschman_Index(IEnumerable<SmlouvyForIndex> smlouvy)
+        public static decimal Herfindahl_Hirschman_Index(IEnumerable<SmlouvyForIndex> smlouvy, decimal prumHodnotaSmluv)
         {
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
+
             var groupedPerDodavatel = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new
+                {
+                    k = k,
+                    sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy)
+                })
                 .ToDictionary(k => k.k, v => v.sumVal);
 
             return Herfindahl_Hirschman_Index(groupedPerDodavatel.Values);
@@ -89,10 +96,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="valuesGroupedByCompany"></param>
         /// <returns></returns>
-        public static decimal Herfindahl_Hirschman_IndexNormalized(IEnumerable<SmlouvyForIndex> smlouvy)
+        public static decimal Herfindahl_Hirschman_IndexNormalized(IEnumerable<SmlouvyForIndex> smlouvy, decimal prumHodnotaSmluv)
         {
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
+
             var groupedPerDodavatel = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new
+                {
+                    k = k,
+                    sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy)
+                })
                 .ToDictionary(k => k.k, v => v.sumVal);
 
             if (groupedPerDodavatel.Count() == 1)
@@ -114,7 +128,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// <param name="individualContractDodavatelCena"></param>
         /// <returns></returns>
         public static decimal Herfindahl_Hirschman_Modified(
-            IEnumerable<SmlouvyForIndex> individualContractDodavatelCena)
+            IEnumerable<SmlouvyForIndex> individualContractDodavatelCena, decimal prumHodnotaSmluv)
         {
             //idealni HHI je, pokud jsou smlouvy rovnomerne mezi jednotlivymi dodavateli a kazdy ma 1 smluvu na stejnou castku
 
@@ -128,20 +142,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //pokud vsechny nulove
             decimal total = individualContractDodavatelCena.Sum(m => m.HodnotaSmlouvy);
-            Dictionary<string, decimal> groupedPerDodavatel;
 
             //pokud vse nulove a kazdy dodavagtel jiny, vrat distribuci -> tnz. HHI
-            if (total == 0 && individualContractDodavatelCena.Select(m => m.Dodavatel).Distinct().Count() == individualContractDodavatelCena.Count())
+            if (total == 0 &&
+                individualContractDodavatelCena.Select(m => m.Dodavatel).Distinct().Count() == individualContractDodavatelCena.Count())
                 return idealHI;
 
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
 
-            if (total == 0)
-                groupedPerDodavatel = individualContractDodavatelCena
-                    .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = (decimal)v.Count() })
-                    .ToDictionary(k => k.k, v => v.sumVal);
-            else
-                groupedPerDodavatel = individualContractDodavatelCena
-                        .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+            Dictionary<string, decimal> groupedPerDodavatel = individualContractDodavatelCena
+                        .GroupBy(k => k.Dodavatel, m => m, (k, v) => new
+                        {
+                            k = k,
+                            sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy)
+                        })
                         .ToDictionary(k => k.k, v => v.sumVal);
 
             decimal HI = Herfindahl_Hirschman_Index(groupedPerDodavatel.Values);
@@ -167,17 +182,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="individualContractDodavatelCena"></param>
         /// <returns></returns>
-        public static decimal Hall_Tideman_Index(IEnumerable<SmlouvyForIndex> smlouvy)
+        public static decimal Hall_Tideman_Index(IEnumerable<SmlouvyForIndex> smlouvy, decimal prumHodnotaSmluv)
         {
-            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
-            if (total == 0)
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
 
-                return Hall_Tideman_Index(
-                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
-                    );
+            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy).Sum();
 
             var groupedPerDodavatel = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new
+                {
+                    dodavatel = k,
+                    sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy)
+                })
                 .OrderByDescending(o => o.sumVal)
                 .Select((m, i) => new { idx = i + 1, dodavatel = m.dodavatel, trznipodil = m.sumVal / total, sumVal = m.sumVal });
 
@@ -194,16 +211,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// https://www.dnb.nl/binaries/Measures%20of%20Competition_tcm46-145799.pdf 2.2.4
         /// 
         /// </summary>
-        public static decimal Comprehensive_Industrial_Concentration_Index(IEnumerable<SmlouvyForIndex> smlouvy)
+        public static decimal Comprehensive_Industrial_Concentration_Index(IEnumerable<SmlouvyForIndex> smlouvy, decimal prumHodnotaSmluv)
         {
-            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
+            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy).Sum();
             if (total == 0)
-                return Comprehensive_Industrial_Concentration_Index(
-                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
-                    );
+                total = 1;
 
             var groupedPerDodavatel = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new
+                {
+                    dodavatel = k,
+                    sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy)
+                })
                 .OrderByDescending(o => o.sumVal)
                 .Select((m, i) => new { idx = i + 1, dodavatel = m.dodavatel, trznipodil = m.sumVal / total, sumVal = m.sumVal })
                 .ToList();
@@ -228,19 +249,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="smlouvy"></param>
         /// <returns></returns>
-        public static decimal Kwoka_Dominance_Index(IEnumerable<SmlouvyForIndex> smlouvy)
+        public static decimal Kwoka_Dominance_Index(IEnumerable<SmlouvyForIndex> smlouvy, decimal prumHodnotaSmluv)
         {
             if (smlouvy.Count() == 1)
                 return 1;
-
-            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
-            if (total == 0)
-                return Kwoka_Dominance_Index(
-                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
-                    );
+            if (prumHodnotaSmluv == 0)
+                prumHodnotaSmluv = 1;
+            decimal total = smlouvy.Select(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy).Sum();
 
             var groupedPerDodavatel = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy == 0 ? prumHodnotaSmluv : m.HodnotaSmlouvy) })
                 .OrderByDescending(o => o.sumVal)
                 .Select((m, i) => new { idx = i + 1, dodavatel = m.dodavatel, trznipodil = m.sumVal / total, sumVal = m.sumVal })
                 .ToList();

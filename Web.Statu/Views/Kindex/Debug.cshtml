@@ -289,7 +289,7 @@
                                     {
                                         <b><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)">@(cl.SearchShortcut)</a>:</b>
                                         <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified).ToHex())">
-                                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified, 0)
+                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Combined_Herfindahl_Hirschman_Modified() ?? 0)
                                         </span> @("/")
                                         <span>
                                             <br />

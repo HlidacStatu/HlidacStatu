@@ -7,9 +7,9 @@
             public long PocetSmluv { get; set; } = 0;
             public decimal CelkovaHodnotaSmluv { get; set; } = 0;
             public long PocetSmluvSeSoukromymSubj { get; set; }
-            public decimal CelkovaHodnotaSmluvSeSoukromymSubj { get; set; } = 0;
-            public long PocetSmluvBezCenySeSoukromymSubj { get; set; }
-
+            public decimal CelkovaHodnotaSmluvSeSoukrSubj { get; set; } = 0;
+            public long PocetSmluvBezCenySeSoukrSubj { get; set; }
+            public decimal PrumernaHodnotaSmluvSeSoukrSubj { get; set; }
 
             public long PocetBezCeny { get; set; } = 0;
             public decimal PercentBezCeny { get; set; } = 0;
