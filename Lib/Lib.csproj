@@ -461,6 +461,7 @@
     <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
     <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.StatistickeUdaje.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.VypocetDetail.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluIndexy.cs" />

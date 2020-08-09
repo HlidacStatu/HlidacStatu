@@ -124,7 +124,7 @@
                     @for (int y = fromY; y <= toY; y++)
                     {
                         <td>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Smlouvy.Pocet)
+                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetSmluv)
                         </td>
                     }
                 </tr>
@@ -135,7 +135,7 @@
                     @for (int y = fromY; y <= toY; y++)
                     {
                         <td>
-                            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).Smlouvy.CelkemCena, shortFormat: true)
+                            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).Statistika.CelkovaHodnotaSmluv, shortFormat: true)
                         </td>
                     }
                 </tr>
@@ -148,7 +148,7 @@
                     @for (int y = fromY; y <= toY; y++)
                     {
                         <td>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.NumBezCeny)
+                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetBezCeny)
                         </td>
                     }
                 </tr>
@@ -242,7 +242,7 @@
                             @if (Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny != null)
                             {
                                 <span>
-                                    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluv) smluv
+                                    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvProVypocet) smluv
                                 </span>
                                 <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
                                     <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
@@ -261,8 +261,8 @@
                             @if (Model.ForYear(y).KoncentraceDodavateluCenyULimitu != null)
                             {
                                 <span>
-                                    @(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluv)/@(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCeny)/
-                                    za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.CelkovaHodnotaSmluv)
+                                    @(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvProVypocet)/@(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCenyProVypocet)/
+                                    za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.HodnotaSmluvProVypocet)
                                 </span>
                                 <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified).ToHex())">
                                     <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified)
@@ -293,9 +293,9 @@
                                         </span> @("/")
                                         <span>
                                             <br />
-                                            @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.CelkovaHodnotaSmluv),
-                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluv) smluv,
-                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCeny) bez ceny
+                                            @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.HodnotaSmluvProVypocet),
+                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvProVypocet) smluv,
+                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCenyProVypocet) bez ceny
                                         </span>
                                     }
                                 </p>

@@ -160,7 +160,7 @@ else
                     </td>
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Smlouvy.Pocet;
+                        val = ki.ForYear(rok).Statistika.PocetSmluv;
         <td>
             <span style="color:black">
                 @HlidacStatu.Util.RenderData.NiceNumber(val)
@@ -173,7 +173,7 @@ else
                     </td>
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Smlouvy.CelkemCena;
+                        val = ki.ForYear(rok).Statistika.CelkovaHodnotaSmluv;
         <td>
             <span style="color:black">
                 @HlidacStatu.Util.RenderData.NicePrice(val, shortFormat: true)
@@ -185,11 +185,11 @@ else
                     <td>
                         Počet smluv bez<br />uvedené ceny
                     </td>
-                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.NumBezCeny);
-                        max = Model.Max(m => m.ForYear(rok).Statistika.NumBezCeny); }
+                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PocetBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PocetBezCeny); }
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Statistika.NumBezCeny;
+                        val = ki.ForYear(rok).Statistika.PocetBezCeny;
         <td>
             <span style="color:@(grad.Color(val,min,max).ToHex())">
                 @HlidacStatu.Util.RenderData.NiceNumber(val)
@@ -328,8 +328,8 @@ else
             @if (ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny != null)
             {
 <span>
-    @(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.PocetSmluv)/@(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvBezCeny)/
-    za @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.CelkovaHodnotaSmluv)
+    @(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvProVypocet)/@(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvBezCenyProVypocet)/
+    za @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncentraceDodavateluBezUvedeneCeny.HodnotaSmluvProVypocet)
 </span>
                     <span style="color:@(gradIndex.Color(val).ToHex())">
                         <br />@HlidacStatu.Util.RenderData.NicePercent(val)
@@ -347,8 +347,8 @@ else
             @if (ki.ForYear(rok).KoncentraceDodavateluCenyULimitu != null)
             {
 <span>
-    @(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.PocetSmluv)/@(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCeny)/
-    za @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.CelkovaHodnotaSmluv)
+    @(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.PocetSmluvProVypocet)/@(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCenyProVypocet)/
+    za @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncentraceDodavateluCenyULimitu.HodnotaSmluvProVypocet)
 </span>
                     <span style="color:@(gradIndex.Color(val).ToHex())">
                         <br />@HlidacStatu.Util.RenderData.NicePercent(val)
@@ -387,9 +387,9 @@ else
 </span>
                         <span>
                             <br />
-                            @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.CelkovaHodnotaSmluv),
-                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluv) smluv,
-                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCeny) bez ceny
+                            @HlidacStatu.Util.RenderData.ShortNicePrice(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.HodnotaSmluvProVypocet),
+                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvProVypocet) smluv,
+                            @HlidacStatu.Util.RenderData.NiceNumber(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCenyProVypocet) bez ceny
                         </span>
                         <span><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(ki.ForYear(rok).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)"><i class="fas fa-search"></i></a></span>}
 

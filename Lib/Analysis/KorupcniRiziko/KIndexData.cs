@@ -111,6 +111,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
         public string Ico { get; set; }
+        public string Jmeno { get; set; }
         public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();
 
         [Nest.Date]

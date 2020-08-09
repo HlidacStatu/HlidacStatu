@@ -65,11 +65,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return KoncetraceDodavateluProObor((int)type);
             }
 
-
-            public Lib.Analysis.BasicData Smlouvy { get; set; }
             //radek 5
             //
-            public Lib.Analysis.RatingData Statistika { get; set; }
+            public StatistickeUdaje Statistika { get; set; }
 
             public int Rok { get; set; }
             //r12

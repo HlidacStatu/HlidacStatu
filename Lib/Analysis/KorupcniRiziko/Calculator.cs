@@ -15,7 +15,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public partial class Calculator
     {
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
-        const int minPocetSmluvKoncentraceDodavatelu = 1;
+        const int minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu = 1;
 
         private Firma urad = null;
         Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
@@ -100,22 +100,43 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
             ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
 
-            ret.Smlouvy = this.urad.Statistic().BasicStatPerYear[year];
-            ret.Statistika = this.urad.Statistic().RatingPerYear[year];
+            var stat = this.urad.Statistic().RatingPerYear[year];
+            ret.Statistika = new KIndexData.StatistickeUdaje()
+            {
+                PocetSmluv = this.urad.Statistic().BasicStatPerYear[year].Pocet,
+                CelkovaHodnotaSmluv = this.urad.Statistic().BasicStatPerYear[year].CelkemCena,
+                PocetBezCeny = stat.NumBezCeny,
+                PocetBezSmluvniStrany = stat.NumBezSmluvniStrany,
+                PocetSPolitiky = stat.NumSPolitiky,
+                PercentBezCeny = stat.PercentBezCeny,
+                PercentBezSmluvniStrany = stat.PercentBezSmluvniStrany,
+                PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany,
+                PercentKcSPolitiky = stat.PercentKcSPolitiky,
+                PercentSPolitiky = stat.PercentSPolitiky,
+                SumKcBezSmluvniStrany = stat.SumKcBezSmluvniStrany,
+                SumKcSPolitiky = stat.SumKcSPolitiky
+            };
 
 
             string queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}";
 
-            if (smlouvyZaRok >= minPocetSmluvKoncentraceDodavatelu)
+            if (smlouvyZaRok >= minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu)
             {
-                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce);
-                if (ret.CelkovaKoncentraceDodavatelu != null)
-                    ret.KoncentraceDodavateluBezUvedeneCeny
-                        = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluv, 2);
+                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(queryPlatce,"Koncentrace soukromých dodavatelů");
+                ret.Statistika.PocetSmluvSeSoukromymSubj = ret.CelkovaKoncentraceDodavatelu.PocetSmluvProVypocet;
+                ret.Statistika.PocetSmluvBezCenySeSoukromymSubj = ret.CelkovaKoncentraceDodavatelu.PocetSmluvBezCenyProVypocet;
+                ret.Statistika.CelkovaHodnotaSmluvSeSoukromymSubj = ret.CelkovaKoncentraceDodavatelu.HodnotaSmluvProVypocet;
 
+
+                if (ret.CelkovaKoncentraceDodavatelu != null)
+                {
+                    ret.KoncentraceDodavateluBezUvedeneCeny
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", "Koncentrace soukromých dodavatelů u smluv s utajenou cenou", ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluvProVypocet, 2);
+
+                }
                 if (ret.PercSmluvUlimitu > 0)
                     ret.KoncentraceDodavateluCenyULimitu
-                        = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluv ?? 0, 2);
+                        = KoncentraceDodavateluCalculator(queryPlatce + " AND ( hint.smlouvaULimitu:>0 )", "Koncentrace soukromých dodavatelů u smluv s cenou u limitu veřejných zakázek",ret.CelkovaKoncentraceDodavatelu?.PrumernaHodnotaSmluvProVypocet ?? 0, 2);
 
                 Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                     .AllTypes
@@ -130,13 +151,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
 
                         queryPlatce = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
-                        var k = KoncentraceDodavateluCalculator(queryPlatce);
+                        var k = KoncentraceDodavateluCalculator(queryPlatce,"Koncentrace soukromých dodavatelů u oboru " + obory[oborid]);
                         KoncentraceDodavateluIndexy kbezCeny = null;
                         if (k != null)
                         {
-                            if (k.PocetSmluvBezCeny > 0)
+                            if (k.PocetSmluvBezCenyProVypocet > 0)
                             {
-                                kbezCeny = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", k.PrumernaHodnotaSmluv == 0 ? 1 : k.PrumernaHodnotaSmluv);
+                                kbezCeny = KoncentraceDodavateluCalculator(queryPlatce + " AND cena:0", "Koncentrace soukromých dodavatelů u smluv s utajenou cenou u oboru " + obory[oborid], k.PrumernaHodnotaSmluvProVypocet == 0 ? 1 : k.PrumernaHodnotaSmluvProVypocet);
                             }
                             ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
                             {
@@ -153,7 +174,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             ret.TotalAveragePercSmlouvyPod50k = TotalAveragePercSmlouvyPod50k(ret.Rok);
 
-            ret.PercSmlouvyPod50k = AveragePercSmlouvyPod50k(this.Ico, ret.Rok, ret.Smlouvy.Pocet);
+            ret.PercSmlouvyPod50k = AveragePercSmlouvyPod50k(this.Ico, ret.Rok, ret.Statistika.PocetSmluv);
             ret.PercSmlouvyPod50kBonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
 
 
@@ -268,22 +289,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //oborova koncentrace
             var oboryKoncentrace = datayear.KoncetraceDodavateluObory
                 .Where(m =>
-                        m.Koncentrace.CelkovaHodnotaSmluv > (datayear.Smlouvy.CelkemCena * 0.05m)
-                        || m.Koncentrace.PocetSmluv > (datayear.Smlouvy.Pocet * 0.05m)
-                        || (m.Koncentrace.PocetSmluvBezCeny > datayear.Statistika.NumBezCeny * 0.02m)
+                        m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
+                        || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
+                        || (m.Koncentrace.PocetSmluvBezCenyProVypocet > datayear.Statistika.PocetBezCeny  * 0.02m)
                         )
                 .ToArray(); //for debug;
 
-            decimal prumernaCenaSmluv = datayear.Smlouvy.CelkemCena / (decimal)datayear.Smlouvy.Pocet;
+            decimal prumernaCenaSmluv = datayear.Statistika.CelkovaHodnotaSmluv / (decimal)datayear.Statistika.PocetSmluv;
             var oboryVahy = oboryKoncentrace
                 .Select(m => new KIndexData.VypocetOboroveKoncentrace.RadekObor()
                 {
                     Obor = m.OborName,
                     Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
-                    Vaha = m.Koncentrace.CelkovaHodnotaSmluv + (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluv * m.PodilSmluvBezCeny),
+                    Vaha = m.Koncentrace.HodnotaSmluvProVypocet + (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
                     PodilSmluvBezCeny = m.PodilSmluvBezCeny,
-                    CelkovaHodnotaSmluv = m.Koncentrace.CelkovaHodnotaSmluv,
-                    PocetSmluvCelkem = m.Koncentrace.PocetSmluv
+                    CelkovaHodnotaSmluv = m.Koncentrace.HodnotaSmluvProVypocet,
+                    PocetSmluvCelkem = m.Koncentrace.PocetSmluvProVypocet
                 })
                 .ToArray();
             decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
@@ -386,7 +407,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
         }
-        public KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1)
+        public KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(string query, string popis, decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1)
         {
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = (size, page) =>
                 {
@@ -446,27 +467,27 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (smlouvy.Count() == 0)
                 return null;
-            if (smlouvy.Count() < minPocetSmluvKoncentraceDodavatelu)
+            if (smlouvy.Count() < minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu)
                 return null;
             if (smlouvy.Count() < minPocetSmluvToCalculate)
                 return new KoncentraceDodavateluIndexy()
                 {
                     Query = query,
                     LastUpdated = DateTime.Now,
-                    PocetSmluv = smlouvy.Count()
+                    PocetSmluvProVypocet = smlouvy.Count()
                 };
 
 
             var ret = new KoncentraceDodavateluIndexy();
-            ret.PocetSmluv = smlouvy.Count();
-            ret.PocetSmluvBezCeny = smlouvy.Count(m => m.HodnotaSmlouvy == 0);
-            ret.PrumernaHodnotaSmluv = smlouvy
+            ret.PocetSmluvProVypocet = smlouvy.Count();
+            ret.PocetSmluvBezCenyProVypocet = smlouvy.Count(m => m.HodnotaSmlouvy == 0);
+            ret.PrumernaHodnotaSmluvProVypocet = smlouvy
                                 .Where(m => m.HodnotaSmlouvy != 0)
                                 .Count() == 0 ? 0 : smlouvy
                                                         .Where(m => m.HodnotaSmlouvy != 0)
                                                         .Select(m => Math.Abs(m.HodnotaSmlouvy))
                                                         .Average();
-            ret.CelkovaHodnotaSmluv = smlouvy.Sum(m => m.HodnotaSmlouvy);
+            ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy);
             ret.Query = query;
 
 
@@ -477,6 +498,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.Comprehensive_Industrial_Concentration_Index = Comprehensive_Industrial_Concentration_Index(smlouvy);
             ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy);
             ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy);
+            ret.Popis = popis;
             ret.LastUpdated = DateTime.Now;
             return ret;
         }
