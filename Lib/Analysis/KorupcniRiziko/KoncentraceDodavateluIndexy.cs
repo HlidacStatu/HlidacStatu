@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using HlidacStatu.Lib.Data;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class KoncentraceDodavateluIndexy
     {
+
         [Nest.Date]
         public DateTime LastUpdated { get; set; }
 
@@ -23,6 +26,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         [Nest.Keyword]
         public string Popis { get; set; }
+
+        private IEnumerable<Calculator.SmlouvyForIndex> _smlouvyBag = null;
+        public IEnumerable<Calculator.SmlouvyForIndex> SmlouvyBag() { return _smlouvyBag; }
 
     }
 

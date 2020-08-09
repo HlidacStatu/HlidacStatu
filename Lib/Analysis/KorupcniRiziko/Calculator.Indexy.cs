@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using HlidacStatu.Lib.Data;
+
 using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
@@ -15,12 +17,26 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public class SmlouvyForIndex
         {
             public SmlouvyForIndex() { }
-            public SmlouvyForIndex(string dodavatel, decimal hodnota) {
+            public SmlouvyForIndex(string dodavatel, decimal hodnota, int uLimitu, int[] obory)
+            {
                 this.Dodavatel = dodavatel;
                 this.HodnotaSmlouvy = hodnota;
+                this.ULimitu = ULimitu;
+                this.Obory = obory;
             }
             public string Dodavatel { get; set; }
             public decimal HodnotaSmlouvy { get; set; }
+            public int ULimitu { get; set; }
+            public int[] Obory { get; set; } = new int[] { };
+            public bool ContainsObor(int oborId)
+            {
+                foreach (var o in Obory)
+                {
+                    if (oborId <= o && o < oborId + 99)
+                        return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -50,7 +66,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             decimal total = valuesGroupedByCompany.Sum();
             if (total == 0)
-                return 0m;
+                return Herfindahl_Hirschman_Index(Enumerable.Repeat<decimal>(1m, valuesGroupedByCompany.Count())); ;
             decimal hindex = valuesGroupedByCompany
                 .Select(v => v / total) //podil na trhu
                 .Select(v => v * v) // ^2
@@ -82,8 +98,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (groupedPerDodavatel.Count() == 1)
                 return 1;
             decimal H = Herfindahl_Hirschman_Index(groupedPerDodavatel.Values);
-            decimal N = (decimal)groupedPerDodavatel.Count() ;
-            decimal hindexNorm = (H - 1 / N) / (1-1/N);
+            decimal N = (decimal)groupedPerDodavatel.Count();
+            decimal hindexNorm = (H - 1 / N) / (1 - 1 / N);
             return hindexNorm;
         }
 
@@ -107,11 +123,26 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (individualContractDodavatelCena.Count() == 1)
                 return 1;
 
-            decimal idealHI = Herfindahl_Hirschman_Index(Enumerable.Repeat<decimal>(1m,individualContractDodavatelCena.Count()));
 
-            var groupedPerDodavatel = individualContractDodavatelCena
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
-                .ToDictionary(k => k.k, v => v.sumVal);
+            decimal idealHI = Herfindahl_Hirschman_Index(Enumerable.Repeat<decimal>(1m, individualContractDodavatelCena.Count()));
+
+            //pokud vsechny nulove
+            decimal total = individualContractDodavatelCena.Sum(m => m.HodnotaSmlouvy);
+            Dictionary<string, decimal> groupedPerDodavatel;
+
+            //pokud vse nulove a kazdy dodavagtel jiny, vrat distribuci -> tnz. HHI
+            if (total == 0 && individualContractDodavatelCena.Select(m => m.Dodavatel).Distinct().Count() == individualContractDodavatelCena.Count())
+                return idealHI;
+
+
+            if (total == 0)
+                groupedPerDodavatel = individualContractDodavatelCena
+                    .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = (decimal)v.Count() })
+                    .ToDictionary(k => k.k, v => v.sumVal);
+            else
+                groupedPerDodavatel = individualContractDodavatelCena
+                        .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { k = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
+                        .ToDictionary(k => k.k, v => v.sumVal);
 
             decimal HI = Herfindahl_Hirschman_Index(groupedPerDodavatel.Values);
 
@@ -140,12 +171,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
             if (total == 0)
-                return 0;
+
+                return Hall_Tideman_Index(
+                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
+                    );
 
             var groupedPerDodavatel = smlouvy
                 .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
                 .OrderByDescending(o => o.sumVal)
-                .Select((m,i)=> new { idx = i+1, dodavatel = m.dodavatel, trznipodil = m.sumVal/total, sumVal = m.sumVal });
+                .Select((m, i) => new { idx = i + 1, dodavatel = m.dodavatel, trznipodil = m.sumVal / total, sumVal = m.sumVal });
 
             decimal htSum = groupedPerDodavatel
                 .Select(m => m.idx * m.trznipodil)
@@ -164,7 +198,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
             if (total == 0)
-                return 0;
+                return Comprehensive_Industrial_Concentration_Index(
+                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
+                    );
 
             var groupedPerDodavatel = smlouvy
                 .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
@@ -199,7 +235,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal total = smlouvy.Select(m => m.HodnotaSmlouvy).Sum();
             if (total == 0)
-                return 0;
+                return Kwoka_Dominance_Index(
+                    smlouvy.Select(m => new SmlouvyForIndex(m.Dodavatel, 1m, m.ULimitu, m.Obory))
+                    );
 
             var groupedPerDodavatel = smlouvy
                 .GroupBy(k => k.Dodavatel, m => m, (k, v) => new { dodavatel = k, sumVal = v.Sum(m => m.HodnotaSmlouvy) })
@@ -208,7 +246,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .ToList();
 
             decimal kwoka = 0;
-            for (int i = 0; i < groupedPerDodavatel.Count()-1; i++)
+            for (int i = 0; i < groupedPerDodavatel.Count() - 1; i++)
             {
                 decimal SiSi_1 = (groupedPerDodavatel[i].trznipodil - groupedPerDodavatel[i + 1].trznipodil);
                 kwoka = kwoka + SiSi_1 * SiSi_1;
