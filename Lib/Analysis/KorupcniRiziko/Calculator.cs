@@ -71,6 +71,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             kindex = new KIndexData();
             kindex.Ico = urad.ICO;
+            kindex.Jmeno = urad.Jmeno;
             kindex.UcetniJednotka = KIndexData.UcetniJednotkaInfo.Load(urad.ICO);
 
 
