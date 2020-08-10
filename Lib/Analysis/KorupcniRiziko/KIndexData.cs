@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public partial class KIndexData
     {
 
-        public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 26 };
+        public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 15 };
 
 
         [Devmasters.Core.ShowNiceDisplayName()]
@@ -28,23 +28,110 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             F = 5
         }
 
+        [Devmasters.Core.ShowNiceDisplayName]
         public enum KIndexParts
         {
+            [Devmasters.Core.NiceDisplayName("% smluv bez ceny")]
             PercentBezCeny = 0,
+
+            [Devmasters.Core.NiceDisplayName("% smluv s nedostatkem")]
             PercSeZasadnimNedostatkem = 1,
+
+            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů")]
             CelkovaKoncentraceDodavatelu = 2,
+
+            [Devmasters.Core.NiceDisplayName("Koncentr.dodav. u smluv se skrytou cenou")]
             KoncentraceDodavateluBezUvedeneCeny = 3,
+
+            [Devmasters.Core.NiceDisplayName("% smluv u limitu veřejných zakázek")]
             PercSmluvUlimitu = 4,
+
+            [Devmasters.Core.NiceDisplayName("Koncentr.dodav. u smluv u limitu VZ")]
             KoncentraceDodavateluCenyULimitu = 5,
+
+            [Devmasters.Core.NiceDisplayName("% smluv s nově založenými smlouvami")]
             PercNovaFirmaDodavatel = 6,
+
+            [Devmasters.Core.NiceDisplayName("% smluv uzavřených o víkendu")]
             PercUzavrenoOVikendu = 7,
+
+            [Devmasters.Core.NiceDisplayName("% smluv s politicky angažovanou firmou")]
             PercSmlouvySPolitickyAngazovanouFirmou = 8,
+
+            [Devmasters.Core.NiceDisplayName("Koncentr.dodavatelů podle oborů")]
             KoncentraceDodavateluObory = 9,
+
+            [Devmasters.Core.NiceDisplayName("Bonus za transparentnost")]
             PercSmlouvyPod50kBonus = 10
         }
 
 
-        public KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal value)
+        public List<Annual> roky { get; set; } = new List<Annual>();
+
+        public Annual ForYear(int year)
+        {
+            return roky.Where(m => m != null && m.Rok == year).FirstOrDefault();
+        }
+
+        public string Ico { get; set; }
+        public string Jmeno { get; set; }
+        public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();
+
+        [Nest.Date]
+        public DateTime LastSaved { get; set; }
+
+        public void Save()
+        {
+            //calculate fields before saving
+            this.LastSaved = DateTime.Now;
+            var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
+            if (!res.IsValid)
+            {
+                throw new ApplicationException(res.ServerError?.ToString());
+            }
+        }
+
+
+
+
+        public static KIndexData Get(string ico)
+        {
+            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
+            if (res.Found == false)
+                return null;
+            else if (!res.IsValid)
+            {
+                throw new ApplicationException(res.ServerError?.ToString());
+            }
+            else
+                return res.Source;
+        }
+
+
+        public static string KIndexLabelColor(KIndexLabelValues label)
+        {
+            switch (label)
+            {
+                case KIndexLabelValues.None:
+                    return "#000000";
+                case KIndexLabelValues.A:
+                    return "#00A5FF";
+                case KIndexLabelValues.B:
+                    return "#0064B4";
+                case KIndexLabelValues.C:
+                    return "#002D5A";
+                case KIndexLabelValues.D:
+                    return "#9099A3";
+                case KIndexLabelValues.E:
+                    return "#F2B41E";
+                case KIndexLabelValues.F:
+                    return "#D44820";
+                default:
+                    return "#000000";
+            }
+        }
+
+        public static KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal value)
         {
             switch (part)
             {
@@ -101,51 +188,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     else
                         return KIndexLabelValues.D;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return KIndexLabelValues.None;
             }
-        }
-
-
-
-        public List<Annual> roky { get; set; } = new List<Annual>();
-
-        public Annual ForYear(int year)
-        {
-            return roky.Where(m => m != null && m.Rok == year).FirstOrDefault();
-        }
-
-        public string Ico { get; set; }
-        public string Jmeno { get; set; }
-        public UcetniJednotkaInfo UcetniJednotka { get; set; } = new UcetniJednotkaInfo();
-
-        [Nest.Date]
-        public DateTime LastSaved { get; set; }
-
-        public void Save()
-        {
-            //calculate fields before saving
-            this.LastSaved = DateTime.Now;
-            var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
-            if (!res.IsValid)
-            {
-                throw new ApplicationException(res.ServerError?.ToString());
-            }
-        }
-
-
-
-
-        public static KIndexData Get(string ico)
-        {
-            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
-            if (res.Found == false)
-                return null;
-            else if (!res.IsValid)
-            {
-                throw new ApplicationException(res.ServerError?.ToString());
-            }
-            else
-                return res.Source;
         }
 
 

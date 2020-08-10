@@ -97,29 +97,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             [Nest.Object(Ignore = true)]
             public string KIndexLabelColor
             {
-                get
-                {
-                    switch (this.KIndexLabel)
-                    {
-                        case KIndexLabelValues.None:
-                            return "#000000";
-                        case KIndexLabelValues.A:
-                            return "#00A5FF";
-                        case KIndexLabelValues.B:
-                            return "#0064B4";
-                        case KIndexLabelValues.C:
-                            return "#002D5A";
-                        case KIndexLabelValues.D:
-                            return "#9099A3";
-                        case KIndexLabelValues.E:
-                            return "#F2B41E";
-                        case KIndexLabelValues.F:
-                            return "#D44820";
-                        default:
-                            return "#000000";
-                    }
-
-                }
+                get => KIndexData.KIndexLabelColor(this.KIndexLabel);
             }
 
             public string KIndexLabelIconUrl(bool local = true)

@@ -5,11 +5,8 @@
 
 @using Devmasters.Core
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
-@{
-    var f = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "Index korupčního rizika pro " + f.Jmeno;
-
-}
+@{ var f = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    ViewBag.Title = "Index korupčního rizika pro " + f.Jmeno; }
 @section scripts
 {
 
@@ -28,26 +25,22 @@
 
 @if (Model == null)
 {
-    <div class="jumbotron">
-        <h1>K-Index</h1>
-        <p>Index korupčního rizika nebyl pro tento subjekt dosud spočítán</p>
-    </div>
-    return;
+<div class="jumbotron">
+    <h1>K-Index</h1>
+    <p>Index korupčního rizika nebyl pro tento subjekt dosud spočítán</p>
+</div>return;
 }
 
 @if (Model.roky.Count(m => m != null) == 0)
 {
-    <div class="jumbotron">
-        <h1>K-Index</h1>
-        <p>Tento subjekt uzavřel v každém roce méně než @(HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYear) smluv.</p>
-        <p>Pro spočítání K-Indexu je to příliš málo smluv.</p>
-    </div>
-    return;
+<div class="jumbotron">
+    <h1>K-Index</h1>
+    <p>Tento subjekt uzavřel v každém roce méně než @(HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYear) smluv.</p>
+    <p>Pro spočítání K-Indexu je to příliš málo smluv.</p>
+</div>return;
 }
 
-@{
-
-    int fromY = Model.roky.Min(m => m.Rok);
+@{ int fromY = Model.roky.Min(m => m.Rok);
     int toY = Model.roky.Max(m => m.Rok);
     int pocetRoku = (toY - fromY) + 1;
 
@@ -62,9 +55,7 @@
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
         , new HlidacStatu.Util.Graphics.RGB("FF0000") //90%
         , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        );
-
-}
+        ); }
 
 
 <div class="jumbotron">
@@ -99,10 +90,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            <b>@y</b>
-                        </td>
-                    }
+        <td>
+            <b>@y</b>
+        </td>
+}
                 </tr>
 
                 <tr>
@@ -111,11 +102,11 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                <td>
-                    <img src="@(Model.ForYear(y).KIndexLabelIconUrl())" style="width:25px" />
-                    @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
-                </td>
-                    }
+        <td>
+            <img src="@(Model.ForYear(y).KIndexLabelIconUrl())" style="width:25px" />
+            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -123,10 +114,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetSmluv)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetSmluv)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -134,10 +125,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).Statistika.CelkovaHodnotaSmluv, shortFormat: true)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).Statistika.CelkovaHodnotaSmluv, shortFormat: true)
+        </td>
+}
                 </tr>
 
 
@@ -147,10 +138,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetBezCeny)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetBezCeny)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -158,10 +149,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentBezCeny)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentBezCeny)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -169,10 +160,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercNovaFirmaDodavatel)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercNovaFirmaDodavatel)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -180,10 +171,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSeZasadnimNedostatkem)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSeZasadnimNedostatkem)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -191,10 +182,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmlouvySPolitickyAngazovanouFirmou)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmlouvySPolitickyAngazovanouFirmou)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -202,10 +193,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmluvUlimitu)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercSmluvUlimitu)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -213,10 +204,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercUzavrenoOVikendu)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PercUzavrenoOVikendu)
+        </td>
+}
                 </tr>
 
                 <tr>
@@ -225,12 +216,12 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            <span style="color:@(gradIndex.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified).ToHex())">
-                                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
-                            </span>
-                        </td>
-                    }
+        <td>
+            <span style="color:@(gradIndex.Color(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified).ToHex())">
+                <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified)
+            </span>
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -238,18 +229,17 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @if (Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny != null)
-                            {
-                                <span>
-                                    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvProVypocet) smluv
-                                </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
-                                </span>
-                            }
-                        </td>
-                    }
+        <td>
+            @if (Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny != null)
+            {
+<span>
+    @(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.PocetSmluvProVypocet) smluv
+</span>
+                    <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified).ToHex())">
+                        <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluBezUvedeneCeny.Herfindahl_Hirschman_Modified)
+                    </span>}
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -257,51 +247,75 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td style="vertical-align: top;">
-                            @if (Model.ForYear(y).KoncentraceDodavateluCenyULimitu != null)
+        <td style="vertical-align: top;">
+            @if (Model.ForYear(y).KoncentraceDodavateluCenyULimitu != null)
+            {
+<span>
+    @(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvProVypocet)/@(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCenyProVypocet)/
+    za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.HodnotaSmluvProVypocet)
+</span>
+                    <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified).ToHex())">
+                        <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified)
+                    </span>}
+        </td>
+}
+                </tr>
+                <tr>
+                    <td>
+                        Výpočet K-Indexu
+                    </td>
+                    @for (int y = fromY; y <= toY; y++)
+                    {
+                    <td style="vertical-align: top;border-right:1px #a0a0a0 solid;">
+                        @if (Model.ForYear(y).KIndexVypocet != null)
+                        {
+                            foreach (KIndexData.VypocetDetail.Radek item in Model.ForYear(y).KIndexVypocet.Radky)
                             {
-                                <span>
-                                    @(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvProVypocet)/@(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.PocetSmluvBezCenyProVypocet)/
-                                    za @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.HodnotaSmluvProVypocet)
-                                </span>
-                                <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified).ToHex())">
-                                    <br />@HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).KoncentraceDodavateluCenyULimitu.Herfindahl_Hirschman_Modified)
-                                </span>
+                                <div class="row" style="border-bottom: 1px #a0a0a0 dashed">
+                                    <div class="col-xs-6" style="font-size:11px">@item.VelicinaLongName</div>
+                                    <div class="col-xs-6 number" style="white-space: nowrap">@(item.Koeficient) x                                    
+                                    <span style="color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)item.Velicina, item.Hodnota)))">
+                                        @HlidacStatu.Util.RenderData.NiceNumber(item.Hodnota)
+                                    </span>
+                                    </div>
+                                </div> 
                             }
-                        </td>
+                            <div class="row">
+                                <div class="col-xs-4" style="font-size:11px"><b>Součet</b></div>
+                                <div class="col-xs-8 number">@HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)</div>
+                            </div>
+                        }
+                    </td>
                     }
                 </tr>
                 <tr>
                     <td>
-                        Koncentrace dodavatelů podle oborů 
+                        Koncentrace dodavatelů podle oborů
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @foreach (var cl in HlidacStatu.Lib.Data.Smlouva.SClassification.AllTypes.Where(m => m.MainType))
-                            {
-                                <p>
-                                    @if (Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value) == null)
-                                    {
-                                        <b>@(cl.SearchShortcut):</b>
-                                    }
-                                    else
-                                    {
-                                        <b><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)">@(cl.SearchShortcut)</a>:</b>
-                                        <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified).ToHex())">
-                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Combined_Herfindahl_Hirschman_Modified() ?? 0)
-                                        </span> @("/")
-                                        <span>
-                                            <br />
-                                            @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.HodnotaSmluvProVypocet),
-                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvProVypocet) smluv,
-                                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCenyProVypocet) bez ceny
-                                        </span>
-                                    }
-                                </p>
-                            }
-                        </td>
-                    }
+        <td>
+            @foreach (var cl in HlidacStatu.Lib.Data.Smlouva.SClassification.AllTypes.Where(m => m.MainType))
+            {
+<p>
+    @if (Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value) == null)
+    {
+<b>@(cl.SearchShortcut):</b> }
+else
+{
+<b><a href="/HledatSmlouvy?q=@System.Net.WebUtility.UrlEncode(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Query)">@(cl.SearchShortcut)</a>:</b>
+                        <span style="color:@(gradIndex.Color(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Koncentrace?.Herfindahl_Hirschman_Modified).ToHex())">
+                            @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value)?.Combined_Herfindahl_Hirschman_Modified() ?? 0)
+                        </span> @("/")
+                                                <span>
+                                                    <br />
+                                                    @HlidacStatu.Util.RenderData.ShortNicePrice(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.HodnotaSmluvProVypocet),
+                                                    @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvProVypocet) smluv,
+                                                    @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KoncetraceDodavateluProObor(cl.Value).Koncentrace.PocetSmluvBezCenyProVypocet) bez ceny
+                                                </span>}
+</p>}
+        </td>
+}
                 </tr>
 
                 <tr>
@@ -310,10 +324,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PodilSmluvNaCelkovychNakupech)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).PodilSmluvNaCelkovychNakupech)
+        </td>
+}
                 </tr>
                 <tr>
                     <td>
@@ -321,10 +335,10 @@
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
-                        <td>
-                            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).FinancniUdaje.OvlivnitelneNakladyCinnosti ?? 0)
-                        </td>
-                    }
+        <td>
+            @HlidacStatu.Util.RenderData.NicePrice(Model.ForYear(y).FinancniUdaje.OvlivnitelneNakladyCinnosti ?? 0)
+        </td>
+}
                 </tr>
             </tbody>
         </table>

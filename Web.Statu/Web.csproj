@@ -454,6 +454,7 @@
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2AuthController.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2WebyController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2FirmyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2DatasetyControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2Controller.cs" />

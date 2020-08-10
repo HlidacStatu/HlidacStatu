@@ -200,10 +200,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
 
-            if (smlouvyZaRok < Consts.MinSmluvPerYear)
+            if (
+                smlouvyZaRok < Consts.MinSmluvPerYear
+                && ret.Statistika.CelkovaHodnotaSmluv < Consts.MinSumSmluvPerYear
+                && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj*ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
+                
+            )
             {
                 ret.KIndex = Consts.MinSmluvPerYearKIndexValue;
-                ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok." };
+                ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok nebo malý objem smluv." };
             }
             else
                 ret.KIndex = CalculateKIndex(ret);
@@ -517,7 +522,7 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             if (prumHodnotaSmlouvy.HasValue)
                 ret.PrumernaHodnotaSmluvProVypocet = prumHodnotaSmlouvy.Value;
 
-            ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy==0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
+            ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
             ret.Query = query;
 
 
@@ -525,7 +530,7 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
             ret.Herfindahl_Hirschman_Modified = Herfindahl_Hirschman_Modified(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
 
-            ret.Comprehensive_Industrial_Concentration_Index 
+            ret.Comprehensive_Industrial_Concentration_Index
                 = Comprehensive_Industrial_Concentration_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
             ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
             ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);

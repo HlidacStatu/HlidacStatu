@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Devmasters.Core;
+
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
@@ -15,6 +17,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     this.Hodnota = hodnota;
                     this.Koeficient = koef;
                 }
+
+                [Nest.Object(Ignore =true)]
+                public string VelicinaLongName { get => ((KIndexParts)this.Velicina).ToNiceDisplayName(); }
 
                 public int Velicina { get; set; }
                 [Nest.Keyword]

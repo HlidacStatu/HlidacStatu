@@ -61,18 +61,18 @@ new SmlouvyForIndex("25520059",288393903,1,new int[] { }),
             SmlouvyForIndex[] data = null;
 
             data = good;
-            var v = HlidacStatu.Lib.Analysis.KorupcniRiziko.Calculator.Herfindahl_Hirschman_Index(data);
+            var v = HlidacStatu.Lib.Analysis.KorupcniRiziko.Calculator.Herfindahl_Hirschman_Index(data,1);
             Assert.AreEqual(v, 0.2m,"ideal");
 
             data = monopol;
-            v = HlidacStatu.Lib.Analysis.KorupcniRiziko.Calculator.Herfindahl_Hirschman_Modified(data);
+            v = HlidacStatu.Lib.Analysis.KorupcniRiziko.Calculator.Herfindahl_Hirschman_Modified(data,1);
             Assert.AreEqual(v, 1- 1m/data.Count(), "ideal");
 
 
             data = monopol;
-            v = Hall_Tideman_Index(data);
+            v = Hall_Tideman_Index(data,1);
             data = good;
-            v = Hall_Tideman_Index(data);
+            v = Hall_Tideman_Index(data,1);
             //real data
             /*
    ID           CR          Deciles        Gini        HH          HK         HT         TE   
@@ -85,10 +85,10 @@ new SmlouvyForIndex("25520059",288393903,1,new int[] { }),
     
              */
 
-            v = Herfindahl_Hirschman_Index(stavebnictvi2017);
+            v = Herfindahl_Hirschman_Index(stavebnictvi2017,1);
             Assert.AreEqual(v, 0.1395145447634315720570318091M, "HHI stavebnictvi");
             // 0.1395145447634315720570318091M
-            v = Hall_Tideman_Index(stavebnictvi2017);
+            v = Hall_Tideman_Index(stavebnictvi2017,1);
             Assert.AreEqual(v, 0.1020947600539618758024922592M, "HTI stavebnictvi");
             //0.1020947600539618758024922592M
 
