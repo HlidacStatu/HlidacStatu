@@ -75,8 +75,9 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
         public string host { get; set; }
         public string url { get; set; }
 
-        public string opendataUrl { get { return "https://www.hlidacstatu.cz/api/v1/WebStatus/" + this.hostid + "?h=" + this.hash; } }
-        
+        public string opendataUrl { get { return "https://www.hlidacstatu.cz/api/v2/Weby/" + this.hostid ; } }
+        public string pageUrl { get { return "https://www.hlidacstatu.cz/StatniWeby/Info/" + this.hostid + "?h=" + hash; } }
+
         [JsonIgnore()]
         public string customUrl { get; set; }
         public string urad { get; set; }

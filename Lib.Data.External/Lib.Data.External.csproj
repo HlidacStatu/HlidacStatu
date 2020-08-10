@@ -517,6 +517,7 @@
     <Compile Include="RPP\OVM\seznamkatprirazenychkovm.cs" />
     <Compile Include="RPP\tmp.cs" />
     <Compile Include="Vazby\FromGraphDb.cs" />
+    <Compile Include="Zabbix\WebStatusExport.cs" />
     <Compile Include="Zabbix\ZabAvailability.cs" />
     <Compile Include="Zabbix\ZabAvailabilityInterval.cs" />
     <Compile Include="Zabbix\ZabAvailabilityStatistics.cs" />

@@ -1,6 +1,7 @@
 ﻿using HlidacStatu.Web.Attributes;
 using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models.Apiv2;
+using Swashbuckle.Swagger.Annotations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -15,6 +16,9 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Vyhledá smlouvy v databázi smluv
         /// </summary>
+        /// <remarks>
+        /// Toto API je pouze pro držitele komerční licence. Kontaktujte nás na api@hlidacstatu.cz.
+        /// </remarks>
         /// <param name="dotaz">fulltext dotaz dle <a href="https://www.hlidacstatu.cz/napoveda">syntaxe</a> </param>
         /// <param name="strana">stránka, max. hodnota je 250</param>
         /// <param name="razeni">
@@ -28,6 +32,7 @@ namespace HlidacStatu.Web.Controllers
         /// <returns></returns>
         [HttpGet, Route("hledat")]
         [AuthorizeAndAudit]
+        [SwaggerOperation(Tags = new[] { "Insolvence" })]
         public SearchResultDTO<Lib.Data.Insolvence.Rizeni> Hledat([FromUri] string dotaz = null, [FromUri] int? strana = null, 
             [FromUri] int? razeni = null)
         {
@@ -75,6 +80,9 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Vrátí detail jedné smlouvy.
         /// </summary>
+        /// <remarks>
+        /// Toto API je pouze pro držitele komerční licence. Kontaktujte nás na api@hlidacstatu.cz.
+        /// </remarks>
         /// <param name="id">id smlouvy</param>
         /// <returns>detail smlouvy</returns>
         [HttpGet, Route("{id?}")]

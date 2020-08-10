@@ -13,6 +13,9 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Detail veřejné zakázky
         /// </summary>
+        /// <remarks>
+        /// Toto API je pouze pro držitele komerční licence. Kontaktujte nás na api@hlidacstatu.cz.
+        /// </remarks>
         /// <param name="id">Id veřejné zakázky</param>
         /// <returns>detail veřejné zakázky</returns>
         [AuthorizeAndAudit(Roles = "Admin")]
@@ -36,6 +39,9 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Vyhledá veřejné zakázky v databázi Hlídače smluv
         /// </summary>
+        /// <remarks>
+        /// Toto API je pouze pro držitele komerční licence. Kontaktujte nás na api@hlidacstatu.cz.
+        /// </remarks>
         /// <param name="dotaz">fulltext dotaz dle <a href="https://www.hlidacstatu.cz/napoveda">syntaxe</a></param>
         /// <param name="strana">stránka, max. hodnota je 250</param>
         /// <param name="razeni">

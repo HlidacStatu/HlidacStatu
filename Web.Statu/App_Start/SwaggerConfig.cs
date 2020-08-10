@@ -34,7 +34,10 @@ namespace HlidacStatu.Web
                              .Email("podpora@hlidacstatu.cz"))
                          .License(lc => lc
                              .Name("CC BY 3.0 CZ")
-                             .Url("https://www.hlidacstatu.cz/texty/licence/"));
+                             .Url("https://www.hlidacstatu.cz/texty/licence/"))
+                             ;
+
+                         ;
                          // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                          c.ApiKey("apiKey")
                              .Description("API Key Authentication")
