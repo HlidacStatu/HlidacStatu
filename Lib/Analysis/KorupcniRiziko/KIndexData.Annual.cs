@@ -84,11 +84,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 get
                 {
-                    int[] limits = { 0, 4, 8, 12, 16, 20 };
                     KIndexLabelValues val = KIndexLabelValues.None;
-                    for (int i = 0; i < limits.Length; i++)
+                    for (int i = 0; i < KIndexLimits.Length; i++)
                     {
-                        if (this.KIndex > limits[i])
+                        if (this.KIndex > KIndexLimits[i])
                             val = (KIndexLabelValues)i;
                     }
 

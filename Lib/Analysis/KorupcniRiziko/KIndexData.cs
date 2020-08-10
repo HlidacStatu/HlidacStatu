@@ -11,6 +11,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     [Nest.ElasticsearchType(IdProperty = nameof(Ico))]
     public partial class KIndexData
     {
+
+        public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 26 };
+
+
         [Devmasters.Core.ShowNiceDisplayName()]
         public enum KIndexLabelValues
         {

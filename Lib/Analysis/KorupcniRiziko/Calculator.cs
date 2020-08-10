@@ -278,23 +278,23 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             );
 
             //r19
-            val += datayear.PercNovaFirmaDodavatel * 2m; //82
+            val += datayear.PercNovaFirmaDodavatel * 3m; //82
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercNovaFirmaDodavatel, datayear.PercNovaFirmaDodavatel, 2m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercNovaFirmaDodavatel, datayear.PercNovaFirmaDodavatel, 3m)
                 );
 
 
             //r21
-            val += datayear.PercUzavrenoOVikendu * 2m; //84
+            val += datayear.PercUzavrenoOVikendu * 3m; //84
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercUzavrenoOVikendu, datayear.PercUzavrenoOVikendu, 2m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercUzavrenoOVikendu, datayear.PercUzavrenoOVikendu, 3m)
             );
 
 
             //r22
-            val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 2m; //86
+            val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 3m; //86
             vradky.Add(new KIndexData.VypocetDetail.Radek(
-                KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou, datayear.PercSmlouvySPolitickyAngazovanouFirmou, 2m
+                KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou, datayear.PercSmlouvySPolitickyAngazovanouFirmou, 3m
                 )
             );
 
@@ -321,9 +321,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 })
                 .ToArray();
             decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
-            val += avg * 14m; //100
+            val += avg * 11m; //100
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 14m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 11m)
                 );
             vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
             vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
