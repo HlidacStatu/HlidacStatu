@@ -1,4 +1,17 @@
-﻿
+﻿h1 small, h1 .small {
+    padding-left: 3em;
+    line-height: 2em;
+    display:block;
+}
+
+h2 small, h2 .small {
+    padding-left: 2.5em;
+    line-height: 1.7em;
+    display: block;
+}
+
+
+
 .alert-orange {
     color: black;
     background-color: #FF9A64;
