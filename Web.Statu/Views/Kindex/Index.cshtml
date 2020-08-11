@@ -32,46 +32,24 @@
         float: left;
     }
 
-        .barbar.cla {
-            position: absolute;
-            margin-left: 0px;
-        }
-
-        .barbar.clb {
-            position: absolute;
-            margin-left: 30px;
-        }
-
-        .barbar.clc {
-            position: absolute;
-            margin-left: 60px;
-        }
-
-        .barbar.cld {
-            position: absolute;
-            margin-left: 90px;
-        }
-
-        .barbar.cle {
-            position: absolute;
-            margin-left: 120px;
-        }
-
-        .barbar.clf {
-            position: absolute;
-            margin-left: 150px;
-        }
-
         .barbar.red {
-            background-color: red;
+            background-color: #d44820;
         }
 
         .barbar.orange {
-            background-color: orange;
+            background-color: #9099a3;
         }
 
         .barbar.green {
-            background-color: green;
+            background-color: #002d5a;
+        }
+
+    .infoshow, .infoshowhide {
+        display: none;
+    }
+
+        .infoshow:checked ~ .infoshowhide {
+            display: block;
         }
 </style>
 
@@ -236,6 +214,25 @@
         </div>
     </div>
 </div>
+
+<div>
+    <input id="show" class="infoshow" type=checkbox>
+    <label for="show"><i style="font-size:2em;" class="far fa-info-square"></i></label>
+
+    <p class="infoshowhide">
+        Ukazatel známky hodnocení K-indexu.
+        Celková hodnota je spočítána jako součet všech hodnot ve sloupci "Mezisoučet" v tabulce.<br />
+        Tuto sečtenou hodnotu porovnáváme následovně: <br />
+        "A" = Celková hodnota < 3 <br />
+        "B" = 3 < Celková hodnota < 6<br />
+        "C" = 6 < Celková hodnota < 9<br />
+        "D" = 9 < Celková hodnota < 12<br />
+        "E" = 12 < Celková hodnota < 15<br />
+        "F" = 15 < Celková hodnota <br />
+
+    </p>
+</div>
+
 <br />
 
 <div class="col-md-12">
@@ -243,7 +240,7 @@
         <tbody>
             <tr>
                 <td>
-                    <b>Rok 2019</b>
+                    <b>Kategorie</b>
                 </td>
                 <td style="text-align:right">
                     <b>Váha</b>
@@ -425,4 +422,22 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div>
+    <input id="show2" class="infoshow" type=checkbox>
+    <label for="show2"><i style="font-size:2em;" class="far fa-info-square"></i></label>
+
+    <p class="infoshowhide">
+        <strong>Váha</strong> - pevná hodnota, kterou jsme určili pro danou kategorii <br />
+        <strong>Základní hodnota</strong> - hodnota vypočítaná ze smluv v dané kategorii <br />
+        <strong>Mezisoučet</strong> - číslo získané vynásobením <strong>Váha</strong> * <strong>Základní hodnota</strong> <br />
+        Součet všech mezisoučtů udává číslo použité pro výsledné určení známky K-indexu.<br />
+        <strong>grafík</strong> - určuje jak moc je daná kategorie zastoupena v celkovém hodnocení vůči ostatním kategoriím. <br />
+        Barva grafíku určuje, jak je na tom organizace v porovnání s ostatními organizacemi. <br />
+        Modrá = v dané kategorii si vede dobře <br />
+        Šedá = v dané kategorii si moc dobře nevede <br />
+        Červená = něco tady smrdí a Hlídač státu to není <br />
+
+    </p>
 </div>
