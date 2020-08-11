@@ -102,17 +102,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public string KIndexLabelIconUrl(bool local = true)
             {
-                string url = "";
-                if (local == false)
-                    url = "https://www.hlidacstatu.cz";
-                switch (this.KIndexLabel)
-                {
-                    case KIndexLabelValues.None:
-                        return url + "/Content/Img/1x1.png ";
-                    default:
-                        return url + $"/Content/kindex/icon{this.KIndexLabel.ToString()}.svg";
-
-                }
+                return KIndexData.KIndexLabelIconUrl(this.KIndexLabel, local);
             }
         }
 

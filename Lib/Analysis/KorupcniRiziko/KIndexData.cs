@@ -192,6 +192,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true)
+        {
+            string url = "";
+            if (local == false)
+                url = "https://www.hlidacstatu.cz";
+            switch (value)
+            {
+                case KIndexLabelValues.None:
+                    return url + "/Content/Img/1x1.png ";
+                default:
+                    return url + $"/Content/kindex/icon{value.ToString()}.svg";
+
+            }
+        }
 
 
     }

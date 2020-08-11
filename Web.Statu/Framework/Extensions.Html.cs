@@ -117,17 +117,21 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
-        public static Restricted KIndexLimited(this HtmlHelper self, System.Security.Principal.IPrincipal user)
+        public static bool ShowKIndex(System.Security.Principal.IPrincipal user)
         {
             if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
             {
-                return IfInRoles(self, user, "Admin");
+                return IfInRoles(user, "KIndex");
             }
             else
-                return new Restricted(self, true);
+                return true;
         }
 
-        public static Restricted IfInRoles(this HtmlHelper self, System.Security.Principal.IPrincipal user, params string[] roles)
+        public static Restricted ShowKIndex(this HtmlHelper self, System.Security.Principal.IPrincipal user)
+        {
+                return new Restricted(self, ShowKIndex(user));
+        }
+        public static bool IfInRoles(System.Security.Principal.IPrincipal user, params string[] roles)
         {
             bool show = false;
             if (roles.Count() > 0)
@@ -146,7 +150,13 @@ namespace HlidacStatu.Web.Framework
             }
             else
                 show = true;
-            return new Restricted(self, show);
+            return show;
+        }
+
+
+        public static Restricted IfInRoles(this HtmlHelper self, System.Security.Principal.IPrincipal user, params string[] roles)
+        {
+            return new Restricted(self, IfInRoles(user, roles));
         }
 
     }

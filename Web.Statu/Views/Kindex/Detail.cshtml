@@ -2,11 +2,11 @@
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 @{
-    var firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index detail";
-    ViewBag.SubTitle = firma.Jmeno;
+    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    ViewBag.Title = "K-index podrobně";
+    ViewBag.SubTitle = "pro " + firma.Jmeno;
 
-    decimal kindexValue = Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+    decimal kindexValue = Model.KIndex.Value; // Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
     Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
     {
@@ -16,7 +16,7 @@
     Func<decimal, decimal, int> teplomer = (kind, delitel) =>
     {
         decimal cislo = kind / delitel;
-        if ( cislo > 0 && cislo <= 1 )
+        if (cislo > 0 && cislo <= 1)
         {
             return (int)Math.Round(cislo * 100, 0);
         }
@@ -38,7 +38,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K-Index</li>
+        <li>K-Index podrobně</li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -170,26 +170,42 @@
     }
 </style>
 
-<div class="row">
-    <label class="control-label new-p--big" for="year">Rok:</label>
 
-    <select class="form-control form-control-new" name="year" id="year" style="width:400px;">
-        @foreach (int year in ViewBag.AvailableKindexYears)
+
+
+
+<p>
+    <b>K-Index</b> je Index korupčního rizika, který pro tuto organizaci analyzuje Hlídač státu.
+    Hodnota K-Indexu je číselná hodnota v rozsahu 0 až 120, kde 0 je nejlepší výsledek (nejnižší míra korupčního rizika ).
+</p>
+<p>
+    Pro snadnější interpretaci toto číslo prezentujeme ve formě textového označení:
+    <ul class="list-inline">
+        <li class=""><img src="/Content/kindex/iconA.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[0] a @KIndexData.KIndexLimits[1]</li>
+        <li class=""><img src="/Content/kindex/iconB.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[1] a @KIndexData.KIndexLimits[2]</li>
+        <li class=""><img src="/Content/kindex/iconC.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[2] a @KIndexData.KIndexLimits[3]</li>
+        <li class=""><img src="/Content/kindex/iconD.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[3] a @KIndexData.KIndexLimits[4]</li>
+        <li class=""><img src="/Content/kindex/iconE.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[4] a @KIndexData.KIndexLimits[5]</li>
+        <li class=""><img src="/Content/kindex/iconF.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[5] a vyšší</li>
+    </ul>
+
+</p>
+
+<hr />
+<h2>
+    K-Index rok
+    @foreach (int year in ViewBag.AvailableKindexYears)
+    {
+        if (year == ViewBag.SelectedYear)
         {
-            if (year == ViewBag.SelectedYear)
-            {
-                <option value="@year" selected="selected">@year</option>
-            }
-            else
-            {
-                <option value="@year">@year</option>
-            }
+            <span>&nbsp;&nbsp;@year</span> }
+        else
+        {
+            <span>&nbsp;&nbsp;<a href="detail/@ViewBag.ICO?rok=@year">@year</a></span>
         }
-    </select>
-</div>
+    }
+</h2>
 
-
-<br />
 <div class="kmeter">
     <div class="kframe apart">
         <div class="kfill">
@@ -230,44 +246,38 @@
     </div>
 </div>
 
-<div>
-    <input id="show" class="infoshow" type=checkbox>
-    <label for="show"><i style="font-size:2em;" class="far fa-info-square"></i></label>
+<hr />
 
-    <p class="infoshowhide">
-        Ukazatel známky hodnocení K-indexu.
-        Celková hodnota je spočítána jako součet všech hodnot ve sloupci "Mezisoučet" v tabulce.<br />
-        Tuto sečtenou hodnotu porovnáváme následovně: <br />
-        "A" = Celková hodnota < 3 <br />
-        "B" = 3 < Celková hodnota < 6<br />
-        "C" = 6 < Celková hodnota < 9<br />
-        "D" = 9 < Celková hodnota < 12<br />
-        "E" = 12 < Celková hodnota < 15<br />
-        "F" = 15 < Celková hodnota <br />
-
-    </p>
-</div>
-
-<br />
-
+<h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
+<p>
+    Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> nevznikla náhodně, ale jde o výpočet z deseti kritérií.
+    Výpočet je zcela transparetní a dále ho detailně popíšeme.
+</p>
+<p>
+    Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
+    a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
+</p>
 <div class="col-md-12">
     <table class="table table-new table-new--dotted table-hover">
         <tbody>
             <tr>
                 <td>
-                    <b>Kategorie</b>
+                    <b>Kritérium</b>
                 </td>
                 <td style="text-align:right">
-                    <b>Váha</b>
+                    <b>Hodnota kritéria</b>
                 </td>
                 <td style="text-align:right">
-                    <b>Základní hodnota</b>
+                    <b>Důležitost<br/> v rámci celku</b>
                 </td>
                 <td style="text-align:right">
-                    <b>Mezisoučet</b>
+                    <b>
+                        Mezisoučet<br />
+                        <span class="small">(hodnota x váha)</span>
+                    </b>
                 </td>
                 <td>
-                    <b>Grafík - poměr zastoupení</b>
+                    <b>Vliv kritéria na hodnotu indexu</b>
                 </td>
             </tr>
             @foreach (var radek in Model.KIndexVypocet.Radky)
@@ -275,31 +285,36 @@
                 <tr>
                     <td>
                         @radek.VelicinaLongName
+                        @if (radek.Velicina == (int)KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
+                        { 
+                        <div class="small">Toto je bonus (proto má zápornou hodnotu) pro organizace, které jsou transparentní nad rámec zákona</div>
+                        }
                     </td>
-                    <td style="text-align:right">
-                        @radek.Koeficient.ToString("F0")
-                    </td>
-                    <td style="text-align:right">
+                    <td class="number">
                         @radek.Hodnota.ToString("F4")
                     </td>
-                    <td style="text-align:right">
+                    <td class="number">
+                        @radek.Koeficient.ToString("F0")
+                    </td>
+                    <td class="number">
                         @((radek.Koeficient * radek.Hodnota).ToString("F2"))
                     </td>
-                    <td style="width:100px">
+                    <td >
                         <div class="barbar" style="width:@sirkaGrafu(radek.Hodnota, radek.Koeficient, kindexValue)%;background-color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))"></div>
                     </td>
                 </tr>
 
             }
             <tr>
-                <td>
-                    <b>Suma</b>
+                <td colspan="5">
+                    Jednotlivé hodnoty všech kritérii se vynásobí vahou (důležitostí) kritéria (v tabulce sloupec mezisoučet) a tyto hodnoty se sečtou
                 </td>
-                <td style="text-align:right">
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <div style="font-weight:bold;font-size:130%">Součet</div>
                 </td>
-                <td style="text-align:right">
-                </td>
-                <td style="text-align:right">
+                <td  style="font-weight:bold;font-size:130%" class="number">
                     <b>@kindexValue.ToString("F2")</b>
                 </td>
             </tr>
@@ -307,20 +322,3 @@
     </table>
 </div>
 
-<div>
-    <input id="show2" class="infoshow" type=checkbox>
-    <label for="show2"><i style="font-size:2em;" class="far fa-info-square"></i></label>
-
-    <p class="infoshowhide">
-        <strong>Váha</strong> - pevná hodnota, kterou jsme určili pro danou kategorii <br />
-        <strong>Základní hodnota</strong> - hodnota vypočítaná ze smluv v dané kategorii <br />
-        <strong>Mezisoučet</strong> - číslo získané vynásobením <strong>Váha</strong> * <strong>Základní hodnota</strong> <br />
-        Součet všech mezisoučtů udává číslo použité pro výsledné určení známky K-indexu.<br />
-        <strong>grafík</strong> - určuje jak moc je daná kategorie zastoupena v celkovém hodnocení vůči ostatním kategoriím. <br />
-        Barva grafíku určuje, jak je na tom organizace v porovnání s ostatními organizacemi. <br />
-        Modrá = v dané kategorii si vede dobře <br />
-        Šedá = v dané kategorii si moc dobře nevede <br />
-        Červená = něco tady smrdí a Hlídač státu to není <br />
-
-    </p>
-</div>

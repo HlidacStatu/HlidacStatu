@@ -11,31 +11,21 @@ namespace HlidacStatu.Web.Controllers
     {
         public ActionResult Index()
         {
-            if (!(this.User.Identity.IsAuthenticated == true))
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
                 return Redirect("/");
             }
-            if (
-                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester"))
-                )
-            {
-                return Redirect("/");
-            }
-            return View();
+            else
+                return View();
         }
 
         public ActionResult Detail(string id, int? rok = null)
         {
-            if (!(this.User.Identity.IsAuthenticated == true))
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
                 return Redirect("/");
             }
-            if (
-                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester"))
-                )
-            {
-                return Redirect("/");
-            }
+
             
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
@@ -66,12 +56,12 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {
-            if (!(this.User.Identity.IsAuthenticated == true))
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
                 return Redirect("/");
             }
             if (
-                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester"))
+                !(this.User.IsInRole("Admin") || this.User.IsInRole("KIndex"))
                 )
             {
                 return Redirect("/");
