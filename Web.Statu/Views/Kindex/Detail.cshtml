@@ -1,0 +1,326 @@
+﻿@model HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Annual
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko
+
+@{
+    var firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    ViewBag.Title = "K-index detail";
+    ViewBag.SubTitle = firma.Jmeno;
+
+    decimal kindexValue = Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+
+    Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
+    {
+        return (int)Math.Round((hodnota * koeficient / celek * 100), 0);
+    };
+
+    Func<decimal, decimal, int> teplomer = (kind, delitel) =>
+    {
+        decimal cislo = kind / delitel;
+        if ( cislo > 0 && cislo <= 1 )
+        {
+            return (int)Math.Round(cislo * 100, 0);
+        }
+        if (cislo > 1)
+        {
+            return 100;
+        }
+
+        return 0;
+    };
+}
+
+@section scripts
+{
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>K-Index</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<style>
+    .barbar {
+        display: block;
+        margin: 0px;
+        padding: 0px;
+        height: 20px;
+        float: left;
+    }
+
+
+    .infoshow, .infoshowhide {
+        display: none;
+    }
+
+        .infoshow:checked ~ .infoshowhide {
+            display: block;
+        }
+
+    .kmeter {
+        margin: 0px;
+        padding: 0px;
+        height: 60px;
+        width: 800px;
+        border: solid grey 0px;
+    }
+
+    .kframe {
+        position: relative;
+        width: 60px;
+        border-top: solid 6px;
+        border-bottom: solid 6px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 100%;
+        float: left;
+        margin-right: 1px;
+        height: 100%;
+    }
+
+    .textover {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        position: absolute;
+        z-index: 2;
+        text-shadow: 0 0 4px #000; /* horizontal-offset vertical-offset 'blur' colour */
+        -moz-text-shadow: 0 0 4px #000;
+        -webkit-text-shadow: 0 0 4px #000;
+    }
+
+    .totalnumber {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        color: black;
+        font-weight: bold;
+        font-size: 25px;
+        position: absolute;
+        z-index: 5;
+    }
+
+    .apart {
+        border-color: #002d5a;
+        border-left: #002d5a solid 6px;
+        padding-left: 5px;
+    }
+
+    .bpart {
+        border-color: #0064b4;
+    }
+
+    .cpart {
+        border-color: #00a5ff;
+    }
+
+    .dpart {
+        border-color: #9099a3;
+    }
+
+    .epart {
+        border-color: #f0aa00;
+    }
+
+    .fpart {
+        border-color: #d44820;
+        border-right: #d44820 solid 6px;
+        padding-right: 5px;
+        width: 240px;
+    }
+
+    .kfill {
+        position: relative;
+        height: 100%;
+    }
+
+    .afill {
+        background-color: #002d5a;
+    }
+
+    .bfill {
+        background-color: #0064b4;
+    }
+
+    .cfill {
+        background-color: #00a5ff;
+    }
+
+    .dfill {
+        background-color: #9099a3;
+    }
+
+    .efill {
+        background-color: #f0aa00;
+    }
+
+    .ffill {
+        background-color: #d44820;
+    }
+</style>
+
+<div class="row">
+    <label class="control-label new-p--big" for="year">Rok:</label>
+
+    <select class="form-control form-control-new" name="year" id="year" style="width:400px;">
+        @foreach (int year in ViewBag.AvailableKindexYears)
+        {
+            if (year == ViewBag.SelectedYear)
+            {
+                <option value="@year" selected="selected">@year</option>
+            }
+            else
+            {
+                <option value="@year">@year</option>
+            }
+        }
+    </select>
+</div>
+
+
+<br />
+<div class="kmeter">
+    <div class="kframe apart">
+        <div class="kfill">
+            <div class="textover">A</div>
+            <div class="kfill afill" style="width: @( teplomer(kindexValue,3) )%"></div>
+        </div>
+    </div>
+    <div class="kframe bpart">
+        <div class="kfill">
+            <div class="textover">B</div>
+            <div class="kfill bfill" style="width: @( teplomer(kindexValue,6) )%"></div>
+        </div>
+    </div>
+    <div class="kframe cpart">
+        <div class="kfill">
+            <div class="textover">C</div>
+            <div class="kfill cfill" style="width: @( teplomer(kindexValue,9) )%"></div>
+        </div>
+    </div>
+    <div class="kframe dpart">
+        <div class="kfill">
+            <div class="textover">D</div>
+            <div class="kfill dfill" style="width: @( teplomer(kindexValue,12) )%"></div>
+        </div>
+    </div>
+    <div class="kframe epart">
+        <div class="kfill">
+            <div class="textover">E</div>
+            <div class="kfill efill" style="width: @( teplomer(kindexValue,15) )%"></div>
+        </div>
+    </div>
+    <div class="kframe fpart">
+        <div class="kfill">
+            <div class="textover">F</div>
+            <div class="totalnumber">@kindexValue.ToString("F2")</div>
+            <div class="kfill ffill" style="width: 49%"></div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <input id="show" class="infoshow" type=checkbox>
+    <label for="show"><i style="font-size:2em;" class="far fa-info-square"></i></label>
+
+    <p class="infoshowhide">
+        Ukazatel známky hodnocení K-indexu.
+        Celková hodnota je spočítána jako součet všech hodnot ve sloupci "Mezisoučet" v tabulce.<br />
+        Tuto sečtenou hodnotu porovnáváme následovně: <br />
+        "A" = Celková hodnota < 3 <br />
+        "B" = 3 < Celková hodnota < 6<br />
+        "C" = 6 < Celková hodnota < 9<br />
+        "D" = 9 < Celková hodnota < 12<br />
+        "E" = 12 < Celková hodnota < 15<br />
+        "F" = 15 < Celková hodnota <br />
+
+    </p>
+</div>
+
+<br />
+
+<div class="col-md-12">
+    <table class="table table-new table-new--dotted table-hover">
+        <tbody>
+            <tr>
+                <td>
+                    <b>Kategorie</b>
+                </td>
+                <td style="text-align:right">
+                    <b>Váha</b>
+                </td>
+                <td style="text-align:right">
+                    <b>Základní hodnota</b>
+                </td>
+                <td style="text-align:right">
+                    <b>Mezisoučet</b>
+                </td>
+                <td>
+                    <b>Grafík - poměr zastoupení</b>
+                </td>
+            </tr>
+            @foreach (var radek in Model.KIndexVypocet.Radky)
+            {
+                <tr>
+                    <td>
+                        @radek.VelicinaLongName
+                    </td>
+                    <td style="text-align:right">
+                        @radek.Koeficient.ToString("F0")
+                    </td>
+                    <td style="text-align:right">
+                        @radek.Hodnota.ToString("F4")
+                    </td>
+                    <td style="text-align:right">
+                        @((radek.Koeficient * radek.Hodnota).ToString("F2"))
+                    </td>
+                    <td style="width:100px">
+                        <div class="barbar" style="width:@sirkaGrafu(radek.Hodnota, radek.Koeficient, kindexValue)%;background-color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))"></div>
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>
+                    <b>Suma</b>
+                </td>
+                <td style="text-align:right">
+                </td>
+                <td style="text-align:right">
+                </td>
+                <td style="text-align:right">
+                    <b>@kindexValue.ToString("F2")</b>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <input id="show2" class="infoshow" type=checkbox>
+    <label for="show2"><i style="font-size:2em;" class="far fa-info-square"></i></label>
+
+    <p class="infoshowhide">
+        <strong>Váha</strong> - pevná hodnota, kterou jsme určili pro danou kategorii <br />
+        <strong>Základní hodnota</strong> - hodnota vypočítaná ze smluv v dané kategorii <br />
+        <strong>Mezisoučet</strong> - číslo získané vynásobením <strong>Váha</strong> * <strong>Základní hodnota</strong> <br />
+        Součet všech mezisoučtů udává číslo použité pro výsledné určení známky K-indexu.<br />
+        <strong>grafík</strong> - určuje jak moc je daná kategorie zastoupena v celkovém hodnocení vůči ostatním kategoriím. <br />
+        Barva grafíku určuje, jak je na tom organizace v porovnání s ostatními organizacemi. <br />
+        Modrá = v dané kategorii si vede dobře <br />
+        Šedá = v dané kategorii si moc dobře nevede <br />
+        Červená = něco tady smrdí a Hlídač státu to není <br />
+
+    </p>
+</div>

@@ -24,6 +24,45 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
+        public ActionResult Detail(string id, int? rok = null)
+        {
+            if (!(this.User.Identity.IsAuthenticated == true))
+            {
+                return Redirect("/");
+            }
+            if (
+                !(this.User.IsInRole("Admin") || this.User.IsInRole("BetaTester"))
+                )
+            {
+                return Redirect("/");
+            }
+            
+            if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
+            {
+                var kdata = Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
+                ViewBag.ICO = id;
+
+                var AvailableKindexYears = kdata.roky.Select(r => r.Rok).OrderByDescending(r => r).ToList();
+                ViewBag.AvailableKindexYears = AvailableKindexYears;
+
+                int? selectedYear = null;
+                if (rok is null || !AvailableKindexYears.Exists(y => y == rok))
+                {
+                    selectedYear = AvailableKindexYears.First();
+                }
+                else
+                {
+                    selectedYear = AvailableKindexYears.Where(y => y == rok).FirstOrDefault();
+                }
+
+                ViewBag.SelectedYear = selectedYear;
+
+                var result = kdata.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
+                return View(result);
+            }
+
+            return View();
+        }
 
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {

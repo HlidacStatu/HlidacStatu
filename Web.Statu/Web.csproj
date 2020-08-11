@@ -1589,6 +1589,7 @@
     <Content Include="Views\Kindex\Debug.Start.cshtml" />
     <Content Include="Views\Home\Reports\25_MinisterstvaStrany.cshtml" />
     <Content Include="Views\Kindex\Index.cshtml" />
+    <Content Include="Views\Kindex\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
