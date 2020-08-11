@@ -10,10 +10,11 @@
 <h2>Current time: @(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff"))</h2>
 
 
-@using (Html.IfInRoles(this.User, "Admin"))
+@using (Html.ShowKIndex(this.User))
 {
     <b>xxx</b>
 }
+
 
 <img src="~/Content/kindex/iconD.svg" style="height:30px" />
 <br />
