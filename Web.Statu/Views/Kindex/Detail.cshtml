@@ -13,19 +13,25 @@
         return (int)Math.Round((hodnota * koeficient / celek * 100), 0);
     };
 
-    Func<decimal, decimal, int> teplomer = (kind, delitel) =>
+    Func<decimal, int, int> kindexMeter = (kind, labelValue) =>
     {
-        decimal cislo = kind / delitel;
-        if ( cislo > 0 && cislo <= 1 )
-        {
-            return (int)Math.Round(cislo * 100, 0);
-        }
-        if (cislo > 1)
-        {
-            return 100;
-        }
+        decimal constant = 3;
 
-        return 0;
+        var calculation = kind/constant - labelValue;
+        if (calculation <= 0)
+            return 0;
+
+
+        decimal widthPerc = Math.Ceiling(calculation * 100);
+
+        int result = (labelValue == 5) 
+            ? (int)Math.Ceiling((widthPerc / ((100 - 5 * constant) / constant))) 
+            : (int)widthPerc;
+
+
+        return (result > 100) ? 100 : result;
+
+        //return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
     };
 }
 
@@ -194,38 +200,38 @@
     <div class="kframe apart">
         <div class="kfill">
             <div class="textover">A</div>
-            <div class="kfill afill" style="width: @( teplomer(kindexValue,3) )%"></div>
+            <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
         </div>
     </div>
     <div class="kframe bpart">
         <div class="kfill">
             <div class="textover">B</div>
-            <div class="kfill bfill" style="width: @( teplomer(kindexValue,6) )%"></div>
+            <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
         </div>
     </div>
     <div class="kframe cpart">
         <div class="kfill">
             <div class="textover">C</div>
-            <div class="kfill cfill" style="width: @( teplomer(kindexValue,9) )%"></div>
+            <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
         </div>
     </div>
     <div class="kframe dpart">
         <div class="kfill">
             <div class="textover">D</div>
-            <div class="kfill dfill" style="width: @( teplomer(kindexValue,12) )%"></div>
+            <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
         </div>
     </div>
     <div class="kframe epart">
         <div class="kfill">
             <div class="textover">E</div>
-            <div class="kfill efill" style="width: @( teplomer(kindexValue,15) )%"></div>
+            <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
         </div>
     </div>
     <div class="kframe fpart">
         <div class="kfill">
             <div class="textover">F</div>
             <div class="totalnumber">@kindexValue.ToString("F2")</div>
-            <div class="kfill ffill" style="width: 49%"></div>
+            <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
         </div>
     </div>
 </div>
