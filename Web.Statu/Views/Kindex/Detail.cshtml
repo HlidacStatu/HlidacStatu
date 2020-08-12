@@ -16,6 +16,7 @@
     Func<decimal, int, int> kindexMeter = (kind, labelValue) =>
     {
         decimal constant = 3;
+        decimal maxValue = 60;
 
         var calculation = kind/constant - labelValue;
         if (calculation <= 0)
@@ -25,7 +26,7 @@
         decimal widthPerc = Math.Ceiling(calculation * 100);
 
         int result = (labelValue == 5) 
-            ? (int)Math.Ceiling((widthPerc / ((100 - 5 * constant) / constant))) 
+            ? (int)Math.Ceiling((widthPerc / ((maxValue - 5 * constant) / constant))) 
             : (int)widthPerc;
 
 
