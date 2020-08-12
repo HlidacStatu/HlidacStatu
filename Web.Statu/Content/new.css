@@ -588,7 +588,6 @@ select {
 
     .table-new th:last-child, .table-new td:last-child {
         padding-right: 0;
-        border-bottom: none;
     }
 
 .table-new .cell-red {

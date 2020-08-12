@@ -69,8 +69,8 @@
 
     .kmeter {
         margin: 0px;
-        padding: 0px;
-        height: 60px;
+        padding: 30px;
+        height: 110px;
         width: 800px;
         border: solid grey 0px;
     }
@@ -179,27 +179,32 @@
 
 
 
+<div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
+    <h4>Co je to K-index</h4>
+    <p>
+        <b>K-Index</b> je Index korupčního rizika, který pro tuto organizaci analyzuje Hlídač státu.
+        Hodnota K-Indexu je číselná hodnota v rozsahu 0 až 120, kde 0 je nejlepší výsledek (nejnižší míra korupčního rizika ).
+    </p>
+    <p>
+        Pro snadnější interpretaci toto číslo prezentujeme ve formě textového označení:
+        <ul class="list-inline">
+            <li class=""><img src="/Content/kindex/iconA.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[0] a @KIndexData.KIndexLimits[1]</li>
+            <li class=""><img src="/Content/kindex/iconB.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[1] a @KIndexData.KIndexLimits[2]</li>
+            <li class=""><img src="/Content/kindex/iconC.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[2] a @KIndexData.KIndexLimits[3]</li>
+        </ul>
 
-<p>
-    <b>K-Index</b> je Index korupčního rizika, který pro tuto organizaci analyzuje Hlídač státu.
-    Hodnota K-Indexu je číselná hodnota v rozsahu 0 až 120, kde 0 je nejlepší výsledek (nejnižší míra korupčního rizika ).
-</p>
-<p>
-    Pro snadnější interpretaci toto číslo prezentujeme ve formě textového označení:
-    <ul class="list-inline">
-        <li class=""><img src="/Content/kindex/iconA.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[0] a @KIndexData.KIndexLimits[1]</li>
-        <li class=""><img src="/Content/kindex/iconB.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[1] a @KIndexData.KIndexLimits[2]</li>
-        <li class=""><img src="/Content/kindex/iconC.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[2] a @KIndexData.KIndexLimits[3]</li>
-        <li class=""><img src="/Content/kindex/iconD.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[3] a @KIndexData.KIndexLimits[4]</li>
-        <li class=""><img src="/Content/kindex/iconE.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[4] a @KIndexData.KIndexLimits[5]</li>
-        <li class=""><img src="/Content/kindex/iconF.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[5] a vyšší</li>
-    </ul>
+        <ul class="list-inline">
+            <li class=""><img src="/Content/kindex/iconD.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[3] a @KIndexData.KIndexLimits[4]</li>
+            <li class=""><img src="/Content/kindex/iconE.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[4] a @KIndexData.KIndexLimits[5]</li>
+            <li class=""><img src="/Content/kindex/iconF.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[5] a vyšší</li>
+        </ul>
 
-</p>
+    </p>
+</div>
 
-<hr />
 <h2>
-    K-Index rok
+    K-Index pro <b>@firma.Jmeno</b>
+    <small>rok
     @foreach (int year in ViewBag.AvailableKindexYears)
     {
         if (year == ViewBag.SelectedYear)
@@ -210,59 +215,67 @@
             <span>&nbsp;&nbsp;<a href="@ViewBag.ICO?rok=@year">@year</a></span>
         }
     }
+    </small>
 </h2>
 
-<div class="kmeter">
-    <div class="kframe apart">
-        <div class="kfill">
-            <div class="textover">A</div>
-            <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <div class="kmeter" style="padding-top:20px;">
+            <div class="kframe apart">
+                <div class="kfill">
+                    <div class="textover">A</div>
+                    <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
+                </div>
+            </div>
+            <div class="kframe bpart">
+                <div class="kfill">
+                    <div class="textover">B</div>
+                    <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
+                </div>
+            </div>
+            <div class="kframe cpart">
+                <div class="kfill">
+                    <div class="textover">C</div>
+                    <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
+                </div>
+            </div>
+            <div class="kframe dpart">
+                <div class="kfill">
+                    <div class="textover">D</div>
+                    <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
+                </div>
+            </div>
+            <div class="kframe epart">
+                <div class="kfill">
+                    <div class="textover">E</div>
+                    <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
+                </div>
+            </div>
+            <div class="kframe fpart">
+                <div class="kfill">
+                    <div class="textover">F</div>
+                    <div class="totalnumber">@kindexValue.ToString("F2")</div>
+                    <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="kframe bpart">
-        <div class="kfill">
-            <div class="textover">B</div>
-            <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
-        </div>
-    </div>
-    <div class="kframe cpart">
-        <div class="kfill">
-            <div class="textover">C</div>
-            <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
-        </div>
-    </div>
-    <div class="kframe dpart">
-        <div class="kfill">
-            <div class="textover">D</div>
-            <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
-        </div>
-    </div>
-    <div class="kframe epart">
-        <div class="kfill">
-            <div class="textover">E</div>
-            <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
-        </div>
-    </div>
-    <div class="kframe fpart">
-        <div class="kfill">
-            <div class="textover">F</div>
-            <div class="totalnumber">@kindexValue.ToString("F2")</div>
-            <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
-        </div>
+
     </div>
 </div>
 
 <hr />
 
 <h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
-<p>
-    Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> nevznikla náhodně, ale jde o výpočet z deseti kritérií.
-    Výpočet je zcela transparetní a dále ho detailně popíšeme.
-</p>
-<p>
-    Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
-    a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
-</p>
+<div style="padding-bottom:10px;">
+    <p>
+        Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> není náhodná, ani ručně odhadnutá, ale jde o přesný výpočet z deseti kritérií.
+        Výpočet je zcela transparetní a dále ho detailně popíšeme.
+    </p>
+    <p>
+        Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
+        a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
+    </p>
+</div>
 <div class="col-md-12">
     <table class="table table-new table-new--dotted table-hover">
         <tbody>
@@ -317,12 +330,13 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="4">
+                <td colspan="3">
                     <div style="font-weight:bold;font-size:130%">Součet</div>
                 </td>
                 <td  style="font-weight:bold;font-size:130%" class="number">
                     <b>@kindexValue.ToString("F2")</b>
                 </td>
+                <td>&nbsp;</td>
             </tr>
         </tbody>
     </table>
