@@ -18,22 +18,22 @@
         decimal constant = 3;
         decimal maxValue = 60;
 
-        var calculation = kind/constant - labelValue;
+        var calculation = kind / constant - labelValue;
         if (calculation <= 0)
             return 0;
 
 
         decimal widthPerc = Math.Ceiling(calculation * 100);
 
-        int result = (labelValue == 5) 
-            ? (int)Math.Ceiling((widthPerc / ((maxValue - 5 * constant) / constant))) 
+        int result = (labelValue == 5)
+            ? (int)Math.Ceiling((widthPerc / ((maxValue - 5 * constant) / constant)))
             : (int)widthPerc;
 
 
         return (result > 100) ? 100 : result;
-        
-        //return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
-    };
+
+//return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
+};
 }
 
 @section scripts
@@ -51,14 +51,6 @@
 }
 
 <style>
-    .barbar {
-        display: block;
-        margin: 0px;
-        padding: 0px;
-        height: 20px;
-        float: left;
-    }
-
 
     .infoshow, .infoshowhide {
         display: none;
@@ -72,7 +64,7 @@
         margin: 0px;
         padding: 30px;
         height: 110px;
-        width: 800px;
+        width: 620px;
         border: solid grey 0px;
     }
 
@@ -177,8 +169,36 @@
     }
 </style>
 
+<h2>
+    <small>
+        K-index za rok
+        @foreach (int year in ViewBag.AvailableKindexYears)
+        {
+            if (year == ViewBag.SelectedYear)
+            {
+                <span>&nbsp;&nbsp;@year</span> }
+            else
+            {
+                <span>&nbsp;&nbsp;<a href="@ViewBag.ICO?rok=@year">@year</a></span>
+            }
+        }
+    </small>
+</h2>
 
-
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="@(Model.KIndexLabelIconUrl())" style="width:100px" />
+            </div>
+            <div class="col-sm-10">
+                <h2>
+                    Úsporné a ekonomické hospodaření, vysoká důvěra, transparentnost, zveřejňují i smlouvy do 50 000 Kč
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
     <h4>Co je to K-index</h4>
@@ -203,24 +223,85 @@
     </p>
 </div>
 
-<h2>
-    K-Index pro <b>@firma.Jmeno</b>
-    <small>rok
-    @foreach (int year in ViewBag.AvailableKindexYears)
-    {
-        if (year == ViewBag.SelectedYear)
-        {
-            <span>&nbsp;&nbsp;@year</span> }
-        else
-        {
-            <span>&nbsp;&nbsp;<a href="@ViewBag.ICO?rok=@year">@year</a></span>
-        }
-    }
-    </small>
-</h2>
 
+<hr />
+
+<h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
+<div style="padding-bottom:10px;">
+    <p>
+        Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> není náhodná, ani ručně odhadnutá, ale jde o přesný výpočet z deseti kritérií.
+        Výpočet je zcela transparetní a dále ho detailně popíšeme.
+    </p>
+    <p>
+        Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
+        a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
+    </p>
+</div>
+<div class="col-md-12">
+    <table class="table table-new table-new--dotted table-hover">
+        <tbody>
+            <tr>
+                <td>
+                    <b>Kritérium</b>
+                </td>
+                <td style="text-align:right">
+                    <b>Hodnota kritéria</b>
+                </td>
+                <td style="text-align:right">
+                    <b>Důležitost<br /> v rámci celku</b>
+                </td>
+                <td style="text-align:right">
+                    <b>
+                        Mezisoučet<br />
+                        <span class="small">(hodnota x váha)</span>
+                    </b>
+                </td>
+            </tr>
+            @foreach (var radek in Model.KIndexVypocet.Radky
+                .OrderByDescending(r => r.Koeficient)
+                .ThenByDescending(r => r.VelicinaLongName))
+            {
+                <tr>
+                    <td>
+                        @radek.VelicinaLongName
+                        @if (radek.Velicina == (int)KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
+                        {
+                            <div class="small">Toto je bonus (proto má zápornou hodnotu) pro organizace, které jsou transparentní nad rámec zákona</div>
+                        }
+                    </td>
+                    <td class="number">
+                        @radek.Hodnota.ToString("F4")
+                    </td>
+                    <td class="number">
+                        @radek.Koeficient.ToString("F0")
+                    </td>
+                    <td class="number" style="color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                        @((radek.Koeficient * radek.Hodnota).ToString("F2"))
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td colspan="5">
+                    Jednotlivé hodnoty všech kritérii se vynásobí vahou (důležitostí) kritéria (v tabulce sloupec mezisoučet) a tyto hodnoty se sečtou
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="font-weight:bold;font-size:130%">Součet</div>
+                </td>
+                <td style="font-weight:bold;font-size:130%" class="number">
+                    <b>@kindexValue.ToString("F2")</b>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <div class="row">
     <div class="col-xs-12 col-sm-6">
+        <div>Celková hodnota K-indexu vychází <strong>@kindexValue.ToString("F2")</strong>. To odpovídá výsledné známce <img src="@(Model.KIndexLabelIconUrl())" style="width:1em" />.
+        </div>
         <div class="kmeter" style="padding-top:20px;">
             <div class="kframe apart">
                 <div class="kfill">
@@ -255,91 +336,11 @@
             <div class="kframe fpart">
                 <div class="kfill">
                     <div class="textover">F</div>
-                    <div class="totalnumber">@kindexValue.ToString("F2")</div>
                     <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
                 </div>
             </div>
         </div>
 
     </div>
-</div>
-
-<hr />
-
-<h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
-<div style="padding-bottom:10px;">
-    <p>
-        Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> není náhodná, ani ručně odhadnutá, ale jde o přesný výpočet z deseti kritérií.
-        Výpočet je zcela transparetní a dále ho detailně popíšeme.
-    </p>
-    <p>
-        Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
-        a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
-    </p>
-</div>
-<div class="col-md-12">
-    <table class="table table-new table-new--dotted table-hover">
-        <tbody>
-            <tr>
-                <td>
-                    <b>Kritérium</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Hodnota kritéria</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Důležitost<br/> v rámci celku</b>
-                </td>
-                <td style="text-align:right">
-                    <b>
-                        Mezisoučet<br />
-                        <span class="small">(hodnota x váha)</span>
-                    </b>
-                </td>
-                <td>
-                    <b>Vliv kritéria na hodnotu indexu</b>
-                </td>
-            </tr>
-            @foreach (var radek in Model.KIndexVypocet.Radky)
-            {
-                <tr>
-                    <td>
-                        @radek.VelicinaLongName
-                        @if (radek.Velicina == (int)KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
-                        { 
-                        <div class="small">Toto je bonus (proto má zápornou hodnotu) pro organizace, které jsou transparentní nad rámec zákona</div>
-                        }
-                    </td>
-                    <td class="number">
-                        @radek.Hodnota.ToString("F4")
-                    </td>
-                    <td class="number">
-                        @radek.Koeficient.ToString("F0")
-                    </td>
-                    <td class="number">
-                        @((radek.Koeficient * radek.Hodnota).ToString("F2"))
-                    </td>
-                    <td >
-                        <div class="barbar" style="width:@sirkaGrafu(radek.Hodnota, radek.Koeficient, kindexValue)%;background-color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))"></div>
-                    </td>
-                </tr>
-
-            }
-            <tr>
-                <td colspan="5">
-                    Jednotlivé hodnoty všech kritérii se vynásobí vahou (důležitostí) kritéria (v tabulce sloupec mezisoučet) a tyto hodnoty se sečtou
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <div style="font-weight:bold;font-size:130%">Součet</div>
-                </td>
-                <td  style="font-weight:bold;font-size:130%" class="number">
-                    <b>@kindexValue.ToString("F2")</b>
-                </td>
-                <td>&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
 </div>
 
