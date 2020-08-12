@@ -313,7 +313,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                             .Highlight(h => Lib.Searching.Tools.GetHighlight<Data.Smlouva>(withHighlighting))
                             .TrackTotalHits(exactNumOfResults || page * pageSize == 0 ? true : (bool?)null)
                     );
-                    if (res.IsValid == false && res.ServerError.Status == 429)
+                    if (res != null && res.IsValid == false && res.ServerError.Status == 429)
                     {
                         System.Threading.Thread.Sleep(100);
                         res = client
