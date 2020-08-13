@@ -3,7 +3,7 @@
 @using System.Linq;
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
-
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 
 @functions
 { private static new HtmlHelper<object> Html
@@ -103,10 +103,10 @@ else
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
     @Html.Raw(HlidacStatu.Lib.Searching.Highlighter.HighlightContentIntoHtmlBlock(
-                        highlights, path, contentToCompare,
-                        foundContentFormat, noHLContent, prefix,
-                        postfix, highlightPartDelimiter, icon)
-                        )
+                                                highlights, path, contentToCompare,
+                                                foundContentFormat, noHLContent, prefix,
+                                                postfix, highlightPartDelimiter, icon)
+                                                )
 
 }
 
@@ -216,7 +216,7 @@ else if (infoFormat == 2 || infoFormat == 3)
     {
 @Html.Raw(ifEmpty) }
 else
-          if (hasValue.GetType() == typeof(string))
+if (hasValue.GetType() == typeof(string))
 {
 @IfExists(!string.IsNullOrEmpty(hasValue.ToString()), exists, ifEmpty) }
 else
@@ -467,21 +467,34 @@ else if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(pri
 
     if (item != null)
     {
-        AddBookmark(user, item, css);
+        @AddBookmark(user, item, css);
     }
 }
+
+@helper KIndexIcon(KIndexData.KIndexLabelValues value, string height,
+    string hPadding = "2px", string vPadding="0")
+{
+    @KIndexIconStyle(value, $"padding:{vPadding} {hPadding};height:{height};width:auto");
+}
+@helper KIndexIconStyle(KIndexData.KIndexLabelValues value, string style)
+{
+    @KIndexLimitedRaw($"<img src='{KIndexData.KIndexLabelIconUrl(value)}' class='kindex' style='{style}'>");
+}
+
 @helper KIndexLimitedRaw(string html)
-{if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+{
+    
+    if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
     {
         if (UserInRole("KIndex"))
         {
-@Html.Raw(html);
-}
-}
-else
-{
-@Html.Raw(html);
-}
+            @Html.Raw(html);
+        }
+    }
+    else
+    {
+        @Html.Raw(html);
+    }
 }
 
 @helper NoWrapHtml(params IHtmlString[] part)
@@ -549,8 +562,8 @@ string descr = "Uložit do záložek. Všechny uložené položky najdete na jed
 }
 
 @helper AddWatchDogSmall(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null,
-                    string preBtnText = null, string postBtnText = null, string prefillWDname = "",
-                    bool showWDList = false, string datasetId = null, string btnCss = null)
+                                                                                                                        string preBtnText = null, string postBtnText = null, string prefillWDname = "",
+                                                                                                                        bool showWDList = false, string datasetId = null, string btnCss = null)
 {
     @AddWatchDog(user, query, dataType, btnText, preBtnText ?? "", postBtnText ?? "", prefillWDname, showWDList, datasetId, true, btnCss ?? "btn btn-warning btn-sm")
 }
@@ -1078,8 +1091,8 @@ else if (v.RelFrom.HasValue)
 
 
 @helper ExportButton(System.Security.Principal.IPrincipal user, string typ, string q,
-                    string order = "0", string title = "Export výsledků hledání",
-                    string style = "", string moreParams = "", string gaPageEventId = null)
+                                                                                                                                                                                                                                                                                        string order = "0", string title = "Export výsledků hledání",
+                                                                                                                                                                                                                                                                                        string style = "", string moreParams = "", string gaPageEventId = null)
 {if (gaPageEventId == null)
     {
         gaPageEventId = CurrPageUrlPath;
@@ -1143,7 +1156,7 @@ else if (v.RelFrom.HasValue)
 
 
 @helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents,
-                string containerCss = null, string gaPageEventId = null)
+                                                                                                                                                                                                                                                                                                    string containerCss = null, string gaPageEventId = null)
 {if (gaPageEventId == null)
     {
         gaPageEventId = CurrPageUrlPath;
@@ -1185,7 +1198,7 @@ else if (v.RelFrom.HasValue)
 
 
 @helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null,
-                string tabColCss = null, string contentColCss = null, string gaPageEventId = null)
+                                                                                                                                                                                                                                                                                                                    string tabColCss = null, string contentColCss = null, string gaPageEventId = null)
 {if (gaPageEventId == null)
     {
         gaPageEventId = CurrPageUrlPath;
@@ -1205,7 +1218,7 @@ else if (v.RelFrom.HasValue)
                 {
 <a href="#" onclick="ga('send', 'event', 'tabVertical', 'change_@i','@gaPageEventId'); return true;" class="list-group-item @(first ? "active" : "")">
     @Html.Raw(s)
-</a>                    first = false;
+</a>first = false;
 }
 }
         </div>
@@ -1257,4 +1270,3 @@ else
 <span>@Html.Raw(content)</span>}
 
 }
-

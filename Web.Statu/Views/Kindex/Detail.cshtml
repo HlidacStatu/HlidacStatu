@@ -47,7 +47,7 @@
         <li><a href="/">Hlídač Státu</a></li>
         <li>K-Index podrobně</li>
         <li class="active">@ViewBag.Title</li>
-    </ol> 
+    </ol>
 }
 
 <style>
@@ -67,6 +67,7 @@
         width: 620px;
         border: solid grey 0px;
     }
+
     .kframe {
         position: relative;
         width: 60px;
@@ -81,10 +82,10 @@
     }
 
     .kmark {
-        color:#909090;
+        color: #909090;
         font-weight: bold;
         position: relative;
-        z-index:100;
+        z-index: 100;
         background: white;
         display: inline-block;
         top: -3px;
@@ -203,7 +204,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-2">
-                <img src="@(Model.KIndexLabelIconUrl())" style="width:100px" />
+                @WebUtil.KIndexIconStyle(Model.KIndexLabel, "width:100px")
             </div>
             <div class="col-sm-10">
                 <h2>
@@ -231,13 +232,13 @@
         které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
     </p>
     <p>
-        Organizace s K-indexem <img src="/Content/kindex/iconA.svg" style="width:15px" /> jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
-        Organizace s K-Index <img src="/Content/kindex/iconF.svg" style="width:15px" /> patří mezi nejhorší.
+        Organizace s K-indexem @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
+        Organizace s K-Index @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px") patří mezi nejhorší.
 
     </p>
     <p>
         Stupnice K-Indexu
-        <img src="/Content/kindex/iconA.svg" style="width:15px" /><img src="/Content/kindex/iconB.svg" style="width:15px" /><img src="/Content/kindex/iconC.svg" style="width:15px" /><img src="/Content/kindex/iconD.svg" style="width:15px" /><img src="/Content/kindex/iconE.svg" style="width:15px" /><img src="/Content/kindex/iconF.svg" style="width:15px" />
+        @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px")
         je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K-indexu a také způsob jeho výpočtu.
     </p>
 </div>
@@ -250,7 +251,8 @@
 <div class="row">
     <div class="col-xs-12 col-sm-6">
         <div>
-            Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce <img src="@(Model.KIndexLabelIconUrl())" style="width:1em" />.
+            Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
+            @WebUtil.KIndexIcon(Model.KIndexLabel, "15px").
         </div>
         <div class="kmeter" style="padding-top:20px;">
             <div class="kframe apart">
@@ -301,12 +303,13 @@
 </div>
 <div class="bs-callout bs-callout-success" style="padding-bottom:30px;">
     <p>
-        Přesná hodnota K-indexu je <b><img src="@(Model.KIndexLabelIconUrl())" style="width:15px" />@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
+        Přesná hodnota K-indexu je <b>@WebUtil.KIndexIcon(Model.KIndexLabel, "15px")@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
     </p>
     <p>
-        Stejně jako u písmene, kde <img src="/Content/kindex/iconA.svg" style="width:15px" /> je nejlepší hodnocení, v číselném vyjádření je nejlepší hodnota 0.
-        Nejhorší hodnota může být teoreticky 120, fakticky jen zřídka překročí hodnotu 50.
-    </p>
+        Obdobně jako u písmenného vyjádření, kde @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") je nejlepší hodnocení,
+        v číselném vyjádření je nejlepší hodnota <b>0</b>.
+        Nejhorší hodnota může být teoreticky 120, fakticky jen zřídka překročí hodnotu <b>50</b>.
+</p>
     <p>
         Číselná hodnota K-index je součtem bodů jednotlivých parametrů, které prezentujeme dále.
         Každá parametrů má v rámci indexu předem definovanou váhu, kterou také najdete v tabulce níže.
@@ -340,10 +343,7 @@
                 <tr>
                     <td>
                         @radek.VelicinaLongName
-                        @if (radek.Velicina == (int)KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
-                        {
-                            <div class="small">Toto je bonus (proto má zápornou hodnotu) pro organizace, které jsou transparentní nad rámec zákona</div>
-                        }
+                        @ParametrDescr((KIndexData.KIndexParts)radek.Velicina)
                     </td>
                     <td class="number">
                         @radek.Hodnota.ToString("F4")
@@ -359,7 +359,7 @@
             }
             <tr>
                 <td colspan="5">
-                    Jednotlivé hodnoty všech kritérii se vynásobí vahou (důležitostí) kritéria (v tabulce sloupec mezisoučet) a tyto hodnoty se sečtou
+                    Jednotlivé hodnoty všech parametrů se vynásobí vahou (důležitostí) parametru a výsledné body se sečtou
                 </td>
             </tr>
             <tr>
@@ -374,3 +374,55 @@
         </tbody>
     </table>
 </div>
+
+
+@helper ParametrDescr(KIndexData.KIndexParts part)
+{
+
+string descr = "";
+switch (part)
+{
+    case KIndexData.KIndexParts.PercentBezCeny:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercSmluvUlimitu:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercUzavrenoOVikendu:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.KoncentraceDodavateluObory:
+        descr = "";
+        break;
+    case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
+        descr = "Bonus (proto má zápornou hodnotu) pro organizace, které zveřejňují smlouvy nad rámec zákona";
+        break;
+    default:
+        break;
+}
+
+if (!string.IsNullOrEmpty(descr))
+{
+                <div class="small">@Html.Raw(descr)</div>
+            }
+
+
+}

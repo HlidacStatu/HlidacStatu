@@ -117,6 +117,16 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
+        public static IHtmlString KIndexLimitedRaw(this HtmlHelper htmlHelper, System.Security.Principal.IPrincipal user, params IHtmlString[] htmls)
+        {
+            if (ShowKIndex(user))
+            {
+                var s = string.Join("", htmls.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));                
+                return htmlHelper.Raw(s);
+            }
+            return htmlHelper.Raw("");
+        }
+
         public static bool ShowKIndex(System.Security.Principal.IPrincipal user)
         {
             if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")

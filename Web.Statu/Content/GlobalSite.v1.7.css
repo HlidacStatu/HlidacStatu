@@ -1672,3 +1672,6 @@ div.verticaltab-container {
     left: 20px;
 }
 
+img.kindex {
+    vertical-align:baseline;
+}
