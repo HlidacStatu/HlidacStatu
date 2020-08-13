@@ -62,7 +62,7 @@
 }
 
 
-@Util.AddVisitImg("/osoba/" + Model.NameId)
+@WebUtil.AddVisitImg("/osoba/" + Model.NameId)
 
 @if (noReasonToShow)
 {
@@ -114,7 +114,7 @@
                                 Funkce
                             </div>
                             <div class="new-p">
-                                @Util.LowBox(80, funkceOsoba)
+                                @HlidacStatu.Web.Util.LowBox(80, funkceOsoba)
                             </div>
                         </div>
                     }
@@ -125,7 +125,7 @@
                                 Podpora politických stran
                             </div>
                             <div class="new-p">
-                                @Util.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+                                @WebUtil.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
                             </div>
                         </div>
                     }
@@ -158,7 +158,7 @@ else
     @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
 }
 
-@Util.FeedbackModal("Poslat opravu či připomínku")
+@WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
 
 

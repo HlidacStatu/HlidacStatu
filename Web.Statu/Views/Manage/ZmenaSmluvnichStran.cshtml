@@ -58,13 +58,13 @@
                 <td>
                     @for (int i = 0; i < subjList.Count; i++)
                     {
-                        <div> <input type="checkbox" name="platce" value="@i" @Util.IfExists(i==1," checked='checked' ") />@RenderSubjekt(subjList[i]) </div>
+                        <div> <input type="checkbox" name="platce" value="@i" @WebUtil.IfExists(i==1," checked='checked' ") />@RenderSubjekt(subjList[i]) </div>
                     }
                 </td>
                 <td>
                     @for (int i = 0; i < subjList.Count; i++)
                     {
-                        <div> <input type="checkbox" name="prijemce" value="@i" @Util.IfExists(i==0," checked='checked' ")/>@RenderSubjekt(subjList[i]) </div>
+                        <div> <input type="checkbox" name="prijemce" value="@i" @WebUtil.IfExists(i==0," checked='checked' ")/>@RenderSubjekt(subjList[i]) </div>
                     }
                 </td>
 
@@ -83,7 +83,7 @@
     <input type="submit" value="Změnit" />
 </form>
 
-@Util.HideFundingInFooter()
+@WebUtil.HideFundingInFooter()
 
 @helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt)
 {

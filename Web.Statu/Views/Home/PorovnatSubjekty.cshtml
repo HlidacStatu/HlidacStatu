@@ -227,7 +227,7 @@ else
 
                 <div class="col-sm-12 block-hover" style="margin-top:10px;">
                     <div style="position:relative;top:33px;">
-                        @Util.ShareWidget(this.Request.Url.AbsoluteUri + "&part=" + currPart, "Vložit tuto tabulku do vlastní stránky ")
+                        @WebUtil.ShareWidget(this.Request.Url.AbsoluteUri + "&part=" + currPart, "Vložit tuto tabulku do vlastní stránky ")
                     </div>
                     @Html.Raw(UtilChart.RenderReport(typeof(HlidacStatu.Lib.Analysis.SubjectStatistic), p, @"{
                                  'language': {
@@ -246,7 +246,7 @@ else
             {
                 <div class="@css block-hover" style="padding-top:30px;">
                     <div style="position:relative;left:16px;">
-                        @Util.ShareWidget(this.Request.Url.AbsoluteUri + "&part=" + currPart, "Vložit tento graf do vlastní stránky")
+                        @WebUtil.ShareWidget(this.Request.Url.AbsoluteUri + "&part=" + currPart, "Vložit tento graf do vlastní stránky")
                     </div>
                     @Html.Raw(UtilChart.RenderReport(typeof(HlidacStatu.Lib.Analysis.SubjectStatistic), p, @"", p.Key))
                 </div>

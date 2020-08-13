@@ -61,7 +61,7 @@
                                         sb.AppendLine(p.OrderBy(oo => oo.Item4).Select(m => $"<a href='{Rizeni.GetUrlFromId(m.Item1)}'>{m.Item1}</a> /z {m.Item4.ToString("yyyy")}/").Aggregate((f, s) => f + "<br/>" + s));
                                         sb.AppendLine("</div>");
                                     }
-                                    @Util.LowBox(80, sb.ToString())
+                                    @WebUtil.LowBox(80, sb.ToString())
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                             );
                                         sb.AppendLine("</div>");
                                     }
-                                    @Util.LowBox(80, sb.ToString())
+                                    @WebUtil.LowBox(80, sb.ToString())
                                 </div>
                             </div>
                         </div>

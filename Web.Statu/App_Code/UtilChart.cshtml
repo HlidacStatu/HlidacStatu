@@ -5,8 +5,7 @@
 @using System.Reflection;
 
 @functions
-{
-    private static new HtmlHelper<object> Html
+{ private static new HtmlHelper<object> Html
     {
         get { return ((WebViewPage)CurrentPage).Html; }
     }
@@ -18,55 +17,45 @@
     private static WebViewPage CurrPage
     {
         get { return (WebViewPage)CurrentPage; }
-    }
-}
+    } }
 
 
 
 @helper RenderReport(HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+{if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+@RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts) }
+else
 {
-    if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
-    {
-        @RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts)
-    }
-    else
-    {
-        @Html.Raw(RenderReportTableObj(item.Title, item, JsDataTableOptions, JsDataTableId))
-    }
+@Html.Raw(RenderReportTableObj(item.Title, item, JsDataTableOptions, JsDataTableId))}
 }
 
 @helper RenderReport(Type type, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+{if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+@RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts) }
+else
 {
-    if (item.Type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
-    {
-        @RenderReportChart(item.Title, item.Data as DotNet.Highcharts.Highcharts)
-    }
-    else
-    {
-        System.Reflection.MethodInfo mi = typeof(ASP.UtilChart).GetMethod("RenderReportTable",
-            new Type[] {
+System.Reflection.MethodInfo mi = typeof(ASP.UtilChart).GetMethod("RenderReportTable",
+    new Type[] {
                 typeof(string),
                 typeof(HlidacStatu.Lib.Render.ReportModel.QueueItem),
                 typeof(string),
                 typeof(string) }
-            //HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null
-            );
-        MethodInfo genericMethod = mi.MakeGenericMethod(type);
-        var res = (string)genericMethod.Invoke(null, new object[] { item.Title, item, JsDataTableOptions, JsDataTableId });
-        @Html.Raw(res)
-    }
+    //HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null
+    );
+MethodInfo genericMethod = mi.MakeGenericMethod(type);
+var res = (string)genericMethod.Invoke(null, new object[] { item.Title, item, JsDataTableOptions, JsDataTableId });
+@Html.Raw(res)}
 }
 
 @helper RenderReport(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem.types type, object data, string JsDataTableOptions, string JsDataTableId = null)
+{if (type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
+    {
+@RenderReportChart(title, data as DotNet.Highcharts.Highcharts) }
+else
 {
-    if (type == HlidacStatu.Lib.Render.ReportModel.QueueItem.types.chart)
-    {
-        @RenderReportChart(title, data as DotNet.Highcharts.Highcharts)
-    }
-    else
-    {
-        @Html.Raw(RenderReport(new HlidacStatu.Lib.Render.ReportModel.QueueItem() { Title = title, Type = type, Data = data }, JsDataTableOptions, JsDataTableId))
-    }
+@Html.Raw(RenderReport(new HlidacStatu.Lib.Render.ReportModel.QueueItem() { Title = title, Type = type, Data = data }, JsDataTableOptions, JsDataTableId))}
 }
 @helper RenderReportChart(string title, DotNet.Highcharts.Highcharts chart)
 {
@@ -81,32 +70,31 @@
 @helper RenderReportTable(string title, HlidacStatu.Lib.Render.ReportDataSource item, string JsDataTableOptions, string JsDataTableId = null)
 {
     @Html.Raw(UtilChart.DataToHTMLTable<object>
-        (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
-            , JsDataTableId, JsDataTableOptions)
-            )
+                            (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
+                                , JsDataTableId, JsDataTableOptions)
+                                )
 }
 
 
 @helper RenderSimpleTimeChart(IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> data,
     int width, int height, string valueName,
     bool showMaxLine = false)
-{
-if (data == null)
-{
-    return;
-}
-if (data.Count() == 0)
-{
-    return;
-}
-string containerId = "chart_"+Guid.NewGuid().ToString("N");
-string sMaxVal = data.Max(m=>m.Value).ToString(HlidacStatu.Util.Consts.enCulture);
-string sdata = data
-    .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month-1},{m.Date.Day}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
-    .Aggregate((f, s) => f + "," + s);
+{if (data == null)
+    {
+        return;
+    }
+    if (data.Count() == 0)
+    {
+        return;
+    }
+    string containerId = "chart_" + Guid.NewGuid().ToString("N");
+    string sMaxVal = data.Max(m => m.Value).ToString(HlidacStatu.Util.Consts.enCulture);
+    string sdata = data
+        .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month - 1},{m.Date.Day}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+        .Aggregate((f, s) => f + "," + s);
 
-    <div id="@containerId" style="height:@(height)px;width:@(width)px"></div>
-    <script>
+<div id="@containerId" style="height:@(height)px;width:@(width)px"></div>
+                <script>
 
         Highcharts.chart('@containerId', {
 chart: {
@@ -172,14 +160,12 @@ chart: {
                 data: [@(sdata)]
             }]
         });
-    </script>
+                </script>
 
 }
 
 
-@functions {
-
-    public static string RenderReportTableObj(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+@functions { public static string RenderReportTableObj(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
     {
         return RenderReportTable<object>(title, item, JsDataTableOptions, JsDataTableId);
     }
@@ -399,7 +385,7 @@ d.Data
                         v[0].Column.ValueRender(v[0].Value)
                         ,
                         v[1].Column.ValueRender(v[1].Value)
-            }
+                        }
     )
     .ToArray() //v[1] contains value, v[0] contains x-axis value
 )
@@ -473,14 +459,11 @@ d.Data
 v[0].Column.ValueRender(v[0].Value)
 ,
 v[1].Column.ValueRender(v[1].Value)
-                            }
+                                        }
                     )
                     .ToArray() //v[1] contains value, v[0] contains x-axis value
                 )
 
         });
         return chart;
-    }
-
-
-}
+    } }

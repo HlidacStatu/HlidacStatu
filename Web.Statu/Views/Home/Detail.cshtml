@@ -87,7 +87,7 @@
 <td class="dontembed">
 
     <h3>
-        @Util.AddBookmark(this.User, Model)
+        @WebUtil.AddBookmark(this.User, Model)
         @ViewBag.Title
     </h3>
     <table class="table table-new table-new--dotted table-hover" id="invalidItemWarn">
@@ -108,7 +108,7 @@
                                             Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy. Nenašli jsme v registru smluv platnou verzi této smlouvy, tato smlouva byla nejspíše odstraněna bez náhrady.
                                         </td>
                                         <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
-                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                            @WebUtil.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
                                         </td>
                                     </tr>
                                 </table>
@@ -124,7 +124,7 @@
                                             Upozornění: Tato verze smlouvy byla zneplatněna vkladatelem smlouvy.
                                         </td>
                                         <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
-                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                            @WebUtil.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako platná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
                                         </td>
                                     </tr>
                                 </table>
@@ -155,7 +155,7 @@
                                             </b>, že ve skutečnosti platná velmi pravděpodobně není!
                                         </td>
                                         <td style="width:30%;padding:0;margin:0;line-height:13px;text-align:right">
-                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                            @WebUtil.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
                                         </td>
                                     </tr>
                                 </table>
@@ -169,7 +169,7 @@
                                     <tr>
                                         <td style="width:50%;padding:0;margin:0;line-height:13px;">Toto je platná smlouva</td>
                                         <td style="width:50%;padding:0;margin:0;line-height:13px;text-align:right">
-                                            @Util.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
+                                            @WebUtil.DynamicModal("/api/v1/ModalZneplatnenaSmlouva/" + Model.Id, "(Má být smlouva označena jako neplatná?).", "btn btn-link", loadingText: "Ověřuji platnost smlouvy v registru smluv", style: "padding:0;margin:0")
                                         </td>
                                     </tr>
                                 </table>
@@ -184,8 +184,8 @@
                     <div>ID Verze: @(Model.identifikator.idVerze)</div>
                     <div>
                         Uzavřena @Model.datumUzavreni.ToShortDateString(), číslo smlouvy @Model.cisloSmlouvy
-                        @Util.IfExists(Model.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", Model.navazanyZaznam))
-                        @Util.IfExists(Model.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(Model.schvalil), Model.schvalil))
+                        @WebUtil.IfExists(Model.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", Model.navazanyZaznam))
+                        @WebUtil.IfExists(Model.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(Model.schvalil), Model.schvalil))
                     </div>
                 </td>
             </tr>
@@ -250,11 +250,11 @@
                         <div>
                             @if (Model.GetRelevantClassification().Count() == 0)
                             {
-                                @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Pomozte nám se správnou klasifikací, prosím.", "btn btn-link")
+                                @WebUtil.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Pomozte nám se správnou klasifikací, prosím.", "btn btn-link")
                             }
                             else
                             {
-                                @Util.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.", "btn btn-link")
+                                @WebUtil.DynamicModal("/api/v1/modalclassification/" + Model.Id, " Jsou oblasti špatně? Dejte nám vědět, prosím.", "btn btn-link")
                             }
                             <br />
                             <span class="small">
@@ -271,11 +271,11 @@
                 <td>Hodnota smlouvy</td>
                 <td>
 
-                    @Util.IfExists(Model.hodnotaBezDph.HasValue, "<p>Cena bez DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaBezDph, html: true) + "</b></p>")
-                    @Util.IfExists(Model.hodnotaVcetneDph.HasValue, "<p>Cena s DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaVcetneDph, html: true) + "</b></p>")
+                    @WebUtil.IfExists(Model.hodnotaBezDph.HasValue, "<p>Cena bez DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaBezDph, html: true) + "</b></p>")
+                    @WebUtil.IfExists(Model.hodnotaVcetneDph.HasValue, "<p>Cena s DPH: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.hodnotaVcetneDph, html: true) + "</b></p>")
                     @if (Model.ciziMena != null && Model.ciziMena.mena != null)
                     {
-                        @Util.IfExists(Model.ciziMena.hodnota > 0
+                        @WebUtil.IfExists(Model.ciziMena.hodnota > 0
                                                 && Model.ciziMena.mena != "CZK",
                                            "<p>Cena v cizí měně: <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(Model.ciziMena.hodnota, Model.ciziMena.mena, html: true) + "</b></p>")
                     }
@@ -315,7 +315,7 @@
                                                 else
                                                 {
                                                     @*<a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value})" data-link="kopie">(naše kopie)</a>*@
-                                                    @Util.FeedbackPriloha("Zpřístupnění přílohy", "", Model.Id, priloha.odkaz)
+                                                    @WebUtil.FeedbackPriloha("Zpřístupnění přílohy", "", Model.Id, priloha.odkaz)
                                                 }
                                             }
                                         </div>
@@ -338,7 +338,7 @@
                                                 <span>(@priloha.WordCount slov)</span>
                                             }
 
-                                            @Util.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
+                                            @WebUtil.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
                                                 prefix: "<blockquote class='small'>", postfix: "</blockquote>")
                                             &nbsp;
                                         </div>
@@ -431,7 +431,7 @@
             </tr>
             <tr>
                 <td>
-                    @Util.IfExists(Model.IsPartOfRegistrSmluv(), "Tento záznam na Registru smluv:", "Zdroj dat:")
+                    @WebUtil.IfExists(Model.IsPartOfRegistrSmluv(), "Tento záznam na Registru smluv:", "Zdroj dat:")
                 </td>
                 <td>
                     <a href="@Model.odkaz" target="_blank">@Model.odkaz</a>
@@ -464,9 +464,9 @@
                     <div class="ssk-group"
                          data-url=""
                          data-text="@Model.predmet">
-                        @Util.ShareFacebook(Model.GetUrl(false))
-                        @Util.ShareTwitter(Model.GetUrl(false), Model.predmet)
-                        @Util.ShareWidget(Model.GetUrl(false))
+                        @WebUtil.ShareFacebook(Model.GetUrl(false))
+                        @WebUtil.ShareTwitter(Model.GetUrl(false), Model.predmet)
+                        @WebUtil.ShareWidget(Model.GetUrl(false))
                     </div>
 
                 </td>
@@ -474,7 +474,7 @@
 
         </tbody>
     </table>
-    @Util.FeedbackModal("Poslat opravu či připomínku")
+    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
 
 
@@ -535,10 +535,10 @@
         <p>
             <a href="/subjekt/@subjekt.ico">
                 <b>@subjekt.nazev</b>
-            </a>&nbsp;&nbsp;&nbsp;@Util.FirmaMoreInfoLinks(subjekt.ico)
+            </a>&nbsp;&nbsp;&nbsp;@WebUtil.FirmaMoreInfoLinks(subjekt.ico)
 
             <br />
-            @Util.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+            @WebUtil.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
 
             @subjekt.adresa<br />
             @if (!string.IsNullOrEmpty(subjekt.ico))
@@ -565,7 +565,7 @@
             {
                 <text>
                     <br />Příjemce peněz
-                    <div>@Util.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
+                    <div>@WebUtil.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
                 </text>
             }
             else if (typSubjektu == 3) //vkladatel do rejstriku

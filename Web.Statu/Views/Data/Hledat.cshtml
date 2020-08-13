@@ -41,7 +41,7 @@
 
 @if (Model.Q != null && Model.DataSet.Registration().searchResultTemplate?.IsFullTemplate() == true)
 {
-    @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), datasetId: Model.DataSet.DatasetId)
+    @WebUtil.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet), datasetId: Model.DataSet.DatasetId)
 }
 
 
@@ -51,7 +51,7 @@
         <div class="col-xs-12">
             <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
             <div>
-                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší strane, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-warning", null).
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší strane, @WebUtil.FeedbackModal("napište nám prosím", "Chyba", "btn btn-warning", null).
                 Zkontrolujeme to.
             </div>
         </div>

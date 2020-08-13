@@ -187,7 +187,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-muted">Ve zkratce</h5>
                         <p class="card-text">
-                            @Util.LowBox(180, statDescription)
+                            @WebUtil.LowBox(180, statDescription)
                         </p>
                         <a href="#" class="card-link">Další podrobnosti</a>
                     </div>
@@ -198,7 +198,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-muted">Role</h5>
                         <p class="card-text">
-                            @Util.LowBox(180, funkceOsoba)
+                            @WebUtil.LowBox(180, funkceOsoba)
                         </p>
                         <a href="#" class="card-link">Další podrobnosti</a>
                     </div>
@@ -263,7 +263,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-muted">Sponzorství</h5>
                         <p class="card-text">
-                            @Util.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, 6))
+                            @WebUtil.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, 6))
                         </p>
                         <a href="#" class="card-link">Další podrobnosti</a>
                     </div>
@@ -289,7 +289,7 @@
                                     @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
                                     @if (kv.Value > 0)
                                     {
-                                        @Util.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
+                                        @WebUtil.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
                                     }
                                 </span>
                             }
@@ -308,7 +308,7 @@
                                     Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " nejsou v insolvečním rejstříku", " se vyskytují v <b>jedné insolvenci</b>", " se vyskytují v <b>{0} insolvencích</b>", " se vyskytují v <b>{0} insolvencích</b>")) jako @text[1].
                                     @if (kv.Value > 0)
                                     {
-                                        @Util.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
+                                        @WebUtil.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
                                     }
                                 </span>
                             }

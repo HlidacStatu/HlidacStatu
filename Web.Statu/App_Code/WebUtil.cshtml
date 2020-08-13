@@ -1,0 +1,1260 @@
+﻿@using System.Web.Mvc;
+@using System.Web.Mvc;
+@using System.Linq;
+@using Microsoft.AspNet.Identity;
+@using System.Reflection;
+
+
+@functions
+{ private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper UrlH
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+
+    private static Uri CurrPageUrl
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Request.Url;
+            //return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+    private static string CurrPageUrlPath
+    {
+        get
+        {
+            return "/" + CurrPageUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        }
+    }
+
+
+    private static WebViewPage CurrPage
+    {
+        get { return (WebViewPage)CurrentPage; }
+    }
+
+
+    private static System.Security.Principal.IPrincipal CurrUser
+    {
+        get { return CurrPage.User; }
+    }
+
+    private static bool UserInRole(params string[] roles)
+    {
+        bool show = false;
+        if (roles.Count() > 0)
+        {
+            if (CurrUser?.Identity?.IsAuthenticated == true)
+            {
+                foreach (var r in roles)
+                {
+                    if (CurrUser.IsInRole(r))
+                    {
+                        show = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+            show = true;
+
+        return show;
+    }
+
+
+    public static string GetSearchUrl(string url, string query)
+    {
+        if (query != null)
+        {
+            if (url.Contains("?"))
+            {
+                url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+            else
+            {
+                url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+        }
+        return url;
+    } }
+
+@helper IfExists(bool showExists, string exists, string ifEmpty = "")
+{if (showExists)
+    {
+@Html.Raw(exists) }
+else
+{
+@Html.Raw(ifEmpty)}
+
+}
+
+
+@helper HighlightContent(IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlights, string path, string contentToCompare,
+        string foundContentFormat = null, string noHLContent = "", string prefix = "",
+        string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
+{
+    @Html.Raw(HlidacStatu.Lib.Searching.Highlighter.HighlightContentIntoHtmlBlock(
+                        highlights, path, contentToCompare,
+                        foundContentFormat, noHLContent, prefix,
+                        postfix, highlightPartDelimiter, icon)
+                        )
+
+}
+
+@helper GAClick(string btnName)
+{
+    @Html.Raw($" onclick=\"ga('send', 'event', 'logoffBtn', 'click','{WebUtil.CurrPageUrlPath}')\" ");
+}
+
+
+@helper HideFundingInFooter()
+{string s = @"
+<style>
+#fundingAdFooter { display: none; }
+</style>
+";
+@Html.Raw(s);
+}
+
+@helper SetAutofocusOnId(string id)
+{
+    <script>
+        window.onload = function() {
+        var input = document.getElementById("@id").focus();
+        }
+    </script>
+}
+
+@helper AddVisitImg(string path)
+{string base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(path));
+<text>
+    <img src="/visitimg/@base64" width="1" height="1" />
+</text>
+}
+
+@helper RenderSmartLookTrackingCode(bool withScriptTag = true)
+{string code = @"window.smartlook || (function(d) {
+var o = smartlook = function(){ o.api.push(arguments)},h = d.getElementsByTagName('head')[0];
+var c = d.createElement('script'); o.api = new Array(); c.async = true; c.type = 'text/javascript';
+c.charset = 'utf-8'; c.src = 'https://rec.smartlook.com/recorder.js'; h.appendChild(c);
+})(document);
+smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
+
+    if (withScriptTag)
+    {
+@Html.Raw("<script type=\"text/javascript\">\n" + code + "</script>\n") }
+else
+{
+@Html.Raw("\n" + code + "\n")}
+}
+
+@helper TitleAds()
+{string[] ads = new string[] {
+//"Bojíte se neplatnosti smluv v registru smluv?|Víte, že vás můžeme <b>denně</b> upozornit na možné problémy s vašimi smlouvami v registru smluv? Stačí jeden klik a je to nastavené. <a onclick=\"return trackOutLink(this, 'infoAd','#TXT#','#FORMAT#');\" href = 'https://www.hlidacstatu.cz/texty/jak-si-pohlidat-chyby-v-uverejnenych-smlouvach-v-registru-smluv/'>Více</a>",
+//"Bojíte se neplatnosti smluv v registru smluv?|Už nemusíte. <b>Denně</b> vám pomůžeme včas odhalit možné problémy a toto riziko minimalizovat? Stačí jeden klik a je to nastavené. <a onclick=\"return trackOutLink(this, 'infoAd','#TXT#','#FORMAT#');\" href='https://www.hlidacsmluv.cz/cenik'>Více</a>"
+//"Jsem 12.-13. ledna 2018 pryč a chci volit prezidenta. Co teď??|" +
+//"Voličský průkaz je řešení. Umožní vám volit v libovolné volební místnosti v ČR. <a onclick=\"return trackOutLink(this, 'infoAd','#TXT#','#FORMAT#');\" href='https://volby.hlidacstatu.cz/?utm_source=hlidacsmluv&utm_medium=header-ad&utm_campaign=volbyprez18&utm_content=v1'>Pomůžeme vám, za 2 min je vše hotovo.</a>"
+};
+    if (ads.Count() == 0)
+    {
+        return;
+    }
+<div class="row">
+    <div id="ads" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2" style="">
+        @{ int infoFormat = HlidacStatu.Util.Consts.Rnd.Next(2);
+            int textNum = HlidacStatu.Util.Consts.Rnd.Next(ads.Length);
+            string[] infoLine = ads[textNum].Replace("#TXT#", "TXT" + textNum.ToString()).Replace("#FORMAT#", "FORMAT" + infoFormat.ToString()).Split('|');
+            string infoHead = infoLine[0];
+            string infoTxt = infoLine[1]; }
+        @if (infoFormat == 0)
+        {
+<div class="alert alert-warning text-center">
+    <h4>@Html.Raw(infoHead)</h4>
+    <p>@Html.Raw(infoTxt)</p>
+</div> }
+else if (infoFormat == 1)
+{
+<div class="bs-callout bs-callout-danger" style="margin-top:0;background: white;">
+    <h4>@Html.Raw(infoHead)</h4>
+    <p>@Html.Raw(infoTxt)</p>
+</div> }
+else if (infoFormat == 2 || infoFormat == 3)
+{
+<script>
+    ga('send', 'event', 'darujAd', 'shown', { nonInteraction: true });
+
+    /**/</script>
+                    <div class="alert alert-orange text-center">
+                        <div class="row">
+                            <div class="col-sm-10 col-xs-12">
+                                <h4>Chceme-li dál měnit prostředí v ČR, <b>potřebujeme zrychlit a nabrat sílu</b>.</h4>
+                                <p class="">
+                                    <b>Už více než rok kontrolujeme politiky a úředníky</b> zda s našimi penězi zacházejí správně. Už více než rok jim pomáháme zavádět moderní e-government.
+                                </p>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <a onclick="ga('send', 'event', 'darujAd', 'daruj-btn', '1');" class="fund-daruj-btn" target="_blank" href="https://www.darujme.cz/projekt/1200384">Podpořte nás</a>
+                                <br /><a class="small" onclick="ga('send', 'event', 'darujAd', 'viceinfo', '1');" target="_blank" href="https://www.darujme.cz/projekt/1200384">Více info</a>
+                            </div>
+                        </div>
+                    </div>}
+    </div>
+</div>
+}
+
+@helper IfExists(object hasValue, string exists, string ifEmpty = "")
+{if (hasValue == null)
+    {
+@Html.Raw(ifEmpty) }
+else
+          if (hasValue.GetType() == typeof(string))
+{
+@IfExists(!string.IsNullOrEmpty(hasValue.ToString()), exists, ifEmpty) }
+else
+{
+@Html.Raw(exists)}
+
+}
+@helper FirmaMoreInfoLinks(string ico, string linkTemplate = null, string textTemplate = null)
+{var merkIco = HlidacStatu.Util.ParseTools.IcoToMerkIco(ico);
+
+    string firmoLink = string.Format("http://www.firmo.cz/cs/osoba/{0}?apc=4801", ico);
+    string merkLink = "https://www.merk.cz/";
+    string linkT = "<a href='{0}' onclick=\"return trackOutLink(this,'Detail');\">&nbsp;<img height='18' src='/Content/Img/{1}' /></a>";
+    string textT = ""; //"více na {0}";
+
+<span class="firmy-more-links">
+    @Html.Raw(string.Format(textT, string.Format(linkT, merkLink, "merk-logo.svg")))
+</span>
+}
+@helper RenderSearchLinkBetweenSubjects(string platceIco, string prijemceIco)
+{
+    @RenderSearchLinkBetweenSubjects(platceIco, "", prijemceIco, "", "", "");
+}
+@helper RenderSearchLinkBetweenSubjects(string platceIco, string prijemceIco, string prefix, string postfix)
+{
+    @RenderSearchLinkBetweenSubjects(platceIco, "", prijemceIco, "", prefix, postfix);
+}
+@helper RenderSearchLinkBetweenSubjects(string platceIco, string platceName, string prijemceIco, string prijemceName, string prefix, string postfix)
+{if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(prijemceIco))
+    {
+@Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20icoPrijemce:{1}'>Další smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceIco, prefix ?? "", postfix ?? "")) }
+else if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(prijemceName))
+{
+@Html.Raw(string.Format("{2}<a href='/HledatSmlouvy?Q=icoPlatce:{0}%20AND%20jmenoPrijemce:\"{1}\"'>Další smlouvy mezi tímto dodavatelem a úřadem</a>{3}", platceIco, prijemceName, prefix ?? "", postfix ?? ""))}
+
+
+}
+
+
+@helper FBTlacitko(string text, string parametr)
+{
+    <span>
+        <a class="btn btn-default" style="background-color:#21262e;color:#c2b07c;"
+           onclick="return trackOutLink(this,'FrankBoldBtn');"
+           data-container="body"
+           data-toggle="popover"
+           data-trigger="hover" data-placement="auto"
+           data-title="Pomoc právníka" data-content="Jste povinný subjekt, a máte při zveřejňování v registru problém? Zde můžete požádat o kontrolu právníkem. Právní službu poskytují Frank Bold Advokáti a úřady, obce, příspěvkové instituce i městské firmy mají kontrolu první smlouvy zdarma."
+           title="Je u smlouvy nějaký problém? Chcete požádat o kontrolu právníkem?" href="http://helpdesk.fbadvokati.cz/?smlouva=@parametr" role="button">
+            Pomoc právníka
+        </a>
+
+    </span>
+}
+
+@helper DynamicModal(string dynamicContentRelUrl, string nazevOdkazu = null, string _class = null,
+    string loadingText = null, string style = null)
+{loadingText = loadingText ?? "Nahrávám formulář";
+    style = style ?? "";
+    if (!dynamicContentRelUrl.EndsWith("&"))
+    {
+        if (dynamicContentRelUrl.Contains("?"))
+        {
+            dynamicContentRelUrl += "&";
+        }
+        else
+        {
+            dynamicContentRelUrl += "?";
+        }
+    }
+    nazevOdkazu = nazevOdkazu ?? "Opravit";
+    _class = _class ?? "btn btn-link";
+    string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
+
+<a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class" style="@style">
+    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>@(nazevOdkazu)
+</a>
+                <div class="modal fade" id="@(modalId)Form" tabindex="-1" role="dialog" aria-labelledby="@(modalId)Title" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="@(modalId)content">
+                        </div>
+                    </div>
+                </div>
+                                <script>
+        $('#btn@(modalId)').on('click', function () {
+            $('#@(modalId)content').html('<div class="loader2">@(loadingText)</div>');
+            $('#@(modalId)content').load('@(dynamicContentRelUrl)modalId=@(modalId)', function () {
+                $('#@(modalId)Form').modal({ show: true });
+            });
+        });
+                                </script>
+}
+
+@helper AddReview(string itemType, string link)
+{var id = "rev_" + Devmasters.Core.TextUtil.GenRandomString(5);<!-- Link trigger modal -->
+                    <a href="@link" data-toggle="modal" data-target="#@id" data-remote="false" class="toReviewBtn btn btn-link">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Opravit
+                    </a> <!-- Default bootstrap modal example -->
+                                    <div class="modal fade" id="@id" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">Oprava údajů</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="loader2">Nahrávám formulář</div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" onclick="javascript: ga('send', 'event', 'btnReview', 'Cancel', 'authenticated');return true;" data-dismiss="modal">Zavřít</button>
+                                                    <button type="button" class="btn btn-primary" onclick="javascript: ga('send', 'event', 'btnReview', 'Send', 'authenticated');AddReview(this,'form@(id)');return false;">Odeslat opravu</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                    <script>
+        // Fill modal with content from link href
+        $("#@id").on("show.bs.modal", function (e) {
+            var link = $(e.relatedTarget);
+            var url = window.location.pathname + window.location.search;
+            var oldV = filterReviewDom($("#@id").closest('.toReview')).text();
+            $(this).find(".modal-body").load("/manage/reviewForm?t=@(itemType)&oldv=" + encodeURI(oldV) + "&formid=@id&url=" + encodeURI(url) + "&id=" + link.attr("href"));
+        });
+
+                                                    </script>
+}
+
+@helper ShareFacebook(HttpRequestBase req, string title = "na Facebook")
+{
+    @ShareFacebook(req.Url.AbsoluteUri)
+}
+
+@helper ShareFacebook(string url, string title = "na Facebook")
+{
+    <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u=@Html.Raw(UrlH.Encode(url))&display=popup&ref=plugin&src=share_button" class="ssk ssk-text ssk-facebook ssk-xs" target="_blank">@title</a>
+}
+
+@helper ShareTwitter(HttpRequestBase req, string text, string title = "na Twitter")
+{
+    @ShareTwitter(req.Url.AbsoluteUri, text)
+}
+
+@helper ShareTwitter(string url, string text, string title = "na Twitter")
+{
+    <a href="https://twitter.com/intent/tweet?original_referer=@Html.Raw(UrlH.Encode(url))&ref_src=twsrc%5Etfw&text=@Html.Raw(UrlH.Encode(text))&tw_p=tweetbutton&url=@Html.Raw(UrlH.Encode(url))" class="ssk ssk-text ssk-twitter ssk-xs" target="_blank">@title</a>
+}
+
+@helper ShareWidget(HttpRequestBase req, string title = "Vložit do vlastní stránky", int width = 500)
+{
+    @ShareWidget(req.Url.AbsoluteUri, title, width)
+}
+
+@helper ShareWidget(string url, string title = "Vložit do vlastní stránky", int width = 500)
+{var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
+    var wid = Devmasters.Core.TextUtil.GenRandomString(5);
+    var pageUrl = new Uri(url);
+    var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
+    var embedUrl = url.Replace(rootUrl, "");
+    if (embedUrl.IndexOf("?") > 0)
+    {
+        embedUrl = embedUrl + "&embed=1";
+    }
+    else
+    {
+        embedUrl = embedUrl + "?embed=1";
+    }
+    var widgetUrl = url.Replace(rootUrl, "");
+    var extHtmlL1 = $"<script src='{rootUrl}/widget/{wid}?width={width}' type='text/javascript'></script>";
+    var extHtmlL2 = $"<div id='{wid}' style='width:{width}px' widget-page='{widgetUrl}'></div>\n";
+    var iframeHtml = $"<iframe " +
+    $" style='border: 0px; width: 100%; overflow: hidden; max-width: {width}px;'" +
+    "frameborder='0' width='100%' border='0' cellspacing='0' " +
+    $"src='{embedUrl}'" +
+    "scrolling='auto' ></iframe>";
+
+<span class="dontembed">
+    <a href="" class="ssk ssk-text ssk-amethyst ssk-xs" data-toggle="modal" data-target="#modal@(modalid)">
+        <span class="glyphicon glyphicon-cog"></span>@title
+    </a>
+</span> <!-- Modal -->
+                <div class="modal fade" id="modal@(modalid)" tabindex="-1" role="dialog" aria-labelledby="modal@(modalid)">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">@title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p style="font-size:14px;">
+                                    Přidejte tento HTML kód na svůj web či do článku. <b>Stačí zkopírovat níže uvedený kód</b>:
+                                </p>
+                                <form>
+                                    <textarea id="modaltxtarea@(modalid)" style="width: 100%;padding: 7px 9px;margin-bottom: 8px;font-size: 14px;color: #66757f;line-height: 20px;
+    overflow: hidden;height: 75px;border: 1px solid #ccd6dd;resize: none;
+    -moz-box-sizing: border-box;box-sizing: border-box;border-radius: 0 3px 3px 3px;display: block;white-space:nowrap;position: relative;z-index: 2;">@Html.Raw(extHtmlL1)
+@Html.Raw(extHtmlL2)</textarea>
+                                </form>
+                                <p style="font-size:14px;">
+                                    Pokud máte <a href="https://www.michalblaha.cz/2019/01/obsah-hlidace-statu-prehledne-na-vlastni-strance-v-clanku-ci-blogu-kdekoliv/" target="_blank">Wordpress plugin</a>: <code>[hlidac-statu page="@(widgetUrl)"]</code>
+                                </p>
+                                <hr />
+                                <h3>Ukázka zobrazení</h3>
+                                <div id="modaliframe@(modalid)">
+                                    Načítáme náhled, jak to bude vypadat.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                <script>
+        $(function () {
+            $('#modal@(modalid)').on('show.bs.modal', function (event) {
+                var modal = $(this)
+                var ifr = modal.find('#modaliframe@(modalid)')[0];
+                while (ifr.firstChild) {
+                    ifr.removeChild(ifr.firstChild);
+                };
+                var div = document.createElement('div');
+                div.innerHTML = '@(System.Web.HttpUtility.JavaScriptStringEncode(iframeHtml))';
+                ifr.appendChild(div);
+
+                $("#modaliframe@(modalid) iframe").load(function() {
+                    this.height = this.contentWindow.document.body.scrollHeight;
+
+                });
+
+            });
+        });
+                                </script>
+}
+
+@helper ShareButtons(string url, string text, string prefixHtml = "", string betweenButtonsHtml = "", string postfixHtml = "")
+{
+    <div class="ssk-group" data-url="@url" data-text="@text">
+        @Html.Raw(prefixHtml)
+        @WebUtil.ShareFacebook(url) @Html.Raw(betweenButtonsHtml)
+        @WebUtil.ShareTwitter(url, @text)
+        @Html.Raw(postfixHtml)
+    </div>
+}
+
+
+@helper AddBookmark(System.Security.Principal.IPrincipal user, object obj, string css = "")
+{HlidacStatu.Lib.Data.Bookmark.IBookmarkable item = obj as HlidacStatu.Lib.Data.Bookmark.IBookmarkable;
+
+    if (item != null)
+    {
+        AddBookmark(user, item, css);
+    }
+}
+@helper KIndexLimitedRaw(string html)
+{if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+    {
+        if (UserInRole("KIndex"))
+        {
+@Html.Raw(html);
+}
+}
+else
+{
+@Html.Raw(html);
+}
+}
+
+@helper NoWrapHtml(params IHtmlString[] part)
+{var s = string.Join("", part.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));
+@Html.Raw("<span style='white-space:nowrap'>" + s + "</span>")
+}
+
+@helper AddBookmark(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Bookmark.IBookmarkable item, string css = "")
+{if (item == null)
+    {
+        return;
+    }
+    bool isBookmarked = false;
+    string name = item.BookmarkName();
+    string url = item.GetUrl(false);
+    string id = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(item);
+
+    if (user?.Identity?.IsAuthenticated == true)
+    {
+        isBookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(item, user.Identity.Name);
+    }
+@AddBookmark(user, isBookmarked, name, url, id, (int)HlidacStatu.Lib.Data.Bookmark.ItemTypes.SingleItem, css)
+}
+@helper AddBookmarkUrl(System.Security.Principal.IPrincipal user, string title, string url, string css = "")
+{var id = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(url);
+    bool isBookmarked = false;
+
+    if (user?.Identity?.IsAuthenticated == true)
+    {
+        isBookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(HlidacStatu.Lib.Data.Bookmark.ItemTypes.Url, id, User.Identity.Name);
+    }
+@AddBookmark(user, isBookmarked, title, url, id, (int)HlidacStatu.Lib.Data.Bookmark.ItemTypes.Url, css)
+}
+
+@helper AddBookmark(System.Security.Principal.IPrincipal user, bool on, string name, string url, string id, int type, string css = "")
+{if (user?.Identity?.IsAuthenticated == true)
+    {
+        string cssVal = "bookmark ";
+        string descr = "";
+        if (on)
+        {
+            cssVal = cssVal + "bookmarkOn";
+            descr = "Uloženo v záložkách. Klikem ze záložek odstraníte.";
+        }
+        else
+        {
+            cssVal = cssVal + "bookmarkOff";
+            descr = "Uložit do záložek. Všechny uložené položky najdete na jednom míste ve vašem profilu a hlavičce.";
+        }
+<a style="@css" href="#" class="@cssVal" bmname="@name" alt="@descr" title="@descr" bmurl="@url" bmid="@id" bmtype="@type" onclick="javascript: ga('send', 'event', 'bookmark', '', 'authenticated');ChangeBookmark(this);return false;"></a> }
+else
+{
+string uid = System.Guid.NewGuid().ToString("N");
+string descr = "Uložit do záložek. Všechny uložené položky najdete na jednom míste ve vašem profilu a hlavičce.";
+<a style="@css" href="#" class="bookmark bookmarkOff" alt="@descr" title="@descr" data-toggle="modal" data-target="#bookmarkInfoAnon" onclick=";return false;"></a>}
+}
+
+
+@helper AddSearchBtn(string url, string query = null, string btnText = "Hledat", string btnCss = null)
+{
+    <a class="@(btnCss ?? "btn btn-default btn-xs")" href="@Html.Raw(GetSearchUrl(url,query))">
+        <span class="glyphicon glyphicon-search dark" aria-hidden="true"></span>
+        @btnText
+    </a>
+}
+
+@helper AddWatchDogSmall(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null,
+                    string preBtnText = null, string postBtnText = null, string prefillWDname = "",
+                    bool showWDList = false, string datasetId = null, string btnCss = null)
+{
+    @AddWatchDog(user, query, dataType, btnText, preBtnText ?? "", postBtnText ?? "", prefillWDname, showWDList, datasetId, true, btnCss ?? "btn btn-warning btn-sm")
+}
+@helper AddWatchDog(System.Security.Principal.IPrincipal user, string query, Type dataType, string btnText = null, string preBtnText = null, string postBtnText = null, string prefillWDname = "", bool showWDList = false, string datasetId = null, bool showBtnIcon = true, string btnCss = null)
+{string dataTypeName = "smlouvy";
+    string dataTypeName2 = "smluv";
+    if (dataType == typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
+    {
+        dataTypeName = "zakázky";
+        dataTypeName2 = "zakázek";
+    }
+    else if (dataType == typeof(HlidacStatu.Lib.Data.Insolvence.Rizeni))
+    {
+        dataTypeName = "insolvence";
+        dataTypeName2 = "insolvencí";
+    }
+    else if (dataType == typeof(HlidacStatu.Lib.Data.External.DataSets.DataSet))
+    {
+        dataTypeName = "záznamy v databázi";
+        dataTypeName2 = "záznamů v databázích";
+    }
+    else if (dataType == null)
+    {
+        dataTypeName = "informace na Hlídači";
+        dataTypeName2 = "informací v celém Hlídači";
+    }
+
+    string datatypeApi = dataType?.Name ?? HlidacStatu.Lib.Data.WatchDog.AllDbDataType;
+    if (!string.IsNullOrEmpty(datasetId))
+    {
+        datatypeApi = datatypeApi + "." + datasetId;
+    }
+
+    var periodList = Devmasters.Core.Enums
+                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.WatchDog.PeriodTime))
+                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key, Disabled = (Convert.ToInt32(m.Value) < 2) })
+                      .ToList();
+
+    string uid = System.Guid.NewGuid().ToString("N");
+
+    if (btnCss == null)
+    {
+        btnCss = "btn btn-warning";
+    }
+
+    if (btnText == null)
+    {
+        btnText = $"Hlídat nové {dataTypeName}";
+        if (!string.IsNullOrEmpty(query))
+        {
+            btnText += $" pro hledání '{Devmasters.Core.TextUtil.ShortenText(query, 30, "...")}'";
+        }
+    }
+    if (preBtnText == null)
+    {
+        preBtnText = $@"
+<div class=""section-title"">
+Hlídání nových {dataTypeName2}
+</div>
+<div class=""flex-row flex-row--center"" style=""margin: 14px 0 16px"">
+<div style=""margin-right: 20px"">
+<img src=""/Content/img/icon-person-watcher.svg"">
+</div>
+<div class=""new-p"">
+Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto dotazu</b> a upozornit vás emailem, že se objevily nové?
+</div>
+</div>
+<div>
+";
+
+        //"<div class=\"bs-callout bs-callout-noborder bs-callout-primary\"><div>Máme pro vás sledovat <b>nové " + dataTypeName + "</b> odpovídající tomuto dotazu a <b>každý den vás na ně upozornit</b> emailem ?";
+    }
+    if (string.IsNullOrEmpty(preBtnText))
+    {
+        postBtnText = "";
+    }
+    if (postBtnText == null)
+    {
+        postBtnText = "</div>";
+    }
+    if (user?.Identity?.IsAuthenticated == true)
+    {
+        var availableWatchdogs = HlidacStatu.Lib.Data.Invoices.GetAvailableWatchdogs(user.Identity.GetUserId());
+
+
+<text>
+    @Html.Raw(preBtnText)
+    @if (availableWatchdogs > 0)
+    {
+<a href="#" class="@btnCss"
+   onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'authenticated');" role="button" data-toggle="modal" data-target="#addWDform@(uid)">
+    @Html.Raw(WebUtil.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
+    <span class="btn-emphasized">@Html.Raw(btnText)</span>
+</a> }
+else
+{
+<a href="/manage/outOfWatchdogs" class="@btnCss"
+   onclick="ga('send', 'event', 'btnWatchDog', 'OutOf', 'authenticated');" role="button">
+    @Html.Raw(WebUtil.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
+    <span class="btn-emphasized">@Html.Raw(btnText)</span>
+</a>}
+
+    @if (showWDList)
+    {
+<a href="/manage/Watchdogs" class="@btnCss"
+   style="padding-left:15px;padding-right:15px"
+   alt="Všichni uložení hlídači" title="Všichni uložení hlídači"
+   onclick="ga('send', 'event', 'btnWatchDog', 'List', 'authenticated');" role="button">
+    @Html.Raw(WebUtil.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>&nbsp;<span class=\"glyphicon glyphicon-th-list\"></span>", "Všichni uložení hlídači"))
+
+</a>}
+    @Html.Raw(postBtnText)
+    <!-- Modal -->
+    <div class="modal fade" id="addWDform@(uid)" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseBtnIcon', 'authenticated');" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Přidání nového hlídače</h4>
+                </div>
+                <div class="modal-body text-left">
+                    <div>
+                        <div class="col-xs-12">
+                            <label for="txt" class="control-label">Pojmenování hlídače</label>
+                            <div>
+                                <input type="text" class="form-control--small" name="wdname@(uid)" id="wdname@(uid)" placeholder="Pojmenování hlídače pro přehlednost" value="@prefillWDname">
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <label for="period@(uid)" class="control-label">Jak často máme kontrolovat nové @dataTypeName?</label>
+                            <div>
+                                <select class="form-control--small" name="period@(uid)" id="period@(uid)">
+                                    @foreach (var kv in periodList)
+                                    {
+                                        if (kv.Value == "2")
+                                        {
+                <option value="@kv.Value" selected="selected" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option> }
+                                        else //if (user?.IsInRole("betatester") == true || user?.IsInRole("canEditData") == true)
+                                        {
+                <option value="@kv.Value" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option>}
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        @if (dataType == typeof(HlidacStatu.Lib.Data.Smlouva))
+                        {
+    <div class="col-xs-12">
+        <label for="focus@(uid)" class="control-label">Typ upozornění</label>
+        <div>
+            <select class="form-control--small" name="focus@(uid)" id="focus@(uid)">
+                <option value="0">Zašlete mi přehled o nových smlouvách v Registru smluv</option>
+                <option value="1">Upozorněte mě na problémy v nových smlouvách</option>
+            </select>
+        </div>
+    </div> }
+else if (dataType == typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka))
+{
+<div class="col-xs-12">
+    <label for="focus@(uid)" class="control-label">Typ veřejných zakázek</label>
+    <div>
+        <select class="form-control--small" name="focus@(uid)" id="focus@(uid)">
+            <option value="0">Zašlete mi info o jakékoliv změně veřejné zakázky</option>
+            <option value="1">Upozorněte mě pouze na zakázky do kterých se dá ještě přihlásit</option>
+        </select>
+    </div>
+</div> }
+else
+{
+<input type="hidden" name="focus@(uid)" id="focus@(uid)" value="0">}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+                    <a href="#" role="button" class="btn btn-success" onclick="javascript: ga('send', 'event', 'btnWatchDog', 'AddNew', 'authenticated');AddNewWD('@query.Replace("'", "\\'")','@datatypeApi',$('#wdname@(uid)').val(),$('#period@(uid)').val(), $('#focus@(uid)').val(), this);return false;">Přidat hlídače</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</text> }
+else
+{
+<text>
+    @Html.Raw(preBtnText)
+    <a href="#" onclick="ga('send', 'event', 'btnWatchDog', 'AddNew', 'anonym');" class="@btnCss" role="button" data-toggle="modal" data-target="#addWDhelp@(uid)">
+        @Html.Raw(WebUtil.IfExists(showBtnIcon, "<span class=\"glyphicon glyphicon-eye-open dark\"></span>", ""))
+        <span class="btn-emphasized">@Html.Raw(btnText)</span>
+    </a>
+    @Html.Raw(postBtnText)
+    <!-- Modal -->
+    <div class="modal fade" id="addWDhelp@(uid)" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseBtnIcon', 'authenticated');" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Musíte být přihlášeni</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <code>Hlídač nových smluv</code> posílá upozornění pouze zaregistrovaným uživatelům.
+                    </p>
+                    <p>
+                        Registrace je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se přihlásit.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="ga('send', 'event', 'btnWatchDog', 'CloseForm', 'anonym');" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+                    <a onclick="ga('send', 'event', 'registerBtn', 'click','@CurrPageUrlPath'); return true;" href="/account/register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Register', 'anonym');" role="button" class="btn btn-primary">Zdarma zaregistrovat</a>
+                    <a onclick="ga('send', 'event', 'registerBtn', 'click','@CurrPageUrlPath'); return true;" href="/account/login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))" onclick="ga('send', 'event', 'btnWatchDog', 'Login', 'anonym');" role="button" class="btn btn-success">Přihlásit se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</text>}
+}
+
+@helper FeedbackModal(string btnText)
+{
+    @FeedbackModal(btnText, null, null, null)
+}
+@helper FeedbackModal(string btnText, string selectOption)
+{
+    @FeedbackModal(btnText, selectOption, null, null)
+}
+@helper FeedbackModal(string btnText, string selectOption, string style, string idPrefix)
+{
+    @FeedbackModal(btnText, selectOption, style, idPrefix, null, false);
+}
+@helper FeedbackModal(string btnText, string selectOption, string style, string idPrefix, string[] options = null)
+{
+    @FeedbackModal(btnText, selectOption, style, idPrefix, options, false);
+}
+@helper FeedbackModal(string btnText, string selectOption, string style, string idPrefix, string[] options = null, bool mustAuth = false, string addData = "")
+{bool defaultForm = options == null;
+    System.Security.Principal.IPrincipal user = CurrPage.User;
+    string[] defaultOptions = new string[] {
+"Chyba","Chci upozornit na chybu",
+"Afera","Tuhle aféru byste meli sledovat",
+"Stiznost","Chci si stěžovat",
+"Pochvala","Chci vás pochválit",
+"NabidkaPomoci","Nabízím vám pomoc",
+"Jiné","Jiné",
+};
+    if (options == null)
+    {
+        options = defaultOptions;
+    }
+
+    if (string.IsNullOrEmpty(style))
+    {
+        style = "btn btn-primary btn-sm";
+    }
+    if (string.IsNullOrEmpty(idPrefix))
+    {
+        idPrefix = System.Guid.NewGuid().ToString("N");
+    }
+
+    if (mustAuth == false || (mustAuth && user?.Identity?.IsAuthenticated == true))
+    {<!-- Button trigger modal -->
+                            <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button> <!-- Modal -->
+                                                <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+                                                     aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close"
+                                                                        data-dismiss="modal">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    <span class="sr-only">Close</span>
+                                                                </button>
+                                                                <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                                                                    Upozornění či poslání vzkazu
+                                                                </h4>
+                                                                @if (defaultForm)
+                                                                {
+                                            <div class="alert alert-danger" role="alert">
+                                                Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a>
+                                            </div>}
+                                                            </div>
+
+                                                            <!-- Modal Body -->
+                                                            <form class="form-horizontal" role="form">
+                                                                <input type="hidden" id="@(idPrefix)fbdata" name="@(idPrefix)fbdata" value="@addData" />
+                                                                <div class="modal-body">
+
+                                                                    <input type="hidden" name="@(idPrefix)fbUrl" id="@(idPrefix)fbUrl" value="@Request.Url.AbsoluteUri" />
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label"
+                                                                               for="@(idPrefix)fbInputTyp">Typ zprávy</label>
+                                                                        <div class="col-sm-10">
+                                                                            <select class="form-control" id="@(idPrefix)fbInputTyp">
+                                                                                @for (int i = 0; i < options.Length; i = i + 2)
+                                                                                {
+                                                            <option @WebUtil.IfExists(options[i] == selectOption, "selected='selected'") value="@options[i]">@options[i + 1]</option>}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label"
+                                                                               for="@(idPrefix)fbInputTxt">Vzkaz</label>
+                                                                        <div class="col-sm-10">
+                                                                            <textarea class="form-control" id="@(idPrefix)fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-2 control-label"
+                                                                               for="@(idPrefix)fbInputEmail">Váš email</label>
+                                                                        <div class="col-sm-10">
+                                                                            <input type="email" class="form-control"
+                                                                                   id="@(idPrefix)fbInputEmail" placeholder="Email" value="@(CurrPage.User?.Identity?.Name)" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <!-- Modal Footer -->
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                                        Zrušit
+                                                                    </button>
+                                                                    <button type="button" onclick="send@(idPrefix)();" class="btn btn-primary" data-dismiss="modal">
+                                                                        Odeslat vzkaz
+                                                                    </button>
+                                                                    <br />
+                                                                    <div><a class="btn btn-default btn-sm" href="/Kontakt">Další kontakty zde</a></div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                                    <script>
+        function send@(idPrefix)() {
+            var prf = '#@(idPrefix)';
+            var typ = $(prf + "fbInputTyp").val();
+            var email = $(prf + "fbInputEmail").val();
+            var text = $(prf + "fbInputTxt").val();
+            var url = $(prf + "fbUrl").val();
+            var adddata = $(prf + "fbdata").val();
+            $.get("/sendFeedbackMail", { typ: typ, email: email, txt: text, url: url, data: adddata, auth: @mustAuth.ToString().ToLower() })
+              .always(function () {
+                  alert("Děkujeme za zaslání zprávy.");
+              });
+
+        }
+                                                                    </script> }
+                                                                                    else
+                                                                                    {
+                                                                    <text>
+                                                                        <!-- Button trigger modal -->
+                                                                        <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button>
+
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+                                                                             aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <!-- Modal Header -->
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close"
+                                                                                                data-dismiss="modal">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                            <span class="sr-only">Close</span>
+                                                                                        </button>
+                                                                                        <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                                                                                            Musíte být přihlášeni
+                                                                                        </h4>
+                                                                                    </div>
+
+                                                                                    <!-- Modal Body -->
+                                                                                    <form class="form-horizontal" role="form">
+                                                                                        <div class="modal-body">
+                                                                                            <p>Pro poslání vzkazu musíte být přihlášeni.</p>
+                                                                                            <p>
+                                                                                                <a href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a> je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
+                                                                                            </p>
+
+                                                                                        </div>
+
+                                                                                        <!-- Modal Footer -->
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                                                                Zavřít
+                                                                                            </button>
+                                                                                        </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </text>}
+
+}
+
+@helper FeedbackPriloha(string btnText, string style, string smlouvaId, string prilohaId)
+{string idPrefix = System.Guid.NewGuid().ToString("N");
+    if (string.IsNullOrEmpty(style))
+    {
+        style = "btn btn-primary btn-sm";
+    }<!-- Button trigger modal -->
+                    <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">Zpřístupnit tuto přílohu</button> <!-- Modal -->
+                                    <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+                                         aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <button type="button" class="close"
+                                                            data-dismiss="modal">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        <span class="sr-only">Close</span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                                                        Zpřístupnění skryté přílohy
+                                                    </h4>
+                                                    <p>
+                                                        Přílohy zneplatněných smluv jsou z registru smluv smazané (obvykle z důvodu ochrany osobních údajů). My je však pro jistotu uchováváme, ale nezveřejňujeme.
+                                                    </p>
+                                                    <p>
+                                                        Pokud existuje závažný veřejný zájem na dostupnosti této přílohy, pošlete nám podrobnosti/odůvodnění a my vám přílohu zpřístupníme.
+                                                    </p>
+                                                </div>
+
+                                                <!-- Modal Body -->
+                                                <form class="form-horizontal" role="form">
+                                                    <div class="modal-body">
+
+                                                        <input type="hidden" name="@(idPrefix)fbUrl" id="@(idPrefix)fbUrl" value="@Request.Url.AbsoluteUri" />
+                                                        <input type="hidden" name="@(idPrefix)fbPriloha" id="@(idPrefix)fbUrl" value="@prilohaId" />
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label"
+                                                                   for="@(idPrefix)fbInputTxt">Vzkaz, odůvodnění</label>
+                                                            <div class="col-sm-10">
+                                                                <textarea class="form-control" id="@(idPrefix)fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label"
+                                                                   for="@(idPrefix)fbInputEmail">Váš email</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="email" class="form-control"
+                                                                       id="@(idPrefix)fbInputEmail" placeholder="Email" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- Modal Footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                            Zrušit
+                                                        </button>
+                                                        <button type="button" onclick="send@(idPrefix)();" class="btn btn-primary" data-dismiss="modal">
+                                                            Odeslat vzkaz
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                    <script>
+        function send@(idPrefix)() {
+            var prf = '#@(idPrefix)';
+            var typ = "Zpřístupnění přílohy";
+            var email = $(prf + "fbInputEmail").val();
+            var text = $(prf + "fbInputTxt").val();
+            var url = $(prf + "fbUrl").val();
+            $.get("/sendFeedbackMail", { typ: typ, email: email, txt: text, url: url })
+              .always(function () {
+                  alert("Děkujeme za zaslání zprávy.");
+              });
+
+        }
+                                                    </script>
+
+
+}
+
+
+
+
+
+
+@helper RenderVazby(HlidacStatu.Lib.Data.Graph.Edge[] vazbyToRender)
+{if (vazbyToRender == null)
+    {
+        return;
+    }
+    if (vazbyToRender.Count() == 0)
+    {
+        return;
+    }
+
+    if (vazbyToRender.Count() == 1)
+    {
+<span>
+    @(vazbyToRender.First().Descr) v @(vazbyToRender.First().To.PrintName())
+    @(vazbyToRender.First().Doba())
+</span> }
+else
+{
+@Html.Raw("Nepřímá vazba přes:<br/><small>")
+                    <span>
+                        @(vazbyToRender.First().From?.PrintName()) @(vazbyToRender.First().Descr)
+                        v @(vazbyToRender.First().To.PrintName()) @(vazbyToRender.First().Doba())
+                        @Html.Raw(" → ")
+
+                        @(vazbyToRender.Skip(1).Select(m => m.Descr + " v " + m.To.PrintName()).Aggregate((f, s) => f + " → " + s))
+                    </span> }
+
+                if (vazbyToRender.Count() > 1)
+                {
+@Html.Raw("</small>")}
+}
+
+@helper RenderVazba(HlidacStatu.Lib.Data.Graph.Edge v)
+{var fname = v.To.PrintName();
+
+@fname @Html.Raw(" - ") @(v.Descr)@Html.Raw("&nbsp;") if (v.RelFrom.HasValue && v.RelTo.HasValue)
+{ @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString())) }
+else if (v.RelTo.HasValue)
+{ @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString())) }
+else if (v.RelFrom.HasValue)
+{ @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))}
+
+}
+
+
+
+@helper ExportButton(System.Security.Principal.IPrincipal user, string typ, string q,
+                    string order = "0", string title = "Export výsledků hledání",
+                    string style = "", string moreParams = "", string gaPageEventId = null)
+{if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+
+    var modalid = Devmasters.Core.TextUtil.GenRandomString(8);<!-- Button trigger modal -->
+                    <a href="#" class="@style" onclick="ga('send', 'event', 'exportBtn', 'click','@gaPageEventId'); return true;" role="button" data-toggle="modal" data-target="#modal@(modalid)"><span class="small">Exportovat výsledky do Excelu</span></a> <!-- Modal -->
+                                    <div class="modal fade" id="modal@(modalid)" tabindex="-1" role="dialog" aria-labelledby="modal@(modalid)">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">@title</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>
+                                                        Export výsledků hledání. Export obsahuje obvykle prvních 1000 záznamů od první stránky v aktuálním třídění.
+                                                        Více záznamů není možné vyexportovat, pokud k tomu nemáte speciální oprávnění.
+                                                    </p>
+                                                    <p class="small text-muted">
+                                                        CSV a Tab delimited souboury jsou kódováné v UTF-8.
+                                                    </p>
+                                                    @if (user?.Identity?.IsAuthenticated == true)
+                                                    {
+                                    <p>
+                                        <a role="button" class="btn btn-primary btn-sm" target="_blank"
+                                           onclick="ga('send', 'event', 'exportBtn', 'export','@gaPageEventId'); return true;"
+                                           href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=excel&@(moreParams)">
+                                            Export do Excelu
+                                        </a>
+                                        @*<a role="button" class="btn btn-default btn-sm" target="_blank"
+                                               href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=numbers&@(moreParams)">
+                                                Do Apple Numbers
+                                            </a>*@
+                                        <a role="button" class="btn btn-default btn-sm" target="_blank"
+                                           href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=csv&@(moreParams)">
+                                            Do CSV
+                                        </a>
+                                        <a role="button" class="btn btn-default btn-sm" target="_blank"
+                                           href="/manage/exportresult/@(typ)?q=@(System.Net.WebUtility.UrlEncode(q))&h=@(HlidacStatu.Lib.Data.Smlouva.Search.QueryHash(typ,q))&o=@(order)&ct=tab&@(moreParams)">
+                                            Do Tab delimited
+                                        </a>
+                                    </p> }
+                                else
+                                {
+                <hr />
+                                    <p><b>Export funguje pouze, když jste přihlášeni.</b></p>
+                                                        <p>
+                                                            <a onclick="ga('send', 'event', 'registerBtn', 'click','@gaPageEventId'); return true;" href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a>
+                                                            je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
+                                                        </p>}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+}
+
+
+
+@helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents,
+                string containerCss = null, string gaPageEventId = null)
+{if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+    containerCss = containerCss ?? "col-xs-12";
+    //tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
+    //contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
+    bool first = true;
+    var id = Guid.NewGuid().ToString("N") + "_";
+    int count = 0;
+
+<div class="@containerCss">
+    <ul class="nav nav-tabs" role="tablist">
+        @foreach (var tabn in tabnames)
+        {
+            count++;
+
+<li role="presentation" @WebUtil.IfExists(first, " class='active' ")>
+    <a href="#@(id+count.ToString())" onclick="ga('send', 'event', 'tabHorizontal', 'change_@count','@gaPageEventId'); return true;" aria-controls="@(id+count.ToString())" role="tab" data-toggle="tab">@Html.Raw(tabn)</a>
+</li>first = false;
+                }
+    </ul>
+
+    <div class="tab-content">
+        @{ first = true;
+            count = 0; }
+        @foreach (var s in contents)
+        {
+            count++;
+<div role="tabpanel" class="tab-pane @WebUtil.IfExists(first, "active")" id="@(id+count.ToString())">
+    @Html.Raw(s)
+
+</div>first = false;
+}
+    </div>
+
+</div>
+}
+
+
+@helper VerticalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents, string containerCss = null,
+                string tabColCss = null, string contentColCss = null, string gaPageEventId = null)
+{if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+    containerCss = containerCss ?? "col-xs-12";
+    tabColCss = tabColCss ?? "col-lg-2 col-md-2 col-sm-2 col-xs-3";
+    contentColCss = contentColCss ?? "col-lg-10 col-md-10 col-sm-10 col-xs-9";
+    bool first = true;
+    var arrTabnames = tabnames.ToArray();
+<div class="@containerCss verticaltab-container">
+    <div class="@tabColCss verticaltab-menu">
+        <div class="list-group">
+            @for (int i = 0; i < arrTabnames.Length; i++)
+            {
+                string s = arrTabnames[i];
+                if (s != null)
+                {
+<a href="#" onclick="ga('send', 'event', 'tabVertical', 'change_@i','@gaPageEventId'); return true;" class="list-group-item @(first ? "active" : "")">
+    @Html.Raw(s)
+</a>                    first = false;
+}
+}
+        </div>
+    </div>
+    <div class="@contentColCss verticaltab">
+        @{ first = true; }
+        @foreach (var s in contents)
+        {
+            if (s != null)
+            {
+<div class="verticaltab-content @(first ? "active" : "")">
+    @Html.Raw(s)
+</div>first = false;
+}
+}
+    </div>
+
+</div>
+}
+
+@helper LowBox(string content, string gaPageEventId = null)
+{
+    @LowBox(120, content, gaPageEventId)
+}
+
+@helper LowBox(int width, string content, string gaPageEventId = null)
+{if (gaPageEventId == null)
+    {
+        gaPageEventId = CurrPageUrlPath;
+    }
+<div class="low-box" style="max-height:@(width)px">
+    <div class="low-box-line" style="top:@(width-55)px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@gaPageEventId'); return true;" class="more"></a></div>
+    <div class="low-box-content">
+        @Html.Raw(content)
+    </div>
+</div>
+
+}
+
+@helper XContent(string content, bool raw = false)
+{if (string.IsNullOrEmpty(content))
+    {
+<span>&nbsp;</span> }
+else if (raw == false)
+{
+<span>@content</span> }
+else
+{
+<span>@Html.Raw(content)</span>}
+
+}
+

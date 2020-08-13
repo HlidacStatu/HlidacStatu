@@ -187,7 +187,7 @@ XINTEXT (0->0.7mld),
     </ol>
 }
 
-@Util.AddVisitImg("/report/" + Model.ToString())
+@WebUtil.AddVisitImg("/report/" + Model.ToString())
 
 @{
     RouteValueDictionary data = ViewContext.RequestContext.RouteData.Values;
@@ -202,6 +202,6 @@ XINTEXT (0->0.7mld),
 }
 @Html.Action("Report_child_"+viewCache, new { routedata = data })
 
-@Util.FeedbackModal("Poslat opravu či připomínku")
+@WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
 

@@ -46,7 +46,7 @@
         smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');
     </script>
 
-    @Util.SetAutofocusOnId("Q")
+    @WebUtil.SetAutofocusOnId("Q")
 }
 
 @section title
@@ -57,7 +57,7 @@
             <ul>
                 <li class=""><a href="/data">Další databáze<sup style="top:0;text-decoration:none;color:yellow;">@(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "")</sup></a></li>
                 <li class=""><a href="/reporty">Analýzy a reporty<sup style="top:0;text-decoration:none;color:yellow;">@(PocetReportu)</sup></a></li>
-                <li class=""><a @Util.GAClick("ZjistiliJsme") style="font-weight:bold;color:yellow;" href="/texty">Zjistili jsme</a></li>
+                <li class=""><a @WebUtil.GAClick("ZjistiliJsme") style="font-weight:bold;color:yellow;" href="/texty">Zjistili jsme</a></li>
                 <li class=""><a href="https://www.hlidacstatu.cz/texty/series/tipy/">Tipy „Jak používat Hlídače“</a></li>
             </ul>
             <ul>

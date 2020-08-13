@@ -59,7 +59,7 @@
 
 
 <h3>Osoby a firmy sponzorující politické strany celkovou částkou vyšší než 100.000 Kč
-    @Util.IfExists(rok != 0, " v roce " + rok, " souhrnně za posledních 10 let")
+    @WebUtil.IfExists(rok != 0, " v roce " + rok, " souhrnně za posledních 10 let")
     </h3>
 <div style="margin-top:20px;margin-bottom:40px;">
     <ul class="list-inline">
@@ -89,4 +89,4 @@
 @Html.Raw(content.Get())
 
 
-@Util.FeedbackModal("Poslat opravu či připomínku")
+@WebUtil.FeedbackModal("Poslat opravu či připomínku")

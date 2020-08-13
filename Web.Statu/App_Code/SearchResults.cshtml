@@ -6,23 +6,26 @@
 @using HlidacStatu.Web.Framework;
 
 @functions
-{
+{ 
     private static new HtmlHelper<object> Html
-    {
-        get { return ((WebViewPage)CurrentPage).Html; }
-    }
+            {
+                get { return ((WebViewPage)CurrentPage).Html; }
+            }
 
-    private static UrlHelper Url
-    {
-        get { return ((WebViewPage)CurrentPage).Url; }
+            private static UrlHelper Url
+            {
+                get { return ((WebViewPage)CurrentPage).Url; }
+            } 
+    
+    
     }
-}
 
 
 
 @helper OsobaTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
             int maxItems, HlidacStatu.Lib.Searching.OsobaSearchResult result)
 {
+   
     <table class="table table-hover">
         <thead>
             @SearchResults.OsobaHead()
@@ -30,8 +33,7 @@
         <tbody>
             @foreach (var hit in result.Results.Take(maxItems))
             {
-                @SearchResults.OsobaRow(user, req, hit)
-            }
+@SearchResults.OsobaRow(user, req, hit)}
         </tbody>
     </table>
 
@@ -52,11 +54,11 @@
 {
     <tr>
         <td style="white-space: nowrap;">
-            @Util.NoWrapHtml(
-                Util.AddBookmark(user, item),
-                Html.Raw("&nbsp;"),
-                Html.Raw($"<a href='{item.GetUrl(false)}'><b>{item.FullNameWithYear(true)}</b></a>")
-             )
+            @WebUtil.NoWrapHtml(
+                     WebUtil.AddBookmark(user, item),
+                     Html.Raw("&nbsp;"),
+                     Html.Raw($"<a href='{item.GetUrl(false)}'><b>{item.FullNameWithYear(true)}</b></a>")
+                  )
         </td>
         <td>
             @Html.Raw(item.Description(true, m => true, 3))
@@ -66,23 +68,19 @@
             {
                 foreach (var v in item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Take(2))
                 {
-                    @RenderOsobaVazba(v)
+@RenderOsobaVazba(v) }
+                    if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length == 3)
+                    {
+@RenderOsobaVazba(item.Vazby()[2]) }
+                    else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
+                    {
+<span>@HlidacStatu.Util.PluralForm.Get(item.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>}
                 }
-                if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length == 3)
-                {
-                    @RenderOsobaVazba(item.Vazby()[2])
-                }
-                else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
-                {
-                    <span>@HlidacStatu.Util.PluralForm.Get(item.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>
-                }
-            }
         </td>
     </tr>
 }
 @helper RenderOsobaVazba(HlidacStatu.Lib.Data.Graph.Edge v)
-{
-    var fname = v.To.PrintName();
+{var fname = v.To.PrintName();
     <div>
         @if (string.IsNullOrEmpty(fname))
         {
@@ -91,17 +89,11 @@
         @fname @Html.Raw("-") @(v.Descr)@Html.Raw("&nbsp;")
 
         @if (v.RelFrom.HasValue && v.RelTo.HasValue)
-        {
-            @(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString()))
-        }
-        else if (v.RelTo.HasValue)
-        {
-            @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString()))
-        }
-        else if (v.RelFrom.HasValue)
-        {
-            @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))
-        }
+        {@(string.Format("({0} - {1})", v.RelFrom.Value.ToShortDateString(), v.RelTo.Value.ToShortDateString())) }
+                else if (v.RelTo.HasValue)
+                { @(string.Format("(do {0})", v.RelTo.Value.ToShortDateString())) }
+                else if (v.RelFrom.HasValue)
+                { @(string.Format("(od {0})", v.RelFrom.Value.ToShortDateString()))}
     </div>
 }
 
@@ -119,17 +111,15 @@
             <tbody>
                 @foreach (var hit in result.ElasticResults.Hits.Take(maxItems))
                 {
-                    @SearchResults.InsolvenceRow(user, req, hit.Source)
-                }
+@SearchResults.InsolvenceRow(user, req, hit.Source)                }
             </tbody>
         </table>
 
         @if (result.Total > maxItems)
         {
-            <div class="text-center">
-                <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "Insolvence", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
-            </div>
-        }
+<div class="text-center">
+    <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "Insolvence", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
+</div>}
 
     </div>
 }
@@ -145,8 +135,7 @@
         <th>Stav řízení</th>
         @if (small == false)
         {
-            <th>Soud</th>
-        }
+<th>Soud</th>}
     </tr>
 }
 
@@ -155,48 +144,42 @@
 {
     <tr>
         <td style="white-space: nowrap;">
-            @Util.NoWrapHtml(
-                Util.AddBookmark(user, item),
-                Html.Raw("&nbsp;"),
-                 Util.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request),
-                    $"<a href='{item.GetUrl(true, query)}'>{item.SpisovaZnacka}</a>",
-                    $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/Insolvence/Rizeni/{item.UrlId()}'>{item.SpisovaZnacka}</a>"
-                )
-             )
+            @WebUtil.NoWrapHtml(
+                     WebUtil.AddBookmark(user, item),
+                     Html.Raw("&nbsp;"),
+                     WebUtil.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(request),
+                         $"<a href='{item.GetUrl(true, query)}'>{item.SpisovaZnacka}</a>",
+                         $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/Insolvence/Rizeni/{item.UrlId()}'>{item.SpisovaZnacka}</a>"
+                     )
+                  )
         </td>
         <td>
             @if (item.Dluznici?.Count > 0)
             {
                 foreach (var o in item.Dluznici.Take(2))
                 {
-                    <div>@Html.Raw(o.ToHtml())</div>
+<div>@Html.Raw(o.ToHtml())</div> }
+                    if (item.Dluznici.Count == 3)
+                    {
+<div>@Html.Raw(item.Dluznici[2].ToHtml())</div> }
+                    else if (item.Dluznici.Count > 3)
+                    {
+<div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>}
                 }
-                if (item.Dluznici.Count == 3)
-                {
-                    <div>@Html.Raw(item.Dluznici[2].ToHtml())</div>
-                }
-                else if (item.Dluznici.Count > 3)
-                {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>
-                }
-            }
         </td>
         <td>
             @if (item.Veritele?.Count > 0)
             {
                 foreach (var o in item.Veritele.Take(2))
                 {
-                    <div>@Html.Raw(o.ToHtml())</div>
+<div>@Html.Raw(o.ToHtml())</div> }
+                    if (item.Veritele.Count == 3)
+                    {
+<div>@Html.Raw(item.Veritele[2].ToHtml())</div> }
+                    else if (item.Veritele.Count > 3)
+                    {
+<div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>}
                 }
-                if (item.Veritele.Count == 3)
-                {
-                    <div>@Html.Raw(item.Veritele[2].ToHtml())</div>
-                }
-                else if (item.Veritele.Count > 3)
-                {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>
-                }
-            }
         </td>
         <td>
             @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")
@@ -210,10 +193,9 @@
         </td>
         @if (small == false)
         {
-            <td>
-                <span>@item.SoudFullName()</span>
-            </td>
-        }
+<td>
+    <span>@item.SoudFullName()</span>
+</td>}
     </tr>
 }
 
@@ -226,9 +208,8 @@
         <th>Vznik</th>
         @if (small == false)
         {
-            <th>Počet smluv v RS</th>
-            <th>Hodnota smluv v RS</th>
-        }
+<th>Počet smluv v RS</th>
+                    <th>Hodnota smluv v RS</th>}
     </tr>
 }
 
@@ -236,16 +217,15 @@
 {
     <tr>
         <td>
-            @Util.AddBookmark(user, rec)
+            @WebUtil.AddBookmark(user, rec)
         </td>
         <td><a href="@rec.GetUrl(true)">@rec.ICO</a></td>
         <td><a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
         <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
         @if (small == false)
         {
-            <td>@HlidacStatu.Util.RenderData.NiceNumber(rec.Statistic().BasicStatPerYear.SummaryAfter2016().Pocet)</td>
-            <td>@HlidacStatu.Util.RenderData.NicePrice(rec.Statistic().BasicStatPerYear.SummaryAfter2016().CelkemCena)</td>
-        }
+<td>@HlidacStatu.Util.RenderData.NiceNumber(rec.Statistic().BasicStatPerYear.SummaryAfter2016().Pocet)</td>
+                    <td>@HlidacStatu.Util.RenderData.NicePrice(rec.Statistic().BasicStatPerYear.SummaryAfter2016().CelkemCena)</td>}
 
     </tr>
 }
@@ -256,8 +236,7 @@
         <th>Smlouva podepsána</th>
         @if (small == false)
         {
-            <th>Smlouva zveřejněna</th>
-        }
+<th>Smlouva zveřejněna</th>}
         <th title="Publikující smluvní strana">Plátce</th>
         <th title="Smluvní strana/y">Dodavatel/é</th>
         <th>Maximální hodnota<br />smlouvy s DPH</th>
@@ -266,139 +245,122 @@
 
 @helper SmlouvyRow(System.Security.Principal.IPrincipal user, HlidacStatu.Lib.Data.Smlouva rec,
         HlidacStatu.Lib.Searching.SmlouvaSearchResult Model, bool small = true)
-{
-    var confLevel = rec.GetConfidenceLevel();
-    string bgLevel = "", iconLevel = "";
+{var confLevel = rec.GetConfidenceLevel();
+                    string bgLevel = "", iconLevel = "";
 
 
-    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
-    {
-        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
-        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
-    }
+                    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
+                    {
+                        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
+                        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
+                    }
 
     <tr class="bg@(bgLevel) first">
         <td>
-            @Util.NoWrapHtml(
-                Html.Raw(iconLevel),
-                Util.AddBookmark(user, rec),
-                Html.Raw($"&nbsp;<a href='{rec.GetUrl(true, Model.Q)}'>{rec.Id}</a>")
-                )
+            @WebUtil.NoWrapHtml(
+                     Html.Raw(iconLevel),
+                     WebUtil.AddBookmark(user, rec),
+                     Html.Raw($"&nbsp;<a href='{rec.GetUrl(true, Model.Q)}'>{rec.Id}</a>")
+                     )
         </td>
         <td>@rec.datumUzavreni.ToShortDateString()</td>
         @if (small == false)
         {
-            <td>
-                @if (rec.platnyZaznam)
-                {
-                    @rec.casZverejneni.ToShortDateString()
-                }
-                else
-                {
-                    <span class="text-warning">Zneplatněná smlouva</span>
-                }
-            </td>
-        }
+<td>
+    @if (rec.platnyZaznam)
+    {
+@rec.casZverejneni.ToShortDateString() }
+                    else
+                    {
+<span class="text-warning">Zneplatněná smlouva</span>}
+</td>}
         <td>
             @if (!string.IsNullOrEmpty(rec.Platce?.ico))
             {
-                <a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a>
-            }
-            else
-            {
-                @(rec.Platce?.nazev)
-            }
+<a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a> }
+                else
+                { @(rec.Platce?.nazev)}
         </td>
         <td>
             @if (rec.Prijemce.Count() == 1)
             {
                 if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
                 {
-                    <a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a>
+<a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a> }
+                    else
+                    {
+@rec.Prijemce[0].nazev }
                 }
                 else
                 {
-                    @rec.Prijemce[0].nazev
-                }
-            }
-            else
-            {
-                <ol>
-                    @foreach (var subj in rec.Prijemce.Take(2))
-                    {
-                        if (!string.IsNullOrEmpty(subj.ico))
-                        {
-                            <li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li>
-                        }
+<ol>
+    @foreach (var subj in rec.Prijemce.Take(2))
+    {
+        if (!string.IsNullOrEmpty(subj.ico))
+        {
+<li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li> }
                         else
                         {
-                            <li>@subj.nazev</li>
-                        }
+<li>@subj.nazev</li>                        }
                     }
-                </ol>
-                @Util.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
-            }
+</ol>
+                    @WebUtil.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+                }
         </td>
         <td>@Html.Raw(rec.NicePrice(html: true))</td>
 
     </tr>
-    <tr class="bg@(bgLevel) last">
-        <td></td>
-        <td colspan="@Util.IfExists(small,"5","6")">
-            @Devmasters.Core.TextUtil.ShortenText(rec.predmet, 200)
-            @if (small && rec.GetRelevantClassification().Count() > 0)
-            {
-                <span class="text-success">&nbsp;|&nbsp;<b>Obor</b>: @(rec.GetRelevantClassification().First().ClassifTypeName())</span>
-            }
-            else if (rec.GetRelevantClassification().Count() > 0)
-            {
-                <span class="text-success">&nbsp;|&nbsp;<b>Obor smlouvy</b>: @(string.Join(" / ", rec.GetRelevantClassification().Select(m => m.ClassifTypeName())))</span>
-
-            }
-        </td>
-    </tr>
+                    <tr class="bg@(bgLevel) last">
+                        <td></td>
+                        <td colspan="@WebUtil.IfExists(small,"5","6")">
+                            @Devmasters.Core.TextUtil.ShortenText(rec.predmet, 200)
+                            @if (small && rec.GetRelevantClassification().Count() > 0)
+                            {
+            <span class="text-success">&nbsp;|&nbsp;<b>Obor</b>: @(rec.GetRelevantClassification().First().ClassifTypeName())</span> }
+                            else if (rec.GetRelevantClassification().Count() > 0)
+                            {
+            <span class="text-success">&nbsp;|&nbsp;<b>Obor smlouvy</b>: @(string.Join(" / ", rec.GetRelevantClassification().Select(m => m.ClassifTypeName())))</span>}
+                        </td>
+                    </tr>
 }
 @helper SmlouvyRowChyby(HlidacStatu.Lib.Data.Smlouva rec)
-{
-    var confLevel = rec.GetConfidenceLevel();
-    string bgLevel = "", iconLevel = "";
+{var confLevel = rec.GetConfidenceLevel();
+                    string bgLevel = "", iconLevel = "";
 
 
-    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
-    {
-        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
-        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
-    }
-    if (rec.Issues != null && rec.Issues.Where(m => m.Public).Count() > 0)
-    {
-        <tr class="bg@(bgLevel) last">
-            <td class="joined">&nbsp;</td>
-            <td colspan="5" class="joined">
-                <h5>
-                    Počet nedostatků: @(rec.Issues.Where(m => m.Public).Count())
-                    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseRec_@(rec.Id)" aria-expanded="false" aria-controls="collapseRec_@(rec.Id)">
-                        Ukázat
-                    </button>
-                </h5>
-                <div class="collapse issueCol" id="collapseRec_@(rec.Id)">
+                    if (confLevel > HlidacStatu.Lib.Issues.ImportanceLevel.Formal)
+                    {
+                        bgLevel = HlidacStatu.Lib.Issues.Importance.GetCssClass(confLevel, true);
+                        iconLevel = HlidacStatu.Lib.Issues.Importance.GetIcon(confLevel);
+                    }
+                    if (rec.Issues != null && rec.Issues.Where(m => m.Public).Count() > 0)
+                    {
+    <tr class="bg@(bgLevel) last">
+        <td class="joined">&nbsp;</td>
+        <td colspan="5" class="joined">
+            <h5>
+                Počet nedostatků: @(rec.Issues.Where(m => m.Public).Count())
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseRec_@(rec.Id)" aria-expanded="false" aria-controls="collapseRec_@(rec.Id)">
+                    Ukázat
+                </button>
+            </h5>
+            <div class="collapse issueCol" id="collapseRec_@(rec.Id)">
 
-                    <ul class="list-group">
+                <ul class="list-group">
 
-                        @foreach (var iss in rec.Issues.Where(m => m.Public).OrderByDescending(m => m.Importance))
+                    @foreach (var iss in rec.Issues.Where(m => m.Public).OrderByDescending(m => m.Importance))
+                    {
+                        if (iss.Public && iss.Importance != HlidacStatu.Lib.Issues.ImportanceLevel.NeedHumanReview)
                         {
-                            if (iss.Public && iss.Importance != HlidacStatu.Lib.Issues.ImportanceLevel.NeedHumanReview)
-                            {
-                                <li title="@iss.Importance.ToNiceDisplayName()" class="list-group-item list-group-item@(HlidacStatu.Lib.Issues.Importance.GetCssClass(iss.Importance, true))">
-                                    <span class="glyphicon glyphicon-eye-open" style="font-size:75%;" aria-hidden="true"></span>&nbsp;@iss.Title : @iss.TextDescription
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-            </td>
-            <td class="joined">&nbsp;</td>
-        </tr>
-    }
+<li title="@iss.Importance.ToNiceDisplayName()" class="list-group-item list-group-item@(HlidacStatu.Lib.Issues.Importance.GetCssClass(iss.Importance, true))">
+    <span class="glyphicon glyphicon-eye-open" style="font-size:75%;" aria-hidden="true"></span>&nbsp;@iss.Title : @iss.TextDescription
+</li>}
+                    }
+                </ul>
+            </div>
+        </td>
+        <td class="joined">&nbsp;</td>
+    </tr>}
 }
 
 @helper VZTableResult(System.Security.Principal.IPrincipal user, HttpRequestBase req,
@@ -408,8 +370,7 @@
     <div class="table-new searching__watcher__table">
         @if (result.Total > maxItems)
         {
-            <h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)maxItems, "první výsledek", "první {0} výsledky", "prvních {0} výsledků"))</h4>
-        }
+<h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)maxItems, "první výsledek", "první {0} výsledky", "prvních {0} výsledků"))</h4>}
         <table class="table table-hover">
             <thead>
                 @SearchResults.VZHeader(skipBookmark)
@@ -420,16 +381,14 @@
                                 //.Where(m => !string.IsNullOrEmpty(m.NazevZakazky?.Trim()) && !string.IsNullOrEmpty(m.PopisZakazky?.Trim()))
                                 .Take(maxItems))
                 {
-                    @SearchResults.VZRow(user, req, item, query, skipBookmark, small)
-                }
+@SearchResults.VZRow(user, req, item, query, skipBookmark, small)                }
             </tbody>
         </table>
         @if (result.Total > maxItems)
         {
-            <div class="text-center">
-                <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "VZ", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
-            </div>
-        }
+<div class="text-center">
+    <a class="btn btn-default btn-default-new" href="@Url.Action("Hledat", "VZ", result.ToRouteValues(1))">zobrazit všechny nalezené </a>
+</div>}
 
     </div>
 }
@@ -451,14 +410,14 @@
 {
     <tr class="first">
         <td style="white-space: nowrap;">
-            @Util.NoWrapHtml(
-                Util.AddBookmark(user, item),
-                Html.Raw("&nbsp;"),
-                Util.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req),
-                  $"<a href='{item.GetUrl(true, query)}'>{item.EvidencniCisloZakazky}</a>",
-                  $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/verejnezakazky/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
-                  )
-            )
+            @WebUtil.NoWrapHtml(
+                     WebUtil.AddBookmark(user, item),
+                     Html.Raw("&nbsp;"),
+                     WebUtil.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req),
+                       $"<a href='{item.GetUrl(true, query)}'>{item.EvidencniCisloZakazky}</a>",
+                       $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/verejnezakazky/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
+                       )
+                 )
         </td>
         <td>
             @(item.PosledniZmena?.ToShortDateString())
@@ -471,13 +430,11 @@
             {
                 if (HlidacStatu.Util.DataValidators.CheckCZICO(item.Zadavatel.ICO))
                 {
-                    <a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a>
+<a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a> }
+                    else
+                    {
+<span>@item.Zadavatel.Jmeno</span>}
                 }
-                else
-                {
-                    <span>@item.Zadavatel.Jmeno</span>
-                }
-            }
         </td>
         <td>
             @if (item.Dodavatele != null && item.Dodavatele.Count() > 0)
@@ -486,16 +443,14 @@
                 {
                     if (HlidacStatu.Util.DataValidators.CheckCZICO(d.ICO))
                     {
-                        <a href="/subjekt/@d.ICO">@d.Jmeno</a><br />
-                    }
-                    else
-                    {
-                        <span>@d.Jmeno</span><br />
-                    }
+<a href="/subjekt/@d.ICO">@d.Jmeno</a><br /> }
+                        else
+                        {
+<span>@d.Jmeno</span><br /> }
 
-                }
-                @Util.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
-            }
+                    }
+@WebUtil.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+}
         </td>
         <td>
             @Devmasters.Core.TextUtil.ShortenText(item.NazevZakazky, 50)
@@ -504,32 +459,27 @@
             <b>
                 @if (item.KonecnaHodnotaBezDPH.HasValue)
                 {
-                    @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value, html: true, shortFormat: small))
-                }
+@Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.KonecnaHodnotaBezDPH.Value, html: true, shortFormat: small)) }
                 else if (item.OdhadovanaHodnotaBezDPH.HasValue)
                 {
-                    <span>odhad.cena </span>
-                    @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value, html: true, shortFormat: small))
-                }
-                else
-                {
-                    <span></span>
-                }
+<span>odhad.cena </span>
+                    @Html.Raw(HlidacStatu.Util.RenderData.NicePrice(item.OdhadovanaHodnotaBezDPH.Value, html: true, shortFormat: small)) }
+                                    else
+                                    {
+                    <span></span>                }
             </b>
         </td>
-    </tr>
-    if (small == false)
-    {
-        <tr class="last">
-            <td></td>
-            <td colspan="2"><span class="small">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</span></td>
-            <td colspan="4">
-                <span class="small">
-                    @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
-                </span>
-            </td>
-        </tr>
-    }
+    </tr> if (small == false)
+                    {
+    <tr class="last">
+        <td></td>
+        <td colspan="2"><span class="small">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</span></td>
+        <td colspan="4">
+            <span class="small">
+                @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
+            </span>
+        </td>
+    </tr>}
 }
 
 
@@ -549,26 +499,22 @@
 {
     <tr class="@((!string.IsNullOrWhiteSpace(item.Duplicita) && item.Zdroj.Nazev != "cedr") ? "alert alert-warning" : "") ">
         <td class="text-nowrap">
-            @{
-                if (!string.IsNullOrWhiteSpace(item.Duplicita) && item.Zdroj.Nazev != "cedr")
-                {
-                    <i class="fas fa-exclamation-circle text-warning" title="Potencionální duplicita"></i>
-                }
-                @Util.AddBookmark(user, item)
-            }
+            @{ if (!string.IsNullOrWhiteSpace(item.Duplicita) && item.Zdroj.Nazev != "cedr")
+                                {
+                <i class="fas fa-exclamation-circle text-warning" title="Potencionální duplicita"></i> }
+                @WebUtil.AddBookmark(user, item) }
             <a href="@(item.GetUrl(true,query))">Detail</a>
         </td>
         <td>
             @Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
-                                item.Prijemce.ObchodniJmeno :
-                                item.Prijemce.HlidacJmeno)
-                        , 40)
+                                     item.Prijemce.ObchodniJmeno :
+                                     item.Prijemce.HlidacJmeno)
+                             , 40)
         </td>
         <td>
             @if (item.Prijemce.Ico != "00000000")
             {
-                <a href="/subjekt/@item.Prijemce.Ico" title="Informace o subjektu">@item.Prijemce.Ico</a>
-            }
+<a href="/subjekt/@item.Prijemce.Ico" title="Informace o subjektu">@item.Prijemce.Ico</a>}
         </td>
         <td>
             @item.GetNazevDotace()
@@ -579,17 +525,14 @@
         <td class="text-right number text-nowrap">
             @if (item.DotaceCelkem == null || item.DotaceCelkem == 0)
             {
-                <code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code>
-            }
-            else
-            {
-                @Html.Raw(HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem, html: true))
-                if (item.PujckaCelkem != null && item.PujckaCelkem > 0)
+<code><i class="fas fa-exclamation-circle"></i> Hodnota neznámá</code> }
+                else
                 {
-                    <br />
-                    <p class="text-muted">z toho @Html.Raw(HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem, html: true)) je půjčka</p>
-                }
-            }
+@Html.Raw(HlidacStatu.Util.RenderData.NicePrice((decimal)item.DotaceCelkem, html: true)) if (item.PujckaCelkem != null && item.PujckaCelkem > 0)
+                    {
+<br />
+                        <p class="text-muted">z toho @Html.Raw(HlidacStatu.Util.RenderData.NicePrice((decimal)item.PujckaCelkem, html: true)) je půjčka</p>}
+                                        }
 
         </td>
     </tr>
@@ -599,19 +542,18 @@
     string controllerName, string[] ignoreRouteValues = null, object htmlAttributes = null,
     bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
 {
-    @Pagination(Url.RequestContext.HttpContext.Request.QueryString["page"], result, resultPageViewName,controllerName,
-    ignoreRouteValues, htmlAttributes,showExport, exportType,user, exportMoreParams);
+    @Pagination(Url.RequestContext.HttpContext.Request.QueryString["page"], result, resultPageViewName, controllerName,
+        ignoreRouteValues, htmlAttributes, showExport, exportType, user, exportMoreParams);
 }
 
 @helper Pagination(string page, HlidacStatu.Lib.Data.Search.ISearchResult result, string resultPageViewName,
     string controllerName, string[] ignoreRouteValues = null, object htmlAttributes = null,
     bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
-{
-int ipage = 1;
-if (Devmasters.Core.TextUtil.IsNumeric(page))
-{
-    ipage = HlidacStatu.Util.ParseTools.ToInt(page) ?? 1;
-}
+{int ipage = 1;
+                    if (Devmasters.Core.TextUtil.IsNumeric(page))
+                    {
+                        ipage = HlidacStatu.Util.ParseTools.ToInt(page) ?? 1;
+                    }
 
     @Pagination(ipage, result, resultPageViewName, controllerName, ignoreRouteValues, htmlAttributes, showExport, exportType, user, exportMoreParams);
 }
@@ -619,44 +561,37 @@ if (Devmasters.Core.TextUtil.IsNumeric(page))
 @helper Pagination(int page, HlidacStatu.Lib.Data.Search.ISearchResult result, string resultPageViewName, string controllerName,
     string[] ignoreRouteValues = null, object htmlAttributes = null,
     bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
-{
-    string firstPageClass = "";
-    string lastPageClass = "";
+{string firstPageClass = "";
+                    string lastPageClass = "";
 
     <div class="text-center">
         <ul class="pagination pagination-lg">
-            @{
-                if (page == 1)
-                {
-                    firstPageClass = "disabled";
-                }
-                if (result.Total < page * result.PageSize
-                    || page * result.PageSize >= result.MaxResultWindow()
-                    )
-                {
-                    lastPageClass = "disabled";
-                }
-
-            }
+            @{ if (page == 1)
+                                {
+                                    firstPageClass = "disabled";
+                                }
+                                if (result.Total < page * result.PageSize
+                                    || page * result.PageSize >= result.MaxResultWindow()
+                                    )
+                                {
+                                    lastPageClass = "disabled";
+                                } }
             @if (string.IsNullOrEmpty(firstPageClass)) //jde jit na predchozi stranku, neni to "disabled"
             {
-                <li class="@firstPageClass">
-                    @Html.CurrentLink("« Předchozí", resultPageViewName, controllerName, result.ToRouteValues(page - 1), htmlAttributes, ignoreRouteValues)
-                </li>
-            }
+<li class="@firstPageClass">
+    @Html.CurrentLink("« Předchozí", resultPageViewName, controllerName, result.ToRouteValues(page - 1), htmlAttributes, ignoreRouteValues)
+</li>}
             @if (string.IsNullOrEmpty(lastPageClass)) //jde jit na dalsi stranku, neni to "disabled"
             {
-                <li class="@lastPageClass">
-                    @Html.CurrentLink("Následující »", resultPageViewName, controllerName, result.ToRouteValues(page + 1), htmlAttributes, ignoreRouteValues)
-                </li>
-            }
+<li class="@lastPageClass">
+    @Html.CurrentLink("Následující »", resultPageViewName, controllerName, result.ToRouteValues(page + 1), htmlAttributes, ignoreRouteValues)
+</li>}
 
             @if (showExport)
             {
-                <li>
-                    @Util.ExportButton(user, exportType, result.Query, result.Order,moreParams:exportMoreParams)
-                </li>
-            }
+<li>
+    @WebUtil.ExportButton(user, exportType, result.Query, result.Order, moreParams: exportMoreParams)
+</li>}
         </ul>
     </div>
 

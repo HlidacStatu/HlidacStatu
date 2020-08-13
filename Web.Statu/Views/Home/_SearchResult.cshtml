@@ -38,7 +38,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
         <div class="col-xs-12">
             <div class="alert alert-danger">Položený dotaz má špatnou syntaxi. Zkontrolujte, že je správně.</div>
             <div>
-                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší strane, @Util.FeedbackModal("napište nám prosím", "Chyba", "btn btn-link", null).
+                Pokud si myslíte, že dotaz je v pořádku a chyba je na naší strane, @WebUtil.FeedbackModal("napište nám prosím", "Chyba", "btn btn-link", null).
                 Zkontrolujeme to.
             </div>
         </div>
@@ -50,7 +50,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
 
     <div class="row">
         <div class="col-sm-6 col-xs-12">
-            @Util.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Smlouva))
+            @WebUtil.AddWatchDog(this.User, Model.Q, typeof(HlidacStatu.Lib.Data.Smlouva))
 
         </div>
         <div class="col-sm-push-1 col-xs-12 col-sm-5">
@@ -58,7 +58,7 @@ this.Request.Url.Scheme + "://" + this.Request.Url.Host + this.Request.Url.Absol
                 Sdílet
             </div>
             <div style="margin: 14px 0 16px">
-                @Util.ShareButtons(Request.Url.AbsoluteUri,
+                @WebUtil.ShareButtons(Request.Url.AbsoluteUri,
               $"Hledání {Model.Q}: {Model.Total} ",
               "", "<br />")
             </div>

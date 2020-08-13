@@ -8,7 +8,7 @@
     Layout = null;
 }
 
-    @Util.AddVisitImg("/report/" + Model.ToString())
+    @WebUtil.AddVisitImg("/report/" + Model.ToString())
 
     @Html.Partial("Reports\\" + (string)ViewBag.NameOfView)
 

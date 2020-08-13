@@ -68,7 +68,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-4">
-            <a @Util.IfExists(!isFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ")
+            <a @WebUtil.IfExists(!isFlatDS, " onclick='return false;' style='cursor: not-allowed;opacity: 0.65;' ")
                class="btn btn-success"
                href="/data/importdata/@Model.id"><i class="far fa-file-import"></i>Importovat data</a>
             <p class="text-info">

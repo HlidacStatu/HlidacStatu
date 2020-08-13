@@ -32,7 +32,7 @@
 }
 
 <h2 id="_top">
-    @Util.AddBookmark(this.User, Model)
+    @WebUtil.AddBookmark(this.User, Model)
     @(Model.Jmeno)
 </h2>
 <h4>zahraniční firma nebo úřad</h4>
@@ -68,13 +68,13 @@
             <td>
                 @if (!string.IsNullOrEmpty(Model.ICO))
                 {
-                    @Util.AddSearchBtn("/hledat", $"ico:{Model.ICO}", $" Vyhledat tuto firmy v celém Hlídači")
-                    @Util.AddWatchDog(this.User, $"ico:{Model.ICO}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    @WebUtil.AddSearchBtn("/hledat", $"ico:{Model.ICO}", $" Vyhledat tuto firmy v celém Hlídači")
+                    @WebUtil.AddWatchDog(this.User, $"ico:{Model.ICO}", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                 }
                 else
                 {
-                    @Util.AddSearchBtn("/hledat", $"\"{Model.Jmeno}\"", $" Vyhledat tuto firmy v celém Hlídači")
-                    @Util.AddWatchDog(this.User, $"\"{Model.Jmeno}\"", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
+                    @WebUtil.AddSearchBtn("/hledat", $"\"{Model.Jmeno}\"", $" Vyhledat tuto firmy v celém Hlídači")
+                    @WebUtil.AddWatchDog(this.User, $"\"{Model.Jmeno}\"", null, "Pohlídat tuto firmu", "", prefillWDname: "Hlídat " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false)
                 }
             </td>
         </tr>

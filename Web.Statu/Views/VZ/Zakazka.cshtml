@@ -42,7 +42,7 @@
 
 
 <h2>
-    @Util.AddBookmark(this.User, Model)
+    @WebUtil.AddBookmark(this.User, Model)
     @Model.NazevZakazky
 </h2>
 
@@ -185,7 +185,7 @@ else
                                             <a href="@Url.Action("TextDokumentu", new { id = @Model.Id, hash = priloha.StorageId })">zobrazit čistý text dokumentu</a>
                                             <span>(@priloha.WordCount slov)</span>
                                         }
-                                        @Util.HighlightContent(highlightingData, "dokumenty.plainText", priloha.PlainText,
+                                        @WebUtil.HighlightContent(highlightingData, "dokumenty.plainText", priloha.PlainText,
                                             prefix: "<br /><blockquote class='small'>", postfix: "</blockquote>")
 
                                     </div>
@@ -218,9 +218,9 @@ else
                 <td>Sdílení</td>
                 <td>
 
-                    @Util.ShareFacebook(Model.GetUrl(false))
-                    @Util.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.GetUrl(false))
+                    @WebUtil.ShareFacebook(Model.GetUrl(false))
+                    @WebUtil.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                    @WebUtil.ShareWidget(Model.GetUrl(false))
                 </td>
             </tr>
             <tr>

@@ -158,14 +158,14 @@ else
             <tr>
                 <th>Novinky o této firmě do mailu</th>
                 <td>
-                    @Util.AddWatchDog(this.User, "ico:" + Model.ICO, null,
+                    @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
                            "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
                            prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
 
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
                         <br />
-                        @Util.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                        @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
                                $"Hlídat změny i "
                                + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
                                + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
@@ -175,9 +175,9 @@ else
             <tr>
                 <th>Sdílet stránku s ostatními</th>
                 <td>
-                    @Util.ShareFacebook(Model.GetUrl(false))
-                    @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.GetUrl(false))
+                    @WebUtil.ShareFacebook(Model.GetUrl(false))
+                    @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                    @WebUtil.ShareWidget(Model.GetUrl(false))
                 </td>
             </tr>
             @{
@@ -487,12 +487,12 @@ else
             {
                 <tr>
                     <th id="_nespolehlivy_platce_dph">
-                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
-                            <span class='@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue, "","glyphicon glyphicon-exclamation-sign")'></span> Firma jako nespolehlivý plátce DPH
+                        <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                            <span class='@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue, "","glyphicon glyphicon-exclamation-sign")'></span> Firma jako nespolehlivý plátce DPH
                         </span>
                     </th>
                     <td>
-                        <span class="@Util.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                        <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
                             od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
                             @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
                             {
@@ -744,7 +744,7 @@ else
                             <p>
                                 <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
                                 <div style="padding-left:20px;">
-                                    @Util.RenderVazby(p.VazbyProICO(Model.ICO))
+                                    @WebUtil.RenderVazby(p.VazbyProICO(Model.ICO))
                                 </div>
                             </p>
                         }

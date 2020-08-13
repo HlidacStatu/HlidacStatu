@@ -40,8 +40,8 @@
                 <div>ID Verze: @(sml.identifikator.idVerze)</div>
                 <div>
                     Uzavřena @sml.datumUzavreni.ToShortDateString(), číslo smlouvy @sml.cisloSmlouvy
-                    @Util.IfExists(sml.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", sml.navazanyZaznam))
-                    @Util.IfExists(sml.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(sml.schvalil), sml.schvalil))
+                    @WebUtil.IfExists(sml.navazanyZaznam, string.Format(", existuje <a href='/Hledatsmlouvy?Q=idSmlouvy:{0}'>související smlouva</a>", sml.navazanyZaznam))
+                    @WebUtil.IfExists(sml.schvalil, string.Format("<div>Smlouvu schválil <a href='/Hledatsmlouvy?Q=schvalil:\"{0}\"'>{1}</a></div>", System.Net.WebUtility.UrlEncode(sml.schvalil), sml.schvalil))
                 </div>
             </td>
         </tr>

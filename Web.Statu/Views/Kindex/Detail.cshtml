@@ -3,7 +3,7 @@
 
 @{
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index podrobně";
+    ViewBag.Title = "K-index";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
 
     decimal kindexValue = Model.KIndex.Value; // Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
@@ -47,7 +47,7 @@
         <li><a href="/">Hlídač Státu</a></li>
         <li>K-Index podrobně</li>
         <li class="active">@ViewBag.Title</li>
-    </ol>
+    </ol> 
 }
 
 <style>
@@ -67,7 +67,6 @@
         width: 620px;
         border: solid grey 0px;
     }
-
     .kframe {
         position: relative;
         width: 60px;
@@ -79,6 +78,21 @@
         float: left;
         margin-right: 1px;
         height: 100%;
+    }
+
+    .kmark {
+        color:#909090;
+        font-weight: bold;
+        position: relative;
+        z-index:100;
+        background: white;
+        display: inline-block;
+        top: -3px;
+        line-height: 10px;
+        font-size: 13px;
+        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+        padding: 0 3px 0 3px;
+        margin: 0;
     }
 
     .textover {
@@ -201,25 +215,30 @@
 </div>
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
-    <h4>Co je to K-index</h4>
+    <h4>Rating K-index</h4>
     <p>
-        <b>K-Index</b> je Index korupčního rizika, který pro tuto organizaci analyzuje Hlídač státu.
-        Hodnota K-Indexu je číselná hodnota v rozsahu 0 až 120, kde 0 je nejlepší výsledek (nejnižší míra korupčního rizika ).
+        Veřejná správa a státní firmy hospodaří s prostředky občanů ČR. Každá organizace se chová jinak,
+        dodržuje zákon, metodiky a doporučení v různé míře. Zanalyzovali jsme více než
+        @HlidacStatu.Util.RenderData.NiceNumber((decimal)Math.Round(HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] / 10000) * 10000) smluv, dvacet tisíc organizací a
+        zanalyzovali jejich transparentnost, dodržování zákona a nakládání s veřejnými penězi.
     </p>
     <p>
-        Pro snadnější interpretaci toto číslo prezentujeme ve formě textového označení:
-        <ul class="list-inline">
-            <li class=""><img src="/Content/kindex/iconA.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[0] a @KIndexData.KIndexLimits[1]</li>
-            <li class=""><img src="/Content/kindex/iconB.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[1] a @KIndexData.KIndexLimits[2]</li>
-            <li class=""><img src="/Content/kindex/iconC.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[2] a @KIndexData.KIndexLimits[3]</li>
-        </ul>
+        Hlídač státu si klade za cíl zpřístupnit složité a nepřehledné hospodaření veřejné správy široké veřejnosti a proto výsledky této analýzy
+        zveřejňujeme ve formě <b>ratingu - Indexu korupčního rizika</b>.
+    </p>
+    <p>
+        Index korupčního rizika - zkráceně <b>K-Index</b>, je ukazatel, který ukazuje míru rizikových faktorů,
+        které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+    </p>
+    <p>
+        Organizace s K-indexem <img src="/Content/kindex/iconA.svg" style="width:15px" /> jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
+        Organizace s K-Index <img src="/Content/kindex/iconF.svg" style="width:15px" /> patří mezi nejhorší.
 
-        <ul class="list-inline">
-            <li class=""><img src="/Content/kindex/iconD.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[3] a @KIndexData.KIndexLimits[4]</li>
-            <li class=""><img src="/Content/kindex/iconE.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[4] a @KIndexData.KIndexLimits[5]</li>
-            <li class=""><img src="/Content/kindex/iconF.svg" style="width:15px" /> - hodnota indexu mezi @KIndexData.KIndexLimits[5] a vyšší</li>
-        </ul>
-
+    </p>
+    <p>
+        Stupnice K-Indexu
+        <img src="/Content/kindex/iconA.svg" style="width:15px" /><img src="/Content/kindex/iconB.svg" style="width:15px" /><img src="/Content/kindex/iconC.svg" style="width:15px" /><img src="/Content/kindex/iconD.svg" style="width:15px" /><img src="/Content/kindex/iconE.svg" style="width:15px" /><img src="/Content/kindex/iconF.svg" style="width:15px" />
+        je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K-indexu a také způsob jeho výpočtu.
     </p>
 </div>
 
@@ -227,16 +246,73 @@
 <hr />
 
 <h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
-<div style="padding-bottom:10px;">
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <div>
+            Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce <img src="@(Model.KIndexLabelIconUrl())" style="width:1em" />.
+        </div>
+        <div class="kmeter" style="padding-top:20px;">
+            <div class="kframe apart">
+                <div class="kfill">
+                    <div class="textover">A</div>
+                    <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
+                </div>
+                <div class="kmark" style="left:42px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[1]</div>
+            </div>
+            <div class="kframe bpart">
+                <div class="kfill">
+                    <div class="textover">B</div>
+                    <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
+                </div>
+                <div class="kmark" style="left:53px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[2]</div>
+            </div>
+            <div class="kframe cpart">
+                <div class="kfill">
+                    <div class="textover">C</div>
+                    <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
+                </div>
+                <div class="kmark" style="left:53px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[3]</div>
+            </div>
+            <div class="kframe dpart">
+                <div class="kfill">
+                    <div class="textover">D</div>
+                    <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
+                </div>
+                <div class="kmark" style="left:50px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[4]</div>
+            </div>
+            <div class="kframe epart">
+                <div class="kfill">
+                    <div class="textover">E</div>
+                    <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
+                </div>
+                <div class="kmark" style="left:48px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[5]</div>
+            </div>
+            <div class="kframe fpart">
+                <div class="kfill">
+                    <div class="textover" style="justify-content: left; left: 23px;">F</div>
+                    <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
+                    <div class="kmark" style="left:213px;">30+</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="bs-callout bs-callout-success" style="padding-bottom:30px;">
     <p>
-        Hodnota indexu <b>@HlidacStatu.Util.RenderData.NiceNumber(kindexValue)</b> není náhodná, ani ručně odhadnutá, ale jde o přesný výpočet z deseti kritérií.
-        Výpočet je zcela transparetní a dále ho detailně popíšeme.
+        Přesná hodnota K-indexu je <b><img src="@(Model.KIndexLabelIconUrl())" style="width:15px" />@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
     </p>
     <p>
-        Každé jednotlivé kritérium má svoji hodnotu v rozmezí 0 až 1, (kde 0 je nejlepší a 1 nejhorší),
-        a v rámci celkové hodnoty indexu má předem definovanou důležitost v rámci indexu (váhu).
+        Stejně jako u písmene, kde <img src="/Content/kindex/iconA.svg" style="width:15px" /> je nejlepší hodnocení, v číselném vyjádření je nejlepší hodnota 0.
+        Nejhorší hodnota může být teoreticky 120, fakticky jen zřídka překročí hodnotu 50.
+    </p>
+    <p>
+        Číselná hodnota K-index je součtem bodů jednotlivých parametrů, které prezentujeme dále.
+        Každá parametrů má v rámci indexu předem definovanou váhu, kterou také najdete v tabulce níže.
     </p>
 </div>
+
 <div class="col-md-12">
     <table class="table table-new table-new--dotted table-hover">
         <tbody>
@@ -245,14 +321,14 @@
                     <b>Kritérium</b>
                 </td>
                 <td style="text-align:right">
-                    <b>Hodnota kritéria</b>
+                    <b>Hodnota parametru</b>
                 </td>
                 <td style="text-align:right">
                     <b>Důležitost<br /> v rámci celku</b>
                 </td>
                 <td style="text-align:right">
                     <b>
-                        Mezisoučet<br />
+                        Počet bodů<br />
                         <span class="small">(hodnota x váha)</span>
                     </b>
                 </td>
@@ -298,49 +374,3 @@
         </tbody>
     </table>
 </div>
-<div class="row">
-    <div class="col-xs-12 col-sm-6">
-        <div>Celková hodnota K-indexu vychází <strong>@kindexValue.ToString("F2")</strong>. To odpovídá výsledné známce <img src="@(Model.KIndexLabelIconUrl())" style="width:1em" />.
-        </div>
-        <div class="kmeter" style="padding-top:20px;">
-            <div class="kframe apart">
-                <div class="kfill">
-                    <div class="textover">A</div>
-                    <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
-                </div>
-            </div>
-            <div class="kframe bpart">
-                <div class="kfill">
-                    <div class="textover">B</div>
-                    <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
-                </div>
-            </div>
-            <div class="kframe cpart">
-                <div class="kfill">
-                    <div class="textover">C</div>
-                    <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
-                </div>
-            </div>
-            <div class="kframe dpart">
-                <div class="kfill">
-                    <div class="textover">D</div>
-                    <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
-                </div>
-            </div>
-            <div class="kframe epart">
-                <div class="kfill">
-                    <div class="textover">E</div>
-                    <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
-                </div>
-            </div>
-            <div class="kframe fpart">
-                <div class="kfill">
-                    <div class="textover">F</div>
-                    <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-

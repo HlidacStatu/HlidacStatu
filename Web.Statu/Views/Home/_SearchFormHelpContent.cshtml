@@ -426,5 +426,5 @@
 
 @helper Try(string typ, string q, bool showT = false)
 {
-    <a class="small" href="@(typ + "/hledat?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@Util.IfExists(showT, "Zkusit ")<i class="fas fa-external-link-alt"></i></a>
+    <a class="small" href="@(typ + "/hledat?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@WebUtil.IfExists(showT, "Zkusit ")<i class="fas fa-external-link-alt"></i></a>
 }

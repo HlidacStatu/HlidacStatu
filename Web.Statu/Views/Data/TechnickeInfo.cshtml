@@ -86,12 +86,12 @@
                 </tr>
                 <tr>
                     <td>Testovací (beta) provoz</td>
-                    <td>@Util.IfExists(reg.betaversion, "Ano", "Ne")</td>
+                    <td>@WebUtil.IfExists(reg.betaversion, "Ano", "Ne")</td>
                 </tr>
                 <tr>
                     <td>Kontaktovat autora</td>
                     <td>
-                        @Util.FeedbackModal("Poslat autorovi zprávu", null, null, null,
+                        @WebUtil.FeedbackModal("Poslat autorovi zprávu", null, null, null,
          new string[]{ "Chyba","Chci upozornit na chybu",
                         "Stiznost","Chci si stěžovat",
                         "Pochvala","Chci vás pochválit",

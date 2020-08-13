@@ -41,7 +41,7 @@
 
 
 <h2>
-    @*@Util.AddBookmark(this.User, Model)*@
+    @*@WebUtil.AddBookmark(this.User, Model)*@
     Insolvenční řízení @Model.Rizeni.SpisovaZnacka
 </h2>
 @if (!HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
@@ -136,17 +136,17 @@ else
                     <span class="text-muted small">
                         Sledování změn řízení
                     </span><br />
-                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
+                    @WebUtil.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
                 </td>
                 <td colspan="2">
                     <span class="text-muted small">
                         Sdílení
                     </span><br />
-                    @Util.ShareFacebook(Model.Rizeni.GetUrl(false))
-                    @Util.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
+                    @WebUtil.ShareFacebook(Model.Rizeni.GetUrl(false))
+                    @WebUtil.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
                     @if (Model.Rizeni.OnRadar)
                     {
-                        @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                        @WebUtil.ShareWidget(Model.Rizeni.GetUrl(false))
                     }
                 </td>
             </tr>
@@ -199,15 +199,15 @@ else
                     Sledování změn řízení
                 </td>
                 <td>
-                    @Util.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
+                    @WebUtil.AddWatchDogSmall(this.User, $"id:\"{Model.Rizeni.SpisovaZnacka}\"", typeof(Rizeni), "Hlídat změny v tomto řízení", prefillWDname: "Insolvence " + Model.Rizeni.SpisovaZnacka, showWDList: false)
                 </td>
             </tr>
             <tr>
                 <td>Sdílení</td>
                 <td>
-                    @Util.ShareFacebook(Model.Rizeni.GetUrl(false))
-                    @Util.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
-                    @Util.ShareWidget(Model.Rizeni.GetUrl(false))
+                    @WebUtil.ShareFacebook(Model.Rizeni.GetUrl(false))
+                    @WebUtil.ShareTwitter(Model.Rizeni.GetUrl(false), $"Insolvenční řízení '{Model.Rizeni.BookmarkName()}' na @HlidacStatu - {Model.Rizeni.InfoFacts().First().Render(false)}")
+                    @WebUtil.ShareWidget(Model.Rizeni.GetUrl(false))
                 </td>
             </tr>
             <tr>
@@ -222,7 +222,7 @@ else
 
 <h3>Účastníci řízení</h3>
 
-@Util.HorizontalTabs(
+@WebUtil.HorizontalTabs(
     new[] { $"Dlužníci ({Model.Rizeni?.Dluznici?.Count ?? 0})", $"Věřitelé ({Model.Rizeni?.Veritele?.Count ?? 0})", $"Insolveční správci ({Model.Rizeni?.Spravci?.Count ?? 0})" },
     new[] {
         Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true }).ToHtmlString(),
@@ -277,7 +277,7 @@ else
                 {
                     <tr>
                         <td colspan="3" style="border-top:none">
-                            @Util.HighlightContent(highlightingData, "dokumenty.plainText", item.Key.PlainText,
+                            @WebUtil.HighlightContent(highlightingData, "dokumenty.plainText", item.Key.PlainText,
                                 prefix: "<blockquote class='small'>", postfix: "</blockquote>")
                         </td>
                     </tr>

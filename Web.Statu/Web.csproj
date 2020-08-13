@@ -744,9 +744,9 @@
     <Content Include="Scripts\Highcharts-6\themes\sand-signika.js.map" />
     <Content Include="Scripts\Highcharts-6\themes\skies.js.map" />
     <Content Include="Scripts\Highcharts-6\themes\sunset.js.map" />
-    <Content Include="App_Code\UtilWebyChart.cshtml" />
-    <Content Include="App_Code\SuperSearch.cshtml" />
-    <Content Include="App_Code\Util.cshtml" />
+    <Content Include="App_Codea\UtilWebyChart.cshtml" />
+    <Content Include="App_Codea\SuperSearch.cshtml" />
+    <Content Include="App_Codea\Util.cshtml" />
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\font-awesome\css\font-awesome.css" />
@@ -1053,13 +1053,13 @@
     <Content Include="Scripts\highlight\styles\zenburn.css" />
     <Content Include="Scripts\hlidac.v1.7.js" />
     <Content Include="Scripts\hlidac.v1.8.js" />
-    <Content Include="App_Code\SearchResults.cshtml" />
+    <Content Include="App_Codea\SearchResults.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Connected Services\Application Insights\ConnectedService.json" />
-    <Content Include="App_Code\Fn.cshtml" />
-    <Content Include="App_Code\UtilChart.cshtml" />
+    <Content Include="App_Codea\Fn.cshtml" />
+    <Content Include="App_Codea\UtilChart.cshtml" />
     <Content Include="Scripts\iframeResizer.contentWindow.min.js" />
     <Content Include="Scripts\iframeResizer.min.js" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
@@ -1137,7 +1137,7 @@
     <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
-    <Content Include="App_Code\Infographic.cshtml" />
+    <Content Include="App_Codea\Infographic.cshtml" />
     <Content Include="apiv2doc.json" />
     <Content Include="App_Data\Czech.3-2-5.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1151,6 +1151,13 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="App_Code\WebUtil.cshtml" />
+    <Content Include="App_Code\Fn.cshtml" />
+    <Content Include="App_Code\Infographic.cshtml" />
+    <Content Include="App_Code\SearchResults.cshtml" />
+    <Content Include="App_Code\UtilChart.cshtml" />
+    <Content Include="App_Code\UtilWebyChart.cshtml" />
+    <Content Include="App_Code\SuperSearch.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />

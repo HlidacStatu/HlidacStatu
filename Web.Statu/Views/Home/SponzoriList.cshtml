@@ -88,7 +88,7 @@ else
         </ol>
         }
         <div>
-            @Util.AddBookmarkUrl(this.User, ViewBag.Title + " " + ViewBag.SubTitle, Request.Url.AbsoluteUri, "font-size:200%")
+            @WebUtil.AddBookmarkUrl(this.User, ViewBag.Title + " " + ViewBag.SubTitle, Request.Url.AbsoluteUri, "font-size:200%")
         </div>
         @UtilChart.RenderReportTable("",Model, @"{
                      'language': {
@@ -104,7 +104,7 @@ else
 
 
 
-    @Util.FeedbackModal("Poslat opravu či připomínku")
+    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
 
 

@@ -51,7 +51,7 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
         <li class="active">@ViewBag.Title</li>
     </ol>
     }
-    @Util.FeedbackModal("Chybí nám tu nějaká aféra? Nebo tu máme chybu?", "Afera")
+    @WebUtil.FeedbackModal("Chybí nám tu nějaká aféra? Nebo tu máme chybu?", "Afera")
 
     <div class="row">
         <div class="col-xs-12">
@@ -109,7 +109,7 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
                 @Html.Raw(item.Description)
             </p>
             <p>
-                @Util.AddWatchDog(this.User, item.Query, typeof(HlidacStatu.Lib.Data.Smlouva), "Poslat upozornění na nové smlouvy k této aféře", "", "", item.Text, false)
+                @WebUtil.AddWatchDog(this.User, item.Query, typeof(HlidacStatu.Lib.Data.Smlouva), "Poslat upozornění na nové smlouvy k této aféře", "", "", item.Text, false)
             </p>
         </div>
     }

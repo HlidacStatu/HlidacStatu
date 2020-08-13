@@ -7,9 +7,8 @@
 
 
 @functions
-{
-    private static new HtmlHelper<object>
-    Html
+{ private static new HtmlHelper<object>
+              Html
     {
         get { return ((WebViewPage)CurrentPage).Html; }
     }
@@ -17,13 +16,12 @@
     private static UrlHelper Url
     {
         get { return ((WebViewPage)CurrentPage).Url; }
-    }
-}
+    } }
 
 
 @helper ChartSharedJavascript()
-    {
-        <script>
+{
+    <script>
 
         function getChartStatus(response, style)
         {
@@ -55,14 +53,13 @@
             return "@(ZabAvailability.GetStatusChartColor(Statuses.BadHttpCode))";
         return s;
     }
-        </script>
+    </script>
 }
 
-@helper Chart(string dataName, int hoursBack, int height, bool detail, string hash="")
-    {
-var uniqueId = "_chart_" + Devmasters.Core.TextUtil.GenRandomString(8);
-var colsize = 0; //data.Select(d => d.ColSize(fromDate, toDate)).Max();
-var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
+@helper Chart(string dataName, int hoursBack, int height, bool detail, string hash = "")
+{var uniqueId = "_chart_" + Devmasters.Core.TextUtil.GenRandomString(8);
+    var colsize = 0; //data.Select(d => d.ColSize(fromDate, toDate)).Max();
+    var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
         ZabAvailability.GetStatusChartColor(Statuses.Pomalé),
         ZabAvailability.GetStatusChartColor(Statuses.Nedostupné),
         ZabAvailability.GetStatusChartColor(Statuses.TimeOuted),
@@ -70,20 +67,20 @@ var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
         ZabAvailability.GetStatusChartColor(Statuses.Unknown)
         };
 
-        <div id="adbmsg@(uniqueId)" style="display:none;" class="row">
-            <div class="col-xs-12 text-center center-block">
-                <div class="alert alert-danger">
-                    <p>
-                        <strong>Nevidíte žádný graf?</strong> Některé verze AdBlock a jiných blokovačů reklam přeruší vykreslení grafu.
-                    </p><p>Vypněte AdBlock pro naše servery a graf poběží. A nebojte, reklamy vám tu nebudeme ukazovat.</p>
-                    @*<p>Na některých telefonech to také zlobí, pracujeme na opravě. Omlouváme se.</p>*@
-                </div>
-            </div>
+<div id="adbmsg@(uniqueId)" style="display:none;" class="row">
+    <div class="col-xs-12 text-center center-block">
+        <div class="alert alert-danger">
+            <p>
+                <strong>Nevidíte žádný graf?</strong> Některé verze AdBlock a jiných blokovačů reklam přeruší vykreslení grafu.
+            </p><p>Vypněte AdBlock pro naše servery a graf poběží. A nebojte, reklamy vám tu nebudeme ukazovat.</p>
+            @*<p>Na některých telefonech to také zlobí, pracujeme na opravě. Omlouváme se.</p>*@
         </div>
-        <div id="container@(uniqueId)" style="height:@(height)px; min-width: 310px; max-width: 1000px; margin: 0 auto"></div>
+    </div>
+</div>
+                <div id="container@(uniqueId)" style="height:@(height)px; min-width: 310px; max-width: 1000px; margin: 0 auto"></div>
 
 
-        <script>
+                                <script>
         var chart@(uniqueId);
         var cats@(uniqueId) =null;
             $(document).ready(function () { //start chart
@@ -329,56 +326,57 @@ var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
 
         }); //end chart
 
-        </script>
+                                </script>
 }
 
 
 
 @helper TableNextGroups(string active)
-    {
-        <h2>Další služby</h2>
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 ">
-                <div class="list-group">
+{
+    <h2>Další služby</h2>
 
-                    <a href="@Url.Action("Https", "Weby")" class="list-group-item @Util.IfExists(active=="https","disabled")">
-                        <span class="badge">@(ZabTools.SslStatuses()?.Count() ?? 0)</span>
-                        Žebříček státních serverů podle HTTPS Labs hodnocení
-                    </a>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 ">
+            <div class="list-group">
+
+                <a href="@Url.Action("Https", "Weby")" class="list-group-item @WebUtil.IfExists(active=="https","disabled")">
+                    <span class="badge">@(ZabTools.SslStatuses()?.Count() ?? 0)</span>
+                    Žebříček státních serverů podle HTTPS Labs hodnocení
+                </a>
 
 
-                    <a href="@Url.Action("Index", "Weby")" class="list-group-item @Util.IfExists(active=="index","disabled")">
-                        <span class="badge">@(ZabTools.WebyItems("0")?.Count() ?? 0)</span>
-                        Nejdůležitější služby státní správy
-                    </a>
+                <a href="@Url.Action("Index", "Weby")" class="list-group-item @WebUtil.IfExists(active=="index","disabled")">
+                    <span class="badge">@(ZabTools.WebyItems("0")?.Count() ?? 0)</span>
+                    Nejdůležitější služby státní správy
+                </a>
 
-                    <a href="@Url.Action("Dalsi","Weby", new { @id="ustredni" })" class="list-group-item @Util.IfExists(active=="ustredni","disabled")">
-                        <span class="badge">@(ZabTools.WebyItems("ustredni")?.Count() ?? 0)</span>
-                        Služby ústředních orgánů státní správy
-                    </a>
-                    <a href="@Url.Action("Dalsi","Weby", new { @id="3" })" class="list-group-item @Util.IfExists(active=="3","disabled")">
-                        <span class="badge">@(ZabTools.WebyItems("3")?.Count() ?? 0)</span>
-                        Open source/open data weby
-                    </a>
-                    <a href="@Url.Action("Dalsi","Weby", new { @id="1" })" class="list-group-item @Util.IfExists(active=="1","disabled")">
-                        <span class="badge">@(ZabTools.WebyItems("1")?.Count() ?? 0)</span>
-                        Další důležité služby
-                    </a>
-                    <a href="@Url.Action("Dalsi","Weby", new { @id="2" })" class="list-group-item @Util.IfExists(active=="2","disabled")">
-                        <span class="badge">@(ZabTools.WebyItems("2")?.Count() ?? 0)</span>
-                        Ostatní měřené služby
-                    </a>
-                    @*<a href="#" class="list-group-item disabled">
-            <span class="badge">Připravujeme</span>
-            Služby krajů ČR
-        </a>*@
-                    <a href="/statniweby/opendata" class="list-group-item @Util.IfExists(active=="opendata","disabled")">
-                        <span class="badge">JSON</span>
-                        Naměřené údaje jako open data
-                    </a>
-                </div>
+                <a href="@Url.Action("Dalsi","Weby", new { @id="ustredni" })" class="list-group-item @WebUtil.IfExists(active=="ustredni","disabled")">
+                    <span class="badge">@(ZabTools.WebyItems("ustredni")?.Count() ?? 0)</span>
+                    Služby ústředních orgánů státní správy
+                </a>
+                <a href="@Url.Action("Dalsi","Weby", new { @id="3" })" class="list-group-item @WebUtil.IfExists(active=="3","disabled")">
+                    <span class="badge">@(ZabTools.WebyItems("3")?.Count() ?? 0)</span>
+                    Open source/open data weby
+                </a>
+                <a href="@Url.Action("Dalsi","Weby", new { @id="1" })" class="list-group-item @WebUtil.IfExists(active=="1","disabled")">
+                    <span class="badge">@(ZabTools.WebyItems("1")?.Count() ?? 0)</span>
+                    Další důležité služby
+                </a>
+                <a href="@Url.Action("Dalsi","Weby", new { @id="2" })" class="list-group-item @WebUtil.IfExists(active=="2","disabled")">
+                    <span class="badge">@(ZabTools.WebyItems("2")?.Count() ?? 0)</span>
+                    Ostatní měřené služby
+                </a>
+                @*<a href="#" class="list-group-item disabled">
+                        <span class="badge">Připravujeme</span>
+                        Služby krajů ČR
+                    </a>*@
+                <a href="/statniweby/opendata" class="list-group-item @WebUtil.IfExists(active=="opendata","disabled")">
+                    <span class="badge">JSON</span>
+                    Naměřené údaje jako open data
+                </a>
             </div>
         </div>
+    </div>
 
 
 }

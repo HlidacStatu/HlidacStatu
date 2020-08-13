@@ -23,7 +23,7 @@
 <div class="container">
     <div class="row shadowbox">
         <h1 class="new-title text-left" style="margin-top: 10px;">
-            @Util.AddBookmark(this.User, Model)
+            @WebUtil.AddBookmark(this.User, Model)
             @Model.FullNameWithYear()
         </h1>
         <hr />
@@ -111,7 +111,7 @@
                             Funkce
                         </div>
                         <div class="new-p">
-                            @Util.LowBox(80,funkceOsoba)
+                            @WebUtil.LowBox(80,funkceOsoba)
                         </div>
                     </div>
                 }
@@ -122,7 +122,7 @@
                             Podpora politických stran
                         </div>
                         <div class="new-p">
-                            @Util.LowBox(80, Model.Description(true,m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+                            @WebUtil.LowBox(80, Model.Description(true,m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
                         </div>
                     </div>
                 }
@@ -160,15 +160,15 @@
         <tr>
             <th>Sdílení osoby na sociálních sítích</th>
             <td>
-                @Util.ShareFacebook(Model.GetUrl(false))
-                @Util.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                @Util.ShareWidget(Model.GetUrl(false))
+                @WebUtil.ShareFacebook(Model.GetUrl(false))
+                @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                @WebUtil.ShareWidget(Model.GetUrl(false))
             </td>
         </tr>
         <tr>
             <th>Novinky o této osobě do mailu</th>
             <td>
-                @Util.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null,
+                @WebUtil.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null,
                $"Hlídat všechny změny o <b>{Model.FullName()}</b> a navázaných firmách",
                btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky pro " + Model.FullName(),
                showWDList: false, preBtnText: "")
@@ -360,7 +360,7 @@
         }
         <tr>
             <td colspan="2">
-                @Util.VerticalTabs(tabs, results)
+                @WebUtil.VerticalTabs(tabs, results)
 
             </td>
         </tr>

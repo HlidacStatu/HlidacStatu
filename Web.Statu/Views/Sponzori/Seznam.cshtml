@@ -23,8 +23,8 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/sponzori">Sponzoři</a></li>
-        @Util.IfExists(!string.IsNullOrEmpty(strana), $"<li><a href='{HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)}'>{strana}</a></li>")
-        @Util.IfExists(rok.HasValue, $"<li>{rok}</li>")
+        @WebUtil.IfExists(!string.IsNullOrEmpty(strana), $"<li><a href='{HlidacStatu.Lib.Data.Sponsors.GetStranaUrl(strana)}'>{strana}</a></li>")
+        @WebUtil.IfExists(rok.HasValue, $"<li>{rok}</li>")
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -81,4 +81,4 @@
 
 </div>
 
-@Util.FeedbackModal("Poslat opravu či připomínku")
+@WebUtil.FeedbackModal("Poslat opravu či připomínku")

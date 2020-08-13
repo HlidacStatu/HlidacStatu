@@ -153,7 +153,7 @@
                                             {
                                                 selected = true;
                                             }
-                                            <option @Util.IfExists(selected, " selected=\"selected\" ") value="@Model.Headers[ih]">@Model.Headers[ih]</option>
+                                            <option @WebUtil.IfExists(selected, " selected=\"selected\" ") value="@Model.Headers[ih]">@Model.Headers[ih]</option>
 
                                         }
                                         <option value="-skip-">Ignorovat</option>

@@ -37,7 +37,7 @@
     }
 <div class="col-xs-12">
         <h3>
-            @Util.AddBookmarkUrl(this.User, ViewBag.Title, Request.Url.AbsoluteUri)
+            @WebUtil.AddBookmarkUrl(this.User, ViewBag.Title, Request.Url.AbsoluteUri)
             Sponzoři @ViewBag.Strana
         </h3>
         <h4>
@@ -58,7 +58,7 @@
 
 
 
-    @Util.FeedbackModal("Poslat opravu či připomínku")
+    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
 
 

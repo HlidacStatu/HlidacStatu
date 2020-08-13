@@ -134,9 +134,9 @@
                             <select style="width:90px;font-size:1em" name="typ_@i" class="input-select-type" cindex="@i" onchange="selectOnCh(this,@i);" onload="selectOnCh(this);">
                                 @*<option value="--"  disabled="disabled">-- vyberte --</option>*@
                                 <optgroup label="Obvyklé">
-                                    <option value="string" @Util.IfExists(colTypes[i] == "string", "selected=\"selected\"")>Text</option>
-                                    <option value="number" @Util.IfExists(colTypes[i] == "number", "selected=\"selected\"")>Číslo</option>
-                                    <option value="datetime" @Util.IfExists(colTypes[i] == "datetime", "selected=\"selected\"")>Datum a čas</option>
+                                    <option value="string" @WebUtil.IfExists(colTypes[i] == "string", "selected=\"selected\"")>Text</option>
+                                    <option value="number" @WebUtil.IfExists(colTypes[i] == "number", "selected=\"selected\"")>Číslo</option>
+                                    <option value="datetime" @WebUtil.IfExists(colTypes[i] == "datetime", "selected=\"selected\"")>Datum a čas</option>
                                 </optgroup>
                                 <optgroup label="Speciální">
                                     <option value="ico">IČ firmy</option>
@@ -147,8 +147,8 @@
                         </td>
                         <td>
                             <div class="radio">
-                                <input @Util.IfExists(i < 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
-                                <input @Util.IfExists(i >= 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
+                                <input @WebUtil.IfExists(i < 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="show" g="*_@i">Zobrazit<br>
+                                <input @WebUtil.IfExists(i >= 6, " checked=\"checked\" ") type="radio" class="show_search_@i" name="show_search_@i" value="hide" g="*_@i">Skrýt<br>
                                 <span style="display:none"><input type="radio" class="show_search_@i" name="show_search_@i" value="price" g="c_number_@i">Zobrazit jako cenu<br></span>
                             </div>
                         </td>

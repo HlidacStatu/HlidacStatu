@@ -7,36 +7,31 @@
 
 @helper RenderPersonWithLink(dynamic osobaId)
 {
-    string sosobaId = osobaId.ToString();
+string sosobaId = osobaId.ToString();
     if (!string.IsNullOrEmpty(sosobaId))
     {
         HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(sosobaId);
         if (o != null)
         {
-            <span><a href="@o.GetUrl(false)">@o.FullNameWithYear(false)</a></span>
-        }
-    }
+<span><a href="@o.GetUrl(false)">@o.FullNameWithYear(false)</a></span>}
+}
 }
 @helper RenderCompanyWithLink(dynamic ico)
-{
-    string sico = ico.ToString();
+{string sico = ico.ToString();
     if (!string.IsNullOrEmpty(sico))
     {
         HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(sico);
         if (o.Valid)
         {
-            <span><a href="@o.GetUrl(false)">@o.Jmeno</a></span>
-        }
-        else
-        {
-            <span>@sico</span>
-        }
-    }
+<span><a href="@o.GetUrl(false)">@o.Jmeno</a></span> }
+else
+{
+<span>@sico</span>}
+}
 }
 
 @functions
-{
-    public static string ShortenText(dynamic value, int? length = null)
+{ public static string ShortenText(dynamic value, int? length = null)
     {
 
         if (value == null)
@@ -223,7 +218,4 @@
 
         return string.Empty;
 
-    }
-
-
-}
+    } }

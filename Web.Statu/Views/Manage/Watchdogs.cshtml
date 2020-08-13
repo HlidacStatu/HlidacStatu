@@ -109,7 +109,7 @@
                 }
             </td>
             <td>@wd.Created.ToShortDateString()</td>
-            <td>@Util.IfExists(wd.StatusId > 0, "Ano", "Pozastaven")</td>
+            <td>@WebUtil.IfExists(wd.StatusId > 0, "Ano", "Pozastaven")</td>
             <td>
                 @if (wd.StatusId > 0)
                 {

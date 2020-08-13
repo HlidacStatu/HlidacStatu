@@ -20,7 +20,7 @@
 @Html.Partial("_SearchForm", new HlidacStatu.Lib.Searching.DotaceSearchResult())
 
 <h2>
-    @Util.AddBookmark(this.User, Model)
+    @WebUtil.AddBookmark(this.User, Model)
     Detail dotace "@Model.GetNazevDotace()"
 </h2>
 
