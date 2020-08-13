@@ -1153,11 +1153,10 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="App_Code\WebUtil.cshtml" />
     <Content Include="App_Code\Fn.cshtml" />
-    <Content Include="App_Code\Infographic.cshtml" />
     <Content Include="App_Code\SearchResults.cshtml" />
+    <Content Include="App_Code\SuperSearch.cshtml" />
     <Content Include="App_Code\UtilChart.cshtml" />
     <Content Include="App_Code\UtilWebyChart.cshtml" />
-    <Content Include="App_Code\SuperSearch.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
