@@ -1045,13 +1045,47 @@ namespace HlidacStatu.Lib.Data
                 try
                 {
 
+                    string html = "";
                     using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(this.odkaz))
                     {
                         net.Timeout = 3000;
-                        string html = net.GetContent().Text;
-                        bool platna = html?.Contains("Smlouva byla znepřístupněna") == false;
-                        return platna;
+                        html = net.GetContent().Text;
                     }
+                    bool existuje = html?.Contains("Smlouva byla znepřístupněna") == false;
+                    if (existuje)
+                    {
+                        //download xml and check
+                        //https://smlouvy.gov.cz/smlouva/9569679/xml/registr_smluv_smlouva_9569679.xml
+                        //https://smlouvy.gov.cz/smlouva/13515796/xml/registr_smluv_smlouva_13515796.xml
+                        var xmlUrl = $"https://smlouvy.gov.cz/smlouva/{this.identifikator.idVerze}/xml/registr_smluv_smlouva_{this.identifikator.idVerze}.xml";
+                        using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(xmlUrl))
+                        {
+                            net.Timeout = 3000;
+                            html = net.GetContent().Text;
+                            using (System.IO.StringReader sr = new StringReader(html))
+                            {
+                                try
+                                {
+                                    System.Xml.Serialization.XmlSerializer xmlsZaznam = new System.Xml.Serialization.XmlSerializer(typeof(Lib.XSD.zaznam));
+                                    var zaznam = xmlsZaznam.Deserialize(sr) as Lib.XSD.zaznam;
+                                    if (zaznam != null)
+                                        return zaznam.data.platnyZaznam;
+                                    else
+                                        return null;
+                                }
+                                catch (Exception e)
+                                {
+                                    return null;
+                                }
+
+                            }
+
+                        }
+
+                    }
+                    else
+                        return false;
+
                 }
                 catch (Exception e)
                 {
