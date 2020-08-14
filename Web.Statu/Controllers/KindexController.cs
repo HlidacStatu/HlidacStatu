@@ -33,7 +33,11 @@ namespace HlidacStatu.Web.Controllers
                 var kdata = Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
 
-                var AvailableKindexYears = kdata.roky.Select(r => r.Rok).OrderByDescending(r => r).ToList();
+                var AvailableKindexYears = kdata.roky
+                    .Where(r=>r.KIndexAvailable)
+                    .Select(r => r.Rok)
+                    .OrderByDescending(r => r).ToList();
+
                 ViewBag.AvailableKindexYears = AvailableKindexYears;
 
                 int? selectedYear = null;
@@ -48,7 +52,7 @@ namespace HlidacStatu.Web.Controllers
 
                 ViewBag.SelectedYear = selectedYear;
 
-                var result = kdata.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
+                Lib.Analysis.KorupcniRiziko.KIndexData.Annual result = kdata.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
                 return View(result);
             }
 

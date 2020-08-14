@@ -74,7 +74,7 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
 
     @helper QueryStatistics(HlidacStatu.Lib.Analysis.TemplatedQuery item)
     {
-        <div class="bs-callout @(Util.IfExists(item.Data.Summary.Pocet==0,"bs-callout-success","bs-callout-danger"))">
+        <div class="bs-callout @(WebUtil.IfExists(item.Data.Summary.Pocet==0,"bs-callout-success","bs-callout-danger"))">
             <h4>
                 <a href="@item.Url()">@Html.Raw(item.Text)</a>
             </h4>

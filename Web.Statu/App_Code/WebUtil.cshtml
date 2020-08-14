@@ -1,5 +1,4 @@
 ﻿@using System.Web.Mvc;
-@using System.Web.Mvc;
 @using System.Linq;
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
@@ -471,31 +470,6 @@ else if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(pri
     }
 }
 
-@helper KIndexIcon(KIndexData.KIndexLabelValues value, string height,
-    string hPadding = "2px", string vPadding="0")
-{
-    @KIndexIconStyle(value, $"padding:{vPadding} {hPadding};height:{height};width:auto");
-}
-@helper KIndexIconStyle(KIndexData.KIndexLabelValues value, string style)
-{
-    @KIndexLimitedRaw($"<img src='{KIndexData.KIndexLabelIconUrl(value)}' class='kindex' style='{style}'>");
-}
-
-@helper KIndexLimitedRaw(string html)
-{
-    
-    if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
-    {
-        if (UserInRole("KIndex"))
-        {
-            @Html.Raw(html);
-        }
-    }
-    else
-    {
-        @Html.Raw(html);
-    }
-}
 
 @helper NoWrapHtml(params IHtmlString[] part)
 {var s = string.Join("", part.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));

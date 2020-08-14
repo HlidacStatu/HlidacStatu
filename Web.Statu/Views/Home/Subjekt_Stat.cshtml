@@ -65,7 +65,7 @@
                             sb.AppendFormat("<li><a href='/Subjekt/{1}'>{2}</a> - {3} - {4}"
                                 , uradSVazbami.Ico, f.Item, HlidacStatu.Lib.Data.Firmy.GetJmeno(f.Item)
                                 , f.ToNiceString(null, false)
-                                , Util.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
+                                , WebUtil.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
                                 );
 
                             if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(f.Item))
@@ -114,7 +114,7 @@
                                 sb.AppendFormat("<li><a href='/Subjekt/'{1}>{2}</a> - {3} - {4}"
                                     , uradSVazbami.Ico, f.Item, HlidacStatu.Lib.Data.Firmy.GetJmeno(f.Item)
                                     , f.ToNiceString(null, false)
-                                    , Util.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
+                                    , WebUtil.AddSearchBtn("/HledatSmlouvy", "icoPlatce:" + uradSVazbami.Ico + " AND icoPrijemce:" + f.Item, "Ukázat tyto smlouvy").ToHtmlString()
 
                                     );
 

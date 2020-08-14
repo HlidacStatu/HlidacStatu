@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HlidacStatu.Lib</RootNamespace>
     <AssemblyName>HlidacStatu.Lib</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -788,22 +788,25 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Db.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getSeznamNespolehlivyPlatceResponse.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getSeznamNespolehlivyPlatceResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceResponse.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceRozsirenyResponse.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceRozsirenyResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciRozsireneType.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciRozsireneType1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciType.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciType1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacSmluv.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType.datasource">
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType2.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\rozhraniCRPDPH.wsdl" />

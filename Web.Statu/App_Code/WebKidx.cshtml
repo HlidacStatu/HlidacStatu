@@ -1,0 +1,112 @@
+﻿@using System.Web.Mvc;
+@using System.Linq;
+@using Microsoft.AspNet.Identity;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+
+
+
+@functions
+{ private static new HtmlHelper<object> Html
+    {
+        get { return ((WebViewPage)CurrentPage).Html; }
+    }
+
+    private static UrlHelper UrlH
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+
+    private static Uri CurrPageUrl
+    {
+        get
+        {
+            return ((WebViewPage)CurrentPage).Request.Url;
+            //return ((WebViewPage)CurrentPage).Url;
+        }
+    }
+    private static string CurrPageUrlPath
+    {
+        get
+        {
+            return "/" + CurrPageUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        }
+    }
+
+
+    private static WebViewPage CurrPage
+    {
+        get { return (WebViewPage)CurrentPage; }
+    }
+
+
+    private static System.Security.Principal.IPrincipal CurrUser
+    {
+        get { return CurrPage.User; }
+    }
+
+    private static bool UserInRole(params string[] roles)
+    {
+        bool show = false;
+        if (roles.Count() > 0)
+        {
+            if (CurrUser?.Identity?.IsAuthenticated == true)
+            {
+                foreach (var r in roles)
+                {
+                    if (CurrUser.IsInRole(r))
+                    {
+                        show = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+            show = true;
+
+        return show;
+    }
+
+
+    public static string GetSearchUrl(string url, string query)
+    {
+        if (query != null)
+        {
+            if (url.Contains("?"))
+            {
+                url = url + "&q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+            else
+            {
+                url = url + "?q=" + System.Net.WebUtility.UrlEncode(query);
+            }
+        }
+        return url;
+    } }
+
+@helper KIndexIcon(KIndexData.KIndexLabelValues value, string height,
+    string hPadding = "2px", string vPadding = "0")
+{
+    @KIndexIconStyle(value, $"padding:{vPadding} {hPadding};height:{height};width:auto");
+}
+@helper KIndexIconStyle(KIndexData.KIndexLabelValues value, string style)
+{
+    @KIndexLimitedRaw($"<img src='{KIndexData.KIndexLabelIconUrl(value)}' class='kindex' style='{style}'>");
+}
+
+@helper KIndexLimitedRaw(string html)
+{if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+    {
+        if (UserInRole("KIndex"))
+        {
+@Html.Raw(html);
+}
+}
+else
+{
+@Html.Raw(html);
+}
+}

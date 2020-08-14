@@ -5,6 +5,8 @@
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
     ViewBag.Title = "K-index";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
+    ViewBag.HideTitle = true;
+
 
     decimal kindexValue = Model.KIndex.Value; // Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
@@ -183,6 +185,20 @@
         background-color: #d44820;
     }
 </style>
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="new-title text-left">
+            @if (Model as HlidacStatu.Lib.Data.Bookmark.IBookmarkable == null) //ViewBag.ShowBookmarkUrl == true)
+            {
+                @WebUtil.AddBookmarkUrl(this.User, ViewBag.Title + " " + ViewBag.SubTitle, Request.Url.AbsoluteUri, "font-size:24px;vertical-align:top;") }
+            else
+            {
+                @WebUtil.AddBookmark(this.User, Model)}
+            @ViewBag.Title
+        </h1>
+    </div>
+</div>
+
 
 <h2>
     <small>
@@ -200,11 +216,18 @@
     </small>
 </h2>
 
+@if (Model.KIndexAvailable == false)
+{
+
+}
+else
+{
 <div class="jumbotron">
     <div class="container">
         <div class="row">
+            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><b>@firma.Jmeno</b> za rok <b>@ViewBag.SelectedYear</b></h2>
             <div class="col-sm-2">
-                @WebUtil.KIndexIconStyle(Model.KIndexLabel, "width:100px")
+                @WebKidx.KIndexIconStyle(Model.KIndexLabel, "width:100px")
             </div>
             <div class="col-sm-10">
                 <h2>
@@ -214,6 +237,7 @@
         </div>
     </div>
 </div>
+}
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
     <h4>Rating K-index</h4>
@@ -232,13 +256,13 @@
         které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
     </p>
     <p>
-        Organizace s K-indexem @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
-        Organizace s K-Index @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px") patří mezi nejhorší.
+        Organizace s K-indexem @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
+        Organizace s K-Index @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px") patří mezi nejhorší.
 
     </p>
     <p>
         Stupnice K-Indexu
-        @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px")
+        @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px")
         je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K-indexu a také způsob jeho výpočtu.
     </p>
 </div>
@@ -252,7 +276,7 @@
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebUtil.KIndexIcon(Model.KIndexLabel, "15px").
+            @WebKidx.KIndexIcon(Model.KIndexLabel, "15px").
         </div>
         <div class="kmeter" style="padding-top:20px;">
             <div class="kframe apart">
@@ -303,13 +327,13 @@
 </div>
 <div class="bs-callout bs-callout-success" style="padding-bottom:30px;">
     <p>
-        Přesná hodnota K-indexu je <b>@WebUtil.KIndexIcon(Model.KIndexLabel, "15px")@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
+        Přesná hodnota K-indexu je <b>@WebKidx.KIndexIcon(Model.KIndexLabel, "15px")@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
     </p>
     <p>
-        Obdobně jako u písmenného vyjádření, kde @WebUtil.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") je nejlepší hodnocení,
+        Obdobně jako u písmenného vyjádření, kde @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") je nejlepší hodnocení,
         v číselném vyjádření je nejlepší hodnota <b>0</b>.
         Nejhorší hodnota může být teoreticky 120, fakticky jen zřídka překročí hodnotu <b>50</b>.
-</p>
+    </p>
     <p>
         Číselná hodnota K-index je součtem bodů jednotlivých parametrů, které prezentujeme dále.
         Každá parametrů má v rámci indexu předem definovanou váhu, kterou také najdete v tabulce níže.
@@ -321,7 +345,7 @@
         <tbody>
             <tr>
                 <td>
-                    <b>Parametr</b><br/>
+                    <b>Parametr</b><br />
                     <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
                         Skrýt nápovědu
                     </a>
@@ -377,7 +401,7 @@
         </tbody>
     </table>
     <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
-        Skrýt nápovědu 
+        Skrýt nápovědu
     </a>
 
 </div>
@@ -392,7 +416,7 @@
             $('.helpKidxBtn').text("Skrýt nápovědu ");
         }
         else {
-            $('.helpKidxBtn').text("Zobrazit nápovědu ");
+            $('.helpKidxBtn').text("Zobrazit nápovědu");
         }
     }
 
@@ -400,82 +424,82 @@
 @helper ParametrDescr(KIndexData.KIndexParts part)
 {
 
-string descr = "";
-switch (part)
-{
-    case KIndexData.KIndexParts.PercentBezCeny:
-        descr = "Procentní podíl smluv uzavřených se soukromými společnostmi za kalendářní rok, které mají skrytou cenu. Cenu je možné skrýt pouze z důvodu bankovního a obchodního tajemství" +
-            "a tato výjimka je velmi často zneužívána pro utajení hodnoty smlouvy. " +
-            "Hodnota <b>0</b> znamená, že žádná smlouva nemá skrytou cenu, hodnota <b>0.5</b> znamená polovinu smlouv se skrytou cenou.";
-        break;
-    case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
-        descr = "Procentní podíl smluv, u kterých jsme při analýze našli zásadní nedostatky. " +
-            "Hodnota <b>0</b> znamená, že žádná smlouva nemá zásadní nedostatky, hodnota <b>0.5</b> znamená polovinu smluv se zásadními nedostatky.";
-        break;
-    case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
-        descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-            $"Koncentraci dodavatelů počítáme pouze pro soukromé dodavatele, tzn. pouze pro smlouvy mezi organizací a soukromými dodavateli. " +
-            "Pro výpočet používáme upravený <b>Herfindahl Hirschman Index</b> a způsob výpočtu podrobně popisujeme v metodice. " +
-            "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
-            "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich." ;
-        break;
-    case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-        descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-            $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají utajenou cenu. Jinak řečeno - jestli k utajování ceny nedochází pouze u některý vybraných dodavatelů. " +
-            "Hodnota <b>0</b> znamená  ideální stav." +
-            "Hodnota <b>od 0.25 do 1.0</b> znamená, že utajování ceny se týká jen vybraného okruhu dodavatelů.";
-        break;
-    case KIndexData.KIndexParts.PercSmluvUlimitu:
-        descr = "Procentní podíl smluv, jejichž hodnota pouze malou hodnotu nižší než je zákonný limit, podle které by se zakázka musela soutěžit podle zákona o zadávání veřejných zakázek. " +
-            "Typicky se jedná o limit <b>6 miliónů</b> korun pro stavební zakázky a <b>2 miliony</b> pro ostatní." +
-            "Hodnota <b>0</b> znamená, že žádná smlouva není u limitu, hodnota <b>1.0</b> znamená všechny smluvy u limitu.";
-        break;
-    case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
-        descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-            $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají cenu u limitu veřejných zakázek. " +
-            $"Jinak řečeno - jestli se obcházení zákona o zadávání veřejných zakázek netýka pouze některých vybraných dodavatelů. " +
-            "Hodnota <b>0</b> znamená  ideální stav." +
-            "Hodnota <b>od 0.25 do 1.0</b> znamená, že ceny smluv u limitu VZ se týká jen vybraného okruhu dodavatelů.";
-        break;
-    case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
-        descr = "Procentní podíl smluv, které jsou uzavřeny z nově založenou firmou. " +
-            "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou s novými firmami.";
-        break;
-    case KIndexData.KIndexParts.PercUzavrenoOVikendu:
-        descr = "Procentní podíl smluv, které jsou podepsány o víkendu nebo státním svátku. Státní úřady obvykle neuzavírají smlouvy mimo pracovní dny. Historicky se u veřejně známých kauz stávalo, " +
-            "že právě ty problematické smlouvy byly uzavřeny mimo pracovní den, aby se snížila možnost třetích stran na to reagovat. " +
-            "Takto Ministerstvo dopravy obešlo konkurenci a <a href='https://www.idnes.cz/ekonomika/doprava/stat-obesel-skytoll-podpisem-smlouvy-s-kapschem-v-nedeli.A160830_175428_eko-doprava_suj' onclick=\"return trackOutLink(this, 'kindex-detail'); \">uzavřelo smlouvu za 5 miliard Kč v neděli</a>. " +
+    string descr = "";
+    switch (part)
+    {
+        case KIndexData.KIndexParts.PercentBezCeny:
+            descr = "Procentní podíl smluv uzavřených se soukromými společnostmi za kalendářní rok, které mají skrytou cenu. Cenu je možné skrýt pouze z důvodu bankovního a obchodního tajemství" +
+                "a tato výjimka je velmi často zneužívána pro utajení hodnoty smlouvy. " +
+                "Hodnota <b>0</b> znamená, že žádná smlouva nemá skrytou cenu, hodnota <b>0.5</b> znamená polovinu smlouv se skrytou cenou.";
+            break;
+        case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
+            descr = "Procentní podíl smluv, u kterých jsme při analýze našli zásadní nedostatky. " +
+                "Hodnota <b>0</b> znamená, že žádná smlouva nemá zásadní nedostatky, hodnota <b>0.5</b> znamená polovinu smluv se zásadními nedostatky.";
+            break;
+        case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
+            descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
+                $"Koncentraci dodavatelů počítáme pouze pro soukromé dodavatele, tzn. pouze pro smlouvy mezi organizací a soukromými dodavateli. " +
+                "Pro výpočet používáme upravený <b>Herfindahl Hirschman Index</b> a způsob výpočtu podrobně popisujeme v metodice. " +
+                "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
+                "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich.";
+            break;
+        case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+            descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
+                $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají utajenou cenu. Jinak řečeno - jestli k utajování ceny nedochází pouze u některý vybraných dodavatelů. " +
+                "Hodnota <b>0</b> znamená  ideální stav." +
+                "Hodnota <b>od 0.25 do 1.0</b> znamená, že utajování ceny se týká jen vybraného okruhu dodavatelů.";
+            break;
+        case KIndexData.KIndexParts.PercSmluvUlimitu:
+            descr = "Procentní podíl smluv, jejichž hodnota pouze malou hodnotu nižší než je zákonný limit, podle které by se zakázka musela soutěžit podle zákona o zadávání veřejných zakázek. " +
+                "Typicky se jedná o limit <b>6 miliónů</b> korun pro stavební zakázky a <b>2 miliony</b> pro ostatní." +
+                "Hodnota <b>0</b> znamená, že žádná smlouva není u limitu, hodnota <b>1.0</b> znamená všechny smluvy u limitu.";
+            break;
+        case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
+            descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
+                $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají cenu u limitu veřejných zakázek. " +
+                $"Jinak řečeno - jestli se obcházení zákona o zadávání veřejných zakázek netýka pouze některých vybraných dodavatelů. " +
+                "Hodnota <b>0</b> znamená  ideální stav." +
+                "Hodnota <b>od 0.25 do 1.0</b> znamená, že ceny smluv u limitu VZ se týká jen vybraného okruhu dodavatelů.";
+            break;
+        case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
+            descr = "Procentní podíl smluv, které jsou uzavřeny z nově založenou firmou. " +
+                "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou s novými firmami.";
+            break;
+        case KIndexData.KIndexParts.PercUzavrenoOVikendu:
+            descr = "Procentní podíl smluv, které jsou podepsány o víkendu nebo státním svátku. Státní úřady obvykle neuzavírají smlouvy mimo pracovní dny. Historicky se u veřejně známých kauz stávalo, " +
+                "že právě ty problematické smlouvy byly uzavřeny mimo pracovní den, aby se snížila možnost třetích stran na to reagovat. " +
+                "Takto Ministerstvo dopravy obešlo konkurenci a <a href='https://www.idnes.cz/ekonomika/doprava/stat-obesel-skytoll-podpisem-smlouvy-s-kapschem-v-nedeli.A160830_175428_eko-doprava_suj' onclick=\"return trackOutLink(this, 'kindex-detail'); \">uzavřelo smlouvu za 5 miliard Kč v neděli</a>. " +
 
-            "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou mimo pracovní den.";
-        break;
-    case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-        descr = "Procentní podíl smluv, které jsou uzavřeny s firmou, která má vazbu na politiku, neboli sponzorovala politickou stranu, " +
-            "nebo je přímo či nepřímo vlastněna sponzorem politické strany anebo ji přímo či nepřímo vlastní politik. " +
-            "Hodnota <b>0</b> znamená, že žádná smlouva s takovou firmou uzavřená není, hodnota <b>0.5</b> znamená, že polovina smluv je uzavřena s takovými firmami.";
-        break;
-    case KIndexData.KIndexParts.KoncentraceDodavateluObory:
-        descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-            "Celkovou koncentraci dodavatelů počítáme v jiném parametru. Zde analyzujeme, zda nedochází ke koncentraci dodavatelů pouze v některých oblastech. " +
-            "Např. pouze v oblasti IT, právní služeb apod. Způsob výpočtu podrobně popisujeme v metodice K-Indexu." +
-            "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
-            "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich v nejdůležitějších oborech.";
-        break;
-    case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
-        descr = "Bonus (proto má zápornou hodnotu) pro organizace, které jsou transparetní nad rámec zákona. Pokud vkládají do registru smluv smlouvy pod hodnotu 50.000 Kč (což nemusí), mohou dostat bonus. " +
-            "Pokud je podíl smluv pod 50.000 Kč o 25% vyšší než je obvyklé (průměr celého registru smluv), pak mají bonus 0.25 bodů. Pokud je podíl vyšší o více než 50%, pak je bonus 0.5 bodů. Pokud je podíl vyšší o více než 75%, pak je bonus 0.75 bodů.";
-        break;
-    default:
-        break;
+                "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou mimo pracovní den.";
+            break;
+        case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+            descr = "Procentní podíl smluv, které jsou uzavřeny s firmou, která má vazbu na politiku, neboli sponzorovala politickou stranu, " +
+                "nebo je přímo či nepřímo vlastněna sponzorem politické strany anebo ji přímo či nepřímo vlastní politik. " +
+                "Hodnota <b>0</b> znamená, že žádná smlouva s takovou firmou uzavřená není, hodnota <b>0.5</b> znamená, že polovina smluv je uzavřena s takovými firmami.";
+            break;
+        case KIndexData.KIndexParts.KoncentraceDodavateluObory:
+            descr = "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
+                "Celkovou koncentraci dodavatelů počítáme v jiném parametru. Zde analyzujeme, zda nedochází ke koncentraci dodavatelů pouze v některých oblastech. " +
+                "Např. pouze v oblasti IT, právní služeb apod. Způsob výpočtu podrobně popisujeme v metodice K-Indexu." +
+                "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
+                "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich v nejdůležitějších oborech.";
+            break;
+        case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
+            descr = "Bonus (proto má zápornou hodnotu) pro organizace, které jsou transparetní nad rámec zákona. Pokud vkládají do registru smluv smlouvy pod hodnotu 50.000 Kč (což nemusí), mohou dostat bonus. " +
+                "Pokud je podíl smluv pod 50.000 Kč o 25% vyšší než je obvyklé (průměr celého registru smluv), pak mají bonus 0.25 bodů. Pokud je podíl vyšší o více než 50%, pak je bonus 0.5 bodů. Pokud je podíl vyšší o více než 75%, pak je bonus 0.75 bodů.";
+            break;
+        default:
+            break;
+    }
+
+    if (!string.IsNullOrEmpty(descr))
+    {
+        <div class="collapse helpKidx" aria-expanded="true">
+            <div class="bs-callout bs-callout-info small">
+                @Html.Raw(descr)
+            </div>
+        </div>
+    }
+
+
 }
-
-if (!string.IsNullOrEmpty(descr))
-{
-<div class="collapse helpKidx" aria-expanded="true">
-    <div class="bs-callout bs-callout-info small">
-        @Html.Raw(descr)
-    </div>
-</div>
-    }
-
-
-    }

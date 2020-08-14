@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/", ConfigurationName="HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/", ConfigurationName="HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH")]
     public interface rozhraniCRPDPH {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://adis.mfcr.cz/rozhraniCRPDPH/getStatusNespolehlivyPlatce", ReplyAction="*")]
@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -129,7 +129,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/")]
     public enum BezVypisuUctuType {
@@ -139,7 +139,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -227,7 +227,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -259,7 +259,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -319,7 +319,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -367,7 +367,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     
     /// <remarks/>
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InformaceOPlatciRozsireneType))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -470,7 +470,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/")]
     public enum NespolehlivyPlatceType {
@@ -486,7 +486,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

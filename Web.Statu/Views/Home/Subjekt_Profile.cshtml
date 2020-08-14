@@ -547,7 +547,7 @@ else
                     @foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
                     {
                         var text = kv.Key.Split('|');
-                        string surl = Util.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO);
+                        string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO);
 
                         <p>
                             @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
@@ -717,7 +717,7 @@ else
                     @foreach (var kv in insolv.OrderByDescending(m => m.Value))
                     {
                         var text = kv.Key.Split('|');
-                        string surl = Util.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
+                        string surl = WebUtil.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
 
                         <p>
                             @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)

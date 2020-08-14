@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="StatusType" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>HlidacStatu.Lib.HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH.StatusType</TypeInfo>
+   <TypeInfo>HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType, Connected Services.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.Reference.cs.dll, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

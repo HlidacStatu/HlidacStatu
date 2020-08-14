@@ -249,7 +249,7 @@
                 @foreach (var kv in oinsolv.OrderByDescending(m => m.Value))
                 {
                     var text = kv.Key.Split('|');
-                    string surl = Util.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
+                    string surl = WebUtil.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
 
                     <p>
                         @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně
@@ -279,7 +279,7 @@
                 @foreach (var kv in insolv.OrderByDescending(m => m.Value))
                 {
                     var text = kv.Key.Split('|');
-                    string surl = Util.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
+                    string surl = WebUtil.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
 
                     <p>
                         Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)
@@ -305,7 +305,7 @@
                 @foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
                 {
                     var text = kv.Key.Split('|');
-                    string surl = Util.GetSearchUrl("/verejnezakazky/hledat", $"osobaid{text[0]}:" + Model.NameId);
+                    string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"osobaid{text[0]}:" + Model.NameId);
 
                     <p>
                         Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)

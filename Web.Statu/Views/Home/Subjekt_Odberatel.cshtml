@@ -43,7 +43,7 @@
                                     System.Tuple<string,string> data = (System.Tuple<string,string>)s;
                                     return string.Format(@"{1} <a href='/subjekt/{0}'>detail o subj</a>
                                                            <br/>{3}", data.Item2, data.Item1, Model.ICO
-                                                           ,Util.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
+                                                           ,WebUtil.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
                                 },
             TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); },
             ValueRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
@@ -59,7 +59,7 @@
                                     System.Tuple<string,string> data = (System.Tuple<string,string>)s;
                                     return string.Format(@"{1} <a href='/subjekt/{0}'>detail o subj</a>
                                                            <br/>{3}", data.Item2, data.Item1, Model.ICO
-                                                           ,Util.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
+                                                           ,WebUtil.AddSearchBtn("/hledatSmlouvy","icoPrijemce:" + data.Item2 + " AND icoPlatce:" + Model.ICO,"smlouvy mezi subjekty").ToHtmlString());
                                 },
             TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
         },
