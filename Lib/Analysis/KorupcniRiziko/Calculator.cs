@@ -326,19 +326,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 })
                 .ToArray();
             decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
-            val += avg * 11m; //100
+            val += avg * 10m; 
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 11m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 10m)
                 );
             vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
             vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
             vypocet.OboroveKoncentrace.Radky = oboryVahy.ToArray();
             //
             //r16 - bonus!
-            val -= datayear.PercSmlouvyPod50kBonus * 2m;
+            val -= datayear.PercSmlouvyPod50kBonus * 1m;
 
             vradky.Add(new KIndexData.VypocetDetail.Radek(
-                KIndexData.KIndexParts.PercSmlouvyPod50kBonus, -1 * datayear.PercSmlouvyPod50kBonus, 2m
+                KIndexData.KIndexParts.PercSmlouvyPod50kBonus, -1 * datayear.PercSmlouvyPod50kBonus, 1m
                 )
             );
             vypocet.Radky = vradky.ToArray();
