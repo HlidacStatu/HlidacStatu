@@ -525,6 +525,18 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
             ret.Query = query;
 
+            ret.TopDodavatele = smlouvy
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new KoncentraceDodavateluIndexy.Souhrn()
+                {
+                    Ico = k,
+                    PocetSmluv = v.Count(),
+                    HodnotaSmluv = v.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy),
+                    Poznamka = v.Any(m=>m.HodnotaSmlouvy == 0) & ret.PrumernaHodnotaSmluvProVypocet > 0 
+                                ? $"Pro {v.Count(m => m.HodnotaSmlouvy ==0)} smluv bez uvedené ceny použita průměrná hodnota smlouvy {ret.PrumernaHodnotaSmluvProVypocet}"
+                                : ""
+                })
+                .ToArray();
+
 
             ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
             ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);

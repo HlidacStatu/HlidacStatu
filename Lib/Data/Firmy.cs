@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Data
             if (f.Valid)
                 return f.Jmeno;
             else
-                return "(neznámé)";
+                return ico;
         }
         public static Firma Get(int ICO)
         {

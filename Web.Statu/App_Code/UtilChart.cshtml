@@ -70,9 +70,9 @@ else
 @helper RenderReportTable(string title, HlidacStatu.Lib.Render.ReportDataSource item, string JsDataTableOptions, string JsDataTableId = null)
 {
     @Html.Raw(UtilChart.DataToHTMLTable<object>
-                            (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
-                                , JsDataTableId, JsDataTableOptions)
-                                )
+                                    (title, item as HlidacStatu.Lib.Render.ReportDataSource<object>
+                                        , JsDataTableId, JsDataTableOptions)
+                                        )
 }
 
 
@@ -161,6 +161,64 @@ chart: {
             }]
         });
                 </script>
+
+}
+
+@helper SemiCircleDonut(IEnumerable<Tuple<string,decimal>> data,
+    string title, string valueName,
+    int height, string addStyle ="")
+{
+//https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/pie-semi-circle
+string containerId = "chart_" + Guid.NewGuid().ToString("N");
+string sdata = data
+    .Select(m => $"['{m.Item1}',{m.Item2.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+    .Aggregate((f, s) => f + "," + s);
+
+    <div id="@containerId" style="height:@(height)px;@addStyle"></div>
+    <script>
+Highcharts.chart('@containerId', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: 0,
+        plotShadow: false
+    },
+    title: {
+    text: '@title',
+        align: 'center',
+        verticalAlign: 'middle',
+        y: 60
+    },
+tooltip: {
+pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+point: {
+    valueSuffix: '%'
+        }
+},
+    plotOptions: {
+pie: {
+    dataLabels: {
+        enabled: false,
+                distance: -50,
+                style: {
+            fontWeight: 'bold',
+                    color: 'white'
+                }
+        },
+            startAngle: -90,
+            endAngle: 90,
+            center: ['50%', '75%'],
+            size: '150%'
+        }
+        },
+    series: [{
+        type: 'pie',
+        name: '@valueName',
+        innerSize: '40%',
+        data: [@Html.Raw(sdata)]
+    }]
+});</script>
 
 }
 
@@ -385,7 +443,7 @@ d.Data
                         v[0].Column.ValueRender(v[0].Value)
                         ,
                         v[1].Column.ValueRender(v[1].Value)
-                        }
+                                }
     )
     .ToArray() //v[1] contains value, v[0] contains x-axis value
 )
@@ -459,7 +517,7 @@ d.Data
 v[0].Column.ValueRender(v[0].Value)
 ,
 v[1].Column.ValueRender(v[1].Value)
-                                        }
+                                                }
                     )
                     .ToArray() //v[1] contains value, v[0] contains x-axis value
                 )

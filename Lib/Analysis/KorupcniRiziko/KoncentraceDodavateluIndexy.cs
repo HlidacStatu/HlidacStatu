@@ -6,6 +6,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class KoncentraceDodavateluIndexy
     {
+        public class Souhrn
+        {
+            public string Ico { get; set; }
+            public int PocetSmluv { get; set; }
+            public decimal HodnotaSmluv { get; set; }
+            public string Poznamka { get; set; }
+        }
 
         [Nest.Date]
         public DateTime LastUpdated { get; set; }
@@ -27,9 +34,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Nest.Keyword]
         public string Popis { get; set; }
 
-        private IEnumerable<Calculator.SmlouvyForIndex> _smlouvyBag = null;
-        public IEnumerable<Calculator.SmlouvyForIndex> SmlouvyBag() { return _smlouvyBag; }
-
+        public Souhrn[] TopDodavatele { get; set; }
     }
 
 }

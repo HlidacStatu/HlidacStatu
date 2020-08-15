@@ -30,30 +30,17 @@ namespace HlidacStatu.Web.Controllers
             
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                var kdata = Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
+                Lib.Analysis.KorupcniRiziko.KIndexData kdata = Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
 
-                var AvailableKindexYears = kdata.roky
-                    .Where(r=>r.KIndexAvailable)
-                    .Select(r => r.Rok)
-                    .OrderByDescending(r => r).ToList();
 
-                ViewBag.AvailableKindexYears = AvailableKindexYears;
+                ViewBag.SelectedYear = rok ?? DateTime.Now.Year - 1;
+                if (rok < 2017)
+                    rok = 2017;
+                if (rok >= DateTime.Now.Year)
+                    rok = DateTime.Now.Year - 1;
 
-                int? selectedYear = null;
-                if (rok is null || !AvailableKindexYears.Exists(y => y == rok))
-                {
-                    selectedYear = AvailableKindexYears.First();
-                }
-                else
-                {
-                    selectedYear = AvailableKindexYears.Where(y => y == rok).FirstOrDefault();
-                }
-
-                ViewBag.SelectedYear = selectedYear;
-
-                Lib.Analysis.KorupcniRiziko.KIndexData.Annual result = kdata.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
-                return View(result);
+                return View(kdata);
             }
 
             return View();

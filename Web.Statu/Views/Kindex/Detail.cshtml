@@ -1,14 +1,32 @@
-﻿@model HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Annual
-@using HlidacStatu.Lib.Analysis.KorupcniRiziko
+﻿@model HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData
+
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+
 
 @{
+
+    int selectedYear = ViewBag.SelectedYear;
+
+    int[] availableKindexYears = Model.roky
+        .Where(r => r.KIndexAvailable)
+        .Select(r => r.Rok)
+        .OrderByDescending(r => r).ToArray();
+
+
+    KIndexData.Annual currYear = Model.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
+
+
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
     ViewBag.Title = "K-index";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
 
-    decimal kindexValue = Model.KIndex.Value; // Model.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+    decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+
+    //kindexValue = 10.9m;
 
     Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
     {
@@ -18,7 +36,7 @@
     Func<decimal, int, int> kindexMeter = (kind, labelValue) =>
     {
         decimal constant = 3;
-        decimal maxValue = 60;
+        decimal maxValue = 50;
 
         var calculation = kind / constant - labelValue;
         if (calculation <= 0)
@@ -40,7 +58,43 @@
 
 @section scripts
 {
-
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
+    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
+    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
+    <script>
+        // Radialize the colors
+        Highcharts.setOptions({
+            colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+                return {
+                    radialGradient: {
+                        cx: 0.5,
+                        cy: 0.3,
+                        r: 0.7
+                    },
+                    stops: [
+                        [0, color],
+                        [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
+                    ]
+                };
+            })
+        });
+        
+    $('.helpKidx').collapse('show')
+    var helpVisible = true;
+    function CollapseAll() {
+        $('.helpKidx').collapse('toggle');
+        helpVisible = !helpVisible;
+        if (helpVisible) {
+            $('.helpKidxBtn').text("Skrýt nápovědu ");
+        }
+        else {
+            $('.helpKidxBtn').text("Zobrazit nápovědu");
+        }
+    }
+    </script>
 }
 
 @section breadcrumb
@@ -85,6 +139,21 @@
 
     .kmark {
         color: #909090;
+        font-weight: bold;
+        position: relative;
+        z-index: 100;
+        background: white;
+        display: inline-block;
+        top: -3px;
+        line-height: 10px;
+        font-size: 13px;
+        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+        padding: 0 3px 0 3px;
+        margin: 0;
+    }
+
+    .kmarkvalue {
+        color: #000;
         font-weight: bold;
         position: relative;
         z-index: 100;
@@ -199,44 +268,63 @@
     </div>
 </div>
 
-
-<h2>
-    <small>
-        K-index za rok
-        @foreach (int year in ViewBag.AvailableKindexYears)
-        {
-            if (year == ViewBag.SelectedYear)
-            {
-                <span>&nbsp;&nbsp;@year</span> }
-            else
-            {
-                <span>&nbsp;&nbsp;<a href="@ViewBag.ICO?rok=@year">@year</a></span>
-            }
-        }
-    </small>
-</h2>
-
-@if (Model.KIndexAvailable == false)
+@if (currYear.KIndexAvailable == false)
 {
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><b>@firma.Jmeno</b> za rok <b>@ViewBag.SelectedYear</b></h2>
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-10">
+                    <h2>
+                        K-Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
 
 }
 else
 {
-<div class="jumbotron">
-    <div class="container">
-        <div class="row">
+    <div class="jumbotron">
+        <div class="container">
             <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><b>@firma.Jmeno</b> za rok <b>@ViewBag.SelectedYear</b></h2>
-            <div class="col-sm-2">
-                @WebKidx.KIndexIconStyle(Model.KIndexLabel, "width:100px")
+            <div class="row">
+                <div class="col-sm-2">
+                    @WebKidx.KIndexIconStyle(currYear.KIndexLabel, "width:100px")
+                </div>
+                <div class="col-sm-10">
+                    <h2>
+                        XXXXX Úsporné a ekonomické hospodaření, vysoká důvěra, transparentnost, zveřejňují i smlouvy do 50 000 Kč
+                    </h2>
+                </div>
             </div>
-            <div class="col-sm-10">
-                <h2>
-                    Úsporné a ekonomické hospodaření, vysoká důvěra, transparentnost, zveřejňují i smlouvy do 50 000 Kč
-                </h2>
-            </div>
+            @if (Model.roky.Any(m => m.KIndexAvailable))
+            {
+                <div class="row" style="margin-top:15px">
+                    <div class="col-sm-12">
+                        <h4>
+                            Spočítaný K-Index pro další roky:
+                            @foreach (int year in availableKindexYears.OrderBy(m => m))
+                            {
+                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+                                if (kidx != null && kidx.KIndexAvailable && year != selectedYear)
+                                {
+                                    <span><a href="@ViewBag.ICO?rok=@year">@WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;width:22px") v @year</a>@(postfix)</span>
+
+                                }
+                            }
+                        </h4>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-</div>
 }
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
@@ -267,7 +355,10 @@ else
     </p>
 </div>
 
-
+@if (currYear.KIndexAvailable == false)
+{
+    return;
+}
 <hr />
 
 <h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
@@ -276,9 +367,9 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebKidx.KIndexIcon(Model.KIndexLabel, "15px").
+            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px").
         </div>
-        <div class="kmeter" style="padding-top:20px;">
+        <div class="kmeter" style="padding-top:20px;margin-top:10px;">
             <div class="kframe apart">
                 <div class="kfill">
                     <div class="textover">A</div>
@@ -318,7 +409,7 @@ else
                 <div class="kfill">
                     <div class="textover" style="justify-content: left; left: 23px;">F</div>
                     <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
-                    <div class="kmark" style="left:213px;">30+</div>
+                    <div class="kmark" style="left:213px;">50+</div>
                 </div>
             </div>
         </div>
@@ -326,9 +417,6 @@ else
     </div>
 </div>
 <div class="bs-callout bs-callout-success" style="padding-bottom:30px;">
-    <p>
-        Přesná hodnota K-indexu je <b>@WebKidx.KIndexIcon(Model.KIndexLabel, "15px")@HlidacStatu.Util.RenderData.NiceNumber(kindexValue) bodů</b>.
-    </p>
     <p>
         Obdobně jako u písmenného vyjádření, kde @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") je nejlepší hodnocení,
         v číselném vyjádření je nejlepší hodnota <b>0</b>.
@@ -339,89 +427,154 @@ else
         Každá parametrů má v rámci indexu předem definovanou váhu, kterou také najdete v tabulce níže.
     </p>
 </div>
+<div class="row">
+    <div class="col-sm-12">
 
-<div class="col-md-12">
-    <table class="table table-new table-new--dotted table-hover">
-        <tbody>
-            <tr>
-                <td>
-                    <b>Parametr</b><br />
-                    <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
-                        Skrýt nápovědu
-                    </a>
-                </td>
-                <td style="text-align:right">
-                    <b>Hodnota parametru</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Důležitost<br /> v rámci celku</b>
-                </td>
-                <td style="text-align:right">
-                    <b>
-                        Počet bodů<br />
-                        <span class="small">(hodnota x váha)</span>
-                    </b>
-                </td>
-            </tr>
-            @foreach (var radek in Model.KIndexVypocet.Radky
-                .OrderByDescending(r => r.Koeficient)
-                .ThenByDescending(r => r.VelicinaLongName))
-            {
+        <table class="table table-new table-new--dotted table-hover">
+            <tbody>
                 <tr>
-                    <td>
-                        @radek.VelicinaLongName
-                        @ParametrDescr((KIndexData.KIndexParts)radek.Velicina)
+                    <td style="font-size:15px;">
+                        <b>Parametr</b><br />
+                        <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
+                            Skrýt nápovědu
+                        </a>
                     </td>
-                    <td class="number" style="vertical-align:top">
-                        @radek.Hodnota.ToString("F4")
+                    <td style="font-size: 15px; text-align: right">
+                        <b>Hodnota parametru</b>
                     </td>
-                    <td class="number" style="vertical-align:top">
-                        @radek.Koeficient.ToString("F0")
+                    <td style="font-size: 15px; text-align: right">
+                        <b>Důležitost<br />v&nbsp;rámci&nbsp;celku</b>
                     </td>
-                    <td class="number" style="vertical-align:top;color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                        @((radek.Koeficient * radek.Hodnota).ToString("F2"))
+                    <td style="font-size: 15px; text-align: right">
+                        <b>
+                            Počet&nbsp;bodů<br />
+                            <span class="small">(hodnota&nbsp;x&nbsp;váha)</span>
+                        </b>
                     </td>
                 </tr>
+                @foreach (var radek in currYear.KIndexVypocet.Radky
+                    .OrderByDescending(r => r.Koeficient)
+                    .ThenByDescending(r => r.VelicinaLongName))
+                {
+                    <tr>
+                        <td style="font-size:15px;">
+                            @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)">detail</a></small>
+                            @*@ParametrDescr((KIndexData.KIndexParts)radek.Velicina)*@ 
+                        </td>
+                        <td class="number" style="font-size: 15px; vertical-align: top">
+                            @radek.Hodnota.ToString("F4")
+                        </td>
+                        <td class="number" style="font-size: 15px; vertical-align: top">
+                            @radek.Koeficient.ToString("F0")
+                        </td>
+                        <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                            @((radek.Koeficient * radek.Hodnota).ToString("F2"))
+                        </td>
+                    </tr>
 
-            }
-            <tr>
-                <td colspan="5">
-                    Jednotlivé hodnoty všech parametrů se vynásobí vahou (důležitostí) parametru a výsledné body se sečtou
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <div style="font-weight:bold;font-size:130%">Součet bodů = K-Index</div>
-                </td>
-                <td style="font-weight:bold;font-size:130%" class="number">
-                    <b>@kindexValue.ToString("F2")</b>
-                </td>
-                <td>&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-    <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
-        Skrýt nápovědu
-    </a>
+                }
+                <tr>
+                    <td colspan="5">
+                        Jednotlivé hodnoty všech parametrů se vynásobí vahou (důležitostí) parametru a výsledné body se sečtou
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <div style="font-weight:bold;font-size:130%">Součet bodů = K-Index</div>
+                    </td>
+                    <td style="font-weight:bold;font-size:130%" class="number">
+                        <b>@kindexValue.ToString("F2")</b>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-info btn-sm helpKidxBtn" role="button" data-toggle="collapse" href="#" onclick="javascript:CollapseAll();return false;" aria-expanded="true">
+            Skrýt nápovědu
+        </a>
 
+    </div>
 </div>
 
-<script>
-    $('.helpKidx').collapse('show')
-    var helpVisible = true;
-    function CollapseAll() {
-        $('.helpKidx').collapse('toggle');
-        helpVisible = !helpVisible;
-        if (helpVisible) {
-            $('.helpKidxBtn').text("Skrýt nápovědu ");
-        }
-        else {
-            $('.helpKidxBtn').text("Zobrazit nápovědu");
-        }
-    }
+<hr style="margin-top:50px" />
 
-</script>
-@helper ParametrDescr(KIndexData.KIndexParts part)
+<h3>Detailní data pro parametry</h3>
+
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+        @{
+            KIndexData.KIndexParts part = KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu;
+            KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.Velicina == (int)part).First();
+
+        }
+        <h2 id="detail_@part">@vradek.VelicinaLongName - <span class="number">@((vradek.Hodnota * vradek.Koeficient).ToString("F2")) bodů</span></h2>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>
+                    Výpočet: hodnota <span class="number">@vradek.Hodnota.ToString("F4")</span> 
+                    x Index důležitosti: <span class="number">@vradek.Koeficient.ToString("F0")</span>
+                    =
+                    <span class="number">@vradek.Hodnota.ToString("F4") x @vradek.Koeficient.ToString("F0")</span>
+                    =
+                    <b class="number">@((vradek.Hodnota * vradek.Koeficient).ToString("F2"))</b>
+                </h4>
+                <h4>Průměrný počet bodů je <b>2.88</b></h4>
+            </div>
+        </div>
+        @ParametrDescr((KIndexData.KIndexParts)vradek.Velicina,false,"well")
+        @if (currYear.CelkovaKoncentraceDodavatelu.TopDodavatele.Count() > 0)
+        {
+            List<Tuple<string, decimal>> data = currYear.CelkovaKoncentraceDodavatelu.TopDodavatele
+                            .OrderByDescending(m => m.HodnotaSmluv)
+                            .Take(7)
+                            .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                            .ToList();
+            if (currYear.CelkovaKoncentraceDodavatelu.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+            {
+                data.Add(new Tuple<string, decimal>("ostatní", currYear.CelkovaKoncentraceDodavatelu.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+            }
+            using (Html.LowBox(250))
+            {
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                          @UtilChart.SemiCircleDonut(data,"","Podíl",240)
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
+
+                        <table class="table table-new table-new--dotted table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Dodavatel</th>
+                                    <th>Počet smluv</th>
+                                    <th>Objem v Kč</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var souh in currYear.CelkovaKoncentraceDodavatelu.TopDodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                                {
+                                    <tr>
+                                        <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
+                                        <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
+                                        <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            }
+        }
+    </div>
+</div>
+
+
+
+
+
+@helper ParametrDescr(KIndexData.KIndexParts part, bool autohide=true, string _class= "bs-callout bs-callout-info small", string style="")
 {
 
     string descr = "";
@@ -494,8 +647,8 @@ else
 
     if (!string.IsNullOrEmpty(descr))
     {
-        <div class="collapse helpKidx" aria-expanded="true">
-            <div class="bs-callout bs-callout-info small">
+        <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
+            <div class="@_class" style="@style">
                 @Html.Raw(descr)
             </div>
         </div>
