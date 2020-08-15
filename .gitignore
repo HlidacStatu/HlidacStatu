@@ -361,6 +361,8 @@ ApplicationInsights.config
 Web.Statu/App_Data/*.filecache.data
 Web.Statu/App_Data/*.filecache.content
 Web.Statu/App_Data/dump/*
+!Web.Statu/App_Data/KIndex*
+
 
 
 

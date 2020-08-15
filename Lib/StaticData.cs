@@ -49,6 +49,8 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.V20.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
 
+        public static Devmasters.Cache.V20.File.FileCache<object> KIndexStat = null;
+
         public static Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.V20.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
@@ -516,7 +518,14 @@ namespace HlidacStatu.Lib
                 //dalsi vyjimky
                 Urady_OVM.Add("00832227");//Euroregion Neisse - Nisa - Nysa
 
-                HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
+                KIndexStat = new Devmasters.Cache.V20.File.FileCache<object>(
+                    StaticData.App_Data_Path, TimeSpan.Zero, "KIndexStat",
+                    (o) =>
+                    {
+                        return Lib.Analysis.KorupcniRiziko.Statistics.Calculate(2019);
+                    });
+
+HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                 SponzorisVazbouNaStat = new Devmasters.Cache.V20.File.FileCache<List<KeyValuePair<Osoba, Analysis.BasicData<string>>>>(
                     StaticData.App_Data_Path, TimeSpan.Zero, "Sponzori_s_vazbouNaStat",
                     (o) =>

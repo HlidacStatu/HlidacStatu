@@ -46,6 +46,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return vysledek;
             }
 
+
+
         }
 
         public class VypocetOboroveKoncentrace

@@ -85,7 +85,7 @@ namespace HlidacStatu.Util
             return ret;
         }
 
-        public static decimal PercentileCont(IEnumerable<decimal> seq, decimal percentile)
+        public static decimal PercentileCont(decimal percentile, IEnumerable<decimal> seq)
         {
             var elements = seq.ToArray();
             Array.Sort(elements);

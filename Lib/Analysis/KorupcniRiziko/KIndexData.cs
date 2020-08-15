@@ -192,6 +192,37 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public static decimal DefaultKIndexPartKoeficient(KIndexParts part)
+        {
+            switch (part)
+            {
+                case KIndexParts.PercentBezCeny:
+                    return 10m;
+                case KIndexParts.PercSeZasadnimNedostatkem:
+                    return 10m;
+                case KIndexParts.CelkovaKoncentraceDodavatelu:
+                    return 20m;
+                case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+                    return 20m;
+                case KIndexParts.PercSmluvUlimitu:
+                    return 10m;
+                case KIndexParts.KoncentraceDodavateluCenyULimitu:
+                    return 10m;
+                case KIndexParts.PercNovaFirmaDodavatel:
+                    return 3m;
+                case KIndexParts.PercUzavrenoOVikendu:
+                    return 3m;
+                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+                    return 3m;
+                case KIndexParts.KoncentraceDodavateluObory:
+                    return 10m;
+                case KIndexParts.PercSmlouvyPod50kBonus:
+                    return 1m;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true)
         {
             string url = "";

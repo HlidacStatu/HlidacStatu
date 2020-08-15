@@ -508,7 +508,7 @@ else
             KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.Velicina == (int)part).First();
 
         }
-        <h2 id="detail_@part">@vradek.VelicinaLongName - <span class="number">@((vradek.Hodnota * vradek.Koeficient).ToString("F2")) bodů</span></h2>
+        <h2 id="detail_@part" style="margin-top:40px;">@vradek.VelicinaLongName - <span class="number">@((vradek.Hodnota * vradek.Koeficient).ToString("F2")) bodů</span></h2>
         <div class="row">
             <div class="col-xs-12">
                 <h4>

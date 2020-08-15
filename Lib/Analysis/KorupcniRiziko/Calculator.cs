@@ -228,35 +228,35 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal val =
             //r5
-            datayear.Statistika.PercentBezCeny * 10m;   //=10   C > 1  F > 2,5
+            datayear.Statistika.PercentBezCeny * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercentBezCeny);   //=10   C > 1  F > 2,5
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.PercentBezCeny,
                 datayear.Statistika.PercentBezCeny,
-                10m)
+                KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercentBezCeny))
             );
 
             //r11
-            val += datayear.PercSeZasadnimNedostatkem * 10m;  //=20
+            val += datayear.PercSeZasadnimNedostatkem * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSeZasadnimNedostatkem);  //=20
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.PercSeZasadnimNedostatkem,
                 datayear.PercSeZasadnimNedostatkem,
-                10m)
+                KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSeZasadnimNedostatkem))
             );
 
 
             //r13
-            val += datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified * 20m ?? 0; //=40
+            val += datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu) ?? 0; //=40
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu,
                 datayear.CelkovaKoncentraceDodavatelu?.Herfindahl_Hirschman_Modified ?? 0,
-                20m)
+                KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu))
             );
 
 
             //r15
-            decimal r15koef = 20m;
+            decimal r15koef = KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny);
             if (datayear.Statistika.PercentBezCeny < 0.05m)
-                r15koef = 10m;
+                r15koef = r15koef/2m;
 
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * r15koef ?? 0; //60
             vradky.Add(new KIndexData.VypocetDetail.Radek(
@@ -266,40 +266,40 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             );
 
             //r17
-            val += datayear.PercSmluvUlimitu * 10m;  //70
+            val += datayear.PercSmluvUlimitu * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmluvUlimitu);  //70
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.PercSmluvUlimitu,
                 datayear.PercSmluvUlimitu,
-                10m)
+                KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmluvUlimitu))
             );
 
             //r18
-            val += datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * 10m ?? 0; //80
+            val += datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu) ?? 0; //80
             vradky.Add(
                 new KIndexData.VypocetDetail.Radek(
                     KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu,
                     datayear.KoncentraceDodavateluCenyULimitu?.Herfindahl_Hirschman_Modified ?? 0,
-                10m)
+                KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu))
             );
 
             //r19
-            val += datayear.PercNovaFirmaDodavatel * 3m; //82
+            val += datayear.PercNovaFirmaDodavatel * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercNovaFirmaDodavatel); //82
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercNovaFirmaDodavatel, datayear.PercNovaFirmaDodavatel, 3m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercNovaFirmaDodavatel, datayear.PercNovaFirmaDodavatel, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercNovaFirmaDodavatel))
                 );
 
 
             //r21
-            val += datayear.PercUzavrenoOVikendu * 3m; //84
+            val += datayear.PercUzavrenoOVikendu * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercUzavrenoOVikendu); //84
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercUzavrenoOVikendu, datayear.PercUzavrenoOVikendu, 3m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.PercUzavrenoOVikendu, datayear.PercUzavrenoOVikendu, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercUzavrenoOVikendu))
             );
 
 
             //r22
-            val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * 3m; //86
+            val += datayear.PercSmlouvySPolitickyAngazovanouFirmou * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou); //86
             vradky.Add(new KIndexData.VypocetDetail.Radek(
-                KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou, datayear.PercSmlouvySPolitickyAngazovanouFirmou, 3m
+                KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou, datayear.PercSmlouvySPolitickyAngazovanouFirmou, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou)
                 )
             );
 
@@ -326,19 +326,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 })
                 .ToArray();
             decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
-            val += avg * 10m; 
+            val += avg * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory); 
             vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, 10m)
+                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory))
                 );
             vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
             vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
             vypocet.OboroveKoncentrace.Radky = oboryVahy.ToArray();
             //
             //r16 - bonus!
-            val -= datayear.PercSmlouvyPod50kBonus * 1m;
+            val -= datayear.PercSmlouvyPod50kBonus * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmlouvyPod50kBonus);
 
             vradky.Add(new KIndexData.VypocetDetail.Radek(
-                KIndexData.KIndexParts.PercSmlouvyPod50kBonus, -1 * datayear.PercSmlouvyPod50kBonus, 1m
+                KIndexData.KIndexParts.PercSmlouvyPod50kBonus, -1 * datayear.PercSmlouvyPod50kBonus, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
                 )
             );
             vypocet.Radky = vradky.ToArray();
@@ -550,6 +550,7 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             ret.LastUpdated = DateTime.Now;
             return ret;
         }
+
 
 
     }
