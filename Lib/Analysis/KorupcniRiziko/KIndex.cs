@@ -11,7 +11,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public class KIndex
     {
         private static CouchbaseCacheManager<KIndexData, string> instanceByIco
-       = CouchbaseCacheManager<KIndexData, string>.GetSafeInstance("kindexByICO", KIndexData.Get, TimeSpan.FromMinutes(120));
+       = CouchbaseCacheManager<KIndexData, string>.GetSafeInstance("kindexByICO", KIndexData.GetDirect,
+#if (!DEBUG)
+                TimeSpan.FromMinutes(120)
+#else
+                TimeSpan.FromSeconds(1)
+#endif
+           );
 
         public static KIndexData Get(string ico)
         {

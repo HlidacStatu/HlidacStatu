@@ -533,82 +533,6 @@ select {
     margin-bottom: 12px;
 }
 
-.table-new table tr {
-    border-bottom: solid thin #E0E6ED;
-}
-
-    .table-new table tr:not(.with-border):last-child {
-        border: none;
-    }
-
-.table-new table th, .table-new table td {
-    padding: 12px 24px 12px 0;
-    text-overflow: ellipsis;
-    vertical-align: top;
-}
-
-    .table-new table th:last-child, .table-new table td:last-child {
-        padding-right: 0;
-    }
-
-.table-new table .cell-red {
-    color: #FF525B;
-}
-
-.table-new table .cell-green {
-    color: #38CAAA;
-}
-
-.table-new table .cell-gray {
-    color: #818C99;
-}
-
-.table-new--dotted table tr {
-    border-bottom: dotted 2px #E0E6ED;
-}
-
-.table-new--wider table th, .table-new--wider table td {
-    padding-right: 42px;
-}
-
-.table-new tr {
-    border-bottom: solid thin #E0E6ED;
-}
-
-    .table-new tr:not(.with-border):last-child {
-        border: none;
-    }
-
-.table-new th, .table-new td {
-    padding: 12px 24px 12px 0;
-    text-overflow: ellipsis;
-    vertical-align: top;
-    border-top: none !important;
-}
-
-    .table-new th:last-child, .table-new td:last-child {
-        padding-right: 0;
-    }
-
-.table-new .cell-red {
-    color: #FF525B;
-}
-
-.table-new .cell-green {
-    color: #38CAAA;
-}
-
-.table-new .cell-gray {
-    color: #818C99;
-}
-
-.table-new--dotted tr {
-    border-bottom: dotted 2px #E0E6ED;
-}
-
-.table-new--wider th, .table-new--wider td {
-    padding-right: 42px;
-}
 
 .gap-1 {
     height: 1px;
@@ -1494,9 +1418,10 @@ select {
     letter-spacing: 0.36px;
     color: #2f2f2f;
 }
-.watcher-block .block-list li {
-    margin-top: 15px ;
-}
+
+    .watcher-block .block-list li {
+        margin-top: 15px;
+    }
 
 .watcher-block .block-status-list {
     margin: 0;
@@ -2584,6 +2509,7 @@ a.form-search__hint:active:focus {
         vertical-align: middle;
         border: none;
     }
+
     .table > tbody > tr.middle > td {
         line-height: 17px;
         color: #333333;
@@ -2592,6 +2518,7 @@ a.form-search__hint:active:focus {
         vertical-align: middle;
         border: none;
     }
+
     .table > tbody > tr.last > td {
         line-height: 17px;
         color: #333333;
@@ -2627,6 +2554,98 @@ a.form-search__hint:active:focus {
             background: #F9F9F9;
             border-bottom: none;
         }
+
+    .table.table-no-border > tbody > tr > td {
+        border-bottom: none;
+    }
+
+    .table.table-dotted > tbody > tr > td {
+        border-bottom: dotted 2px #E0E6ED;
+    }
+
+.table-new table tr {
+    border-bottom: solid thin #E0E6ED;
+}
+
+    .table-new table tr:not(.with-border):last-child {
+        border: none;
+    }
+
+.table-new table th, .table-new table td {
+    padding: 12px 24px 12px 0;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+    .table-new table th:last-child, .table-new table td:last-child {
+        padding-right: 0;
+    }
+
+.table-new table .cell-red {
+    color: #FF525B;
+}
+
+.table-new table .cell-green {
+    color: #38CAAA;
+}
+
+.table-new table .cell-gray {
+    color: #818C99;
+}
+
+
+.table-new--wider table th, .table-new--wider table td {
+    padding-right: 42px;
+}
+
+.table-new tr {
+    border-bottom: solid thin #E0E6ED;
+}
+
+    .table-new tr:not(.with-border):last-child {
+        border: none;
+    }
+
+.table-new th, .table-new td {
+    padding: 12px 24px 12px 0;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    border-top: none !important;
+}
+
+    .table-new th:last-child, .table-new td:last-child {
+        padding-right: 0;
+    }
+
+.table-new .cell-red {
+    color: #FF525B;
+}
+
+.table-new .cell-green {
+    color: #38CAAA;
+}
+
+.table-new .cell-gray {
+    color: #818C99;
+}
+
+
+.table-new--wider th, .table-new--wider td {
+    padding-right: 42px;
+}
+
+.table-new--dotted tr, .table-new--dotted table tr {
+    border-bottom: dotted 2px #E0E6ED;
+}
+
+.table-no-border tr, .table-no-border table tr, .table-no-border tr td, .table-no-border table tr td, .table-no-border tr th, .table-no-border table tr th,
+.table-no-border tbody tr, .table-no-border tbody table tr, .table.table-no-border > tbody > tr > td, .table-no-border table tbody tr td, .table-no-border thead tr th, .table-no-border thead table tr th,
+{
+    border-bottom: none;
+}
+
+
+
 
 .small-link {
     font-size: 12px;
@@ -2952,5 +2971,5 @@ a.form-search__hint:active:focus {
     padding: 3px 4px;
     display: inline-block;
     line-height: 1em;
-    white-space:nowrap;
+    white-space: nowrap;
 }

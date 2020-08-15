@@ -30,7 +30,7 @@ namespace HlidacStatu.Web.Controllers
             
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                Lib.Analysis.KorupcniRiziko.KIndexData kdata = Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
+                Lib.Analysis.KorupcniRiziko.KIndexData kdata = Lib.Analysis.KorupcniRiziko.KIndex.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
 
 
@@ -66,7 +66,7 @@ namespace HlidacStatu.Web.Controllers
 
             if (HlidacStatu.Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(id));
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
                 return View("Debug", kdata);
             }
@@ -79,7 +79,7 @@ namespace HlidacStatu.Web.Controllers
                     var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
                     if (f.Valid)
                     {
-                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.Get(Util.ParseTools.NormalizeIco(i));
+                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Util.ParseTools.NormalizeIco(i));
                         if (kidx != null)
                             kdata.Add(kidx);
                     }

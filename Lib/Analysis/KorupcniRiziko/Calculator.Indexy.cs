@@ -21,7 +21,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 this.Dodavatel = dodavatel;
                 this.HodnotaSmlouvy = hodnota;
-                this.ULimitu = ULimitu;
+                this.ULimitu = uLimitu;
                 this.Obory = obory;
             }
             public string Dodavatel { get; set; }

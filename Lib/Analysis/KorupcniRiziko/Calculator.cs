@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (urad.Valid == false)
                 throw new ArgumentOutOfRangeException("invalid ICO");
 
-            kindex = KIndexData.Get(ico);
+            kindex = KIndexData.GetDirect(ico);
         }
 
         object lockCalc = new object();

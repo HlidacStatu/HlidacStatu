@@ -21,6 +21,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 [Nest.Object(Ignore =true)]
                 public string VelicinaLongName { get => ((KIndexParts)this.Velicina).ToNiceDisplayName(); }
 
+                [Nest.Object(Ignore = true)]
+                public KIndexParts VelicinaPart { get => (KIndexParts)this.Velicina; }
+
                 public int Velicina { get; set; }
                 [Nest.Keyword]
                 public string VelicinaName { get; set; }
