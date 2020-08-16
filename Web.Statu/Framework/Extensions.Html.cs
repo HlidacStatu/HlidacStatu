@@ -117,8 +117,34 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
-        public static IHtmlString KIndexLimitedRaw(this HtmlHelper htmlHelper, System.Security.Principal.IPrincipal user, params IHtmlString[] htmls)
+        public static IHtmlString KIndexLabelLink(this HtmlHelper htmlHelper, string ico, string height = "15px", string hPadding = "3px", string vPadding = "0")
         {
+            return htmlHelper.KIndexLabelLink(ico, $"padding:{vPadding} {hPadding};height:{height};width:auto");
+        }
+        public static IHtmlString KIndexLabelLink(this HtmlHelper htmlHelper, string ico, string style)
+        {
+            if (string.IsNullOrEmpty(ico))
+                return htmlHelper.Raw("");
+
+            ico = HlidacStatu.Util.ParseTools.NormalizeIco(ico);
+            System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
+            if (ShowKIndex(user))
+            {
+                var lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
+                if (lbl != null && lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+                {
+                        return htmlHelper.Raw($"<a href='/kindex/detail/{ico}'>"
+                            + $"<img src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(lbl.Item2)}' class='kindex'  style='{style}' />"
+                            + "</a>");
+                }
+            }
+            return htmlHelper.Raw("");
+
+        }
+
+        public static IHtmlString KIndexLimitedRaw(this HtmlHelper htmlHelper, params IHtmlString[] htmls)
+        {
+            System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
                 var s = string.Join("", htmls.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));                

@@ -259,19 +259,19 @@
         icon = @"&nbsp;<span class='text-warning glyphicon glyphicon-exclamation-sign' style='font-size:90%;' aria-hidden='true' ></span>";
         sclass = "invalid";
     }
-    <li class="@sclass">
-        <a href="/subjekt/@item.Subject().ICO">@(item.Subject().Jmeno)</a> (
-        @HlidacStatu.Util.PluralForm.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
-        celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true))
+<li class="@sclass">
+    @Html.KIndexLabelLink(item.Subject().ICO)<a href="/subjekt/@item.Subject().ICO">@(item.Subject().Jmeno)</a> (
+    @HlidacStatu.Util.PluralForm.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
+    celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true))
 
-        @Html.Raw(
-                 item.Subject()?.ICO == "66003008" ?
-                 string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} smluv skrývá cenu</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
-                 :
-                 string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} bez ceny</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
-                )
-        )@Html.Raw(icon)
-    </li>
+    @Html.Raw(
+                  item.Subject()?.ICO == "66003008" ?
+                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} smluv skrývá cenu</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                  :
+                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} bez ceny</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                 )
+    )@Html.Raw(icon)
+</li>
 
 }
 

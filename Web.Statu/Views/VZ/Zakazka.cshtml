@@ -4,6 +4,8 @@
 @using HlidacStatu.Lib;
 @using System.Linq;
 @using Devmasters.Core;
+@using HlidacStatu.Web.Framework
+ 
 
 @{
     /**/
@@ -85,7 +87,7 @@ else
                 <td>
                     @if (HlidacStatu.Util.DataValidators.CheckCZICO(Model.Zadavatel?.ICO))
                     {
-                        <a href="https://www.hlidacstatu.cz/subjekt/@Model.Zadavatel.ICO">@Model.Zadavatel.Jmeno (IČ @Model.Zadavatel.ICO)</a>
+                        @Html.KIndexLabelLink(Model.Zadavatel.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@Model.Zadavatel.ICO">@Model.Zadavatel.Jmeno (IČ @Model.Zadavatel.ICO)</a>
                     }
                     else
                     {
@@ -101,13 +103,11 @@ else
                     {
                         if (HlidacStatu.Util.DataValidators.CheckCZICO(od.ICO))
                         {
-                            <a href="https://www.hlidacstatu.cz/subjekt/@od.ICO">@od.Jmeno (IČ @od.ICO)</a>
-                        }
-                        else
-                        {
-                            <span>@od.Jmeno</span>
-                        }
-                    }
+                @Html.KIndexLabelLink(od.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@od.ICO">@od.Jmeno (IČ @od.ICO)</a> }
+                                    else
+                                    {
+                <span>@od.Jmeno</span>}
+                                }
                 </td>
             </tr>
             <tr>

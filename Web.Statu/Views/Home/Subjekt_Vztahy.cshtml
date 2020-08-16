@@ -70,7 +70,7 @@
             Name = "Dodavatel pro ",
             HtmlRender = (s) =>
             {
-                return $@"<a href='/subjekt/{s.Key}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key)}</a>";
+                return Html.KIndexLabelLink(s.Key) + $@"<a href='/subjekt/{s.Key}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key)}</a>";
             },
             TextRender = (s) => { return HlidacStatu.Lib.Data.Firmy.GetJmeno(s.Key); }
         }

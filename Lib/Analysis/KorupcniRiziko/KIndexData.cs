@@ -66,6 +66,34 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
 
+
+        public Annual LastKIndex()
+        {
+            return roky?.Where(m => m.KIndexAvailable)?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
+        }
+
+        public decimal? LastKIndexValue()
+        {
+            return LastKIndex()?.KIndex;
+        }
+        public KIndexLabelValues LastKIndexLabel()
+        {
+            return LastKIndexLabel(out int? tmp);
+        }
+        public KIndexLabelValues LastKIndexLabel(out int? rok)
+        {
+
+            var val = LastKIndex();
+            rok = null;
+            if (val != null)
+            {
+                rok = val.Rok;
+                return val.KIndexLabel;
+            }
+            else
+                return KIndexLabelValues.None;
+        }
+
         public List<Annual> roky { get; set; } = new List<Annual>();
 
         public Annual ForYear(int year)

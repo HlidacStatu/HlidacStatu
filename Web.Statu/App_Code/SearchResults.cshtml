@@ -172,7 +172,7 @@
             {
                 foreach (var o in item.Veritele.Take(2))
                 {
-<div>@Html.Raw(o.ToHtml())</div> }
+            <div>@Html.KIndexLabelLink(o.ICO)@Html.Raw(o.ToHtml())</div> }
                     if (item.Veritele.Count == 3)
                     {
 <div>@Html.Raw(item.Veritele[2].ToHtml())</div> }
@@ -220,7 +220,7 @@
             @WebUtil.AddBookmark(user, rec)
         </td>
         <td><a href="@rec.GetUrl(true)">@rec.ICO</a></td>
-        <td><a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
+        <td>@Html.KIndexLabelLink(rec.ICO)<a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
         <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
         @if (small == false)
         {
@@ -274,39 +274,41 @@
                     {
 <span class="text-warning">Zneplatněná smlouva</span>}
 </td>}
-        <td>
-            @if (!string.IsNullOrEmpty(rec.Platce?.ico))
-            {
-<a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a> }
-                else
-                { @(rec.Platce?.nazev)}
-        </td>
-        <td>
-            @if (rec.Prijemce.Count() == 1)
-            {
-                if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
-                {
-<a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a> }
-                    else
-                    {
-@rec.Prijemce[0].nazev }
-                }
-                else
-                {
-<ol>
-    @foreach (var subj in rec.Prijemce.Take(2))
-    {
-        if (!string.IsNullOrEmpty(subj.ico))
+    <td>
+        @if (!string.IsNullOrEmpty(rec.Platce?.ico))
         {
-<li><a href="/Subjekt/@subj.ico">@subj.nazev</a></li> }
-                        else
-                        {
-<li>@subj.nazev</li>                        }
+    @Html.KIndexLabelLink(rec.Platce.ico)<a href="/Subjekt/@rec.Platce.ico">@rec.Platce.nazev</a> }
+else
+{ @(rec.Platce?.nazev)}
+    </td>
+    <td>
+        @if (rec.Prijemce.Count() == 1)
+        {
+            if (!string.IsNullOrEmpty(rec.Prijemce[0].ico))
+            {
+    @Html.KIndexLabelLink(rec.Prijemce[0].ico)<a href="/Subjekt/@rec.Prijemce[0].ico">@rec.Prijemce[0].nazev</a> }
+else
+{
+    @rec.Prijemce[0].nazev }
+}
+else
+{
+    <ol>
+        @foreach (var subj in rec.Prijemce.Take(2))
+        {
+            if (!string.IsNullOrEmpty(subj.ico))
+            {
+        <li>@Html.KIndexLabelLink(subj.ico)<a href="/Subjekt/@subj.ico">@subj.nazev</a></li>
+ }
+else
+{
+    <li>@subj.nazev</li>
+    }
+}
+    </ol>
+                        @WebUtil.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
                     }
-</ol>
-                    @WebUtil.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
-                }
-        </td>
+    </td>
         <td>@Html.Raw(rec.NicePrice(html: true))</td>
 
     </tr>
@@ -430,11 +432,11 @@
             {
                 if (HlidacStatu.Util.DataValidators.CheckCZICO(item.Zadavatel.ICO))
                 {
-<a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a> }
-                    else
-                    {
-<span>@item.Zadavatel.Jmeno</span>}
-                }
+        @Html.KIndexLabelLink(item.Zadavatel.ICO)<a href="/subjekt/@item.Zadavatel.ICO">@item.Zadavatel.Jmeno</a> }
+    else
+    {
+        <span>@item.Zadavatel.Jmeno</span>}
+}
         </td>
         <td>
             @if (item.Dodavatele != null && item.Dodavatele.Count() > 0)
@@ -506,15 +508,15 @@
             <a href="@(item.GetUrl(true,query))">Detail</a>
         </td>
         <td>
-            @Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
-                                     item.Prijemce.ObchodniJmeno :
-                                     item.Prijemce.HlidacJmeno)
-                             , 40)
+            @Html.KIndexLabelLink(item.Prijemce.Ico)@Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
+  item.Prijemce.ObchodniJmeno :
+  item.Prijemce.HlidacJmeno)
+, 40)
         </td>
         <td>
             @if (item.Prijemce.Ico != "00000000")
             {
-<a href="/subjekt/@item.Prijemce.Ico" title="Informace o subjektu">@item.Prijemce.Ico</a>}
+            <a href="/subjekt/@item.Prijemce.Ico" title="Informace o subjektu">@item.Prijemce.Ico</a>}
         </td>
         <td>
             @item.GetNazevDotace()

@@ -1,7 +1,7 @@
 ﻿@model HlidacStatu.Lib.Data.Smlouva
 @using Devmasters.Core
 @using HlidacStatu.Lib
-
+@using HlidacStatu.Web.Framework
 @{
 
     ViewBag.Title = Devmasters.Core.TextUtil.ShortenText(Model.predmet ?? "", 70);
@@ -532,57 +532,50 @@
     @helper RenderSubjekt(HlidacStatu.Lib.Data.Smlouva.Subjekt subjekt, int typSubjektu)
     {
         HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(subjekt.ico);
-        <p>
-            <a href="/subjekt/@subjekt.ico">
-                <b>@subjekt.nazev</b>
-            </a>&nbsp;&nbsp;&nbsp;@WebUtil.FirmaMoreInfoLinks(subjekt.ico)
+<p>
+    @Html.KIndexLabelLink(subjekt.ico)<a href="/subjekt/@subjekt.ico">
+        <b>@subjekt.nazev</b>
+    </a>&nbsp;&nbsp;&nbsp;@WebUtil.FirmaMoreInfoLinks(subjekt.ico)
 
-            <br />
-            @WebUtil.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
+    <br />
+    @WebUtil.IfExists(subjekt.utvar, subjekt.utvar + "<br />")
 
-            @subjekt.adresa<br />
-            @if (!string.IsNullOrEmpty(subjekt.ico))
-            {
-                <text>
-                    ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
-                </text>
-            }
-            @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
-            {
-                <text>
-                    &nbsp;dat.schránka @subjekt.datovaSchranka
-                </text>
-            }
+    @subjekt.adresa<br />
+    @if (!string.IsNullOrEmpty(subjekt.ico))
+    {
+<text>
+    ICO <a href="/subjekt/@subjekt.ico">@subjekt.ico</a>
+</text>}
+    @if (!string.IsNullOrEmpty(subjekt.datovaSchranka))
+    {
+<text>
+    &nbsp;dat.schránka @subjekt.datovaSchranka
+</text>}
 
 
-            @if (typSubjektu == 1)
-            {
-                <text>
-                    <br />Plátce peněz
-                </text>
-            }
-            else if (typSubjektu == 2)
-            {
-                <text>
-                    <br />Příjemce peněz
-                    <div>@WebUtil.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
-                </text>
-            }
-            else if (typSubjektu == 3) //vkladatel do rejstriku
-            {
-                <text>
-                </text>
-            }
-            @if (firma != null && firma.IsNespolehlivyPlatceDPH())
-            {
-                <div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>
-            }
+    @if (typSubjektu == 1)
+    {
+<text>
+    <br />Plátce peněz
+</text> }
+                else if (typSubjektu == 2)
+                {
+<text>
+    <br />Příjemce peněz
+    <div>@WebUtil.RenderSearchLinkBetweenSubjects(Model.Platce?.ico, subjekt.ico)</div>
+</text> }
+                else if (typSubjektu == 3) //vkladatel do rejstriku
+                {
+<text>
+</text>}
+    @if (firma != null && firma.IsNespolehlivyPlatceDPH())
+    {
+<div><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>Nespolehlivý plátce DPH</span> (<a href="@firma.GetUrl(false)">více</a>)</div>}
 
 
-            @if (!string.IsNullOrEmpty(subjekt.ico))
-            {
-                <br />
-            }
-        </p>
+    @if (!string.IsNullOrEmpty(subjekt.ico))
+    {
+<br />}
+</p>
     }
 
