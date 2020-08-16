@@ -361,7 +361,9 @@ else
 {
     return;
 }
-<hr />
+<div style="padding:20px 0;"></div>
+<hr style="width:30%;margin:auto" />
+<div style="padding:20px 0;"></div>
 
 <h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
 
@@ -419,7 +421,7 @@ else
 
     </div>
 </div>
-<div class="bs-callout bs-callout-success" style="padding-bottom:30px;">
+<div class="bs-callout bs-callout-success" style="margin-bottom:50px;">
     <p>
         Obdobně jako u písmenného vyjádření, kde @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") je nejlepší hodnocení,
         v číselném vyjádření je nejlepší hodnota <b>0</b>.
@@ -547,13 +549,13 @@ else
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
     <div class="row">
         <div class="col-xs-12">
-@if (percentValue)
-{
-            <h4>
-                Parametr <b>@vradek.VelicinaLongName</b> přesně odpovídá procentuálnímu zastoupení v rámci všech smluv organizace na rok @currYear.Rok.
-                Tzn. že hodnota parametru @(vradek.Hodnota.ToString("F4")) odpovídá @(vradek.Hodnota.ToString("P2")) podílu těchto smluv v rámci všech smluv.
-            </h4>
-}
+            @if (percentValue)
+            {
+                <h4>
+                    Parametr <b>@vradek.VelicinaLongName</b> přesně odpovídá procentuálnímu zastoupení v rámci všech smluv organizace na rok @currYear.Rok.
+                    Tzn. že hodnota parametru @(vradek.Hodnota.ToString("F4")) odpovídá @(vradek.Hodnota.ToString("P2")) podílu těchto smluv v rámci všech smluv.
+                </h4>
+            }
             <h4>
                 Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
                 <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.
