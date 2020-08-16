@@ -489,13 +489,19 @@ else
                                             case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
                                             case KIndexData.KIndexParts.PercUzavrenoOVikendu:
                                             case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                                            case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
+                                                @ParametrDetail(currYear, radek.VelicinaPart)
                                                 break;
+                                            case KIndexData.KIndexParts.KoncentraceDodavateluObory:
+                                                @ParametrDetail(currYear, radek.VelicinaPart, false)
+                                                break;
+
                                             case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
                                             case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                                            case KIndexData.KIndexParts.KoncentraceDodavateluObory:
                                             case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
                                                 @KoncentraceDetail(currYear, radek.VelicinaPart)
+                                                break;
+                                            case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
+                                                @ParametrDescr(radek.VelicinaPart, false, "well")
                                                 break;
                                             default:
                                                 break;
@@ -536,13 +542,42 @@ else
 <hr style="margin-top:50px" />
 
 
+@helper ParametrDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, bool percentValue = true)
+{
+    KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
+    <div class="row">
+        <div class="col-xs-12">
+@if (percentValue)
+{
+            <h4>
+                Parametr <b>@vradek.VelicinaLongName</b> přesně odpovídá procentuálnímu zastoupení v rámci všech smluv organizace na rok @currYear.Rok.
+                Tzn. že hodnota parametru @(vradek.Hodnota.ToString("F4")) odpovídá @(vradek.Hodnota.ToString("P2")) podílu těchto smluv v rámci všech smluv.
+            </h4>
+}
+            <h4>
+                Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
+                <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.
+                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(10, currYear.Rok, part))</b>,
+                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(90, currYear.Rok, part))</b>
+            </h4>
+        </div>
+    </div>
+    @ParametrDescr(vradek.VelicinaPart, false, "well")
+
+}
+
 
 @helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
     <div class="row">
         <div class="col-xs-12">
-            <h4>Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je  <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.</h4>
+            <h4>
+                Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
+                <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.
+                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(10, currYear.Rok, part))</b>,
+                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(90, currYear.Rok, part))</b>
+            </h4>
         </div>
     </div>
     @ParametrDescr(vradek.VelicinaPart, false, "well")

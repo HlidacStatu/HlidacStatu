@@ -49,7 +49,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             [Devmasters.Core.NiceDisplayName("Koncentr.dodav. u smluv u limitu VZ")]
             KoncentraceDodavateluCenyULimitu = 5,
 
-            [Devmasters.Core.NiceDisplayName("% smluv s nově založenými smlouvami")]
+            [Devmasters.Core.NiceDisplayName("% smluv s nově založenými firmami")]
             PercNovaFirmaDodavatel = 6,
 
             [Devmasters.Core.NiceDisplayName("% smluv uzavřených o víkendu")]

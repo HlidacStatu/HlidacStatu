@@ -2081,9 +2081,11 @@ select {
 .number {
     font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
     text-align: right !important;
-    font-size: 90% !important;
 }
 
+    .number .small {
+        font-size: 90% !important;
+    }
 
 
 .badge-error {
