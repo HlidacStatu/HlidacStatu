@@ -25,7 +25,9 @@
         <a href="/porovnat/subjekty?ico=@(HlidacStatu.Lib.StaticData.MinisterstvaCache.Get().Select(i=>i.ICO).Aggregate((f,s)=> f+","+s))&title=@Url.Encode("Porovnání ministerstev")" class="btn btn-default">Porovnat ministerstva</a>
         <a href="/porovnat/subjekty?ico=@(HlidacStatu.Lib.StaticData.KrajskeUradyCache.Get().Select(i=>i.ICO).Aggregate((f,s)=> f+","+s))&title=@Url.Encode("Porovnání krajských úřadů")" class="btn btn-default">Porovnat krajské úřady</a>
         <a href="/porovnat/subjekty?ico=@(HlidacStatu.Lib.StaticData.VysokeSkolyCache.Get().Select(i=>i.ICO).Aggregate((f,s)=> f+","+s))&title=@Url.Encode("Porovnání vysokých škol")" class="btn btn-default">Porovnat vysoké školy</a>
-        <a href="/porovnat/subjekty?ico=00066001,00090450,70947023,70946078,72053119,00080837,70971641,27502988,00085031,70932581,70960399,00095711,26913453,03447286,25396544,60733098&title=@Url.Encode("Porovnání krajských správ silnic")" class="btn btn-default">Porovnat krajské správy silnic</a>
+        <a href="/porovnat/subjekty?ico=00066001,00090450,70947023,70946078,72053119,00080837,70971641,27502988,00085031,70932581,70960399,00095711,26913453,03447286,25396544,60733098&title=@Url.Encode("Porovnání krajských správ silnic")" class="btn btn-default">
+        Porovnat krajské správy silnic
+        </a>
         <a class="btn btn-default" href="/porovnat/subjekty?ico=00064165,00064173,00064203,00098892,00159816,00179906,00669806,00843989,25488627,26365804,27283933,27661989,65269705,27283518,26000202,00023736,00023884,27256391,61383082,27256537,00023001,27520536,26068877,47813750,00064211,00209805,27660915,00635162,27256456,00090638,00092584,00064190&title=@Url.Encode("Porovnání velkých nemocnic v ČR")">
             Porovnat velké nemocnice
         </a>

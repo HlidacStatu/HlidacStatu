@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json.Linq; 
+﻿using Newtonsoft.Json.Linq;
+
 using Scriban.Runtime;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,7 +130,20 @@ namespace HlidacStatu.Lib.Render
                 {
                     HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
                     if (o.Valid)
-                        return $"<span><a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
+                    {
+                        //var lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
+                        //string skidx = "";
+                        //if (lbl != null && lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+                        //{
+                        //    skidx = $"<a href='/kindex/detail/{ico}'>"
+                        //        + $"<img src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(lbl.Item2)}' class='kindex' style='padding:0 3px;height:15px;width:auto' />"
+                        //        + "</a>";
+                        //}
+
+                        return $"<span>"
+                            //+ skidx //TODO KIDX
+                            + $"<a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
+                    }
                     else
                         return $"<span>{ico}</span>";
                 }
@@ -245,7 +260,7 @@ namespace HlidacStatu.Lib.Render
                 decimal? val = HlidacStatu.Util.ParseTools.ToDecimal(value.ToString());
                 if (val.HasValue)
                 {
-                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena,html: html, shortFormat: shortFormat);
+                    return HlidacStatu.Util.RenderData.NicePrice(val.Value, mena: mena, html: html, shortFormat: shortFormat);
                 }
                 return "";
             }
@@ -392,6 +407,6 @@ namespace HlidacStatu.Lib.Render
 
             }
         }
-    
+
     }
 }

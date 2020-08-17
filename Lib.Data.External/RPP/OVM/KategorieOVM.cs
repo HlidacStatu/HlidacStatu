@@ -2,9 +2,12 @@
 
 namespace HlidacStatu.Lib.Data.External.RPP
 {
+    //https://rpp-ais.egon.gov.cz/AISP/verejne/
     public class KategorieOVM
     {
-        public static int[] preferredIds = new int[] {
+
+
+        public static int[] PreferredIds = new int[] {
             1081,1128,197,137,1124,1118,1119,178,1122,1126,155,11,1121,118,2051,1060,
             191,123,115,122,141,128,147,1132,164,173,1130,103,1129,1120,105,145,
             109,135,158,120,121,113,12,186,143,107,114,980

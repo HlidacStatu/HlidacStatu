@@ -30,13 +30,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public decimal AverageKindex { get; set; }
         public Dictionary<int, decimal> PercentileKIndex { get; set; } = new Dictionary<int, decimal>();
+        public List<string> SubjectOrderedListKIndex { get; set; }
+        public Dictionary<KIndexData.KIndexParts, List<string>> SubjectOrderedListParts { get; set; } = new Dictionary<KIndexData.KIndexParts, List<string>>();
+
 
         public KIndexData.VypocetDetail AverageParts { get; set; }
         public Dictionary<int, KIndexData.VypocetDetail> PercentileParts { get; set; } = new Dictionary<int, KIndexData.VypocetDetail>();
         public int Rok { get; set; }
 
 
-        public static IEnumerable<Statistics> Calculate(int untilYear)
+        public static IEnumerable<Statistics> Calculate(int untilYear, string[] forIcos = null)
         {
             int[] calculationYears = Enumerable.Range(2017, untilYear - 2017 + 1).ToArray();
 
@@ -44,9 +47,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
                             .Size(size)
-                            //.Source(ss => ss.ExcludeAll())
                             .From(page * size)
-                            //.Query(q => q.QueryString(qs => qs.Query(query)))
                             .Query(q => q.MatchAll())
                             .Scroll("10m")
                             );
@@ -62,7 +63,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
                     return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-                }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter, false, prefix: "GET data ");
+                }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter, 
+                false, prefix: "GET data ");
 
 
             List<Statistics> stats = new List<Statistics>();
@@ -70,18 +72,36 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             foreach (var year in calculationYears)
             {
                 var datayear = data
-                    .Select(m => m.ForYear(year))
-                    .Where(y => y != null && y.KIndexAvailable)
-                    .ToArray();
+                    .Where(m => (forIcos == null || forIcos?.Contains(m.Ico) == true))
+                    .Select(m => new { ic = m.Ico, data = m.ForYear(year) })
+                    .Where(y => y != null && y.data != null && y.data.KIndexAvailable)
+                    .ToDictionary(k => k.ic, v => v.data);
 
                 var stat = new Statistics() { Rok = year };
-                stat.AverageKindex = datayear.Average(m => m.KIndex.Value);
+                //poradi
+                stat.SubjectOrderedListKIndex = datayear
+                    .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
+                    .OrderBy(m => m.Value.KIndex)
+                    .Select(m => m.Key)
+                    .ToList();
+                foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
+                {
+                    stat.SubjectOrderedListParts.Add(part,datayear
+                        .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
+                        .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
+                        .Select(m => m.Key)
+                        .ToList()
+                        );
+                }
+
+                //prumery
+                stat.AverageKindex = datayear.Average(m => m.Value.KIndex.Value);
 
                 stat.AverageParts = new KIndexData.VypocetDetail();
                 List<KIndexData.VypocetDetail.Radek> radky = new List<KIndexData.VypocetDetail.Radek>();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    decimal val = datayear.Select(m => m.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part))
+                    decimal val = datayear.Select(m => m.Value.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part))
                             .Average(a => a.Hodnota);
 
                     KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
@@ -89,19 +109,25 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 }
                 stat.AverageParts = new KIndexData.VypocetDetail() { Radky = radky.ToArray() };
 
+
+                //percentily
                 stat.PercentileKIndex = new Dictionary<int, decimal>();
                 stat.PercentileParts = new Dictionary<int, KIndexData.VypocetDetail>();
+
+
                 foreach (var perc in Percentiles)
                 {
+
+
                     stat.PercentileKIndex.Add(perc,
-                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, datayear.Select(m => m.KIndex.Value))
+                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, datayear.Select(m => m.Value.KIndex.Value))
                         );
 
                     radky = new List<KIndexData.VypocetDetail.Radek>();
                     foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                     {
                         decimal val = HlidacStatu.Util.MathTools.PercentileCont(perc / 100m,
-                                datayear.Select(m => m.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part).Hodnota)
+                                datayear.Select(m => m.Value.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part).Hodnota)
                             );
                         KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
                         radky.Add(radek);
@@ -129,7 +155,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (stat == null)
                 return 0;
             else
-                return stat.AverageParts.Radky.First(m=>m.Velicina == (int)part).Hodnota;
+                return stat.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
         public static decimal Percentil(int perc, int year)
@@ -162,7 +188,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                 prefValue = perc.Key;
             }
-            return new PercInterval(prefValue,100);
+            return new PercInterval(prefValue, 100);
         }
         public static PercInterval GetPartPercentil(int year, KIndexData.KIndexParts part, decimal value)
         {
@@ -173,7 +199,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             foreach (var perc in stat.PercentileParts)
             {
                 var percValue = perc.Value.Radky.First(m => m.Velicina == (int)part).Hodnota;
-                if (value <=percValue )
+                if (value <= percValue)
                     return new PercInterval(prefValue, perc.Key);
 
                 prefValue = perc.Key;
@@ -190,12 +216,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return PercIntervalShortText(GetKIndexPercentile(year, value));
         }
 
-        public static string PercIntervalShortText(PercInterval val )
-        {           
+        public static string PercIntervalShortText(PercInterval val)
+        {
             if (val.To <= 50)
             {
                 if (val.To <= 10)
-                    return $"je mezi {val.To}% nejlepších";
+                    return $"je mezi {val.To} % nejlepších";
                 else if (val.To <= 33)
                     return $"patří mezi první třetinu nejlepších";
                 else
@@ -204,7 +230,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             else
             {
                 if (val.From >= 90)
-                    return $"je mezi {val.From}% nejhorších";
+                    return $"je mezi {100 - val.From} % nejhorších";
                 else if (val.From >= 66)
                     return $"patří do třetiny nejhorších";
                 else

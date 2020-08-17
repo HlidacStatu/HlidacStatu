@@ -64,7 +64,7 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
             var prefSeznam = res.seznam.ToArray();
             for (int i = 0; i < prefSeznam.Count(); i++)
             {
-                prefSeznam[i].hlidac_preferred = External.RPP.KategorieOVM.preferredIds.Contains(prefSeznam[i].id);
+                prefSeznam[i].hlidac_preferred = External.RPP.KategorieOVM.PreferredIds.Contains(prefSeznam[i].id);
             }
             res.seznam = prefSeznam.ToArray();
             return res;

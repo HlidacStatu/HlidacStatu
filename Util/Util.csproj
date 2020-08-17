@@ -135,6 +135,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CZ-Nuts.cs" />
     <Compile Include="Cache\AutoUpdateCouchbaseCache.cs" />
     <Compile Include="Cache\AutoUpdateCouchbaseCacheManager.cs" />
     <Compile Include="Cache\CouchbaseCacheProvider.cs" />
