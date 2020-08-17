@@ -373,7 +373,8 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex.Value)).
+            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex.Value)) 
+            (@statistics.SubjektRank(Model.Ico)).
 
         </div>
         <div class="kmeter" style="padding-top:20px;margin-top:10px;">
@@ -470,7 +471,8 @@ else
                         <td class="number" style="font-size: 15px; vertical-align: top">
                             @radek.Hodnota.ToString("F4")
                             <div class="small" style="font-family: Cabin, sans-serif;">
-                                @(statistics.PercIntervalShortText((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota))
+                                @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
+                                (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
                             </div>
                         </td>
                         <td class="number" style="font-size: 15px; vertical-align: top">
