@@ -43,8 +43,7 @@
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
     <h4>Porovnání základních hodnot</h4>
     <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
-    <p><span style="color: green; font-weight: bold;">Zelená barva</span> - nejlepší v dané kategorii</p>
-    <p><span style="color: red; font-weight: bold;">Červená barva</span> - nejhorší v dané kategorii</p>
+    
 </div>
 
 <div class="row">
@@ -73,22 +72,6 @@
 
                 @foreach(KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    var selectedYearVelicina = Model.Select(company => company
-                        .ForYear(selectedYear)
-                        .KIndexVypocet
-                        .Radky
-                        .Where(r => r.Velicina == (int)velicina)
-                        .Select(r => r.Hodnota * r.Koeficient)
-                        .FirstOrDefault());
-
-                    decimal? bestValue = selectedYearVelicina.Min();
-                    decimal? worstValue = selectedYearVelicina.Max();
-                    if(bestValue == worstValue)
-                    {
-                        bestValue = null;
-                        worstValue = null;
-                    }
-
                     <tr>
                         <th>@velicina.ToNiceDisplayName()</th>
                         @foreach (var cmp in Model)
@@ -99,21 +82,8 @@
                                     .Select(r => r.Hodnota * r.Koeficient)
                                     .FirstOrDefault();
                                     
-
-                            string compareStyle = "color:black;";
-                            if(hodnota == bestValue)
-                            {
-                                compareStyle = "color:green; font-weight:bold;";
-                            }
-                            if ( hodnota == worstValue)
-                            {
-                                compareStyle = "color:red; font-weight:bold;";
-                            }
-
                             <td class="number" style="font-size: 15px; vertical-align: top;">
-                                <div style="@compareStyle">
-                                    @(hodnota.ToString("F2"))
-                                </div>
+                                @(hodnota.ToString("F2"))
                                 <div class="small" style="font-family: Cabin, sans-serif;">
                                     @(Statistics.PercIntervalShortText(selectedYear, velicina, hodnota))
                                 </div>
