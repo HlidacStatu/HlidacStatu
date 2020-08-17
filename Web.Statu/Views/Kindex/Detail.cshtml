@@ -31,6 +31,8 @@
 
     //kindexValue = 10.9m;
 
+    Statistics statistics = Statistics.GetStatistics(selectedYear);
+
     Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
     {
         return (int)Math.Round((hodnota * koeficient / celek * 100), 0);
@@ -371,7 +373,7 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(Statistics.PercIntervalShortText(selectedYear, currYear.KIndex.Value)).
+            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex.Value)).
 
         </div>
         <div class="kmeter" style="padding-top:20px;margin-top:10px;">
@@ -468,7 +470,7 @@ else
                         <td class="number" style="font-size: 15px; vertical-align: top">
                             @radek.Hodnota.ToString("F4")
                             <div class="small" style="font-family: Cabin, sans-serif;">
-                                @(Statistics.PercIntervalShortText(selectedYear, (KIndexData.KIndexParts)radek.Velicina, radek.Hodnota))
+                                @(statistics.PercIntervalShortText((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota))
                             </div>
                         </td>
                         <td class="number" style="font-size: 15px; vertical-align: top">
@@ -491,16 +493,16 @@ else
                                             case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
                                             case KIndexData.KIndexParts.PercUzavrenoOVikendu:
                                             case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                                                @ParametrDetail(currYear, radek.VelicinaPart)
+                                                @ParametrDetail(currYear, radek.VelicinaPart, statistics)
                                                 break;
                                             case KIndexData.KIndexParts.KoncentraceDodavateluObory:
-                                                @ParametrDetail(currYear, radek.VelicinaPart, false)
+                                                @ParametrDetail(currYear, radek.VelicinaPart, statistics, false)
                                                 break;
 
                                             case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
                                             case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
                                             case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
-                                                @KoncentraceDetail(currYear, radek.VelicinaPart)
+                                                @KoncentraceDetail(currYear, radek.VelicinaPart, statistics)
                                                 break;
                                             case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
                                                 @ParametrDescr(radek.VelicinaPart, false, "well")
@@ -527,7 +529,7 @@ else
                     <td style="font-weight:bold;font-size:130%" class="number">
                         <b>@kindexValue.ToString("F2")</b>
                         <div style="font-family: Cabin, sans-serif;">
-                            @(Statistics.PercIntervalShortText(selectedYear, currYear.KIndex.Value))
+                            @(statistics.PercIntervalShortText(currYear.KIndex.Value))
                         </div>
                     </td>
                     <td>&nbsp;</td>
@@ -544,7 +546,7 @@ else
 <hr style="margin-top:50px" />
 
 
-@helper ParametrDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, bool percentValue = true)
+@helper ParametrDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics, bool percentValue = true)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
     <div class="row">
@@ -558,9 +560,9 @@ else
             }
             <h4>
                 Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
-                <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.
-                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(10, currYear.Rok, part))</b>,
-                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(90, currYear.Rok, part))</b>
+                <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
+                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
+                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
             </h4>
         </div>
     </div>
@@ -569,16 +571,16 @@ else
 }
 
 
-@helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part)
+@helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
     <div class="row">
         <div class="col-xs-12">
             <h4>
                 Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
-                <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Average(currYear.Rok, part))</b>.
-                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(10, currYear.Rok, part))</b>,
-                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(Statistics.Percentil(90, currYear.Rok, part))</b>
+                <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
+                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
+                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
             </h4>
         </div>
     </div>

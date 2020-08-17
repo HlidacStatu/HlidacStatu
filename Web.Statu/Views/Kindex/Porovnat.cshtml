@@ -7,7 +7,7 @@
 
 
 @{
-    
+
     int selectedYear = ViewBag.SelectedYear;
 
 
@@ -16,11 +16,12 @@
     //ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
+    Statistics statistics = Statistics.GetStatistics(selectedYear);
 
     //decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
     //kindexValue = 10.9m;
-  
+
 }
 
 @section scripts
@@ -85,7 +86,7 @@
                             <td class="number" style="font-size: 15px; vertical-align: top;">
                                 @(hodnota.ToString("F2"))
                                 <div class="small" style="font-family: Cabin, sans-serif;">
-                                    @(Statistics.PercIntervalShortText(selectedYear, velicina, hodnota))
+                                    @(statistics.PercIntervalShortText(velicina, hodnota))
                                 </div>
                             </td>
                         }

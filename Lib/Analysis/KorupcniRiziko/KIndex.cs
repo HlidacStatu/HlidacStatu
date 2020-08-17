@@ -18,6 +18,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 TimeSpan.FromSeconds(120)
 #endif
            );
+        static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
+        private static KIndexData getDirect(string ico)
+        {
+            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
+            if (res.Found == false)
+                return notFoundKIdx;
+            else if (!res.IsValid)
+            {
+                throw new ApplicationException(res.ServerError?.ToString());
+            }
+            else
+                return res.Source;
+        }
+
 
         private static MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, string> instanceLabelByIco
        = MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, string>.GetSafeInstance("kindexLabelByICO", getDirectLabel,
@@ -27,6 +41,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 TimeSpan.FromSeconds(120)
 #endif
            );
+        private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel(string ico)
+        {
+            var kidx = Get(ico);
+            if (kidx != null)
+            {
+                var lbl = kidx.LastKIndexLabel(out int? rok);
+                return new Tuple<int?, KIndexData.KIndexLabelValues>(rok, lbl);
+            }
+
+            return new Tuple<int?, KIndexData.KIndexLabelValues>(null, KIndexData.KIndexLabelValues.None);
+        }
 
 
         public static KIndexData Get(string ico)
@@ -45,30 +70,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return instanceLabelByIco.Get(ico);
         }
 
-        private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel(string ico)
-        {
-            var kidx = Get(ico);
-            if (kidx != null)
-            {
-                var lbl = kidx.LastKIndexLabel(out int? rok);
-                return new Tuple<int?, KIndexData.KIndexLabelValues>(rok, lbl);
-            }
 
-            return new Tuple<int?, KIndexData.KIndexLabelValues>(null, KIndexData.KIndexLabelValues.None);
-        }
-
-        static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
-        private static KIndexData getDirect(string ico)
+        public static decimal Average(int year)
         {
-            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
-            if (res.Found == false)
-                return notFoundKIdx;
-            else if (!res.IsValid)
-            {
-                throw new ApplicationException(res.ServerError?.ToString());
-            }
+            var stat =  Statistics.KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year);
+            if (stat == null)
+                return 0;
             else
-                return res.Source;
+                return stat.AverageKindex;
+        }
+        public static decimal Average(int year, KIndexData.KIndexParts part)
+        {
+            var stat = Statistics.KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year);
+            if (stat == null)
+                return 0;
+            else
+                return stat.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
 
