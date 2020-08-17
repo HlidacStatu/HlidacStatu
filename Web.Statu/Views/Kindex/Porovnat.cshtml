@@ -1,0 +1,100 @@
+﻿@model List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData>
+
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+
+
+@{
+    
+    int selectedYear = ViewBag.SelectedYear;
+
+
+    //HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    ViewBag.Title = "K-index porovnání";
+    //ViewBag.SubTitle = "pro " + firma.Jmeno;
+    ViewBag.HideTitle = true;
+
+
+    //decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+
+    //kindexValue = 10.9m;
+  
+}
+
+@section scripts
+{
+  
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>K-Index porovnání</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+
+<h2>Porovnání K-indexu úřadů</h2>
+
+<div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
+    <h4>Porovnání základních hodnot</h4>
+    <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
+    
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <table class="table table-no-border">
+            <tbody>
+                <tr>
+                    <td>firma</td>
+                    @foreach(var cmp in Model)
+                    {
+                        <th style="text-align:right">
+                            @cmp.Jmeno
+                        </th>
+                    }
+                </tr>
+                <tr>
+                    <th>Celková známka</th>
+                    @foreach (var cmp in Model)
+                    {
+                        <td class="number" style="font-size: 15px; vertical-align: top">
+                            @WebKidx.KIndexIconStyle(cmp.ForYear(selectedYear).KIndexLabel, "width:20px")
+                        </td>
+                    }
+                </tr>
+
+                @foreach(KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
+                {
+                    <tr>
+                        <th>@velicina.ToNiceDisplayName()</th>
+                        @foreach (var cmp in Model)
+                        {
+                            var hodnota = cmp.ForYear(selectedYear)
+                                    .KIndexVypocet.Radky
+                                    .Where(r => r.Velicina == (int)velicina)
+                                    .Select(r => r.Hodnota * r.Koeficient)
+                                    .FirstOrDefault();
+                                    
+                            <td class="number" style="font-size: 15px; vertical-align: top;">
+                                @(hodnota.ToString("F2"))
+                                <div class="small" style="font-family: Cabin, sans-serif;">
+                                    @(Statistics.PercIntervalShortText(selectedYear, velicina, hodnota))
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
