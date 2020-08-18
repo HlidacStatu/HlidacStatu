@@ -4,6 +4,7 @@
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 @using HlidacStatu.Web.Framework;
 @using System.Linq;
+@using System.Text.RegularExpressions;
 
 
 @{
@@ -21,12 +22,22 @@
     //decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
     //kindexValue = 10.9m;
+    
+
+    Func<string, string> removeSelfFromUrl = (input) =>
+    {
+        string source = Request.Url.Segments.LastOrDefault();
+        string removedIco = source.Remove(source.IndexOf(input), input.Length);
+        return Regex.Replace(removedIco,"(^,|,$)","").Replace(",,",",");
+    };
 
 }
 
 @section scripts
 {
-  
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
 }
 
 @section breadcrumb
@@ -44,8 +55,13 @@
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
     <h4>Porovnání základních hodnot</h4>
     <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
-    
+
 </div>
+<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" onchange="FindCompany(this)" />
+<div id="companies">
+
+</div>
+
 
 <div class="row">
     <div class="col-sm-12">
@@ -54,12 +70,16 @@
             <tbody>
                 <tr>
                     <td>firma</td>
-                    @foreach(var cmp in Model)
+                    @foreach (var cmp in Model)
                     {
                         <th style="text-align:right">
                             @cmp.Jmeno
+                            <div class="small" style="font-family: Cabin, sans-serif;">
+                                <a href="@(removeSelfFromUrl(cmp.Ico))">odebrat</a>
+                            </div>
                         </th>
                     }
+                
                 </tr>
                 <tr>
                     <th>Celková známka</th>
@@ -71,31 +91,58 @@
                     }
                 </tr>
 
-                @foreach(KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
+                @foreach (KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
                     <tr>
                         <th>@velicina.ToNiceDisplayName()</th>
                         @foreach (var cmp in Model)
                         {
-                            var hodnota = cmp.ForYear(selectedYear)
-                                    .KIndexVypocet.Radky
+                            var hodnota = cmp.ForYear(selectedYear)?
+                                    .KIndexVypocet?.Radky?
                                     .Where(r => r.Velicina == (int)velicina)
                                     .Select(r => r.Hodnota * r.Koeficient)
                                     .FirstOrDefault();
-                                    
+
                             <td class="number" style="font-size: 15px; vertical-align: top;">
-                                @(hodnota.ToString("F2"))
-                                <div class="small" style="font-family: Cabin, sans-serif;">
-                                    @(statistics.PercIntervalShortText(velicina, hodnota))
-                                </div>
+                                @(hodnota?.ToString("F2") ?? "Chybí K-index")
+                                
+                                @if(hodnota.HasValue)
+                                {
+                                    <div class="small" style="font-family: Cabin, sans-serif;">
+                                        @(statistics.PercIntervalShortText(velicina, hodnota.Value))
+                                    </div>
+                                }
                             </td>
                         }
                     </tr>
                 }
-                
+
             </tbody>
         </table>
 
     </div>
 </div>
 
+<script>
+
+    function FindCompany(caller) {
+        let req = "/kindex/findcompany/" + caller.value;
+        $.get(req, function (data) {
+            $('#companies').empty();
+            data.forEach(comp => {
+                var button = $('<button/>',
+                    {
+                        text: comp.Name,
+                        click: function () { AddCompany(comp.Ico); }
+                    });
+
+                $("#companies").append(button);
+            });
+        }, "json");
+    }
+
+    function AddCompany(ico) {
+        window.location.href = window.location.href + "," + ico;
+    }
+
+</script>

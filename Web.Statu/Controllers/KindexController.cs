@@ -28,7 +28,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            
+
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
                 KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id));
@@ -67,6 +67,11 @@ namespace HlidacStatu.Web.Controllers
             }
 
             return View(kindexes);
+        }
+
+        public JsonResult FindCompany(string id)
+        {
+            return Json(Company.FullTextSearch(id), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Debug(string id, string ico = "", int? rok = null)

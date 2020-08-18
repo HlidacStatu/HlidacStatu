@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HlidacStatu.Util.Cache;
+using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class KIndex
     {
+        private static ElasticClient _esClient = ES.Manager.GetESClient_KIndex();
         private static CouchbaseCacheManager<KIndexData, string> instanceByIco
        = CouchbaseCacheManager<KIndexData, string>.GetSafeInstance("kindexByICO", getDirect,
 #if (!DEBUG)
@@ -21,7 +23,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
         private static KIndexData getDirect(string ico)
         {
-            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
+            var res = _esClient.Get<KIndexData>(ico);
             if (res.Found == false)
                 return notFoundKIdx;
             else if (!res.IsValid)
@@ -63,6 +65,47 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return null;
             
             return f;
+        }
+
+        public static IEnumerable<KIndexData> YieldExistingKindexes(string scrollTimeout = "2m", int scrollSize = 300)
+        {
+            ISearchResponse<KIndexData> initialResponse = _esClient.Search<KIndexData>
+                (scr => scr.From(0)
+                     .Take(scrollSize)
+                     .MatchAll()
+                     .Scroll(scrollTimeout));
+
+            if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
+                throw new Exception(initialResponse.ServerError.Error.Reason);
+
+            if (initialResponse.Documents.Any())
+                foreach (var document in initialResponse.Documents)
+                {
+                    // filter to get only existing calculated Kindexes
+                    if (document.roky.Any(m => m.KIndexAvailable))
+                        yield return document;
+                }
+
+            string scrollid = initialResponse.ScrollId;
+            bool isScrollSetHasData = true;
+            while (isScrollSetHasData)
+            {
+                ISearchResponse<KIndexData> loopingResponse = _esClient.Scroll<KIndexData>(scrollTimeout, scrollid);
+                if (loopingResponse.IsValid)
+                {
+                    foreach (var document in loopingResponse.Documents)
+                    {
+                        // filter to get only existing calculated Kindexes
+                        if (document.roky.Any(m => m.KIndexAvailable))
+                            yield return document;
+                    }
+                    scrollid = loopingResponse.ScrollId;
+                }
+                isScrollSetHasData = loopingResponse.Documents.Any();
+            }
+
+            _esClient.ClearScroll(new ClearScrollRequest(scrollid));
+
         }
 
         public static Tuple<int?, KIndexData.KIndexLabelValues> GetLastLabel(string ico)
