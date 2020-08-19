@@ -229,19 +229,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 case KIndexParts.PercSeZasadnimNedostatkem:
                     return 10m;
                 case KIndexParts.CelkovaKoncentraceDodavatelu:
-                    return 20m;
+                    return 10m;
                 case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                    return 20m;
+                    return 10m;
                 case KIndexParts.PercSmluvUlimitu:
                     return 10m;
                 case KIndexParts.KoncentraceDodavateluCenyULimitu:
                     return 10m;
                 case KIndexParts.PercNovaFirmaDodavatel:
-                    return 3m;
+                    return 10m;
                 case KIndexParts.PercUzavrenoOVikendu:
-                    return 3m;
+                    return 10m;
                 case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    return 3m;
+                    return 10m;
                 case KIndexParts.KoncentraceDodavateluObory:
                     return 10m;
                 case KIndexParts.PercSmlouvyPod50kBonus:

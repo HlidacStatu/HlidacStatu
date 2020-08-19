@@ -32,7 +32,7 @@
     //kindexValue = 10.9m;
 
     Statistics statistics = Statistics.GetStatistics(selectedYear);
-
+    
     Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
     {
         return (int)Math.Round((hodnota * koeficient / celek * 100), 0);

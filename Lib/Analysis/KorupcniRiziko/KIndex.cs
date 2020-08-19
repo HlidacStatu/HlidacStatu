@@ -12,12 +12,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public class KIndex
     {
         private static ElasticClient _esClient = ES.Manager.GetESClient_KIndex();
-        private static CouchbaseCacheManager<KIndexData, string> instanceByIco
-       = CouchbaseCacheManager<KIndexData, string>.GetSafeInstance("kindexByICO", getDirect,
+        private static MemoryCacheManager<KIndexData, string> instanceByIco
+       = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICO", getDirect,
 #if (!DEBUG)
                 TimeSpan.FromMinutes(1200)
 #else
-                TimeSpan.FromSeconds(120)
+                TimeSpan.FromSeconds(10)
 #endif
            );
         static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
