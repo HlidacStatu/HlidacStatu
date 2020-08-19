@@ -42,16 +42,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static IEnumerable<Company> FullTextSearch(string search, int take = 50)
         {
-            
+            if (string.IsNullOrWhiteSpace(search))
+                return new List<Company>();
+                
             var fullSearchNames = GetCompanies()
-                .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
+                .Where(c => c.Name.StartsWith(search, StringComparison.InvariantCultureIgnoreCase))
                 .Take(take);
             IEnumerable<Company> totalResult = fullSearchNames;
             if (totalResult.Count() >= take)
                 return totalResult;
 
             var fullSearchIcos = GetCompanies()
-                .Where(c => c.Ico.StartsWith(search))
+                .Where(c => c.Ico.StartsWith(search, StringComparison.InvariantCultureIgnoreCase))
                 .Take(take);
             totalResult = totalResult.Union(fullSearchIcos).Take(take);
             if (totalResult.Count() >= take)
@@ -63,7 +65,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .Where(c => 
                     tokenizedSearchInput.All(txt => 
                         c.Tokens.Any(tkn => 
-                            tkn.StartsWith(txt)
+                            tkn.StartsWith(txt, StringComparison.InvariantCultureIgnoreCase)
                         )
                     )
                 )
@@ -76,7 +78,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .Where(c =>
                     tokenizedSearchInput.Any(txt =>
                         c.Tokens.Any(tkn =>
-                            tkn.StartsWith(txt)
+                            tkn.StartsWith(txt, StringComparison.InvariantCultureIgnoreCase)
                         )
                     )
                 )
