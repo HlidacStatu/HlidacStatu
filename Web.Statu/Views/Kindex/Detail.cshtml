@@ -450,15 +450,6 @@ else
                     <td style="font-size: 15px; text-align: right">
                         <b>Hodnota parametru</b>
                     </td>
-                    <td style="font-size: 15px; text-align: right">
-                        <b>Důležitost<br />v&nbsp;rámci&nbsp;celku</b>
-                    </td>
-                    <td style="font-size: 15px; text-align: right">
-                        <b>
-                            Počet&nbsp;bodů<br />
-                            <span class="small">(hodnota&nbsp;x&nbsp;váha)</span>
-                        </b>
-                    </td>
                 </tr>
                 @foreach (var radek in currYear.KIndexVypocet.Radky
                     .OrderByDescending(r => r.Koeficient)
@@ -468,18 +459,12 @@ else
                         <td style="font-size:15px;">
                             @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)" onclick="showHelp(this,'#detail_@(radek.Velicina)');return false;">@ukazatTxt</a></small>
                         </td>
-                        <td class="number" style="font-size: 15px; vertical-align: top">
-                            @radek.Hodnota.ToString("F4")
+                        <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                            @((radek.Koeficient * radek.Hodnota).ToString("F2"))
                             <div class="small" style="font-family: Cabin, sans-serif;">
                                 @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
                                 (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
                             </div>
-                        </td>
-                        <td class="number" style="font-size: 15px; vertical-align: top">
-                            @radek.Koeficient.ToString("F0")
-                        </td>
-                        <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                            @((radek.Koeficient * radek.Hodnota).ToString("F2"))
                         </td>
                     </tr>
                     <tr style="border-bottom:dotted 2px #E0E6ED">
@@ -520,12 +505,12 @@ else
 
                 }
                 <tr>
-                    <td colspan="5">
+                    <td colspan="2">
                         Jednotlivé hodnoty všech parametrů se vynásobí vahou (důležitostí) parametru a výsledné body se sečtou
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3">
+                    <td>
                         <div style="font-weight:bold;font-size:130%">Součet bodů = K-Index</div>
                     </td>
                     <td style="font-weight:bold;font-size:130%" class="number">
