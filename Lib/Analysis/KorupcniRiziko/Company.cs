@@ -7,6 +7,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class Company
     {
+        public Company(){ }
         public Company(string name, string ico, decimal? value)
             : this(name, ico)
         {
