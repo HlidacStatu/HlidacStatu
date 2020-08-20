@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Company>
+
+@using Devmasters.Core;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+@using System.Text.RegularExpressions;
+
+@{
+
+    int selectedYear = ViewBag.SelectedYear;
+
+
+    //HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    ViewBag.Title = "K-index porovnání";
+    //ViewBag.SubTitle = "pro " + firma.Jmeno;
+    ViewBag.HideTitle = true;
+
+    //Statistics statistics = Statistics.GetStatistics(selectedYear);
+
+}
+
+@section scripts
+{
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>K-Index porovnání</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<style>
+    .whisp {
+        width: 600px;
+        text-align: left;
+        background: white;
+        border-left: 2px grey solid;
+        border-top: 0px;
+        border-bottom: 1px grey dotted;
+        border-right: 0px grey solid;
+        padding-bottom: 2px;
+    }
+
+    #companies {
+        margin-bottom: 10px;
+    }
+</style>
+
+<h2>Žebříček Hall of Infame</h2>
+
+<div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
+    <h4>Porovnání základních hodnot</h4>
+    <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
+
+</div>
+<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
+<div id="companies">
+
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <table class="table table-no-border">
+            <tbody>
+                <tr>
+                    <td>Firma</td>
+                    <td>Známka</td>
+                    <td style="text-align: right;">Body</td>
+                    @*<td>Přidat do porovnání</td>*@
+                </tr>
+                @foreach(var record in Model)
+                {
+                    <tr>
+                        <td>
+                            <a href="/subjekt/@record.Ico">@record.Name</a>
+                        </td>
+                        <td>
+                            <a href="/kindex/detail/@record.Ico">@(KIndexData.CalculateLabel(record.Value4Sort))</a>
+                        </td>
+                        <td style="text-align: right;">
+                            @record.Value4Sort
+                        </td>
+                        @*<td></td>*@
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+
+
+</script>

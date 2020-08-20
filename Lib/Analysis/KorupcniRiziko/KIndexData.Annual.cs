@@ -91,14 +91,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 get
                 {
-                    KIndexLabelValues val = KIndexLabelValues.None;
-                    for (int i = 0; i < KIndexLimits.Length; i++)
-                    {
-                        if (this.KIndex > KIndexLimits[i])
-                            val = (KIndexLabelValues)i;
-                    }
-
-                    return val;
+                    return CalculateLabel(this.KIndex);
                 }
             }
             [Nest.Object(Ignore = true)]

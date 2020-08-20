@@ -1590,6 +1590,7 @@
     <Content Include="Views\Kindex\Index.cshtml" />
     <Content Include="Views\Kindex\Detail.cshtml" />
     <Content Include="Views\Kindex\Porovnat.cshtml" />
+    <Content Include="Views\Kindex\Zebricek.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

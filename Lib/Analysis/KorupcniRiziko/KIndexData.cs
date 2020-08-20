@@ -175,8 +175,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public static KIndexLabelValues CalculateLabel(decimal? value)
+        {
+            KIndexLabelValues label = KIndexLabelValues.None;
+            for (int i = 0; i < KIndexLimits.Length; i++)
+            {
+                if (value > KIndexLimits[i])
+                    label = (KIndexLabelValues)i;
+            }
 
-
+            return label;
+        }
 
         public static KIndexData GetDirect(string ico)
         {

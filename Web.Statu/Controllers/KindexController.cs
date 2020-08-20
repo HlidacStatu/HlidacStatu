@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 using HlidacStatu.Lib.Data;
+using HlidacStatu.Lib.OCR.Api;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -67,6 +68,37 @@ namespace HlidacStatu.Web.Controllers
             }
 
             return View(kindexes);
+        }
+
+        public ActionResult Zebricek(string id, int? rok = null)
+        {
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User)
+                || string.IsNullOrWhiteSpace(id))
+            {
+                return Redirect("/");
+            }
+
+            rok = FixKindexYear(rok);
+            ViewBag.SelectedYear = rok;
+
+            var stat = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
+
+            IEnumerable<Company> result = null; 
+            switch (id)
+            {
+                case "nejlepsi":
+                    result = stat.Take(100);
+                    break;
+                case "nejhorsi":
+                    result = stat.OrderByDescending(k => k.Value4Sort).Take(100);
+                    break;
+                default:
+                    result = stat;
+                    break;
+            }
+            
+
+            return View(result);
         }
 
         public JsonResult FindCompany(string id)

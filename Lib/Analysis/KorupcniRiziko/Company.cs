@@ -30,10 +30,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private static Dictionary<string,Company> ListCompanies()
         {
             Dictionary<string, Company> companies = new Dictionary<string, Company>();
-            int i = 0;
             foreach(var kindexRecord in KIndex.YieldExistingKindexes())
             {
-                //Console.WriteLine($"{i++} - {kindexRecord.Jmeno}");
                 companies.Add(kindexRecord.Ico, new Company(kindexRecord.Jmeno, kindexRecord.Ico));
             }
 
@@ -45,19 +43,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return CachedCompanies.Get();
         }
 
-        public static IEnumerable<KeyValuePair<string,Company>> FullTextSearch(string search, int take = 50)
+        public static IEnumerable<Company> FullTextSearch(string search, int take = 50)
         {
 
-            IEnumerable<KeyValuePair<string, Company>> fullSearchNames = GetCompanies()
-                .Where(c => c.Value.Name.ToLower().StartsWith(search.ToLower()))
+            IEnumerable<Company> fullSearchNames = GetCompanies().Values
+                .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
                 .Take(take);
 
-            IEnumerable<KeyValuePair<string, Company>> totalResult = fullSearchNames;
+            IEnumerable<Company> totalResult = fullSearchNames;
             if (totalResult.Count() >= take)
                 return totalResult;
 
             var fullSearchIcos = GetCompanies()
                 .Where(c => c.Key.StartsWith(search))
+                .Select(c => c.Value)
                 .Take(take);
             totalResult = totalResult.Union(fullSearchIcos).Take(take);
             if (totalResult.Count() >= take)
@@ -65,10 +64,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             var tokenizedSearchInput = Tokenize(search);
 
-            var tokenSearchAll = GetCompanies()
+            var tokenSearchAll = GetCompanies().Values
                 .Where(c => 
                     tokenizedSearchInput.All(txt => 
-                        c.Value.Tokens.Any(tkn => 
+                        c.Tokens.Any(tkn => 
                             tkn.StartsWith(txt)
                         )
                     )
@@ -78,10 +77,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (totalResult.Count() >= take)
                 return totalResult;
 
-            var tokenSearchAny = GetCompanies()
+            var tokenSearchAny = GetCompanies().Values
                 .Where(c =>
                     tokenizedSearchInput.Any(txt =>
-                        c.Value.Tokens.Any(tkn =>
+                        c.Tokens.Any(tkn =>
                             tkn.StartsWith(txt)
                         )
                     )
