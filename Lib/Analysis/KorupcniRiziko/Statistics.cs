@@ -22,8 +22,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public decimal AverageKindex { get; set; }
         public Dictionary<int, decimal> PercentileKIndex { get; set; } = new Dictionary<int, decimal>();
-        public List<string> SubjektOrderedListKIndexAsc { get; set; }
-        public Dictionary<KIndexData.KIndexParts, List<string>> SubjektOrderedListPartsAsc { get; set; } = new Dictionary<KIndexData.KIndexParts, List<string>>();
+        public List<Tuple<string,decimal>> SubjektOrderedListKIndexAsc { get; set; }
+        public Dictionary<KIndexData.KIndexParts, List<Tuple<string, decimal>>> SubjektOrderedListPartsAsc { get; set; } = new Dictionary<KIndexData.KIndexParts, List<Tuple<string, decimal>>>();
 
 
         public KIndexData.VypocetDetail AverageParts { get; set; }
@@ -51,9 +51,35 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return this.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
+
+        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc()
+        {
+            return SubjektOrderedListKIndexAsc
+                .OrderBy(m => m.Item2)
+                .Select(m => new Company(
+                    Company.GetCompanies().ContainsKey(m.Item1)
+                        ? Company.GetCompanies()[m.Item1].Name
+                        : Lib.Data.Firmy.GetJmeno(m.Item1)
+                    , m.Item1, m.Item2)
+                );
+        }
+
+        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part)
+        {
+            return SubjektOrderedListPartsAsc[part]
+                .OrderBy(m => m.Item2)
+                .Select(m => new Company(
+                    Company.GetCompanies().ContainsKey(m.Item1)
+                        ? Company.GetCompanies()[m.Item1].Name
+                        : Lib.Data.Firmy.GetJmeno(m.Item1)
+                    , m.Item1, m.Item2)
+                )
+                .ToList();
+        }
+
         public int? SubjektRank(string ico)
         {
-            var res = this.SubjektOrderedListKIndexAsc.IndexOf(ico);
+            var res = this.SubjektOrderedListKIndexAsc.FindIndex(m=>m.Item1 == ico);
             if (res == -1)
                 return null;
             else
@@ -61,7 +87,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public int? SubjektRank(string ico, KIndexData.KIndexParts part)
         {
-            var res = this.SubjektOrderedListPartsAsc[part].IndexOf(ico);
+            var res = this.SubjektOrderedListPartsAsc[part].FindIndex( m=>m.Item1== ico);
             if (res == -1)
                 return null;
             else
@@ -88,16 +114,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             }
-
+            return "";
         }
 
         public int? SubjektRankText(string ico, KIndexData.KIndexParts part)
         {
-            var res = this.SubjektOrderedListPartsAsc[part].IndexOf(ico);
-            if (res == -1)
-                return null;
-            else
-                return res;
+            throw new NotImplementedException();
         }
 
         public decimal Percentil(int perc, KIndexData.KIndexParts part)

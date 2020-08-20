@@ -43,7 +43,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
                     return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-                }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter, 
+                }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter,
                 false, prefix: "GET data ");
 
 
@@ -62,14 +62,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 stat.SubjektOrderedListKIndexAsc = datayear
                     .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
                     .OrderBy(m => m.Value.KIndex)
-                    .Select(m => m.Key)
+                    .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex.Value))
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    stat.SubjektOrderedListPartsAsc.Add(part,datayear
+                    stat.SubjektOrderedListPartsAsc.Add(part, datayear
                         .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
                         .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
-                        .Select(m => m.Key)
+                        .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex.Value))
                         .ToList()
                         );
                 }
@@ -122,7 +122,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
 
-         
+
 
 
         public static string PercIntervalShortText(PercInterval val)

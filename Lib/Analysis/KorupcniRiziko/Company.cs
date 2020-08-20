@@ -7,9 +7,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class Company
     {
+        public Company(string name, string ico, decimal? value)
+            : this(name, ico)
+        {
+            Value4Sort = value;
+        }
         public Company(string name, string ico)
         {
             Name = name;
+            Ico = ico;
             Tokens = Tokenize($"{name} {ico}");
         }
 
@@ -89,6 +95,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Name { get; set; }
         public string Ico { get; set; }
         private string[] Tokens { get; set; }
+        public decimal? Value4Sort { get; set; } = null;
 
         private static string[] Tokenize(string input)
         {
