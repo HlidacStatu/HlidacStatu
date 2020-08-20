@@ -59,14 +59,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                 var stat = new Statistics() { Rok = year };
                 //poradi
-                stat.SubjektOrderedListKIndex = datayear
+                stat.SubjektOrderedListKIndexAsc = datayear
                     .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
                     .OrderBy(m => m.Value.KIndex)
                     .Select(m => m.Key)
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    stat.SubjektOrderedListParts.Add(part,datayear
+                    stat.SubjektOrderedListPartsAsc.Add(part,datayear
                         .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
                         .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
                         .Select(m => m.Key)

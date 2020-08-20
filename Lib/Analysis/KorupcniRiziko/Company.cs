@@ -10,48 +10,48 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public Company(string name, string ico)
         {
             Name = name;
-            Ico = ico;
             Tokens = Tokenize($"{name} {ico}");
         }
 
-        public static Devmasters.Cache.V20.File.FileCache<Company[]> CachedCompanies = 
-            new Devmasters.Cache.V20.File.FileCache<Company[]>(
+        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,Company>> CachedCompanies = 
+            new Devmasters.Cache.V20.File.FileCache<Dictionary<string, Company>>(
                 Lib.Init.WebAppDataPath, TimeSpan.Zero, "KIndexCompanies",
                     (o) =>
                     {
-                        return ListCompanies().ToArray();
+                        return ListCompanies();
                     });
 
-        private static IEnumerable<Company> ListCompanies()
+        private static Dictionary<string,Company> ListCompanies()
         {
-            List<Company> companies = new List<Company>();
+            Dictionary<string, Company> companies = new Dictionary<string, Company>();
             int i = 0;
             foreach(var kindexRecord in KIndex.YieldExistingKindexes())
             {
-                Console.WriteLine($"{i++} - {kindexRecord.Jmeno}");
-                companies.Add(new Company(kindexRecord.Jmeno, kindexRecord.Ico));
+                //Console.WriteLine($"{i++} - {kindexRecord.Jmeno}");
+                companies.Add(kindexRecord.Ico, new Company(kindexRecord.Jmeno, kindexRecord.Ico));
             }
 
             return companies;
         }
 
-        public static IEnumerable<Company> GetCompanies()
+        public static Dictionary<string, Company> GetCompanies()
         {
             return CachedCompanies.Get();
         }
 
-        public static IEnumerable<Company> FullTextSearch(string search, int take = 50)
+        public static IEnumerable<KeyValuePair<string,Company>> FullTextSearch(string search, int take = 50)
         {
-            
-            var fullSearchNames = GetCompanies()
-                .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
+
+            IEnumerable<KeyValuePair<string, Company>> fullSearchNames = GetCompanies()
+                .Where(c => c.Value.Name.ToLower().StartsWith(search.ToLower()))
                 .Take(take);
-            IEnumerable<Company> totalResult = fullSearchNames;
+
+            IEnumerable<KeyValuePair<string, Company>> totalResult = fullSearchNames;
             if (totalResult.Count() >= take)
                 return totalResult;
 
             var fullSearchIcos = GetCompanies()
-                .Where(c => c.Ico.StartsWith(search))
+                .Where(c => c.Key.StartsWith(search))
                 .Take(take);
             totalResult = totalResult.Union(fullSearchIcos).Take(take);
             if (totalResult.Count() >= take)
@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var tokenSearchAll = GetCompanies()
                 .Where(c => 
                     tokenizedSearchInput.All(txt => 
-                        c.Tokens.Any(tkn => 
+                        c.Value.Tokens.Any(tkn => 
                             tkn.StartsWith(txt)
                         )
                     )
@@ -75,7 +75,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var tokenSearchAny = GetCompanies()
                 .Where(c =>
                     tokenizedSearchInput.Any(txt =>
-                        c.Tokens.Any(tkn =>
+                        c.Value.Tokens.Any(tkn =>
                             tkn.StartsWith(txt)
                         )
                     )

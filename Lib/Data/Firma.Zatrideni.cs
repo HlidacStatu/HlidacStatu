@@ -84,6 +84,24 @@ namespace HlidacStatu.Lib.Data
 
 
 
+                Technicke_sluzby = 10006,
+                Sportovni_zarizeni = 10007,
+                Domov_duchodcu = 10008,
+                Veznice = 10009,
+                Pamatky = 10010, //narodni pamatkovy ustav
+                Zachranne_sluzby = 10011,
+                
+                //spolovny, prehrady, zasobarny pitne vody
+                // vodarny
+                // kulturni zarizeni, divadla, kina, strediska
+                // spravy povodi
+                // ZOO
+                // hrbitovy, krematoria
+                // lazne, blazince
+                // regionalni rozvojove agentury, vinarstvi, ...
+                // domy deti a mladeze
+
+
                 [Disabled]
                 OVM_pro_evidenci_skutecnych_majitelu = 3106,
             }

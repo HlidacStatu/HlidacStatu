@@ -22,8 +22,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public decimal AverageKindex { get; set; }
         public Dictionary<int, decimal> PercentileKIndex { get; set; } = new Dictionary<int, decimal>();
-        public List<string> SubjektOrderedListKIndex { get; set; }
-        public Dictionary<KIndexData.KIndexParts, List<string>> SubjektOrderedListParts { get; set; } = new Dictionary<KIndexData.KIndexParts, List<string>>();
+        public List<string> SubjektOrderedListKIndexAsc { get; set; }
+        public Dictionary<KIndexData.KIndexParts, List<string>> SubjektOrderedListPartsAsc { get; set; } = new Dictionary<KIndexData.KIndexParts, List<string>>();
 
 
         public KIndexData.VypocetDetail AverageParts { get; set; }
@@ -53,7 +53,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public int? SubjektRank(string ico)
         {
-            var res = this.SubjektOrderedListKIndex.IndexOf(ico);
+            var res = this.SubjektOrderedListKIndexAsc.IndexOf(ico);
             if (res == -1)
                 return null;
             else
@@ -61,13 +61,44 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public int? SubjektRank(string ico, KIndexData.KIndexParts part)
         {
-            var res = this.SubjektOrderedListParts[part].IndexOf(ico);
+            var res = this.SubjektOrderedListPartsAsc[part].IndexOf(ico);
             if (res == -1)
                 return null;
             else
                 return res;
         }
 
+        public string SubjektRankText(string ico)
+        {
+            var rank = SubjektRank(ico);
+            if (rank == null)
+                return "";
+            else
+            {
+                int count = this.SubjektOrderedListPartsAsc.Count;
+                if (rank <= 100)
+                {
+                    return $"je {rank}. nejlepší";
+                }
+                else
+                if (rank >= count*2/3)
+                {
+                    return $"je {rank}. z ";
+                }
+
+
+            }
+
+        }
+
+        public int? SubjektRankText(string ico, KIndexData.KIndexParts part)
+        {
+            var res = this.SubjektOrderedListPartsAsc[part].IndexOf(ico);
+            if (res == -1)
+                return null;
+            else
+                return res;
+        }
 
         public decimal Percentil(int perc, KIndexData.KIndexParts part)
         {
@@ -115,5 +146,5 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return PercIntervalShortText(GetKIndexPercentile(value));
         }
 
-     }
+    }
 }
