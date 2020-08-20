@@ -22,7 +22,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public decimal AverageKindex { get; set; }
         public Dictionary<int, decimal> PercentileKIndex { get; set; } = new Dictionary<int, decimal>();
-        public List<Tuple<string,decimal>> SubjektOrderedListKIndexAsc { get; set; }
+        public List<Tuple<string, decimal>> SubjektOrderedListKIndexAsc { get; set; }
         public Dictionary<KIndexData.KIndexParts, List<Tuple<string, decimal>>> SubjektOrderedListPartsAsc { get; set; } = new Dictionary<KIndexData.KIndexParts, List<Tuple<string, decimal>>>();
 
 
@@ -79,19 +79,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public int? SubjektRank(string ico)
         {
-            var res = this.SubjektOrderedListKIndexAsc.FindIndex(m=>m.Item1 == ico);
+            var res = this.SubjektOrderedListKIndexAsc.FindIndex(m => m.Item1 == ico);
             if (res == -1)
                 return null;
             else
-                return res;
+                return res + 1;
         }
         public int? SubjektRank(string ico, KIndexData.KIndexParts part)
         {
-            var res = this.SubjektOrderedListPartsAsc[part].FindIndex( m=>m.Item1== ico);
+            var res = this.SubjektOrderedListPartsAsc[part].FindIndex(m => m.Item1 == ico);
             if (res == -1)
                 return null;
             else
-                return res;
+                return res + 1;
         }
 
         public string SubjektRankText(string ico)
@@ -100,26 +100,41 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (rank == null)
                 return "";
             else
-            {
-                int count = this.SubjektOrderedListPartsAsc.Count;
-                if (rank <= 100)
-                {
-                    return $"je {rank}. nejlepší";
-                }
-                else
-                if (rank >= count*2/3)
-                {
-                    return $"je {rank}. z ";
-                }
-
-
-            }
-            return "";
+                return RankText(rank.Value, this.SubjektOrderedListKIndexAsc.Count);
         }
 
-        public int? SubjektRankText(string ico, KIndexData.KIndexParts part)
+        public string SubjektRankText(string ico, KIndexData.KIndexParts part)
         {
-            throw new NotImplementedException();
+            var rank = SubjektRank(ico, part);
+            if (rank == null)
+                return "";
+            else
+                return RankText(rank.Value, this.SubjektOrderedListPartsAsc[part].Count);
+        }
+
+        public string RankText(int rank, int count)
+        {
+            if (rank == 1)
+            {
+                return $"nejlepší";
+            }
+            else if (rank == count)
+            {
+                return $"nejhorší";
+            }
+            else if (rank <= 100)
+            {
+                return $"{rank}. nejlepší";
+            }
+            else if (rank >= count - 100)
+            {
+                return $"{count - rank}. z nejhorších";
+            }
+            else
+            {
+                return $"{rank} z {count}";
+            }
+
         }
 
         public decimal Percentil(int perc, KIndexData.KIndexParts part)
