@@ -6,7 +6,6 @@
 @using System.Linq;
 @using System.Text.RegularExpressions;
 
-
 @{
 
     int selectedYear = ViewBag.SelectedYear;
@@ -19,10 +18,12 @@
 
     Statistics statistics = Statistics.GetStatistics(selectedYear);
 
+    string ukazatTxt = "ukázat detail";
+    string schovatTxt = "schovat detail";
     //decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
     //kindexValue = 10.9m;
-    
+
 
     Func<string, string> removeSelfFromUrl = (input) =>
     {
@@ -35,9 +36,9 @@
 
 @section scripts
 {
-    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    @*<script src="/Scripts/typeahead.jquery.min.js"></script>
     <script src="/Scripts/bloodhound.min.js"></script>
-    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />*@
 }
 
 @section breadcrumb
@@ -49,6 +50,22 @@
     </ol>
 }
 
+<style>
+    .whisp {
+        width: 600px;
+        text-align: left;
+        background: white;
+        border-left: 2px grey solid;
+        border-top: 0px;
+        border-bottom: 1px grey dotted;
+        border-right: 0px grey solid;
+        padding-bottom: 2px;
+    }
+
+    #companies {
+        margin-bottom: 10px;
+    }
+</style>
 
 <h2>Porovnání K-indexu úřadů</h2>
 
@@ -57,7 +74,7 @@
     <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
 
 </div>
-<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" onchange="FindCompany(this)" />
+<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
 <div id="companies">
 
 </div>
@@ -69,17 +86,14 @@
         <table class="table table-no-border">
             <tbody>
                 <tr>
-                    <td>firma</td>
+                    <td style="width:290px">firma</td>
                     @foreach (var cmp in Model)
                     {
-                        <th style="text-align:right">
-                            @cmp.Jmeno
-                            <div class="small" style="font-family: Cabin, sans-serif;">
-                                <a href="@(removeSelfFromUrl(cmp.Ico))">odebrat</a>
-                            </div>
+                        <th style="text-align: right; width: 150px">
+                            <a href="@(removeSelfFromUrl(cmp.Ico))" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
-                
+
                 </tr>
                 <tr>
                     <th>Celková známka</th>
@@ -94,19 +108,30 @@
                 @foreach (KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
                     <tr>
-                        <th>@velicina.ToNiceDisplayName()</th>
+                        <th>
+                            @velicina.ToNiceDisplayName()
+                            <small><a href="#detail_@((KIndexData.KIndexParts)velicina)" onclick="showHelp(this,'#detail_@(velicina)');return false;">@ukazatTxt</a></small>
+                            <div id="detail_@velicina" style="display:none">
+                                <div class="row">
+                                    <div class="col-xs-11 col-lg-offset-1 box-stats" style="background-color:#f9f9fe">
+                                        @(Html.Raw(KIndexData.PartsDescription(velicina)))
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+
                         @foreach (var cmp in Model)
                         {
                             var hodnota = cmp.ForYear(selectedYear)?
-                                    .KIndexVypocet?.Radky?
-                                    .Where(r => r.Velicina == (int)velicina)
-                                    .Select(r => r.Hodnota * r.Koeficient)
-                                    .FirstOrDefault();
+                                .KIndexVypocet?.Radky?
+                                .Where(r => r.Velicina == (int)velicina)
+                                .Select(r => r.Hodnota * r.Koeficient)
+                                .FirstOrDefault();
 
                             <td class="number" style="font-size: 15px; vertical-align: top;">
                                 @(hodnota?.ToString("F2") ?? "Chybí K-index")
-                                
-                                @if(hodnota.HasValue)
+
+                                @if (hodnota.HasValue)
                                 {
                                     <div class="small" style="font-family: Cabin, sans-serif;">
                                         @(statistics.PercIntervalShortText(velicina, hodnota.Value))
@@ -116,6 +141,16 @@
                         }
                     </tr>
                 }
+
+                <tr>
+                    <th>Součet</th>
+                    @foreach (var cmp in Model)
+                    {
+                        <td class="number" style="font-size: 15px; vertical-align: top;">
+                            @(cmp.ForYear(selectedYear)?.KIndex?.ToString("F2") ?? "Chybí K-index" )
+                        </td>
+                    }
+                </tr>
 
             </tbody>
         </table>
@@ -133,6 +168,7 @@
                 var button = $('<button/>',
                     {
                         text: comp.Name,
+                        class: 'whisp',
                         click: function () { AddCompany(comp.Ico); }
                     });
 
@@ -143,6 +179,18 @@
 
     function AddCompany(ico) {
         window.location.href = window.location.href + "," + ico;
+    }
+
+    function showHelp(btn, id) {
+        var visible = $(btn).text().includes('@ukazatTxt');
+        if (visible) {
+            $(id).show(300);
+            $(btn).text('@schovatTxt');
+        }
+        else {
+            $(id).hide(300);
+            $(btn).text('@ukazatTxt');
+        }
     }
 
 </script>

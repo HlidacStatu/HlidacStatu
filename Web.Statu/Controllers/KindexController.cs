@@ -71,7 +71,7 @@ namespace HlidacStatu.Web.Controllers
 
         public JsonResult FindCompany(string id)
         {
-            return Json(Company.FullTextSearch(id), JsonRequestBehavior.AllowGet);
+            return Json(Company.FullTextSearch(id, 10), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Debug(string id, string ico = "", int? rok = null)
