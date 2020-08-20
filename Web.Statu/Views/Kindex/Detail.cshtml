@@ -287,6 +287,28 @@
                     </h2>
                 </div>
             </div>
+            @if (Model.roky.Any(m => m.KIndexAvailable))
+            {
+                <div class="row" style="margin-top:15px">
+                    <div class="col-sm-12">
+                        <h4>
+                            Spočítaný K-Index pro další roky:
+                            @foreach (int year in availableKindexYears.OrderBy(m => m))
+                            {
+                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+                                if (kidx != null && kidx.KIndexAvailable && year != selectedYear)
+                                {
+                                    <span><a href="@ViewBag.ICO?rok=@year">@WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                                }
+                            }
+                        </h4>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 

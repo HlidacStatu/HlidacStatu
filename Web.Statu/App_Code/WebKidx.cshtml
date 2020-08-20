@@ -2,7 +2,7 @@
 @using System.Linq;
 @using Microsoft.AspNet.Identity;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
-
+@using HlidacStatu.Web.Framework;
 
 
 @functions
@@ -90,11 +90,11 @@
 @helper KIndexIcon(KIndexData.KIndexLabelValues value, string height,
     string hPadding = "3px", string vPadding = "0")
 {
-    @KIndexIconStyle(value, $"padding:{vPadding} {hPadding};height:{height};width:auto");
+    @Html.KIndexIcon(value, $"padding:{vPadding} {hPadding};height:{height};width:auto");
 }
 @helper KIndexIconStyle(KIndexData.KIndexLabelValues value, string style)
 {
-    @KIndexLimitedRaw($"<img src='{KIndexData.KIndexLabelIconUrl(value)}' class='kindex' style='{style}'>");
+    @Html.KIndexIcon(value, style);
 }
 
 @helper KIndexLimitedRaw(string html)

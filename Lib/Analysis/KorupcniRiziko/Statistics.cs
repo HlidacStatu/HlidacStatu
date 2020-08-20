@@ -51,10 +51,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return this.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
-
-        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc()
+        public IEnumerable<Tuple<string, decimal>> Filter(IEnumerable<Tuple<string, decimal>> source, IEnumerable<string> filterIco = null)
         {
-            return SubjektOrderedListKIndexAsc
+            return source
+                .Where(m => (filterIco == null) || filterIco.Contains(m.Item1))
+                ;
+        }
+
+        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc(IEnumerable<string> filterIco = null)
+        {
+            return Filter(SubjektOrderedListKIndexAsc,filterIco)
                 .OrderBy(m => m.Item2)
                 .Select(m => new Company(
                     Company.GetCompanies().ContainsKey(m.Item1)
@@ -64,9 +70,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 );
         }
 
-        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part)
+        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<string> filterIco = null)
         {
-            return SubjektOrderedListPartsAsc[part]
+            return Filter(SubjektOrderedListPartsAsc[part],filterIco)
                 .OrderBy(m => m.Item2)
                 .Select(m => new Company(
                     Company.GetCompanies().ContainsKey(m.Item1)

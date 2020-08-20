@@ -321,12 +321,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             string url = "";
             if (local == false)
                 url = "https://www.hlidacstatu.cz";
+
+            bool hranate = Devmasters.Core.Util.Config.GetConfigValue("KIdxIconStyle") == "hranate";
             switch (value)
             {
                 case KIndexLabelValues.None:
                     return url + "/Content/Img/1x1.png ";
                 default:
-                    return url + $"/Content/kindex/icon{value.ToString()}.svg";
+                    return url + $"/Content/kindex/{(hranate ? "hranate" : "kulate")}/icon{value.ToString()}.svg";
 
             }
         }

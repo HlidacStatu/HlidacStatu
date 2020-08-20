@@ -117,6 +117,35 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, string height = "15px", string hPadding = "3px", string vPadding = "0")
+        {
+            return htmlHelper.KIndexIcon(ico, $"padding:{vPadding} {hPadding};height:{height};width:auto");
+        }
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, string style)
+        {
+            if (string.IsNullOrEmpty(ico))
+                return htmlHelper.Raw("");
+
+            ico = HlidacStatu.Util.ParseTools.NormalizeIco(ico);
+            Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
+            if (lbl != null && lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+            {
+                return KIndexIcon(htmlHelper, lbl.Item2, style);
+            }
+            return htmlHelper.Raw("");
+        }
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label, string style)
+        {
+            System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
+            if (ShowKIndex(user))
+            {
+                return htmlHelper.Raw($"<img title='K-Index {label.ToString()} - Index korupčního rizika'  src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(label)}' class='kindex' style='{style}'>");
+            }
+            else
+                return htmlHelper.Raw("");
+        }
+
+
         public static IHtmlString KIndexLabelLink(this HtmlHelper htmlHelper, string ico, string height = "15px", string hPadding = "3px", string vPadding = "0")
         {
             return htmlHelper.KIndexLabelLink(ico, $"padding:{vPadding} {hPadding};height:{height};width:auto");
@@ -130,12 +159,12 @@ namespace HlidacStatu.Web.Framework
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                var lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
+                Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
                 if (lbl != null && lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
                 {
-                        return htmlHelper.Raw($"<a href='/kindex/detail/{ico}'>"
-                            + $"<img src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(lbl.Item2)}' class='kindex'  style='{style}' />"
-                            + "</a>");
+                    return htmlHelper.Raw($"<a href='/kindex/detail/{ico}'>"
+                        + KIndexIcon(htmlHelper,lbl.Item2,style).ToHtmlString()
+                        + "</a>");
                 }
             }
             return htmlHelper.Raw("");
@@ -147,7 +176,7 @@ namespace HlidacStatu.Web.Framework
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                var s = string.Join("", htmls.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));                
+                var s = string.Join("", htmls.Select(m => m.ToHtmlString().Replace("\n", "").Trim()));
                 return htmlHelper.Raw(s);
             }
             return htmlHelper.Raw("");
@@ -165,7 +194,7 @@ namespace HlidacStatu.Web.Framework
 
         public static Restricted ShowKIndex(this HtmlHelper self, System.Security.Principal.IPrincipal user)
         {
-                return new Restricted(self, ShowKIndex(user));
+            return new Restricted(self, ShowKIndex(user));
         }
         public static bool IfInRoles(System.Security.Principal.IPrincipal user, params string[] roles)
         {

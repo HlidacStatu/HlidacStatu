@@ -1,0 +1,85 @@
+﻿
+@using Devmasters.Enums;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Web.Framework;
+@using System.Linq;
+@using System.Text.RegularExpressions;
+
+@{
+
+    ViewBag.Title = "Porovnání K-Index pro různé skupiny subjektů";
+    ViewBag.HideTitle = true;
+
+}
+
+@section scripts
+{
+
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>K-Index</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<style>
+    .whisp {
+        width: 600px;
+        text-align: left;
+        background: white;
+        border-left: 2px grey solid;
+        border-top: 0px;
+        border-bottom: 1px grey dotted;
+        border-right: 0px grey solid;
+        padding-bottom: 2px;
+    }
+
+    #companies {
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <p>Připravili jsme pro vás několik připravených porovnání</p>
+        <div class="row">
+            <div class="col-xs-12">
+                @foreach (var g in Devmasters.Enums.Enums.Groups(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor)))
+                {
+                    <h3>@g</h3>
+                    <div>
+                        @foreach (var item in Devmasters.Enums.Enums.InGroup(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor), g))
+                        {
+                        <a href="zebricek/@item.ToString()" class="btn btn-default">Porovnat @(item.ToNiceDisplayName())</a>
+
+                        }
+                    </div>
+
+                }
+
+            </div>
+            <div class="col-xs-12">
+                <div style="border-color: #ddd;border-width: 1px;border-radius: 4px 4px 0 0;-webkit-box-shadow: none;box-shadow: none;">
+                    <form action="/porovnat/special?&title=@Url.Encode("Porovnání měst v krajích")" method="get" class="form-inline">
+                        <select name="specialvalue" class="form-control">
+                            <option value="">(vyberte kraj)</option>
+                            @Html.Raw(HlidacStatu.Lib.StaticData.MestaPodleKraju.Keys.OrderBy(k => k).Select(k => $"<option value='{k}'>{k}</option>").Aggregate((f, s) => f + s))
+                        </select>
+                        <button type="submit" name="specialtype" value="mestavkraji" class="btn btn-default">Porovnat města v kraji</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+
+</script>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 46 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-123,-116)">
+        <g transform="matrix(2.55549,0,0,1.38743,32.0474,17.2999)">
+            <g transform="matrix(0.391314,0,0,0.720759,28.5274,6.92061)">
+                <g id="Podklad" transform="matrix(1,0,0,1,-2.01638,-49.5215)">
+                    <g id="Border">
+                        <g transform="matrix(1.04711,0,0,1.05434,-109.83,110.449)">
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(0,86,155);"/>
+                        </g>
+                        <g transform="matrix(1.29027,0,0,1.14652,-145.407,108.05)">
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(0,86,155);"/>
+                        </g>
+                    </g>
+                    <g id="back">
+                        <g transform="matrix(0.98284,0,0,1,-100.528,113.674)">
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(0,100,180);"/>
+                        </g>
+                        <g transform="matrix(1.21107,0,0,1.08599,-133.922,111.463)">
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(0,100,180);"/>
+                        </g>
+                    </g>
+                </g>
+                <g transform="matrix(1.14023,0,0,1.14023,3.92761,86.437)">
+                    <g transform="matrix(37.6811,0,0,37.6811,21.2198,44.9576)">
+                        <path d="M0.077,-0L0.319,-0C0.46,-0 0.572,-0.059 0.572,-0.192C0.572,-0.279 0.521,-0.328 0.455,-0.345L0.455,-0.349C0.508,-0.369 0.54,-0.432 0.54,-0.49C0.54,-0.615 0.435,-0.652 0.3,-0.652L0.077,-0.652L0.077,-0ZM0.224,-0.391L0.224,-0.538L0.294,-0.538C0.363,-0.538 0.396,-0.519 0.396,-0.468C0.396,-0.421 0.365,-0.391 0.293,-0.391L0.224,-0.391ZM0.224,-0.114L0.224,-0.282L0.307,-0.282C0.388,-0.282 0.428,-0.259 0.428,-0.202C0.428,-0.142 0.387,-0.114 0.307,-0.114L0.224,-0.114Z" style="fill:white;fill-rule:nonzero;"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

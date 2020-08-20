@@ -1,12 +1,11 @@
-﻿using Devmasters.Core;
-using HlidacStatu.Util;
+﻿using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Devmasters.Core;
+using Devmasters.Enums;
 using HlidacStatu.Util.Cache;
 
 namespace HlidacStatu.Lib.Data
@@ -29,67 +28,110 @@ namespace HlidacStatu.Lib.Data
                 TimeSpan.FromDays(5)
            );
 
-
+            [Groupable]
             [ShowNiceDisplayName()]
+            [Sortable(SortableAttribute.SortAlgorithm.BySortValueAndThenAlphabetically)]
             public enum StatniOrganizaceObor
             {
                 [Disabled]
                 Ostatni = 0,
 
+                [GroupValue("Zdravotnictví")]
+                [NiceDisplayName("Zdravotní ústavy")]
                 Zdravotni_ustavy = 158,
-                Hasicsky_zachranny_sbor = 135,
-                Krajske_hygienicke_stanice = 113,
-                Krajska_statni_zastupitelstvi = 143,
-                Krajske_soudy = 107,
-                Soudy = 123,
-                Statutarni_mesta = 103,
-                Verejne_vysoke_skoly = 1129,
-                [NiceDisplayName("Krajská ředitelství policie")]
-                Krajska_reditelstvi_policie = 145,
-                [NiceDisplayName("Státní fondy")]
-                Statni_fondy = 980,
-                [NiceDisplayName("Okresní správy sociálního zabezpečení")]
-                OSSZ = 128,
-                [NiceDisplayName("Kraje a hl. m. Praha")]
-                Kraje_Praha = 12,
-                [NiceDisplayName("Obce s rozšířenou působností")]
-                Obce_III_stupne = 11,
+                [GroupValue("Zdravotnictví")]
                 [NiceDisplayName("Zdravotní pojišťovny")]
                 Zdravotni_pojistovny = 186,
-                [NiceDisplayName("Katastrální úřady")]
-                Katastralni_urady = 127,
-                Ministerstva = 2926,
-                [NiceDisplayName("Organizační složky státu")]
-                Organizacni_slozky_statu = 191,
-                [NiceDisplayName("Další ústřední orgány státní správy")]
-                Dalsi_ustredni_organy_statni_spravy = 104,
-                [NiceDisplayName("Celní úřady")]
-                Celni_urady = 105,
+                [GroupValue("Zdravotnictví")]
+                [NiceDisplayName("Nemocnice")]
+                Nemocnice = 10001,
+                [GroupValue("Zdravotnictví")]
+                [NiceDisplayName("Velké nemocnice v ČR")]
+                Velke_nemocnice = 10002,
+                [GroupValue("Zdravotnictví")]
+                [NiceDisplayName("Fakultní nemocnice")]
+                Fakultni_nemocnice = 10003,
 
-                [NiceDisplayName("Finanční úřady")]
-                Financni_urady = 109,
+                [GroupValue("Justice")]
+                [NiceDisplayName("Krajská státní zastupitelství")]
+                Krajska_statni_zastupitelstvi = 143,
+                [GroupValue("Justice")]
+                [NiceDisplayName("Krajské soudy")]
+                Krajske_soudy = 107,
+                [GroupValue("Justice")]
+                [NiceDisplayName("Všechny soudy")]
+                Soudy = 123,
 
-                [NiceDisplayName("Konzervatoře")]
-                Konzervatore = 1120,
+                [GroupValue("Samospráva")]
+                [NiceDisplayName("Kraje a hl. m. Praha")]
+                Kraje_Praha = 12,
+                [GroupValue("Samospráva")]
+                [NiceDisplayName("Obce s rozšířenou působností")]
+                Obce_III_stupne = 11,
+                [GroupValue("Samospráva")]
+                [NiceDisplayName("Statutární města")]
+                Statutarni_mesta = 103,
+                [GroupValue("Samospráva")]
                 [NiceDisplayName("Městské části Prahy")]
                 Mestske_casti_Prahy = 600,
 
-                Nemocnice = 10001,
-                Velke_nemocnice = 10002,
-                Fakultni_nemocnice = 10003,
+
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Hasičscké záchranné sbory")]
+                Hasicsky_zachranny_sbor = 135,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Krajské hygienické stanice")]
+                Krajske_hygienicke_stanice = 113,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Krajská ředitelství policie")]
+                Krajska_reditelstvi_policie = 145,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Státní fondy")]
+                Statni_fondy = 980,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Okresní správy sociálního zabezpečení")]
+                OSSZ = 128,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Katastrální úřady")]
+                Katastralni_urady = 127,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Ministerstva")]
+                Ministerstva = 2926,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Organizační složky státu")]
+                Organizacni_slozky_statu = 191,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Další ústřední orgány státní správy")]
+                Dalsi_ustredni_organy_statni_spravy = 104,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Celní úřady")]
+                Celni_urady = 105,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Finanční úřady")]
+                Financni_urady = 109,
+
+                [GroupValue("Školství")]
+                [NiceDisplayName("Veřejné vysoké školy")]
+                Verejne_vysoke_skoly = 1129,
+
+                [GroupValue("Školství")]
+                [NiceDisplayName("Konzervatoře")]
+                Konzervatore = 1120,
+
+                [GroupValue("Služby")]
                 [NiceDisplayName("Krajské správy silnic")]
                 Krajske_spravy_silnic = 10004,
+                [GroupValue("Služby")]
                 [NiceDisplayName("Dopravní podniky měst")]
                 Dopravni_podniky = 10005,
 
 
-
-                Technicke_sluzby = 10006,
-                Sportovni_zarizeni = 10007,
-                Domov_duchodcu = 10008,
-                Veznice = 10009,
-                Pamatky = 10010, //narodni pamatkovy ustav
-                Zachranne_sluzby = 10011,
+                //Technicke_sluzby = 10006,
+                //Sportovni_zarizeni = 10007,
+                //Domov_duchodcu = 10008,
+                //Veznice = 10009,
+                //Pamatky = 10010, //narodni pamatkovy ustav
+                //Zachranne_sluzby = 10011,
                 
                 //spolovny, prehrady, zasobarny pitne vody
                 // vodarny
@@ -149,7 +191,7 @@ namespace HlidacStatu.Lib.Data
                         icos = GetSubjektyFromRPP((int)obor);
                         break;
                     case StatniOrganizaceObor.Nemocnice:
-                        icos = GetSubjektyFromSQL("select distinct fn.ICO from Firma_NACE where nace like '86%' and f.IsInRS = 1");
+                        icos = GetSubjektyFromSQL("select distinct fn.ICO from Firma_NACE fn inner join firma f on f.ICO = fn.ICO where nace like '86%' and f.IsInRS = 1");
                         break;
                     case StatniOrganizaceObor.Velke_nemocnice:
                         icos = "00064165,00064173,00064203,00098892,00159816,00179906,00669806,00843989,25488627,26365804,27283933,27661989,65269705,27283518,26000202,00023736,00023884,27256391,61383082,27256537,00023001,27520536,26068877,47813750,00064211,00209805,27660915,00635162,27256456,00090638,00092584,00064190"
