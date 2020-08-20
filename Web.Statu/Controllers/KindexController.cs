@@ -80,6 +80,7 @@ namespace HlidacStatu.Web.Controllers
 
             rok = FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
+            ViewBag.SelectedLadder = id;
 
             var stat = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
 

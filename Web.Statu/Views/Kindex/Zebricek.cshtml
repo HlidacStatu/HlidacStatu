@@ -12,7 +12,7 @@
 
 
     //HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index porovnání";
+    ViewBag.Title = "žebříček";
     //ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
@@ -29,7 +29,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K-Index porovnání</li>
+        <li>K-Index</li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -51,21 +51,23 @@
     }
 </style>
 
-<h2>Žebříček Hall of Infame</h2>
-
-<div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
-    <h4>Porovnání základních hodnot</h4>
-    <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
-
-</div>
-<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
-<div id="companies">
-
-</div>
+<h2>Žebříček</h2>
 
 
 <div class="row">
     <div class="col-sm-12">
+        
+        @for(int year = DateTime.Now.Year - 1; year > 2016; year--)
+        {
+            if(year != ViewBag.SelectedYear)
+            {
+                <a href="@(ViewBag.SelectedLadder)?rok=@year">@year</a>
+            }
+            else
+            {
+                <span>@year</span>
+            }
+        }
 
         <table class="table table-no-border">
             <tbody>
@@ -82,10 +84,10 @@
                             <a href="/subjekt/@record.Ico">@record.Name</a>
                         </td>
                         <td>
-                            <a href="/kindex/detail/@record.Ico">@(KIndexData.CalculateLabel(record.Value4Sort))</a>
+                            <a href="/kindex/detail/@record.Ico?rok=@selectedYear">@(WebKidx.KIndexIconStyle(KIndexData.CalculateLabel(record.Value4Sort), "width:15px"))</a>
                         </td>
                         <td style="text-align: right;">
-                            @record.Value4Sort
+                            @(record.Value4Sort?.ToString("F2"))
                         </td>
                         @*<td></td>*@
                     </tr>
