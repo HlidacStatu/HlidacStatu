@@ -191,7 +191,12 @@ namespace HlidacStatu.Lib.Data
                         icos = GetSubjektyFromRPP((int)obor);
                         break;
                     case StatniOrganizaceObor.Nemocnice:
-                        icos = GetSubjektyFromSQL("select distinct fn.ICO from Firma_NACE fn inner join firma f on f.ICO = fn.ICO where nace like '86%' and f.IsInRS = 1");
+                        string sql = @"select distinct f.ico 
+                            from Firma_NACE fn
+                            join firma f on f.ICO = fn.ICO
+                            where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
+                            and f.Kod_PF not in (105, 101, 801, 601)";
+                        icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Velke_nemocnice:
                         icos = "00064165,00064173,00064203,00098892,00159816,00179906,00669806,00843989,25488627,26365804,27283933,27661989,65269705,27283518,26000202,00023736,00023884,27256391,61383082,27256537,00023001,27520536,26068877,47813750,00064211,00209805,27660915,00635162,27256456,00090638,00092584,00064190"
@@ -206,7 +211,8 @@ namespace HlidacStatu.Lib.Data
                             .Split(',');
                         break;
                     case StatniOrganizaceObor.Dopravni_podniky:
-                        icos = new string[] { };
+                        icos = "05792291,25095251,25136046,25137280,00005886,25166115,25164538,25220683,29099846,61058238,48364282,62240935,64053466,06231292,62242504,25013891,47311975,00079642,06873031,25267213,63217066,25512897,25508881,00100790,47676639,05724252,64610250,61974757,60730153"
+                            .Split(',');
                         break;
                     case StatniOrganizaceObor.Ostatni:
                         icos = new string[] { };
