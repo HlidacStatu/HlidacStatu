@@ -2,23 +2,23 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 46 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
     <g transform="matrix(1,0,0,1,-123,-116)">
-        <g transform="matrix(2.55549,0,0,1.38743,32.0474,17.2999)">
-            <g transform="matrix(0.391314,0,0,0.720759,28.5274,6.92061)">
+        <g transform="matrix(2.55549,0,0,1.38743,32.1167,17.2999)">
+            <g id="iconB" transform="matrix(0.391314,0,0,0.720759,28.5274,6.92061)">
                 <g id="Podklad" transform="matrix(1,0,0,1,-2.01638,-49.5215)">
                     <g id="Border">
                         <g transform="matrix(1.04711,0,0,1.05434,-109.83,110.449)">
-                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(0,86,155);"/>
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(57,134,20);"/>
                         </g>
                         <g transform="matrix(1.29027,0,0,1.14652,-145.407,108.05)">
-                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(0,86,155);"/>
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(57,134,20);"/>
                         </g>
                     </g>
                     <g id="back">
                         <g transform="matrix(0.98284,0,0,1,-100.528,113.674)">
-                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(0,100,180);"/>
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(57,201,20);"/>
                         </g>
                         <g transform="matrix(1.21107,0,0,1.08599,-133.922,111.463)">
-                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(0,100,180);"/>
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(57,201,20);"/>
                         </g>
                     </g>
                 </g>
