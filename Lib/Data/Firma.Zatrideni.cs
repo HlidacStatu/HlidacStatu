@@ -129,7 +129,9 @@ namespace HlidacStatu.Lib.Data
                 Technicke_sluzby = 10006,
 
                 //Sportovni_zarizeni = 10007,
-                //Domov_duchodcu = 10008,
+                [GroupValue("Služby")]
+                [NiceDisplayName("Domovy důchodců")]
+                Domov_duchodcu = 10008,
                 //Veznice = 10009,
                 //Pamatky = 10010, //narodni pamatkovy ustav
                 //Zachranne_sluzby = 10011,
@@ -220,6 +222,10 @@ namespace HlidacStatu.Lib.Data
                         break;
                     case StatniOrganizaceObor.Technicke_sluzby:
                         sql = @"select ico from Firma f where Jmeno like N'technické služby%' and f.IsInRS = 1";
+                        icos = GetSubjektyFromSQL(sql);
+                        break;
+                    case StatniOrganizaceObor.Domov_duchodcu:
+                        sql = @"select ico from Firma f where Jmeno like N'%domov důchodců%' and f.IsInRs = 1";
                         icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Ostatni:
