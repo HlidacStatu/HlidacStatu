@@ -124,9 +124,10 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Služby")]
                 [NiceDisplayName("Dopravní podniky měst")]
                 Dopravni_podniky = 10005,
+                [GroupValue("Služby")]
+                [NiceDisplayName("Technické služby")]
+                Technicke_sluzby = 10006,
 
-
-                //Technicke_sluzby = 10006,
                 //Sportovni_zarizeni = 10007,
                 //Domov_duchodcu = 10008,
                 //Veznice = 10009,
@@ -163,6 +164,7 @@ namespace HlidacStatu.Lib.Data
             private static Zatrideni.Item[] GetSubjektyDirect(StatniOrganizaceObor obor)
             {
                 string[] icos = null;
+                string sql = "";
                 switch (obor)
                 {
                     case StatniOrganizaceObor.Zdravotni_ustavy:
@@ -191,11 +193,13 @@ namespace HlidacStatu.Lib.Data
                         icos = GetSubjektyFromRPP((int)obor);
                         break;
                     case StatniOrganizaceObor.Nemocnice:
-                        string sql = @"select distinct f.ico 
-                            from Firma_NACE fn
-                            join firma f on f.ICO = fn.ICO
-                            where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
-                            and f.Kod_PF not in (105, 101, 801, 601)";
+                        sql = @"select f.ICO, f.Jmeno from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
+                            union
+                            select distinct f.ico, f.Jmeno 
+                                from Firma_NACE fn
+                                join firma f on f.ICO = fn.ICO
+                                where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
+                                and f.Kod_PF not in (105, 101, 801, 601)";
                         icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Velke_nemocnice:
@@ -213,6 +217,10 @@ namespace HlidacStatu.Lib.Data
                     case StatniOrganizaceObor.Dopravni_podniky:
                         icos = "05792291,25095251,25136046,25137280,00005886,25166115,25164538,25220683,29099846,61058238,48364282,62240935,64053466,06231292,62242504,25013891,47311975,00079642,06873031,25267213,63217066,25512897,25508881,00100790,47676639,05724252,64610250,61974757,60730153"
                             .Split(',');
+                        break;
+                    case StatniOrganizaceObor.Technicke_sluzby:
+                        sql = @"select ico from Firma f where Jmeno like N'technické služby%' and f.IsInRS = 1";
+                        icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Ostatni:
                         icos = new string[] { };
