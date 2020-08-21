@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using com.sun.org.apache.regexp.@internal;
+
 using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
@@ -14,57 +16,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
 
         public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 15 };
-
-
-        [Devmasters.Core.ShowNiceDisplayName()]
-        public enum KIndexLabelValues
-        {
-            [Devmasters.Core.NiceDisplayName("-")]
-            None = -1,
-            A = 0,
-            B = 1,
-            C = 2,
-            D = 3,
-            E = 4,
-            F = 5
-        }
-
-        [Devmasters.Core.ShowNiceDisplayName]
-        public enum KIndexParts
-        {
-            [Devmasters.Core.NiceDisplayName("Podíl smluv bez ceny")]
-            PercentBezCeny = 0,
-
-            [Devmasters.Core.NiceDisplayName("Podíl smluv s nedostatkem")]
-            PercSeZasadnimNedostatkem = 1,
-
-            [Devmasters.Core.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů")]
-            CelkovaKoncentraceDodavatelu = 2,
-
-            [Devmasters.Core.NiceDisplayName("Opakování dodavatelů u smluv se skrytou cenou")]
-            KoncentraceDodavateluBezUvedeneCeny = 3,
-
-            [Devmasters.Core.NiceDisplayName("Podíl smluv s cenou u limitu veřejných zakázek")]
-            PercSmluvUlimitu = 4,
-
-            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů u smluv blízské u limitu VZ")]
-            KoncentraceDodavateluCenyULimitu = 5,
-
-            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených s nově založenými firmami")]
-            PercNovaFirmaDodavatel = 6,
-
-            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených o víkendu či svátku")]
-            PercUzavrenoOVikendu = 7,
-
-            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených s firmami, jejichž majitelé či ony sami sponzorovali politické strany")]
-            PercSmlouvySPolitickyAngazovanouFirmou = 8,
-
-            [Devmasters.Core.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů u hlavních oborů činnosti")]
-            KoncentraceDodavateluObory = 9,
-
-            [Devmasters.Core.NiceDisplayName("Bonus za transparentnost")]
-            PercSmlouvyPod50kBonus = 10
-        }
 
         public static string PartsDescription(KIndexData.KIndexParts part)
         {
@@ -139,7 +90,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public KIndexLabelValues LastKIndexLabel(out int? rok)
         {
-            
+
             var val = LastKIndex();
             rok = null;
             if (val != null)
@@ -224,63 +175,209 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     return "#000000";
             }
         }
+        public static string KIndexCommentForPart(KIndexParts part, KIndexData.Annual data)
+        {
+            var lbl = KIndexLabelForPart(part, data.KIndexVypocet.Radky.Where(m=>m.VelicinaPart == part).First().Hodnota);
+            switch (part)
+            {
+                case KIndexParts.PercentBezCeny:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Neskrývá ceny u žádných smluv";
+                        case KIndexLabelValues.B:
+                            return "Skrývá ceny u minima smluv";
+                        case KIndexLabelValues.C:
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                            return $"Skrývá ceny u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
+                        case KIndexLabelValues.F:
+                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.PercSeZasadnimNedostatkem:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Nemá žádné smlouvy se zásadními nedostatky";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return $"Zásadní nedostatky evidujeme pouze u {data.PercSeZasadnimNedostatkem:P2} smluv";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                        case KIndexLabelValues.F:
+                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")} z {data.Statistika.PocetSmluv}";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.CelkovaKoncentraceDodavatelu:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Zakázky se nekoncentrují u žádných dodavatelů";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return "Rozdíly mezi velikostí zakázek dodavatelů jsou malé";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                            return "Zakázky se koncentrují u malého počtu dodavatelů";
+                        case KIndexLabelValues.F:
+                            return $"Koncentrace velkých zakázek u vybraných dodavatelů je vysoká";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Zakázky se nekoncentrují u žádných dodavatelů";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return "Rozdíly mezi velikostí zakázek dodavatelů jsou malé";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                            return "Zakázky se koncentrují u malého počtu dodavatelů";
+                        case KIndexLabelValues.F:
+                            return $"Koncentrace zakázek u vybraných dodavatelů je vysoká";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.KoncentraceDodavateluCenyULimitu:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Zakázky s podezřelou cenou se nekoncentrují u žádných dodavatelů";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return "Zakázky s podezřelou cenou se nekoncentrují u vybraných dodavatelů";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                            return "Zakázky s podezřelou cenou se se koncentrují u malého počtu dodavatelů";
+                        case KIndexLabelValues.F:
+                            return $"Koncentrace zakázek s podezřelou cenou u vybraných dodavatelů je vysoká";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.KoncentraceDodavateluObory:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Zakázky s podezřelou cenou se nekoncentrují u žádných dodavatelů";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return "Zakázky s podezřelou cenou se nekoncentrují u vybraných dodavatelů";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                            return "Zakázky s podezřelou cenou se se koncentrují u malého počtu dodavatelů";
+                        case KIndexLabelValues.F:
+                            return $"Koncentrace zakázek s podezřelou cenou u vybraných dodavatelů je vysoká";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.PercSmluvUlimitu:
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Organizace neobhází limity zákona o veřejných zakázkách";
+                        case KIndexLabelValues.B:
+                            return "Velmi málo smluv má hodnotu blízkou limitům pro ";
+                        case KIndexLabelValues.C:
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                        case KIndexLabelValues.F:
+                            return $"{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvULimitu, "{0} smlouva;{0} smlouvy;{0} smluv")} má hodnotu blízkou limitům veřejných zakázek, což může naznačovat snahu se vyhnout řádné veřejné soutěži";
+                        default:
+                            return "";
+                    }
+                case KIndexParts.PercNovaFirmaDodavatel:
+                    break;
+                case KIndexParts.PercUzavrenoOVikendu:
+                    break;
+                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+                    break;
+                case KIndexParts.PercSmlouvyPod50kBonus:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public static KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal value)
         {
             switch (part)
             {
+                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
                 case KIndexParts.PercentBezCeny:
-                    if (value < 0.1m)
+                    if (value == 0m)
                         return KIndexLabelValues.A;
-                    else if (value > 0.25m)
-                        return KIndexLabelValues.F;
-                    else
+                    else if (value < 0.05m)
+                        return KIndexLabelValues.B;
+                    else if (value < 0.1m)
+                        return KIndexLabelValues.C;
+                    else if (value < 0.15m)
                         return KIndexLabelValues.D;
+                    else if (value < 0.2m)
+                        return KIndexLabelValues.E;
+                    else
+                        return KIndexLabelValues.F;
+
                 case KIndexParts.PercSeZasadnimNedostatkem:
-                    if (value < 0.02m)
+                    if (value == 0m)
                         return KIndexLabelValues.A;
-                    else if (value > 0.05m)
-                        return KIndexLabelValues.F;
-                    else
+                    else if (value < 0.01m)
+                        return KIndexLabelValues.C;
+                    else if (value < 0.015m)
                         return KIndexLabelValues.D;
+                    else
+                        return KIndexLabelValues.F;
+
                 case KIndexParts.CelkovaKoncentraceDodavatelu:
                 case KIndexParts.KoncentraceDodavateluCenyULimitu:
                 case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
                 case KIndexParts.KoncentraceDodavateluObory:
-                    if (value < 0.15m)
-                        return KIndexLabelValues.A;
-                    else if (value > 0.25m)
-                        return KIndexLabelValues.F;
-                    else
-                        return KIndexLabelValues.D;
-                case KIndexParts.PercSmluvUlimitu:
-                    if (value < 0.1m)
-                        return KIndexLabelValues.A;
-                    else if (value > 0.2m)
-                        return KIndexLabelValues.F;
-                    else
-                        return KIndexLabelValues.D;
-                case KIndexParts.PercNovaFirmaDodavatel:
                     if (value < 0.05m)
                         return KIndexLabelValues.A;
-                    else if (value > 0.15m)
-                        return KIndexLabelValues.F;
-                    else
+                    else if (value < 0.1m)
+                        return KIndexLabelValues.B;
+                    else if (value < 0.15m)
+                        return KIndexLabelValues.C;
+                    else if (value < 0.2m)
                         return KIndexLabelValues.D;
+                    else if (value < 0.25m)
+                        return KIndexLabelValues.E;
+                    else
+                        return KIndexLabelValues.F;
+
+                case KIndexParts.PercSmluvUlimitu:
+                    if (value == 0)
+                        return KIndexLabelValues.A;
+                    else if (value < 0.04m)
+                        return KIndexLabelValues.B;
+                    else if (value < 0.06m)
+                        return KIndexLabelValues.C;
+                    else if (value < 0.08m)
+                        return KIndexLabelValues.D;
+                    else if (value < 0.1m)
+                        return KIndexLabelValues.E;
+                    else
+                        return KIndexLabelValues.F;
+
+                case KIndexParts.PercNovaFirmaDodavatel:
                 case KIndexParts.PercUzavrenoOVikendu:
-                    if (value < 0.01m)
+                    if (value == 0)
                         return KIndexLabelValues.A;
-                    else if (value > 0.1m)
-                        return KIndexLabelValues.F;
-                    else
+                    else if (value < 0.02m)
+                        return KIndexLabelValues.B;
+                    else if (value < 0.03m)
+                        return KIndexLabelValues.C;
+                    else if (value < 0.04m)
                         return KIndexLabelValues.D;
-                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    if (value < 0.1m)
-                        return KIndexLabelValues.A;
-                    else if (value > 0.2m)
-                        return KIndexLabelValues.F;
+                    else if (value < 0.5m)
+                        return KIndexLabelValues.E;
                     else
-                        return KIndexLabelValues.D;
+                        return KIndexLabelValues.F;
+
                 default:
                     return KIndexLabelValues.None;
             }

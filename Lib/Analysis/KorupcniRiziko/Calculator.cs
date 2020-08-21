@@ -115,7 +115,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 PercentKcSPolitiky = stat.PercentKcSPolitiky,
                 PercentSPolitiky = stat.PercentSPolitiky,
                 SumKcBezSmluvniStrany = stat.SumKcBezSmluvniStrany,
-                SumKcSPolitiky = stat.SumKcSPolitiky
+                SumKcSPolitiky = stat.SumKcSPolitiky,
+                PocetSmluvULimitu = _calc_ULimitu[year].Pocet,
+                PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
+                PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
+                PocetSmluvNovaFirma = _calc_NovaFirmaDodavatel[year].Pocet,
             };
 
 
