@@ -82,7 +82,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 foreach (var document in initialResponse.Documents)
                 {
                     // filter to get only existing calculated Kindexes
-                    if (document.roky.Any(m => m.KIndexAvailable))
+                    if (document.roky.Any(m => m.KIndexReady))
                         yield return document;
                 }
 
@@ -96,7 +96,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     foreach (var document in loopingResponse.Documents)
                     {
                         // filter to get only existing calculated Kindexes
-                        if (document.roky.Any(m => m.KIndexAvailable))
+                        if (document.roky.Any(m => m.KIndexReady))
                             yield return document;
                     }
                     scrollid = loopingResponse.ScrollId;

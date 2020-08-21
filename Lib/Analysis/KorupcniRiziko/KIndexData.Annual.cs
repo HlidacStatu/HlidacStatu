@@ -6,7 +6,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public partial class KIndexData
     {
-        public class Annual
+        public partial class Annual
         {
             protected Annual() { }
 
@@ -74,17 +74,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public FinanceData FinancniUdaje { get; set; }
 
 
-            public decimal? KIndex { get; set; }
+            public decimal KIndex { get; set; }
+            public bool KIndexReady { get; set; } = true;
 
             public string[] KIndexIssues { get; set; }
 
             public VypocetDetail KIndexVypocet { get; set; }
 
-            [Nest.Object(Ignore = true)]
-            public bool KIndexAvailable
-            { 
-                get => this.KIndex.HasValue && this.KIndex != Consts.MinSmluvPerYearKIndexValue;
-            }
 
             [Nest.Object(Ignore = true)]
             public KIndexLabelValues KIndexLabel

@@ -37,9 +37,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public decimal Vypocet()
             {
-                if (Radky == null)
-                    return Consts.MinSmluvPerYearKIndexValue;
-                var vysledek= Radky
+                decimal vysledek = 0;
+                if (Radky != null)
+                 vysledek = Radky
                     .Select(m => m.Hodnota * m.Koeficient)
                     .Sum();
 

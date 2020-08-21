@@ -145,7 +145,7 @@
                     @foreach (var cmp in Model)
                     {
                         <td class="number" style="font-size: 15px; vertical-align: top;">
-                            @(cmp.ForYear(selectedYear)?.KIndex?.ToString("F2") ?? "Chybí K-index" )
+                            @(cmp.ForYear(selectedYear)?.KIndex.ToString("F2") ?? "Chybí K-index" )
                         </td>
                     }
                 </tr>

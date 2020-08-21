@@ -38,7 +38,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 searchfnc,
                 (hit, param) =>
                 {
-                    if (hit.Source.roky.Any(m => m.KIndexAvailable))
+                    if (hit.Source.roky.Any(m => m.KIndexReady))
                         data.Add(hit.Source);
 
 
@@ -54,28 +54,28 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 var datayear = data
                     .Where(m => (forIcos == null || forIcos?.Contains(m.Ico) == true))
                     .Select(m => new { ic = m.Ico, data = m.ForYear(year) })
-                    .Where(y => y != null && y.data != null && y.data.KIndexAvailable)
+                    .Where(y => y != null && y.data != null && y.data.KIndexReady)
                     .ToDictionary(k => k.ic, v => v.data);
 
                 var stat = new Statistics() { Rok = year };
                 //poradi
                 stat.SubjektOrderedListKIndexAsc = datayear
-                    .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
+                    .Where(m => m.Value.KIndexReady)
                     .OrderBy(m => m.Value.KIndex)
-                    .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex.Value))
+                    .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex))
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
                     stat.SubjektOrderedListPartsAsc.Add(part, datayear
-                        .Where(m => m.Value.KIndex != Consts.MinSmluvPerYearKIndexValue)
+                        .Where(m => m.Value.KIndexReady)
                         .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
-                        .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex.Value))
+                        .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex))
                         .ToList()
                         );
                 }
 
                 //prumery
-                stat.AverageKindex = datayear.Average(m => m.Value.KIndex.Value);
+                stat.AverageKindex = datayear.Average(m => m.Value.KIndex);
 
                 stat.AverageParts = new KIndexData.VypocetDetail();
                 List<KIndexData.VypocetDetail.Radek> radky = new List<KIndexData.VypocetDetail.Radek>();
@@ -100,7 +100,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
                     stat.PercentileKIndex.Add(perc,
-                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, datayear.Select(m => m.Value.KIndex.Value))
+                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, datayear.Select(m => m.Value.KIndex))
                         );
 
                     radky = new List<KIndexData.VypocetDetail.Radek>();

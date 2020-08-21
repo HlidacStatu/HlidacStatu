@@ -106,7 +106,7 @@
                     {
             <td>
                 <img src="@(Model.ForYear(y).KIndexLabelIconUrl())" style="width:25px" />
-                @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)
+                @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex)
             </td>}
                 </tr>
                 <tr>
@@ -272,7 +272,7 @@
             </div> }
             <div class="row">
                 <div class="col-xs-4" style="font-size:11px"><b>Součet</b></div>
-                <div class="col-xs-8 number">@HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex ?? 0)</div>
+                <div class="col-xs-8 number">@HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).KIndex)</div>
             </div>}
             </td>}
                 </tr>

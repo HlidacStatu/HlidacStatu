@@ -39,7 +39,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
         object lockCalc = new object();
-        public KIndexData GetData(bool refresh = false)
+        public KIndexData GetData(bool refresh = false, bool forceCalculate = false)
         {
             if (refresh)
                 kindex = null;
@@ -47,19 +47,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 if (kindex == null)
                 {
-                    kindex = CalculateSourceData();
+                    kindex = CalculateSourceData(forceCalculate);
                 }
             }
 
             return kindex;
         }
 
-        private KIndexData CalculateSourceData()
+        private KIndexData CalculateSourceData(bool forceCalculate)
         {
             this.InitData();
             foreach (var year in CalculationYears)
             {
-                KIndexData.Annual data_rok = CalculateForYear(year);
+                KIndexData.Annual data_rok = CalculateForYear(year, forceCalculate);
                 kindex.roky.Add(data_rok);
             }
             return kindex;
@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             _calc_NovaFirmaDodavatel = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )");
         }
 
-        private KIndexData.Annual CalculateForYear(int year)
+        private KIndexData.Annual CalculateForYear(int year, bool forceCalculate)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
 
@@ -191,27 +191,33 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.PercSmlouvyPod50kBonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
 
 
-            ret = FinalCalculationKIdx(ret);
+            ret = FinalCalculationKIdx(ret, forceCalculate);
 
             return ret;
         }
 
-        public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret)
+        public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret, bool forceCalculate)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
+
+            ret.KIndex = CalculateKIndex(ret);
 
             if (
                 smlouvyZaRok < Consts.MinSmluvPerYear
                 && ret.Statistika.CelkovaHodnotaSmluv < Consts.MinSumSmluvPerYear
                 && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj*ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
-                
             )
             {
-                ret.KIndex = Consts.MinSmluvPerYearKIndexValue;
-                ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok nebo malý objem smluv." };
+                if (forceCalculate == false)
+                {
+
+                    ret.KIndexReady = false;
+                    ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok nebo malý objem smluv." };
+                }
+                else 
+                    ret.KIndexIssues = new string[] { $"Organizace má méně smluv nebo objem smluv než určuje metodika. Pro výpočet a publikaci byla aplikována výjimka." };
             }
-            else
-                ret.KIndex = CalculateKIndex(ret);
+
 
             ret.LastUpdated = DateTime.Now;
 

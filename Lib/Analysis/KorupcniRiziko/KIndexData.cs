@@ -10,6 +10,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
     [Nest.ElasticsearchType(IdProperty = nameof(Ico))]
     public partial class KIndexData
+        : Util.ISocialInfo
     {
 
         public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 15 };
@@ -31,34 +32,34 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Devmasters.Core.ShowNiceDisplayName]
         public enum KIndexParts
         {
-            [Devmasters.Core.NiceDisplayName("% smluv bez ceny")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv bez ceny")]
             PercentBezCeny = 0,
 
-            [Devmasters.Core.NiceDisplayName("% smluv s nedostatkem")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv s nedostatkem")]
             PercSeZasadnimNedostatkem = 1,
 
-            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů")]
+            [Devmasters.Core.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů")]
             CelkovaKoncentraceDodavatelu = 2,
 
-            [Devmasters.Core.NiceDisplayName("Koncentr.dodav. u smluv se skrytou cenou")]
+            [Devmasters.Core.NiceDisplayName("Opakování dodavatelů u smluv se skrytou cenou")]
             KoncentraceDodavateluBezUvedeneCeny = 3,
 
-            [Devmasters.Core.NiceDisplayName("% smluv u limitu veřejných zakázek")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv s cenou u limitu veřejných zakázek")]
             PercSmluvUlimitu = 4,
 
-            [Devmasters.Core.NiceDisplayName("Koncentr.dodav. u smluv u limitu VZ")]
+            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů u smluv blízské u limitu VZ")]
             KoncentraceDodavateluCenyULimitu = 5,
 
-            [Devmasters.Core.NiceDisplayName("% smluv s nově založenými firmami")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených s nově založenými firmami")]
             PercNovaFirmaDodavatel = 6,
 
-            [Devmasters.Core.NiceDisplayName("% smluv uzavřených o víkendu")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených o víkendu či svátku")]
             PercUzavrenoOVikendu = 7,
 
-            [Devmasters.Core.NiceDisplayName("% smluv s politicky angažovanou firmou")]
+            [Devmasters.Core.NiceDisplayName("Podíl smluv uzavřených s firmami, jejichž majitelé či ony sami sponzorovali politické strany")]
             PercSmlouvySPolitickyAngazovanouFirmou = 8,
 
-            [Devmasters.Core.NiceDisplayName("Koncentr.dodavatelů podle oborů")]
+            [Devmasters.Core.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů u hlavních oborů činnosti")]
             KoncentraceDodavateluObory = 9,
 
             [Devmasters.Core.NiceDisplayName("Bonus za transparentnost")]
@@ -125,7 +126,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public Annual LastKIndex()
         {
-            return roky?.Where(m => m.KIndexAvailable)?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
+            return roky?.Where(m => m.KIndexReady)?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
         }
 
         public decimal? LastKIndexValue()
@@ -138,7 +139,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public KIndexLabelValues LastKIndexLabel(out int? rok)
         {
-
+            
             var val = LastKIndex();
             rok = null;
             if (val != null)

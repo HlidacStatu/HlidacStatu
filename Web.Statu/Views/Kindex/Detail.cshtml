@@ -13,7 +13,7 @@
     int selectedYear = ViewBag.SelectedYear;
 
     int[] availableKindexYears = Model.roky
-        .Where(r => r.KIndexAvailable)
+        .Where(r => r.KIndexReady)
         .Select(r => r.Rok)
         .OrderByDescending(r => r).ToArray();
 
@@ -27,7 +27,7 @@
     ViewBag.HideTitle = true;
 
 
-    decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
+    decimal kindexValue = currYear.KIndex; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
 
     //kindexValue = 10.9m;
 
@@ -272,7 +272,7 @@
     </div>
 </div>
 
-@if (currYear.KIndexAvailable == false)
+@if (currYear.KIndexReady == false)
 {
     <div class="jumbotron">
         <div class="container">
@@ -287,7 +287,7 @@
                     </h2>
                 </div>
             </div>
-            @if (Model.roky.Any(m => m.KIndexAvailable))
+            @if (Model.roky.Any(m => m.KIndexReady))
             {
                 <div class="row" style="margin-top:15px">
                     <div class="col-sm-12">
@@ -298,7 +298,7 @@
                                 var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
                                 string postfix = year == availableKindexYears.Max() ? "." : ", ";
 
-                                if (kidx != null && kidx.KIndexAvailable && year != selectedYear)
+                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
                                 {
                                     <span><a href="@ViewBag.ICO?rok=@year">@WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
 
@@ -328,7 +328,7 @@ else
                     </h2>
                 </div>
             </div>
-            @if (Model.roky.Any(m => m.KIndexAvailable))
+            @if (Model.roky.Any(m => m.KIndexReady))
             {
                 <div class="row" style="margin-top:15px">
                     <div class="col-sm-12">
@@ -339,7 +339,7 @@ else
                                 var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
                                 string postfix = year == availableKindexYears.Max() ? "." : ", ";
 
-                                if (kidx != null && kidx.KIndexAvailable && year != selectedYear)
+                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
                                 {
                                     <span><a href="@ViewBag.ICO?rok=@year">@WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
 
@@ -381,7 +381,7 @@ else
     </p>
 </div>
 
-@if (currYear.KIndexAvailable == false)
+@if (currYear.KIndexReady == false)
 {
     return;
 }
@@ -395,7 +395,7 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex.Value)) 
+            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex)) 
             (@statistics.SubjektRank(Model.Ico)).
 
         </div>
@@ -535,7 +535,7 @@ else
                     <td style="font-weight:bold;font-size:130%" class="number">
                         <b>@kindexValue.ToString("F2")</b>
                         <div style="font-family: Cabin, sans-serif;">
-                            @(statistics.PercIntervalShortText(currYear.KIndex.Value))
+                            @(statistics.PercIntervalShortText(currYear.KIndex))
                         </div>
                     </td>
                     <td>&nbsp;</td>
