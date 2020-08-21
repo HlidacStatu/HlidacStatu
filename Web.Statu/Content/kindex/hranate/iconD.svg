@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 46 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <g transform="matrix(1,0,0,1,-123,-315)">
-        <g transform="matrix(2.55549,0,0,1.38743,32.1167,17.2999)">
-            <g id="iconD" transform="matrix(0.391314,0,0,0.720759,27.9404,-33.5585)">
-                <g id="Podklad" transform="matrix(1,0,0,1,-0.516385,206.559)">
-                    <g id="Border">
-                        <g transform="matrix(1.04711,0,0,1.05434,-109.83,110.449)">
-                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(194,114,41);"/>
-                        </g>
-                        <g transform="matrix(1.29027,0,0,1.14652,-145.407,108.05)">
-                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(194,114,41);"/>
-                        </g>
-                    </g>
-                    <g id="back">
-                        <g transform="matrix(0.98284,0,0,1,-100.528,113.674)">
-                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(255,146,49);"/>
-                        </g>
-                        <g transform="matrix(1.21107,0,0,1.08599,-133.922,111.463)">
-                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(255,146,49);"/>
-                        </g>
-                    </g>
-                </g>
-                <g transform="matrix(1.14023,0,0,1.14023,5.42761,343.508)">
-                    <g transform="matrix(37.6811,0,0,37.6811,21.2198,44.9576)">
-                        <path d="M0.077,-0L0.269,-0C0.46,-0 0.588,-0.105 0.588,-0.329C0.588,-0.553 0.46,-0.652 0.261,-0.652L0.077,-0.652L0.077,-0ZM0.224,-0.119L0.224,-0.533L0.252,-0.533C0.363,-0.533 0.437,-0.485 0.437,-0.329C0.437,-0.173 0.363,-0.119 0.252,-0.119L0.224,-0.119Z" style="fill:white;fill-rule:nonzero;"/>
-                    </g>
-                </g>
+    <g id="iconD">
+        <g id="Podklad">
+            <g id="Border">
+                <rect x="0.306" y="21.4" width="45.066" height="33.159" style="fill:rgb(194,114,41);"/>
+                <path d="M22.839,0.945L45.372,21.4L0.306,21.4L22.839,0.945Z" style="fill:rgb(194,114,41);"/>
+            </g>
+            <g id="back">
+                <rect x="1.619" y="22.118" width="42.3" height="31.45" style="fill:rgb(255,146,49);"/>
+                <path d="M22.769,2.743L43.919,22.118L1.619,22.118L22.769,2.743Z" style="fill:rgb(255,146,49);"/>
             </g>
         </g>
+        <path d="M13.45,50.51L21.699,50.51C29.905,50.51 35.405,45.999 35.405,36.375C35.405,26.75 29.905,22.497 21.355,22.497L13.45,22.497L13.45,50.51ZM19.766,45.397L19.766,27.61L20.969,27.61C25.738,27.61 28.917,29.672 28.917,36.375C28.917,43.077 25.738,45.397 20.969,45.397L19.766,45.397Z" style="fill:white;fill-rule:nonzero;"/>
     </g>
 </svg>
