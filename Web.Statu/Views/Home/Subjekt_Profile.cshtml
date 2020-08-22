@@ -80,96 +80,111 @@ else
             @if (Model.Datum_Zapisu_OR.HasValue)
             {
 
-                <tr>
-                    <th>Založena</th>
-                    <td>
-                        <div>@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
-                        @if (firstInRS.HasValue)
-                        {
-                            <div>
-                                @HlidacStatu.Lib.RenderTools.DateDiffShort(Model.Datum_Zapisu_OR.Value, firstInRS.Value,
-"První známá smlouva v registru smluv byla podepsána {0} po založení firmy.",
-"První známá smlouva v registru smluv byla podepsána {0} před založením firmy.")
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
+        <tr>
+            <th>Založena</th>
+            <td>
+                <div>@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
+                @if (firstInRS.HasValue)
+                {
+        <div>
+            @HlidacStatu.Lib.RenderTools.DateDiffShort(Model.Datum_Zapisu_OR.Value, firstInRS.Value,
+     "První známá smlouva v registru smluv byla podepsána {0} po založení firmy.",
+     "První známá smlouva v registru smluv byla podepsána {0} před založením firmy.")
+        </div>}
+            </td>
+        </tr>
+}
             @if (Model.ICO != null && @Model.ICO.Length > 0)
             {
-                <tr>
-                    <th>IČO</th>
-                    <td>@Model.ICO</td>
-                </tr>
-            }
+        <tr>
+            <th>IČO</th>
+            <td>@Model.ICO</td>
+        </tr>
+}
             @if (Model.DatovaSchranka != null && @Model.DatovaSchranka.Length > 0)
             {
-                <tr>
-                    <th>Datová schránka</th>
-                    <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
-                </tr>
+        <tr>
+            <th>Datová schránka</th>
+            <td>@Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
+        </tr>
             }
+
+            @using (Html.ShowKIndex(this.User))
+            {
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.ICO);
+                if (kidx != null && kidx.LastKIndexLabel() != HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+                {
+                    <tr>
+                        <th>Index korupčního rizika K-Index
+                        </th>
+                        <td>
+                            <img src="/socialbanner/kindex?v=@Model.ICO" style="width:80%;max-width:600px;min-width:300px;height:auto" />
+                            <p class="small muted">
+                                Index korupčního rizika - zkráceně K-Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                            </p>
+                        </td>
+                    </tr>
+                }
+            }
+
+
             @if (Model.KategorieOVM().Count() > 0)
             {
-                <tr>
-                    <th>Kategorie OVM</th>
-                    <td>
-                        <div class="low-box" style="max-height:100px">
-                            <div class="low-box-line" style="top:45px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@("/" + Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped))'); return true;" class="more"></a></div>
-                            <div class="low-box-content">
-                                @foreach (var cat in Model.KategorieOVM())
-                                {
-                                    <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)&subtitle=@(System.Net.WebUtility.UrlEncode($"Subjekty v kategorii {cat.nazev}"))"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>
-                                }
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            }
+        <tr>
+            <th>Kategorie OVM</th>
+            <td>
+                <div class="low-box" style="max-height:100px">
+                    <div class="low-box-line" style="top:45px"><a href="#" onclick="ga('send', 'event', 'btnLowBoxMore', 'showMore','@("/" + Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped))'); return true;" class="more"></a></div>
+                    <div class="low-box-content">
+                        @foreach (var cat in Model.KategorieOVM())
+                        {
+        <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)&subtitle=@(System.Net.WebUtility.UrlEncode($"Subjekty v kategorii {cat.nazev}"))"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>}
+                    </div>
+                </div>
+            </td>
+        </tr>
+}
             @if (Model.Vazby()?.Count() > 0)
             {
-                <tr>
-                    <th>Majetkové vazby společnosti</th>
-                    <td>
-                        <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
-                    </td>
-                </tr>
-            }
+        <tr>
+            <th>Majetkové vazby společnosti</th>
+            <td>
+                <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
+            </td>
+        </tr>
+}
             @if (firstInRS.HasValue)
             {
-                <tr>
-                    <th>První smlouva v RS uveřejněna</th>
-                    <td>
-                        @firstInRS.Value.ToString("d.M.yyyy")
-                    </td>
-                </tr>
-
-            }
+        <tr>
+            <th>První smlouva v RS uveřejněna</th>
+            <td>
+                @firstInRS.Value.ToString("d.M.yyyy")
+            </td>
+        </tr>
+}
             @if (lastInRS.HasValue)
             {
-                <tr>
-                    <th>Poslední smlouva v RS uveřejněna</th>
-                    <td>
-                        @lastInRS.Value.ToString("d.M.yyyy")
-                    </td>
-                </tr>
-
-            }
+        <tr>
+            <th>Poslední smlouva v RS uveřejněna</th>
+            <td>
+                @lastInRS.Value.ToString("d.M.yyyy")
+            </td>
+        </tr>
+}
             <tr>
                 <th>Novinky o této firmě do mailu</th>
                 <td>
                     @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
-                           "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
-                           prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                                     "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
+                                     prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
 
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
-                        <br />
-                        @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
-                               $"Hlídat změny i "
-                               + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
-                               + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
-                    }
+        <br />
+                            @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                                             $"Hlídat změny i "
+                                             + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
+                                             + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")}
                 </td>
             </tr>
             <tr>
@@ -180,16 +195,13 @@ else
                     @WebUtil.ShareWidget(Model.GetUrl(false))
                 </td>
             </tr>
-            @{
-                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-            }
+            @{ var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total; }
             <tr>
                 <th>Obsah stránky</th>
                 <td>
                     <div id="_obsah"></div>
-                    @{
-                        Dictionary<string, string> obsah = new Dictionary<string, string>();
+                    @{ Dictionary<string, string> obsah = new Dictionary<string, string>();
                         obsah.Add("_pravni_problemy", "Právní problémy a varování");
                         obsah.Add("_registr_smluv", "Statistiky registru smluv");
                         obsah.Add("_smlouvy_s_politiky", "Smlouvy s politiky");
@@ -203,8 +215,7 @@ else
                         obsah.Add("_vazby_na_politiky", "Obchody úřadu s firmami navázanými na politiky");
                         obsah.Add("_dodavatele", "Statistika dodavatelů " + (Model.JsemOVM() ? "úřadu" : "firmy"));
                         obsah.Add("_odberatele", "Statistiky odběratelů " + (Model.JsemOVM() ? "úřadu" : "firmy"));
-                        obsah.Add("_dalsi_db", (Model.JsemOVM() ? "Úřad" : "Firmy") + " v dalších databázích");
-                    }
+                        obsah.Add("_dalsi_db", (Model.JsemOVM() ? "Úřad" : "Firmy") + " v dalších databázích"); }
                     <script type="text/javascript">
                         $(function () {
 
@@ -224,66 +235,59 @@ else
             </tr>
             @if (numFatalIssue.Value + numVazneIssue.Value > 0)
             {
-                <tr>
-                    <td colspan="2">
-                        <h3 id="_pravni_problemy" class="text-danger">Problémy a varování</h3>
-                        <ul>
-                            @if (numFatalIssue.Value > 0)
-                            {
-                                <li>
-                                    @Model.ObecneJmeno() má v registru smluv
-                                    <span class="text-danger">
+        <tr>
+            <td colspan="2">
+                <h3 id="_pravni_problemy" class="text-danger">Problémy a varování</h3>
+                <ul>
+                    @if (numFatalIssue.Value > 0)
+                    {
+        <li>
+            @Model.ObecneJmeno() má v registru smluv
+            <span class="text-danger">
 
-                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni">
-                                            @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
-                                            {
-                                                @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0} smluv</b> obsahujících "))
-                                            }
-                                            else
-                                            {
-                                                @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>{0:### ### ##0} smluv</b> obsahujících "))
-                                            }
-                                        </a>
-                                        tak závažné nedostatky v rozporu se zákonem,
+                <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni">
+                    @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                    {
+        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0} smluv</b> obsahujících ")) }
+    else
+    {
+        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>{0:### ### ##0} smluv</b> obsahujících "))}
+                </a>
+                tak závažné nedostatky v rozporu se zákonem,
 
-                                    </span> že jsou velmi pravděpodobně neplatné.
+            </span> že jsou velmi pravděpodobně neplatné.
 
-                                </li>
-                            }
-                            @if (numVazneIssue.Value > 0)
-                            {
-                                <li>
-                                    @if (numFatalIssue.Value == 0)
-                                    {
-                                        <span>
-                                            @Model.ObecneJmeno() má v registru smluv
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span>Současně má v registru smluv</span>
-                                    }
-                                    <span class="text-danger">
-                                        <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne">
-                                            @if (numVazneIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
-                                            {
-                                                @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0}</b> smluv obsahujících "))
-                                            }
-                                            else
-                                            {
-                                                @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>{0:### ### ##0}</b> smluv obsahujících "))
-                                            }
-                                        </a>
-                                        vážné nedostatky
-                                    </span>.
+        </li>
+}
+                    @if (numVazneIssue.Value > 0)
+                    {
+        <li>
+            @if (numFatalIssue.Value == 0)
+            {
+        <span>
+            @Model.ObecneJmeno() má v registru smluv
+        </span> }
+    else
+    {
+        <span>Současně má v registru smluv</span>}
+            <span class="text-danger">
+                <a href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne">
+                    @if (numVazneIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                    {
+        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>více než {0:### ### ##0}</b> smluv obsahujících ")) }
+    else
+    {
+        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "0 smluv", "<b>jednu smlouvu</b> obsahující", "<b>{0} smlouvy</b> obsahující", "<b>{0:### ### ##0}</b> smluv obsahujících "))}
+                </a>
+                vážné nedostatky
+            </span>.
 
-                                </li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-
-            }
+        </li>
+}
+                </ul>
+            </td>
+        </tr>
+}
             <tr>
                 <td colspan="2">
                     <h3 id="_registr_smluv">Statistiky z registru smluv</h3>
@@ -301,17 +305,14 @@ else
                     @(Model.Statistic().RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
                     @if (Model.PatrimStatu())
                     {
-                        <text>
-                            @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
-                        </text>
-                    }
+        <text>
+            @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+        </text>}
                 </td>
                 <td>
-                    <script>
-                        window.onload = function () {
+                    <script>window.onload = function () {
                             $('#graf').toggle();
-                        }
-                    </script>
+                        }</script>
 
                     <a onclick="$('#graf').toggle();">Zobraz grafy</a>
                 </td>
@@ -320,88 +321,72 @@ else
                 <td colspan="2">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            @{
-                                ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                        statistics.BasicStatPerYear.Data
-                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkemCena)
-                                        );
+                            @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                                             statistics.BasicStatPerYear.Data
+                                                             .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                             .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkemCena)
+                                                             );
 
-                                @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
-                                         true, true, 150, "rdsSumPerY",
-                                          "", "",
-                                         rdsSumPerY, "Kč", xValueFormat: "{value:%Y}")
-                                 )
-
-                            }
+                @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
+                                   true, true, 150, "rdsSumPerY",
+                                    "", "",
+                                   rdsSumPerY, "Kč", xValueFormat: "{value:%Y}")
+                           ) }
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            @{
-                                ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                            statistics.BasicStatPerYear.Data
-                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.Pocet)
-                                            );
+                            @{ ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                                                 statistics.BasicStatPerYear.Data
+                                                                     .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                     .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.Pocet)
+                                                                 );
 
-                                @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
-                                        true, true, 150, "rdsCountPerY",
-                                        "", "",
-                                        rdsCountPerY, "", xValueFormat: "{value:%Y}")
-                                )
-
-                            }
+                @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
+                                  true, true, 150, "rdsCountPerY",
+                                  "", "",
+                                  rdsCountPerY, "", xValueFormat: "{value:%Y}")
+                          ) }
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            @{
-                                ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                            statistics.RatingPerYear.Data
-                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentBezCeny * 100)
-                                            );
+                            @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                                                 statistics.RatingPerYear.Data
+                                                                     .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                     .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentBezCeny * 100)
+                                                                 );
 
-                                @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
-                                            true, true, 150, "rdsbezCenyPerY",
-                                            "", "%",
-                                            rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
-                                    )
-
-                            }
+                @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
+                                      true, true, 150, "rdsbezCenyPerY",
+                                      "", "%",
+                                      rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
+                              ) }
                         </div>
                         @if (Model.PatrimStatu() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
                         {
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
+                                                 statistics.RatingPerYear.Data
+                                                 .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                 .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSPolitiky)
+                                                 );
+
+        @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                           true, true, 150, "rdsPolitikPerYKc",
+                            "", "Kč",
+                           rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
+                   ) }
+        </div>
                             <div class="col-xs-12 col-sm-6 col-md-4">
-                                @{
-                                    ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
-                                            statistics.RatingPerYear.Data
-                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                            .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSPolitiky)
-                                            );
+                                @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                                                     statistics.RatingPerYear.Data
+                                                                     .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                     .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSPolitiky * 100)
+                                                                     );
 
-                                    @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
-                                             true, true, 150, "rdsPolitikPerYKc",
-                                              "", "Kč",
-                                             rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
-                                     )
-
-                                }
-                            </div>
-                            <div class="col-xs-12 col-sm-6 col-md-4">
-                                @{
-                                    ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                            statistics.RatingPerYear.Data
-                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                            .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSPolitiky * 100)
-                                            );
-
-                                    @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
-                                                     true, true, 150, "rdsPolitikPerY",
-                                                      "", "%",
-                                                     rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
-                                             )
-
-                                }
-                            </div>
-                        }
+                @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                                           true, true, 150, "rdsPolitikPerY",
+                                            "", "%",
+                                           rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
+                                   ) }
+                            </div>}
                     </div>
                 </td>
             </tr>
@@ -410,138 +395,131 @@ else
                 && Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().Pocet > 0
                 )
             {
-                <tr>
-                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
-                    <td>
-                        @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
-                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
-                        @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                        @if (Model.PatrimStatu())
-                        {
-                            <text>
-                                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
-                            </text>
-                        }
-                    </td>
-                </tr>
-            }
+        <tr>
+            <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
+            <td>
+                @Html.Raw(Model.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.ICO))<br />
+                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                @if (Model.PatrimStatu())
+                {
+        <text>
+            @(Model.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+        </text>}
+            </td>
+        </tr>
+}
 
             @if (Model.PatrimStatu() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
             {
                 double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
                 numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
-                <tr>
-                    <th>Smlouvy s vazbou na politiky</th>
-                    <td id="_smlouvy_s_politiky">
-                        <a href="#_vazby_na_politiky">Zde najdete přehled navázaných osob a firem</a>.
+        <tr>
+            <th>Smlouvy s vazbou na politiky</th>
+            <td id="_smlouvy_s_politiky">
+                <a href="#_vazby_na_politiky">Zde najdete přehled navázaných osob a firem</a>.
 
-                        <table class="table table-condensed table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="text-align:left">Rok</th>
-                                    <th style="text-align:center">Počet smluv</th>
-                                    <th style="text-align:center">% podíl</th>
-                                    <th style="text-align:center">Hodnota smluv v Kč</th>
-                                    <th style="text-align:center">% podíl</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var bs in statistics.RatingPerYear.RegistrSmluvTime)
-                                {
-                                    <tr>
-                                        <td>@bs.Key</td>
-                                        <td class="number">@bs.Value.NumSPolitiky</td>
-                                        <td class="number">@bs.Value.PercentSPolitiky.ToString("P2")</td>
-                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSPolitiky, html: true))</td>
-                                        <td class="number">@bs.Value.PercentKcSPolitiky.ToString("P2")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Celkem</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.NumSPolitiky</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
-                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(statistics.RatingPerYear.Summary.SumKcSPolitiky, html: true))</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </td>
-                </tr>
-            }
+                <table class="table table-condensed table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">Rok</th>
+                            <th style="text-align:center">Počet smluv</th>
+                            <th style="text-align:center">% podíl</th>
+                            <th style="text-align:center">Hodnota smluv v Kč</th>
+                            <th style="text-align:center">% podíl</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bs in statistics.RatingPerYear.RegistrSmluvTime)
+                        {
+        <tr>
+            <td>@bs.Key</td>
+            <td class="number">@bs.Value.NumSPolitiky</td>
+            <td class="number">@bs.Value.PercentSPolitiky.ToString("P2")</td>
+            <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSPolitiky, html: true))</td>
+            <td class="number">@bs.Value.PercentKcSPolitiky.ToString("P2")</td>
+        </tr>
+}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Celkem</th>
+                            <th class="number">@statistics.RatingPerYear.Summary.NumSPolitiky</th>
+                            <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
+                            <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(statistics.RatingPerYear.Summary.SumKcSPolitiky, html: true))</th>
+                            <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </td>
+        </tr>
+}
             @if (!string.IsNullOrEmpty(Model.Description(false)))
             {
 
-                <tr>
-                    <th>Další info</th>
-                    <td>
-                        @Html.Raw(Model.Description(true))
-                    </td>
-                </tr>
-            }
+        <tr>
+            <th>Další info</th>
+            <td>
+                @Html.Raw(Model.Description(true))
+            </td>
+        </tr>
+}
 
 
 
             @if (Model.IsNespolehlivyPlatceDPH())
             {
-                <tr>
-                    <th id="_nespolehlivy_platce_dph">
-                        <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
-                            <span class='@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue, "","glyphicon glyphicon-exclamation-sign")'></span> Firma jako nespolehlivý plátce DPH
-                        </span>
-                    </th>
-                    <td>
-                        <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
-                            od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
-                            @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
-                            {
-                                <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>
-                            }
-                        </span>
-                    </td>
-                </tr>
-
-                if (Model.NespolehlivyPlatceDPH_obchodSuradyStat() != null)
-                {
-                    <tr>
-                        <th><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Které úřady s touto firmou přesto obchodovaly?</span></th>
-                        <td>
-                            <ul>
-                                @foreach (var ustat in Model.NespolehlivyPlatceDPH_obchodSuradyStat().Detail)
-                                {
-                                    var query = string.Format("%28icoPlatce%3A{0}+AND+icoPrijemce%3A{1}%29+OR+%28icoPlatce%3A{1}+AND+icoPrijemce%3A{0}%29", Model.ICO, ustat.Item);
-                                    if (Model.NespolehlivyPlatceDPH().FromDate.HasValue)
-                                    {
-                                        DateTime toDate = Model.NespolehlivyPlatceDPH().ToDate.HasValue ? Model.NespolehlivyPlatceDPH().ToDate.Value : DateTime.Now.AddDays(1);
-                                        query = query + string.Format(" AND podepsano:[{0} TO {1}]",
-                                            Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"),
-                                            toDate.ToString("yyyy-MM-dd")
-                                            ); //podepsano:[2016-01-01 TO 2016-12-31]
-                                    }
-                                    <li>
-                                        <div><a href="/subjekt/@ustat.Item">@HlidacStatu.Lib.Data.Firmy.GetJmeno(ustat.Item)</a></div>
-                                        <div style="margin-left:5px">
-                                            <a href='/HledatSmlouvy?Q=@query'>@ustat.ToNiceString(null, false)</a>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        </td>
-                    </tr>
-
-                }
-            }
+        <tr>
+            <th id="_nespolehlivy_platce_dph">
+                <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                    <span class='@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue, "","glyphicon glyphicon-exclamation-sign")'></span> Firma jako nespolehlivý plátce DPH
+                </span>
+            </th>
+            <td>
+                <span class="@WebUtil.IfExists(Model.NespolehlivyPlatceDPH().ToDate.HasValue,"", "text-danger")">
+                    od @Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("d.M.yyyy")
+                    @if (Model.NespolehlivyPlatceDPH().ToDate.HasValue)
+                    {
+        <span>do @Model.NespolehlivyPlatceDPH().ToDate.Value.ToString("d.M.yyyy")</span>}
+                </span>
+            </td>
+        </tr>
+ if (Model.NespolehlivyPlatceDPH_obchodSuradyStat() != null)
+        {
+        <tr>
+            <th><span class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Které úřady s touto firmou přesto obchodovaly?</span></th>
+            <td>
+                <ul>
+                    @foreach (var ustat in Model.NespolehlivyPlatceDPH_obchodSuradyStat().Detail)
+                    {
+                        var query = string.Format("%28icoPlatce%3A{0}+AND+icoPrijemce%3A{1}%29+OR+%28icoPlatce%3A{1}+AND+icoPrijemce%3A{0}%29", Model.ICO, ustat.Item);
+                        if (Model.NespolehlivyPlatceDPH().FromDate.HasValue)
+                        {
+                            DateTime toDate = Model.NespolehlivyPlatceDPH().ToDate.HasValue ? Model.NespolehlivyPlatceDPH().ToDate.Value : DateTime.Now.AddDays(1);
+                            query = query + string.Format(" AND podepsano:[{0} TO {1}]",
+                                Model.NespolehlivyPlatceDPH().FromDate.Value.ToString("yyyy-MM-dd"),
+                                toDate.ToString("yyyy-MM-dd")
+                                ); //podepsano:[2016-01-01 TO 2016-12-31]
+                        }
+        <li>
+            <div><a href="/subjekt/@ustat.Item">@HlidacStatu.Lib.Data.Firmy.GetJmeno(ustat.Item)</a></div>
+            <div style="margin-left:5px">
+                <a href='/HledatSmlouvy?Q=@query'>@ustat.ToNiceString(null, false)</a>
+            </div>
+        </li>
+}
+                </ul>
+            </td>
+        </tr>
+}
+}
 
             <tr>
-                @{
-                    var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, "1");
+                @{ var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, "1");
                     var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, "1");
                     Dictionary<string, long> vzakaz = new Dictionary<string, long>();
                     vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
-                    vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
-
-                }
+                    vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total); }
                 <th id="_verejne_zakazky">Veřejné zakázky</th>
                 <td>
                     @foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
@@ -549,57 +527,50 @@ else
                         var text = kv.Key.Split('|');
                         string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO);
 
-                        <p>
-                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[1]} nenašli",
-                           $" se vyskytuje v <a href='{surl}'><b>jedné veřejné zakázce</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkách</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkach</b></a> jako {text[1]}")).
-                        </p>
-                    }
+        <p>
+            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[1]} nenašli",
+                     $" se vyskytuje v <a href='{surl}'><b>jedné veřejné zakázce</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkách</b></a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}} veřejných zakázkach</b></a> jako {text[1]}")).
+        </p>}
                 </td>
             </tr>
 
 
 
-            @{
-                var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
-                    .Sum("souhrn", s => s
-                        .Field(f => f.DotaceCelkem)
-                    );
+            @{ var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                                         .Sum("souhrn", s => s
+                                             .Field(f => f.DotaceCelkem)
+                                         );
                 var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
                     HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
                     dotaceAggs, exactNumOfResults: true);
 
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
                 decimal sumDotace = (decimal)dotaceSearch.ElasticResults.Aggregations.Sum("souhrn").Value;
-                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotace) + "</b>.";
-
-            }
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotace) + "</b>."; }
             <tr>
                 <th id="_dotace">Dotace</th>
                 <td>
                     @if (Model.JsemOVM())
                     {
-                        <p>
-                            Úřad @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
-                                             " nedostal žádnou dotaci.",
-                                             " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
-                                             " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
-                                             " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            Firma @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
-                                             " nedostala žádnou dotaci.",
-                                             " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
-                                             " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
-                                             " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
-                        </p>
-
-                    }
+        <p>
+            Úřad @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
+                                       " nedostal žádnou dotaci.",
+                                       " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                       " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                       " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+        </p> }
+    else
+    {
+        <p>
+            Firma @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
+                                       " nedostala žádnou dotaci.",
+                                       " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                       " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                       " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+        </p>}
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
 
@@ -628,71 +599,67 @@ else
                             string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
                             if (Model.JsemOVM())
                             {
-                                <p>
-                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
-                                    (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-                                    úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+        <p>
+            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+            úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
 
-                                    @Devmasters.Core.Lang.Plural.Get(items.Count,
-                                                    "dostala",
-                                                    "dostaly",
-                                                    "dostalo")
-                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
-                                                                                " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
-                                                                                " další <b>{0} dotace</b>" + sdotaceHDiffKc,
-                                                                                " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
-                                </p>
-                                <p>
-                                    Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
-                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
-                                                 " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                                 " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                                 " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
-                                </p>
+            @Devmasters.Core.Lang.Plural.Get(items.Count,
+                                      "dostala",
+                                      "dostaly",
+                                      "dostalo")
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                                                  " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                  " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                  " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+        </p>
+                                    <p>
+                                        Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
+                                        @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                                               " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                               " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                               " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                                    </p> }
+                                else
+                                {
+        <p>
+            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+            firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+
+            @Devmasters.Core.Lang.Plural.Get(items.Count,
+                                      "dostala",
+                                      "dostaly",
+                                      "dostalo")
+            @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                                                  " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                  " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                  " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+        </p>
+                                    <p>
+                                        Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
+                                        @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                                               " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                               " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                               " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                                    </p> }
                             }
                             else
                             {
-                                <p>
-                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
-                                    (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-                                    firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-
-                                    @Devmasters.Core.Lang.Plural.Get(items.Count,
-                                                    "dostala",
-                                                    "dostaly",
-                                                    "dostalo")
-                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
-                                                                                " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
-                                                                                " další <b>{0} dotace</b>" + sdotaceHDiffKc,
-                                                                                " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
-                                </p>
-                                <p>
-                                    Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
-                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
-                                                 " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                                 " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                                 " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
-                                </p>
-                            }
-                        }
-                        else
-                        {
-                            if (Model.JsemOVM())
-                            {
-                                <p>
-                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
-                                    úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                                </p>
-                            }
-                            else
-                            {
-                                <p>
-                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
-                                    firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                                </p>
-                            }
-                        }
-                    }
+                                if (Model.JsemOVM())
+                                {
+        <p>
+            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+            úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+        </p> }
+    else
+    {
+        <p>
+            <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+            firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+        </p>}
+}
+}
                 </td>
             </tr>
 
@@ -700,17 +667,14 @@ else
 
 
 
-            @{
-                var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
+            @{ var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
                 var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
                 var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
 
                 Dictionary<string, long> insolv = new Dictionary<string, long>();
                 insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
                 insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
-                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
-
-            }
+                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total); }
             <tr>
                 <th id="_insolvencni_rejstrik">Insolvenční rejstřík</th>
                 <td>
@@ -719,39 +683,36 @@ else
                         var text = kv.Key.Split('|');
                         string surl = WebUtil.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
 
-                        <p>
-                            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
-                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
-                           " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
+        <p>
+            @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+                     " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
 
-                    </p>
-                }
+                </p>}
                 </td>
             </tr>
 
             @if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(Model.ICO))
             {
-                <tr>
-                    <th id="_navazani_politici">Politicky aktivní osoby s vazbou na firmu</th>
-                    <td>
-                        @foreach (var p in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
-                                .SoukromeFirmy[Model.ICO]
-                                .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
-                                .Where(p => p != null)
-                                .OrderBy(p => p.Prijmeni)
-                                )
-                        {
-                            <p>
-                                <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
-                                <div style="padding-left:20px;">
-                                    @WebUtil.RenderVazby(p.VazbyProICO(Model.ICO))
-                                </div>
-                            </p>
-                        }
-                    </td>
-                </tr>
-
-            }
+        <tr>
+            <th id="_navazani_politici">Politicky aktivní osoby s vazbou na firmu</th>
+            <td>
+                @foreach (var p in HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+                        .SoukromeFirmy[Model.ICO]
+                        .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+                        .Where(p => p != null)
+                        .OrderBy(p => p.Prijmeni)
+                        )
+                {
+        <p>
+            <strong><a href="/politik/@p.NameId">@p.FullName()</a></strong>
+            <div style="padding-left:20px;">
+                @WebUtil.RenderVazby(p.VazbyProICO(Model.ICO))
+            </div>
+        </p>}
+            </td>
+        </tr>
+}
 
         </tbody>
     </table>
