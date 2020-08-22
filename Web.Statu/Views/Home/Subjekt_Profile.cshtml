@@ -115,13 +115,17 @@ else
                 if (kidx != null && kidx.LastKIndexLabel() != HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
                 {
                     <tr>
-                        <th>Index korupčního rizika K-Index
+                        <th>Index korupčního rizika K–Index
                         </th>
                         <td>
-                            <img src="/socialbanner/kindex?v=@Model.ICO" style="width:80%;max-width:600px;min-width:300px;height:auto" />
-                            <p class="small muted">
-                                Index korupčního rizika - zkráceně K-Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                            <p class=" muted">
+                                Index korupčního rizika - zkráceně K–Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
                             </p>
+                            <a href="/kindex/detail/@Model.ICO">
+                                <img src="/socialbanner/kindex?v=@Model.ICO" style="width:80%;max-width:500px;min-width:150px;height:auto" />
+                            </a>
+                            <br/>
+                            <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
                         </td>
                     </tr>
                 }

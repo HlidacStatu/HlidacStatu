@@ -22,7 +22,7 @@
 
 
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index ";
+    ViewBag.Title = "K–Index ";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
@@ -105,7 +105,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K-Index podrobně</li>
+        <li>K–Index podrobně</li>
         <li class="active">@Model.Jmeno</li>
     </ol>
 }
@@ -283,7 +283,7 @@
                 </div>
                 <div class="col-sm-10">
                     <h2>
-                        K-Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
+                        K–Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
                     </h2>
                 </div>
             </div>
@@ -292,7 +292,7 @@
                 <div class="row" style="margin-top:15px">
                     <div class="col-sm-12">
                         <h4>
-                            Spočítaný K-Index pro další roky:
+                            Spočítaný K–Index pro další roky:
                             @foreach (int year in availableKindexYears.OrderBy(m => m))
                             {
                                 var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
@@ -333,7 +333,7 @@ else
                 <div class="row" style="margin-top:15px">
                     <div class="col-sm-12">
                         <h4>
-                            Spočítaný K-Index pro další roky:
+                            Spočítaný K–Index pro další roky:
                             @foreach (int year in availableKindexYears.OrderBy(m => m))
                             {
                                 var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
@@ -354,7 +354,7 @@ else
 }
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
-    <h4>Rating K-index</h4>
+    <h4>Rating K–Index</h4>
     <p>
         Veřejná správa a státní firmy hospodaří s prostředky občanů ČR. Každá organizace se chová jinak,
         dodržuje zákon, metodiky a doporučení v různé míře. Zanalyzovali jsme více než
@@ -366,18 +366,18 @@ else
         zveřejňujeme ve formě <b>ratingu - Indexu korupčního rizika</b>.
     </p>
     <p>
-        Index korupčního rizika - zkráceně <b>K-Index</b>, je ukazatel, který ukazuje míru rizikových faktorů,
+        Index korupčního rizika - zkráceně <b>K–Index</b>, je ukazatel, který ukazuje míru rizikových faktorů,
         které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
     </p>
     <p>
-        Organizace s K-indexem @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
-        Organizace s K-Index @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px") patří mezi nejhorší.
+        Organizace s K–Indexem @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px") jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
+        Organizace s K–Index @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px") patří mezi nejhorší.
 
     </p>
     <p>
-        Stupnice K-Indexu
+        Stupnice K–Indexu
         @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@ViewBag.Title
-        je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K-indexu a také způsob jeho výpočtu.
+        je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K–Indexu a také způsob jeho výpočtu.
     </p>
 </div>
 
@@ -389,12 +389,12 @@ else
 <hr style="width:30%;margin:auto" />
 <div style="padding:20px 0;"></div>
 
-<h2>Podrobný výpočet K-Indexu pro organizaci @(firma.Jmeno)</h2>
+<h2>Podrobný výpočet K–Indexu pro organizaci @(firma.Jmeno)</h2>
 
 <div class="row">
     <div class="col-xs-12 col-sm-6">
         <div>
-            Celková hodnota K-indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
+            Celková hodnota K–Indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
             @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex)) 
             (@statistics.SubjektRank(Model.Ico)).
 
@@ -453,7 +453,7 @@ else
         Nejhorší hodnota může být teoreticky 120, fakticky jen zřídka překročí hodnotu <b>50</b>.
     </p>
     <p>
-        Číselná hodnota K-index je součtem bodů jednotlivých parametrů, které prezentujeme dále.
+        Číselná hodnota K–Index je součtem bodů jednotlivých parametrů, které prezentujeme dále.
         Každá parametrů má v rámci indexu předem definovanou váhu, kterou také najdete v tabulce níže.
     </p>
 </div>
@@ -545,7 +545,7 @@ else
                 </tr>
                 <tr>
                     <td>
-                        <div style="font-weight:bold;font-size:130%">Součet bodů = K-Index</div>
+                        <div style="font-weight:bold;font-size:130%">Součet bodů = K–Index</div>
                     </td>
                     <td style="font-weight:bold;font-size:130%" class="number">
                         <b>@kindexValue.ToString("F2")</b>

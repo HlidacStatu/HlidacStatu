@@ -12,7 +12,7 @@
 
 
     //HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index porovnání";
+    ViewBag.Title = "K–Index porovnání";
     //ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
@@ -43,7 +43,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K-Index porovnání</li>
+        <li>K–Index porovnání</li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -65,11 +65,11 @@
     }
 </style>
 
-<h2>Porovnání K-indexu úřadů</h2>
+<h2>Porovnání K–Indexu úřadů</h2>
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
     <h4>Porovnání základních hodnot</h4>
-    <p>Porovnání hodnot, které dohromady skládají výslednou známku K-indexu</p>
+    <p>Porovnání hodnot, které dohromady skládají výslednou známku K–Indexu</p>
 
 </div>
 <input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
@@ -127,7 +127,7 @@
                                 .FirstOrDefault();
 
                             <td class="number" style="font-size: 15px; vertical-align: top;">
-                                @(hodnota?.ToString("F2") ?? "Chybí K-index")
+                                @(hodnota?.ToString("F2") ?? "Chybí K–Index")
 
                                 @if (hodnota.HasValue)
                                 {
@@ -145,7 +145,7 @@
                     @foreach (var cmp in Model)
                     {
                         <td class="number" style="font-size: 15px; vertical-align: top;">
-                            @(cmp.ForYear(selectedYear)?.KIndex.ToString("F2") ?? "Chybí K-index" )
+                            @(cmp.ForYear(selectedYear)?.KIndex.ToString("F2") ?? "Chybí K–Index" )
                         </td>
                     }
                 </tr>

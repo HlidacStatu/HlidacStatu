@@ -92,25 +92,25 @@ namespace HlidacStatu.Web.Controllers
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m=>m.Ico));
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
-                    ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K-Indexu";
+                    ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
 
                 case "nejlepsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc().Take(100);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
-                    ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K-Indexu";
+                    ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
                     break;
                 case "nejhorsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .OrderByDescending(k => k.Value4Sort)
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
-                    ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K-Indexu";
+                    ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K–Indexu";
                     break;
                 case "celkovy":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
-                    ViewBag.LadderTitle = "Žebříček K-Indexu";
+                    ViewBag.LadderTitle = "Žebříček K–Indexu";
                     break;
                 default:
                     return View("Zebricek.Index");

@@ -139,7 +139,7 @@ namespace HlidacStatu.Web.Framework
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                return htmlHelper.Raw($"<img title='K-Index {label.ToString()} - Index korupčního rizika'  src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(label)}' class='kindex' style='{style}'>");
+                return htmlHelper.Raw($"<img title='K–Index {label.ToString()} - Index korupčního rizika'  src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(label)}' class='kindex' style='{style}'>");
             }
             else
                 return htmlHelper.Raw("");

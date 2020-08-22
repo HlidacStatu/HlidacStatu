@@ -24,7 +24,7 @@
 @if (Model.Count() == 0)
 {
 <div class="jumbotron">
-    <h1>K-Index</h1>
+    <h1>K–Index</h1>
     <p>Indexy korupčního rizika nebyly pro tyto subjekty dosud spočítány</p>
 </div>return;
 }
@@ -56,7 +56,7 @@
 
 
 <div class="jumbotron">
-    <h1>K-Index pro @rok</h1>
+    <h1>K–Index pro @rok</h1>
     <p>
         Porovnání indexu korupčního rizika pro <br />
         <ul class="">
@@ -66,7 +66,7 @@
 </div>
 
 <h2>
-    K-Index pro rok
+    K–Index pro rok
     @for (int i = fromY; i <= toY; i++)
     {
         if (i == rok)
@@ -107,7 +107,7 @@ else
                 </tr>
                 <tr>
                     <td>
-                        K-Index hodnota
+                        K–Index hodnota
                     </td>
                     @foreach (var ki in Model)
                     {

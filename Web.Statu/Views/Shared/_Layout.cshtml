@@ -365,9 +365,10 @@
 
 
         @if (
-    !(ViewBag.HideTitle == true)
-    &&
-    !string.IsNullOrEmpty((string)ViewBag.Title))
+            !(ViewBag.HideTitle == true)
+            &&
+            !string.IsNullOrEmpty((string)ViewBag.Title)
+            )
         {
             <div class="row">
                 <div class="col-xs-12">

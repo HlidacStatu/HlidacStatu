@@ -21,7 +21,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K-Index</li>
+        <li>K–Index</li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -29,7 +29,7 @@
 @if (Model == null)
 {
 <div class="jumbotron">
-    <h1>K-Index</h1>
+    <h1>K–Index</h1>
     <p>Index korupčního rizika nebyl pro tento subjekt dosud spočítán</p>
 </div>return;
 }
@@ -37,9 +37,9 @@
 @if (Model.roky.Count(m => m != null) == 0)
 {
 <div class="jumbotron">
-    <h1>K-Index</h1>
+    <h1>K–Index</h1>
     <p>Tento subjekt uzavřel v každém roce méně než @(HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYear) smluv.</p>
-    <p>Pro spočítání K-Indexu je to příliš málo smluv.</p>
+    <p>Pro spočítání K–Indexu je to příliš málo smluv.</p>
 </div>return;
 }
 
@@ -62,7 +62,7 @@
 
 
 <div class="jumbotron">
-    <h1>K-Index</h1>
+    <h1>K–Index</h1>
     <p>Index korupčního rizika pro <b>@(HlidacStatu.Lib.Data.Firmy.Get(Model.Ico)?.Jmeno) (@Model.Ico)</b> </p>
 </div>
 
@@ -251,7 +251,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Výpočet K-Indexu
+                        Výpočet K–Indexu
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
@@ -280,7 +280,7 @@
 
                 <tr>
                     <td>
-                        oborový K-Index
+                        oborový K–Index
                     </td>
                     @for (int y = fromY; y <= toY; y++)
                     {
