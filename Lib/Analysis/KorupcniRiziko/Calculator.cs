@@ -106,16 +106,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 PocetSmluv = this.urad.Statistic().BasicStatPerYear[year].Pocet,
                 CelkovaHodnotaSmluv = this.urad.Statistic().BasicStatPerYear[year].CelkemCena,
-                PocetBezCeny = stat.NumBezCeny,
-                PocetBezSmluvniStrany = stat.NumBezSmluvniStrany,
-                PocetSPolitiky = stat.NumSPolitiky,
-                PercentBezCeny = stat.PercentBezCeny,
-                PercentBezSmluvniStrany = stat.PercentBezSmluvniStrany,
+                PocetSmluvBezCeny = stat.NumBezCeny,
+                PocetSmluvBezSmluvniStrany = stat.NumBezSmluvniStrany,
+                PocetSmluvPolitiky = stat.NumSPolitiky,
+                PercentSmluvBezCeny = stat.PercentBezCeny,
+                PercentSmluvBezSmluvniStrany = stat.PercentBezSmluvniStrany,
                 PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany,
-                PercentKcSPolitiky = stat.PercentKcSPolitiky,
-                PercentSPolitiky = stat.PercentSPolitiky,
-                SumKcBezSmluvniStrany = stat.SumKcBezSmluvniStrany,
-                SumKcSPolitiky = stat.SumKcSPolitiky,
+                PercentKcSmluvPolitiky = stat.PercentKcSPolitiky,
+                PercentSmluvPolitiky = stat.PercentSPolitiky,
+                SumKcSmluvBezSmluvniStrany = stat.SumKcBezSmluvniStrany,
+                SumKcSmluvPolitiky = stat.SumKcSPolitiky,
                 PocetSmluvULimitu = _calc_ULimitu[year].Pocet,
                 PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
                 PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
@@ -238,10 +238,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal val =
             //r5
-            datayear.Statistika.PercentBezCeny * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercentBezCeny);   //=10   C > 1  F > 2,5
+            datayear.Statistika.PercentSmluvBezCeny * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercentBezCeny);   //=10   C > 1  F > 2,5
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.PercentBezCeny,
-                datayear.Statistika.PercentBezCeny,
+                datayear.Statistika.PercentSmluvBezCeny,
                 KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercentBezCeny))
             );
 
@@ -265,7 +265,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //r15
             decimal r15koef = KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny);
-            if (datayear.Statistika.PercentBezCeny < 0.05m)
+            if (datayear.Statistika.PercentSmluvBezCeny < 0.05m)
                 r15koef = r15koef/2m;
 
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * r15koef ?? 0; //60
@@ -319,7 +319,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .Where(m =>
                         m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
                         || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
-                        || (m.Koncentrace.PocetSmluvBezCenyProVypocet > datayear.Statistika.PocetBezCeny * 0.02m)
+                        || (m.Koncentrace.PocetSmluvBezCenyProVypocet > datayear.Statistika.PocetSmluvBezCeny * 0.02m)
                         )
                 .ToArray(); //for better debug;
 
@@ -419,11 +419,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public static decimal SmlouvyPod50kBonus(decimal icoPodil, decimal vsePodil)
         {
             if (icoPodil > vsePodil * 1.75m)
-                return 0.75m;
+                return Consts.BonusPod50K_3;
             else if (icoPodil > vsePodil * 1.5m)
-                return 0.5m;
+                return Consts.BonusPod50K_2;
             if (icoPodil > vsePodil * 1.25m)
-                return 0.25m;
+                return Consts.BonusPod50K_1;
             return 0m;
         }
 
@@ -535,7 +535,7 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
             ret.Query = query;
 
-            ret.TopDodavatele = smlouvy
+            ret.Dodavatele = smlouvy
                 .GroupBy(k => k.Dodavatel, m => m, (k, v) => new KoncentraceDodavateluIndexy.Souhrn()
                 {
                     Ico = k,

@@ -376,12 +376,280 @@ else
     </p>
     <p>
         Stupnice K-Indexu
-        @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px")
+        @WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px")@WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px")@ViewBag.Title
         je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K-indexu a také způsob jeho výpočtu.
     </p>
 </div>
 
 @if (currYear.KIndexReady == false)
+{
+
+
+#line default
+#line hidden
+
+#line 19 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    __o = firma.Jmeno;
+
+
+#line default
+#line hidden
+
+#line 20 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    __o = ViewBag.SelectedYear;
+
+
+#line default
+#line hidden
+
+#line 21 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    if (Model.roky.Any(m => m.KIndexReady))
+    {
+
+
+#line default
+#line hidden
+
+#line 22 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+        foreach (int year in availableKindexYears.OrderBy(m => m))
+        {
+            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+            string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+            if (kidx != null && kidx.KIndexReady && year != selectedYear)
+            {
+
+
+#line default
+#line hidden
+
+#line 23 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = ViewBag.ICO;
+
+
+#line default
+#line hidden
+
+#line 24 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = year;
+
+
+#line default
+#line hidden
+
+#line 25 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;height:18px");
+
+
+#line default
+#line hidden
+
+#line 26 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = year;
+
+
+#line default
+#line hidden
+
+#line 27 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = postfix;
+
+
+#line default
+#line hidden
+
+#line 28 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+
+            }
+        }
+
+#line default
+#line hidden
+
+#line 29 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+    }
+
+#line default
+#line hidden
+
+#line 30 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+
+}
+else
+{
+
+
+#line default
+#line hidden
+
+#line 31 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    __o = firma.Jmeno;
+
+
+#line default
+#line hidden
+
+#line 32 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    __o = ViewBag.SelectedYear;
+
+
+#line default
+#line hidden
+
+#line 33 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    __o = WebKidx.KIndexIconStyle(currYear.KIndexLabel, "width:100px");
+
+
+#line default
+#line hidden
+
+#line 34 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+    if (Model.roky.Any(m => m.KIndexReady))
+    {
+
+
+#line default
+#line hidden
+
+#line 35 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+        foreach (int year in availableKindexYears.OrderBy(m => m))
+        {
+            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+            string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+            if (kidx != null && kidx.KIndexReady && year != selectedYear)
+            {
+
+
+#line default
+#line hidden
+
+#line 36 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = ViewBag.ICO;
+
+
+#line default
+#line hidden
+
+#line 37 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = year;
+
+
+#line default
+#line hidden
+
+#line 38 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = WebKidx.KIndexIconStyle(kidx.KIndexLabel, "padding-left:6px;height:18px");
+
+
+#line default
+#line hidden
+
+#line 39 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = year;
+
+
+#line default
+#line hidden
+
+#line 40 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+                __o = postfix;
+
+
+#line default
+#line hidden
+
+#line 41 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+
+            }
+        }
+
+#line default
+#line hidden
+
+#line 42 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+    }
+
+#line default
+#line hidden
+
+#line 43 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+
+}
+
+#line default
+#line hidden
+
+#line 44 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = HlidacStatu.Util.RenderData.NiceNumber((decimal)Math.Round(HlidacStatu.Lib.StaticData.BasicStatisticData.Get()[0] / 10000) * 10000);
+
+
+#line default
+#line hidden
+
+#line 45 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px");
+
+
+#line default
+#line hidden
+
+#line 46 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px");
+
+
+#line default
+#line hidden
+
+#line 47 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.A, "15px");
+
+
+#line default
+#line hidden
+
+#line 48 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.B, "15px");
+
+
+#line default
+#line hidden
+
+#line 49 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.C, "15px");
+
+
+#line default
+#line hidden
+
+#line 50 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.D, "15px");
+
+
+#line default
+#line hidden
+
+#line 51 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.E, "15px");
+
+
+#line default
+#line hidden
+
+#line 52 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+__o = WebKidx.KIndexIcon(KIndexData.KIndexLabelValues.F, "15px");
+
+
+#line default
+#line hidden
+
+#line 53 "C:\Projects\HlidacStatu.GitHub\HlidacStatu\Web.Statu\Views\Kindex\Detail.cshtml"
+if (currYear.KIndexReady == false)
 {
     return;
 }
@@ -588,33 +856,33 @@ else
         </div>
     </div>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
-    KoncentraceDodavateluIndexy koncentrace = null;
-    switch (part)
-    {
-        case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
-            koncentrace = currYear.CelkovaKoncentraceDodavatelu;
-            break;
-        case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-            koncentrace = currYear.KoncentraceDodavateluBezUvedeneCeny;
-            break;
-        case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
-            koncentrace = currYear.KoncentraceDodavateluCenyULimitu;
-            break;
-        default:
-            break;
-    }
+KoncentraceDodavateluIndexy koncentrace = null;
+switch (part)
+{
+    case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
+        koncentrace = currYear.CelkovaKoncentraceDodavatelu;
+        break;
+    case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+        koncentrace = currYear.KoncentraceDodavateluBezUvedeneCeny;
+        break;
+    case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
+        koncentrace = currYear.KoncentraceDodavateluCenyULimitu;
+        break;
+    default:
+        break;
+}
 
-    if (koncentrace?.TopDodavatele?.Count() > 0)
+if (koncentrace?.Dodavatele?.Count() > 0)
+{
+    List<Tuple<string, decimal>> data = koncentrace.Dodavatele
+                    .OrderByDescending(m => m.HodnotaSmluv)
+                    .Take(7)
+                    .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                    .ToList();
+    if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
     {
-        List<Tuple<string, decimal>> data = koncentrace.TopDodavatele
-                        .OrderByDescending(m => m.HodnotaSmluv)
-                        .Take(7)
-                        .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
-                        .ToList();
-        if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
-        {
-            data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
-        }
+        data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+    }
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
@@ -630,7 +898,7 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var souh in koncentrace.TopDodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(10))
+                        @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(10))
                         {
                             <tr>
                                 <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>

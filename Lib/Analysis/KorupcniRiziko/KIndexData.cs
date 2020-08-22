@@ -177,7 +177,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public static string KIndexCommentForPart(KIndexParts part, KIndexData.Annual data)
         {
-            var lbl = KIndexLabelForPart(part, data.KIndexVypocet.Radky.Where(m=>m.VelicinaPart == part).First().Hodnota);
+            var lbl = KIndexLabelForPart(part, data.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First().Hodnota);
             switch (part)
             {
                 case KIndexParts.PercentBezCeny:
@@ -190,9 +190,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.C:
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
-                            return $"Skrývá ceny u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
+                            return $"Skrývá ceny u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
                         case KIndexLabelValues.F:
-                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
+                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}";
                         default:
                             return "";
                     }
@@ -221,9 +221,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Rozdíly mezi velikostí zakázek dodavatelů jsou malé";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
-                            return "Zakázky se koncentrují u malého počtu dodavatelů";
+                            return "Velké zakázky se koncentrují u malého počtu dodavatelů";
                         case KIndexLabelValues.F:
-                            return $"Koncentrace velkých zakázek u vybraných dodavatelů je vysoká";
+                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()}";
                         default:
                             return "";
                     }
@@ -231,15 +231,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     switch (lbl)
                     {
                         case KIndexLabelValues.A:
-                            return "Zakázky se nekoncentrují u žádných dodavatelů";
+                            return "Zakázky se skrytou cenou se nekoncentrují u žádných dodavatelů";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return "Rozdíly mezi velikostí zakázek dodavatelů jsou malé";
+                            return "Zakázky se skrytou cenou uzavřelo více dodavatelů a žádný nedominuje";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
-                            return "Zakázky se koncentrují u malého počtu dodavatelů";
+                            return "Zakázky se skrytou cenou se koncentrují u malého počtu dodavatelů";
                         case KIndexLabelValues.F:
-                            return $"Koncentrace zakázek u vybraných dodavatelů je vysoká";
+                            return $"Většinu zakázek se skrytou cenou {HlidacStatu.Util.PluralForm.Get(data.KoncentraceDodavateluBezUvedeneCeny.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")}";
                         default:
                             return "";
                     }
@@ -250,12 +250,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Zakázky s podezřelou cenou se nekoncentrují u žádných dodavatelů";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return "Zakázky s podezřelou cenou se nekoncentrují u vybraných dodavatelů";
+                            return "Zakázky s podezřelou cenou uzavřelo více dodavatelů a žádný nedominuje";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                             return "Zakázky s podezřelou cenou se se koncentrují u malého počtu dodavatelů";
                         case KIndexLabelValues.F:
-                            return $"Koncentrace zakázek s podezřelou cenou u vybraných dodavatelů je vysoká";
+                            return $"Většinu zakázek se skrytou cenou {HlidacStatu.Util.PluralForm.Get(data.KoncentraceDodavateluCenyULimitu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")}";
                         default:
                             return "";
                     }
@@ -263,15 +263,25 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     switch (lbl)
                     {
                         case KIndexLabelValues.A:
-                            return "Zakázky s podezřelou cenou se nekoncentrují u žádných dodavatelů";
+                            return "Zakázky v jednotlivých oborech se nekoncentrují u žádných dodavatelů ";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return "Zakázky s podezřelou cenou se nekoncentrují u vybraných dodavatelů";
+                            return "Zakázky v jednotlivých oborech uzavřelo více dodavatelů a žádný výrazně nedominuje";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
-                            return "Zakázky s podezřelou cenou se se koncentrují u malého počtu dodavatelů";
+                            var oboryE = data.KoncetraceDodavateluObory
+                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Koncentrace.Herfindahl_Hirschman_Modified) >= KIndexLabelValues.D);
+                            var soboryE = oboryE.Select(m => m.OborName)
+                                .Aggregate((f, s) => f + ", " + s);
+
+                            return $"Dominance zakázek u dodavatelů je objevuje v {HlidacStatu.Util.PluralForm.Get(oboryE.Count(), "oboru;oborech;oborech")} {soboryE}";
                         case KIndexLabelValues.F:
-                            return $"Koncentrace zakázek s podezřelou cenou u vybraných dodavatelů je vysoká";
+                            var oboryF = data.KoncetraceDodavateluObory
+                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Koncentrace.Herfindahl_Hirschman_Modified) >= KIndexLabelValues.D);
+                            var soboryF = oboryF.Select(m => m.OborName)
+                                .Aggregate((f, s) => f + ", " + s);
+
+                            return $"Dominance zakázek u dodavatelů je v {HlidacStatu.Util.PluralForm.Get(oboryF.Count(), "oboru;oborech;oborech")} {soboryF}";
                         default:
                             return "";
                     }
@@ -287,19 +297,69 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
                             return $"{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvULimitu, "{0} smlouva;{0} smlouvy;{0} smluv")} má hodnotu blízkou limitům veřejných zakázek, což může naznačovat snahu se vyhnout řádné veřejné soutěži";
+                            //return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")} z {data.Statistika.PocetSmluv}";
                         default:
                             return "";
                     }
                 case KIndexParts.PercNovaFirmaDodavatel:
-                    break;
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Nemá žádné smlouvy s nově založenými firmami";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvNovaFirma, "{0} smlouvu;{0} smlouvy;{0} smluv")} s nově založenými firmami";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                        case KIndexLabelValues.F:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvNovaFirma, "{0} smlouvu;{0} smlouvy;{0} smluv")} s nově založenými firmami";
+                        default:
+                            return "";
+                    }
                 case KIndexParts.PercUzavrenoOVikendu:
-                    break;
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Nemá žádné smlouvy uzavřené o víkendu nebo svátku";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvOVikendu, "{0} smlouvu;{0} smlouvy;{0} smluv")} o víkendu nebo svátku";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                        case KIndexLabelValues.F:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvOVikendu, "{0} smlouvu;{0} smlouvy;{0} smluv")} o víkendu nebo svátku";
+                        default:
+                            return "";
+                    }
                 case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    break;
+                    switch (lbl)
+                    {
+                        case KIndexLabelValues.A:
+                            return "Nemá žádné smlouvy uzavřené s firmami, jejichž majitelé či ony sami sponzorovali politické strany";
+                        case KIndexLabelValues.B:
+                        case KIndexLabelValues.C:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvPolitiky, "{0} smlouvu;{0} smlouvy;{0} smluv")} s firmami, jejichž majitelé či ony sami sponzorovali politické strany";
+                        case KIndexLabelValues.D:
+                        case KIndexLabelValues.E:
+                        case KIndexLabelValues.F:
+                            return $"Uzavřela {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvPolitiky, "{0} smlouvu;{0} smlouvy;{0} smluv")} ({Util.RenderData.NicePercent(data.Statistika.PercentKcSmluvPolitiky)}) s firmami, jejichž majitelé či ony sami sponzorovali politické strany";
+                        default:
+                            return "";
+                    }
                 case KIndexParts.PercSmlouvyPod50kBonus:
-                    break;
+                    var bonusR = data.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == part);
+                    if (bonusR != null)
+                    {
+                        if (bonusR.Hodnota == Consts.BonusPod50K_3)
+                            return "Dobrovolně zveřejňuje velké množství smluv pod 50.000 Kč a výrazně zvyšuje svou transparentnost hospodaření.";
+                        if (bonusR.Hodnota == Consts.BonusPod50K_2)
+                            return "Dobrovolně zveřejňuje smluvy pod 50.000 Kč a výrazně zvyšuje svou transparentnost hospodaření.";
+                        if (bonusR.Hodnota == Consts.BonusPod50K_1)
+                            return "Dobrovolně zveřejňuje smluvy pod 50.000 Kč a zvyšuje svou transparentnost hospodaření.";
+                    }
+                    return "";
                 default:
-                    break;
+                    return "";
             }
         }
 
@@ -378,6 +438,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     else
                         return KIndexLabelValues.F;
 
+                case KIndexParts.PercSmlouvyPod50kBonus:
+                    if (value > 0)
+                        return KIndexLabelValues.A;
+                    else
+                        return KIndexLabelValues.None;
                 default:
                     return KIndexLabelValues.None;
             }

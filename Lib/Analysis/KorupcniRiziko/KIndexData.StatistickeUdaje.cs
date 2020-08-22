@@ -11,17 +11,17 @@
             public long PocetSmluvBezCenySeSoukrSubj { get; set; }
             public decimal PrumernaHodnotaSmluvSeSoukrSubj { get; set; }
 
-            public long PocetBezCeny { get; set; } = 0;
-            public decimal PercentBezCeny { get; set; } = 0;
-            public long PocetBezSmluvniStrany { get; set; } = 0;
-            public decimal SumKcBezSmluvniStrany { get; set; } = 0;
-            public decimal PercentBezSmluvniStrany { get; set; } = 0;
+            public long PocetSmluvBezCeny { get; set; } = 0;
+            public decimal PercentSmluvBezCeny { get; set; } = 0;
+            public long PocetSmluvBezSmluvniStrany { get; set; } = 0;
+            public decimal SumKcSmluvBezSmluvniStrany { get; set; } = 0;
+            public decimal PercentSmluvBezSmluvniStrany { get; set; } = 0;
             public decimal PercentKcBezSmluvniStrany { get; set; } = 0;
 
-            public long PocetSPolitiky { get; set; } = 0;
-            public decimal PercentSPolitiky { get; set; } = 0;
-            public decimal SumKcSPolitiky { get; set; } = 0;
-            public decimal PercentKcSPolitiky { get; set; } = 0;
+            public long PocetSmluvPolitiky { get; set; } = 0;
+            public decimal PercentSmluvPolitiky { get; set; } = 0;
+            public decimal SumKcSmluvPolitiky { get; set; } = 0;
+            public decimal PercentKcSmluvPolitiky { get; set; } = 0;
 
             public long PocetSmluvSeZasadnimNedostatkem { get; set; }
             public long PocetSmluvULimitu { get; set; }

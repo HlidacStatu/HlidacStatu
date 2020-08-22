@@ -19,5 +19,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public const int MinSmluvPerYear = 100;
         public const int MinSumSmluvPerYear = 60000000;
         //public const decimal MinSmluvPerYearKIndexValue = -10000m;
+
+        public const decimal BonusPod50K_1 = 0.25m;
+        public const decimal BonusPod50K_2 = 0.5m;
+        public const decimal BonusPod50K_3 = 0.75m;
+
     }
 }
