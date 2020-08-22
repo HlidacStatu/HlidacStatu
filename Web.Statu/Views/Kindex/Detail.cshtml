@@ -22,7 +22,7 @@
 
 
     HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "K-index";
+    ViewBag.Title = "K-index ";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
 
@@ -106,7 +106,7 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li>K-Index podrobně</li>
-        <li class="active">@ViewBag.Title</li>
+        <li class="active">@Model.Jmeno</li>
     </ol>
 }
 
@@ -277,7 +277,7 @@
     <div class="jumbotron">
         <div class="container">
             <div class="row">
-                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><b>@firma.Jmeno</b> za rok <b>@ViewBag.SelectedYear</b></h2>
+                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
                 <div class="col-sm-2">
 
                 </div>
@@ -317,7 +317,7 @@ else
 {
     <div class="jumbotron">
         <div class="container">
-            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><b>@firma.Jmeno</b> za rok <b>@ViewBag.SelectedYear</b></h2>
+            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
             <div class="row" style="display: flex;align-items: center;">
                 <div class="col-sm-2">
                     @WebKidx.KIndexIconStyle(currYear.KIndexLabel, "width:100px")
