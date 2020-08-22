@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Popis { get; set; }
 
         public Souhrn[] Dodavatele { get; set; }
-        public Souhrn[] TopDodavatele()
+        public Souhrn[] TopDodavatele(int? minPocet=null)
         {
             if (Dodavatele.Count() == 1)
                 return Dodavatele;
@@ -50,7 +50,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 schody.Add(i, sortedDodav[i].HodnotaSmluv - sortedDodav[i + 1].HodnotaSmluv);
                 tmpSum = tmpSum + sortedDodav[i].HodnotaSmluv;
-                if (i==-1 && tmpSum >= this.HodnotaSmluvProVypocet * 0.65m)
+                if (posOver60Perc==-1 && tmpSum >= this.HodnotaSmluvProVypocet * 0.65m)
                     posOver60Perc = i;
             }
             decimal avgDiff = schody.Average(m => m.Value);
@@ -65,6 +65,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     break;
                 }
             }
+            if (minPocet.HasValue && lastPosOfDominant + 1 < minPocet)
+                lastPosOfDominant = minPocet.Value - 1;
 
             return sortedDodav.Take(lastPosOfDominant + 1).ToArray();
         }
