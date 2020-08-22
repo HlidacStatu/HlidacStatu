@@ -47,7 +47,7 @@ namespace HlidacStatu.Lib.Data
         {
             if (string.IsNullOrEmpty(ICO))
                 return Firma.LoadError;
-            var f =  instanceByIco.Get(ICO);
+            var f =  instanceByIco.Get(Util.ParseTools.NormalizeIco( ICO));
             if (f == null)
                 return Firma.LoadError;
             else

@@ -90,9 +90,11 @@ namespace HlidacStatu.Util
 
         public static string NormalizeIco(string ico)
         {
-            if (ico == null)
+            if (ico == null) 
                 return string.Empty;
-            else if (ico.Contains("cz-"))
+
+            ico = ico.Trim();
+            if (ico.Contains("cz-"))
                 return MerkIcoToICO(ico);
             else
                 return ico.PadLeft(8, '0');
@@ -102,7 +104,7 @@ namespace HlidacStatu.Util
         public static string MerkIcoToICO(string merkIco)
         {
             if (merkIco.ToLower().Contains("cz-"))
-                merkIco = merkIco.Replace("cz-", "");
+                merkIco = merkIco.Trim().Replace("cz-", "");
 
             return merkIco.PadLeft(8, '0');
         }

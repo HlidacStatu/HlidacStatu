@@ -328,9 +328,15 @@ else
                     </div>
                 </div>
             </div>
+            @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
+            {
+            <div style="margin-top:20px" class="text-warning">
+                @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
+            </div>
+            }
             @if (Model.roky.Any(m => m.KIndexReady))
             {
-                <div class="row" style="margin-top:15px">
+                <div class="row" style="margin-top:25px">
                     <div class="col-sm-12">
                         <h4>
                             Spočítaný K–Index pro další roky:
