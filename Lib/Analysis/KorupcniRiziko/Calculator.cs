@@ -313,36 +313,38 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 )
             );
 
+            if (datayear.KoncetraceDodavateluObory != null)
+            {
+                //oborova koncentrace
+                var oboryKoncentrace = datayear.KoncetraceDodavateluObory
+                    .Where(m =>
+                            m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
+                            || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
+                            || (m.Koncentrace.PocetSmluvBezCenyProVypocet > datayear.Statistika.PocetSmluvBezCeny * 0.02m)
+                            )
+                    .ToArray(); //for better debug;
 
-            //oborova koncentrace
-            var oboryKoncentrace = datayear.KoncetraceDodavateluObory
-                .Where(m =>
-                        m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
-                        || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
-                        || (m.Koncentrace.PocetSmluvBezCenyProVypocet > datayear.Statistika.PocetSmluvBezCeny * 0.02m)
-                        )
-                .ToArray(); //for better debug;
-
-            decimal prumernaCenaSmluv = datayear.Statistika.PrumernaHodnotaSmluvSeSoukrSubj;
-            var oboryVahy = oboryKoncentrace
-                .Select(m => new KIndexData.VypocetOboroveKoncentrace.RadekObor()
-                {
-                    Obor = m.OborName,
-                    Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
-                    Vaha = m.Koncentrace.HodnotaSmluvProVypocet,  // prumerne cenu u nulobych cen uz pocitam u Koncentrace.HodnotaSmluvProVypocet //+ (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
+                decimal prumernaCenaSmluv = datayear.Statistika.PrumernaHodnotaSmluvSeSoukrSubj;
+                var oboryVahy = oboryKoncentrace
+                    .Select(m => new KIndexData.VypocetOboroveKoncentrace.RadekObor()
+                    {
+                        Obor = m.OborName,
+                        Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
+                        Vaha = m.Koncentrace.HodnotaSmluvProVypocet,  // prumerne cenu u nulobych cen uz pocitam u Koncentrace.HodnotaSmluvProVypocet //+ (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
                     PodilSmluvBezCeny = m.PodilSmluvBezCeny,
-                    CelkovaHodnotaSmluv = m.Koncentrace.HodnotaSmluvProVypocet,
-                    PocetSmluvCelkem = m.Koncentrace.PocetSmluvProVypocet
-                })
-                .ToArray();
-            decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
-            val += avg * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory); 
-            vradky.Add(
-                new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory))
-                );
-            vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
-            vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
-            vypocet.OboroveKoncentrace.Radky = oboryVahy.ToArray();
+                        CelkovaHodnotaSmluv = m.Koncentrace.HodnotaSmluvProVypocet,
+                        PocetSmluvCelkem = m.Koncentrace.PocetSmluvProVypocet
+                    })
+                    .ToArray();
+                decimal avg = oboryVahy.WeightedAverage(m => m.Hodnota, w => w.Vaha);
+                val += avg * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory);
+                vradky.Add(
+                    new KIndexData.VypocetDetail.Radek(KIndexData.KIndexParts.KoncentraceDodavateluObory, avg, KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluObory))
+                    );
+                vypocet.OboroveKoncentrace = new KIndexData.VypocetOboroveKoncentrace();
+                vypocet.OboroveKoncentrace.PrumernaCenaSmluv = prumernaCenaSmluv;
+                vypocet.OboroveKoncentrace.Radky = oboryVahy.ToArray();
+            }
             //
             //r16 - bonus!
             val -= datayear.PercSmlouvyPod50kBonus * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.PercSmlouvyPod50kBonus);
