@@ -149,6 +149,9 @@ namespace HlidacStatu.Lib.Data
 
                 [Disabled]
                 OVM_pro_evidenci_skutecnych_majitelu = 3106,
+
+                [Disabled]
+                Vse = -1,
             }
 
             /*
@@ -169,6 +172,9 @@ namespace HlidacStatu.Lib.Data
                 string sql = "";
                 switch (obor)
                 {
+                    case StatniOrganizaceObor.Vse:
+                        icos = GetAllSubjektyFromRPP();
+                        break;
                     case StatniOrganizaceObor.Zdravotni_ustavy:
                     case StatniOrganizaceObor.Hasicsky_zachranny_sbor:
                     case StatniOrganizaceObor.Krajske_hygienicke_stanice:
@@ -270,6 +276,21 @@ namespace HlidacStatu.Lib.Data
 
                 return new string[] { };
             }
+
+            private static string[] GetAllSubjektyFromRPP()
+            {
+                var res = Lib.ES.Manager.GetESClient_RPP_Kategorie()
+                    .Search<Lib.Data.External.RPP.KategorieOVM>(s=>s.Size(9000).Query(q=>q.MatchAll()));
+                if (res.IsValid)
+                    return res.Hits
+                        .Select(m => m.Source)
+                        .SelectMany(m => m.OVM_v_kategorii.Select(m => m.kodOvm))
+                        .Distinct()
+                        .ToArray();
+
+                return new string[] { };
+            }
+
         }
     }
 }
