@@ -138,7 +138,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
             else
             {
-                return $"{rank} z {count}";
+                return $"{rank}. z {count}";
             }
 
         }

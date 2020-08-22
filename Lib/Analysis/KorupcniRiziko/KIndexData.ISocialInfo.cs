@@ -12,8 +12,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         : Util.ISocialInfo
     {
 
-
-        public static string KIndexCommentForPart(KIndexParts part, KIndexData.Annual data)
+        public static string KIndexCommentForPart(KIndexParts part, KIndexData.Annual data, bool html = false)
+        {
+            var txt = _kIndexCommentForPart(part, data);
+            if (html)
+                return txt;
+            else
+                return Devmasters.Core.TextUtil.RemoveHTML(txt);
+        }
+        private static string _kIndexCommentForPart(KIndexParts part, KIndexData.Annual data)
         {
             var lbl = KIndexLabelForPart(part, data.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First().Hodnota);
             switch (part)
@@ -41,11 +48,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Nemá žádné smlouvy se zásadními nedostatky.";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return $"Zásadní nedostatky evidujeme pouze u {data.PercSeZasadnimNedostatkem:P2} smluv.";
+                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.RenderData.NiceNumber(data.Statistika.PocetSmluvSeZasadnimNedostatkem)} smluv.";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Zásadní nedostatky evidujeme u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv}.";
+                            return $"Zásadní nedostatky evidujeme u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv} smluv.";
                         default:
                             return "";
                     }
@@ -61,7 +68,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                             return "Velké zakázky se koncentrují u malého počtu dodavatelů.";
                         case KIndexLabelValues.F:
-                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z celkem {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()}.";
+                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z celkem {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()} dodavatelů.";
                         default:
                             return "";
                     }
@@ -195,7 +202,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         if (bonusR.Hodnota == Consts.BonusPod50K_1)
                             return "Dobrovolně zveřejňuje smluvy pod 50.000 Kč a zvyšuje svou transparentnost hospodaření.";
                     }
-                    return "";
+                    return "Nesplněna podmínka pro udělení bonusu za transparentnost.";
                 default:
                     return "";
             }
@@ -203,18 +210,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-        private string Best(Annual data, int year, string ico, out KIndexParts? usedPart)  
+        private string Best(Annual data, int year, string ico, out KIndexParts? usedPart)
         {
             Statistics stat = Statistics.GetStatistics(year);
-            var bestRarr =data.KIndexVypocet.Radky
+            var bestRarr = data.KIndexVypocet.Radky
                 .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
-                .Where(m=>m.rank.HasValue)
+                .Where(m => m.rank.HasValue)
                 .Where(m =>
                     m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                    //&& m.r.VelicinaPart != KIndexParts.
+                                                                           //&& m.r.VelicinaPart != KIndexParts.
                 )
                 .OrderBy(m => m.rank)
-                .ThenBy(o=>o.r.Hodnota)
+                .ThenBy(o => o.r.Hodnota)
                 .ToArray(); //better debug
             var bestR = bestRarr.FirstOrDefault();
             usedPart = bestR?.r?.VelicinaPart;
@@ -230,9 +237,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var worstRarr = data.KIndexVypocet.Radky
                 .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
                 .Where(m => m.rank.HasValue)
-                .Where(m=>
+                .Where(m =>
                     m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                    //&& m.r.VelicinaPart != KIndexParts.
+                                                                           //&& m.r.VelicinaPart != KIndexParts.
                 )
                 .OrderByDescending(m => m.rank)
                 .ThenByDescending(o => o.r.Hodnota)
@@ -248,7 +255,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public InfoFact[] InfoFacts(int year)
         {
-            var ann = this.roky.Where(m=>m.Rok == year).FirstOrDefault();
+            var ann = this.roky.Where(m => m.Rok == year).FirstOrDefault();
 
             List<InfoFact> facts = new List<InfoFact>();
             if (ann == null || ann.KIndexReady == false)
@@ -288,7 +295,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (!string.IsNullOrEmpty(sworst))
                 facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Summary));
 
-            foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexParts>().Select(m=>m.Value))
+            foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexParts>().Select(m => m.Value))
             {
                 if (part != bestPart && part != worstPart)
                 {

@@ -32,7 +32,7 @@
     //kindexValue = 10.9m;
 
     Statistics statistics = Statistics.GetStatistics(selectedYear);
-    
+
     Func<decimal, decimal, decimal, int> sirkaGrafu = (hodnota, koeficient, celek) =>
     {
         return (int)Math.Round((hodnota * koeficient / celek * 100), 0);
@@ -324,7 +324,7 @@ else
                 </div>
                 <div class="col-sm-10">
                     <div style="font-size:26px;line-height:30px;">
-                        @Html.Raw( HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok),3,true,false,lineFormat:"<div>{0}</div>",html:true))
+                        @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok), 3, true, false, lineFormat: "<div>{0}</div>", html: true))
                     </div>
                 </div>
             </div>
@@ -395,7 +395,7 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K–Indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex)) 
+            @WebKidx.KIndexIcon(currYear.KIndexLabel, "15px") a @(statistics.PercIntervalShortText(currYear.KIndex))
             (@statistics.SubjektRank(Model.Ico)).
 
         </div>
@@ -469,6 +469,9 @@ else
                     <td style="font-size: 15px; text-align: right">
                         <b>Hodnota parametru</b>
                     </td>
+                    <td style="font-size: 15px; text-align: right">
+                        <b>Komentář</b>
+                    </td>
                 </tr>
                 @foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexParts>())
                 {
@@ -484,18 +487,20 @@ else
                             @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)" onclick="showHelp(this,'#detail_@(radek.Velicina)');return false;">@ukazatTxt</a></small>
                         </td>
                         <td style="text-align:right;font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota),"height:25px")
+                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:25px")
+                        </td>
+                        <td>
                             @(KIndexData.KIndexCommentForPart(radek.VelicinaPart,currYear))
                         </td>
-<!--
-                        <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                            @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
-                            <div class="small" style="font-family: Cabin, sans-serif;">
-                                @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
-                                (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
-                            </div>
-                        </td>
--->
+                        <!--
+                                                <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                                                    @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
+                                                    <div class="small" style="font-family: Cabin, sans-serif;">
+                                                        @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
+                                                        (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
+                                                    </div>
+                                                </td>
+                        -->
 
                     </tr>
                     <tr style="border-bottom:dotted 2px #E0E6ED">
@@ -539,19 +544,13 @@ else
 
                 }
                 <tr>
-                    <td colspan="2">
-                        Jednotlivé hodnoty všech parametrů se sečtou
-                    </td>
-                </tr>
-                <tr>
                     <td>
                         <div style="font-weight:bold;font-size:130%">Součet bodů = K–Index</div>
                     </td>
-                    <td style="font-weight:bold;font-size:130%" class="number">
-                        <b>@kindexValue.ToString("F2")</b>
-                        <div style="font-family: Cabin, sans-serif;">
-                            @(statistics.PercIntervalShortText(currYear.KIndex))
-                        </div>
+                    <td style="text-align:right">@Html.KIndexIcon(currYear.KIndexLabel, "height:30px")</td>
+                    <td style="font-size:130%">
+                        Počet bodů <b>@kindexValue.ToString("F2")</b>, což znamená
+                        @(statistics.SubjektRank(Model.Ico)). místo z celkem @(statistics.SubjektOrderedListKIndexAsc.Count).
                     </td>
                     <td>&nbsp;</td>
                 </tr>
@@ -603,32 +602,33 @@ else
         </div>
     </div>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
-KoncentraceDodavateluIndexy koncentrace = null;
-switch (part)
-{
-    case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
-        koncentrace = currYear.CelkovaKoncentraceDodavatelu;
-        break;
-    case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-        koncentrace = currYear.KoncentraceDodavateluBezUvedeneCeny;
-        break;
-    case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
-        koncentrace = currYear.KoncentraceDodavateluCenyULimitu;
-        break;
-    default:
-        break;
-}
-
-if (koncentrace?.Dodavatele?.Count() > 0)
-{
-    List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
-                    .OrderByDescending(m => m.HodnotaSmluv)
-                    .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
-                    .ToList();
-    if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+    KoncentraceDodavateluIndexy koncentrace = null;
+    switch (part)
     {
-        data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+        case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
+            koncentrace = currYear.CelkovaKoncentraceDodavatelu;
+            break;
+        case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
+            koncentrace = currYear.KoncentraceDodavateluBezUvedeneCeny;
+            break;
+        case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
+            koncentrace = currYear.KoncentraceDodavateluCenyULimitu;
+            break;
+        default:
+            break;
     }
+
+    if (koncentrace?.Dodavatele?.Count() > 0)
+    {
+        List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
+                        .OrderByDescending(m => m.HodnotaSmluv)
+                        .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                        .Take(12)
+                        .ToList();
+        if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+        {
+            data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+        }
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
@@ -665,11 +665,11 @@ if (koncentrace?.Dodavatele?.Count() > 0)
 @helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
 {
 
-string descr = "";
-descr = KIndexData.PartsDescription(part);
+    string descr = "";
+    descr = KIndexData.PartsDescription(part);
 
-if (!string.IsNullOrEmpty(descr))
-{
+    if (!string.IsNullOrEmpty(descr))
+    {
         <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
             <div class="@_class" style="@style">
                 @Html.Raw(descr)

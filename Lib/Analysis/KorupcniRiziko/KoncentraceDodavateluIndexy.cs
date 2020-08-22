@@ -62,8 +62,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 if (schody[i] > avgDiff)
                 {
                     lastPosOfDominant = i;
-                    break;
                 }
+                else
+                    break;
+
             }
             if (minPocet.HasValue && lastPosOfDominant + 1 < minPocet)
                 lastPosOfDominant = minPocet.Value - 1;
