@@ -49,11 +49,11 @@
         <p>Připravili jsme pro vás několik připravených porovnání</p>
         <div class="row">
             <div class="col-xs-12">
-                @foreach (var g in Devmasters.Enums.Enums.Groups(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor)))
+                @foreach (var g in Devmasters.Enums.EnumTools.Groups(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor)))
                 {
                     <h3>@g</h3>
                     <div>
-                        @foreach (var item in Devmasters.Enums.Enums.InGroup(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor), g))
+                        @foreach (var item in Devmasters.Enums.EnumTools.InGroup(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor), g))
                         {
                         <a href="zebricek/@item.ToString()" class="btn btn-default">Porovnat @(item.ToNiceDisplayName())</a>
 

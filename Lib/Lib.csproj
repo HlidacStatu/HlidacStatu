@@ -59,8 +59,8 @@
     <Reference Include="Devmasters.DatabaseUpgrader, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.DatabaseUpgrader.1.472.1.1\lib\net40\Devmasters.DatabaseUpgrader.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Enums, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Enums.2.0.2\lib\net48\Devmasters.Enums.dll</HintPath>
+    <Reference Include="Devmasters.Enums, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Enums.2.1.0\lib\net48\Devmasters.Enums.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Imaging, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Imaging.1.472.1.1\lib\net40\Devmasters.Imaging.dll</HintPath>

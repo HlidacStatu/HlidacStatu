@@ -138,7 +138,7 @@
                     @for (int y = fromY; y <= toY; y++)
                     {
             <td>
-                @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetBezCeny)
+                @HlidacStatu.Util.RenderData.NiceNumber(Model.ForYear(y).Statistika.PocetSmluvBezCeny)
             </td>}
                 </tr>
                 <tr>
@@ -148,7 +148,7 @@
                     @for (int y = fromY; y <= toY; y++)
                     {
             <td>
-                @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentBezCeny)
+                @HlidacStatu.Util.RenderData.NicePercent(Model.ForYear(y).Statistika.PercentSmluvBezCeny)
             </td>}
                 </tr>
                 <tr>

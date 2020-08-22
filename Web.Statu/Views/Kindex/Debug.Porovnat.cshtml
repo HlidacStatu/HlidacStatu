@@ -185,11 +185,11 @@ else
                     <td>
                         Počet smluv bez<br />uvedené ceny
                     </td>
-                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PocetBezCeny);
-                        max = Model.Max(m => m.ForYear(rok).Statistika.PocetBezCeny); }
+                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PocetSmluvBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PocetSmluvBezCeny); }
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Statistika.PocetBezCeny;
+                        val = ki.ForYear(rok).Statistika.PocetSmluvBezCeny;
         <td>
             <span style="color:@(grad.Color(val,min,max).ToHex())">
                 @HlidacStatu.Util.RenderData.NiceNumber(val)
@@ -200,11 +200,11 @@ else
                     <td>
                         % smluv bez<br />uvedené ceny
                     </td>
-                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PercentBezCeny);
-                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentBezCeny); }
+                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PercentSmluvBezCeny);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentSmluvBezCeny); }
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Statistika.PercentBezCeny;
+                        val = ki.ForYear(rok).Statistika.PercentSmluvBezCeny;
         <td>
             <span style="color:@(grad.Color(val,min,max).ToHex())">
                 @HlidacStatu.Util.RenderData.NicePercent(val)
@@ -215,11 +215,11 @@ else
                     <td>
                         % smluv s firmou<br />navázanou na politiky
                     </td>
-                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PercentSPolitiky);
-                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentSPolitiky); }
+                    @{ min = Model.Min(m => m.ForYear(rok).Statistika.PercentSmluvPolitiky);
+                        max = Model.Max(m => m.ForYear(rok).Statistika.PercentSmluvPolitiky); }
                     @foreach (var ki in Model)
                     {
-                        val = ki.ForYear(rok).Statistika.PercentSPolitiky;
+                        val = ki.ForYear(rok).Statistika.PercentSmluvPolitiky;
         <td>
             <span style="color:@(grad.Color(val,min,max).ToHex())">
                 @HlidacStatu.Util.RenderData.NicePercent(val)
