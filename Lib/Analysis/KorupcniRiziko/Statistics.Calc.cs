@@ -41,6 +41,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     if (hit.Source.roky.Any(m => m.KIndexReady))
                         data.Add(hit.Source);
 
+                    if (data.Count>100)
+                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = true, Log = null };
 
                     return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                 }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter,
@@ -68,6 +70,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 {
                     stat.SubjektOrderedListPartsAsc.Add(part, datayear
                         .Where(m => m.Value.KIndexReady)
+                        .Where(m=> m.Value.KIndexVypocet.Radky.Any(r => r.VelicinaPart == part))
                         .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
                         .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex))
                         .ToList()
@@ -81,7 +84,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 List<KIndexData.VypocetDetail.Radek> radky = new List<KIndexData.VypocetDetail.Radek>();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    decimal val = datayear.Select(m => m.Value.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part))
+                    decimal val = datayear
+                        .Select(m => m.Value.KIndexVypocet.Radky
+                            .FirstOrDefault(r => r.Velicina == (int)part))
+                            .Where(a=>a!=null)
                             .Average(a => a.Hodnota);
 
                     KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
@@ -107,7 +113,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                     {
                         decimal val = HlidacStatu.Util.MathTools.PercentileCont(perc / 100m,
-                                datayear.Select(m => m.Value.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part).Hodnota)
+                                datayear
+                                .Select(m => m.Value.KIndexVypocet.Radky.FirstOrDefault(r => r.Velicina == (int)part))
+                                .Where(m=>m != null)
+                                .Select(m=>m.Hodnota)
                             );
                         KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
                         radky.Add(radek);
