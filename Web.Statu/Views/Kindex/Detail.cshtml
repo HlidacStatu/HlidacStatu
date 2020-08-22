@@ -470,27 +470,42 @@ else
                         <b>Hodnota parametru</b>
                     </td>
                 </tr>
-                @foreach (var radek in currYear.KIndexVypocet.Radky
-                    .OrderByDescending(r => r.Koeficient)
-                    .ThenByDescending(r => r.VelicinaLongName))
+                @foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexParts>())
                 {
+                    var radek = currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == part.Value);
+                    if (radek == null)
+                    {
+                        break;
+                    }
+
+
                     <tr>
                         <td style="font-size:15px;">
                             @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)" onclick="showHelp(this,'#detail_@(radek.Velicina)');return false;">@ukazatTxt</a></small>
                         </td>
+                        <td style="text-align:right;font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota),"height:25px")
+                            @(KIndexData.KIndexCommentForPart(radek.VelicinaPart,currYear))
+                        </td>
+<!--
                         <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                            @((radek.Koeficient * radek.Hodnota).ToString("F2"))
+                            @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
                             <div class="small" style="font-family: Cabin, sans-serif;">
                                 @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
                                 (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
                             </div>
                         </td>
+-->
+
                     </tr>
                     <tr style="border-bottom:dotted 2px #E0E6ED">
                         <td colspan="4" style="padding:0">
                             <div id="detail_@radek.Velicina" style="display:none">
                                 <div class="row">
                                     <div class="col-xs-11 col-lg-offset-1 box-stats" style="background-color:#f9f9fe">
+                                        <h3>
+                                            Číselná hodnota parametru je @Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, true))
+                                        </h3>
                                         @switch (radek.VelicinaPart)
                                         {
                                             case KIndexData.KIndexParts.PercentBezCeny:
@@ -525,7 +540,7 @@ else
                 }
                 <tr>
                     <td colspan="2">
-                        Jednotlivé hodnoty všech parametrů se vynásobí vahou (důležitostí) parametru a výsledné body se sečtou
+                        Jednotlivé hodnoty všech parametrů se sečtou
                     </td>
                 </tr>
                 <tr>
