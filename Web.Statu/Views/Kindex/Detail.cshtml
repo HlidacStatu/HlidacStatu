@@ -621,9 +621,8 @@ switch (part)
 
 if (koncentrace?.Dodavatele?.Count() > 0)
 {
-    List<Tuple<string, decimal>> data = koncentrace.Dodavatele
+    List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
                     .OrderByDescending(m => m.HodnotaSmluv)
-                    .Take(7)
                     .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
                     .ToList();
     if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
