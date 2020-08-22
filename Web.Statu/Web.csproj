@@ -249,6 +249,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -1624,6 +1627,10 @@
     <Content Include="Scripts\jquery-1.11.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PrivateInternals\Images\KIndexGenerator\KIndexGenerator.csproj">
+      <Project>{6c394e28-31d3-42a7-a7fb-75ffb1d752d4}</Project>
+      <Name>KIndexGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj">
       <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
       <Name>Lib.OCR.TextReadability</Name>

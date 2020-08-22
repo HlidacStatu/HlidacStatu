@@ -1388,17 +1388,19 @@ text zpravy: {txt}
         public ActionResult SocialBanner(string id, string v, string t, string st, string b, string f, string img, string rat = "16x9", string res = "1200x628", string col = "")
         {
             string mainUrl = this.Request.Url.Scheme + "://" + this.Request.Url.Host;
-            if (System.Diagnostics.Debugger.IsAttached)
-                mainUrl = "https://www.hlidacstatu.cz";
+
 
 #if (DEBUG)
-            mainUrl = "https://www.hlidacstatu.cz";
+            if (System.Diagnostics.Debugger.IsAttached)
+                mainUrl = "http://local.hlidacstatu.cz";
+            //mainUrl = "https://www.hlidacstatu.cz";
 #endif
             //twitter Recommended size: 1024 x 512 pixels
             //fb Recommended size: 1200 pixels by 630 pixels
 
             string url = null;
 
+            byte[] data = null;
             if (id?.ToLower() == "subjekt")
             {
                 Firma fi = Firmy.Get(v);
@@ -1480,7 +1482,10 @@ text zpravy: {txt}
                     + "&img=" + System.Net.WebUtility.UrlEncode(img)
                     + "&color=" + col
                     + "&ratio=" + rat;
-                v = url;
+            }
+            else if (id?.ToLower() == "kindex")
+            {
+                data = Framework.RemoteUrlFromWebCache.GetBinary(mainUrl+"/kindex/banner/"+v,"kindex-banner-"+v, Request.QueryString["refresh"] == "1");
             }
             else if (id?.ToLower() == "page")
             {
@@ -1531,41 +1536,14 @@ text zpravy: {txt}
             }
 
 
-            byte[] data = null;
             try
             {
 
 
-                if (!string.IsNullOrEmpty(url))
+                if (data == null && !string.IsNullOrEmpty(url))
                 {
-                    string[] webShotServiceUrls = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url")
-                        ?.Split(';')
-                        ?.Where(m => !string.IsNullOrEmpty(m))
-                        ?.ToArray();
 
-                    if (webShotServiceUrls == null || webShotServiceUrls?.Length == null || webShotServiceUrls?.Length == 0)
-                        webShotServiceUrls = new[] { "http://127.0.0.1:9090" };
-
-                    var webShotServiceUrl = webShotServiceUrls[HlidacStatu.Util.Consts.Rnd.Next(webShotServiceUrls.Length)];
-
-                    //string scr = webShotServiceUrl + "/png?ratio=" + rat + "&url=" + System.Net.WebUtility.UrlEncode(url);
-                    string scr = webShotServiceUrl + "/screenshot?vp_width=1920&vp_height=1080&url="
-                        + System.Net.WebUtility.UrlEncode(url);
-
-                    if (Request.QueryString["refresh"] == "1")
-                    {
-                        Framework.RemoteUrlFromWebCache.Manager.Delete(new Util.Cache.KeyAndId()
-                        {
-                            ValueForData = scr,
-                            CacheNameOnDisk = (id?.ToLower() ?? "null") + "-" + rat + "-" + v
-                        });
-                    }
-
-                    data = Framework.RemoteUrlFromWebCache.Manager.Get(new Util.Cache.KeyAndId()
-                    {
-                        ValueForData = scr,
-                        CacheNameOnDisk = (id?.ToLower() ?? "null") + "-" + rat + "-" + v
-                    });
+                    data = Framework.RemoteUrlFromWebCache.GetScreenshot(url, (id?.ToLower() ?? "null") + "-" + rat + "-" + v, Request.QueryString["refresh"] == "1");
                 }
             }
             catch (Exception e)
@@ -1578,6 +1556,10 @@ text zpravy: {txt}
                 return File(data, "image/png");
 
         }
+
+
+
+
         public ActionResult Tip(string id)
         {
             string url = "";

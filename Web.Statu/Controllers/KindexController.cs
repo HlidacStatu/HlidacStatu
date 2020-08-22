@@ -170,6 +170,36 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
+
+        [ValidateInput(false)]
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public ActionResult Banner(string id, int? rok = null)
+        {
+            byte[] data = null;
+            var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(id);
+            if (kidx != null)
+            {
+                KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
+                data = img.GenerateImageByteArray(kidx.Jmeno,
+                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
+                    kidx.LastKIndexLabel().ToString()
+                    );
+
+            }
+            else
+            {
+                KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
+                data = img.GenerateImageByteArray(kidx.Jmeno,
+                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
+                    Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None.ToString()
+                    );
+
+            }
+            return File(data, "image/png");
+        }
+
+
+
         private int FixKindexYear(int? year)
         {
             if (year < 2017)

@@ -77,12 +77,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public Annual LastKIndex()
         {
+            return LastReadyKIndex() ?? roky?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
+        }
+
+        public Annual LastReadyKIndex()
+        {
             return roky?.Where(m => m.KIndexReady)?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
         }
 
         public decimal? LastKIndexValue()
         {
-            return LastKIndex()?.KIndex;
+            return LastReadyKIndex()?.KIndex;
         }
         public KIndexLabelValues LastKIndexLabel()
         {

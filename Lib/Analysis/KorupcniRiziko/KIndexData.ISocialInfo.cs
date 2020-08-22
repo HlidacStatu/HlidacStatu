@@ -45,7 +45,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")} z {data.Statistika.PocetSmluv}.";
+                            return $"Zásadní nedostatky evidujeme u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv}.";
                         default:
                             return "";
                     }
@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                             return "Velké zakázky se koncentrují u malého počtu dodavatelů.";
                         case KIndexLabelValues.F:
-                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()}.";
+                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z celkem {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()}.";
                         default:
                             return "";
                     }
@@ -269,7 +269,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     facts.Add(new InfoFact("Málo rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.C:
-                    facts.Add(new InfoFact("Velmi málo rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.D:
                     break;
@@ -303,7 +302,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         public InfoFact[] InfoFacts()
         {
-            return InfoFacts(this.roky.OrderByDescending(o => o.Rok).FirstOrDefault(m => m.KIndexReady)?.Rok ?? 2019);
+            var kidx = LastKIndex();
+            return InfoFacts(kidx?.Rok ?? 2019);
         }
 
         public bool NotInterestingToShow()
