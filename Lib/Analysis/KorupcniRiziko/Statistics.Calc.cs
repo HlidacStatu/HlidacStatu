@@ -41,8 +41,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     if (hit.Source.roky.Any(m => m.KIndexReady))
                         data.Add(hit.Source);
 
-                    if (data.Count>100)
-                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = true, Log = null };
 
                     return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                 }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter,
