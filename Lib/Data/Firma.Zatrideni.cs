@@ -284,7 +284,7 @@ namespace HlidacStatu.Lib.Data
                 if (res.IsValid)
                     return res.Hits
                         .Select(m => m.Source)
-                        .SelectMany(m => m.OVM_v_kategorii.Select(m => m.kodOvm))
+                        .SelectMany(m => m.OVM_v_kategorii.Select(ovm => ovm.kodOvm))
                         .Distinct()
                         .ToArray();
 
