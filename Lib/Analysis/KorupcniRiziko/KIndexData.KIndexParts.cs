@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             [SortValue(11)]
             [GroupValue("Koncentrace")]
-            [Devmasters.Core.NiceDisplayName("Opakování dodavatelů u smluv se skrytou cenou")]
+            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů u smluv se skrytou cenou")]
             KoncentraceDodavateluBezUvedeneCeny = 3,
 
             [SortValue(12)]
