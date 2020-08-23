@@ -22,7 +22,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         private static string _kIndexCommentForPart(KIndexParts part, KIndexData.Annual data)
         {
-            var lbl = KIndexLabelForPart(part, data.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First().Hodnota);
+            var v = data.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).FirstOrDefault()?.Hodnota;
+            if (v.HasValue == false)
+                return "";
+
+            var lbl = KIndexLabelForPart(part, v.Value);
             switch (part)
             {
                 case KIndexParts.PercentBezCeny:
@@ -37,7 +41,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                             return $"Skrývá ceny u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}.";
                         case KIndexLabelValues.F:
-                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")}.";
+                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouva;{0} smlouvy;{0} smluv")} z celkem {data.Statistika.PocetSmluv} smluv.";
                         default:
                             return "";
                     }
@@ -48,7 +52,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Nemá žádné smlouvy se zásadními nedostatky.";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smluv;{0} smluv")} smluv.";
+                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smluv;{0} smluv")}.";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
@@ -239,7 +243,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .Where(m => m.rank.HasValue)
                 .Where(m =>
                     m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                                                                           //&& m.r.VelicinaPart != KIndexParts.
+                      && m.r.VelicinaPart != KIndexParts.PercSmlouvyPod50kBonus
                 )
                 .OrderByDescending(m => m.rank)
                 .ThenByDescending(o => o.r.Hodnota)

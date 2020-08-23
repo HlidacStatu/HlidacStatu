@@ -91,13 +91,21 @@
                             @(record.rank).
                         </td>
                         <td>
-                            <a href="/kindex/detail/@record.item.Ico?rok=@selectedYear">@(WebKidx.KIndexIconStyle(KIndexData.CalculateLabel(record.item.Value4Sort), "width:19px"))</a>
+                            @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
+                            @*<a href="/kindex/detail/@record.item.Ico?rok=@selectedYear">@(Html.KIndexIcon(KIndexData.CalculateLabel(record.item.Value4Sort), "width:19px"))</a>*@
                         </td>
                         <td>
                             <a href="/subjekt/@record.item.Ico">@record.item.Name</a>
                         </td>
                         <td class="number">
+                            @if (record.item.Value4Sort == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
+                            {
+                            <span>Není k dispozici</span>
+                            }
+                            else
+                            {
                             @(record.item.Value4Sort?.ToString("F2"))
+                            }
                         </td>
                         @*<td></td>*@
                     </tr>

@@ -8,6 +8,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         public partial class Annual
         {
+            public static Annual Empty(int rok)
+            {
+                Annual ann = new Annual(rok);
+                ann.KIndex = Consts.MinSmluvPerYearKIndexValue;
+                ann.KIndexReady = false;
+                ann.KIndexVypocet = new VypocetDetail() { Radky = new VypocetDetail.Radek[] { } };
+                return ann;
+            }
+
             protected Annual() { }
 
             [Nest.Date]
@@ -87,7 +96,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 get
                 {
-                    return CalculateLabel(this.KIndex);
+                    if (this.KIndexReady)
+                        return CalculateLabel(this.KIndex);
+                    else
+                        return KIndexLabelValues.None;
                 }
             }
             [Nest.Object(Ignore = true)]

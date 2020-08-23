@@ -14,7 +14,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
     public partial class Calculator
     {
-        public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017).ToArray();
         const int minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu = 1;
 
         private Firma urad = null;
@@ -57,7 +56,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private KIndexData CalculateSourceData(bool forceCalculate)
         {
             this.InitData();
-            foreach (var year in CalculationYears)
+            foreach (var year in Consts.CalculationYears)
             {
                 KIndexData.Annual data_rok = CalculateForYear(year, forceCalculate);
                 kindex.roky.Add(data_rok);

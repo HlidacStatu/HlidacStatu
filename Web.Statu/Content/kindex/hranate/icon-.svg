@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 46 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-123,-551)">
+        <g transform="matrix(2.55549,0,0,1.38743,32.1167,17.2999)">
+            <g id="icon-" transform="matrix(0.381974,0,0,0.70781,28.1252,36.2617)">
+                <g id="Podklad" transform="matrix(1.02445,0,0,1.01829,-1.04834,351.875)">
+                    <g id="Border">
+                        <g transform="matrix(1.04711,0,0,1.05434,-109.83,110.449)">
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(126,126,126);stroke:rgb(126,126,126);stroke-width:0.1px;"/>
+                        </g>
+                        <g transform="matrix(1.29027,0,0,1.14652,-145.407,108.05)">
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(126,126,126);stroke:rgb(126,126,126);stroke-width:0.08px;"/>
+                        </g>
+                    </g>
+                    <g id="back">
+                        <g transform="matrix(0.98284,0,0,1,-100.528,113.674)">
+                            <rect x="124.278" y="46.145" width="43.039" height="31.45" style="fill:rgb(144,153,163);stroke:rgb(144,153,163);stroke-width:0.1px;"/>
+                        </g>
+                        <g transform="matrix(1.21107,0,0,1.08599,-133.922,111.463)">
+                            <path d="M145.895,26.686L163.359,44.527L128.431,44.527L145.895,26.686Z" style="fill:rgb(144,153,163);stroke:rgb(144,153,163);stroke-width:0.09px;"/>
+                        </g>
+                    </g>
+                </g>
+                <g transform="matrix(1.16811,0,0,1.16109,5.96129,474.464)">
+                    <rect x="23.935" y="43.549" width="15.534" height="6.567" style="fill:white;fill-rule:nonzero;stroke:white;stroke-opacity:0;stroke-width:0.88px;stroke-linecap:butt;stroke-miterlimit:2;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

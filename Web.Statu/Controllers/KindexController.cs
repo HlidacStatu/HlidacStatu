@@ -65,6 +65,8 @@ namespace HlidacStatu.Web.Controllers
                     var kidx = KIndex.Get(Util.ParseTools.NormalizeIco(i));
                     if (kidx != null)
                         kindexes.Add(kidx);
+                    else
+                        kindexes.Add(KIndexData.Empty(f.ICO, f.Jmeno));
                 }
             }
 
@@ -77,7 +79,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 return Redirect("/");
             }
-            
+
             rok = FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
             ViewBag.SelectedLadder = id;
@@ -90,7 +92,8 @@ namespace HlidacStatu.Web.Controllers
             switch (id?.ToLower())
             {
                 case "obor":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m=>m.Ico));
+                    result = Statistics.GetStatistics(rok.Value)
+                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m => m.Ico), showNone: true);
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
@@ -206,7 +209,7 @@ namespace HlidacStatu.Web.Controllers
                 return 2017;
             if (year is null || year >= DateTime.Now.Year)
                 return DateTime.Now.Year - 1;
-            
+
             return year.Value;
         }
     }

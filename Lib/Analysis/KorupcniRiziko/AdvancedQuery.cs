@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static Dictionary<int, BasicData> PerYear(string query, int[] yearsInterval = null)
         {
-            yearsInterval = yearsInterval ?? Calculator.CalculationYears;
+            yearsInterval = yearsInterval ?? Consts.CalculationYears;
 
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggY =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()

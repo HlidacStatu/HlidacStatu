@@ -98,7 +98,7 @@
                     @foreach (var cmp in Model)
                     {
                         <td class="number" style="font-size: 15px; vertical-align: top">
-                            @WebKidx.KIndexIconStyle(cmp.ForYear(selectedYear).KIndexLabel, "width:20px")
+                            @Html.KIndexIcon(cmp.ForYear(selectedYear).KIndexLabel, "width: 20px", true)
                         </td>
                     }
                 </tr>

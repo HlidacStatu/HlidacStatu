@@ -15,6 +15,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         : Util.ISocialInfo
     {
 
+        public static KIndexData Empty(string ico, string jmeno = null)
+        {
+            KIndexData kidx = new KIndexData();
+            kidx.Ico = ico;
+            kidx.Jmeno = jmeno ?? Lib.Data.Firmy.GetJmeno(ico);
+            kidx.roky =  Consts.CalculationYears
+                .Select(rok=>Annual.Empty(rok))
+                .ToList();
+            return kidx;
+        }
+
         public static int[] KIndexLimits = { 0, 3, 6, 9, 12, 15 };
 
         public static string PartsDescription(KIndexData.KIndexParts part)
@@ -98,13 +109,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             var val = LastKIndex();
             rok = null;
-            if (val != null)
+            if (val == null)
+                return KIndexLabelValues.None;
+            else 
             {
                 rok = val.Rok;
                 return val.KIndexLabel;
             }
-            else
-                return KIndexLabelValues.None;
         }
 
         public List<Annual> roky { get; set; } = new List<Annual>();
@@ -297,7 +308,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
-        public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true)
+        public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true, bool showNone = false)
         {
             string url = "";
             if (local == false)
@@ -307,7 +318,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             switch (value)
             {
                 case KIndexLabelValues.None:
-                    return url + "/Content/Img/1x1.png ";
+                    if (showNone)
+                        return url + $"/Content/kindex/{(hranate ? "hranate" : "kulate")}/icon-.svg";
+                    else
+                        return url + "/Content/Img/1x1.png ";
                 default:
                     return url + $"/Content/kindex/{(hranate ? "hranate" : "kulate")}/icon{value.ToString()}.svg";
 

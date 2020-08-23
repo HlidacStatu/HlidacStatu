@@ -51,16 +51,29 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return this.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
-        public IEnumerable<Tuple<string, decimal>> Filter(IEnumerable<Tuple<string, decimal>> source, IEnumerable<string> filterIco = null)
+        public IEnumerable<Tuple<string, decimal>> Filter(IEnumerable<Tuple<string, decimal>> source, IEnumerable<string> filterIco = null, bool showNone = false)
         {
-            return source
-                .Where(m => (filterIco == null) || filterIco.Contains(m.Item1))
-                ;
+            if (showNone)
+            {
+                var data = source
+                    .Where(m => (filterIco == null) || filterIco.Contains(m.Item1));
+                if (filterIco != null && filterIco.Count() > 0)
+                {
+                    IEnumerable<Tuple<string, decimal>> missing_data = filterIco
+                        .Except(data.Select(m => m.Item1))
+                        .Select(m => new Tuple<string, decimal>(m,Consts.MinSmluvPerYearKIndexValue));
+                    return data.Concat(missing_data);
+                }
+                else return data;
+            }
+            else
+                return source
+                    .Where(m => (filterIco == null) || filterIco.Contains(m.Item1));
         }
 
-        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc(IEnumerable<string> filterIco = null)
+        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc(IEnumerable<string> filterIco = null, bool showNone = false)
         {
-            return Filter(SubjektOrderedListKIndexAsc,filterIco)
+            return Filter(SubjektOrderedListKIndexAsc,filterIco, showNone)
                 .OrderBy(m => m.Item2)
                 .Select(m => new Company(
                     Company.GetCompanies().ContainsKey(m.Item1)

@@ -99,13 +99,13 @@
             @if (Model.firma.Jmeno.Length > 40)
             {
             <div style="padding-left:2em;">
-                @Html.KIndexLabelLink(Model.firma.ICO, "height:30px;")<span class="text-info">@Model.firma.Jmeno</span>
+                @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
 
             </div>
             }
             else
             {
-            @Html.KIndexLabelLink(Model.firma.ICO, "height:30px;")<span class="text-info">@Model.firma.Jmeno</span>
+            @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
             }
         </h2>
     </div>
