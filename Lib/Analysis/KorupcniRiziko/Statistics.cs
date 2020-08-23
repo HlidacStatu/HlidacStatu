@@ -83,9 +83,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 );
         }
 
-        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<string> filterIco = null)
+        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<string> filterIco = null, bool showNone = false)
         {
-            return Filter(SubjektOrderedListPartsAsc[part],filterIco)
+            return Filter(SubjektOrderedListPartsAsc[part],filterIco,showNone)
                 .OrderBy(m => m.Item2)
                 .Select(m => new Company(
                     Company.GetCompanies().ContainsKey(m.Item1)
