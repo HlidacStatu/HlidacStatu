@@ -48,11 +48,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Nemá žádné smlouvy se zásadními nedostatky.";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
-                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.RenderData.NiceNumber(data.Statistika.PocetSmluvSeZasadnimNedostatkem)} smluv.";
+                            return $"Zásadní nedostatky evidujeme u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smluv;{0} smluv")} smluv.";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Zásadní nedostatky evidujeme u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv} smluv.";
+                            return $"Zásadní nedostatky evidujeme u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smlouv;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv} smluv.";
                         default:
                             return "";
                     }
