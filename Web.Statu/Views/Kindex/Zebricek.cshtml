@@ -84,7 +84,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var record in Model.Select((m, i) => new { rank = i + 1, item = m }))
+                @foreach (var record in Model.Where(r => r.Value4Sort != HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue).Select((m, i) => new { rank = i + 1, item = m }))
                 {
                     <tr>
                         <td>
@@ -92,26 +92,32 @@
                         </td>
                         <td>
                             @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
-                            @*<a href="/kindex/detail/@record.item.Ico?rok=@selectedYear">@(Html.KIndexIcon(KIndexData.CalculateLabel(record.item.Value4Sort), "width:19px"))</a>*@
                         </td>
                         <td>
                             <a href="/subjekt/@record.item.Ico">@record.item.Name</a>
                         </td>
                         <td class="number">
-                            @if (record.item.Value4Sort == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
-                            {
-                            <span>Není pro tento rok k dispozici</span>
-                            }
-                            else
-                            {
                             @(record.item.Value4Sort?.ToString("F2"))
-                            }
                         </td>
                         @*<td></td>*@
                     </tr>
                 }
             </tbody>
         </table>
+        <hr />
+        <div>
+            <p>V seznamu nám chybí následující organizace, kde by byl výpočet K-indexu nepřesný:</p>
+            <p>
+                @{
+                    string[] rest = Model
+                        .Where(r => r.Value4Sort == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
+                        .Select(r => $"<a href=\"/subjekt/{r.Ico} \">{r.Name}</a>").ToArray();
+                } 
+                
+                @Html.Raw(string.Join(" | ", rest)) 
+                
+            </p>
+        </div>
 
     </div>
 </div>
