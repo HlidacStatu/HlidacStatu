@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 stat.SubjektOrderedListKIndexAsc = datayear
                     .Where(m => m.Value.KIndexReady)
                     .OrderBy(m => m.Value.KIndex)
-                    .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex))
+                    .Select(m => (m.Key, m.Value.KIndex))
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         .Where(m => m.Value.KIndexReady)
                         .Where(m=> m.Value.KIndexVypocet.Radky.Any(r => r.VelicinaPart == part))
                         .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
-                        .Select(m => new Tuple<string, decimal>(m.Key, m.Value.KIndex))
+                        .Select(m => (m.Key, m.Value.KIndex))
                         .ToList()
                         );
                 }
