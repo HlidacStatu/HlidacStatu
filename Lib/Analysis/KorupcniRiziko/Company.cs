@@ -8,16 +8,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public class Company
     {
         public Company(){ }
-        public Company(string name, string ico, decimal? value)
-            : this(name, ico)
-        {
-            Value4Sort = value;
-        }
         public Company(string name, string ico)
         {
             Name = name;
             Ico = ico;
             Tokens = Tokenize($"{name} {ico}");
+        }
+        public Company(string name, string ico, decimal? value)
+            : this(name, ico)
+        {
+            Value4Sort = value;
+        }
+
+        public Company(string name, string ico, decimal? value, string group)
+            : this(name, ico, value)
+        {
+            Group = group;
         }
 
         public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,Company>> CachedCompanies = 
@@ -96,6 +102,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Ico { get; set; }
         private string[] Tokens { get; set; }
         public decimal? Value4Sort { get; set; } = null;
+        public string Group { get; set; }
 
         private static string[] Tokenize(string input)
         {

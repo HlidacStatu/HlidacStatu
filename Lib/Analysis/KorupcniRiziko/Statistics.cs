@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="year">Minimum year = 2018</param>
         /// <returns>Positive number means improvement. Negative number means worsening.</returns>
-        public static IEnumerable<Company> GetJumpers(int year)
+        public static IEnumerable<Company> GetJumpersFromBest(int year)
         {
             if(year < 2017 || year >= DateTime.Now.Year)
             {
@@ -66,7 +66,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     Company.GetCompanies().TryGetValue(cy.ico, out Company comp);
                     comp.Value4Sort = yb.kindex - cy.kindex;
                     return comp;
-                });
+                })
+                .OrderByDescending(c => c.Value4Sort);
 
             if (statChosenYear == null || statYearBefore == null)
                 return new List<Company>();

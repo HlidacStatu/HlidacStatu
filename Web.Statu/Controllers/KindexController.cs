@@ -73,7 +73,7 @@ namespace HlidacStatu.Web.Controllers
             return View(kindexes);
         }
 
-        public ActionResult Zebricek(string id, int? rok = null)
+        public ActionResult Zebricek(string id, int? rok = null, string group = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
@@ -115,6 +115,10 @@ namespace HlidacStatu.Web.Controllers
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Žebříček K–Indexu";
                     break;
+                case "skokani":
+                    ViewBag.LadderTitle = "Skokani K–Indexu";
+                    result = Statistics.GetJumpersFromBest(rok.Value);
+                    return View("Zebricek.Skokani", result);
                 default:
                     return View("Zebricek.Index");
             }
