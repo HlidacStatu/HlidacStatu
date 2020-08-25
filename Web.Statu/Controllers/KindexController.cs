@@ -93,31 +93,36 @@ namespace HlidacStatu.Web.Controllers
             {
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
-                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m => m.Ico), showNone: true);
+                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m => m.Ico), showNone: true)
+                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
-
                 case "nejlepsi":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc().Take(100);
+                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
+                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
+                        .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
                     break;
                 case "nejhorsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
+                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
                         .OrderByDescending(k => k.Value4Sort)
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K–Indexu";
                     break;
                 case "celkovy":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
+                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
+                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Žebříček K–Indexu";
                     break;
                 case "skokani":
                     ViewBag.LadderTitle = "Skokani K–Indexu";
-                    result = Statistics.GetJumpersFromBest(rok.Value);
+                    result = Statistics.GetJumpersFromBest(rok.Value)
+                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     return View("Zebricek.Skokani", result);
                 default:
                     return View("Zebricek.Index");
