@@ -9,7 +9,7 @@
 @{
 
     int selectedYear = ViewBag.SelectedYear;
-
+    string selectedGroup = ViewBag.SelectedGroup;
 
     ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
     ViewBag.HideTitle = true;
@@ -50,16 +50,15 @@
 
 <h2>@(ViewBag.LadderTitle) pro rok @ViewBag.SelectedYear</h2>
 
-
 <div class="row">
     <div class="col-sm-12">
         <h3 class="">
             Žebříček pro další roky:
             @for (int year = DateTime.Now.Year - 1; year > 2016; year--)
             {
-                if (year != ViewBag.SelectedYear)
+                if (year != selectedYear)
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@year"><i class="fas fa-arrow-square-right"></i> @year</a>
+                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@year&group=@selectedGroup"><i class="fas fa-arrow-square-right"></i> @year</a>
                 }
                 else
                 {
@@ -69,6 +68,28 @@
         </h3>
     </div>
 </div>
+
+<h2>@(string.IsNullOrEmpty(selectedGroup) ? "Nebyla vybrána žádná skupina" : $"Pro skupinu: {selectedGroup}")</h2>
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="">
+            Skupiny podle kterých lze filtrovat:
+            @foreach(var group in Model.Select(c => c.Group).Distinct())
+            {
+                if (group != selectedGroup)
+                {
+                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?group=@group&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group</a>
+                }
+                else
+                {
+                    <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>@group</span>
+                }
+            }
+        </h3>
+    </div>
+</div>
+
+
 <hr style="width:1px" />
 <div class="row" >
     <div class="col-sm-12">

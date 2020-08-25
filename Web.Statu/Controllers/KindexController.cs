@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Devmasters.Enums;
 using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 using HlidacStatu.Lib.Data;
-using HlidacStatu.Lib.OCR.Api;
-using Devmasters.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -29,7 +27,6 @@ namespace HlidacStatu.Web.Controllers
             {
                 return Redirect("/");
             }
-
 
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
@@ -83,7 +80,7 @@ namespace HlidacStatu.Web.Controllers
             rok = FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
             ViewBag.SelectedLadder = id;
-
+            ViewBag.SelectedGroup = group;
 
             IEnumerable<Company> result = null;
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
@@ -98,6 +95,7 @@ namespace HlidacStatu.Web.Controllers
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
+
                 case "nejlepsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
@@ -105,6 +103,7 @@ namespace HlidacStatu.Web.Controllers
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
                     break;
+
                 case "nejhorsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
@@ -113,30 +112,34 @@ namespace HlidacStatu.Web.Controllers
                     ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K–Indexu";
                     break;
+
                 case "celkovy":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Žebříček K–Indexu";
                     break;
+
                 case "skokani":
                     ViewBag.LadderTitle = "Skokani K–Indexu";
                     result = Statistics.GetJumpersFromBest(rok.Value)
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     return View("Zebricek.Skokani", result);
+
                 default:
                     return View("Zebricek.Index");
             }
 
-
             return View(result);
         }
 
+        // Used for searching
         public JsonResult FindCompany(string id)
         {
             return Json(Company.FullTextSearch(id, 10), JsonRequestBehavior.AllowGet);
         }
 
+        //todo: What are we going to do with this?
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
@@ -155,22 +158,22 @@ namespace HlidacStatu.Web.Controllers
                 return View("Debug.Start");
             }
 
-            if (HlidacStatu.Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
+            if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kdata = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Util.ParseTools.NormalizeIco(id));
+                KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
                 return View("Debug", kdata);
             }
             else if (id?.ToLower() == "porovnat")
             {
-                List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData> kdata = new List<Lib.Analysis.KorupcniRiziko.KIndexData>();
+                List<KIndexData> kdata = new List<KIndexData>();
 
                 foreach (var i in ico.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
                     if (f.Valid)
                     {
-                        var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Util.ParseTools.NormalizeIco(i));
+                        var kidx = KIndex.Get(Util.ParseTools.NormalizeIco(i));
                         if (kidx != null)
                             kdata.Add(kidx);
                     }
@@ -181,14 +184,12 @@ namespace HlidacStatu.Web.Controllers
                 return NotFound();
         }
 
-
-
         [ValidateInput(false)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
         public ActionResult Banner(string id, int? rok = null)
         {
             byte[] data = null;
-            var kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(id);
+            var kidx = KIndex.Get(id);
             if (kidx != null)
             {
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
@@ -196,21 +197,17 @@ namespace HlidacStatu.Web.Controllers
                     Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
                     kidx.LastKIndexLabel().ToString()
                     );
-
             }
             else
             {
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
                 data = img.GenerateImageByteArray(kidx.Jmeno,
                     Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
-                    Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None.ToString()
+                    KIndexData.KIndexLabelValues.None.ToString()
                     );
-
             }
             return File(data, "image/png");
         }
-
-
 
         private int FixKindexYear(int? year)
         {
