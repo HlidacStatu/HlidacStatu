@@ -92,30 +92,53 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public IEnumerable<SubjectWithKIndex> Filter(IEnumerable<(string ico, decimal kindex)> source, IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
         {
-            IEnumerable<SubjectWithKIndex> data = source
-                    .Where(m => (filterIco == null) || filterIco.Any(f=>f.Ico == m.ico))
-                    .Select(m=>new SubjectWithKIndex() { 
-                        Ico=m.ico, 
-                        KIndex = m.kindex, 
+            IEnumerable<SubjectWithKIndex> data;
+            if (filterIco != null && filterIco.Count() > 0)
+            {
+                data = source.Join(
+                    filterIco,
+                    cy => cy.ico,
+                    yb => yb.Ico,
+                    (cy, yb) =>
+                        new SubjectWithKIndex()
+                        {
+                            Ico = cy.ico,
+                            KIndex = cy.kindex,
+                            Jmeno = yb.Jmeno,
+                            Group = yb.Group,
+                            Kraj = yb.Kraj
+                        }
+                    );
+            }
+            else
+            {
+                data = source.
+                    Select(m => new SubjectWithKIndex()
+                    {
+                        Ico = m.ico,
                         Jmeno = SubjectNameCache.CachedCompanies.Get()[m.ico].Name,
-                        Group = filterIco == null ? "": filterIco.FirstOrDefault()?.Group,
-                        Kraj = filterIco == null ? "" : filterIco.FirstOrDefault()?.Kraj
-                    });
-
+                        Kraj = "",
+                        Group="",
+                        KIndex = m.kindex
+                    }
+                    ) ;
+            }
             if (showNone)
             {
                 if (filterIco != null && filterIco.Count() > 0)
                 {
-                    IEnumerable<SubjectWithKIndex> missing_data = filterIco
-                        .Where(m=>!data.Any(d=>d.Ico == m.Ico))
-                        .Select(m => new SubjectWithKIndex()
-                        {
-                            Ico = m.Ico,
-                            KIndex = Consts.MinSmluvPerYearKIndexValue,
-                            Jmeno = m.Ico,
-                            Group = filterIco == null ? "" : filterIco.FirstOrDefault()?.Group,
-                            Kraj = filterIco == null ? "" : filterIco.FirstOrDefault()?.Kraj
-                        });
+                    var missing_ico = filterIco.Select(m => m.Ico).Except(data.Select(m => m.Ico));
+
+                    IEnumerable<SubjectWithKIndex> missing_data = missing_ico
+                        .Join(filterIco,mi=>mi, fi=>fi.Ico, (mi,fi)=> 
+                            new SubjectWithKIndex()
+                            {
+                                Ico = fi.Ico,
+                                KIndex = Consts.MinSmluvPerYearKIndexValue,
+                                Jmeno = fi.Ico,
+                                Group = fi.Group,
+                                Kraj = fi.Kraj
+                            });
                     data = data.Concat(missing_data);
                 }
             }
