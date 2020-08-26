@@ -33,7 +33,7 @@ namespace HlidacStatu.Web.Controllers
                 KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
 
-                rok = FixKindexYear(rok);
+                rok = Consts.FixKindexYear(rok);
                 ViewBag.SelectedYear = rok;
 
                 return View(kdata);
@@ -50,7 +50,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            rok = FixKindexYear(rok);
+            rok = Consts.FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
 
             var kindexes = new List<KIndexData>();
@@ -77,7 +77,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            rok = FixKindexYear(rok);
+            rok = Consts.FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
@@ -188,6 +188,7 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
         public ActionResult Banner(string id, int? rok = null)
         {
+            rok = Consts.FixKindexYear(rok);
             byte[] data = null;
             var kidx = KIndex.Get(id);
             if (kidx != null)
@@ -195,7 +196,8 @@ namespace HlidacStatu.Web.Controllers
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
                 data = img.GenerateImageByteArray(kidx.Jmeno,
                     Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
-                    kidx.LastKIndexLabel().ToString()
+                    kidx.LastKIndexLabel().ToString(),
+                    rok.Value
                     );
             }
             else
@@ -203,20 +205,12 @@ namespace HlidacStatu.Web.Controllers
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
                 data = img.GenerateImageByteArray(kidx.Jmeno,
                     Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
-                    KIndexData.KIndexLabelValues.None.ToString()
+                    KIndexData.KIndexLabelValues.None.ToString(),
+                    rok.Value
                     );
             }
             return File(data, "image/png");
         }
-
-        private int FixKindexYear(int? year)
-        {
-            if (year < 2017)
-                return 2017;
-            if (year is null || year >= DateTime.Now.Year)
-                return DateTime.Now.Year - 1;
-
-            return year.Value;
-        }
+        
     }
 }

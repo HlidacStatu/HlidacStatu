@@ -26,5 +26,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public const decimal BonusPod50K_2 = 0.5m;
         public const decimal BonusPod50K_3 = 0.75m;
 
+        /// <summary>
+        /// Checks if year is within the range (CalculationYears). 
+        /// If null or later than max then sets it to the max year from the range.
+        /// If earlier than the earliest year from range then sets it to the earliest one.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public static int FixKindexYear(int? year)
+        {
+            if (year < CalculationYears.Min())
+                return CalculationYears.Min();
+            if (year is null || year >= CalculationYears.Max())
+                return CalculationYears.Max();
+
+            return year.Value;
+        }
     }
 }
