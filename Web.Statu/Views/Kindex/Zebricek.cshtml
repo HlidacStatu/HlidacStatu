@@ -14,6 +14,7 @@
     ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
     ViewBag.HideTitle = true;
 
+    List<string> filterGroups = Model.Select(c => c.Group).Distinct().ToList();
 
 }
 
@@ -69,29 +70,42 @@
     </div>
 </div>
 
-<h2>@(string.IsNullOrEmpty(selectedGroup) ? "Nebyla vybrána žádná skupina" : $"Pro skupinu: {selectedGroup}")</h2>
-<div class="row">
-    <div class="col-sm-12">
-        <h3 class="">
-            Skupiny podle kterých lze filtrovat:
-            @foreach(var group in Model.Select(c => c.Group).Distinct())
-            {
-                if (group != selectedGroup)
+@* TODO:
+    + přidat hodnotu pro zobrazení všech hodnot*@
+@if(filterGroups.Count > 2 || Model.Count() > 10)
+{
+    <h2>@(string.IsNullOrEmpty(selectedGroup) ? "Nebyla vybrána žádná skupina" : $"Pro skupinu: {selectedGroup}")</h2>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="">
+                Skupiny podle kterých lze filtrovat:
+                @if (string.IsNullOrEmpty(selectedGroup))
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?group=@group&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group</a>
+                    <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>Zobrazit vše</span>
                 }
                 else
                 {
-                    <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>@group</span>
+                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zobrazit vše</a>
                 }
-            }
-        </h3>
+                @foreach (var group in filterGroups)
+                {
+                    if (group != selectedGroup)
+                    {
+                        <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?group=@group&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group</a>
+                    }
+                    else
+                    {
+                        <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>@group</span>
+                    }
+                }
+            </h3>
+        </div>
     </div>
-</div>
+}
 
 
 <hr style="width:1px" />
-<div class="row" >
+<div class="row">
     <div class="col-sm-12">
 
         <table class="table table-striped table-dotted table-condensed table-hover">
@@ -127,7 +141,7 @@
         </table>
         <hr />
         <div>
-            <p>V seznamu nám chybí následující organizace, kde by byl výpočet K-indexu nepřesný:</p>
+            <p>K-Index nebyl spočítán pro následující organizace, které mají méně než @(Consts.MinSmluvPerYear) smluv za rok nebo malý objem smluv.</p>
             <p>
                 @{
                     string[] rest = Model

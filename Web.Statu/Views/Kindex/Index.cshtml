@@ -23,421 +23,67 @@
     </ol>
 }
 
-<style>
-    .barbar {
-        display: block;
-        margin: 0px;
-        padding: 0px;
-        height: 20px;
-        float: left;
-    }
+<div class="watcher-blocks">
 
-        .barbar.red {
-            background-color: #d44820;
-        }
+    <div class="watcher-blocks__wrapper">
+        <!-- Štítek -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    O K-indexu
+                </h2>
+            </div>
 
-        .barbar.orange {
-            background-color: #9099a3;
-        }
+            <div class="block-col ">
+                <p>
+                    Tady bude obrázek k indexu a co to je
+                </p>
+            </div>
 
-        .barbar.green {
-            background-color: #002d5a;
-        }
+            <div class="block-button-wrapper">
+                <a href="/kindex" class="btn btn-default btn-default-new">Sem nejspíš odkaz na blog, nebo článek o kindexu</a>
+            </div>
+        </div>
 
-    .infoshow, .infoshowhide {
-        display: none;
-    }
+        <!-- Žebříček -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Žebříčky
+                </h2>
+            </div>
 
-        .infoshow:checked ~ .infoshowhide {
-            display: block;
-        }
-</style>
+            <div class="block-col ">
+                <a href="/kindex/zebricek/nejlepsi">Nejlepší organizace</a>
+                <a href="/kindex/zebricek/nejhorsi">Nejhorší organizace</a>
+            </div>
 
-<style>
-    .kmeter {
-        margin: 0px;
-        padding: 0px;
-        height: 60px;
-        width: 800px;
-        border: solid grey 0px;
-    }
+            <div class="block-button-wrapper">
+                <a href="/kindex/zebricek" class="btn btn-default btn-default-new">zobrazit všechny žebříčky</a>
+            </div>
+        </div>
 
-    .kframe {
-        position: relative;
-        width: 60px;
-        border-top: solid 6px;
-        border-bottom: solid 6px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        height: 100%;
-        float: left;
-        margin-right: 1px;
-        height: 100%;
-    }
+        <!-- Porovnání -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Porovnávač
+                </h2>
+            </div>
 
-    .textover {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        color: white;
-        font-weight: bold;
-        font-size: 20px;
-        position: absolute;
-        z-index: 2;
-        text-shadow: 0 0 4px #000; /* horizontal-offset vertical-offset 'blur' colour */
-        -moz-text-shadow: 0 0 4px #000;
-        -webkit-text-shadow: 0 0 4px #000;
-    }
+            <div class="block-col ">
+                <p>
+                    Můžete si také porovnat jednotlivé složky kindexu u organizací mezi sebou.
+                </p>
+                <a href="/kindex/porovnat/47609109,60162694,00007064,66002222,45769851,00164801,00551023,00022985,00025429,00024341,66003008,00020478,00023671,00006947">Ministerstva</a>
+            </div>
 
-    .totalnumber {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        color: black;
-        font-weight: bold;
-        font-size: 25px;
-        position: absolute;
-        z-index: 5;
-    }
-
-    .apart {
-        border-color: #002d5a;
-        border-left: #002d5a solid 6px;
-        padding-left: 5px;
-    }
-
-    .bpart {
-        border-color: #0064b4;
-    }
-
-    .cpart {
-        border-color: #00a5ff;
-    }
-
-    .dpart {
-        border-color: #9099a3;
-    }
-
-    .epart {
-        border-color: #f0aa00;
-    }
-
-    .fpart {
-        border-color: #d44820;
-        border-right: #d44820 solid 6px;
-        padding-right: 5px;
-        width: 240px;
-    }
-
-    .kfill {
-        position: relative;
-        height: 100%;
-    }
-
-    .afill {
-        background-color: #002d5a;
-    }
-
-    .bfill {
-        background-color: #0064b4;
-    }
-
-    .cfill {
-        background-color: #00a5ff;
-    }
-
-    .dfill {
-        background-color: #9099a3;
-    }
-
-    .efill {
-        background-color: #f0aa00;
-    }
-
-    .ffill {
-        background-color: #d44820;
-    }
-</style>
-
-<div class="row">
-    <label class="control-label new-p--big" for="year">Rok:</label>
-
-    <select class="form-control form-control-new" name="year" id="year" style="width:400px;">
-        <option value="2019" selected="selected">2019</option>
-        <option value="2018">2018</option>
-        <option value="2017">2017</option>
-    </select>
-</div>
-
-
-<br />
-<div class="kmeter">
-    <div class="kframe apart">
-        <div class="kfill">
-            <div class="textover">A</div>
-            <div class="kfill afill" style="width: 100%"></div>
+            <div class="block-button-wrapper">
+                <a href="/osoby" class="btn btn-default btn-default-new">zobrazit vybraná porovnání</a>
+            </div>
         </div>
     </div>
-    <div class="kframe bpart">
-        <div class="kfill">
-            <div class="textover">B</div>
-            <div class="kfill bfill" style="width: 100%"></div>
-        </div>
-    </div>
-    <div class="kframe cpart">
-        <div class="kfill">
-            <div class="textover">C</div>
-            <div class="kfill cfill" style="width: 100%"></div>
-        </div>
-    </div>
-    <div class="kframe dpart">
-        <div class="kfill">
-            <div class="textover">D</div>
-            <div class="kfill dfill" style="width: 100%"></div>
-        </div>
-    </div>
-    <div class="kframe epart">
-        <div class="kfill">
-            <div class="textover">E</div>
-            <div class="kfill efill" style="width: 100%"></div>
-        </div>
-    </div>
-    <div class="kframe fpart">
-        <div class="kfill">
-            <div class="textover">F</div>
-            <div class="totalnumber">20,6</div>
-            <div class="kfill ffill" style="width: 49%"></div>
-        </div>
-    </div>
-</div>
-
-<div>
-    <input id="show" class="infoshow" type=checkbox>
-    <label for="show"><i style="font-size:2em;" class="far fa-info-square"></i></label>
-
-    <p class="infoshowhide">
-        Ukazatel známky hodnocení K–Indexu.
-        Celková hodnota je spočítána jako součet všech hodnot ve sloupci "Mezisoučet" v tabulce.<br />
-        Tuto sečtenou hodnotu porovnáváme následovně: <br />
-        "A" = Celková hodnota < 3 <br />
-        "B" = 3 < Celková hodnota < 6<br />
-        "C" = 6 < Celková hodnota < 9<br />
-        "D" = 9 < Celková hodnota < 12<br />
-        "E" = 12 < Celková hodnota < 15<br />
-        "F" = 15 < Celková hodnota <br />
-
-    </p>
-</div>
-
-<br />
-
-<div class="col-md-12">
-    <table class="table table-new table-new--dotted table-hover">
-        <tbody>
-            <tr>
-                <td>
-                    <b>Kategorie</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Váha</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Základní hodnota</b>
-                </td>
-                <td style="text-align:right">
-                    <b>Mezisoučet</b>
-                </td>
-                <td>
-                    <b>Grafík - poměr zastoupení</b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy se skrytou cenou
-                </td>
-                <td style="text-align:right">
-                    10
-                </td>
-                <td style="text-align:right">
-                    0.14
-                </td>
-                <td style="text-align:right">
-                    1.40
-                </td>
-                <td style="width:100px">
-                    <div class="barbar orange" style="width:7%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy s nově založenými firmami
-                </td>
-                <td style="text-align:right">
-                    2
-                </td>
-                <td style="text-align:right">
-                    0.17
-                </td>
-                <td style="text-align:right">
-                    0.34
-                </td>
-                <td style="width:100px">
-                    <div class="barbar red" style="width:2%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy se zásadním nedostatkem
-                </td>
-                <td style="text-align:right">
-                    10
-                </td>
-                <td style="text-align:right">
-                    0.73
-                </td>
-                <td style="text-align:right">
-                    7.30
-                </td>
-                <td style="width:100px">
-                    <div class="barbar orange" style="width:35%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy s firmami s vazbou na politiky
-                </td>
-                <td style="text-align:right">
-                    2
-                </td>
-                <td style="text-align:right">
-                    0.38
-                </td>
-                <td style="text-align:right">
-                    0.76
-                </td>
-                <td style="width:100px">
-                    <div class="barbar orange" style="width:4%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy s cenou u limitu VZ
-                </td>
-                <td style="text-align:right">
-                    10
-                </td>
-                <td style="text-align:right">
-                    0.01
-                </td>
-                <td style="text-align:right">
-                    0.10
-                </td>
-                <td style="width:100px">
-                    <div class="barbar green" style="width:0%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    smlouvy uzavřené o víkendu
-                </td>
-                <td style="text-align:right">
-                    2
-                </td>
-                <td style="text-align:right">
-                    0.05
-                </td>
-                <td style="text-align:right">
-                    0.10
-                </td>
-                <td style="width:100px">
-                    <div class="barbar green" style="width:0%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Koncentrace dodavatelů
-                </td>
-                <td style="text-align:right">
-                    20
-                </td>
-                <td style="text-align:right">
-                    0.18
-                </td>
-                <td style="text-align:right">
-                    3.60
-                </td>
-                <td style="width:100px">
-                    <div class="barbar green" style="width:17%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Koncentrace dodavatelů bez uvedené ceny
-                </td>
-                <td style="text-align:right">
-                    20
-                </td>
-                <td style="text-align:right">
-                    0.26
-                </td>
-                <td style="text-align:right">
-                    5.20
-                </td>
-                <td style="width:100px">
-                    <div class="barbar red" style="width:25%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Koncentrace dodavatelů - ceny u limitu VZ
-                </td>
-                <td style="text-align:right">
-                    10
-                </td>
-                <td style="text-align:right">
-                    0.18
-                </td>
-                <td style="text-align:right">
-                    1.80
-                </td>
-                <td style="width:100px">
-                    <div class="barbar orange" style="width:9%"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <b>Suma</b>
-                </td>
-                <td style="text-align:right">
-                </td>
-                <td style="text-align:right">
-                </td>
-                <td style="text-align:right">
-                    <b>20.6</b>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div>
-    <input id="show2" class="infoshow" type=checkbox>
-    <label for="show2"><i style="font-size:2em;" class="far fa-info-square"></i></label>
-
-    <p class="infoshowhide">
-        <strong>Váha</strong> - pevná hodnota, kterou jsme určili pro danou kategorii <br />
-        <strong>Základní hodnota</strong> - hodnota vypočítaná ze smluv v dané kategorii <br />
-        <strong>Mezisoučet</strong> - číslo získané vynásobením <strong>Váha</strong> * <strong>Základní hodnota</strong> <br />
-        Součet všech mezisoučtů udává číslo použité pro výsledné určení známky K–Indexu.<br />
-        <strong>grafík</strong> - určuje jak moc je daná kategorie zastoupena v celkovém hodnocení vůči ostatním kategoriím. <br />
-        Barva grafíku určuje, jak je na tom organizace v porovnání s ostatními organizacemi. <br />
-        Modrá = v dané kategorii si vede dobře <br />
-        Šedá = v dané kategorii si moc dobře nevede <br />
-        Červená = něco tady smrdí a Hlídač státu to není <br />
-
-    </p>
 </div>

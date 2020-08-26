@@ -1615,6 +1615,7 @@
     <Content Include="Views\Kindex\Zebricek.cshtml" />
     <Content Include="Views\Kindex\Zebricek.Index.cshtml" />
     <Content Include="Views\Kindex\Zebricek.Skokani.cshtml" />
+    <Content Include="Views\Kindex\Porovnat.Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

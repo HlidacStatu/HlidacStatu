@@ -41,7 +41,7 @@
     Func<decimal, int, int> kindexMeter = (kind, labelValue) =>
     {
         decimal constant = 3;
-        decimal maxValue = 50;
+        decimal maxValue = 25;
 
         var calculation = kind / constant - labelValue;
         if (calculation <= 0)
@@ -226,7 +226,7 @@
         border-color: #d44820;
         border-right: #d44820 solid 6px;
         padding-right: 5px;
-        width: 240px;
+        width: 180px;
     }
 
     .kfill {
@@ -445,7 +445,7 @@ else
                 <div class="kfill">
                     <div class="textover" style="justify-content: left; left: 23px;">F</div>
                     <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
-                    <div class="kmark" style="left:213px;">50+</div>
+                    <div class="kmark" style="left:153px;">25+</div>
                 </div>
             </div>
         </div>

@@ -44,11 +44,14 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Porovnat(string id, int? rok = null)
         {
-            if (!Framework.HtmlExtensions.ShowKIndex(this.User)
-                || string.IsNullOrWhiteSpace(id))
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
+                //todo: přidat base view, kde pokud nebude žádná hodnota v id, tak zobrazíme základní porovnání
                 return Redirect("/");
             }
+
+            if (string.IsNullOrWhiteSpace(id))
+                return View("Porovnat.Index");
 
             rok = Consts.FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
