@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="year">Minimum year = 2018</param>
         /// <returns>Positive number means improvement. Negative number means worsening.</returns>
-        public static IEnumerable<Company> GetJumpersFromBest(int year)
+        public static IEnumerable<SubjectWithKIndex> GetJumpersFromBest(int year)
         {
             if(year < 2017 || year >= DateTime.Now.Year)
             {
@@ -59,18 +59,24 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var statChosenYear = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year).SubjektOrderedListKIndexAsc;
             var statYearBefore = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year - 1).SubjektOrderedListKIndexAsc;
 
-            var result = statChosenYear.Join(statYearBefore,
+            IEnumerable<SubjectWithKIndex> result = statChosenYear.Join(statYearBefore,
                 cy => cy.ico,
                 yb => yb.ico,
                 (cy, yb) => {
-                    Company.GetCompanies().TryGetValue(cy.ico, out Company comp);
-                    comp.Value4Sort = yb.kindex - cy.kindex;
-                    return comp;
+                    SubjectNameCache.GetCompanies().TryGetValue(cy.ico, out SubjectNameCache comp);
+                    var r = new SubjectWithKIndex()
+                    {
+                        Ico = cy.ico,
+                        Jmeno = comp?.Name,
+                        KIndex = yb.kindex - cy.kindex,
+                        Group = ""
+                    };
+                    return r;
                 })
-                .OrderByDescending(c => c.Value4Sort);
+                .OrderByDescending(c => c.KIndex);
 
             if (statChosenYear == null || statYearBefore == null)
-                return new List<Company>();
+                return new List<SubjectWithKIndex>();
             else
                 return result;
         }
@@ -84,49 +90,48 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return this.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
 
-        public IEnumerable<(string ico, decimal kindex)> Filter(IEnumerable<(string ico, decimal kindex)> source, IEnumerable<string> filterIco = null, bool showNone = false)
+        public IEnumerable<SubjectWithKIndex> Filter(IEnumerable<(string ico, decimal kindex)> source, IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
         {
+            IEnumerable<SubjectWithKIndex> data = source
+                    .Where(m => (filterIco == null) || filterIco.Any(f=>f.Ico == m.ico))
+                    .Select(m=>new SubjectWithKIndex() { 
+                        Ico=m.ico, 
+                        KIndex = m.kindex, 
+                        Jmeno = SubjectNameCache.CachedCompanies.Get()[m.ico].Name,
+                        Group = filterIco == null ? "": filterIco.FirstOrDefault()?.Group,
+                        Kraj = filterIco == null ? "" : filterIco.FirstOrDefault()?.Kraj
+                    });
+
             if (showNone)
             {
-                var data = source
-                    .Where(m => (filterIco == null) || filterIco.Contains(m.ico));
                 if (filterIco != null && filterIco.Count() > 0)
                 {
-                    IEnumerable<(string ico, decimal kindex)> missing_data = filterIco
-                        .Except(data.Select(m => m.ico))
-                        .Select(m => (m,Consts.MinSmluvPerYearKIndexValue));
-                    return data.Concat(missing_data);
+                    IEnumerable<SubjectWithKIndex> missing_data = filterIco
+                        .Where(m=>!data.Any(d=>d.Ico == m.Ico))
+                        .Select(m => new SubjectWithKIndex()
+                        {
+                            Ico = m.Ico,
+                            KIndex = Consts.MinSmluvPerYearKIndexValue,
+                            Jmeno = m.Ico,
+                            Group = filterIco == null ? "" : filterIco.FirstOrDefault()?.Group,
+                            Kraj = filterIco == null ? "" : filterIco.FirstOrDefault()?.Kraj
+                        });
+                    data = data.Concat(missing_data);
                 }
-                else return data;
             }
-            else
-                return source
-                    .Where(m => (filterIco == null) || filterIco.Contains(m.ico));
+            return data;
         }
 
-        public IEnumerable<Company> SubjektOrderedListKIndexCompanyAsc(IEnumerable<string> filterIco = null, bool showNone = false)
+        public IEnumerable<SubjectWithKIndex> SubjektOrderedListKIndexCompanyAsc(IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
         {
             return Filter(SubjektOrderedListKIndexAsc,filterIco, showNone)
-                .OrderBy(m => m.kindex)
-                .Select(m => new Company(
-                    Company.GetCompanies().ContainsKey(m.ico)
-                        ? Company.GetCompanies()[m.ico].Name
-                        : Lib.Data.Firmy.GetJmeno(m.ico)
-                    , m.ico, m.kindex)
-                );
+                .OrderBy(m => m.KIndex);
         }
 
-        public IEnumerable<Company> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<string> filterIco = null, bool showNone = false)
+        public IEnumerable<Lib.Data.Firma.Zatrideni.Item> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
         {
             return Filter(SubjektOrderedListPartsAsc[part],filterIco,showNone)
-                .OrderBy(m => m.kindex)
-                .Select(m => new Company(
-                    Company.GetCompanies().ContainsKey(m.ico)
-                        ? Company.GetCompanies()[m.ico].Name
-                        : Lib.Data.Firmy.GetJmeno(m.ico)
-                    , m.ico, m.kindex)
-                )
-                .ToList();
+                .OrderBy(m => m.KIndex);
         }
 
         public int? SubjektRank(string ico)

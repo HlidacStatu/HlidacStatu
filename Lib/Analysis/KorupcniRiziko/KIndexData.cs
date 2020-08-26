@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using com.sun.org.apache.regexp.@internal;
 
 using Nest;
 

@@ -380,6 +380,9 @@ namespace HlidacStatu.Lib.Data
                 kancelar_cisteni = 11105,
                 [NiceDisplayName("Nábor zaměstnanců")]
                 kancelar_nabor = 11106,
+                [NiceDisplayName("Mobily, smart zařízení")]
+                kancelar_smart = 11107,
+
 
                 [NiceDisplayName("Řemesla")]
                 remeslo_obecne = 11200,

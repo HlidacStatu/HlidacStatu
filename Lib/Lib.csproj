@@ -490,9 +490,10 @@
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluIndexy.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluObor.cs" />
-    <Compile Include="Analysis\KorupcniRiziko\Company.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\SubjectNameCache.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Statistics.Calc.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Statistics.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\SubjectWithKIndex.cs" />
     <Compile Include="Analysis\OsobaStatistic.cs" />
     <Compile Include="Analysis\ComplexStatistic.cs" />
     <Compile Include="Analysis\RatingData.cs" />

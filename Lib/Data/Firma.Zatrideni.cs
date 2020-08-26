@@ -19,7 +19,8 @@ namespace HlidacStatu.Lib.Data
             {
                 public string Ico { get; set; }
                 public string Jmeno { get; set; }
-                public string Tag { get; set; } = "";
+                public string Kraj { get; set; } = "";
+                public string Group { get; set; } = "";
             }
 
 
@@ -100,6 +101,12 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Organizační složky státu")]
                 Organizacni_slozky_statu = 191,
+
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Všechny ústřední orgány státní správy")]
+                Vsechny_ustredni_organy_statni_spravy = 10104,
+
+                [Disabled()]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Další ústřední orgány státní správy")]
                 Dalsi_ustredni_organy_statni_spravy = 104,
@@ -109,6 +116,10 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Finanční úřady")]
                 Financni_urady = 109,
+                [GroupValue("Státní úřady a organizace")]
+                [NiceDisplayName("Výjimky z registru smluv")]
+                Vyjimky_RS = 10100,
+
 
                 [GroupValue("Školství")]
                 [NiceDisplayName("Veřejné vysoké školy")]
@@ -135,7 +146,7 @@ namespace HlidacStatu.Lib.Data
                 //Veznice = 10009,
                 //Pamatky = 10010, //narodni pamatkovy ustav
                 //Zachranne_sluzby = 10011,
-                
+
                 //spolovny, prehrady, zasobarny pitne vody
                 // vodarny
                 // kulturni zarizeni, divadla, kina, strediska
@@ -187,7 +198,6 @@ namespace HlidacStatu.Lib.Data
                     case StatniOrganizaceObor.Statni_fondy:
                     case StatniOrganizaceObor.OSSZ:
                     case StatniOrganizaceObor.Kraje_Praha:
-                    case StatniOrganizaceObor.Obce_III_stupne:
                     case StatniOrganizaceObor.Zdravotni_pojistovny:
                     case StatniOrganizaceObor.Katastralni_urady:
                     case StatniOrganizaceObor.Ministerstva:
@@ -199,6 +209,14 @@ namespace HlidacStatu.Lib.Data
                     case StatniOrganizaceObor.Mestske_casti_Prahy:
                     case StatniOrganizaceObor.OVM_pro_evidenci_skutecnych_majitelu:
                         icos = GetSubjektyFromRPP((int)obor);
+                        break;
+                    case StatniOrganizaceObor.Obce_III_stupne:
+
+                        break;
+                    case StatniOrganizaceObor.Vsechny_ustredni_organy_statni_spravy:
+                        icos = GetSubjektyFromRPP((int)StatniOrganizaceObor.Dalsi_ustredni_organy_statni_spravy)
+                            .Concat(GetSubjektyFromRPP((int)StatniOrganizaceObor.Ministerstva))
+                            .ToArray();
                         break;
                     case StatniOrganizaceObor.Nemocnice:
                         sql = @"select f.ICO, f.Jmeno from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
@@ -234,11 +252,44 @@ namespace HlidacStatu.Lib.Data
                         sql = @"select ico from Firma f where Jmeno like N'%domov důchodců%' and f.IsInRs = 1";
                         icos = GetSubjektyFromSQL(sql);
                         break;
+                    case StatniOrganizaceObor.Vyjimky_RS:
+
+                        // Poslanecká sněmovna, Senát, Kancelář prezidenta republiky, Ústavní soud, Nejvyšší kontrolní úřad, 
+                        //Kancelář veřejného ochránce práv a Úřad Národní rozpočtové rady
+                        //CNB
+                        icos = new string[] { "00006572", "63839407", "48136000", "48513687", "49370227", "70836981", "05553539", "48136450" };
+                        break;
                     case StatniOrganizaceObor.Ostatni:
                         icos = new string[] { };
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
+                }
+                bool removeKraj = false;
+                switch (obor)
+                {
+                    case StatniOrganizaceObor.Ostatni:
+                    case StatniOrganizaceObor.Zdravotni_pojistovny:
+                    case StatniOrganizaceObor.Fakultni_nemocnice:
+                    case StatniOrganizaceObor.Krajska_statni_zastupitelstvi:
+                    case StatniOrganizaceObor.Krajske_soudy:
+                    case StatniOrganizaceObor.Kraje_Praha:
+                    case StatniOrganizaceObor.Mestske_casti_Prahy:
+                    case StatniOrganizaceObor.OSSZ:
+                    case StatniOrganizaceObor.Ministerstva:
+                    case StatniOrganizaceObor.Organizacni_slozky_statu:
+                    case StatniOrganizaceObor.Vsechny_ustredni_organy_statni_spravy:
+                    case StatniOrganizaceObor.Dalsi_ustredni_organy_statni_spravy:
+                    case StatniOrganizaceObor.Financni_urady:
+                    case StatniOrganizaceObor.Vyjimky_RS:
+                    case StatniOrganizaceObor.Verejne_vysoke_skoly:
+                    case StatniOrganizaceObor.Konzervatore:
+                    case StatniOrganizaceObor.Krajske_spravy_silnic:
+                    case StatniOrganizaceObor.OVM_pro_evidenci_skutecnych_majitelu:
+                        removeKraj = true;
+                        break;
+                    default:
+                        break;
                 }
 
                 if (icos.Count() == 0)
@@ -252,7 +303,12 @@ namespace HlidacStatu.Lib.Data
                             var f = Firmy.Get(ic);
                             if (f.PatrimStatu())
                             {
-                                ret.Add(new Item() { Ico = f.ICO, Jmeno = f.Jmeno, Tag = Util.CZ_Nuts.Nace2Kraj(f.KrajId) });
+                                ret.Add(new Item()
+                                {
+                                    Ico = f.ICO,
+                                    Jmeno = f.Jmeno,
+                                    Kraj = removeKraj ? "": Util.CZ_Nuts.Nace2Kraj(f.KrajId)
+                                });
                             }
                             return new Devmasters.Core.Batch.ActionOutputData();
                         }, true);
@@ -280,7 +336,7 @@ namespace HlidacStatu.Lib.Data
             private static string[] GetAllSubjektyFromRPP()
             {
                 var res = Lib.ES.Manager.GetESClient_RPP_Kategorie()
-                    .Search<Lib.Data.External.RPP.KategorieOVM>(s=>s.Size(9000).Query(q=>q.MatchAll()));
+                    .Search<Lib.Data.External.RPP.KategorieOVM>(s => s.Size(9000).Query(q => q.MatchAll()));
                 if (res.IsValid)
                     return res.Hits
                         .Select(m => m.Source)

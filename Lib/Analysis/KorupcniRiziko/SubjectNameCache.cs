@@ -5,59 +5,59 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
-    public class Company
+    public class SubjectNameCache
     {
-        public Company(){ }
-        public Company(string name, string ico)
+        public SubjectNameCache(){ }
+        public SubjectNameCache(string name, string ico)
         {
             Name = name;
             Ico = ico;
             Tokens = Tokenize($"{name} {ico}");
         }
-        public Company(string name, string ico, decimal? value)
+        public SubjectNameCache(string name, string ico, decimal? value)
             : this(name, ico)
         {
             Value4Sort = value;
         }
 
-        public Company(string name, string ico, decimal? value, string group)
+        public SubjectNameCache(string name, string ico, decimal? value, string group)
             : this(name, ico, value)
         {
             Group = group;
         }
 
-        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,Company>> CachedCompanies = 
-            new Devmasters.Cache.V20.File.FileCache<Dictionary<string, Company>>(
+        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,SubjectNameCache>> CachedCompanies = 
+            new Devmasters.Cache.V20.File.FileCache<Dictionary<string, SubjectNameCache>>(
                 Lib.Init.WebAppDataPath, TimeSpan.Zero, "KIndexCompanies",
                     (o) =>
                     {
                         return ListCompanies();
                     });
 
-        private static Dictionary<string,Company> ListCompanies()
+        private static Dictionary<string,SubjectNameCache> ListCompanies()
         {
-            Dictionary<string, Company> companies = new Dictionary<string, Company>();
+            Dictionary<string, SubjectNameCache> companies = new Dictionary<string, SubjectNameCache>();
             foreach(var kindexRecord in KIndex.YieldExistingKindexes())
             {
-                companies.Add(kindexRecord.Ico, new Company(kindexRecord.Jmeno, kindexRecord.Ico));
+                companies.Add(kindexRecord.Ico, new SubjectNameCache(kindexRecord.Jmeno, kindexRecord.Ico));
             }
 
             return companies;
         }
 
-        public static Dictionary<string, Company> GetCompanies()
+        public static Dictionary<string, SubjectNameCache> GetCompanies()
         {
             return CachedCompanies.Get();
         }
 
-        public static IEnumerable<Company> FullTextSearch(string search, int take = 50)
+        public static IEnumerable<SubjectNameCache> FullTextSearch(string search, int take = 50)
         {
 
-            IEnumerable<Company> fullSearchNames = GetCompanies().Values
+            IEnumerable<SubjectNameCache> fullSearchNames = GetCompanies().Values
                 .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
                 .Take(take);
 
-            IEnumerable<Company> totalResult = fullSearchNames;
+            IEnumerable<SubjectNameCache> totalResult = fullSearchNames;
             if (totalResult.Count() >= take)
                 return totalResult;
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Company>
+﻿@model IEnumerable<SubjectWithKIndex>
 
 @using Devmasters.Core;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -67,7 +67,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var record in Model.Where(r => r.Value4Sort != HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue).Select((m, i) => new { rank = i + 1, item = m }))
+                @foreach (var record in Model.Where(r => r.KIndex != HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue).Select((m, i) => new { rank = i + 1, item = m }))
                 {
                     <tr>
                         <td>
@@ -77,11 +77,11 @@
                             @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
                         </td>*@
                         <td>
-                            <a href="/subjekt/@record.item.Ico">@record.item.Name</a>
+                            <a href="/subjekt/@record.item.Ico">@record.item.Jmeno</a>
                         </td>
                         <td class="number">
                             <a href="/kindex/detail/@record.item.Ico?rok=@selectedYear">
-                                @(record.item.Value4Sort?.ToString("F2"))
+                                @(record.item.KIndex.ToString("F2"))
                             </a>
                         </td>
                         @*<td></td>*@

@@ -82,7 +82,7 @@ namespace HlidacStatu.Web.Controllers
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
 
-            IEnumerable<Company> result = null;
+            IEnumerable<SubjectWithKIndex> result = null;
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
             if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
                 id = "obor";
@@ -90,7 +90,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
-                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId).Select(m => m.Ico), showNone: true)
+                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true)
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
@@ -107,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
                 case "nejhorsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
-                        .OrderByDescending(k => k.Value4Sort)
+                        .OrderByDescending(k => k.KIndex)
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K–Indexu";
@@ -136,7 +136,7 @@ namespace HlidacStatu.Web.Controllers
         // Used for searching
         public JsonResult FindCompany(string id)
         {
-            return Json(Company.FullTextSearch(id, 10), JsonRequestBehavior.AllowGet);
+            return Json(SubjectNameCache.FullTextSearch(id, 10), JsonRequestBehavior.AllowGet);
         }
 
         //todo: What are we going to do with this?
