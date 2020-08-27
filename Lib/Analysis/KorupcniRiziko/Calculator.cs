@@ -138,18 +138,40 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                     if (ret.CelkovaKoncentraceDodavatelu != null)
                     {
-                        ret.KoncentraceDodavateluBezUvedeneCeny
-                            = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
-                            "Koncentrace soukromých dodavatelů u smluv s utajenou cenou",
-                            ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 2);
+                        //ma cenu koncentraci pocitat?
+                        //musi byt vice ne 5 smluv a nebo jeden dodavatel musi mit vice nez 1/2 smluv a to vice nez 2
+                        if (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 5
+                            || allSmlouvy.Where(m => m.HodnotaSmlouvy == 0)
+                                    .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
+                                    .Max() > 2
+                            )
+                        {
+                            ret.KoncentraceDodavateluBezUvedeneCeny
+                                = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
+                                "Koncentrace soukromých dodavatelů u smluv s utajenou cenou",
+                                ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 2);
 
+                            ret.KoncentraceDodavateluBezUvedeneCeny.Dodavatele = ret.KoncentraceDodavateluBezUvedeneCeny
+                                .Dodavatele
+                                //jde o smlouvy bez ceny, u souhrnu dodavatelu resetuj ceny na 0
+                                .Select(m => new KoncentraceDodavateluIndexy.Souhrn() { HodnotaSmluv = 0, Ico = m.Ico, PocetSmluv = m.PocetSmluv, Poznamka = m.Poznamka })
+                                .ToArray();
+                        }
                     }
                     if (ret.PercSmluvUlimitu > 0)
-                        ret.KoncentraceDodavateluCenyULimitu
+                    {
+                        if (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
+                            || allSmlouvy.Where(m => m.ULimitu > 0)
+                                    .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
+                                    .Max() > 2
+                            )
+                        {
+                            ret.KoncentraceDodavateluCenyULimitu
                             = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.ULimitu > 0), queryPlatce + " AND ( hint.smlouvaULimitu:>0 )",
                             "Koncentrace soukromých dodavatelů u smluv s cenou u limitu veřejných zakázek",
-                            ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 2);
-
+                            ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 3);
+                        }
+                    }
                     Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
                         .AllTypes
                         .Where(m => m.MainType)
@@ -501,68 +523,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             return smlouvy;
         }
-
-        public static KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(IEnumerable<SmlouvyForIndex> source, string query, string popis,
-decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
-)
-        {
-            IEnumerable<SmlouvyForIndex> smlouvy = source;
-
-            if (smlouvy.Count() == 0)
-                return null;
-            if (smlouvy.Count() < minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu)
-                return null;
-            if (smlouvy.Count() < minPocetSmluvToCalculate)
-                return new KoncentraceDodavateluIndexy()
-                {
-                    Query = query,
-                    LastUpdated = DateTime.Now,
-                    PocetSmluvProVypocet = smlouvy.Count(),
-                    HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy),
-                    Popis = "Málo smluv k výpočtu. " + popis
-                };
-
-
-            var ret = new KoncentraceDodavateluIndexy();
-            ret.PocetSmluvProVypocet = smlouvy.Count();
-            ret.PocetSmluvBezCenyProVypocet = smlouvy.Count(m => m.HodnotaSmlouvy == 0);
-
-            ret.PrumernaHodnotaSmluvProVypocet = smlouvy.Any(m => m.HodnotaSmlouvy != 0) ?
-                    smlouvy.Where(m => m.HodnotaSmlouvy != 0).Select(m => m.HodnotaSmlouvy).Average()
-                    : 0;
-            if (prumHodnotaSmlouvy.HasValue)
-                ret.PrumernaHodnotaSmluvProVypocet = prumHodnotaSmlouvy.Value;
-
-            ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
-            ret.Query = query;
-
-            ret.Dodavatele = smlouvy
-                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new KoncentraceDodavateluIndexy.Souhrn()
-                {
-                    Ico = k,
-                    PocetSmluv = v.Count(),
-                    HodnotaSmluv = v.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy),
-                    Poznamka = v.Any(m=>m.HodnotaSmlouvy == 0) & ret.PrumernaHodnotaSmluvProVypocet > 0 
-                                ? $"Pro {v.Count(m => m.HodnotaSmlouvy ==0)} smluv bez uvedené ceny použita průměrná hodnota smlouvy {ret.PrumernaHodnotaSmluvProVypocet}"
-                                : ""
-                })
-                .ToArray();
-
-
-            ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-            ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-            ret.Herfindahl_Hirschman_Modified = Herfindahl_Hirschman_Modified(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-
-            ret.Comprehensive_Industrial_Concentration_Index
-                = Comprehensive_Industrial_Concentration_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-            ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-            ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
-            ret.Popis = popis;
-            ret.LastUpdated = DateTime.Now;
-            return ret;
-        }
-
-
 
     }
 

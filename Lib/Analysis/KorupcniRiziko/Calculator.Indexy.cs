@@ -273,6 +273,70 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return kwoka;
         }
 
+
+
+        public static KoncentraceDodavateluIndexy KoncentraceDodavateluCalculator(IEnumerable<SmlouvyForIndex> source, string query, string popis,
+decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
+)
+        {
+            IEnumerable<SmlouvyForIndex> smlouvy = source;
+
+            if (smlouvy.Count() == 0)
+                return null;
+            if (smlouvy.Count() < minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu)
+                return null;
+            if (smlouvy.Count() < minPocetSmluvToCalculate)
+                return new KoncentraceDodavateluIndexy()
+                {
+                    Query = query,
+                    LastUpdated = DateTime.Now,
+                    PocetSmluvProVypocet = smlouvy.Count(),
+                    HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy),
+                    Popis = "Málo smluv k výpočtu. " + popis
+                };
+
+
+            var ret = new KoncentraceDodavateluIndexy();
+            ret.PocetSmluvProVypocet = smlouvy.Count();
+            ret.PocetSmluvBezCenyProVypocet = smlouvy.Count(m => m.HodnotaSmlouvy == 0);
+
+            ret.PrumernaHodnotaSmluvProVypocet = smlouvy.Any(m => m.HodnotaSmlouvy != 0) ?
+                    smlouvy.Where(m => m.HodnotaSmlouvy != 0).Select(m => m.HodnotaSmlouvy).Average()
+                    : 0;
+            if (prumHodnotaSmlouvy.HasValue)
+                ret.PrumernaHodnotaSmluvProVypocet = prumHodnotaSmlouvy.Value;
+
+            ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
+            ret.Query = query;
+
+            ret.Dodavatele = smlouvy
+                .GroupBy(k => k.Dodavatel, m => m, (k, v) => new KoncentraceDodavateluIndexy.Souhrn()
+                {
+                    Ico = k,
+                    PocetSmluv = v.Count(),
+                    HodnotaSmluv = v.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy),
+                    Poznamka = v.Any(m => m.HodnotaSmlouvy == 0) & ret.PrumernaHodnotaSmluvProVypocet > 0
+                                ? $"Pro {v.Count(m => m.HodnotaSmlouvy == 0)} smluv bez uvedené ceny použita průměrná hodnota smlouvy {ret.PrumernaHodnotaSmluvProVypocet}"
+                                : ""
+                })
+                .ToArray();
+
+
+            ret.Herfindahl_Hirschman_Index = Herfindahl_Hirschman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+            ret.Herfindahl_Hirschman_Normalized = Herfindahl_Hirschman_IndexNormalized(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+            ret.Herfindahl_Hirschman_Modified = Herfindahl_Hirschman_Modified(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+
+            ret.Comprehensive_Industrial_Concentration_Index
+                = Comprehensive_Industrial_Concentration_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+            ret.Hall_Tideman_Index = Hall_Tideman_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+            ret.Kwoka_Dominance_Index = Kwoka_Dominance_Index(smlouvy, ret.PrumernaHodnotaSmluvProVypocet);
+            ret.Popis = popis;
+            ret.LastUpdated = DateTime.Now;
+            return ret;
+        }
+
+
+
     }
 
 }
