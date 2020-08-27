@@ -196,12 +196,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     var bonusR = data.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == part);
                     if (bonusR != null)
                     {
-                        if (bonusR.Hodnota == Consts.BonusPod50K_3)
-                            return "Dobrovolně zveřejňuje velké množství smluv pod 50.000 Kč a výrazně zvyšuje transparentnost hospodaření.";
-                        if (bonusR.Hodnota == Consts.BonusPod50K_2)
-                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč a výrazně zvyšuje transparentnost hospodaření.";
-                        if (bonusR.Hodnota == Consts.BonusPod50K_1)
-                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč a zvyšuje transparentnost hospodaření.";
+                        if (bonusR.Hodnota == -1*Consts.BonusPod50K_3)
+                            return "Dobrovolně zveřejňuje velké množství smluv pod 50.000 Kč.";
+                        if (bonusR.Hodnota == -1 * Consts.BonusPod50K_2)
+                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč.";
+                        if (bonusR.Hodnota == -1 * Consts.BonusPod50K_1)
+                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč.";
                     }
                     return "Nesplněna podmínka pro udělení bonusu za transparentnost.";
                 default:
@@ -210,42 +210,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
 
-        KIndexParts[] _orderedValues = null;
-        static readonly object _lockObj = new object();
-        private KIndexParts[] orderedValuesFromBest(Annual data, int year, string ico)
-        {
-            if (_orderedValues == null)
-            {
-                lock (_lockObj) {
-                    if (_orderedValues == null)
-                    {
-                        Statistics stat = Statistics.GetStatistics(year);
-                        if (data.KIndexVypocet.Radky != null || data.KIndexVypocet.Radky.Count() > 0)
-
-                            _orderedValues = data.KIndexVypocet.Radky
-                                .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
-                                .Where(m => m.rank.HasValue)
-                                .Where(m =>
-                                    m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                                    && !(m.r.VelicinaPart == KIndexParts.PercSmlouvyPod50kBonus && m.r.Hodnota==0) //bez bonusu
-                                )
-                                .OrderBy(m => m.rank)
-                                .ThenBy(o => o.r.Hodnota)
-                                .Select(m => m.r.VelicinaPart)
-                                .ToArray(); //better debug
-                        else
-                            _orderedValues = new KIndexParts[] { };
-                    }
-                }
-            }
-            return _orderedValues;
-            
-        }
         private string Best(Annual data, int year, string ico, out KIndexParts? usedPart)
         {
             Statistics stat = Statistics.GetStatistics(year);
             
-            usedPart = orderedValuesFromBest(data,year,ico).FirstOrDefault();
+            usedPart = data.OrderedValuesFromBestForInfofacts(ico).FirstOrDefault();
             if (usedPart != null)
             {
                 return KIndexData.KIndexCommentForPart(usedPart.Value, data);
@@ -254,7 +223,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
         private string Worst(Annual data, int year, string ico, out KIndexParts? usedPart)
         {
-            usedPart = orderedValuesFromBest(data, year, ico)?.Reverse()?.FirstOrDefault();
+            usedPart = data.OrderedValuesFromBestForInfofacts(ico)?.Reverse()?.FirstOrDefault();
             if (usedPart != null)
             {
                 return KIndexData.KIndexCommentForPart(usedPart.Value, data);
@@ -322,8 +291,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 if (!string.IsNullOrEmpty(sBest))
                     facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Stat));
             }
-            if (orderedValuesFromBest(ann,year,this.Ico)!=null)
-            foreach (var part in orderedValuesFromBest(ann,year,this.Ico).Reverse())
+            foreach (var part in ann.OrderedValuesFromBestForInfofacts(this.Ico).Reverse())
             {
                 if (part != bestPart && part != worstPart)
                 {

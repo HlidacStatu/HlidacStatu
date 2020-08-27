@@ -112,6 +112,41 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 return KIndexData.KIndexLabelIconUrl(this.KIndexLabel, local);
             }
+
+
+            KIndexParts[] _orderedValuesForInfofacts = null;
+            static readonly object _lockObj = new object();
+            public KIndexParts[] OrderedValuesFromBestForInfofacts(string ico)
+            {
+                if (_orderedValuesForInfofacts == null)
+                {
+                    lock (_lockObj)
+                    {
+                        if (_orderedValuesForInfofacts == null)
+                        {
+                            Statistics stat = Statistics.GetStatistics(this.Rok);
+                            if (this.KIndexVypocet.Radky != null || this.KIndexVypocet.Radky.Count() > 0)
+
+                                _orderedValuesForInfofacts = this.KIndexVypocet.Radky
+                                    .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
+                                    .Where(m => m.rank.HasValue)
+                                    .Where(m =>
+                                        m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
+                                        && !(m.r.VelicinaPart == KIndexParts.PercSmlouvyPod50kBonus && m.r.Hodnota == 0) //bez bonusu
+                                    )
+                                    .OrderBy(m => m.rank)
+                                    .ThenBy(o => o.r.Hodnota)
+                                    .Select(m => m.r.VelicinaPart)
+                                    .ToArray(); //better debug
+                            else
+                                _orderedValuesForInfofacts = new KIndexParts[] { };
+                        }
+                    }
+                }
+                return _orderedValuesForInfofacts;
+
+            }
+
         }
 
     }
