@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// </summary>
         /// <param name="year">Minimum year = 2018</param>
         /// <returns>Positive number means improvement. Negative number means worsening.</returns>
-        public static IEnumerable<SubjectWithKIndex> GetJumpersFromBest(int year)
+        public static IEnumerable<SubjectWithKIndexTrend> GetJumpersFromBest(int year)
         {
             if(year < 2017 || year >= DateTime.Now.Year)
             {
@@ -59,24 +59,25 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var statChosenYear = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year).SubjektOrderedListKIndexAsc;
             var statYearBefore = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year - 1).SubjektOrderedListKIndexAsc;
 
-            IEnumerable<SubjectWithKIndex> result = statChosenYear.Join(statYearBefore,
+            IEnumerable<SubjectWithKIndexTrend> result = statChosenYear.Join(statYearBefore,
                 cy => cy.ico,
                 yb => yb.ico,
                 (cy, yb) => {
                     SubjectNameCache.GetCompanies().TryGetValue(cy.ico, out SubjectNameCache comp);
-                    var r = new SubjectWithKIndex()
+                    var r = new SubjectWithKIndexTrend()
                     {
                         Ico = cy.ico,
                         Jmeno = comp?.Name,
-                        KIndex = yb.kindex - cy.kindex,
-                        Group = ""
+                        KIndex = Math.Abs(yb.kindex - cy.kindex),
+                        Group = yb.kindex - cy.kindex < 0 ? "Zhoršení ratingu" : "Zlepšení ratingu",
+                        Roky = new Dictionary<int, decimal> { { year - 1, yb.kindex }, { year, cy.kindex } }
                     };
                     return r;
                 })
                 .OrderByDescending(c => c.KIndex);
 
             if (statChosenYear == null || statYearBefore == null)
-                return new List<SubjectWithKIndex>();
+                return new List<SubjectWithKIndexTrend>();
             else
                 return result;
         }
@@ -136,7 +137,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             {
                                 Ico = fi.Ico,
                                 KIndex = Consts.MinSmluvPerYearKIndexValue,
-                                Jmeno = fi.Ico,
+                                Jmeno = fi.Jmeno,
                                 Group = fi.Group,
                                 KrajId = fi.KrajId,
                                 Kraj = fi.Kraj

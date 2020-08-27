@@ -122,9 +122,8 @@ namespace HlidacStatu.Web.Controllers
                     break;
 
                 case "skokani":
-                    ViewBag.LadderTitle = "Skokani K–Indexu";
-                    result = Statistics.GetJumpersFromBest(rok.Value);
-                    return View("Zebricek.Skokani", result);
+                    ViewBag.LadderTitle = "Top změny K–Indexu";
+                    return View("Zebricek.Skokani", Statistics.GetJumpersFromBest(rok.Value).Take(100));
 
                 default:
                     return View("Zebricek.Index");

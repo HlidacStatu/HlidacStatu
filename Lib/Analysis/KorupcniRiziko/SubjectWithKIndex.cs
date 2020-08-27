@@ -12,4 +12,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
     }
+
+
+    public class SubjectWithKIndexTrend : Lib.Data.Firma.Zatrideni.Item
+    {
+        public decimal KIndex { get; set; }
+
+        public Dictionary<int, decimal> Roky { get; set; }
+    }
+
 }

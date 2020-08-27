@@ -12,7 +12,7 @@
     string selectedGroup = ViewBag.SelectedGroup;
     string selectedKraj = ViewBag.SelectedKraj;
 
-    var data = Model.ToArray().Where(m=>true);
+    var data = Model.ToArray().Where(m => true);
 
     if (!string.IsNullOrEmpty(selectedGroup))
     {
@@ -25,8 +25,6 @@
     }
 
 
-    ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
-    ViewBag.HideTitle = true;
 
     string filterUrlValue = "group";
     Dictionary<string, int> filterGroups = Model
@@ -41,6 +39,18 @@
 
     }
 
+
+    ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
+    if (filterUrlValue == "group" && !string.IsNullOrEmpty(selectedGroup))
+    {
+        ViewBag.SubTitle = $"pro skupinu {selectedGroup}";
+    }
+    else if (!string.IsNullOrEmpty(selectedKraj))
+    {
+        ViewBag.SubTitle = $"pro kraj {selectedKraj}";
+    }
+    ViewBag.HideTitle = true;
+
 }
 
 @section scripts
@@ -52,8 +62,9 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K–Index</li>
-        <li class="active">@ViewBag.Title</li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li><a href="/kindex/zebricek">Žebříčky</a></li>
+        <li class="active">@ViewBag.Title + " " + @ViewBag.SubTitle</li>
     </ol>
 }
 
@@ -74,7 +85,7 @@
     }
 </style>
 
-<h2>@(ViewBag.LadderTitle) pro rok @ViewBag.SelectedYear</h2>
+<h2>@(ViewBag.LadderTitle) pro rok @ViewBag.SelectedYear<small>@ViewBag.SubTitle</small></h2>
 
 <div class="row">
     <div class="col-sm-12">
@@ -95,16 +106,14 @@
     </div>
 </div>
 
-@* TODO:
-    + přidat hodnotu pro zobrazení všech hodnot*@
-@if (filterGroups.Count > 2 && Model.Count() > 10)
+@if (filterGroups.Count > 1 && Model.Count() > 10)
 {
-    <h2>@(string.IsNullOrEmpty(selectedGroup) ? "Nebyla vybrána žádná skupina" : $"Pro skupinu: {selectedGroup}")</h2>
+
     <div class="row">
         <div class="col-sm-12">
-            <h3 class="">
+            <h4 class="">
                 Skupiny podle kterých lze filtrovat:
-            </h3>
+            </h4>
             <div>
                 @if (string.IsNullOrEmpty(selectedGroup))
                 {
@@ -130,6 +139,7 @@
             </div>
         </div>
     </div>
+    <hr/>
 }
 
 
@@ -176,12 +186,14 @@
             <p>K-Index nebyl spočítán pro následující organizace, které mají méně než @(Consts.MinSmluvPerYear) smluv za rok nebo malý objem smluv.</p>
             <p>
                 @{
-                    string[] rest = Model
+                    string[] rest = data
                         .Where(r => r.KIndex == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
-                        .Select(r => $"<a href=\"/subjekt/{r.Ico} \">{r.Jmeno}</a>").ToArray();
+                        .Select(r => Html.KIndexIcon(KIndexData.KIndexLabelValues.None, 15, showNone: true).ToHtmlString()
+                            + $"<a href=\"/subjekt/{r.Ico} \">{r.Jmeno}</a>"
+                        ).ToArray();
                 }
 
-                @Html.Raw(string.Join(" | ", rest))
+                @Html.Raw(string.Join(", ", rest))
 
             </p>
         </div>
