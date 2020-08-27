@@ -10,11 +10,36 @@
 
     int selectedYear = ViewBag.SelectedYear;
     string selectedGroup = ViewBag.SelectedGroup;
+    string selectedKraj = ViewBag.SelectedKraj;
+
+    var data = Model.ToArray().Where(m=>true);
+
+    if (!string.IsNullOrEmpty(selectedGroup))
+    {
+        data = data.Where(c => string.IsNullOrEmpty(selectedGroup) || selectedGroup == c.Group);
+    }
+
+    if (!string.IsNullOrEmpty(selectedKraj))
+    {
+        data = data.Where(c => string.IsNullOrEmpty(selectedKraj) || selectedKraj == c.Kraj);
+    }
+
 
     ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
     ViewBag.HideTitle = true;
 
-    List<string> filterGroups = Model.Select(c => c.Group).Distinct().ToList();
+    string filterUrlValue = "group";
+    Dictionary<string, int> filterGroups = Model
+        .GroupBy(k => k.Group, v => v, (k, v) => new { group = k, count = v.Count() })
+        .ToDictionary(k => k.group, c => c.count);
+    if (filterGroups.Count < 2)
+    {
+        filterUrlValue = "kraj";
+        filterGroups = Model
+            .GroupBy(k => k.Kraj, v => v, (k, v) => new { group = k, count = v.Count() })
+        .ToDictionary(k => k.group, c => c.count);
+
+    }
 
 }
 
@@ -59,7 +84,7 @@
             {
                 if (year != selectedYear)
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@year&group=@selectedGroup"><i class="fas fa-arrow-square-right"></i> @year</a>
+                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@year&group=@System.Net.WebUtility.UrlEncode(selectedGroup)"><i class="fas fa-arrow-square-right"></i> @year</a>
                 }
                 else
                 {
@@ -72,33 +97,37 @@
 
 @* TODO:
     + přidat hodnotu pro zobrazení všech hodnot*@
-@if(filterGroups.Count > 2 || Model.Count() > 10)
+@if (filterGroups.Count > 2 && Model.Count() > 10)
 {
     <h2>@(string.IsNullOrEmpty(selectedGroup) ? "Nebyla vybrána žádná skupina" : $"Pro skupinu: {selectedGroup}")</h2>
     <div class="row">
         <div class="col-sm-12">
             <h3 class="">
                 Skupiny podle kterých lze filtrovat:
+            </h3>
+            <div>
                 @if (string.IsNullOrEmpty(selectedGroup))
                 {
-                    <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>Zobrazit vše</span>
+                    @*<span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>Zobrazeno vše</span>*@
                 }
                 else
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zobrazit vše</a>
+                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zrušit filter, zobrazit vše</a>
                 }
                 @foreach (var group in filterGroups)
                 {
-                    if (group != selectedGroup)
+                    if (group.Key != selectedGroup)
                     {
-                        <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?group=@group&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group</a>
+                        <span style="padding-right:20px;">
+                            <a href="@(ViewBag.SelectedLadder)?@filterUrlValue=@System.Net.WebUtility.UrlEncode(group.Key)&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group.Key </a>(@group.Value)
+                        </span>
                     }
                     else
                     {
-                        <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>@group</span>
+                        <span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
                     }
                 }
-            </h3>
+            </div>
         </div>
     </div>
 }
@@ -119,7 +148,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var record in Model.Where(r => r.KIndex != HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue).Select((m, i) => new { rank = i + 1, item = m }))
+                @foreach (var record in data
+                    .Where(r => r.KIndex != HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
+                    .Select((m, i) => new { rank = i + 1, item = m })
+                    )
                 {
                     <tr>
                         <td>
@@ -147,10 +179,10 @@
                     string[] rest = Model
                         .Where(r => r.KIndex == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue)
                         .Select(r => $"<a href=\"/subjekt/{r.Ico} \">{r.Jmeno}</a>").ToArray();
-                } 
-                
-                @Html.Raw(string.Join(" | ", rest)) 
-                
+                }
+
+                @Html.Raw(string.Join(" | ", rest))
+
             </p>
         </div>
 

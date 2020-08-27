@@ -274,18 +274,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     return facts.ToArray();
 
                 case KIndexLabelValues.A:
-                    facts.Add(new InfoFact("Velmi málo rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
+                    facts.Add(new InfoFact("Nevykazuje téměř žádné rizikové faktory.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.B:
-                    facts.Add(new InfoFact("Málo rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
+                    facts.Add(new InfoFact("Chování s malou mírou rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.C:
+                    facts.Add(new InfoFact("Částečně umožňuje rizikové jednání.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.D:
+                    facts.Add(new InfoFact("Vyšší míra rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.E:
+                    facts.Add(new InfoFact("Vysoký výskyt rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 case KIndexLabelValues.F:
+                    facts.Add(new InfoFact("Velmi vysoká míra rizikových faktorů.", InfoFact.ImportanceLevel.Summary));
                     break;
                 default:
                     break;
@@ -294,10 +298,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexParts? worstPart = null;
             var sBest = Best(ann, year, this.Ico, out bestPart);
             if (!string.IsNullOrEmpty(sBest))
-                facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Summary));
+                facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Stat));
             var sworst = Worst(ann, year, this.Ico, out worstPart);
             if (!string.IsNullOrEmpty(sworst))
-                facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Summary));
+                facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Stat));
 
             foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexParts>().Select(m => m.Value))
             {

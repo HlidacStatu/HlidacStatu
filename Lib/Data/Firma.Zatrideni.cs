@@ -19,13 +19,14 @@ namespace HlidacStatu.Lib.Data
             {
                 public string Ico { get; set; }
                 public string Jmeno { get; set; }
+                public string KrajId { get; set; } = "";
                 public string Kraj { get; set; } = "";
                 public string Group { get; set; } = "";
             }
 
 
-            private static CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor> instanceByZatrideni
-           = CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor>.GetSafeInstance("oboryByObor", GetSubjektyDirect,
+            private static MemoryCacheManager<Zatrideni.Item[], StatniOrganizaceObor> instanceByZatrideni
+           = MemoryCacheManager<Zatrideni.Item[], StatniOrganizaceObor>.GetSafeInstance("oboryByObor", GetSubjektyDirect,
                 TimeSpan.FromDays(5)
            );
 
@@ -219,9 +220,9 @@ namespace HlidacStatu.Lib.Data
                             .ToArray();
                         break;
                     case StatniOrganizaceObor.Nemocnice:
-                        sql = @"select f.ICO, f.Jmeno from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
+                        sql = @"select f.ICO from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
                             union
-                            select distinct f.ico, f.Jmeno 
+                            select distinct f.ico
                                 from Firma_NACE fn
                                 join firma f on f.ICO = fn.ICO
                                 where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
@@ -307,11 +308,12 @@ namespace HlidacStatu.Lib.Data
                                 {
                                     Ico = f.ICO,
                                     Jmeno = f.Jmeno,
-                                    Kraj = removeKraj ? "": Util.CZ_Nuts.Nace2Kraj(f.KrajId)
-                                });
+                                    KrajId = removeKraj ? "": f.KrajId,
+                                    Kraj = removeKraj ? "" : CZ_Nuts.Nace2Kraj(f.KrajId,"(neznamý)")
+                        });
                             }
                             return new Devmasters.Core.Batch.ActionOutputData();
-                        }, true);
+                        }, !System.Diagnostics.Debugger.IsAttached);
 
                     return ret.ToArray();
                 }

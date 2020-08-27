@@ -44,19 +44,24 @@ namespace HlidacStatu.Util
             if ((infofacts?.Count() ?? 0) == 0)
                 return string.Empty;
 
-            infofacts = infofacts.OrderByDescending(o => o.Level).ToArray();
+            IEnumerable<InfoFact> infof = infofacts.OrderByDescending(o => o.Level).ToArray();
 
             var taken = new List<InfoFact>();
-            if (takeSummary)
-                taken.Add(infofacts.First());
 
+            if (infofacts.Any(m => m.Level == ImportanceLevel.Summary))
+            {
+                if (takeSummary == false)
+                    infof = infof.Where(m => m.Level != ImportanceLevel.Summary);
+                else
+                    taken.Add(infof.First());
+            }
 
             if (number > 1)
             {
                 if (shuffle)
-                    taken.AddRange(infofacts.Skip(takeSummary ? 1 : 0).Shuffle().Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Shuffle().Take(number - (takeSummary ? 1 : 0)));
                 else
-                    taken.AddRange(infofacts.Skip(takeSummary ? 1 : 0).Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Take(number - (takeSummary ? 1 : 0)));
             }
 
             bool useStringF = lineFormat.Contains("{0}");

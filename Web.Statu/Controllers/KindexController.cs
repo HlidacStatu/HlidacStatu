@@ -73,7 +73,7 @@ namespace HlidacStatu.Web.Controllers
             return View(kindexes);
         }
 
-        public ActionResult Zebricek(string id, int? rok = null, string group = null)
+        public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
@@ -84,6 +84,8 @@ namespace HlidacStatu.Web.Controllers
             ViewBag.SelectedYear = rok;
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
+            ViewBag.SelectedKraj = kraj;
+
 
             IEnumerable<SubjectWithKIndex> result = null;
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
@@ -93,15 +95,13 @@ namespace HlidacStatu.Web.Controllers
             {
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
-                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true)
-                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
+                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
 
                 case "nejlepsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
-                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
@@ -109,7 +109,6 @@ namespace HlidacStatu.Web.Controllers
 
                 case "nejhorsi":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
-                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group)
                         .OrderByDescending(k => k.KIndex)
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
@@ -117,16 +116,14 @@ namespace HlidacStatu.Web.Controllers
                     break;
 
                 case "celkovy":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
-                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
+                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Žebříček K–Indexu";
                     break;
 
                 case "skokani":
                     ViewBag.LadderTitle = "Skokani K–Indexu";
-                    result = Statistics.GetJumpersFromBest(rok.Value)
-                        .Where(c => (string.IsNullOrEmpty(group)) || group == c.Group);
+                    result = Statistics.GetJumpersFromBest(rok.Value);
                     return View("Zebricek.Skokani", result);
 
                 default:

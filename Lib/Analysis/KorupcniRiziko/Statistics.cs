@@ -106,6 +106,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             KIndex = cy.kindex,
                             Jmeno = yb.Jmeno,
                             Group = yb.Group,
+                            KrajId = yb.KrajId,
                             Kraj = yb.Kraj
                         }
                     );
@@ -117,7 +118,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         Ico = m.ico,
                         Jmeno = SubjectNameCache.CachedCompanies.Get()[m.ico].Name,
-                        Kraj = "",
+                        KrajId = "",
                         Group="",
                         KIndex = m.kindex
                     }
@@ -137,6 +138,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                                 KIndex = Consts.MinSmluvPerYearKIndexValue,
                                 Jmeno = fi.Ico,
                                 Group = fi.Group,
+                                KrajId = fi.KrajId,
                                 Kraj = fi.Kraj
                             });
                     data = data.Concat(missing_data);

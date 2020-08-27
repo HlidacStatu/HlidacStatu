@@ -27,7 +27,7 @@ namespace HlidacStatu.Util
 {"CZ072","Zlínský kraj"}
         };
 
-        public static string Nace2Kraj(string nace)
+        public static string Nace2Kraj(string nace, string ifUnknown = "")
         {
             nace = nace.ToUpper();
             if (Kraje.ContainsKey(nace))
