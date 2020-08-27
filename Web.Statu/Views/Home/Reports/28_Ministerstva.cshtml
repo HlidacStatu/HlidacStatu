@@ -366,34 +366,39 @@
         <div class="col-xs-6">
             <h4>Nejdéle působící strany na @resort</h4>
             <ol>
+                @foreach (var vl in vladnuti
+                    .GroupBy(k=>k.Strana,v=>v,(k,v)=> new { strana=k, days = v.Sum(ss=>ss.Days) } )
+                    
+                    )
+                {
+                <li>
+                    <b>@vl.strana</b> řídila resort celkem <b>@HlidacStatu.Util.RenderData.NiceNumber(vl.days) dní</b>
+                </li>
+                }
+            </ol>
+        </div>
+
+        <div class="col-xs-6">
+            <h4>Nejdelší nepřetržité působení stran na @resort</h4>
+            <ol>
                 @foreach (var vl in vladnuti)
                 {
-                    var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
-                    <li>
-                        <b>@vl.Strana</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
-                        <br />nepřetržitě @HlidacStatu.Util.RenderData.NiceNumber(vl.Days) dní
-                        @if (vl.Days < celkemD)
-                        {
-                            <span>
-                                (<i>
-                                    a celkem @HlidacStatu.Util.RenderData.NiceNumber(celkemD) dní
-                                </i>)
-                            </span>
-                        }
-                    </li>
+                <li>
+                    <b>@vl.Strana</b> (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
+                     - nepřetržitě <b>@HlidacStatu.Util.RenderData.NiceNumber(vl.Days) dní</b>
+                </li>
                 }
             </ol>
         </div>
         <div class="col-xs-5" style="border-left: 1px #ddd solid;">
-            <h4>Historie</h4>
+            <h4>Jednotlivý ministři</h4>
             <ol>
                 @foreach (var vl in ministri.Where(m => (m.Resort == resort)).OrderBy(m => m.Zacatek))
                 {
                     var celkemD = vladnuti.Where(v => v.Strana == vl.Strana).Sum(m => m.Days);
-                    <li>
-                        @vl.Jmeno <b>@vl.Strana</b>, (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
-                    </li>
-                }
+    <li>
+        @vl.Jmeno <b>@vl.Strana</b>, (@vl.Zacatek.ToString("d.M.yyyy") - @vl.Konec.ToString("d.M.yyyy"))
+    </li>}
             </ol>
         </div>
     </div>
