@@ -33,7 +33,7 @@ namespace HlidacStatu.Util
             if (Kraje.ContainsKey(nace))
                 return Kraje[nace];
             else
-                return "";
+                return ifUnknown;
 
         }
     }
