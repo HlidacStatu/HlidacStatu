@@ -210,46 +210,54 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
 
+        KIndexParts[] _orderedValues = null;
+        static readonly object _lockObj = new object();
+        private KIndexParts[] orderedValuesFromBest(Annual data, int year, string ico)
+        {
+            if (_orderedValues == null)
+            {
+                lock (_lockObj) {
+                    if (_orderedValues == null)
+                    {
+                        Statistics stat = Statistics.GetStatistics(year);
+                        if (data.KIndexVypocet.Radky != null || data.KIndexVypocet.Radky.Count() > 0)
 
+                            _orderedValues = data.KIndexVypocet.Radky
+                                .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
+                                .Where(m => m.rank.HasValue)
+                                .Where(m =>
+                                    m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
+                                    && !(m.r.VelicinaPart == KIndexParts.PercSmlouvyPod50kBonus && m.r.Hodnota==0) //bez bonusu
+                                )
+                                .OrderBy(m => m.rank)
+                                .ThenBy(o => o.r.Hodnota)
+                                .Select(m => m.r.VelicinaPart)
+                                .ToArray(); //better debug
+                        else
+                            _orderedValues = new KIndexParts[] { };
+                    }
+                }
+            }
+            return _orderedValues;
+            
+        }
         private string Best(Annual data, int year, string ico, out KIndexParts? usedPart)
         {
             Statistics stat = Statistics.GetStatistics(year);
-            var bestRarr = data.KIndexVypocet.Radky
-                .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
-                .Where(m => m.rank.HasValue)
-                .Where(m =>
-                    m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                                                                           //&& m.r.VelicinaPart != KIndexParts.
-                )
-                .OrderBy(m => m.rank)
-                .ThenBy(o => o.r.Hodnota)
-                .ToArray(); //better debug
-            var bestR = bestRarr.FirstOrDefault();
-            usedPart = bestR?.r?.VelicinaPart;
-            if (bestR != null)
+            
+            usedPart = orderedValuesFromBest(data,year,ico).FirstOrDefault();
+            if (usedPart != null)
             {
-                return KIndexData.KIndexCommentForPart(bestR.r.VelicinaPart, data);
+                return KIndexData.KIndexCommentForPart(usedPart.Value, data);
             }
             return null;
         }
         private string Worst(Annual data, int year, string ico, out KIndexParts? usedPart)
         {
-            Statistics stat = Statistics.GetStatistics(year);
-            var worstRarr = data.KIndexVypocet.Radky
-                .Select(m => new { r = m, rank = stat.SubjektRank(ico, m.VelicinaPart) })
-                .Where(m => m.rank.HasValue)
-                .Where(m =>
-                    m.r.VelicinaPart != KIndexParts.PercNovaFirmaDodavatel //nezajimava oblast
-                      && m.r.VelicinaPart != KIndexParts.PercSmlouvyPod50kBonus
-                )
-                .OrderByDescending(m => m.rank)
-                .ThenByDescending(o => o.r.Hodnota)
-                .ToArray(); //better debug
-            var worstR = worstRarr.FirstOrDefault();
-            usedPart = worstR?.r?.VelicinaPart;
-            if (worstR != null)
+            usedPart = orderedValuesFromBest(data, year, ico)?.Reverse()?.FirstOrDefault();
+            if (usedPart != null)
             {
-                return KIndexData.KIndexCommentForPart(worstR.r.VelicinaPart, data);
+                return KIndexData.KIndexCommentForPart(usedPart.Value, data);
             }
             return null;
         }
@@ -294,13 +302,28 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexParts? bestPart = null;
             KIndexParts? worstPart = null;
             var sBest = Best(ann, year, this.Ico, out bestPart);
-            if (!string.IsNullOrEmpty(sBest))
-                facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Stat));
             var sworst = Worst(ann, year, this.Ico, out worstPart);
-            if (!string.IsNullOrEmpty(sworst))
-                facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Stat));
 
-            foreach (var part in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexParts>().Select(m => m.Value))
+            //A-C dej pozitivni prvni
+            if (ann.KIndexLabel == KIndexLabelValues.A
+                || ann.KIndexLabel == KIndexLabelValues.B
+                || ann.KIndexLabel == KIndexLabelValues.C
+                )
+            {
+                if (!string.IsNullOrEmpty(sBest))
+                    facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Stat));
+                if (!string.IsNullOrEmpty(sworst))
+                    facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Stat));
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(sworst))
+                    facts.Add(new InfoFact(sworst, InfoFact.ImportanceLevel.Stat));
+                if (!string.IsNullOrEmpty(sBest))
+                    facts.Add(new InfoFact(sBest, InfoFact.ImportanceLevel.Stat));
+            }
+            if (orderedValuesFromBest(ann,year,this.Ico)!=null)
+            foreach (var part in orderedValuesFromBest(ann,year,this.Ico).Reverse())
             {
                 if (part != bestPart && part != worstPart)
                 {

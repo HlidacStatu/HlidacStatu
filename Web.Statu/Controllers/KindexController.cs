@@ -228,7 +228,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
                 data = img.GenerateImageByteArray(kidx.Jmeno,
-                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
+                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, false, false, " "),
                     kidx.LastKIndexLabel().ToString(),
                     rok.Value
                     );
