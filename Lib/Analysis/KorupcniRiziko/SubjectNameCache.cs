@@ -7,23 +7,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class SubjectNameCache
     {
-        public SubjectNameCache(){ }
         public SubjectNameCache(string name, string ico)
         {
             Name = name;
             Ico = ico;
             Tokens = Tokenize($"{name} {ico}");
-        }
-        public SubjectNameCache(string name, string ico, decimal? value)
-            : this(name, ico)
-        {
-            Value4Sort = value;
-        }
-
-        public SubjectNameCache(string name, string ico, decimal? value, string group)
-            : this(name, ico, value)
-        {
-            Group = group;
         }
 
         public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,SubjectNameCache>> CachedCompanies = 
@@ -52,7 +40,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static IEnumerable<SubjectNameCache> FullTextSearch(string search, int take = 50)
         {
-
+            if (string.IsNullOrEmpty(search))
+                return new List<SubjectNameCache>();
+            
             IEnumerable<SubjectNameCache> fullSearchNames = GetCompanies().Values
                 .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
                 .Take(take);
@@ -100,10 +90,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public string Name { get; set; }
         public string Ico { get; set; }
-        private string[] Tokens { get; set; }
-        public decimal? Value4Sort { get; set; } = null;
-        public string Group { get; set; }
-
+        public string[] Tokens { get; private set; }
+        
         private static string[] Tokenize(string input)
         {
             return input.ToLower().KeepLettersNumbersAndSpace().RemoveAccents().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

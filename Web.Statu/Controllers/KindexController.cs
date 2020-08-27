@@ -138,6 +138,40 @@ namespace HlidacStatu.Web.Controllers
             return Json(SubjectNameCache.FullTextSearch(id, 10), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult KindexForIco(string id, int? rok = null)
+        {
+            rok = Consts.FixKindexYear(rok);
+            var f = Firmy.Get(Util.ParseTools.NormalizeIco(id));
+            if (f.Valid)
+            {
+                var kidx = KIndex.Get(Util.ParseTools.NormalizeIco(id));
+
+                if (kidx != null)
+                {
+                    
+                    var radky = kidx.ForYear(rok.Value).KIndexVypocet.Radky
+                        .Select(r => new
+                        {
+                            VelicinaName = r.VelicinaName,
+                            Label = $"<img title='K–Index {KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota).ToString()} - Index korupčního rizika'  src='{KIndexData.KIndexLabelIconUrl(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota), showNone: true)}' class='kindex' style='height:25px'>",
+                            Comment = KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))
+                        }).ToList();
+
+                    var result = new
+                    {
+                        Ico = kidx.Ico,
+                        Jmeno = Devmasters.Core.TextUtil.ShortenText(kidx.Jmeno, 55),
+                        Kindex = $"<img title='K–Index {kidx.ForYear(rok.Value).KIndexLabel.ToString()} - Index korupčního rizika'  src='{KIndexData.KIndexLabelIconUrl(kidx.ForYear(rok.Value).KIndexLabel, showNone: true)}' class='kindex' style='width: 30px'>",
+                        Radky = radky
+                    };
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
         //todo: What are we going to do with this?
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {
