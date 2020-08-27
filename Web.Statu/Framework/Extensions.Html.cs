@@ -142,12 +142,12 @@ namespace HlidacStatu.Web.Framework
         }
 
         public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label, 
-            string style, bool showNone = false)
+            string style, bool showNone = false, string title="")
         {
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                return htmlHelper.Raw($"<img title='K–Index {label.ToString()} - Index korupčního rizika'  src='{Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>");
+                return htmlHelper.Raw(Lib.Analysis.KorupcniRiziko.KIndexData.KindexImageIcon(label,style,showNone,title));
             }
             else
                 return htmlHelper.Raw("");

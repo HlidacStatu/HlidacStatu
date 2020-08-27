@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
-
-using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
@@ -83,6 +79,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 default:
                     return "";
             }
+        }
+
+        /// <summary>
+        /// Returns IMG html tag with path to icon.
+        /// </summary>
+        public static string KindexImageIcon(KIndexLabelValues label, string style, bool showNone = false, string title = "")
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                return $"<img title='K–Index {label.ToString()} - Index korupčního rizika' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
+            }
+            return $"<img title='{title}' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
         }
 
         public Annual LastKIndex()

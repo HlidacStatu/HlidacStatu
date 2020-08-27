@@ -47,16 +47,29 @@
     .whisp {
         width: 600px;
         text-align: left;
-        background: white;
+        background-color: white;
         border-left: 2px grey solid;
         border-top: 0px;
         border-bottom: 1px grey dotted;
         border-right: 0px grey solid;
         padding-bottom: 2px;
     }
+    
+    .whisp:focus {
+        background-color: lightblue;
+    }
 
     #companies {
         margin-bottom: 10px;
+    }
+
+    .porovnani {
+        font-size: 15px; 
+        vertical-align: top;
+    }
+
+    .porovnaniHead {
+        width: 150px;
     }
 </style>
 
@@ -82,8 +95,8 @@
                     <td style="width:290px">firma</td>
                     @foreach (var cmp in Model)
                     {
-                        <th class="number @cmp.Ico" style="width: 150px">
-                            <a onclick="RemoveCompany(cmp.Ico)" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                        <th class="porovnaniHead number @cmp.Ico">
+                            <a href="#" onclick="RemoveCompany('@cmp.Ico'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
 
@@ -92,7 +105,7 @@
                     <th>Celková známka</th>
                     @foreach (var cmp in Model)
                     {
-                        <td class="number @cmp.Ico" style="font-size: 15px; vertical-align: top">
+                        <td class="porovnani number @cmp.Ico">
                             @Html.KIndexIcon(cmp.ForYear(selectedYear).KIndexLabel, "width: 30px", true)
                         </td>
                     }
@@ -121,13 +134,13 @@
                                 .Select(r => r.Hodnota)
                                 .FirstOrDefault();
 
-                            <td class="number @cmp.Ico" style="font-size: 15px; vertical-align: top;">
+                            <td class="porovnani number @cmp.Ico">
                                 @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
 
-                                @if (hodnota.HasValue)
-                                {
-                                    @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota.Value), "height:25px")
-                                }
+                                @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota?? 0),
+                                   "height:25px",
+                                   showNone: true,
+                                   title: KIndexData.KIndexCommentForPart(velicina, cmp.ForYear(selectedYear)))
                             </td>
                         }
                     </tr>
@@ -143,18 +156,27 @@
     function FindCompany(caller) {
         let req = "/kindex/findcompany/" + caller.value;
         $.get(req, function (data) {
-            $('#companies').empty();
+            EmptyCompanies();
             data.forEach(comp => {
                 var button = $('<button/>',
                     {
                         text: comp.Name,
                         class: 'whisp',
-                        click: function () { AddCompany(comp.Ico, 2019); }
+                        click: function () { AddCompany(comp.Ico, 2019); EmptyCompanies(); CleanSearchBox(); }
                     });
 
                 $("#companies").append(button);
             });
         }, "json");
+        Navigate();
+    }
+
+    function EmptyCompanies() {
+        $('#companies').empty();
+    }
+
+    function CleanSearchBox() {
+        $('#addComparison').val("").focus();
     }
 
     function AddCompany(ico, year) {
@@ -162,15 +184,62 @@
 
         let req = "/kindex/KindexForIco/" + ico + "?year=" + year;
         $.get(req, function (data) {
-            $("#nazev").append(`<th class="number ${data.Ico}" style="width: 150px"><a onclick="RemoveCompany(${data.Ico})" style="color: red; float:left"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
-            $(`#kindex`).append(`<td class="number ${data.Ico}">${data.Kindex}</td>`);
+            $("#nazev").append(`<th class="porovnaniHead number ${data.Ico}" style="width: 150px"><a href="#" onclick="RemoveCompany('${data.Ico}'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
+            $(`#kindex`).append(`<td class="porovnani number ${data.Ico}">${data.Kindex}</td>`);
             data.Radky.forEach(radek => {
-                $(`#${radek.VelicinaName}`).append(`<td class="number ${data.Ico}">${radek.Label}</td>`);
+                $(`#${radek.VelicinaName}`).append(`<td class="porovnani number ${data.Ico}">${radek.Label}</td>`);
             });
 
         }, "json");
     }
 
+    function RemoveCompany(ico) {
+        let re = new RegExp(`,?${ico}`, "g");
+        let href = window.location.href.replace(re, "").replace("/,", "/");
+        window.history.pushState("", "", href);
+
+        $(`.${ico}`).remove();
+    }
+
+    function Navigate() {
+
+        var index = -1;
+
+        jQuery(parent).on('keydown', function (e) {
+            var checkboxes = $('#companies').find('button.whisp');
+            if (e.keyCode == 38) {
+                if (index > 0) {
+                    index = index - 1;
+                }
+                checkboxes[index].focus();
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            else if (e.keyCode == 40) {
+                if (index < checkboxes.length - 1) {
+                    index = index + 1;
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                else {
+                    index = checkboxes.length - 1;
+                }
+                checkboxes[index].focus();
+            }
+            else if (e.keyCode == 27) {
+                EmptyCompanies();
+                CleanSearchBox();
+            }
+            
+        });
+    }
+
+    //function CancelKeyDownDefault(event) {
+    //    if (e.keyCode == 40) {
+    //        event.preventDefault();
+    //        event.stopPropagation();
+    //    }
+    //}
 
     function showHelp(btn, id) {
         var visible = $(btn).text().includes('@ukazatTxt');

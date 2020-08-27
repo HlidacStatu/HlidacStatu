@@ -153,15 +153,19 @@ namespace HlidacStatu.Web.Controllers
                         .Select(r => new
                         {
                             VelicinaName = r.VelicinaName,
-                            Label = $"<img title='K–Index {KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota).ToString()} - Index korupčního rizika'  src='{KIndexData.KIndexLabelIconUrl(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota), showNone: true)}' class='kindex' style='height:25px'>",
-                            Comment = KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))
+                            Label = KIndexData.KindexImageIcon(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota), 
+                                "height: 25px", 
+                                showNone: true,
+                                KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))),
                         }).ToList();
 
                     var result = new
                     {
                         Ico = kidx.Ico,
                         Jmeno = Devmasters.Core.TextUtil.ShortenText(kidx.Jmeno, 55),
-                        Kindex = $"<img title='K–Index {kidx.ForYear(rok.Value).KIndexLabel.ToString()} - Index korupčního rizika'  src='{KIndexData.KIndexLabelIconUrl(kidx.ForYear(rok.Value).KIndexLabel, showNone: true)}' class='kindex' style='width: 30px'>",
+                        Kindex = KIndexData.KindexImageIcon(kidx.ForYear(rok.Value).KIndexLabel,
+                                "height: 40px",
+                                showNone: true),
                         Radky = radky
                     };
 
