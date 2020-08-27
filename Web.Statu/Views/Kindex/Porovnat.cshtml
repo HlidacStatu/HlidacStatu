@@ -11,7 +11,6 @@
     int selectedYear = ViewBag.SelectedYear;
 
 
-    //HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
     ViewBag.Title = "K–Index porovnání";
     //ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
@@ -20,10 +19,6 @@
 
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
-    //decimal kindexValue = currYear.KIndex.Value; // currYear.KIndexVypocet.Radky.Sum(r => r.Hodnota * r.Koeficient);
-
-    //kindexValue = 10.9m;
-
 
     Func<string, string> removeSelfFromUrl = (input) =>
     {
@@ -83,29 +78,29 @@
 
         <table class="table table-no-border">
             <tbody>
-                <tr>
+                <tr id="nazev">
                     <td style="width:290px">firma</td>
                     @foreach (var cmp in Model)
                     {
-                        <th style="text-align: right; width: 150px">
-                            <a href="@(removeSelfFromUrl(cmp.Ico))" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                        <th class="number @cmp.Ico" style="width: 150px">
+                            <a onclick="RemoveCompany(cmp.Ico)" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
 
                 </tr>
-                <tr>
+                <tr id="kindex">
                     <th>Celková známka</th>
                     @foreach (var cmp in Model)
                     {
-                        <td class="number" style="font-size: 15px; vertical-align: top">
-                            @Html.KIndexIcon(cmp.ForYear(selectedYear).KIndexLabel, "width: 20px", true)
+                        <td class="number @cmp.Ico" style="font-size: 15px; vertical-align: top">
+                            @Html.KIndexIcon(cmp.ForYear(selectedYear).KIndexLabel, "width: 30px", true)
                         </td>
                     }
                 </tr>
 
                 @foreach (KIndexData.KIndexParts velicina in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
-                    <tr>
+                    <tr id="@velicina">
                         <th>
                             @velicina.ToNiceDisplayName()
                             <small><a href="#detail_@((KIndexData.KIndexParts)velicina)" onclick="showHelp(this,'#detail_@(velicina)');return false;">@ukazatTxt</a></small>
@@ -123,33 +118,20 @@
                             var hodnota = cmp.ForYear(selectedYear)?
                                 .KIndexVypocet?.Radky?
                                 .Where(r => r.Velicina == (int)velicina)
-                                .Select(r => r.Hodnota * r.Koeficient)
+                                .Select(r => r.Hodnota)
                                 .FirstOrDefault();
 
-                            <td class="number" style="font-size: 15px; vertical-align: top;">
-                                @(hodnota?.ToString("F2") ?? "Chybí K–Index")
+                            <td class="number @cmp.Ico" style="font-size: 15px; vertical-align: top;">
+                                @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
 
                                 @if (hodnota.HasValue)
                                 {
-                                    <div class="small" style="font-family: Cabin, sans-serif;">
-                                        @(statistics.PercIntervalShortText(velicina, hodnota.Value))
-                                    </div>
+                                    @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota.Value), "height:25px")
                                 }
                             </td>
                         }
                     </tr>
                 }
-
-                <tr>
-                    <th>Součet</th>
-                    @foreach (var cmp in Model)
-                    {
-                        <td class="number" style="font-size: 15px; vertical-align: top;">
-                            @(cmp.ForYear(selectedYear)?.KIndex.ToString("F2") ?? "Chybí K–Index" )
-                        </td>
-                    }
-                </tr>
-
             </tbody>
         </table>
 
@@ -167,7 +149,7 @@
                     {
                         text: comp.Name,
                         class: 'whisp',
-                        click: function () { AddCompany(comp.Ico); }
+                        click: function () { AddCompany(comp.Ico, 2019); }
                     });
 
                 $("#companies").append(button);
@@ -175,9 +157,20 @@
         }, "json");
     }
 
-    function AddCompany(ico) {
-        window.location.href = window.location.href + "," + ico;
+    function AddCompany(ico, year) {
+        window.history.pushState("", "", window.location.href + "," + ico);
+
+        let req = "/kindex/KindexForIco/" + ico + "?year=" + year;
+        $.get(req, function (data) {
+            $("#nazev").append(`<th class="number ${data.Ico}" style="width: 150px"><a onclick="RemoveCompany(${data.Ico})" style="color: red; float:left"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
+            $(`#kindex`).append(`<td class="number ${data.Ico}">${data.Kindex}</td>`);
+            data.Radky.forEach(radek => {
+                $(`#${radek.VelicinaName}`).append(`<td class="number ${data.Ico}">${radek.Label}</td>`);
+            });
+
+        }, "json");
     }
+
 
     function showHelp(btn, id) {
         var visible = $(btn).text().includes('@ukazatTxt');
