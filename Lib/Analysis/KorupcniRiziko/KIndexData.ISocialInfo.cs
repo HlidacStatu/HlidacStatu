@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                             return $"Skrývá ceny u {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouvy;{0} smluv;{0} smluv")}.";
                         case KIndexLabelValues.F:
-                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouvy;{0} smluv;{0} smluv")} z celkem {data.Statistika.PocetSmluv} smluv.";
+                            return $"Skrývá ceny u varujícího počtu {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvBezCeny, "{0} smlouvy;{0} smluv;{0} smluv")} z {data.Statistika.PocetSmluv} smluv.";
                         default:
                             return "";
                     }
@@ -56,7 +56,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Zásadní nedostatky u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smluv;{0} smluv")}</b> z celkem {data.Statistika.PocetSmluv} smluv.";
+                            return $"Zásadní nedostatky u <b>{HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouvy;{0} smluv;{0} smluv")}</b> z {data.Statistika.PocetSmluv} smluv.";
                         default:
                             return "";
                     }
@@ -72,7 +72,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.E:
                             return "Velké zakázky se koncentrují u malého počtu dodavatelů.";
                         case KIndexLabelValues.F:
-                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z celkem {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()} dodavatelů.";
+                            return $"Většinu peněz {HlidacStatu.Util.PluralForm.Get(data.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")} z {data.CelkovaKoncentraceDodavatelu.Dodavatele.Count()}.";
                         default:
                             return "";
                     }

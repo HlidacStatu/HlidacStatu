@@ -2162,9 +2162,10 @@ select {
 
 /* box stats */
 .box-stats {
-    border: 1px solid #D2D2D2;
+    border-left: 1px solid #D2D2D2;
     border-radius: 5px;
-    padding: 20px 20px 20px 25px;
+    padding-left: 25px;
+    margin-bottom:30px;
     height: 100%;
 }
 

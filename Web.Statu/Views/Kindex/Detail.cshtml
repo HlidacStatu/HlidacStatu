@@ -330,9 +330,9 @@ else
             </div>
             @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
             {
-            <div style="margin-top:20px" class="text-warning">
-                @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
-            </div>
+                <div style="margin-top:20px" class="text-warning">
+                    @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
+                </div>
             }
             @if (Model.roky.Any(m => m.KIndexReady))
             {
@@ -376,13 +376,13 @@ else
         které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
     </p>
     <p>
-        Organizace s K–Indexem @Html.KIndexIcon(KIndexData.KIndexLabelValues.A,15) jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
+        Organizace s K–Indexem @Html.KIndexIcon(KIndexData.KIndexLabelValues.A, 15) jsou nejlepší, nejvíce transparentní a s nejnižšími riziky.
         Organizace s K–Index @Html.KIndexIcon(KIndexData.KIndexLabelValues.F, 15) patří mezi nejhorší.
 
     </p>
     <p>
         Stupnice K–Indexu
-        @Html.KIndexIcon(KIndexData.KIndexLabelValues.A,15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.B, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.C, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.D, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.E, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.F, 15) @ViewBag.Title
+        @Html.KIndexIcon(KIndexData.KIndexLabelValues.A, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.B, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.C, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.D, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.E, 15)@Html.KIndexIcon(KIndexData.KIndexLabelValues.F, 15) @ViewBag.Title
         je hrubá pro snadnou přehlednost, pro podrobnější srovnání a porovnání vždy ukazujeme i přesnou číselnou hodnotu K–Indexu a také způsob jeho výpočtu.
     </p>
 </div>
@@ -401,7 +401,7 @@ else
     <div class="col-xs-12 col-sm-6">
         <div>
             Celková hodnota K–Indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
-            @Html.KIndexIcon(currYear.KIndexLabel,15) a @(statistics.PercIntervalShortText(currYear.KIndex))
+            @Html.KIndexIcon(currYear.KIndexLabel, 15) a @(statistics.PercIntervalShortText(currYear.KIndex))
             (@statistics.SubjektRank(Model.Ico)).
 
         </div>
@@ -513,9 +513,12 @@ else
                         <td colspan="4" style="padding:0">
                             <div id="detail_@radek.Velicina" style="display:none">
                                 <div class="row">
-                                    <div class="col-xs-11 col-lg-offset-1 box-stats" style="background-color:#f9f9fe">
+                                    <div class="col-xs-11 col-lg-offset-1 box-stats" >
                                         <h3>
-                                            Číselná hodnota parametru je @Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, true))
+                                            Číselná hodnota parametru je @Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(radek.Hodnota, true)).
+                                            Hodnotu tohoto parametru hodnotíme 
+                                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:19px"). 
+
                                         </h3>
                                         @switch (radek.VelicinaPart)
                                         {
@@ -576,20 +579,22 @@ else
         <div class="col-xs-12">
             @if (percentValue)
             {
-                <h4>
-                    Parametr <b>@vradek.VelicinaLongName</b> přesně odpovídá procentuálnímu zastoupení v rámci všech smluv organizace na rok @currYear.Rok.
+                <div class="well">
+                    Parametr <b>@(vradek.VelicinaLongName.ToLower())</b> přesně odpovídá procentuálnímu zastoupení v rámci všech smluv organizace za rok @currYear.Rok.
                     Tzn. že hodnota parametru @(vradek.Hodnota.ToString("F4")) odpovídá @(vradek.Hodnota.ToString("P2")) podílu těchto smluv v rámci všech smluv.
-                </h4>
+                </div>
             }
-            <h4>
-                Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
-                <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
-                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
-                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
-            </h4>
         </div>
     </div>
+    <h3>Co tento parametr znamená?</h3>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
+<h4>Jaké jsou obvyklé hodnoty tohoto parametru?</h4>
+<div class="well well-sm">
+    Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
+    <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
+    Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
+    10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
+</div>
 
 }
 
