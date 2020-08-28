@@ -56,23 +56,56 @@ namespace HlidacStatu.Web.Controllers
             rok = Consts.FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
 
-            var kindexes = new List<KIndexData>();
-            foreach (var i in id.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            var results = new List<SubjectWithKIndexAnnualData>();
+            if (Enum.TryParse(id, true, out Firma.Zatrideni.StatniOrganizaceObor oborFromId))
             {
-                var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
-                if (f.Valid)
+                var subjects = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
+                
+                foreach (var subject in subjects)
                 {
-                    var kidx = KIndex.Get(Util.ParseTools.NormalizeIco(i));
-                    if (kidx != null)
-                        kindexes.Add(kidx);
-                    else
-                        kindexes.Add(KIndexData.Empty(f.ICO, f.Jmeno));
+                    SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData((Firma.Zatrideni.Item)subject);
+                    try
+                    {
+                        data.PopulateWithAnnualData(rok.Value);
+                    }
+                    catch (Exception)
+                    {
+                        // chybí ičo v objeku data
+                        continue;
+                    }
+                    results.Add(data);
+                }
+            }
+            else
+            {
+                foreach (var i in id.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
+                    if (f.Valid)
+                    {
+                        SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData()
+                        {
+                            Ico = f.ICO,
+                            Jmeno = f.Jmeno
+                        };
+                        try
+                        {
+                            data.PopulateWithAnnualData(rok.Value);
+                        }
+                        catch (Exception)
+                        {
+                            // chybí ičo v objeku data
+                            continue;
+                        }
+                        results.Add(data);
+                    }
                 }
             }
 
-            return View(kindexes);
+            return View(results);
         }
-
+        
         public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
