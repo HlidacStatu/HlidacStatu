@@ -47,17 +47,17 @@
         border-right: 0px grey solid;
         padding-bottom: 2px;
     }
-    
-    .whisp:focus {
-        background-color: lightblue;
-    }
+
+        .whisp:focus {
+            background-color: lightblue;
+        }
 
     #companies {
         margin-bottom: 10px;
     }
 
     .porovnani {
-        font-size: 15px; 
+        font-size: 15px;
         vertical-align: top;
     }
 
@@ -73,6 +73,49 @@
     <p>Porovnání hodnot, které dohromady skládají výslednou známku K–Indexu</p>
 
 </div>
+
+@{
+
+    var groups = Model.GroupBy(s => s.Group,
+        (key, group) => new {
+            GroupName = key,
+            Subjects = group.Select(s =>
+                Html.KIndexIcon(s.AnnualData.KIndexLabel, 15, showNone: true).ToHtmlString()
+                            + $"<a href=\"#\" onclick=\"AddCompany({s.Ico},{selectedYear}); return false;\" \">{s.Jmeno}</a>"
+            )
+        });
+
+    if (groups.Count() <= 1)
+    {
+        groups = Model.GroupBy(s => s.Kraj,
+        (key, group) => new
+        {
+            GroupName = key,
+            Subjects = group.Select(s =>
+                Html.KIndexIcon(s.AnnualData.KIndexLabel, 15, showNone: true).ToHtmlString()
+                            + $"<a href=\"#\" onclick=\"AddCompany({s.Ico},{selectedYear}); return false;\" \">{s.Jmeno}</a>"
+            )
+        });
+    }
+
+}
+
+@if (groups.Count() > 1)
+{
+    <div id="#groups">
+        @foreach (var group in groups)
+        {
+            <div id="@group.GroupName">
+                <p>@group.GroupName</p>
+
+                @Html.Raw(string.Join(", ", group.Subjects))
+
+            </div>
+        }
+    </div>
+}
+
+
 <input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
 <div id="companies">
 
@@ -86,21 +129,27 @@
             <tbody>
                 <tr id="nazev">
                     <td style="width:290px">firma</td>
-                    @foreach (var cmp in Model)
+                    @if (groups.Count() <= 1)
                     {
-                        <th class="porovnaniHead number @cmp.Ico">
-                            <a href="#" onclick="RemoveCompany('@cmp.Ico'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
-                        </th>
+                        foreach (var cmp in Model)
+                        {
+                            <th class="porovnaniHead number @cmp.Ico">
+                                <a href="#" onclick="RemoveCompany('@cmp.Ico'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                            </th>
+                        }
                     }
 
                 </tr>
                 <tr id="kindex">
                     <th>Celková známka</th>
-                    @foreach (var cmp in Model)
-                    {
-                        <td class="porovnani number @cmp.Ico">
-                            @Html.KIndexIcon(cmp.AnnualData.KIndexLabel, "width: 30px", true)
-                        </td>
+                    @if (groups.Count() <= 1)
+                    { 
+                        foreach (var cmp in Model)
+                        {
+                            <td class="porovnani number @cmp.Ico">
+                                @Html.KIndexIcon(cmp.AnnualData.KIndexLabel, "width: 30px", true)
+                            </td>
+                        }
                     }
                 </tr>
 
@@ -118,23 +167,25 @@
                                 </div>
                             </div>
                         </th>
-
-                        @foreach (var cmp in Model)
+                        @if (groups.Count() <= 1)
                         {
-                            var hodnota = cmp.AnnualData?
-                                .KIndexVypocet?.Radky?
-                                .Where(r => r.Velicina == (int)velicina)
-                                .Select(r => r.Hodnota)
-                                .FirstOrDefault();
+                            foreach (var cmp in Model)
+                            {
+                                var hodnota = cmp.AnnualData?
+                                    .KIndexVypocet?.Radky?
+                                    .Where(r => r.Velicina == (int)velicina)
+                                    .Select(r => r.Hodnota)
+                                    .FirstOrDefault();
 
-                            <td class="porovnani number @cmp.Ico">
-                                @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
+                                <td class="porovnani number @cmp.Ico">
+                                    @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
 
-                                @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota?? 0),
-                                   "height:25px",
-                                   showNone: true,
-                                   title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))
-                            </td>
+                                    @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota ?? 0),
+                                        "height:25px",
+                                        showNone: true,
+                                        title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))
+                                </td>
+                            }
                         }
                     </tr>
                 }
@@ -223,7 +274,7 @@
                 EmptyCompanies();
                 CleanSearchBox();
             }
-            
+
         });
     }
 
