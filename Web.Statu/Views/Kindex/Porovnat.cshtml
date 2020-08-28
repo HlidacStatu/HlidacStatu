@@ -1,4 +1,4 @@
-﻿@model List<HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData>
+﻿@model List<HlidacStatu.Lib.Analysis.KorupcniRiziko.SubjectWithKIndexAnnualData>
 
 @using Devmasters.Core;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -19,13 +19,6 @@
 
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
-
-    Func<string, string> removeSelfFromUrl = (input) =>
-    {
-        string source = Request.Url.Segments.LastOrDefault();
-        string removedIco = source.Remove(source.IndexOf(input), input.Length);
-        return Regex.Replace(removedIco,"(^,|,$)","").Replace(",,",",");
-    };
 
 }
 
@@ -106,7 +99,7 @@
                     @foreach (var cmp in Model)
                     {
                         <td class="porovnani number @cmp.Ico">
-                            @Html.KIndexIcon(cmp.ForYear(selectedYear).KIndexLabel, "width: 30px", true)
+                            @Html.KIndexIcon(cmp.AnnualData.KIndexLabel, "width: 30px", true)
                         </td>
                     }
                 </tr>
@@ -128,7 +121,7 @@
 
                         @foreach (var cmp in Model)
                         {
-                            var hodnota = cmp.ForYear(selectedYear)?
+                            var hodnota = cmp.AnnualData?
                                 .KIndexVypocet?.Radky?
                                 .Where(r => r.Velicina == (int)velicina)
                                 .Select(r => r.Hodnota)
@@ -140,7 +133,7 @@
                                 @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota?? 0),
                                    "height:25px",
                                    showNone: true,
-                                   title: KIndexData.KIndexCommentForPart(velicina, cmp.ForYear(selectedYear)))
+                                   title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))
                             </td>
                         }
                     </tr>
