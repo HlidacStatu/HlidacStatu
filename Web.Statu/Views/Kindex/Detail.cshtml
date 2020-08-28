@@ -87,10 +87,25 @@
             })
         });
 
+$(document).ready(function(){
+
+    $("#sel_obory").change(function(){
+        $(this).find("option:selected").each(function(){
+            var optionValue = $(this).attr("value");
+            if(optionValue){
+                $(".boxobor").not("." + optionValue).hide();
+                $(".boxobor." + optionValue).show();
+                InitLowBox();
+            } else{
+                $(".boxobor").hide();
+            }
+        });
+    }).change();
+});
     function showHelp(btn, id) {
         var visible = $(btn).text().includes('@ukazatTxt');
         if (visible) {
-            $(id).show(300);
+            $(id).show(300, function(){ InitLowBox(); });
             $(btn).text('@schovatTxt');
         }
         else {
@@ -513,11 +528,11 @@ else
                         <td colspan="4" style="padding:0">
                             <div id="detail_@radek.Velicina" style="display:none">
                                 <div class="row">
-                                    <div class="col-xs-11 col-lg-offset-1 box-stats" >
+                                    <div class="col-xs-11 col-lg-offset-1 box-stats">
                                         <h3>
                                             Číselná hodnota parametru je @Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(radek.Hodnota, true)).
-                                            Hodnotu tohoto parametru hodnotíme 
-                                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:19px"). 
+                                            Hodnotu tohoto parametru hodnotíme
+                                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:19px").
 
                                         </h3>
                                         @switch (radek.VelicinaPart)
@@ -531,7 +546,7 @@ else
                                                 @ParametrDetail(currYear, radek.VelicinaPart, statistics)
                                                 break;
                                             case KIndexData.KIndexParts.KoncentraceDodavateluObory:
-                                                @ParametrDetail(currYear, radek.VelicinaPart, statistics, false)
+                                                @KoncentraceDetailObory(currYear, radek.VelicinaPart, statistics)
                                                 break;
 
                                             case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
@@ -588,13 +603,41 @@ else
     </div>
     <h3>Co tento parametr znamená?</h3>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
-<h4>Jaké jsou obvyklé hodnoty tohoto parametru?</h4>
-<div class="well well-sm">
-    Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
-    <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
-    Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
-    10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
-</div>
+    <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
+    <div class="well well-sm">
+        <table class="table table-condensed table-dotted" style="width:auto">
+            <tr>
+                <td>Průměrný počet bodů</td>
+                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part)) bodů</td>
+            </tr>
+            <tr>
+                <th colspan="2">Nejlepší výsledky</th>
+            </tr>
+            <tr>
+                <td>Nejlepších 10% organizací má méně než</td>
+                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part)) bodů</td>
+            </tr>
+            <tr>
+                <td>Nejlepších třetina organizací má méně než</td>
+                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(33, part)) bodů</td>
+            </tr>
+            <tr>
+                <th colspan="2">Nejhorší výsledky</th>
+            </tr>
+            <tr>
+                <td>Nejhorší třetina organizací má více než</td>
+                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(66, part)) bodů</td>
+            </tr>
+            <tr>
+                <td>Nejhorších 10% organizací má více než</td>
+                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part)) bodů</td>
+            </tr>
+        </table>
+        parametru "@part.ToNiceDisplayName()" je
+        <b></b>.
+        Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
+        10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
+    </div>
 
 }
 
@@ -602,18 +645,11 @@ else
 @helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
-    <div class="row">
-        <div class="col-xs-12">
-            <h4>
-                Průměrný počet bodů parametru "@part.ToNiceDisplayName()" je
-                <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part))</b>.
-                Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
-                10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
-            </h4>
-        </div>
-    </div>
+    <h3>Co tento parametr znamená?</h3>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
+
     KoncentraceDodavateluIndexy koncentrace = null;
+    bool showHodnota = true;
     switch (part)
     {
         case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
@@ -621,6 +657,7 @@ else
             break;
         case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
             koncentrace = currYear.KoncentraceDodavateluBezUvedeneCeny;
+            showHodnota = false;
             break;
         case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
             koncentrace = currYear.KoncentraceDodavateluCenyULimitu;
@@ -646,26 +683,36 @@ else
             </div>
             <div class="col-xs-12 col-sm-6">
 
-                <table class="table table-new table-new--dotted table-hover">
-                    <thead>
-                        <tr>
-                            <th>Dodavatel</th>
-                            <th>Počet smluv</th>
-                            <th>Objem v Kč</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(10))
-                        {
+                @using (Html.LowBox(250))
+                {
+                    <table class="table table-new table-new--dotted table-hover">
+                        <thead>
                             <tr>
-                                <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
-                                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
-                                <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                <th>Dodavatel</th>
+                                <th>Počet smluv</th>
+                                @if (showHodnota)
+                                {
+                                    <th>Objem v Kč</th>
+                                }
                             </tr>
-                        }
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                            {
+                                <tr>
+                                    <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
+                                    <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
+                                    @if (showHodnota)
+                                    {
+                                        <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                    }
+                                </tr>
 
-                </table>
+                            }
+                        </tbody>
+
+                    </table>
+                }
             </div>
         </div>
 
@@ -673,19 +720,119 @@ else
     }
 }
 
-@helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
+@helper KoncentraceDetailObory(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics)
 {
+    KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
+    <h3>Co tento parametr znamená?</h3>
+    @ParametrDescr(vradek.VelicinaPart, false, "well")
 
-    string descr = "";
-    descr = KIndexData.PartsDescription(part);
-
-    if (!string.IsNullOrEmpty(descr))
+    if (currYear.KIndexVypocet.OboroveKoncentrace.Radky.Count() > 0)
     {
-        <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
-            <div class="@_class" style="@style">
-                @Html.Raw(descr)
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="sel_obory">Významné obory</label>
+                        <div class="col-sm-10">
+                            <select id="sel_obory" class="form-control">
+                                <option>-- vyberte obor, který vás zajímá --</option>
+                                @foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
+                                {
+                                    <option value="@ro.Obor">@(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    }
 
-}
+
+                    foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
+                    {
+<div class="boxobor @ro.Obor" style="display:none;">
+    <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
+    @if (ro.PodilSmluvBezCeny > 0)
+    {
+        <p>
+            Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
+        </p>
+        <hr style="width:50%" />
+    }
+    <div class="row">
+        <div class="col-xs-12">
+            @{
+                KoncentraceDodavateluIndexy koncentrace = currYear.KoncetraceDodavateluObory
+                    .First(o => o.OborName == ro.Obor)
+                    .Koncentrace;
+
+                List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
+                                .OrderByDescending(m => m.HodnotaSmluv)
+                                .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                                .Take(12)
+                                .ToList();
+                if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+                {
+                    data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+                }
+            }
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
+                </div>
+                <div class="col-xs-12 col-sm-6">
+
+                    @using (Html.LowBox(250))
+                    {
+                        <table class="table table-new table-new--dotted table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Dodavatel</th>
+                                    <th>Počet smluv</th>
+                                    <th>Objem v Kč</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                                {
+                                    <tr>
+                                        <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
+                                        <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
+                                        <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+
+                        </table>
+                    }
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+                    }
+
+                    }
+                    }
+
+
+                    @helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
+                    {
+
+                        string descr = "";
+                        descr = KIndexData.PartsDescription(part);
+
+                        if (!string.IsNullOrEmpty(descr))
+                        {
+                            <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
+                                <div class="@_class" style="@style">
+                                    @Html.Raw(descr)
+                                </div>
+                            </div>
+                        }
+
+                    }

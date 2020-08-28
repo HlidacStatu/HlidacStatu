@@ -226,10 +226,9 @@ function ChangeBookmark(btn) {
         });
 }
 
-
-var campaignN = "bookmark";
-$(function () {
-
+function InitLowBox()
+{
+    console.log("init LowBox");
     $(".low-box").each(function () {
         var t = $(this);
         var more = t.find(".low-box-line:first");
@@ -243,7 +242,17 @@ $(function () {
             });
             more.hide();
         }
+        else {
+            more.show();
+        }
     });
+
+}
+
+var campaignN = "bookmark";
+$(function () {
+
+    InitLowBox();
     $(".low-box .low-box-line .more").click(function () {
         var totalHeight = 0;
         $el = $(this); $p = $el.parent(); $up = $p.parent();

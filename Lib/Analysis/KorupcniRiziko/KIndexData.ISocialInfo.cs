@@ -118,17 +118,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return "Zakázky v jednotlivých oborech uzavřelo více dodavatelů, žádný výrazně nedominuje.";
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
-                            var oboryE = data.KoncetraceDodavateluObory
-                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Koncentrace.Herfindahl_Hirschman_Modified) >= KIndexLabelValues.D);
-                            var soboryE = oboryE.Select(m => m.OborName)
-                                .Aggregate((f, s) => f + ", " + s);
+                            var oboryE = data.KIndexVypocet.OboroveKoncentrace?
+                                .Radky
+                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Hodnota) >= KIndexLabelValues.D);
 
                             return $"Dominance zakázek u dodavatelů se objevuje v {HlidacStatu.Util.PluralForm.Get(oboryE.Count(), "{0} oboru;{0} oborech;{0} oborech")}.";
                         case KIndexLabelValues.F:
-                            var oboryF = data.KoncetraceDodavateluObory
-                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Koncentrace.Herfindahl_Hirschman_Modified) >= KIndexLabelValues.D);
-                            var soboryF = oboryF.Select(m => m.OborName)
-                                .Aggregate((f, s) => f + ", " + s);
+                            var oboryF = data.KIndexVypocet.OboroveKoncentrace?
+                                .Radky
+                                .Where(m => KIndexData.KIndexLabelForPart(KIndexParts.KoncentraceDodavateluObory, m.Hodnota) >= KIndexLabelValues.D);
 
                             return $"Dominance zakázek u dodavatelů je výrazná v {HlidacStatu.Util.PluralForm.Get(oboryF.Count(), "{0} oboru;{0} oborech;{0} oborech")}.";
                         default:

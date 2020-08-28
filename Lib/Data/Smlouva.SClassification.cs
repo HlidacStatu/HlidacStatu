@@ -145,18 +145,20 @@ namespace HlidacStatu.Lib.Data
                     else
                         return null;
                 }
-                public static ClassificationsTypes? ToClassifType(string value)
+                public static ClassificationsTypes? ToClassifType(string value, ClassificationsTypes? ifNotFound = null)
                 {
                     ClassificationsTypes t;
+                    if (value.Contains("_") == false)
+                        value = value + "_obecne";
                     if (Enum.TryParse(value, out t))
                     {
                         if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
-                            return null;
+                            return ifNotFound;
                         else
                             return t;
                     }
                     else
-                        return null;
+                        return ifNotFound;
                 }
 
                 public string ClassifSearchQuery()

@@ -10,6 +10,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Nest.Keyword]
         public string OborName { get; set; }
 
+
         public KoncentraceDodavateluIndexy Koncentrace { get; set; }
 
         public decimal SmluvBezCenyMalusKoeficient { get; set; } = 1;

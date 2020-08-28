@@ -105,7 +105,7 @@ namespace HlidacStatu.Web.Framework
                 () =>
                 {
                     var html = $@"<div class='low-box' style='max-height:{width}px'>
-        <div class='low-box-line' style='top:{width - 55}px'><a href='#' onclick='ga('send', 'event', 'btnLowBoxMore', 'showMore','{gaPageEventId}'); return true;' class='more'></a></div>
+        <div class='low-box-line' style='top:{width - 55}px'><a href='#' onclick=""ga('send', 'event', 'btnLowBoxMore', 'showMore','{gaPageEventId}'); return true;"" class='more'></a></div>
         <div class='low-box-content'>";
                     htmlHelper.ViewContext.Writer.Write(html);
                 },

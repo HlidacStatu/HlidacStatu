@@ -705,10 +705,15 @@ namespace HlidacStatu.Lib.Data
             if (this.Hint == null)
                 this.Hint = new HintSmlouva();
 
-            List<Firma> firmy = this.Prijemce.Select(m => m.ico)
-                .Concat(new string[] { this.Platce.ico })
+            Firma fPlatce = Firmy.Get(this.Platce.ico);
+            Firma[] fPrijemci = this.Prijemce.Select(m => m.ico)
                 .Where(m => !string.IsNullOrWhiteSpace(m))
                 .Select(m => Firmy.Get(m))
+                .Where(f => f.Valid)
+                .ToArray();
+
+            List<Firma> firmy = fPrijemci
+                .Concat(new Firma[] { fPlatce })
                 .Where(f => f.Valid)
                 .ToList();
 
@@ -727,6 +732,24 @@ namespace HlidacStatu.Lib.Data
             else if (firmy.Any(f => f.MaVazbyNaPolitikyPred(this.datumUzavreni)))
                 this.Hint.SmlouvaSPolitickyAngazovanymSubjektem = (int)HintSmlouva.PolitickaAngazovanostTyp.AngazovanyMajitel;
 
+            if (fPlatce.Valid && fPlatce.PatrimStatu())
+            {
+                if (fPrijemci.All(f => f.PatrimStatu()))
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatStat;
+                else if (fPrijemci.All(f => f.PatrimStatu() == false))
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatSoukr;
+                else 
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.Kombinovane;
+            }
+            if (fPlatce.Valid && fPlatce.PatrimStatu()==false)
+            {
+                if (fPrijemci.All(f => f.PatrimStatu()))
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatSoukr;
+                else if (fPrijemci.All(f => f.PatrimStatu() == false))
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeSoukrSoukr;
+                else
+                    this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.Kombinovane;
+            }
 
             //U limitu
             this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.OK;

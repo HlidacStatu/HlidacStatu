@@ -42,7 +42,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             [SortValue(13)]
             [GroupValue("Koncentrace")]
-            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů u smluv blízské u limitu VZ")]
+            [Devmasters.Core.NiceDisplayName("Koncentrace dodavatelů u smluv blízké u limitu VZ")]
             KoncentraceDodavateluCenyULimitu = 5,
 
 
