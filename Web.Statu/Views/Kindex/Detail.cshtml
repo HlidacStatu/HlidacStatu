@@ -514,14 +514,14 @@ else
                             @(KIndexData.KIndexCommentForPart(radek.VelicinaPart,currYear))
                         </td>
                         <!--
-                                                <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                                                    @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
-                                                    <div class="small" style="font-family: Cabin, sans-serif;">
-                                                        @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
-                                                        (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
-                                                    </div>
-                                                </td>
-                        -->
+                                    <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                                        @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
+                                        <div class="small" style="font-family: Cabin, sans-serif;">
+                                            @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
+                                            (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
+                                        </div>
+                                    </td>
+            -->
 
                     </tr>
                     <tr style="border-bottom:dotted 2px #E0E6ED">
@@ -569,15 +569,73 @@ else
                 }
                 <tr>
                     <td>
-                        <div style="font-weight:bold;font-size:130%">Součet bodů = K–Index</div>
+                        <span style="font-weight:bold;font-size:130%">Součet bodů = K–Index</span>
+                        <small><a href="#detail_celkem" onclick="showHelp(this,'#detail_celkem');return false;">@ukazatTxt</a></small>
                     </td>
                     <td style="text-align:right">@Html.KIndexIcon(currYear.KIndexLabel, "height:30px")</td>
                     <td style="font-size:130%">
-                        Počet bodů <b>@kindexValue.ToString("F2")</b>, což znamená
-                        @(statistics.SubjektRank(Model.Ico)). místo z celkem @(statistics.SubjektOrderedListKIndexAsc.Count).
+                        Počet bodů <b>@kindexValue.ToString("F2")</b>
                     </td>
                     <td>&nbsp;</td>
                 </tr>
+                <tr>
+                    <td colspan="4" style="padding:0">
+                        <div id="detail_celkem" style="display:none">
+                            <div class="row">
+                                <div class="col-xs-11 col-lg-offset-1 box-stats">
+                                    <p>
+                                        Počet bodů <b>@kindexValue.ToString("F2")</b> znamená pro @Model.Jmeno celkově
+                                        @(statistics.SubjektRank(Model.Ico)). místo z @(statistics.SubjektOrderedListKIndexAsc.Count).
+                                    </p>
+                                    <p>
+                                        Výpočet celkového počtu bodů je jednoduchý. Sečtou se body u jednotlivých parametrů a 
+                                        výsledek se poté (pro lepší čitelnost) vynásobí deseti.
+                                    </p>
+                                    <p>
+                                        <table class="table table-condensed" style="width:auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parametr</th>
+                                                    <th>Počet bodů</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var r in currYear.KIndexVypocet.Radky
+                                                    .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
+                                                    )
+                                                {
+                                                    <tr>
+                                                        <td>@r.VelicinaLongName</td>
+                                                        <td class="number">@(r.Hodnota.ToString("N4")) </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td>Mezisoučet x 10 
+                                                    <br/>(pro lepší čitelnost)</td>
+                                                    <td class="number">@(currYear.KIndexVypocet.Radky
+                                                                      .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
+                                                                      .Sum(m => m.Hodnota).ToString("N3")) x 10</td>
+                                                </tr>
+                                                @if (currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)?.Hodnota > 0)
+                                                {
+                                                    <tr>
+                                                        <td>Odečíst bonus za transparentnost</td>
+                                                        <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == KIndexData.KIndexParts.PercSmlouvyPod50kBonus).Hodnota)</td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td>Výsledný K-Index </td>
+                                                    <td class="number">@currYear.KIndexVypocet.Vypocet().ToString("N")</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
 
