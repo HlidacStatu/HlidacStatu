@@ -23,7 +23,7 @@ namespace HlidacStatu.Web
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                         "~/Scripts/bootstrap.js",
                         "~/Scripts/respond.js",
-                        "~/Scripts/hlidac.v1.8.js",
+                        "~/Scripts/hlidac.v1.9.js",
                         "~/Scripts/fuckadblock.min.js",
                         "~/scripts/social-share-kit.min.js"
                       ));
@@ -51,7 +51,7 @@ namespace HlidacStatu.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/globalsite.v1.7.css",
+                      "~/Content/globalsite.v1.9.css",
                        "~/content/social-share-kit.css",
                       "~/Content/new.css"
                       ));
