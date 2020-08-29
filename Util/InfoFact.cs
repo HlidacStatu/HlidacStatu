@@ -56,7 +56,7 @@ namespace HlidacStatu.Util
                     taken.Add(infof.First());
             }
 
-            if (number > 1)
+            if (number > 1 && taken.Count()>1)
             {
                 if (shuffle)
                     taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Shuffle().Take(number - (takeSummary ? 1 : 0)));
@@ -66,9 +66,12 @@ namespace HlidacStatu.Util
 
             bool useStringF = lineFormat.Contains("{0}");
 
-            return taken
-                .Select(t => useStringF ? string.Format(lineFormat, t.Render(html)) : t.Render(html))
-                .Aggregate((f, s) => f + delimiterBetween + s);
+            if (taken.Count == 0)
+                return "";
+            else
+                return taken
+                    .Select(t => useStringF ? string.Format(lineFormat, t.Render(html)) : t.Render(html))
+                    .Aggregate((f, s) => f + delimiterBetween + s);
         }
 
     }
