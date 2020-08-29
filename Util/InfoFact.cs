@@ -56,9 +56,9 @@ namespace HlidacStatu.Util
                     taken.Add(infof.First());
             }
 
-            if (number > 1 && taken.Count()>1)
+            if (taken.Count< number)
             {
-                if (shuffle)
+                if (shuffle && taken.Count() > 1)
                     taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Shuffle().Take(number - (takeSummary ? 1 : 0)));
                 else
                     taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Take(number - (takeSummary ? 1 : 0)));
