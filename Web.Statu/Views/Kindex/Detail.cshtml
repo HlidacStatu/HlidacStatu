@@ -592,7 +592,7 @@ else
                                         výsledek se poté (pro lepší čitelnost) vynásobí deseti.
                                     </p>
                                     <p>
-                                        <table class="table table-condensed" style="width:auto">
+                                        <table class="table table-condensed table-no-border" style="width:auto">
                                             <thead>
                                                 <tr>
                                                     <th>Parametr</th>
@@ -606,15 +606,30 @@ else
                                                 {
                                                     <tr>
                                                         <td>@r.VelicinaLongName</td>
-                                                        <td class="number">@(r.Hodnota.ToString("N4")) </td>
+                                                        <td class="number">+ @(r.Hodnota.ToString("N4")) </td>
                                                     </tr>
                                                 }
                                                 <tr>
-                                                    <td>Mezisoučet x 10 
-                                                    <br/>(pro lepší čitelnost)</td>
-                                                    <td class="number">@(currYear.KIndexVypocet.Radky
+                                                    <td>
+                                                        Mezisoučet
+                                                        <br />(pro lepší čitelnost)
+                                                    </td>
+                                                    <td class="number"  style="border-top:2px double black">
+                                                        
+                                                        @(currYear.KIndexVypocet.Radky
                                                                       .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
-                                                                      .Sum(m => m.Hodnota).ToString("N3")) x 10</td>
+                                                                      .Sum(m => m.Hodnota).ToString("N3"))
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        x 10 (pro lepší čitelnost)
+                                                    </td>
+                                                    <td class="number" style="border-top:2px double black">                                                        
+                                                        @(currYear.KIndexVypocet.Radky
+                                                                      .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
+                                                                      .Sum(m => m.Hodnota*10).ToString("N2"))
+                                                    </td>
                                                 </tr>
                                                 @if (currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)?.Hodnota > 0)
                                                 {
@@ -623,9 +638,9 @@ else
                                                         <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == KIndexData.KIndexParts.PercSmlouvyPod50kBonus).Hodnota)</td>
                                                     </tr>
                                                 }
-                                                <tr>
-                                                    <td>Výsledný K-Index </td>
-                                                    <td class="number">@currYear.KIndexVypocet.Vypocet().ToString("N")</td>
+                                                <tr >
+                                                    <td><b>Výsledný K-Index</b></td>
+                                                    <td class="number" style="border-top:2px double black;font-weight:bold">@currYear.KIndexVypocet.Vypocet().ToString("N")</td>
                                                 </tr>
                                             </tbody>
                                         </table>
