@@ -678,39 +678,8 @@ else
     @ParametrDescr(vradek.VelicinaPart, false, "well")
     <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
     <div class="well well-sm">
-        <table class="table table-condensed table-dotted" style="width:auto">
-            <tr>
-                <td>Průměrný počet bodů</td>
-                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Average(part)) bodů</td>
-            </tr>
-            <tr>
-                <th colspan="2">Nejlepší výsledky</th>
-            </tr>
-            <tr>
-                <td>Nejlepších 10% organizací má méně než</td>
-                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part)) bodů</td>
-            </tr>
-            <tr>
-                <td>Nejlepších třetina organizací má méně než</td>
-                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(33, part)) bodů</td>
-            </tr>
-            <tr>
-                <th colspan="2">Nejhorší výsledky</th>
-            </tr>
-            <tr>
-                <td>Nejhorší třetina organizací má více než</td>
-                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(66, part)) bodů</td>
-            </tr>
-            <tr>
-                <td>Nejhorších 10% organizací má více než</td>
-                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part)) bodů</td>
-            </tr>
-        </table>
-        parametru "@part.ToNiceDisplayName()" je
-        <b></b>.
-        Nejlepších 10% organizací má tento parametr menší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(10, part))</b>,
-        10% nejhorších vyšší než <b>@HlidacStatu.Util.RenderData.NiceNumber(statistics.Percentil(90, part))</b>
-    </div>
+        <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
+     </div>
 
 }
 

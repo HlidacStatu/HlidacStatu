@@ -1,6 +1,8 @@
 ﻿using Devmasters.Enums;
+
 using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 using HlidacStatu.Lib.Data;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +63,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 var subjects = Statistics.GetStatistics(rok.Value)
                             .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
-                
+
                 foreach (var subject in subjects)
                 {
                     SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData((Firma.Zatrideni.Item)subject);
@@ -105,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
 
             return View(results);
         }
-        
+
         public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
@@ -181,13 +183,13 @@ namespace HlidacStatu.Web.Controllers
 
                 if (kidx != null)
                 {
-                    
+
                     var radky = kidx.ForYear(rok.Value).KIndexVypocet.Radky
                         .Select(r => new
                         {
                             VelicinaName = r.VelicinaName,
-                            Label = KIndexData.KindexImageIcon(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota), 
-                                "height: 25px", 
+                            Label = KIndexData.KindexImageIcon(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota),
+                                "height: 25px",
                                 showNone: true,
                                 KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))),
                         }).ToList();
@@ -256,6 +258,61 @@ namespace HlidacStatu.Web.Controllers
 
         [ValidateInput(false)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+        public ActionResult PercentileBanner(string id, int? part = null, int? rok = null)
+        {
+            rok = Consts.FixKindexYear(rok);
+            var kidx = KIndex.Get(id);
+            if (kidx != null)
+            {
+
+                Statistics stat = Statistics.GetStatistics(rok.Value);
+
+                KIndexData.KIndexParts? kpart = (KIndexData.KIndexParts?)part;
+                if (kpart.HasValue)
+                {
+                    var val = kidx.ForYear(rok.Value).KIndexVypocet.Radky.FirstOrDefault(m=>m.VelicinaPart==kpart.Value)?.Hodnota ?? 0;
+
+                    return Content(
+                        new HlidacStatu.KIndexGenerator.PercentileBanner(
+                            val,
+                            stat.Percentil(1, kpart.Value),
+                            stat.Percentil(10, kpart.Value),
+                            stat.Percentil(25, kpart.Value),
+                            stat.Percentil(50, kpart.Value),
+                            stat.Percentil(75, kpart.Value),
+                            stat.Percentil(90, kpart.Value),
+                            stat.Percentil(99, kpart.Value),
+                            Lib.StaticData.App_Data_Path).Svg()
+                        , "image/svg+xml");
+
+
+                }
+                else
+                {
+                    var val = kidx.ForYear(rok.Value).KIndex;
+
+                    return Content(
+                        new HlidacStatu.KIndexGenerator.PercentileBanner(
+                            val,
+                            stat.Percentil(1),
+                            stat.Percentil(10),
+                            stat.Percentil(25),
+                            stat.Percentil(50),
+                            stat.Percentil(75),
+                            stat.Percentil(90),
+                            stat.Percentil(99),
+                            Lib.StaticData.App_Data_Path).Svg()
+                        , "image/svg+xml");
+
+                }
+
+            }
+            else
+                return Content("", "image/svg+xml");
+        }
+
+        [ValidateInput(false)]
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
         public ActionResult Banner(string id, int? rok = null)
         {
             rok = Consts.FixKindexYear(rok);
@@ -281,6 +338,6 @@ namespace HlidacStatu.Web.Controllers
             }
             return File(data, "image/png");
         }
-        
+
     }
 }
