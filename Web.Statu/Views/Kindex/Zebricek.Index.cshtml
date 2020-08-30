@@ -7,8 +7,8 @@
 
 @{
 
-    ViewBag.Title = "Porovnání K–Index pro různé skupiny subjektů";
-    ViewBag.HideTitle = true;
+    ViewBag.Title = "Porovnání K–Index pro různé skupiny úřadů a organizací";
+    //ViewBag.HideTitle = true;
 
 }
 
@@ -21,8 +21,8 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K–Index</li>
-        <li class="active">@ViewBag.Title</li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
     </ol>
 }
 
@@ -46,7 +46,7 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <p>Připravili jsme pro vás několik žebříčků</p>
+        <h2>Připravili jsme pro vás několik žebříčků</h2>
         <div class="row">
             <div class="col-xs-12">
                 @foreach (var g in Devmasters.Enums.EnumTools.Groups(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor)))
@@ -55,24 +55,27 @@
                     <div>
                         @foreach (var item in Devmasters.Enums.EnumTools.InGroup(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor), g))
                         {
-                        <a href="/kindex/zebricek/@item.ToString()" class="btn btn-default">Porovnat @(item.ToNiceDisplayName())</a>
+                            <a href="/kindex/zebricek/@item.ToString()" class="btn btn-default"><span class="text-gray">Porovnat</span> @(item.ToNiceDisplayName())</a>
+
+                        }
+                        @if (g == "Samospráva")
+                        {
+                            <div style="border: 1px #ddd dashed;border-radius: 4px 4px 0 0;-webkit-box-shadow: none;box-shadow: none;display:inline-block;padding: 0px 5px 0px 5px;margin-left: 10px;background-color:#f0f0f0">
+                                <form action="/kindex/zebricek/Obce_III_stupne" method="get" class="form-inline">
+                                    <select name="kraj" class="form-control">
+                                        <option value="">(vyberte kraj)</option>
+                                        @Html.Raw(HlidacStatu.Util.CZ_Nuts.Kraje.OrderBy(k => k.Value).Select(k => $"<option value='{k.Value}'>{k.Value}</option>").Aggregate((f, s) => f + s))
+                                    </select>
+                                    <button type="submit" name="specialtype" value="mestavkraji" class="btn btn-default">Porovnat města v kraji</button>
+                                </form>
+                            </div>
+
 
                         }
                     </div>
 
                 }
 
-            </div>
-            <div class="col-xs-12">
-                <div style="border-color: #ddd;border-width: 1px;border-radius: 4px 4px 0 0;-webkit-box-shadow: none;box-shadow: none;">
-                    <form action="/porovnat/special?&title=@Url.Encode("Porovnání měst v krajích")" method="get" class="form-inline">
-                        <select name="specialvalue" class="form-control">
-                            <option value="">(vyberte kraj)</option>
-                            @Html.Raw(HlidacStatu.Lib.StaticData.MestaPodleKraju.Keys.OrderBy(k => k).Select(k => $"<option value='{k}'>{k}</option>").Aggregate((f, s) => f + s))
-                        </select>
-                        <button type="submit" name="specialtype" value="mestavkraji" class="btn btn-default">Porovnat města v kraji</button>
-                    </form>
-                </div>
             </div>
         </div>
 

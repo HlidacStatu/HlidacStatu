@@ -114,165 +114,168 @@ $(document).ready(function(){
         }
     }
     </script>
+
+    <style>
+
+        .infoshow, .infoshowhide {
+            display: none;
+        }
+
+            .infoshow:checked ~ .infoshowhide {
+                display: block;
+            }
+
+        .kmeter {
+            margin: 0px;
+            padding: 30px;
+            height: 110px;
+            width: 620px;
+            border: solid grey 0px;
+        }
+
+        .kframe {
+            position: relative;
+            width: 60px;
+            border-top: solid 6px;
+            border-bottom: solid 6px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            height: 100%;
+            float: left;
+            margin-right: 1px;
+            height: 100%;
+        }
+
+        .kmark {
+            color: #909090;
+            font-weight: bold;
+            position: relative;
+            z-index: 100;
+            background: white;
+            display: inline-block;
+            top: -3px;
+            line-height: 10px;
+            font-size: 13px;
+            font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+            padding: 0 3px 0 3px;
+            margin: 0;
+        }
+
+        .kmarkvalue {
+            color: #000;
+            font-weight: bold;
+            position: relative;
+            z-index: 100;
+            background: white;
+            display: inline-block;
+            top: -3px;
+            line-height: 10px;
+            font-size: 13px;
+            font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+            padding: 0 3px 0 3px;
+            margin: 0;
+        }
+
+        .textover {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            z-index: 2;
+            text-shadow: 0 0 4px #000; /* horizontal-offset vertical-offset 'blur' colour */
+            -moz-text-shadow: 0 0 4px #000;
+            -webkit-text-shadow: 0 0 4px #000;
+        }
+
+        .totalnumber {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            color: black;
+            font-weight: bold;
+            font-size: 25px;
+            position: absolute;
+            z-index: 5;
+        }
+
+        .apart {
+            border-color: #002d5a;
+            border-left: #002d5a solid 6px;
+            padding-left: 5px;
+        }
+
+        .bpart {
+            border-color: #0064b4;
+        }
+
+        .cpart {
+            border-color: #00a5ff;
+        }
+
+        .dpart {
+            border-color: #9099a3;
+        }
+
+        .epart {
+            border-color: #f0aa00;
+        }
+
+        .fpart {
+            border-color: #d44820;
+            border-right: #d44820 solid 6px;
+            padding-right: 5px;
+            width: 180px;
+        }
+
+        .kfill {
+            position: relative;
+            height: 100%;
+        }
+
+        .afill {
+            background-color: #002d5a;
+        }
+
+        .bfill {
+            background-color: #0064b4;
+        }
+
+        .cfill {
+            background-color: #00a5ff;
+        }
+
+        .dfill {
+            background-color: #9099a3;
+        }
+
+        .efill {
+            background-color: #f0aa00;
+        }
+
+        .ffill {
+            background-color: #d44820;
+        }
+    </style>
+
 }
 
 @section breadcrumb
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K–Index podrobně</li>
-        <li class="active">@Model.Jmeno</li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li>Podrobně</li>
+        <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
     </ol>
 }
 
-<style>
-
-    .infoshow, .infoshowhide {
-        display: none;
-    }
-
-        .infoshow:checked ~ .infoshowhide {
-            display: block;
-        }
-
-    .kmeter {
-        margin: 0px;
-        padding: 30px;
-        height: 110px;
-        width: 620px;
-        border: solid grey 0px;
-    }
-
-    .kframe {
-        position: relative;
-        width: 60px;
-        border-top: solid 6px;
-        border-bottom: solid 6px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        height: 100%;
-        float: left;
-        margin-right: 1px;
-        height: 100%;
-    }
-
-    .kmark {
-        color: #909090;
-        font-weight: bold;
-        position: relative;
-        z-index: 100;
-        background: white;
-        display: inline-block;
-        top: -3px;
-        line-height: 10px;
-        font-size: 13px;
-        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
-        padding: 0 3px 0 3px;
-        margin: 0;
-    }
-
-    .kmarkvalue {
-        color: #000;
-        font-weight: bold;
-        position: relative;
-        z-index: 100;
-        background: white;
-        display: inline-block;
-        top: -3px;
-        line-height: 10px;
-        font-size: 13px;
-        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
-        padding: 0 3px 0 3px;
-        margin: 0;
-    }
-
-    .textover {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        color: white;
-        font-weight: bold;
-        font-size: 20px;
-        position: absolute;
-        z-index: 2;
-        text-shadow: 0 0 4px #000; /* horizontal-offset vertical-offset 'blur' colour */
-        -moz-text-shadow: 0 0 4px #000;
-        -webkit-text-shadow: 0 0 4px #000;
-    }
-
-    .totalnumber {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        color: black;
-        font-weight: bold;
-        font-size: 25px;
-        position: absolute;
-        z-index: 5;
-    }
-
-    .apart {
-        border-color: #002d5a;
-        border-left: #002d5a solid 6px;
-        padding-left: 5px;
-    }
-
-    .bpart {
-        border-color: #0064b4;
-    }
-
-    .cpart {
-        border-color: #00a5ff;
-    }
-
-    .dpart {
-        border-color: #9099a3;
-    }
-
-    .epart {
-        border-color: #f0aa00;
-    }
-
-    .fpart {
-        border-color: #d44820;
-        border-right: #d44820 solid 6px;
-        padding-right: 5px;
-        width: 180px;
-    }
-
-    .kfill {
-        position: relative;
-        height: 100%;
-    }
-
-    .afill {
-        background-color: #002d5a;
-    }
-
-    .bfill {
-        background-color: #0064b4;
-    }
-
-    .cfill {
-        background-color: #00a5ff;
-    }
-
-    .dfill {
-        background-color: #9099a3;
-    }
-
-    .efill {
-        background-color: #f0aa00;
-    }
-
-    .ffill {
-        background-color: #d44820;
-    }
-</style>
 <div class="row">
     <div class="col-xs-12">
         <h1 class="new-title text-left">
@@ -514,14 +517,14 @@ else
                             @(KIndexData.KIndexCommentForPart(radek.VelicinaPart,currYear))
                         </td>
                         <!--
-                                    <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                                        @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
-                                        <div class="small" style="font-family: Cabin, sans-serif;">
-                                            @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
-                                            (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
-                                        </div>
-                                    </td>
-            -->
+                                                <td class="number" style="font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                                                    @HlidacStatu.Util.RenderData.NiceNumber(radek.Koeficient * radek.Hodnota, false)
+                                                    <div class="small" style="font-family: Cabin, sans-serif;">
+                                                        @(statistics.PercIntervalShortText(radek.VelicinaPart, radek.Hodnota))
+                                                        (@statistics.SubjektRank(Model.Ico, radek.VelicinaPart))
+                                                    </div>
+                                                </td>
+                        -->
 
                     </tr>
                     <tr style="border-bottom:dotted 2px #E0E6ED">
@@ -588,7 +591,7 @@ else
                                         @(statistics.SubjektRank(Model.Ico)). místo z @(statistics.SubjektOrderedListKIndexAsc.Count).
                                     </p>
                                     <p>
-                                        Výpočet celkového počtu bodů je jednoduchý. Sečtou se body u jednotlivých parametrů a 
+                                        Výpočet celkového počtu bodů je jednoduchý. Sečtou se body u jednotlivých parametrů a
                                         výsledek se poté (pro lepší čitelnost) vynásobí deseti.
                                     </p>
                                     <p>
@@ -614,8 +617,8 @@ else
                                                         Mezisoučet
                                                         <br />(pro lepší čitelnost)
                                                     </td>
-                                                    <td class="number"  style="border-top:2px double black">
-                                                        
+                                                    <td class="number" style="border-top:2px double black">
+
                                                         @(currYear.KIndexVypocet.Radky
                                                                       .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
                                                                       .Sum(m => m.Hodnota).ToString("N3"))
@@ -625,7 +628,7 @@ else
                                                     <td>
                                                         x 10 (pro lepší čitelnost)
                                                     </td>
-                                                    <td class="number" style="border-top:2px double black">                                                        
+                                                    <td class="number" style="border-top:2px double black">
                                                         @(currYear.KIndexVypocet.Radky
                                                                       .Where(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)
                                                                       .Sum(m => m.Hodnota*10).ToString("N2"))
@@ -638,7 +641,7 @@ else
                                                         <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == KIndexData.KIndexParts.PercSmlouvyPod50kBonus).Hodnota)</td>
                                                     </tr>
                                                 }
-                                                <tr >
+                                                <tr>
                                                     <td><b>Výsledný K-Index</b></td>
                                                     <td class="number" style="border-top:2px double black;font-weight:bold">@currYear.KIndexVypocet.Vypocet().ToString("N")</td>
                                                 </tr>
@@ -679,7 +682,7 @@ else
     <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
     <div class="well well-sm">
         <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
-     </div>
+    </div>
 
 }
 
@@ -790,91 +793,91 @@ else
         </div>
 
 
-                    foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
-                    {
-<div class="boxobor @ro.Obor" style="display:none;">
-    <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
-    @if (ro.PodilSmluvBezCeny > 0)
-    {
-        <p>
-            Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
-        </p>
-        <hr style="width:50%" />
-    }
-    <div class="row">
-        <div class="col-xs-12">
-            @{
-                KoncentraceDodavateluIndexy koncentrace = currYear.KoncetraceDodavateluObory
-                    .First(o => o.OborName == ro.Obor)
-                    .Koncentrace;
-
-                List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
-                                .OrderByDescending(m => m.HodnotaSmluv)
-                                .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
-                                .Take(12)
-                                .ToList();
-                if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+        foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
+        {
+            <div class="boxobor @ro.Obor" style="display:none;">
+                <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
+                @if (ro.PodilSmluvBezCeny > 0)
                 {
-                    data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+                    <p>
+                        Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
+                    </p>
+                    <hr style="width:50%" />
                 }
-            }
-            <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
-                </div>
-                <div class="col-xs-12 col-sm-6">
+                <div class="row">
+                    <div class="col-xs-12">
+                        @{
+                            KoncentraceDodavateluIndexy koncentrace = currYear.KoncetraceDodavateluObory
+                                .First(o => o.OborName == ro.Obor)
+                                .Koncentrace;
 
-                    @using (Html.LowBox(250))
-                    {
-                        <table class="table table-new table-new--dotted table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Dodavatel</th>
-                                    <th>Počet smluv</th>
-                                    <th>Objem v Kč</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                            List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
+                                            .OrderByDescending(m => m.HodnotaSmluv)
+                                            .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                                            .Take(12)
+                                            .ToList();
+                            if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
+                            {
+                                data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
+                            }
+                        }
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+
+                                @using (Html.LowBox(250))
                                 {
-                                    <tr>
-                                        <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
-                                        <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
-                                        <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
-                                    </tr>
+                                    <table class="table table-new table-new--dotted table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Dodavatel</th>
+                                                <th>Počet smluv</th>
+                                                <th>Objem v Kč</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                                            {
+                                                <tr>
+                                                    <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
+                                                    <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
+                                                    <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                                </tr>
 
+                                            }
+                                        </tbody>
+
+                                    </table>
                                 }
-                            </tbody>
+                            </div>
+                        </div>
 
-                        </table>
-                    }
+
+
+                    </div>
                 </div>
             </div>
+        }
+
+    }
+}
 
 
+@helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
+{
 
+    string descr = "";
+    descr = KIndexData.PartsDescription(part);
+
+    if (!string.IsNullOrEmpty(descr))
+    {
+        <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
+            <div class="@_class" style="@style">
+                @Html.Raw(descr)
+            </div>
         </div>
-    </div>
-</div>
-                    }
+    }
 
-                    }
-                    }
-
-
-                    @helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
-                    {
-
-                        string descr = "";
-                        descr = KIndexData.PartsDescription(part);
-
-                        if (!string.IsNullOrEmpty(descr))
-                        {
-                            <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
-                                <div class="@_class" style="@style">
-                                    @Html.Raw(descr)
-                                </div>
-                            </div>
-                        }
-
-                    }
+}

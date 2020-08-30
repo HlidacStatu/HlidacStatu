@@ -209,10 +209,8 @@ namespace HlidacStatu.Lib.Data
                     case StatniOrganizaceObor.Konzervatore:
                     case StatniOrganizaceObor.Mestske_casti_Prahy:
                     case StatniOrganizaceObor.OVM_pro_evidenci_skutecnych_majitelu:
-                        icos = GetSubjektyFromRPP((int)obor);
-                        break;
                     case StatniOrganizaceObor.Obce_III_stupne:
-
+                        icos = GetSubjektyFromRPP((int)obor);
                         break;
                     case StatniOrganizaceObor.Vsechny_ustredni_organy_statni_spravy:
                         icos = GetSubjektyFromRPP((int)StatniOrganizaceObor.Dalsi_ustredni_organy_statni_spravy)

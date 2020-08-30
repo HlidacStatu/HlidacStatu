@@ -128,6 +128,9 @@ namespace HlidacStatu.Web.Controllers
                 id = "obor";
             switch (id?.ToLower())
             {
+                case "mesta":
+
+                    break;
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
                         .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
@@ -146,18 +149,18 @@ namespace HlidacStatu.Web.Controllers
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .OrderByDescending(k => k.KIndex)
                         .Take(100);
-                    ViewBag.LadderTopic = "Top 100 nejhorších subjektů";
-                    ViewBag.LadderTitle = "Top 100 nejhorších subjektů podle K–Indexu";
+                    ViewBag.LadderTopic = "Nejhůře hodnocené úřady a organizace";
+                    ViewBag.LadderTitle = "Nejhůře hodnocené úřady a organizace podle K–Indexu";
                     break;
 
                 case "celkovy":
                     result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
-                    ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
-                    ViewBag.LadderTitle = "Žebříček K–Indexu";
+                    ViewBag.LadderTopic = "Kompletní žebříček úřadů a organizací";
+                    ViewBag.LadderTitle = "Kompletní žebříček úřadů a organizací podle K–Indexu";
                     break;
 
                 case "skokani":
-                    ViewBag.LadderTitle = "Top změny K–Indexu";
+                    ViewBag.LadderTitle = "Úřady a organizace, kterým se hodnocení K-Indexu meziročně nejvíce změnilo";
                     return View("Zebricek.Skokani", Statistics.GetJumpersFromBest(rok.Value).Take(200));
 
                 default:

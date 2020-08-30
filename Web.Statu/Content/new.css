@@ -131,6 +131,14 @@ h1 {
     color: #303b47;
 }
 
+h1.new-title {
+    color: #28313B;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 48px;
+    letter-spacing: 0.6px;
+}
+
 h2.new-title {
     color: #28313B;
     font-size: 40px;

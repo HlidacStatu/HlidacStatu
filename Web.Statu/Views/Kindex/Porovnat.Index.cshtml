@@ -7,7 +7,7 @@
 
 @{
 
-    ViewBag.Title = "Porovnání K–Index pro různé skupiny subjektů";
+    ViewBag.Title = "Porovnání K–Index pro různé skupiny úřadů a organizací";
     ViewBag.HideTitle = true;
 
 }
@@ -21,8 +21,8 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li>K–Index</li>
-        <li class="active">@ViewBag.Title</li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
     </ol>
 }
 
@@ -55,7 +55,7 @@
                     <div>
                         @foreach (var item in Devmasters.Enums.EnumTools.InGroup(typeof(HlidacStatu.Lib.Data.Firma.Zatrideni.StatniOrganizaceObor), g))
                         {
-                        <a href="/kindex/porovnat/@item.ToString()" class="btn btn-default">Porovnat @(item.ToNiceDisplayName())</a>
+                        <a href="/kindex/porovnat/@item.ToString()" class="btn btn-default"><span class="text-gray">Porovnat</span> @(item.ToNiceDisplayName())</a>
 
                         }
                     </div>
