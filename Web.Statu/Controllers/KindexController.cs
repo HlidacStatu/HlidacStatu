@@ -24,6 +24,32 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Detail(string id, int? rok = null)
         {
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User)    || string.IsNullOrWhiteSpace(id))
+            {
+                return Redirect("/");
+            }
+
+            if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
+            {
+                ViewBag.ICO = id;
+
+                ViewBag.SelectedYear = rok;
+
+                (string id, int? rok) model = (id, rok);
+                return View(model);
+            }
+            else
+                return View("Index");
+
+
+        }
+
+        [ChildActionOnly()]
+#if (!DEBUG)
+        [OutputCache(VaryByParam = "id;rok;group;kraj", Duration = 60 * 60 * 1)]
+#endif
+        public ActionResult Detail_child(string id, int? rok = null)
+        {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User)
                 || string.IsNullOrWhiteSpace(id))
             {
@@ -107,8 +133,61 @@ namespace HlidacStatu.Web.Controllers
 
             return View(results);
         }
-
         public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null)
+        {
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User))
+            {
+                return Redirect("/");
+            }
+
+            ViewBag.SelectedYear = rok;
+            ViewBag.SelectedLadder = id;
+            ViewBag.SelectedGroup = group;
+            ViewBag.SelectedKraj = kraj;
+
+
+            Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
+            if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
+                id = "obor";
+            switch (id?.ToLower())
+            {
+                case "obor":
+                    ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
+                    ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
+                    break;
+
+                case "nejlepsi":
+                    ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
+                    ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
+                    break;
+
+                case "nejhorsi":
+                    ViewBag.LadderTopic = "Nejhůře hodnocené úřady a organizace";
+                    ViewBag.LadderTitle = "Nejhůře hodnocené úřady a organizace podle K–Indexu";
+                    break;
+
+                case "celkovy":
+                    ViewBag.LadderTopic = "Kompletní žebříček úřadů a organizací";
+                    ViewBag.LadderTitle = "Kompletní žebříček úřadů a organizací podle K–Indexu";
+                    break;
+
+                case "skokani":
+                    ViewBag.LadderTitle = "Úřady a organizace, kterým se hodnocení K-Indexu meziročně nejvíce změnilo";
+                    break;
+                default:
+                    break;
+            }
+
+
+            (string id, int? rok, string group, string kraj) model = (ViewBag.SelectedLadder, rok, group, kraj);
+            return View(model);
+        }
+
+        [ChildActionOnly()]
+#if (!DEBUG)
+        [OutputCache(VaryByParam = "id;rok;group;kraj", Duration = 60 * 60 * 1)]
+#endif
+        public ActionResult Zebricek_child(string id, int? rok = null, string group = null, string kraj = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
@@ -270,7 +349,7 @@ namespace HlidacStatu.Web.Controllers
                 KIndexData.KIndexParts? kpart = (KIndexData.KIndexParts?)part;
                 if (kpart.HasValue)
                 {
-                    var val = kidx.ForYear(rok.Value).KIndexVypocet.Radky.FirstOrDefault(m=>m.VelicinaPart==kpart.Value)?.Hodnota ?? 0;
+                    var val = kidx.ForYear(rok.Value).KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == kpart.Value)?.Hodnota ?? 0;
 
                     return Content(
                         new HlidacStatu.KIndexGenerator.PercentileBanner(
