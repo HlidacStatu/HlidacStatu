@@ -50,11 +50,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// <returns>Positive number means improvement. Negative number means worsening.</returns>
         public static IEnumerable<SubjectWithKIndexTrend> GetJumpersFromBest(int year)
         {
-            if(year < 2017 || year >= DateTime.Now.Year)
-            {
-                throw new ArgumentOutOfRangeException(nameof(year), $"Year must be bigger than 2017 and smaler than {DateTime.Now.Year}.");
-            }
-
+            if (year < Consts.CalculationYears.Min() + 1)
+                year = Consts.CalculationYears.Min() + 1;
+            if (year > Consts.CalculationYears.Max() )
+                year = Consts.CalculationYears.Max();
 
             var statChosenYear = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year).SubjektOrderedListKIndexAsc;
             var statYearBefore = KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year - 1).SubjektOrderedListKIndexAsc;
@@ -74,6 +73,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     };
                     return r;
                 })
+                .Where(m=>(m.Roky.First().Value - m.Roky.Last().Value )!= 0)
                 .OrderByDescending(c => c.KIndex);
 
             if (statChosenYear == null || statYearBefore == null)

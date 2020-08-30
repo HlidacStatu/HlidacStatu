@@ -128,9 +128,6 @@ namespace HlidacStatu.Web.Controllers
                 id = "obor";
             switch (id?.ToLower())
             {
-                case "mesta":
-
-                    break;
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
                         .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
