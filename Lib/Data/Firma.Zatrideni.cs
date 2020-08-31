@@ -151,6 +151,8 @@ namespace HlidacStatu.Lib.Data
                 Technicke_sluzby = 10006,
 
                 //Sportovni_zarizeni = 10007,
+
+                [Disabled]
                 [GroupValue("Služby")]
                 [NiceDisplayName("Domovy důchodců")]
                 Domov_duchodcu = 10008,
