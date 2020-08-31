@@ -154,7 +154,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 .OrderBy(m => m.KIndex);
         }
 
-        public IEnumerable<Lib.Data.Firma.Zatrideni.Item> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
+        public IEnumerable<SubjectWithKIndex> SubjektOrderedListPartsCompanyAsc(KIndexData.KIndexParts part, IEnumerable<Lib.Data.Firma.Zatrideni.Item> filterIco = null, bool showNone = false)
         {
             return Filter(SubjektOrderedListPartsAsc[part],filterIco,showNone)
                 .OrderBy(m => m.KIndex);

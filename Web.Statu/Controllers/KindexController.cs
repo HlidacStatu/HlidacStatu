@@ -149,8 +149,20 @@ namespace HlidacStatu.Web.Controllers
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
             if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
                 id = "obor";
+
+            if (id != null && id.StartsWith("part_"))
+                id = "part";
             switch (id?.ToLower())
             {
+                case "part":
+                    string spart = ViewBag.SelectedLadder.ToString().Replace("part_", "");
+                    if (Enum.TryParse<KIndexData.KIndexParts>(spart, out var part))
+                    {
+                        ViewBag.LadderTopic = part.ToNiceDisplayName();
+                        ViewBag.LadderTitle = part.ToNiceDisplayName() + " podle K–Indexu";
+                    }
+
+                    break;
                 case "obor":
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
@@ -205,8 +217,21 @@ namespace HlidacStatu.Web.Controllers
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
             if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
                 id = "obor";
+            if (id != null && id.StartsWith("part_"))
+                id = "part";
             switch (id?.ToLower())
             {
+                case "part":
+                    string spart = ViewBag.SelectedLadder.ToString().Replace("part_","");
+                    if (Enum.TryParse<KIndexData.KIndexParts>(spart, out var part))
+                    {
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListPartsCompanyAsc(part, null);
+                        ViewBag.LadderTopic = part.ToNiceDisplayName();
+                        ViewBag.LadderTitle = part.ToNiceDisplayName() + " podle K–Indexu";
+                    }
+
+                    break;
                 case "obor":
                     result = Statistics.GetStatistics(rok.Value)
                         .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);

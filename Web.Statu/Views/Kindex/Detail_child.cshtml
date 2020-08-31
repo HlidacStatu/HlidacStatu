@@ -59,8 +59,8 @@
 
         return (result > 100) ? 100 : result;
 
-        //return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
-    };
+//return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
+};
 }
 
 
@@ -204,8 +204,161 @@ else
 
 <h2>Podrobný výpočet K–Indexu pro organizaci @(firma.Jmeno)</h2>
 
+<style>
+
+    .infoshow, .infoshowhide {
+        display: none;
+    }
+
+        .infoshow:checked ~ .infoshowhide {
+            display: block;
+        }
+
+    .kmeter {
+        margin: 0px;
+        padding: 30px 5px 30px 5px;
+        height: 110px;
+        width:100%;
+        max-width: 620px;
+        border: solid grey 0px;
+    }
+
+    .kframe {
+        position: relative;
+        max-width: 60px;
+        width:12%;
+        border-top: solid 6px;
+        border-bottom: solid 6px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 100%;
+        float: left;
+        margin-right: 1px;
+        height: 100%;
+    }
+
+    .kmark {
+        color: #909090;
+        font-weight: bold;
+        position: relative;
+        z-index: 100;
+        background: white;
+        display: inline-block;
+        top: -3px;
+        line-height: 10px;
+        font-size: 13px;
+        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+        padding: 0 3px 0 3px;
+        margin: 0;
+    }
+
+    .kmarkvalue {
+        color: #000;
+        font-weight: bold;
+        position: relative;
+        z-index: 100;
+        background: white;
+        display: inline-block;
+        top: -3px;
+        line-height: 10px;
+        font-size: 13px;
+        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace !important;
+        padding: 0 3px 0 3px;
+        margin: 0;
+    }
+
+    .textover {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        position: absolute;
+        z-index: 2;
+        text-shadow: 0 0 4px #000; /* horizontal-offset vertical-offset 'blur' colour */
+        -moz-text-shadow: 0 0 4px #000;
+        -webkit-text-shadow: 0 0 4px #000;
+    }
+
+    .totalnumber {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        color: black;
+        font-weight: bold;
+        font-size: 25px;
+        position: absolute;
+        z-index: 5;
+    }
+
+    .apart {
+        border-color: #002d5a;
+        border-left: #002d5a solid 6px;
+        padding-left: 5px;
+    }
+
+    .bpart {
+        border-color: #0064b4;
+    }
+
+    .cpart {
+        border-color: #00a5ff;
+    }
+
+    .dpart {
+        border-color: #9099a3;
+    }
+
+    .epart {
+        border-color: #f0aa00;
+    }
+
+    .fpart {
+        border-color: #d44820;
+        border-right: #d44820 solid 6px;
+        padding-right: 5px;
+        max-width: 180px;
+        width: 37.2%;
+    }
+
+    .kfill {
+        position: relative;
+        height: 100%;
+    }
+
+    .afill {
+        background-color: #002d5a;
+    }
+
+    .bfill {
+        background-color: #0064b4;
+    }
+
+    .cfill {
+        background-color: #00a5ff;
+    }
+
+    .dfill {
+        background-color: #9099a3;
+    }
+
+    .efill {
+        background-color: #f0aa00;
+    }
+
+    .ffill {
+        background-color: #d44820;
+    }
+</style>
+
+
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-xs-12 ">
         <div>
             Celková hodnota K–Indexu je <strong>@kindexValue.ToString("F2") bodů</strong>. To odpovídá výsledné známce
             @Html.KIndexIcon(currYear.KIndexLabel, 15) a @(statistics.PercIntervalShortText(currYear.KIndex))
@@ -218,41 +371,41 @@ else
                     <div class="textover">A</div>
                     <div class="kfill afill" style="width: @( kindexMeter(kindexValue,0) )%"></div>
                 </div>
-                <div class="kmark" style="left:42px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[1]</div>
+                <div class="kmark" style="left:80%;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[1]</div>
             </div>
             <div class="kframe bpart">
                 <div class="kfill">
                     <div class="textover">B</div>
                     <div class="kfill bfill" style="width: @( kindexMeter(kindexValue,1) )%"></div>
                 </div>
-                <div class="kmark" style="left:53px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[2]</div>
+                <div class="kmark" style="left:80%;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[2]</div>
             </div>
             <div class="kframe cpart">
                 <div class="kfill">
                     <div class="textover">C</div>
                     <div class="kfill cfill" style="width: @( kindexMeter(kindexValue,2) )%"></div>
                 </div>
-                <div class="kmark" style="left:53px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[3]</div>
+                <div class="kmark" style="left:80%">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[3]</div>
             </div>
             <div class="kframe dpart">
                 <div class="kfill">
                     <div class="textover">D</div>
                     <div class="kfill dfill" style="width: @( kindexMeter(kindexValue,3) )%"></div>
                 </div>
-                <div class="kmark" style="left:50px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[4]</div>
+                <div class="kmark" style="left:80%;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[4]</div>
             </div>
             <div class="kframe epart">
                 <div class="kfill">
                     <div class="textover">E</div>
                     <div class="kfill efill" style="width: @( kindexMeter(kindexValue,4) )%"></div>
                 </div>
-                <div class="kmark" style="left:48px;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[5]</div>
+                <div class="kmark" style="left:80%;">@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLimits[5]</div>
             </div>
             <div class="kframe fpart">
                 <div class="kfill">
                     <div class="textover" style="justify-content: left; left: 23px;">F</div>
                     <div class="kfill ffill" style="width: @( kindexMeter(kindexValue,5) )%"></div>
-                    <div class="kmark" style="left:153px;">25+</div>
+                    <div class="kmark" style="left:85%;">25+</div>
                 </div>
             </div>
         </div>
