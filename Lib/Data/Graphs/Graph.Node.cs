@@ -43,11 +43,11 @@ namespace HlidacStatu.Lib.Data
                         return Osoby.GetById.Get(Convert.ToInt32(Id))?.FullNameWithYear(html) ?? "(neznámá osoba)";
                     case NodeType.Company:
                     default:
-                        var f = Firmy.Get(Id);
-                        if (f.Valid)
-                            return f.Jmeno;
-                        else
-                            return "(neznámá firma)";
+                        return Firmy.GetJmeno(Id);
+                        //if (f.Valid)
+                        //    return f.Jmeno;
+                        //else
+                        //    return "(neznámá firma)";
                 }
             }
 
