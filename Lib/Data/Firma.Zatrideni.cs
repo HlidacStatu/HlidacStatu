@@ -298,11 +298,11 @@ namespace HlidacStatu.Lib.Data
                 else
                 {
                     var ret = new System.Collections.Concurrent.BlockingCollection<Item>();
-                    Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos.Distinct(),
+                    Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos.Select(m=>m.Trim()).Distinct(),
                         ic =>
                         {
                             var f = Firmy.Get(ic);
-                            if (f.PatrimStatu())
+                            if (f.PatrimStatu() && !ret.Any(ff=>ff.Ico == f.ICO))
                             {
                                 ret.Add(new Item()
                                 {
