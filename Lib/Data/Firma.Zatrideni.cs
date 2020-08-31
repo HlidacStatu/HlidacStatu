@@ -38,6 +38,7 @@ namespace HlidacStatu.Lib.Data
                 [Disabled]
                 Ostatni = 0,
 
+                [Disabled]
                 [GroupValue("Zdravotnictví")]
                 [NiceDisplayName("Zdravotní ústavy")]
                 Zdravotni_ustavy = 158,
@@ -54,12 +55,14 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Fakultní nemocnice")]
                 Fakultni_nemocnice = 10003,
 
+                [Disabled]
                 [GroupValue("Justice")]
                 [NiceDisplayName("Krajská státní zastupitelství")]
                 Krajska_statni_zastupitelstvi = 143,
                 [GroupValue("Justice")]
                 [NiceDisplayName("Krajské soudy")]
                 Krajske_soudy = 107,
+                [Disabled]
                 [GroupValue("Justice")]
                 [NiceDisplayName("Všechny soudy")]
                 Soudy = 123,
@@ -132,6 +135,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Veřejné vysoké školy")]
                 Verejne_vysoke_skoly = 1129,
 
+                [Disabled]
                 [GroupValue("Školství")]
                 [NiceDisplayName("Konzervatoře")]
                 Konzervatore = 1120,
