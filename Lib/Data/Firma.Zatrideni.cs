@@ -81,6 +81,7 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Hasičscké záchranné sbory")]
                 Hasicsky_zachranny_sbor = 135,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Krajské hygienické stanice")]
                 Krajske_hygienicke_stanice = 113,
@@ -90,9 +91,11 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Státní fondy")]
                 Statni_fondy = 980,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Okresní správy sociálního zabezpečení")]
                 OSSZ = 128,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Katastrální úřady")]
                 Katastralni_urady = 127,
@@ -111,12 +114,15 @@ namespace HlidacStatu.Lib.Data
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Další ústřední orgány státní správy")]
                 Dalsi_ustredni_organy_statni_spravy = 104,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Celní úřady")]
                 Celni_urady = 105,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Finanční úřady")]
                 Financni_urady = 109,
+                [Disabled]
                 [GroupValue("Státní úřady a organizace")]
                 [NiceDisplayName("Výjimky z registru smluv")]
                 Vyjimky_RS = 10100,
