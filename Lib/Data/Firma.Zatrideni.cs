@@ -25,8 +25,8 @@ namespace HlidacStatu.Lib.Data
             }
 
 
-            private static MemoryCacheManager<Zatrideni.Item[], StatniOrganizaceObor> instanceByZatrideni
-           = MemoryCacheManager<Zatrideni.Item[], StatniOrganizaceObor>.GetSafeInstance("oboryByObor", GetSubjektyDirect,
+            private static CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor> instanceByZatrideni
+           = CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor>.GetSafeInstance("oboryByObor", GetSubjektyDirect,
                 TimeSpan.FromDays(5)
            );
 

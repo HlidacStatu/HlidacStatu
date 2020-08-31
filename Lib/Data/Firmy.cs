@@ -9,6 +9,18 @@ namespace HlidacStatu.Lib.Data
     {
 
         static Firma nullObj = new Firma();
+
+        
+        private static string getNameByIco(string key)
+        {
+            var o = Firma.FromIco(key);
+            if (o == null)
+                return key;
+            if (o.Valid == false)
+                return key;
+            return o.Jmeno;
+        }
+
         private static Firma getByIco(string key)
         {
             var o = Firma.FromIco(key);
@@ -21,11 +33,13 @@ namespace HlidacStatu.Lib.Data
         }
 
         public static CouchbaseCacheManager<Firma, string> instanceByIco
-            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByICO", getByIco, TimeSpan.FromMinutes(120));
+            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByICO", getByIco, TimeSpan.FromHours(4));
 
         public static CouchbaseCacheManager<Firma, string> instanceByDS
-            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByDS", getByDS, TimeSpan.FromMinutes(120));
+            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByDS", getByDS, TimeSpan.FromHours(4));
 
+        public static CouchbaseCacheManager<string, string> instanceNameOnlyByIco
+            = CouchbaseCacheManager<string, string>.GetSafeInstance("firmaNameOnlyByICO", getNameByIco, TimeSpan.FromHours(12));
 
         public static string GetJmeno(int ICO)
         {
@@ -33,11 +47,7 @@ namespace HlidacStatu.Lib.Data
         }
         public static string GetJmeno(string ico)
         {
-            var f = Firmy.Get(ico);
-            if (f.Valid)
-                return f.Jmeno;
-            else
-                return ico;
+            return instanceNameOnlyByIco.Get(Util.ParseTools.NormalizeIco(ico));
         }
         public static Firma Get(int ICO)
         {
