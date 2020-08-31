@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 Lib.Init.WebAppDataPath, TimeSpan.Zero, "KIndexStat",
                     (o) =>
                     {
-                        return Lib.Analysis.KorupcniRiziko.Statistics.Calculate(2019).ToArray();
+                        return Lib.Analysis.KorupcniRiziko.Statistics.Calculate().ToArray();
                     });
 
 

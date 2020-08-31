@@ -19,9 +19,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-        public static IEnumerable<Statistics> Calculate(int untilYear, string[] forIcos = null)
+        public static IEnumerable<Statistics> Calculate(string[] forIcos = null)
         {
-            int[] calculationYears = Enumerable.Range(2017, untilYear - 2017 + 1).ToArray();
+            int[] calculationYears = Consts.CalculationYears;
 
             Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = (size, page) =>
             {
@@ -69,8 +69,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     stat.SubjektOrderedListPartsAsc.Add(part, datayear
                         .Where(m => m.Value.KIndexReady)
                         .Where(m=> m.Value.KIndexVypocet.Radky.Any(r => r.VelicinaPart == part))
-                        .OrderBy(m => m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota)
-                        .Select(m => (m.Key, m.Value.KIndex))
+                        .Select(m => (m.Key, m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota))
+                        .OrderBy(m => m.Hodnota)
                         .ToList()
                         );
                 }
