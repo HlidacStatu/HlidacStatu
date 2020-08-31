@@ -83,15 +83,18 @@
                     <a href="/kindex/zebricek/celkove" class="btn btn-default"><span class="text-gray">Porovnat</span> všechny</a>
 
                 </div>
-                <h3>Podle jednotlivých parametrů K-Indexu</h3>
-                <div>
-                    @foreach (var item in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexData.KIndexParts>())
-                    {
-                        <a href="/kindex/zebricek/part_@item.Value" class="btn btn-default"><span class="text-gray">Porovnat</span> podle @(item.Value.ToNiceDisplayName())</a>
+                @if (false)
+                {
+                    <h3>Podle jednotlivých parametrů K-Indexu</h3>
+                    <div>
+                        @foreach (var item in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexData.KIndexParts>())
+                        {
+                            <a href="/kindex/zebricek/part_@item.Value" class="btn btn-default"><span class="text-gray">Porovnat</span> podle @(item.Value.ToNiceDisplayName())</a>
 
-                    }
+                        }
 
-                </div>
+                    </div>
+                }
             </div>
         </div>
 
