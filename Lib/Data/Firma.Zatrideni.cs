@@ -178,6 +178,7 @@ namespace HlidacStatu.Lib.Data
             }
 
 
+            static object _getSubjektyDirectLock = new object();
             private static Zatrideni.Item[] GetSubjektyDirect(StatniOrganizaceObor obor)
             {
                 string[] icos = null;
@@ -297,20 +298,27 @@ namespace HlidacStatu.Lib.Data
                     return new Item[] { };
                 else
                 {
-                    var ret = new System.Collections.Concurrent.BlockingCollection<Item>();
+                    var ret = new System.Collections.Generic.List<Item>();
                     Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos.Select(m=>m.Trim()).Distinct(),
                         ic =>
                         {
                             var f = Firmy.Get(ic);
-                            if (f.PatrimStatu() && !ret.Any(ff=>ff.Ico == f.ICO))
+                            
+                            if (f.PatrimStatu())
                             {
-                                ret.Add(new Item()
+                                lock (_getSubjektyDirectLock) 
                                 {
-                                    Ico = f.ICO,
-                                    Jmeno = f.Jmeno,
-                                    KrajId = removeKraj ? "": f.KrajId,
-                                    Kraj = removeKraj ? "" : CZ_Nuts.Nace2Kraj(f.KrajId,"(neznamý)")
-                        });
+                                    if (!ret.Any(ff => ff.Ico == f.ICO))
+                                    {
+                                        ret.Add(new Item()
+                                        {
+                                            Ico = f.ICO,
+                                            Jmeno = f.Jmeno,
+                                            KrajId = removeKraj ? "" : f.KrajId,
+                                            Kraj = removeKraj ? "" : CZ_Nuts.Nace2Kraj(f.KrajId, "(neznamý)")
+                                        });
+                                    }
+                                }
                             }
                             return new Devmasters.Core.Batch.ActionOutputData();
                         }, !System.Diagnostics.Debugger.IsAttached);
