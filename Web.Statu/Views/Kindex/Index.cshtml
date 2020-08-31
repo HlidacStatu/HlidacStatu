@@ -38,6 +38,9 @@
             </div>
 
             <div class="block-col ">
+                <p class="muted">
+                    Index korupčního rizika - zkráceně K–Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                </p>
                 <p>
                     <img src="/content/Img/kindex-info.png" style="width:100%;" title="Popis K-Indexu" />
                 </p>
@@ -64,11 +67,15 @@
                 @{
                     var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
                         .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
-
                 }
+                <div>
                 
-                @Html.KIndexLabelLink(todaysOrg.ico)<a href="/subjekt/@todaysOrg.ico">
-                </a>&nbsp;&nbsp;&nbsp;@WebUtil.FirmaMoreInfoLinks(todaysOrg.ico)
+                    <a href="/kindex/detail/@todaysOrg.ico">
+                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:80%;max-width:500px;min-width:150px;height:auto" />
+                    </a>
+                    <br />
+                    <a href="/kindex/detail/@todaysOrg.ico">Jak jsme @Html.KIndexIcon(@todaysOrg.ico) spočítali podrobně popisujeme zde</a>
+                </div>
             </div>
 
             <div class="block-button-wrapper">
