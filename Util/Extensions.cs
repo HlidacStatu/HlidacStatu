@@ -120,6 +120,21 @@ namespace HlidacStatu.Util
             return source.OrderBy<T, int>((item) => Consts.Rnd.Next());
         }
 
+        /// <summary>
+        /// Picks "Random" element from IEnumberable based on the day.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static T TipOfTheDay<T>(this IEnumerable<T> source)
+        {
+            var begginingOfTheTime = new DateTime(1972, 10, 19);
+            var dayDiff = DateTime.Now - begginingOfTheTime;
+            int index = dayDiff.Days % source.Count();
+
+            return source.ElementAt(index);
+        }
+
         public static string RenderInfoFacts(this IEnumerable<InfoFact> infofacts, int number,
             bool takeSummary = true, bool shuffle = false,
             string delimiterBetween = " ",

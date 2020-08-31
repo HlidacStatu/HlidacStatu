@@ -4,6 +4,8 @@
 @using System.Linq;
 @using HlidacStatu.Web.Framework;
 @using HlidacStatu.Web.Models;
+@using HlidacStatu.Util;
+
 
 @{
     ViewBag.Title = "K–Index";
@@ -31,14 +33,42 @@
             <div class="watcher__title">
                 <img src="/Content/img/icon-person-watcher.svg">
                 <h2 class="new-title">
-                    O K-indexu
+                    Co je K-Index
                 </h2>
             </div>
 
             <div class="block-col ">
                 <p>
-                    Tady bude obrázek k indexu a co to je
+                    <img src="/content/Img/kindex-info.png" style="width:100%;" title="Popis K-Indexu" />
                 </p>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/kindex" class="btn btn-default btn-default-new">Sem nejspíš odkaz na blog, nebo článek o kindexu</a>
+            </div>
+        </div>
+
+        <!-- Organizace dne -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Organizace dne
+                </h2>
+            </div>
+
+            <div class="block-col ">
+                <p>
+                    Organizací pro dnešní den je
+                </p>
+                @{
+                    var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
+                        .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
+
+                }
+                
+                @Html.KIndexLabelLink(todaysOrg.ico)<a href="/subjekt/@todaysOrg.ico">
+                </a>&nbsp;&nbsp;&nbsp;@WebUtil.FirmaMoreInfoLinks(todaysOrg.ico)
             </div>
 
             <div class="block-button-wrapper">
@@ -55,13 +85,20 @@
                 </h2>
             </div>
 
-            <div class="block-col ">
-                <a href="/kindex/zebricek/nejlepsi">Nejlepší organizace</a>
-                <a href="/kindex/zebricek/nejhorsi">Nejhorší organizace</a>
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Hlavní žebříčky
+                </div>
+                <div class="block-tags">
+                    <a href="/kindex/zebricek/nejlepsi" class="tag">Nejlepší organizace</a>
+                    <a href="/kindex/zebricek/nejhorsi" class="tag">Nejhorší organizace</a>
+                    <a href="/kindex/zebricek/celkovy" class="tag">Všechny organizace</a>
+                    <a href="/kindex/zebricek/skokani" class="tag">Skokani</a>
+                </div>
             </div>
 
             <div class="block-button-wrapper">
-                <a href="/kindex/zebricek" class="btn btn-default btn-default-new">zobrazit všechny žebříčky</a>
+                <a href="/kindex/zebricek" class="btn btn-default btn-default-new">zobrazit ostatní žebříčky</a>
             </div>
         </div>
 
@@ -82,7 +119,7 @@
             </div>
 
             <div class="block-button-wrapper">
-                <a href="/osoby" class="btn btn-default btn-default-new">zobrazit vybraná porovnání</a>
+                <a href="/kindex/porovnat" class="btn btn-default btn-default-new">zobrazit vybraná porovnání</a>
             </div>
         </div>
     </div>
