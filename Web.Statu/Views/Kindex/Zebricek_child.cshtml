@@ -14,6 +14,7 @@
     string selectedGroup = ViewBag.SelectedGroup;
     string selectedKraj = ViewBag.SelectedKraj;
     KIndexData.KIndexParts? part = (KIndexData.KIndexParts?)ViewBag.SelectedPart;
+    string partDesc = part.HasValue ? "pro " + part.Value.ToNiceDisplayName() : "";
 
 
     var data = Model.ToArray().Where(m => true);
@@ -56,7 +57,6 @@
     ViewBag.HideTitle = true;
 
 
-    string partDesc = part.HasValue ? "pro " + part.Value.ToNiceDisplayName() : "";
 }
 
 @section scripts

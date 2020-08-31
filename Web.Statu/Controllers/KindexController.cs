@@ -188,7 +188,8 @@ namespace HlidacStatu.Web.Controllers
             }
 
 
-            (string id, int? rok, string group, string kraj, string part) model = ((string)ViewBag.SelectedLadder, rok, group, kraj, part);
+            (string id, int? rok, string group, string kraj) model = ((string)ViewBag.SelectedLadder, rok, 
+                group,kraj );
             return View(model);
         }
 

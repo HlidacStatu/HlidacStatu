@@ -1,4 +1,4 @@
-﻿@model (string id,int? rok,string group,string kraj,string part)
+﻿@model  (string id,int? rok,string group,string kraj)
 
 @using Devmasters.Core;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -11,6 +11,7 @@
     string selectedGroup = ViewBag.SelectedGroup;
     string selectedKraj = ViewBag.SelectedKraj;
 
+    
 
     ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
     if (!string.IsNullOrEmpty(selectedGroup))
@@ -64,5 +65,5 @@
     rok = Model.rok,
     kraj = Model.kraj,
     group = Model.group,
-    part = Model.part
+    part = Request.QueryString["part"]
 })
