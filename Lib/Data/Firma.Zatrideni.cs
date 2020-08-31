@@ -218,13 +218,15 @@ namespace HlidacStatu.Lib.Data
                             .ToArray();
                         break;
                     case StatniOrganizaceObor.Nemocnice:
-                        sql = @"select f.ICO from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
+                        sql = @"select distinct ico from (
+                            select f.ICO from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
                             union
                             select distinct f.ico
                                 from Firma_NACE fn
                                 join firma f on f.ICO = fn.ICO
                                 where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
-                                and f.Kod_PF not in (105, 101, 801, 601)";
+                                and f.Kod_PF not in (105, 101, 801, 601)
+                            ) as f";
                         icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Velke_nemocnice:
@@ -296,7 +298,7 @@ namespace HlidacStatu.Lib.Data
                 else
                 {
                     var ret = new System.Collections.Concurrent.BlockingCollection<Item>();
-                    Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos,
+                    Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos.Distinct(),
                         ic =>
                         {
                             var f = Firmy.Get(ic);
