@@ -13,6 +13,8 @@
     int selectedYear = ViewBag.SelectedYear;
     string selectedGroup = ViewBag.SelectedGroup;
     string selectedKraj = ViewBag.SelectedKraj;
+    KIndexData.KIndexParts? part = (KIndexData.KIndexParts?)ViewBag.SelectedPart;
+
 
     var data = Model.ToArray().Where(m => true);
 
@@ -53,6 +55,8 @@
     }
     ViewBag.HideTitle = true;
 
+
+    string partDesc = part.HasValue ? "pro " + part.Value.ToNiceDisplayName() : "";
 }
 
 @section scripts
@@ -66,11 +70,11 @@
         <li><a href="/">Hlídač Státu</a></li>
         <li><a href="/kindex">K–Index</a></li>
         <li><a href="/kindex/zebricek">Žebříčky úřadů a organizací</a></li>
-        <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
+        <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle) @partDesc</li>
     </ol>
 }
 
-<h2>@(ViewBag.LadderTitle) pro rok @ViewBag.SelectedYear<small>@ViewBag.SubTitle</small></h2>
+<h2>@(ViewBag.LadderTitle) pro rok @ViewBag.SelectedYear<small>@ViewBag.SubTitle @partDesc</small></h2>
 
 <div class="row">
     <div class="col-sm-12">
@@ -140,9 +144,9 @@
             <thead>
                 <tr>
                     <th>Pořadí</th>
-                    <th>Známka</th>
+                    <th>Známka @partDesc</th>
                     <th>Firma</th>
-                    <th style="text-align: right;">Body</th>
+                    <th style="text-align: right;">Body @partDesc</th>
                     @*<td>Přidat do porovnání</td>*@
                 </tr>
             </thead>
@@ -161,7 +165,15 @@
                             @(record.rank).
                         </td>
                         <td>
-                            @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
+                            @if (part.HasValue)
+                            {
+                                var lbl = KIndexData.KIndexLabelForPart(part.Value, record.item.KIndex);
+                                @Html.KIndexLabelLink(record.item.Ico, lbl,"height:15px;" )
+                            }
+                            else
+                            {
+                                @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
+                            }
                         </td>
                         <td>
                             <a href="/subjekt/@record.item.Ico">@record.item.Jmeno</a>

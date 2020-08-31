@@ -1,4 +1,4 @@
-﻿@model (string id, int? rok, string group, string kraj)
+﻿@model (string id,int? rok,string group,string kraj,string part)
 
 @using Devmasters.Core;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -63,5 +63,6 @@
     id = Model.id,
     rok = Model.rok,
     kraj = Model.kraj,
-    group = Model.group
+    group = Model.group,
+    part = Model.part
 })

@@ -133,7 +133,7 @@ namespace HlidacStatu.Web.Controllers
 
             return View(results);
         }
-        public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null)
+        public ActionResult Zebricek(string id, int? rok = null, string group = null, string kraj = null, string part = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
@@ -150,19 +150,16 @@ namespace HlidacStatu.Web.Controllers
             if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
                 id = "obor";
 
-            if (id != null && id.StartsWith("part_"))
-                id = "part";
+
+            if (Enum.TryParse<KIndexData.KIndexParts>(part, out KIndexData.KIndexParts ePart))
+            {
+                part = ePart.ToString();
+            }
+            else
+                part = "";
+
             switch (id?.ToLower())
             {
-                case "part":
-                    string spart = ViewBag.SelectedLadder.ToString().Replace("part_", "");
-                    if (Enum.TryParse<KIndexData.KIndexParts>(spart, out var part))
-                    {
-                        ViewBag.LadderTopic = part.ToNiceDisplayName();
-                        ViewBag.LadderTitle = part.ToNiceDisplayName() + " podle K–Indexu";
-                    }
-
-                    break;
                 case "obor":
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
@@ -191,15 +188,15 @@ namespace HlidacStatu.Web.Controllers
             }
 
 
-            (string id, int? rok, string group, string kraj) model = (ViewBag.SelectedLadder, rok, group, kraj);
+            (string id, int? rok, string group, string kraj, string part) model = ((string)ViewBag.SelectedLadder, rok, group, kraj, part);
             return View(model);
         }
 
         [ChildActionOnly()]
 #if (!DEBUG)
-        [OutputCache(VaryByParam = "id;rok;group;kraj", Duration = 60 * 60 * 1)]
+        [OutputCache(VaryByParam = "id;rok;group;kraj;part", Duration = 60 * 60 * 1)]
 #endif
-        public ActionResult Zebricek_child(string id, int? rok = null, string group = null, string kraj = null)
+        public ActionResult Zebricek_child(string id, int? rok = null, string group = null, string kraj = null, string part = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))
             {
@@ -212,42 +209,49 @@ namespace HlidacStatu.Web.Controllers
             ViewBag.SelectedGroup = group;
             ViewBag.SelectedKraj = kraj;
 
+            KIndexData.KIndexParts? selectedPart = null;
+            if (Enum.TryParse<KIndexData.KIndexParts>(part, out KIndexData.KIndexParts ePart))
+                selectedPart = (KIndexData.KIndexParts)ePart;
+            ViewBag.SelectedPart = selectedPart;
 
             IEnumerable<SubjectWithKIndex> result = null;
             Lib.Data.Firma.Zatrideni.StatniOrganizaceObor oborFromId;
             if (Enum.TryParse<Firma.Zatrideni.StatniOrganizaceObor>(id, true, out oborFromId))
                 id = "obor";
-            if (id != null && id.StartsWith("part_"))
-                id = "part";
+
             switch (id?.ToLower())
             {
-                case "part":
-                    string spart = ViewBag.SelectedLadder.ToString().Replace("part_","");
-                    if (Enum.TryParse<KIndexData.KIndexParts>(spart, out var part))
-                    {
-                        result = Statistics.GetStatistics(rok.Value)
-                            .SubjektOrderedListPartsCompanyAsc(part, null);
-                        ViewBag.LadderTopic = part.ToNiceDisplayName();
-                        ViewBag.LadderTitle = part.ToNiceDisplayName() + " podle K–Indexu";
-                    }
-
-                    break;
                 case "obor":
-                    result = Statistics.GetStatistics(rok.Value)
-                        .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
+                    if (selectedPart.HasValue)
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value, Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
+                    else
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
                     ViewBag.LadderTopic = oborFromId.ToNiceDisplayName();
                     ViewBag.LadderTitle = oborFromId.ToNiceDisplayName() + " podle K–Indexu";
                     break;
 
                 case "nejlepsi":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
+                    if (selectedPart.HasValue)
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value)
+                            .Take(100);
+                    else
+                        result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
                     break;
 
                 case "nejhorsi":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
+                    if (selectedPart.HasValue)
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value)
+                            .OrderByDescending(k => k.KIndex)
+                            .Take(100);
+                    else
+                        result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
                         .OrderByDescending(k => k.KIndex)
                         .Take(100);
                     ViewBag.LadderTopic = "Nejhůře hodnocené úřady a organizace";
@@ -255,7 +259,12 @@ namespace HlidacStatu.Web.Controllers
                     break;
 
                 case "celkovy":
-                    result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
+                    if (selectedPart.HasValue)
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value)
+                            .Take(100);
+                    else
+                        result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
                     ViewBag.LadderTopic = "Kompletní žebříček úřadů a organizací";
                     ViewBag.LadderTitle = "Kompletní žebříček úřadů a organizací podle K–Indexu";
                     break;
