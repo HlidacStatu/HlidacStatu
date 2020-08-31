@@ -63,7 +63,8 @@
     }
 
     .porovnaniHead {
-        width: 150px;
+        min-width: 160px;
+        width: 160px;
     }
 </style>
 
@@ -118,7 +119,7 @@
                     <th>Celková známka</th>
                     @foreach (var cmp in Model)
                     {
-                        <td class="porovnani number @cmp.Ico">
+                        <td class="porovnani total number @cmp.Ico">
                             @Html.KIndexIcon(cmp.AnnualData.KIndexLabel, "width: 30px", true)
                         </td>
                     }
