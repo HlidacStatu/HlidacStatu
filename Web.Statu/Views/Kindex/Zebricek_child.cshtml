@@ -76,7 +76,7 @@
     <div class="col-sm-12">
         <h3 class="">
             Žebříček pro další roky:
-            @for (int year = DateTime.Now.Year - 1; year > 2016; year--)
+            @foreach (int year in Consts.CalculationYears)
             {
                 if (year != selectedYear)
                 {
