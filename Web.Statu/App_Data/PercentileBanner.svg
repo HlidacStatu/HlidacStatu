@@ -32,16 +32,16 @@
                 </g>
                 <g id="cisla" transform="matrix(1.02986,9.60655e-34,0,1.247,118.138,-43.9043)">
                     <g transform="matrix(1.96112,-7.75162e-34,0,1.96112,-344.121,-689.179)">
-                        <text id="t75" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:16.317px;fill:rgb(166,166,166);">8,8</text>
+                        <text id="t75" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;fill:rgb(166,166,166);">8,8</text>
                     </g>
                     <g transform="matrix(1.96112,-7.75162e-34,0,1.96112,-344.121,-689.179)">
-                        <text id="t25" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:16.317px;fill:rgb(166,166,166);">8,8</text>
+                        <text id="t25" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;fill:rgb(166,166,166);">8,8</text>
                     </g>
                 </g>
                 <g id="_50perc" serif:id="50perc" transform="matrix(1.02986,0,0,1.247,-530.116,-43.669)">
-                    <g transform="matrix(1,0,0,1,156.825,-101.742)">
-                        <text x="482.665px" y="333.506px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">P<tspan x="497.3px 511.364px 517.264px 531.328px 543.883px 549.159px 563.457px 575.701px 581.314px 595.378px 603.358px 616.07px 628.313px 642.611px 647.887px 659.897px 672.14px 683.708px " y="333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px 333.506px ">olovina organizací</tspan></text>
-                        <text x="524.101px" y="368.638px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">m<tspan x="546.666px 558.909px 564.522px 587.087px 600.162px 614.459px 627.534px 633.147px 647.34px 661.403px 675.596px " y="368.638px 368.638px 368.638px 368.638px 368.638px 368.638px 368.638px 368.638px 368.638px 368.638px 368.638px ">á méně bodů</tspan></text>
+                    <g transform="matrix(1,0,0,1,204.174,-101.742)">
+                        <text x="432.411px" y="331.198px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:24px;fill:rgb(115,115,115);">Polovina organizací</text>
+                        <text x="481.77px" y="355.983px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:24px;fill:rgb(115,115,115);">má méně bodů</text>
                     </g>
                     <g transform="matrix(0.378,0,0,-0.378,782.692,547.841)">
                         <rect x="239.571" y="0" width="19.841" height="500" style="fill:rgb(115,115,115);"/>
@@ -61,21 +61,16 @@
                         <rect x="239.571" y="0" width="19.841" height="500" style="fill:rgb(115,115,115);"/>
                     </g>
                     <g transform="matrix(1.96112,0,0,1.96112,284.337,-689.368)">
-                        <text id="t50" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
+                        <text id="t50" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
                     </g>
                 </g>
                 <g id="_90perc" serif:id="90perc" transform="matrix(1.02986,0,0,1.247,-906.965,-43.7158)">
-                    <g transform="matrix(1,0,0,1,24.7459,-40.3702)">
-                        <text x="985.182px" y="352.034px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">9</text>
-                        <text x="1005.59px" y="352.034px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">z<tspan x="1017.6px 1023.21px 1031.45px 1049.36px 1054.97px " y="352.034px 352.034px 352.034px 352.034px 352.034px "> 10 o</tspan></text>
-                        <text x="1069.04px" y="352.034px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">r</text>
-                        <text x="1076.5px" y="352.034px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">g<tspan x="1089.21px 1101.45px 1115.75px 1121.03px 1133.04px 1145.28px 1156.85px " y="352.034px 352.034px 352.034px 352.034px 352.034px 352.034px 352.034px ">anizací</tspan></text>
-                        <text x="985.182px" y="380.634px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">m<tspan x="1007.75px 1019.99px 1025.61px 1048.17px 1061.25px 1075.54px " y="380.634px 380.634px 380.634px 380.634px 380.634px 380.634px ">á méně</tspan></text>
-                        <text x="1093.71px" y="380.634px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">b</text>
-                        <text x="1108.17px" y="380.634px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(115,115,115);">o<tspan x="1122.23px 1136.42px " y="380.634px 380.634px ">dů</tspan></text>
+                    <g transform="matrix(1,0,0,1,20.7459,-35.3702)">
+                        <text x="1006.46px" y="350.534px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">9 z 10 organizací</text>
+                        <text x="1018.77px" y="374.534px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">má méně bodů</text>
                     </g>
                     <g transform="matrix(1.96112,7.35628e-34,0,1.96112,650.259,-689.33)">
-                        <text id="t90" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
+                        <text id="t90" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
                     </g>
                     <g transform="matrix(0.378,-9.33643e-18,9.33643e-18,-0.454238,1148.95,553.487)">
                         <rect x="239.571" y="0" width="19.841" height="500" style="fill:rgb(255,145,77);fill-opacity:0.51;"/>
@@ -83,7 +78,7 @@
                     <g transform="matrix(9.80599e-17,0.592595,1.09091,-4.38802e-18,1218.33,553.487)">
                         <path d="M283,25.6L0,25.6L0,20.1L283,20.1L283,25.6Z" style="fill:rgb(255,145,77);fill-rule:nonzero;"/>
                     </g>
-                    <g transform="matrix(0.39659,2.06342e-17,2.10981e-17,-0.399,1176,423.196)">
+                    <g transform="matrix(0.282847,6.70465e-18,2.90613e-17,-0.399,1196.36,423.196)">
                         <clipPath id="_clip3">
                             <rect x="2.357" y="242.677" width="176.692" height="18.797" clip-rule="nonzero"/>
                         </clipPath>
@@ -94,14 +89,11 @@
                 </g>
                 <g id="_10perc" serif:id="10perc" transform="matrix(1.02986,0,0,1.247,-562.611,-42.5269)">
                     <g transform="matrix(1,0,0,1,680.906,-87.793)">
-                        <text x="256.957px" y="513.977px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(255,145,77);">D<tspan x="275.622px 288.698px 299.225px 312.301px 320.826px 326.102px 340.399px 352.643px 358.256px 372.32px 380.299px 393.011px 405.254px 419.552px 424.827px 436.837px 449.08px 460.648px " y="513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px 513.977px ">esetina organizací</tspan></text>
-                        <text x="471.537px" y="513.977px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(255,145,77);">d<tspan x="485.731px 499.794px 510.321px 522.565px 536.42px 542.32px " y="513.977px 513.977px 513.977px 513.977px 513.977px 513.977px ">osáhla</tspan></text>
-                        <text x="256.957px" y="542.577px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(255,145,77);">l<tspan x="262.856px 275.932px 290.177px " y="542.577px 542.577px 542.577px ">epš</tspan></text>
-                        <text x="300.705px" y="542.577px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(255,145,77);">í</text>
-                        <text x="305.72px" y="542.577px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:26px;fill:rgb(255,145,77);">h<tspan x="319.576px 333.639px 339.253px 351.808px 364.702px 375.229px 381.128px 394.204px 408.397px 419.809px " y="542.577px 542.577px 542.577px 542.577px 542.577px 542.577px 542.577px 542.577px 542.577px 542.577px ">o výsledku</tspan></text>
+                        <text x="251.706px" y="512.477px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">Desetina organizací dosáhla</text>
+                        <text x="251.706px" y="536.477px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">lepšího výsledku</text>
                     </g>
                     <g transform="matrix(1.96112,7.35628e-34,0,1.96112,315.889,-690.284)">
-                        <text id="t10" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
+                        <text id="t10" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
                     </g>
                     <g transform="matrix(9.75182e-17,0.589226,1.09091,-5.36045e-18,883.387,553.487)">
                         <path d="M283,25.6L0,25.6L0,20.1L283,20.1L283,25.6Z" style="fill:rgb(255,145,77);fill-rule:nonzero;"/>
@@ -116,8 +108,8 @@
                 <g transform="matrix(2.05972,0,0,2.494,-272.073,0.370227)">
                     <g id="rozsah">
                         <g id="rozsahText">
-                            <text x="320.369px" y="409.353px" style="font-family:'Cabin-Regular', 'Cabin', sans-serif;font-size:16.998px;fill:rgb(115,115,115);">R<tspan x="330.464px 339.657px 347.508px 354.39px 362.394px 371.451px 375.12px 389.872px 398.42px 406.271px 409.719px 413.388px 422.14px 431.181px 434.561px 438.23px 446.234px 449.903px 458.298px 467.338px 470.719px 474.388px 483.7px 492.248px 497.464px 505.026px 513.573px 522.92px 528.493px 531.941px 535.798px 544.345px " y="409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px 409.353px ">ozsah mezi 25. a 75. percentilem</tspan></text>
-                            <text x="330.851px" y="425.522px" style="font-family:'Cabin-Italic', 'Cabin', sans-serif;font-style:italic;font-size:12.999px;fill:rgb(115,115,115);">5<tspan x="337.377px 346.034px 348.555px 359.604px 362.126px 368.69px 372.564px 378.413px 385.316px 391.893px 394.558px 400.03px 406.932px 412.249px 414.913px 417.435px 427.73px 434.632px 437.154px 443.796px 450.36px 457.003px 462.852px 465.374px 470.963px 473.485px 477.306px 483.871px 494.166px 497.987px 504.551px 507.073px 510.947px 517.511px 522.983px 527.923px 534.825px 541.285px 547.59px " y="425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px 425.522px ">0 % organizací má body v tomto rozsahu.</tspan></text>
+                            <text x="320.369px" y="409.353px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:16.998px;fill:rgb(115,115,115);">Rozsah mezi 25. a 75. <tspan x="474.388px " y="409.353px ">p</tspan>ercentilem</text>
+                            <text x="330.851px" y="425.522px" style="font-family:'Cabin-Italic', 'Cabin', Helvetica, sans-serif;font-style:italic;font-size:12.999px;fill:rgb(115,115,115);">50 % organizací má body<tspan x="462.852px " y="425.522px "> </tspan>v tomto rozsahu.</text>
                         </g>
                     </g>
                 </g>
@@ -134,7 +126,7 @@
                 </g>
                 <g id="vysledek" transform="matrix(1.02986,0,0,1.247,-678.117,32.2932)">
                     <g transform="matrix(2,0,0,2,25.5027,131.72)">
-                        <text id="vysledekText" x="473.44px" y="213.884px" style="font-family:'Cabin-SemiBold', 'Cabin', sans-serif;font-weight:600;font-size:18.591px;fill:rgb(201,48,44);">88,88</text>
+                        <text id="vysledekText" x="473.44px" y="213.884px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:18.591px;fill:rgb(201,48,44);">88,88</text>
                     </g>
                     <g id="Bod" transform="matrix(0.0859917,0,0,-0.0859917,1000.58,617.928)">
                         <path d="M250,500C233.585,500 217.327,498.399 201.227,495.196C185.128,491.994 169.495,487.252 154.329,480.97C139.163,474.688 124.756,466.987 111.107,457.867C97.459,448.748 84.831,438.384 73.223,426.777C61.616,415.169 51.252,402.541 42.133,388.893C33.013,375.244 25.312,360.837 19.03,345.671C12.748,330.505 8.006,314.872 4.804,298.773C1.601,282.673 0,266.415 0,250C0,233.585 1.601,217.327 4.804,201.227C8.006,185.128 12.748,169.495 19.03,154.329C25.312,139.164 33.013,124.756 42.133,111.107C51.252,97.459 61.616,84.831 73.223,73.223C84.831,61.616 97.459,51.253 111.107,42.133C124.756,33.013 139.163,25.312 154.329,19.03C169.495,12.748 185.128,8.006 201.227,4.804C217.327,1.601 233.585,0 250,0C266.415,0 282.673,1.601 298.773,4.804C314.872,8.006 330.505,12.748 345.671,19.03C360.836,25.312 375.244,33.013 388.893,42.133C402.541,51.253 415.169,61.616 426.777,73.223C438.384,84.831 448.748,97.459 457.867,111.107C466.987,124.756 474.688,139.164 480.97,154.329C487.252,169.495 491.994,185.128 495.196,201.227C498.399,217.327 500,233.585 500,250C500,266.415 498.399,282.673 495.196,298.773C491.994,314.872 487.252,330.505 480.97,345.671C474.688,360.837 466.987,375.244 457.867,388.893C448.748,402.541 438.384,415.169 426.777,426.777C415.169,438.384 402.541,448.748 388.893,457.867C375.244,466.987 360.836,474.688 345.671,480.97C330.505,487.252 314.872,491.994 298.773,495.196C282.673,498.399 266.415,500 250,500Z" style="fill:rgb(201,48,44);fill-rule:nonzero;"/>
