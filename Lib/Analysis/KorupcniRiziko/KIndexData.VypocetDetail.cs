@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Devmasters.Core;
+using Devmasters.Enums;
 
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko

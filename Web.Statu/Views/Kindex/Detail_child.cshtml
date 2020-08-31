@@ -1,6 +1,6 @@
 ﻿@model HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData
 
-@using Devmasters.Core;
+@using Devmasters.Enums;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 @using HlidacStatu.Web.Framework;
 @using System.Linq;
@@ -580,6 +580,8 @@ else
                                             </tbody>
                                         </table>
                                     </p>
+                                    <img src="/kindex/PercentileBanner/@Model.Ico" style="width:80%;max-width:800px;height:auto" />
+
                                 </div>
                             </div>
                         </div>
@@ -611,11 +613,13 @@ else
     </div>
     <h3>Co tento parametr znamená?</h3>
     @ParametrDescr(vradek.VelicinaPart, false, "well")
-    <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
-    <div class="well well-sm">
-        <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
-    </div>
-
+    if (part != KIndexData.KIndexParts.PercNovaFirmaDodavatel)
+    {
+        <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
+        <div class="well well-sm">
+            <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
+        </div>
+    }
 }
 
 
