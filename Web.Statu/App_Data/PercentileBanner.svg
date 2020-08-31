@@ -108,8 +108,8 @@
                 <g transform="matrix(2.05972,0,0,2.494,-272.073,0.370227)">
                     <g id="rozsah">
                         <g id="rozsahText">
-                            <text x="320.369px" y="409.353px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:16.998px;fill:rgb(115,115,115);">Rozsah mezi 25. a 75. <tspan x="474.388px " y="409.353px ">p</tspan>ercentilem</text>
-                            <text x="330.851px" y="425.522px" style="font-family:'Cabin-Italic', 'Cabin', Helvetica, sans-serif;font-style:italic;font-size:12.999px;fill:rgb(115,115,115);">50 % organizací má body<tspan x="462.852px " y="425.522px "> </tspan>v tomto rozsahu.</text>
+                            <text x="320.369px" y="409.353px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:16.998px;fill:rgb(115,115,115);">Rozsah mezi 25. a 75. percentilem</text>
+                            <text x="330.851px" y="425.522px" style="font-family:'Cabin-Italic', 'Cabin', Helvetica, sans-serif;font-style:italic;font-size:12.999px;fill:rgb(115,115,115);">50 % organizací má body v tomto rozsahu.</text>
                         </g>
                     </g>
                 </g>
