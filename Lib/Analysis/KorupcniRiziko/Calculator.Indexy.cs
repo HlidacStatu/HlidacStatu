@@ -303,8 +303,10 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
             ret.PrumernaHodnotaSmluvProVypocet = smlouvy.Any(m => m.HodnotaSmlouvy != 0) ?
                     smlouvy.Where(m => m.HodnotaSmlouvy != 0).Select(m => m.HodnotaSmlouvy).Average()
                     : 0;
-            if (prumHodnotaSmlouvy.HasValue)
+            if (prumHodnotaSmlouvy.HasValue && prumHodnotaSmlouvy > 0)
                 ret.PrumernaHodnotaSmluvProVypocet = prumHodnotaSmlouvy.Value;
+            else if (prumHodnotaSmlouvy.HasValue && prumHodnotaSmlouvy == 0)
+                ret.PrumernaHodnotaSmluvProVypocet = 1;
 
             ret.HodnotaSmluvProVypocet = smlouvy.Sum(m => m.HodnotaSmlouvy == 0 ? ret.PrumernaHodnotaSmluvProVypocet : m.HodnotaSmlouvy);
             ret.Query = query;

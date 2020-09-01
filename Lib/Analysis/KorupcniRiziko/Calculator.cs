@@ -80,8 +80,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )");
 
-
             _calc_NovaFirmaDodavatel = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )");
+
         }
 
         private KIndexData.Annual CalculateForYear(int year, bool forceCalculate)
@@ -130,11 +130,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.Statistika.PocetSmluvSeSoukromymSubj = allSmlouvy.Count();
                 ret.Statistika.PocetSmluvBezCenySeSoukrSubj = allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count();
                 ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj = allSmlouvy.Sum(m => m.HodnotaSmlouvy);
+                if (allSmlouvy.Any(m => m.HodnotaSmlouvy > 0))
+                    ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = allSmlouvy.Where(m => m.HodnotaSmlouvy > 0).Average(m => m.HodnotaSmlouvy);
+                else
+                    ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = 0;
 
                 ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(allSmlouvy, queryPlatce, "Koncentrace soukromých dodavatelů");
                 if (ret.CelkovaKoncentraceDodavatelu != null)
                 {
-                    ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = ret.CelkovaKoncentraceDodavatelu.PrumernaHodnotaSmluvProVypocet;
 
                     if (ret.CelkovaKoncentraceDodavatelu != null)
                     {
@@ -358,7 +361,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         Obor = m.OborName,
                         Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
-                        Vaha = m.Koncentrace.HodnotaSmluvProVypocet,  // prumerne cenu u nulobych cen uz pocitam u Koncentrace.HodnotaSmluvProVypocet //+ (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
+                        Vaha = m.Koncentrace.HodnotaSmluvProVypocet > 0 ? m.Koncentrace.HodnotaSmluvProVypocet : 1,  // prumerne cenu u nulobych cen uz pocitam u Koncentrace.HodnotaSmluvProVypocet //+ (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
                         PodilSmluvBezCeny = m.PodilSmluvBezCeny,
                         CelkovaHodnotaSmluv = m.Koncentrace.HodnotaSmluvProVypocet,
                         PocetSmluvCelkem = m.Koncentrace.PocetSmluvProVypocet
