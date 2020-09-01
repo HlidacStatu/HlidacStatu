@@ -78,13 +78,14 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            if (string.IsNullOrWhiteSpace(id))
-                return View("Porovnat.Index");
-
             rok = Consts.FixKindexYear(rok);
             ViewBag.SelectedYear = rok;
 
             var results = new List<SubjectWithKIndexAnnualData>();
+
+            if (string.IsNullOrWhiteSpace(id))
+                return View(results);
+
             if (Enum.TryParse(id, true, out Firma.Zatrideni.StatniOrganizaceObor oborFromId))
             {
                 var subjects = Statistics.GetStatistics(rok.Value)
