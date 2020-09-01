@@ -84,6 +84,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         }
 
+
+        static object _koncetraceDodavateluOboryLock = new object();
         private KIndexData.Annual CalculateForYear(int year, bool forceCalculate)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
@@ -202,18 +204,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
                             //KoncentraceDodavateluIndexy kbezCeny = null;
-                            if (k != null)
+                            lock (_koncetraceDodavateluOboryLock)
                             {
-                                ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
+                                if (k != null)
                                 {
-                                    OborId = oborid,
-                                    OborName = obory[oborid],
-                                    Koncentrace = k,
-                                    SmluvBezCenyMalusKoeficient = k.PocetSmluvProVypocet == 0 ?
-                                          1 : (1m + (decimal)k.PocetSmluvBezCenyProVypocet / (decimal)k.PocetSmluvProVypocet)
-                                    //KoncentraceBezUvedeneCeny = kbezCeny
-                                });
-                            };
+                                    ret.KoncetraceDodavateluObory.Add(new KoncentraceDodavateluObor()
+                                    {
+                                        OborId = oborid,
+                                        OborName = obory[oborid],
+                                        Koncentrace = k,
+                                        SmluvBezCenyMalusKoeficient = k.PocetSmluvProVypocet == 0 ?
+                                              1 : (1m + (decimal)k.PocetSmluvBezCenyProVypocet / (decimal)k.PocetSmluvProVypocet)
+                                        //KoncentraceBezUvedeneCeny = kbezCeny
+                                    });
+                                };
+                            }
                             return new Devmasters.Core.Batch.ActionOutputData();
                         }, null, null, !System.Diagnostics.Debugger.IsAttached, maxDegreeOfParallelism: 10 // 
                         );
@@ -346,9 +351,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (datayear.KoncetraceDodavateluObory != null)
             {
+                
                 //oborova koncentrace
                 var oboryKoncentrace = datayear.KoncetraceDodavateluObory
-                    .Where(m=>m != null)
+                    //.Where(m=>m != null)
                     .Where(m =>
                             m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
                             || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
