@@ -97,69 +97,95 @@
 
     <div class="watcher-blocks__wrapper">
 
-        <!-- block Nezhasinat -->
+        @if (HlidacStatu.Web.Framework.HtmlExtensions.ShowKIndex(this.User))
+        {
+            <!-- K-Index -->
+            <div class="watcher-block">
+                <div class="watcher__title">
+                    <img src="/Content/img/icon-person-watcher.svg">
+                    <h2 class="new-title">
+                        <a href="/kindex">Co je K-Index</a>
+                    </h2>
+                </div>
 
-        <div class="watcher-block">
-            <div class="watcher__title" style="padding:10px 10px 20px 10px;/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fde54c+0,fde54c+59,ffffff+100 */
+                <div class="block-col ">
+                    <p class="muted">
+                        <a href="/kindex">Index korupčního rizika</a> - zkráceně K–Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                    </p>
+                    <p>
+                        <a href="/kindex">
+                            <img src="/content/Img/kindex-info.png" style="width:100%;" title="Popis K-Indexu" />
+                        </a>
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- block Nezhasinat -->
+
+            <div class="watcher-block">
+                <div class="watcher__title" style="padding:10px 10px 20px 10px;/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fde54c+0,fde54c+59,ffffff+100 */
 background: #fde54c; /* Old browsers */
 background: -moz-linear-gradient(top,  #fde54c 0%, #fde54c 59%, #ffffff 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top,  #fde54c 0%,#fde54c 59%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom,  #fde54c 0%,#fde54c 59%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 ">
-                <a target="_blank" onclick="return trackOutLink(this,'Index');" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/"><img src="/Content/img/icon-person-watcher.svg"></a>
-                <h2 class="new-title">
-                    <a onclick="return trackOutLink(this,'index');" target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/" style="color:black">Nezhasínat!</a>
-                    <img src="/content/img/rekonstrukce-statu.svg" style="height:25px;width:auto;" /><img src="/content/img/Hlidac-statu-ctverec-notext.svg" style="height:30px;width:auto;" />
-                </h2>
-            </div>
-            <div class="block-col">
-                <div>
-                    Ve spolupráci s Rekonstrukcí státu hlídáme, kolik stát <b>skutečně</b> vyplatil na podpoře podnikatelům z peněz daňových poplatníků.
+                    <a target="_blank" onclick="return trackOutLink(this,'Index');" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/"><img src="/Content/img/icon-person-watcher.svg"></a>
+                    <h2 class="new-title">
+                        <a onclick="return trackOutLink(this,'index');" target="_blank" href="https://www.rekonstrukcestatu.cz/cs/nezhasinat/" style="color:black">Nezhasínat!</a>
+                        <img src="/content/img/rekonstrukce-statu.svg" style="height:25px;width:auto;" /><img src="/content/img/Hlidac-statu-ctverec-notext.svg" style="height:30px;width:auto;" />
+                    </h2>
                 </div>
-            </div>
+                <div class="block-col">
+                    <div>
+                        Ve spolupráci s Rekonstrukcí státu hlídáme, kolik stát <b>skutečně</b> vyplatil na podpoře podnikatelům z peněz daňových poplatníků.
+                    </div>
+                </div>
 
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Slíbená podpora ekonomice
-                </div>
-                <div class="block-table">
-                    <table class="table-row">
+                <div class="block-col block-part">
+                    <div class="block-subtitle">
+                        Slíbená podpora ekonomice
+                    </div>
+                    <div class="block-table">
+                        <table class="table-row">
+                            <tr>
+                                <td class="table-col" style="margin-right:20px;line-height:40px;width:100%;">
+
+                                    <span id="covid-counter" style="font-size:30px;font-weight:bold;color:#ff525b">1&nbsp;190 miliard Kč</span>
+                                    <sup>(<a href="/report/27">zdroj</a>}</sup>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="block-subtitle">
+                        Skutečně vyplaceno (k @(keDni.ToString("d.M.yyyy")))
+                    </div>
+                    <table>
                         <tr>
-                            <td class="table-col" style="margin-right:20px;line-height:40px;width:100%;">
-
-                                <span id="covid-counter" style="font-size:30px;font-weight:bold;color:#ff525b">1&nbsp;190 miliard Kč</span>
-                                <sup>(<a href="/report/27">zdroj</a>}</sup>
-                            </td>
+                            <td style="width:150px;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
+                            <td style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</td>
+                        </tr>
+                        <tr>
+                            <td class="" style="width:auto;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_neprima, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
+                            <td class="" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</td>
+                        </tr>
+                        <tr style="border-bottom:#ff525b 2px double ">
+                            <td class="" style="width:auto;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
+                            <td class="" style="padding-left:20px;">Úvěr či záruka za úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
+                        </tr>
+                        <tr>
+                            <td class="" style="width:auto;line-height:40px;white-space:nowrap"><span style="font-size:23px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima + vypl_neprima + vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
+                            <td class="" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></td>
                         </tr>
                     </table>
-                </div>
-                <div class="block-subtitle">
-                    Skutečně vyplaceno (k @(keDni.ToString("d.M.yyyy")))
-                </div>
-                <table>
-                    <tr>
-                        <td style="width:150px;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
-                        <td style="padding-left:20px;">Přímá nevratná podpora (Pětadvacítka, ANTIVIRUS, Ošetřovné pro OSVČ apod.)</td>
-                    </tr>
-                    <tr>
-                        <td class="" style="width:auto;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_neprima, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
-                        <td class="" style="padding-left:20px;">Nepřímá podpora (Snížení daní, liberační balíček)</td>
-                    </tr>
-                    <tr style="border-bottom:#ff525b 2px double ">
-                        <td class="" style="width:auto;line-height:40px;text-align:right;white-space:nowrap"><span style="font-size:25px;font-weight:bold">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show))&nbsp;mld.&nbsp;Kč</span></td>
-                        <td class="" style="padding-left:20px;">Úvěr či záruka za úvěr (ČMZRB COVID I-II-III-Praha, EGAP)</td>
-                    </tr>
-                    <tr>
-                        <td class="" style="width:auto;line-height:40px;white-space:nowrap"><span style="font-size:23px;font-weight:bold;color:#ff525b">@Html.Raw(HlidacStatu.Util.RenderData.ShortNiceNumber(vypl_prima + vypl_neprima + vypl_zaruka, true, showDecimal: RenderData.ShowDecimalVal.Show)) mld. Kč</span></td>
-                        <td class="" style="padding-left:20px;line-height:40px;"><span style="font-size:25px;font-weight:bold;color:#ff525b">skutečně vyplaceno</span></td>
-                    </tr>
-                </table>
-                <div class="block-button-wrapper">
-                    <a onclick="return trackOutLink(this,'Index');" href="/report/27" class="btn btn-default btn-default-new">Podrobnosti o podporách</a>
+                    <div class="block-button-wrapper">
+                        <a onclick="return trackOutLink(this,'Index');" href="/report/27" class="btn btn-default btn-default-new">Podrobnosti o podporách</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
 
         <!-- block 1 -->
         <div class="watcher-block">

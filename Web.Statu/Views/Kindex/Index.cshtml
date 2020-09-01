@@ -1,11 +1,11 @@
-﻿@using Devmasters.Core
-@using HlidacStatu.Lib
-@using HlidacStatu.Lib.Analysis
+﻿@*@using Devmasters.Core;*@
+@using HlidacStatu.Lib.Data;
+@using HlidacStatu.Lib.Analysis;
 @using System.Linq;
 @using HlidacStatu.Web.Framework;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Util;
-
+@using Devmasters.Enums;
 
 @{
     ViewBag.Title = "K–Index";
@@ -51,36 +51,6 @@
             </div>
         </div>
 
-        <!-- Organizace dne -->
-        <div class="watcher-block">
-            <div class="watcher__title">
-                <img src="/Content/img/icon-person-watcher.svg">
-                <h2 class="new-title">
-                    Organizace dne
-                </h2>
-            </div>
-
-            <div class="block-col ">
-                <p>
-                    Organizací pro dnešní den je
-                </p>
-                @{
-                    var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
-                        .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
-                }
-                <div>
-                
-                    <a href="/kindex/detail/@todaysOrg.ico">
-                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:100%;max-width:500px;min-width:150px;height:auto" />
-                    </a>
-                </div>
-            </div>
-
-            <div class="block-button-wrapper">
-                <a href="/kindex/detail/@todaysOrg.ico" class="btn btn-default btn-default-new">Jak jsme K-Index spočítali</a>
-            </div>
-        </div>
-
         <!-- Žebříček -->
         <div class="watcher-block">
             <div class="watcher__title">
@@ -102,10 +72,55 @@
                 </div>
             </div>
 
+            @{ string[] groupFilter = new[] { "Justice", "Samospráva", "Školství" }; }
+            @foreach (var g in Devmasters.Enums.EnumTools.Groups(typeof(Firma.Zatrideni.StatniOrganizaceObor))
+            .Except(groupFilter))
+            {
+                <div class="block-col block-part">
+                    <div class="block-subtitle">
+                        @g
+                    </div>
+                    <div class="block-tags">
+                        @foreach (var item in Devmasters.Enums.EnumTools.InGroup(typeof(Firma.Zatrideni.StatniOrganizaceObor), g))
+                        {
+                            <a href="/kindex/zebricek/@item.ToString()" class="tag">@(item.ToNiceDisplayName())</a>
+                        }
+                    </div>
+                </div>
+            }
+
             <div class="block-button-wrapper">
                 <a href="/kindex/zebricek" class="btn btn-default btn-default-new">zobrazit ostatní žebříčky</a>
             </div>
         </div>
+
+        <!-- Organizace dne -->
+        <div class="watcher-block">
+            <div class="watcher__title">
+                <img src="/Content/img/icon-person-watcher.svg">
+                <h2 class="new-title">
+                    Organizace dne
+                </h2>
+            </div>
+
+            <div class="block-col ">
+                @{
+                    var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
+                        .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
+                }
+                <div>
+
+                    <a href="/kindex/detail/@todaysOrg.ico">
+                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:100%;max-width:500px;min-width:150px;height:auto;margin-left:auto;margin-right:auto;display:block;" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="block-button-wrapper">
+                <a href="/kindex/detail/@todaysOrg.ico" class="btn btn-default btn-default-new">Jak jsme Index korupčního rizika spočítali</a>
+            </div>
+        </div>
+
 
         <!-- Porovnání -->
         <div class="watcher-block">
