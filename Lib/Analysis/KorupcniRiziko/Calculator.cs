@@ -348,6 +348,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 //oborova koncentrace
                 var oboryKoncentrace = datayear.KoncetraceDodavateluObory
+                    .Where(m=>m != null)
                     .Where(m =>
                             m.Koncentrace.HodnotaSmluvProVypocet > (datayear.Statistika.CelkovaHodnotaSmluv * 0.05m)
                             || m.Koncentrace.PocetSmluvProVypocet > (datayear.Statistika.PocetSmluv * 0.05m)
