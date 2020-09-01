@@ -140,11 +140,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         //ma cenu koncentraci pocitat?
                         //musi byt vice ne 5 smluv a nebo jeden dodavatel musi mit vice nez 1/2 smluv a to vice nez 2
-                        if (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 5
+                        if (
+                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 0)
+                            &&
+                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 5
                             || allSmlouvy.Where(m => m.HodnotaSmlouvy == 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
                             )
+                         )
                         {
                             ret.KoncentraceDodavateluBezUvedeneCeny
                                 = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
@@ -160,10 +164,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     }
                     if (ret.PercSmluvUlimitu > 0)
                     {
-                        if (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
+                        if (
+                            (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 0)
+                            && (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
                             || allSmlouvy.Where(m => m.ULimitu > 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
+                                )
                             )
                         {
                             ret.KoncentraceDodavateluCenyULimitu
@@ -230,7 +237,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (
                 smlouvyZaRok < Consts.MinSmluvPerYear
                 && ret.Statistika.CelkovaHodnotaSmluv < Consts.MinSumSmluvPerYear
-                && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj*ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
+                && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
             )
             {
                 if (forceCalculate == false)
@@ -239,7 +246,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     ret.KIndexReady = false;
                     ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok nebo malý objem smluv." };
                 }
-                else 
+                else
                     ret.KIndexIssues = new string[] { $"Organizace má méně smluv nebo objem smluv než určuje metodika. Pro výpočet a publikaci byla aplikována výjimka." };
             }
 
@@ -287,7 +294,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //r15
             decimal r15koef = KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny);
             if (datayear.Statistika.PercentSmluvBezCeny < 0.05m)
-                r15koef = r15koef/2m;
+                r15koef = r15koef / 2m;
 
             val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * r15koef ?? 0; //60
             vradky.Add(new KIndexData.VypocetDetail.Radek(
@@ -352,7 +359,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         Obor = m.OborName,
                         Hodnota = m.Combined_Herfindahl_Hirschman_Modified(),
                         Vaha = m.Koncentrace.HodnotaSmluvProVypocet,  // prumerne cenu u nulobych cen uz pocitam u Koncentrace.HodnotaSmluvProVypocet //+ (prumernaCenaSmluv * (decimal)m.Koncentrace.PocetSmluvProVypocet * m.PodilSmluvBezCeny),
-                    PodilSmluvBezCeny = m.PodilSmluvBezCeny,
+                        PodilSmluvBezCeny = m.PodilSmluvBezCeny,
                         CelkovaHodnotaSmluv = m.Koncentrace.HodnotaSmluvProVypocet,
                         PocetSmluvCelkem = m.Koncentrace.PocetSmluvProVypocet
                     })
