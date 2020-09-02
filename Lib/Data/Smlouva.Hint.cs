@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data
         public int PocetDniOdZalozeniFirmy{ get; set; } = 999999;
 
         [Nest.Number]
-        public int VztahSeSoukromymSubjektem { get; set; } = -1;
+        public int VztahSeSoukromymSubjektem { get; set; } = -2;
 
     }
 }

@@ -38,27 +38,27 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
         object lockCalc = new object();
-        public KIndexData GetData(bool refresh = false, bool forceCalculate = false)
+        public KIndexData GetData(bool refreshData = false, bool forceCalculateAllYears = false)
         {
-            if (refresh)
+            if (refreshData || forceCalculateAllYears)
                 kindex = null;
             lock (lockCalc)
             {
                 if (kindex == null)
                 {
-                    kindex = CalculateSourceData(forceCalculate);
+                    kindex = CalculateSourceData(forceCalculateAllYears);
                 }
             }
 
             return kindex;
         }
 
-        private KIndexData CalculateSourceData(bool forceCalculate)
+        private KIndexData CalculateSourceData(bool forceCalculateAllYears)
         {
             this.InitData();
             foreach (var year in Consts.CalculationYears)
             {
-                KIndexData.Annual data_rok = CalculateForYear(year, forceCalculate);
+                KIndexData.Annual data_rok = CalculateForYear(year, forceCalculateAllYears);
                 kindex.roky.Add(data_rok);
             }
             return kindex;
@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
         static object _koncetraceDodavateluOboryLock = new object();
-        private KIndexData.Annual CalculateForYear(int year, bool forceCalculate)
+        private KIndexData.Annual CalculateForYear(int year, bool forceCalculateAllYears)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
 
@@ -231,12 +231,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.PercSmlouvyPod50kBonus = SmlouvyPod50kBonus(ret.PercSmlouvyPod50k, ret.TotalAveragePercSmlouvyPod50k);
 
 
-            ret = FinalCalculationKIdx(ret, forceCalculate);
+            ret = FinalCalculationKIdx(ret, forceCalculateAllYears);
 
             return ret;
         }
 
-        public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret, bool forceCalculate)
+        public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret, bool forceCalculateAllYears)
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
 
@@ -244,11 +244,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (
                 smlouvyZaRok < Consts.MinSmluvPerYear
-                && ret.Statistika.CelkovaHodnotaSmluv < Consts.MinSumSmluvPerYear
+                && ret.Statistika.PocetSmluvSeSoukromymSubj < Consts.MinSumSmluvPerYear
                 && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
             )
             {
-                if (forceCalculate == false)
+                if (forceCalculateAllYears == false)
                 {
 
                     ret.KIndexReady = false;

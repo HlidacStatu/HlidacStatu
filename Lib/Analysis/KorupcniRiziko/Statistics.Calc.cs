@@ -22,15 +22,30 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public static IEnumerable<Statistics> Calculate(string[] forIcos = null)
         {
             int[] calculationYears = Consts.CalculationYears;
-
-            Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = (size, page) =>
+            Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = null;
+            if (forIcos != null)
             {
-                return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
-                            .Size(size)
-                            .From(page * size)
-                            .Query(q => q.MatchAll())
-                            .Scroll("10m")
-                            );
+                searchfnc = (size, page) =>
+                {
+                    return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
+                                .Size(size)
+                                .From(page * size)
+                                .Query(q => q.Terms(t => t.Field(f => f.Ico).Terms(forIcos)))
+                                .Scroll("10m")
+                                );
+                };
+            }
+            else
+            {
+                searchfnc = (size, page) =>
+                {
+                    return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
+                                .Size(size)
+                                .From(page * size)
+                                .Query(q => q.MatchAll())
+                                .Scroll("10m")
+                                );
+                };
             };
 
             List<Lib.Analysis.KorupcniRiziko.KIndexData> data = new List<Analysis.KorupcniRiziko.KIndexData>();
@@ -56,6 +71,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     .Select(m => new { ic = m.Ico, data = m.ForYear(year) })
                     .Where(y => y != null && y.data != null && y.data.KIndexReady)
                     .ToDictionary(k => k.ic, v => v.data);
+
+                if (datayear.Count == 0)
+                    continue;
 
                 var stat = new Statistics() { Rok = year };
                 //poradi
