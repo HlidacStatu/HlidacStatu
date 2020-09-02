@@ -114,7 +114,7 @@
                     {
                         uniqueSalt = uniqueSalt + 1;
                         <th class="porovnaniHead number @(cmp.Ico)_@(uniqueSalt)">
-                            <a href="#" onclick="RemoveCompany('@(cmp.Ico)_@(uniqueSalt)'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                            <a href="#" onclick="RemoveCompany('@(cmp.Ico)_@(uniqueSalt)'); return false;" style="color: red; float:right; margin-left: 5px;"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
 
