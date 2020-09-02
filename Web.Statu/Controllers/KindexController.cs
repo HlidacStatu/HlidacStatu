@@ -241,7 +241,7 @@ namespace HlidacStatu.Web.Controllers
                             .Take(100);
                     else
                         result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc()
-                            .Where(s => s.KIndex > 0)
+                            //.Where(s => s.KIndex > 0)
                             .Take(100);
                     ViewBag.LadderTopic = "Top 100 nejlepších subjektů";
                     ViewBag.LadderTitle = "Top 100 nejlepších subjektů podle K–Indexu";
