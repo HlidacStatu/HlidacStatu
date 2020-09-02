@@ -86,14 +86,17 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return View(results);
 
-            if (Enum.TryParse(id, true, out Firma.Zatrideni.StatniOrganizaceObor oborFromId))
+            
+            foreach (var i in id.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                var subjects = Statistics.GetStatistics(rok.Value)
-                            .SubjektOrderedListKIndexCompanyAsc(Firma.Zatrideni.Subjekty(oborFromId), showNone: true);
-
-                foreach (var subject in subjects)
+                var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
+                if (f.Valid)
                 {
-                    SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData((Firma.Zatrideni.Item)subject);
+                    SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData()
+                    {
+                        Ico = f.ICO,
+                        Jmeno = f.Jmeno
+                    };
                     try
                     {
                         data.PopulateWithAnnualData(rok.Value);
@@ -106,31 +109,7 @@ namespace HlidacStatu.Web.Controllers
                     results.Add(data);
                 }
             }
-            else
-            {
-                foreach (var i in id.Split(new char[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    var f = Firmy.Get(Util.ParseTools.NormalizeIco(i));
-                    if (f.Valid)
-                    {
-                        SubjectWithKIndexAnnualData data = new SubjectWithKIndexAnnualData()
-                        {
-                            Ico = f.ICO,
-                            Jmeno = f.Jmeno
-                        };
-                        try
-                        {
-                            data.PopulateWithAnnualData(rok.Value);
-                        }
-                        catch (Exception)
-                        {
-                            // chybí ičo v objeku data
-                            continue;
-                        }
-                        results.Add(data);
-                    }
-                }
-            }
+            
 
             return View(results);
         }
@@ -312,6 +291,7 @@ namespace HlidacStatu.Web.Controllers
 
                     var result = new
                     {
+                        UniqueId = Guid.NewGuid(),
                         Ico = kidx.Ico,
                         Jmeno = Devmasters.Core.TextUtil.ShortenText(kidx.Jmeno, 55),
                         Kindex = KIndexData.KindexImageIcon(kidx.ForYear(rok.Value).KIndexLabel,
