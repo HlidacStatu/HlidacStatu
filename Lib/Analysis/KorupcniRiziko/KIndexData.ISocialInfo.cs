@@ -301,10 +301,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             return facts.ToArray();
         }
+
         public InfoFact[] InfoFacts()
         {
             var kidx = LastKIndex();
-            return InfoFacts(kidx?.Rok ?? 2019);
+            return InfoFacts(kidx?.Rok ?? Consts.CalculationYears.Max());
         }
 
         public bool NotInterestingToShow()

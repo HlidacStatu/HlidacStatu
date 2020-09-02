@@ -1,5 +1,4 @@
-﻿@*@using Devmasters.Core;*@
-@using HlidacStatu.Lib.Data;
+﻿@using HlidacStatu.Lib.Data;
 @using HlidacStatu.Lib.Analysis;
 @using System.Linq;
 @using HlidacStatu.Web.Framework;
@@ -104,6 +103,9 @@
             </div>
 
             <div class="block-col ">
+                <p class="muted">
+                    Náhodně vybraný štítek Indexu korupčního rizika pro dnešní den.
+                </p>
                 @{
                     var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
                         .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
@@ -111,7 +113,7 @@
                 <div>
 
                     <a href="/kindex/detail/@todaysOrg.ico">
-                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:100%;max-width:500px;min-width:150px;height:auto;margin-left:auto;margin-right:auto;display:block;" />
+                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:80%;max-width:500px;min-width:150px;height:auto;margin-left:auto;margin-right:auto;display:block;" />
                     </a>
                 </div>
             </div>
@@ -144,11 +146,15 @@
                     <a href="/kindex/porovnat/65993390,71214011,72080043,67981801" class="tag">Ředitelství</a>
                     <a href="/kindex/porovnat/60193531,28244532,60193468,26463318" class="tag">Akciové společnosti vlastněné státem</a>
                     <a href="/kindex/porovnat/68378271,61388971,67985823,67985939,68081707" class="tag">Vybrané stavy AV</a>
+
+                    <a href="/kindex/porovnat/66362768,00263338,00069922,00023281,00094871" class="tag">Vybrané galerie</a>
+                    <a href="/kindex/porovnat/00023272,00023299,00100595,00094862,00100609" class="tag">Vybraná muzea</a>
+
                 </div>
             </div>
 
             <div class="block-button-wrapper">
-                <a href="/kindex/porovnat" class="btn btn-default btn-default-new">Vytvořit vlastní porovnání</a>
+                <a href="/kindex/porovnat/" class="btn btn-default btn-default-new">Vytvořit vlastní porovnání</a>
             </div>
         </div>
     </div>
