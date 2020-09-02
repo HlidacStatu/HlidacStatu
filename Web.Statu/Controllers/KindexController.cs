@@ -431,27 +431,39 @@ namespace HlidacStatu.Web.Controllers
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
         public ActionResult Banner(string id, int? rok = null)
         {
-            rok = Consts.FixKindexYear(rok);
-            byte[] data = null;
             var kidx = KIndex.Get(id);
+
+            byte[] data = null;
             if (kidx != null)
             {
+                KIndexData.KIndexLabelValues label;
+                Util.InfoFact[] infoFacts;
+                int year;
+                if (rok is null)
+                {
+                    label = kidx.LastKIndexLabel(out int? y);
+                    year = y.Value;
+                    infoFacts = kidx.InfoFacts();
+                }
+                else
+                {
+                    year = Consts.FixKindexYear(rok);
+                    label = kidx.ForYear(year)?.KIndexLabel ?? KIndexData.KIndexLabelValues.None;
+                    infoFacts = kidx.InfoFacts(year);
+                }
+
+
                 KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
                 data = img.GenerateImageByteArray(kidx.Jmeno,
-                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, false, false, " "),
-                    kidx.LastKIndexLabel().ToString(),
-                    rok.Value
-                    );
+                    Util.InfoFact.RenderInfoFacts(infoFacts,
+                        3,
+                        takeSummary: (label == KIndexData.KIndexLabelValues.None),
+                        shuffle: false,
+                        " "),
+                    label.ToString(),
+                    year);
             }
-            else
-            {
-                KIndexGenerator.IndexLabel img = new KIndexGenerator.IndexLabel(Lib.StaticData.App_Data_Path);
-                data = img.GenerateImageByteArray(kidx.Jmeno,
-                    Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 3, true, false, " "),
-                    KIndexData.KIndexLabelValues.None.ToString(),
-                    rok.Value
-                    );
-            }
+            
             return File(data, "image/png");
         }
 

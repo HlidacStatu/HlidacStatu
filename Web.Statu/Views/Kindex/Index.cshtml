@@ -1,5 +1,4 @@
-﻿@*@using Devmasters.Core;*@
-@using HlidacStatu.Lib.Data;
+﻿@using HlidacStatu.Lib.Data;
 @using HlidacStatu.Lib.Analysis;
 @using System.Linq;
 @using HlidacStatu.Web.Framework;
@@ -104,6 +103,9 @@
             </div>
 
             <div class="block-col ">
+                <p class="muted">
+                    Náhodně vybraný štítek Indexu korupčního rizika pro dnešní den.
+                </p>
                 @{
                     var todaysOrg = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics
                         .GetStatistics(2019).SubjektOrderedListKIndexAsc.TipOfTheDay();
@@ -111,7 +113,7 @@
                 <div>
 
                     <a href="/kindex/detail/@todaysOrg.ico">
-                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:100%;max-width:500px;min-width:150px;height:auto;margin-left:auto;margin-right:auto;display:block;" />
+                        <img src="/socialbanner/kindex?v=@todaysOrg.ico" style="width:80%;max-width:500px;min-width:150px;height:auto;margin-left:auto;margin-right:auto;display:block;" />
                     </a>
                 </div>
             </div>
@@ -152,7 +154,7 @@
             </div>
 
             <div class="block-button-wrapper">
-                <a href="/kindex/porovnat" class="btn btn-default btn-default-new">Vytvořit vlastní porovnání</a>
+                <a href="/kindex/porovnat/" class="btn btn-default btn-default-new">Vytvořit vlastní porovnání</a>
             </div>
         </div>
     </div>
