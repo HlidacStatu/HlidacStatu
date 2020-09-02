@@ -79,8 +79,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 //poradi
                 stat.SubjektOrderedListKIndexAsc = datayear
                     .Where(m => m.Value.KIndexReady)
-                    .OrderBy(m => m.Value.KIndex)
                     .Select(m => (m.Key, m.Value.KIndex))
+                    .OrderBy(m => m.KIndex)
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
