@@ -66,6 +66,7 @@
         min-width: 160px;
         width: 160px;
     }
+
 </style>
 
 <h2>Porovnání vybraných K–Indexů pro rok @selectedYear</h2>
@@ -74,7 +75,7 @@
     <div class="col-sm-12">
         <h3 class="">
             Porovnání pro další roky:
-            @foreach (int year in Consts.CalculationYears )
+            @foreach (int year in Consts.CalculationYears)
             {
                 if (year != selectedYear)
                 {
@@ -89,37 +90,44 @@
     </div>
 </div>
 
-<div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
-    <h4>Porovnání základních hodnot</h4>
-    <p>Porovnání hodnot, které dohromady skládají výslednou známku K–Indexu</p>
+<div>
+    <label for="addComparison">Chcete-li přidat do porovnání další subjekt, použijte tento vyhledávací box</label>
+    <input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
+    <div id="companies">
 
-</div>
-
-<input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
-<div id="companies">
+    </div>
 
 </div>
 
 <div class="row">
     <div class="col-sm-12">
 
-        <table class="table table-no-border">
+        <table class="table table-no-border" id="tabulkaPorovnani" @(Model.Count == 0 ? "style=\"display:none\"" : "") >
             <tbody>
                 <tr id="nazev">
                     <td style="width:290px">firma</td>
+                    @{ 
+                        int uniqueSalt = 0;
+                    }
+                    
                     @foreach (var cmp in Model)
                     {
-                        <th class="porovnaniHead number @cmp.Ico">
-                            <a href="#" onclick="RemoveCompany('@cmp.Ico'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                        uniqueSalt = uniqueSalt + 1;
+                        <th class="porovnaniHead number @(cmp.Ico)_@(uniqueSalt)">
+                            <a href="#" onclick="RemoveCompany('@(cmp.Ico)_@(uniqueSalt)'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
 
                 </tr>
                 <tr id="kindex">
                     <th>Celková známka</th>
+                    @{
+                        uniqueSalt = 0;
+                    }
                     @foreach (var cmp in Model)
                     {
-                        <td class="porovnani total number @cmp.Ico">
+                        uniqueSalt = uniqueSalt + 1;
+                        <td class="porovnani total number @(cmp.Ico)_@(uniqueSalt)">
                             @Html.KIndexIcon(cmp.AnnualData.KIndexLabel, "width: 30px", true)
                         </td>
                     }
@@ -140,6 +148,9 @@
                             </div>
                         </th>
                         
+                        @{
+                            uniqueSalt = 0;
+                        }
                         @foreach (var cmp in Model)
                         {
                             var hodnota = cmp.AnnualData?
@@ -147,8 +158,8 @@
                                 .Where(r => r.Velicina == (int)velicina)
                                 .Select(r => r.Hodnota)
                                 .FirstOrDefault();
-
-                            <td class="porovnani number @cmp.Ico">
+                            uniqueSalt = uniqueSalt + 1;
+                            <td class="porovnani number @(cmp.Ico)_@(uniqueSalt)">
                                 @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
 
                                 @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota ?? 0),
@@ -184,6 +195,7 @@
             });
         }, "json");
         Navigate();
+        
     }
 
     function EmptyCompanies() {
@@ -194,26 +206,37 @@
         $('#addComparison').val("").focus();
     }
 
-    function AddCompany(ico, year) {
-        window.history.pushState("", "", window.location.href + "," + ico);
+    function ShowTable() {
+        $('#tabulkaPorovnani').css('display', 'block');
+    }
 
+    function AddCompany(ico, year) {
+        let url = new URL(window.location.href);
+        let separator = (url.pathname.toLowerCase().endsWith("porovnat")) ? "/" : ",";
+        url.pathname = url.pathname + separator + ico;
+        window.history.pushState("", "", url.href);
+
+        let unique = `${Date.now()}`;
         let req = "/kindex/KindexForIco/" + ico + "?year=" + year;
         $.get(req, function (data) {
-            $("#nazev").append(`<th class="porovnaniHead number ${data.Ico}" style="width: 150px"><a href="#" onclick="RemoveCompany('${data.Ico}'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
-            $(`#kindex`).append(`<td class="porovnani number ${data.Ico}">${data.Kindex}</td>`);
+            $("#nazev").append(`<th class="porovnaniHead number ${data.Ico}_${unique}" style="width: 150px"><a href="#" onclick="RemoveCompany('${data.Ico}_${unique}'); return false;" style="color: red; float:left"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
+            $(`#kindex`).append(`<td class="porovnani number ${data.Ico}_${unique}">${data.Kindex}</td>`);
             data.Radky.forEach(radek => {
-                $(`#${radek.VelicinaName}`).append(`<td class="porovnani number ${data.Ico}">${radek.Label}</td>`);
+                $(`#${radek.VelicinaName}`).append(`<td class="porovnani number ${data.Ico}_${unique}">${radek.Label}</td>`);
             });
 
         }, "json");
+
+        ShowTable();
     }
 
-    function RemoveCompany(ico) {
-        let re = new RegExp(`,?${ico}`, "g");
+    function RemoveCompany(icoWithHash) {
+        let ico = icoWithHash.replace(/_.*/, "");
+        let re = new RegExp(`,?${ico}`, "");
         let href = window.location.href.replace(re, "").replace("/,", "/");
         window.history.pushState("", "", href);
 
-        $(`.${ico}`).remove();
+        $(`.${icoWithHash}`).remove();
     }
 
     function Navigate() {
@@ -249,12 +272,6 @@
         });
     }
 
-    //function CancelKeyDownDefault(event) {
-    //    if (e.keyCode == 40) {
-    //        event.preventDefault();
-    //        event.stopPropagation();
-    //    }
-    //}
 
     function showHelp(btn, id) {
         var visible = $(btn).text().includes('@ukazatTxt');
