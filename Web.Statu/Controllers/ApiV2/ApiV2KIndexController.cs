@@ -1,59 +1,54 @@
 ﻿using HlidacStatu.Web.Attributes;
-using HlidacStatu.Web.Models.Apiv2;
-using System.Web.Http;
-using System.Net.Http;
-using System.Linq;
-using System.Net;
-using HlidacStatu.Util;
-using System;
-using System.IO;
-using System.Web.Http.Description;
-using HlidacStatu.Web.Framework;
-using Swashbuckle.Swagger.Annotations;
 using System.Collections.Generic;
+using System.Web.Http;
+using System.Web.Http.Description;
+using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+using HlidacStatu.Web.Models.Apiv2;
 
 namespace HlidacStatu.Web.Controllers
 {
-    [SwaggerControllerTag("KIndex")]
     [RoutePrefix("api/v2/kindex")]
-    public class ApiV2KIndexController : ApiV2AuthController
+    public class ApiV2KindexController : ApiV2AuthController
     {
-        public const int DefaultResultPageSize = 25;
-        public const int MaxResultsFromES = 5000;
-
-        /*
-        Atributy pro API
-        [SwaggerOperation(Tags = new[] { "Beta" })] - zarazeni metody do jine skupiny metod, pouze na urovni methody
-        [ApiExplorerSettings(IgnoreApi = true)] - neni videt v dokumentaci, ani ve swagger file
-        [SwaggerControllerTag("Core")] - Tag pro vsechny metody v controller
-        */
-
-
-
-
-        // /api/v2/{id}
+        [ApiExplorerSettings(IgnoreApi = true)]
         [AuthorizeAndAudit(Roles = "Admin")]
-        [HttpGet, Route("stats")]
-        [SwaggerOperation(Tags = new[] { "Private" })]
-        public string Stats(int rok)
+        [HttpGet, Route("{ico}")]
+        public KIndexData Detail(string ico)
         {
-            var stat = HlidacStatu.Lib.Analysis.KorupcniRiziko.Statistics.GetStatistics(rok);
-            if (stat != null)
+            if (string.IsNullOrEmpty(ico))
             {
-                List<string> lines = new List<string>();
-                foreach (var item in stat.SubjektOrderedListKIndexAsc)
-                {
-                    lines.Add(
-                        item.ico + "\t"
-                        + item.kindex
-                        );
-                }
-                return lines.Aggregate((f, s) => f + "\n" + s);
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota ico chybí."));
             }
-            else
-                return "";
+
+            var kindex = KIndex.Get(ico);
+            
+            if (kindex == null)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Kindex pro ico [{ico}] nenalezen."));
+            }
+
+            //if(this.ApiAuth.ApiCall.UserRoles.Contains("Admin"))
+            //{
+            //    return kindex;
+            //}
+
+            List<KIndexData.Annual> limitedYears = new List<KIndexData.Annual>();
+            foreach(var year in kindex.roky)
+            {
+                var limitedYear = KIndexData.Annual.Empty(year.Rok);
+                limitedYear.KIndex = year.KIndex;
+                limitedYear.KIndexVypocet = year.KIndexVypocet;
+                limitedYears.Add(limitedYear);
+            }
+            var limitedKindex = new KIndexData
+            {
+                Ico = kindex.Ico,
+                Jmeno = kindex.Jmeno,
+                LastSaved = kindex.LastSaved,
+                roky = limitedYears
+            };
+
+            return limitedKindex;
         }
-
-
     }
 }
