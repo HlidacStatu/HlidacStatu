@@ -242,18 +242,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
 
             ret.KIndex = CalculateKIndex(ret);
-            ret.KIndexReady = true;
+
             if (
-                !(
                     ret.Statistika.PocetSmluvSeSoukromymSubj >= Consts.MinSmluvPerYear
                     ||
-                    (
                         ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj >= Consts.MinSumSmluvPerYear
-                    || 
+                    ||
                         (ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj + ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj) >= Consts.MinSumSmluvPerYear
-                    )
                 )
-            )
+            {
+                ret.KIndexReady = true;
+                ret.KIndexIssues = null;
+
+            }
+            else
             {
                 if (forceCalculateAllYears == false)
                 {
@@ -358,7 +360,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (datayear.KoncetraceDodavateluObory != null)
             {
-                
+
                 //oborova koncentrace
                 var oboryKoncentrace = datayear.KoncetraceDodavateluObory
                     //.Where(m=>m != null)
