@@ -248,7 +248,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 && 
                 (
                     ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj<= Consts.MinSumSmluvPerYear
-                || 
+                && 
                     (ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj + ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj) < Consts.MinSumSmluvPerYear
                 )
             )
