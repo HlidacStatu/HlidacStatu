@@ -242,7 +242,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
 
             ret.KIndex = CalculateKIndex(ret);
-
+            ret.KIndexReady = true;
             if (
                 !(
                     ret.Statistika.PocetSmluvSeSoukromymSubj >= Consts.MinSmluvPerYear
