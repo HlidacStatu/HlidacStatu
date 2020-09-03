@@ -244,12 +244,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.KIndex = CalculateKIndex(ret);
 
             if (
-                ret.Statistika.PocetSmluvSeSoukromymSubj <= Consts.MinSmluvPerYear
-                && 
-                (
-                    ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj<= Consts.MinSumSmluvPerYear
-                && 
-                    (ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj + ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj) < Consts.MinSumSmluvPerYear
+                !(
+                    ret.Statistika.PocetSmluvSeSoukromymSubj >= Consts.MinSmluvPerYear
+                    ||
+                    (
+                        ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj >= Consts.MinSumSmluvPerYear
+                    || 
+                        (ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj + ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj) >= Consts.MinSumSmluvPerYear
+                    )
                 )
             )
             {
