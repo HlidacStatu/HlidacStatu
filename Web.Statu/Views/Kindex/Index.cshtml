@@ -59,18 +59,6 @@
                 </h2>
             </div>
 
-            <div class="block-col block-part">
-                <div class="block-subtitle">
-                    Hlavní žebříčky
-                </div>
-                <div class="block-tags">
-                    <a href="/kindex/zebricek/nejlepsi" class="tag">Nejlepší organizace</a>
-                    <a href="/kindex/zebricek/nejhorsi" class="tag">Nejhorší organizace</a>
-                    <a href="/kindex/zebricek/celkovy" class="tag">Všechny organizace</a>
-                    <a href="/kindex/zebricek/skokani" class="tag">Skokani</a>
-                </div>
-            </div>
-
             @{ string[] groupFilter = new[] { "Justice", "Samospráva", "Školství" }; }
             @foreach (var g in Devmasters.Enums.EnumTools.Groups(typeof(Firma.Zatrideni.StatniOrganizaceObor))
             .Except(groupFilter))
@@ -87,6 +75,18 @@
                     </div>
                 </div>
             }
+
+            <div class="block-col block-part">
+                <div class="block-subtitle">
+                    Souhrnné žebříčky
+                </div>
+                <div class="block-tags">
+                    <a href="/kindex/zebricek/nejlepsi" class="tag">Nejlepší organizace</a>
+                    <a href="/kindex/zebricek/nejhorsi" class="tag">Nejhorší organizace</a>
+                    <a href="/kindex/zebricek/celkovy" class="tag">Všechny organizace</a>
+                    <a href="/kindex/zebricek/skokani" class="tag">Skokani</a>
+                </div>
+            </div>
 
             <div class="block-button-wrapper">
                 <a href="/kindex/zebricek" class="btn btn-default btn-default-new">zobrazit ostatní žebříčky</a>
@@ -147,8 +147,8 @@
                     <a href="/kindex/porovnat/60193531,28244532,60193468,26463318" class="tag">Akciové společnosti vlastněné státem</a>
                     <a href="/kindex/porovnat/68378271,61388971,67985823,67985939,68081707" class="tag">Vybrané ústavy AV</a>
 
-                    <a href="/kindex/porovnat/66362768,00263338,00069922,00023281,00094871" class="tag">Vybrané galerie</a>
-                    <a href="/kindex/porovnat/00023272,00023299,00100595,00094862,00100609" class="tag">Vybraná muzea</a>
+                    <a href="/kindex/porovnat/00263338,00069922,00023281,00094871,00064416" class="tag">Vybrané galerie</a>
+                    <a href="/kindex/porovnat/00023272,00023299,00101435,75075741,00064432" class="tag">Vybraná muzea</a>
 
                 </div>
             </div>
