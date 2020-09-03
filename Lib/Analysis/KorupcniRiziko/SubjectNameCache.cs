@@ -90,7 +90,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public string Name { get; set; }
         public string Ico { get; set; }
-        public string[] Tokens { get; private set; }
+        public string[] Tokens { get; set; }
         
         private static string[] Tokenize(string input)
         {

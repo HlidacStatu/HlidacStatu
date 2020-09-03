@@ -4,16 +4,29 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 using HlidacStatu.Web.Models.Apiv2;
+using System.Linq;
 
 namespace HlidacStatu.Web.Controllers
 {
     [RoutePrefix("api/v2/kindex")]
     public class ApiV2KindexController : ApiV2AuthController
     {
+
         [ApiExplorerSettings(IgnoreApi = true)]
         [AuthorizeAndAudit(Roles = "Admin")]
-        [HttpGet, Route("{ico}")]
-        public KIndexData Detail(string ico)
+        [HttpGet, Route()]
+        public IEnumerable<SubjectNameCache> AllSubjects()
+        {
+            return SubjectNameCache.GetCompanies().Values.Select(snc => {
+                snc.Tokens = null;
+                return snc;
+            });
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AuthorizeAndAudit(Roles = "Admin")]
+        [HttpGet, Route("full/{ico}")]
+        public KIndexData FullDetail(string ico)
         {
             if (string.IsNullOrEmpty(ico))
             {
@@ -27,28 +40,40 @@ namespace HlidacStatu.Web.Controllers
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Kindex pro ico [{ico}] nenalezen."));
             }
 
-            //if(this.ApiAuth.ApiCall.UserRoles.Contains("Admin"))
-            //{
-            //    return kindex;
-            //}
+            return kindex;
+            
+        }
 
-            List<KIndexData.Annual> limitedYears = new List<KIndexData.Annual>();
-            foreach(var year in kindex.roky)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AuthorizeAndAudit(Roles = "Admin")]
+        [HttpGet, Route("{ico}")]
+        public KIndexDTO Detail(string ico)
+        {
+            if (string.IsNullOrEmpty(ico))
             {
-                var limitedYear = KIndexData.Annual.Empty(year.Rok);
-                limitedYear.KIndex = year.KIndex;
-                limitedYear.KIndexVypocet = year.KIndexVypocet;
-                limitedYears.Add(limitedYear);
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota ico chybí."));
             }
-            var limitedKindex = new KIndexData
+
+            var kindex = KIndex.Get(ico);
+
+            if (kindex == null)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Kindex pro ico [{ico}] nenalezen."));
+            }
+
+            var limitedKindex = new KIndexDTO
             {
                 Ico = kindex.Ico,
-                Jmeno = kindex.Jmeno,
-                LastSaved = kindex.LastSaved,
-                roky = limitedYears
+                Name = kindex.Jmeno,
+                LastChange = kindex.LastSaved,
+                AnnualCalculations = kindex.roky.Select(annual => new KIndexYearsDTO { 
+                    KIndex = annual.KIndex,
+                    Calculation = annual.KIndexVypocet
+                })
             };
 
             return limitedKindex;
         }
+
     }
 }
