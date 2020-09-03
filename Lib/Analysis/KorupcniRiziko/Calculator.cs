@@ -264,7 +264,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     ret.KIndexIssues = new string[] { $"K-Index nespočítán. Méně než {Consts.MinSmluvPerYear} smluv za rok nebo malý objem smluv." };
                 }
                 else
+                {
+                    ret.KIndexReady = true;
                     ret.KIndexIssues = new string[] { $"Organizace má méně smluv nebo objem smluv než určuje metodika. Pro výpočet a publikaci byla aplikována výjimka." };
+                }
             }
 
 
