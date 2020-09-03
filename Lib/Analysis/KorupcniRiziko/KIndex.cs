@@ -12,8 +12,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public class KIndex
     {
         private static ElasticClient _esClient = ES.Manager.GetESClient_KIndex();
-        private static CouchbaseCacheManager<KIndexData, string> instanceByIco
-       = CouchbaseCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", getDirect,
+        private static MemoryCacheManager<KIndexData, string> instanceByIco
+       = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", getDirect,
 #if (!DEBUG)
                 TimeSpan.FromDays(10)
 #else

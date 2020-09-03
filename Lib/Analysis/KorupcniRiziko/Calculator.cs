@@ -171,8 +171,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     {
                         if (
                             (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 0)
-                            && (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
-                            || allSmlouvy.Where(m => m.ULimitu > 0)
+                            && (
+                                allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
+                                || allSmlouvy.Where(m => m.ULimitu > 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
                                 )
@@ -243,9 +244,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.KIndex = CalculateKIndex(ret);
 
             if (
-                smlouvyZaRok < Consts.MinSmluvPerYear
-                && ret.Statistika.PocetSmluvSeSoukromymSubj < Consts.MinSumSmluvPerYear
-                && ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj < Consts.MinSumSmluvPerYear
+                ret.Statistika.PocetSmluvSeSoukromymSubj <= Consts.MinSmluvPerYear
+                && 
+                (
+                    ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj<= Consts.MinSumSmluvPerYear
+                || 
+                    (ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj + ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj * ret.Statistika.PocetSmluvBezCenySeSoukrSubj) < Consts.MinSumSmluvPerYear
+                )
             )
             {
                 if (forceCalculateAllYears == false)
