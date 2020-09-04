@@ -566,7 +566,7 @@ else
                                                                       .Sum(m => m.Hodnota*10).ToString("N2"))
                                                     </td>
                                                 </tr>
-                                                @if (currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart != KIndexData.KIndexParts.PercSmlouvyPod50kBonus)?.Hodnota > 0)
+                                                @if (currYear.KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == KIndexData.KIndexParts.PercSmlouvyPod50kBonus)?.Hodnota > 0)
                                                 {
                                                     <tr>
                                                         <td>Odečíst bonus za transparentnost</td>

@@ -241,7 +241,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
 
-            ret.KIndex = CalculateKIndex(ret);
+            CalculateKIndex(ret);
 
             if (
                     ret.Statistika.PocetSmluvSeSoukromymSubj >= Consts.MinSmluvPerYear
@@ -276,10 +276,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return ret;
         }
 
-        public decimal CalculateKIndex(KIndexData.Annual datayear)
+        public void CalculateKIndex(KIndexData.Annual datayear)
         {
 
-            //https://docs.google.com/spreadsheets/d/1FhaaXOszHORki7t5_YEACWFZUya5QtqUnNVPAvCArGQ/edit#gid=0
             KIndexData.VypocetDetail vypocet = new KIndexData.VypocetDetail();
             var vradky = new List<KIndexData.VypocetDetail.Radek>();
 
@@ -312,15 +311,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             //r15
-            decimal r15koef = KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny);
+            decimal r15koef = 1;
             if (datayear.Statistika.PercentSmluvBezCeny < 0.05m)
-                r15koef = r15koef / 2m;
+                r15koef = 2m;
+            decimal r15val = datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified ?? 0;
+            r15val = r15val / r15koef;
 
-            val += datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified * r15koef ?? 0; //60
+            val += r15val * KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny); //60
             vradky.Add(new KIndexData.VypocetDetail.Radek(
                 KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny,
-                datayear.KoncentraceDodavateluBezUvedeneCeny?.Herfindahl_Hirschman_Modified ?? 0,
-                r15koef)
+                r15val,
+                 KIndexData.DefaultKIndexPartKoeficient(KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny))
             );
 
             //r17
@@ -416,7 +417,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             datayear.KIndexVypocet = vypocet;
 
 
-            return val;
+            datayear.KIndex = val;
 
         }
 
