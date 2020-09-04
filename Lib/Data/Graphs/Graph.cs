@@ -63,11 +63,12 @@ TimeSpan.FromDays(3));
         }
 
         public static List<Edge> vsechnyDcerineVazbyInternal(string ico, int level, bool goDeep, Edge parent,
-ExcludeDataCol excludeICO = null, DateTime? datumOd = null, DateTime? datumDo = null,
+ExcludeDataCol excludeICO = null, DateTime? datumOd = null, DateTime? datumDo = null, decimal minPodil = 0,
 Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
         {
-            string sql = @"select vazbakIco, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from Firmavazby 
+            string sql = $@"select vazbakIco, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from Firmavazby 
     where ico=@ico 
+    and (podil is null or podil >= {minPodil})
 	and dbo.IsSomehowInInterval(@datumOd, @datumDo, datumOd, datumDo) = 1
 ";
             var p = new IDataParameter[] {
@@ -77,25 +78,23 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
             };
 
             var rel = GetChildrenRelations(sql, Node.NodeType.Company, ico, datumOd, datumDo,
-                p, level, goDeep, parent, excludeICO, aktualnost);
+                p, level, goDeep, parent, excludeICO,minPodil, aktualnost);
             return rel;
         }
 
 
         public static List<Edge> vsechnyDcerineVazbyInternal(Lib.Data.Osoba person, int level, bool goDeep, Edge parent,
-            ExcludeDataCol excludeICO = null, IEnumerable<int> excludeOsobaId = null, DateTime? datumOd = null, DateTime? datumDo = null,
+            ExcludeDataCol excludeICO = null, IEnumerable<int> excludeOsobaId = null, 
+            DateTime? datumOd = null, DateTime? datumDo = null, decimal minPodil = 0,
             Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
         {
             if (excludeOsobaId == null)
                 excludeOsobaId = new int[] { };
 
-            string sql = @"select vazbakIco, vazbakOsobaId, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from OsobaVazby 
+            string sql = $@"select vazbakIco, vazbakOsobaId, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from OsobaVazby 
                             where osobaId = @osobaId and
-	(
-		(datumOd <= @datumOd or @datumOd is null)
-		OR (datumOd >= @datumOd and datumDo is null) 
-	)
-	and (datumDo >= @datumDo or datumDo is null or @datumDo is null)
+                                and (podil is null or podil >= {minPodil})
+                	and dbo.IsSomehowInInterval(@datumOd, @datumDo, datumOd, datumDo) = 1
 ";
             var p = new IDataParameter[] {
                 new SqlParameter("osobaId",person.InternalId),
@@ -105,7 +104,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
 
             var relForPerson = GetChildrenRelations(sql, Node.NodeType.Person, person.InternalId.ToString(),
                 datumOd, datumDo,
-                p, level, goDeep, parent, excludeICO, aktualnost);
+                p, level, goDeep, parent, excludeICO, minPodil, aktualnost);
 
             var relForConnectedPersons = new List<Edge>();
             using (DbEntities db = new DbEntities())
@@ -179,7 +178,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
         public static List<Edge> GetChildrenRelations(string sql,
             Node.NodeType nodeType, string nodeId, DateTime? datumOd, DateTime? datumDo,
             IDataParameter[] parameters, int level, bool goDeep,
-            Edge parent, ExcludeDataCol excludeICO, Relation.AktualnostType aktualnost)
+            Edge parent, ExcludeDataCol excludeICO, decimal minPodil, Relation.AktualnostType aktualnost)
         {
             if (excludeICO == null)
                 excludeICO = new ExcludeDataCol();
@@ -353,7 +352,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
 
                         vsechnyDcerineVazbyInternal(rel.To.Id, level, goDeep, rel,
                             excludeICO.AddItem(new ExcludeData(rel)),
-                        rel.RelFrom, rel.RelTo, aktualnost)
+                        rel.RelFrom, rel.RelTo, minPodil, aktualnost)
                         );
 
                 }

@@ -524,15 +524,15 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public bool PatrimStatu()
+        public bool PatrimStatu(decimal minpodil = 0)
         {
-            return JsemOVM() || JsemStatniFirma();
+            return JsemOVM() || JsemStatniFirma(minpodil);
         }
         public bool JsemOVM()
         {
             return StaticData.Urady_OVM.Contains(this.ICO);
         }
-        public bool JsemStatniFirma()
+        public bool JsemStatniFirma(decimal minpodil = 0)
         {
 
             if (

@@ -571,7 +571,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                     .ToHashSet();
                 VsechnyStatniMestskeFirmy.Add("60193913");//Pražská energetika
                 foreach (var ic in "25054040,48592307,27376516,06714366,25677063,27234835,28880757,28537319,29202311,28080378,28923405,27831248,27966216,02065801,06532438,44794274".Split(','))
-                    VsechnyStatniMestskeFirmy.Add("60193913");//porizenky Pražská energetika
+                    VsechnyStatniMestskeFirmy.Add("60193913");//podrizenky Pražská energetika
 
 
 
