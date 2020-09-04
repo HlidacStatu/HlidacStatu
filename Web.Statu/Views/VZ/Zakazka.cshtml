@@ -1,35 +1,33 @@
 ﻿@model HlidacStatu.Lib.Data.VZ.VerejnaZakazka
 
+@using Devmasters.Enums;
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
 @using Devmasters.Core;
 @using HlidacStatu.Web.Framework
- 
-
-@{
-    /**/
-
-    ViewBag.Title = "Hlídač veřejných zakázek";
-    ViewBag.SubTitle = "Zakázka " + Model.EvidencniCisloZakazky;
-
-    ViewBag.SocialShareTitle = Model.NazevZakazky;
-    ViewBag.SocialShareText = Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 200));
-
-    ViewBag.SocialShareType = "article";
-    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/zakazka?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.Id;
-    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
-                + "<meta property=\"og:image:height\" content=\"1080\" />"
-                + "<meta property=\"og:image:type\" content=\"image/png\" />"
-                ;
 
 
-    string bookmarkId = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(Model);
-    bool bookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(Model, User?.Identity?.Name);
+@{ /**/
 
-    IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>;
+                ViewBag.Title = "Hlídač veřejných zakázek";
+                ViewBag.SubTitle = "Zakázka " + Model.EvidencniCisloZakazky;
 
-}
+                ViewBag.SocialShareTitle = Model.NazevZakazky;
+                ViewBag.SocialShareText = Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 200));
+
+                ViewBag.SocialShareType = "article";
+                ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/zakazka?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.Id;
+                ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                            + "<meta property=\"og:image:height\" content=\"1080\" />"
+                            + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                            ;
+
+
+                string bookmarkId = HlidacStatu.Lib.Data.Bookmark.GetBookmarkId(Model);
+                bool bookmarked = HlidacStatu.Lib.Data.Bookmark.IsItemBookmarked(Model, User?.Identity?.Name);
+
+                IReadOnlyDictionary<string, IReadOnlyCollection<string>> highlightingData = ViewBag.Highlighting as IReadOnlyDictionary<string, IReadOnlyCollection<string>>; }
 
 
 @section breadcrumb
@@ -50,220 +48,201 @@
 
 @if (!HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(this.Request))
 {
-    <h3>Omezený přístup pouze pro registrované uživatele.</h3>
-    <p>
-        Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
-        <b>Registrace je zdarma a je velmi jednoduchá</b>. Stačí vám pouze platný email.
-    </p>
-    <p>Pokud jste již zaregistrováni, <a onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
-    <p>
-        <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;"
-           href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
-    </p>
-    <script>
-        $(function () {
+<h3>Omezený přístup pouze pro registrované uživatele.</h3>
+                <p>
+                    Podrobné informace o veřejných zakázkách jsou z licenčních důvodů dostupné pouze registrovaným uživatelům Hlídače Státu.
+                    <b>Registrace je zdarma a je velmi jednoduchá</b>. Stačí vám pouze platný email.
+                </p>
+                                <p>Pokud jste již zaregistrováni, <a onclick="ga('send', 'event', 'loginBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;" href="/account/Login?returnUrl=@(this.Url.Action())" class="btn btn-default">zalogujte se</a>. </p>
+                                                <p>
+                                                    <a onclick="ga('send', 'event', 'registerBtn', 'click','@this.Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped)#PristupOmezen'); return true;"
+                                                       href="/account/Register?returnUrl=@(this.Url.Action())" class="btn btn-primary">Zaregistrovat se</a>
+                                                </p>
+                                                                <script>$(function () {
             $("#VZInfoAnon").modal('show');
-        });
-    </script>
-}
-else
-{
-    <table class="table table-hover">
-        <tbody>
-            <tr>
-                <td>Číslo zakázky</td>
-                <td>@Model.EvidencniCisloZakazky</td>
-            </tr>
-            <tr>
-                <td>Název zakázky</td>
-                <td>@Model.NazevZakazky</td>
-            </tr>
-            <tr>
-                <td>Popis zakázky</td>
-                <td>@Html.Raw(Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 2000)))</td>
-            </tr>
-            <tr>
-                <td>Zadavatel</td>
-                <td>
-                    @if (HlidacStatu.Util.DataValidators.CheckCZICO(Model.Zadavatel?.ICO))
-                    {
-                        @Html.KIndexLabelLink(Model.Zadavatel.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@Model.Zadavatel.ICO">@Model.Zadavatel.Jmeno (IČ @Model.Zadavatel.ICO)</a>
-                    }
-                    else
-                    {
-                        <span>@(Model.Zadavatel?.Jmeno)</span>
-                    }
+        });</script> }
+                                                                            else
+                                                                            {
+                                                                <table class="table table-hover">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Číslo zakázky</td>
+                                                                            <td>@Model.EvidencniCisloZakazky</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Název zakázky</td>
+                                                                            <td>@Model.NazevZakazky</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Popis zakázky</td>
+                                                                            <td>@Html.Raw(Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 2000)))</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Zadavatel</td>
+                                                                            <td>
+                                                                                @if (HlidacStatu.Util.DataValidators.CheckCZICO(Model.Zadavatel?.ICO))
+                                                                                {
+                                                                                    @Html.KIndexLabelLink(Model.Zadavatel.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@Model.Zadavatel.ICO">@Model.Zadavatel.Jmeno (IČ @Model.Zadavatel.ICO)</a> }
+                                                                                                    else
+                                                                                                    {
+                                                                                    <span>@(Model.Zadavatel?.Jmeno)</span>}
 
-                </td>
-            </tr>
-            <tr>
-                <td>Odběratelé</td>
-                <td>
-                    @foreach (var od in Model.Dodavatele ?? new HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Subject[] { })
-                    {
-                        if (HlidacStatu.Util.DataValidators.CheckCZICO(od.ICO))
-                        {
-                @Html.KIndexLabelLink(od.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@od.ICO">@od.Jmeno (IČ @od.ICO)</a> }
-                                    else
-                                    {
-                <span>@od.Jmeno</span>}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Odběratelé</td>
+                                                                            <td>
+                                                                                @foreach (var od in Model.Dodavatele ?? new HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Subject[] { })
+                                                                                {
+                                                                                    if (HlidacStatu.Util.DataValidators.CheckCZICO(od.ICO))
+                                                                                    {
+                                                                @Html.KIndexLabelLink(od.ICO)<a href="https://www.hlidacstatu.cz/subjekt/@od.ICO">@od.Jmeno (IČ @od.ICO)</a> }
+                                                            else
+                                                            {
+                                        <span>@od.Jmeno</span>}
                                 }
-                </td>
-            </tr>
-            <tr>
-                <td>Datum uveřejnění zakázky</td>
-                <td>@(Model.DatumUverejneni?.ToShortDateString() ?? "")</td>
-            </tr>
-            <tr>
-                <td>Lhůta pro nabídky</td>
-                <td>@(Model.LhutaDoruceni?.ToShortDateString() ?? "neuvedena")</td>
-            </tr>
-            @if (Model.DatumUzavreniSmlouvy.HasValue)
-            {
-                <tr>
-                    <td>Datum&nbsp;uzavření&nbsp;smlouvy</td>
-                    <td>@(Model.DatumUzavreniSmlouvy?.ToShortDateString() ?? "")</td>
-                </tr>
-            }
-            <tr>
-                <td>CPV kódy</td>
-                <td>
-                    @foreach (var cpv in Model.CPV)
-                    {
-                        <div>@Model.CPVText(cpv) - <i><a href="/VerejneZakazky/Hledat?q=cpv:@cpv">@cpv</a></i></div>
-                    }
-                </td>
-            </tr>
-            @if (Model.OdhadovanaHodnotaBezDPH.HasValue && Model.OdhadovanaHodnotaBezDPH != 0)
-            {
-                <tr>
-                    <td>Odhadovaná&nbsp;hodnota&nbsp;zakázky</td>
-                    <td>@HlidacStatu.Util.RenderData.NicePrice(Model.OdhadovanaHodnotaBezDPH.Value, mena: Model.OdhadovanaHodnotaMena ?? "Kč")</td>
-                </tr>
-            }
-            @if (Model.KonecnaHodnotaBezDPH.HasValue && Model.KonecnaHodnotaBezDPH != 0)
-            {
-                <tr>
-                    <td>Konečná hodnota zakázky</td>
-                    <td>@HlidacStatu.Util.RenderData.NicePrice(Model.KonecnaHodnotaBezDPH.Value, mena: Model.KonecnaHodnotaMena ?? "Kč")</td>
-                </tr>
-            }
-            <tr>
-                <td>Formuláře</td>
-                <td>
-                    @foreach (var f in Model.Formulare)
-                    {
-                        <div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Datum uveřejnění zakázky</td>
+                                                                            <td>@(Model.DatumUverejneni?.ToShortDateString() ?? "")</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Lhůta pro nabídky</td>
+                                                                            <td>@(Model.LhutaDoruceni?.ToShortDateString() ?? "neuvedena")</td>
+                                                                        </tr>
+                                                                        @if (Model.DatumUzavreniSmlouvy.HasValue)
+                                                                        {
+                                                        <tr>
+                                                            <td>Datum&nbsp;uzavření&nbsp;smlouvy</td>
+                                                            <td>@(Model.DatumUzavreniSmlouvy?.ToShortDateString() ?? "")</td>
+                                                        </tr>}
+                                                                        <tr>
+                                                                            <td>CPV kódy</td>
+                                                                            <td>
+                                                                                @foreach (var cpv in Model.CPV)
+                                                                                {
+                                                                <div>@Model.CPVText(cpv) - <i><a href="/VerejneZakazky/Hledat?q=cpv:@cpv">@cpv</a></i></div>}
+                                                                            </td>
+                                                                        </tr>
+                                                                        @if (Model.OdhadovanaHodnotaBezDPH.HasValue && Model.OdhadovanaHodnotaBezDPH != 0)
+                                                                        {
+                                                        <tr>
+                                                            <td>Odhadovaná&nbsp;hodnota&nbsp;zakázky</td>
+                                                            <td>@HlidacStatu.Util.RenderData.NicePrice(Model.OdhadovanaHodnotaBezDPH.Value, mena: Model.OdhadovanaHodnotaMena ?? "Kč")</td>
+                                                        </tr>}
+                                                                        @if (Model.KonecnaHodnotaBezDPH.HasValue && Model.KonecnaHodnotaBezDPH != 0)
+                                                                        {
+                                                        <tr>
+                                                            <td>Konečná hodnota zakázky</td>
+                                                            <td>@HlidacStatu.Util.RenderData.NicePrice(Model.KonecnaHodnotaBezDPH.Value, mena: Model.KonecnaHodnotaMena ?? "Kč")</td>
+                                                        </tr>}
+                                                                        <tr>
+                                                                            <td>Formuláře</td>
+                                                                            <td>
+                                                                                @foreach (var f in Model.Formulare)
+                                                                                {
+                                                                <div>
 
-                            <div class="list-group">
-                                <a href="https://www.vestnikverejnychzakazek.cz/SearchForm/Search?FormNumber=@f.Cislo" class="list-group-item">
-                                    <h4 class="list-group-item-text">@f.DruhFormulare().ToNiceDisplayName() - formulář @f.Druh</h4>
-                                    <p class="list-group-item-heading">@f.Cislo <span class="glyphicon glyphicon-link"></span></p>
-                                    <p class="list-group-item-text">ze dne @(f.Zverejnen?.ToShortDateString())</p>
-                                </a>
-                            </div>
+                                                                    <div class="list-group">
+                                                                        <a href="https://www.vestnikverejnychzakazek.cz/SearchForm/Search?FormNumber=@f.Cislo" class="list-group-item">
+                                                                            <h4 class="list-group-item-text">@f.DruhFormulare().ToNiceDisplayName() - formulář @f.Druh</h4>
+                                                                            <p class="list-group-item-heading">@f.Cislo <span class="glyphicon glyphicon-link"></span></p>
+                                                                            <p class="list-group-item-text">ze dne @(f.Zverejnen?.ToShortDateString())</p>
+                                                                        </a>
+                                                                    </div>
 
-                        </div>
-                    }
-                </td>
-            </tr>
-            @if (Model.Dokumenty != null && Model.Dokumenty?.Length > 0)
-            {
-                <tr>
-                    <td>Dokumenty k zakázce</td>
-                    <td>
-                        <ol>
-                            @foreach (var priloha in Model.Dokumenty.OrderBy(o => o.TypDokumentu))
-                            {
-                                <li>
-                                    <div>
-                                        <b>@priloha.Name</b>
-                                        <a href="@(priloha.GetDocumentUrlToDownload())" target="_blank">Originál</a>
-                                        @if (priloha.WordCount > 2)
-                                        {
-                                            @Html.Raw(";&nbsp;")
-                                            <a href="@Url.Action("TextDokumentu", new { id = @Model.Id, hash = priloha.StorageId })">zobrazit čistý text dokumentu</a>
-                                            <span>(@priloha.WordCount slov)</span>
-                                        }
-                                        @WebUtil.HighlightContent(highlightingData, "dokumenty.plainText", priloha.PlainText,
-                                            prefix: "<br /><blockquote class='small'>", postfix: "</blockquote>")
+                                                                </div>}
+                                                                            </td>
+                                                                        </tr>
+                                                                        @if (Model.Dokumenty != null && Model.Dokumenty?.Length > 0)
+                                                                        {
+                                                        <tr>
+                                                            <td>Dokumenty k zakázce</td>
+                                                            <td>
+                                                                <ol>
+                                                                    @foreach (var priloha in Model.Dokumenty.OrderBy(o => o.TypDokumentu))
+                                                                    {
+                                                <li>
+                                                    <div>
+                                                        <b>@priloha.Name</b>
+                                                        <a href="@(priloha.GetDocumentUrlToDownload())" target="_blank">Originál</a>
+                                                        @if (priloha.WordCount > 2)
+                                                        {
+                                @Html.Raw(";&nbsp;")
+                                                            <a href="@Url.Action("TextDokumentu", new { id = @Model.Id, hash = priloha.StorageId })">zobrazit čistý text dokumentu</a>
+                                                                                        <span>(@priloha.WordCount slov)</span>}
+                                                        @WebUtil.HighlightContent(highlightingData, "dokumenty.plainText", priloha.PlainText,
+                                                                 prefix: "<br /><blockquote class='small'>", postfix: "</blockquote>")
 
-                                    </div>
-                                </li>
-                            }
-                        </ol>
-                    </td>
-                </tr>
-            }
-            <tr>
-                <td>Stálé URL zakázky na Hlídači Státu</td>
-                <td>
-                    <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
-                        <code>@(this.Request.Url.AbsoluteUri)</code>
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>Poskytovatel dat</td>
-                <td>
-                    Data z profilů zadavatelů poskytla společnost <a onclick="return trackOutLink(this,'VZDetail');" href="http://datlab.eu">DATLAB s.r.o.</a>
-                    z databáze zadávacích dokumentací <a onclick="return trackOutLink(this,'VZDetail');" href="https://tenderman.cz"><img src="~/Content/Img/Tenderman_Logo.svg" style="height:25px;width:auto" /></a>
-                </td>
-            </tr>
-            <tr>
-                <td>Datum posledni změny zakázky</td>
-                <td>@(Model.PosledniZmena?.ToShortDateString() ?? "")</td>
-            </tr>
-            <tr>
-                <td>Sdílení</td>
-                <td>
+                                                    </div>
+                                                </li>}
+                                                                </ol>
+                                                            </td>
+                                                        </tr>}
+                                                                        <tr>
+                                                                            <td>Stálé URL zakázky na Hlídači Státu</td>
+                                                                            <td>
+                                                                                <a href="@(this.Request.Url.AbsoluteUri)" target="_blank">
+                                                                                    <code>@(this.Request.Url.AbsoluteUri)</code>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Poskytovatel dat</td>
+                                                                            <td>
+                                                                                Data z profilů zadavatelů poskytla společnost <a onclick="return trackOutLink(this,'VZDetail');" href="http://datlab.eu">DATLAB s.r.o.</a>
+                                                                                z databáze zadávacích dokumentací <a onclick="return trackOutLink(this,'VZDetail');" href="https://tenderman.cz"><img src="~/Content/Img/Tenderman_Logo.svg" style="height:25px;width:auto" /></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Datum posledni změny zakázky</td>
+                                                                            <td>@(Model.PosledniZmena?.ToShortDateString() ?? "")</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Sdílení</td>
+                                                                            <td>
 
-                    @WebUtil.ShareFacebook(Model.GetUrl(false))
-                    @WebUtil.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
-                    @WebUtil.ShareWidget(Model.GetUrl(false))
-                </td>
-            </tr>
-            <tr>
-                <td>Zdroj zakázky</td>
-                <td>
-                    @{
-                        var sourceUrls = Model.ZdrojZakazkyUrl();
-                        if (sourceUrls != null)
-                        {
-                            if (!string.IsNullOrEmpty(sourceUrls.ZakazkaURL))
-                            {
-                                <a href="@sourceUrls.ZakazkaURL" target="_blank">
-                                    <code>@sourceUrls.ZakazkaURL</code>
-                                </a>
-                            }
-                            else if (!string.IsNullOrEmpty(sourceUrls.ProfilZadavatelUrl)
-                                    &&
-                                    !string.IsNullOrEmpty(sourceUrls.ProfilZadavatelUrl)
-                            )
-                            {
-                                <div>
+                                                                                @WebUtil.ShareFacebook(Model.GetUrl(false))
+                                                                                @WebUtil.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                                                                                @WebUtil.ShareWidget(Model.GetUrl(false))
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Zdroj zakázky</td>
+                                                                            <td>
+                                                                                @{ var sourceUrls = Model.ZdrojZakazkyUrl();
+                                                                                                    if (sourceUrls != null)
+                                                                                                    {
+                                                                                                        if (!string.IsNullOrEmpty(sourceUrls.ZakazkaURL))
+                                                                                                        {
+                                                                                    <a href="@sourceUrls.ZakazkaURL" target="_blank">
+                                                                                        <code>@sourceUrls.ZakazkaURL</code>
+                                                                                    </a> }
+                                                                                                        else if (!string.IsNullOrEmpty(sourceUrls.ProfilZadavatelUrl)
+                                                                                                                &&
+                                                                                                                !string.IsNullOrEmpty(sourceUrls.ProfilZadavatelUrl)
+                                                                                                        )
+                                                                                                        {
+                                                                                    <div>
 
-                                    <a href="@sourceUrls.ProfilZadavatelUrl" target="_blank">
-                                        <code>@sourceUrls.ProfilZadavatelUrl</code>
-                                    </a> (zkusit <a href="@sourceUrls.SearchZakazkaUrl" target="_blank">najít zakázku Googlem</a>)
-                                </div>
-                                <div class="bs-callout bs-callout-primary small">
-                                    <h4><span class="glyphicon glyphicon-info-sign"></span> Veřejná zakázka z profilu zadavatele</h4>
-                                    <p>
-                                        Některé profily zadavatelů nemají možnost přímo odkazovat jednotlivé zakázky a musíte je tam pracně hledat.
-                                        Výše uvedené URL je odkaz na celý profil zadavatele (a když budete mít štěstí, bude ješte fungovat), a zde musíte použadovanou zakázku hledat podle evidenčního čísla
-                                        <code>@Model.EvidencniCisloZakazky</code>.
-                                    </p>
-                                </div>
-                            }
-                        }
-                    }
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-}
+                                                                                        <a href="@sourceUrls.ProfilZadavatelUrl" target="_blank">
+                                                                                            <code>@sourceUrls.ProfilZadavatelUrl</code>
+                                                                                        </a> (zkusit <a href="@sourceUrls.SearchZakazkaUrl" target="_blank">najít zakázku Googlem</a>)
+                                                                                    </div>
+                                                                                                            <div class="bs-callout bs-callout-primary small">
+                                                                                                                <h4><span class="glyphicon glyphicon-info-sign"></span> Veřejná zakázka z profilu zadavatele</h4>
+                                                                                                                <p>
+                                                                                                                    Některé profily zadavatelů nemají možnost přímo odkazovat jednotlivé zakázky a musíte je tam pracně hledat.
+                                                                                                                    Výše uvedené URL je odkaz na celý profil zadavatele (a když budete mít štěstí, bude ješte fungovat), a zde musíte použadovanou zakázku hledat podle evidenčního čísla
+                                                                                                                    <code>@Model.EvidencniCisloZakazky</code>.
+                                                                                                                </p>
+                                                                                                            </div> }
+                                                                                                                            } }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>}
 
 
 @section onlyembed

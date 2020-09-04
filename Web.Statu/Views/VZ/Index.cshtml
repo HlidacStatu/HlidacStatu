@@ -23,7 +23,7 @@
 <hr />
 <h2>Veřejné zakázky v jednotlivých oblastech</h2>
 <div class="row">
-    @foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
+    @foreach (var obl in Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
     {
         var numAll = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
             new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()

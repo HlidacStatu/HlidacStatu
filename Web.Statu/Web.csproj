@@ -62,8 +62,8 @@
     <Reference Include="Devmasters.Cache, Version=1.472.20.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.20.2\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.20.1\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.20.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.20.3\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Enums, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Enums.2.1.3\lib\net48\Devmasters.Enums.dll</HintPath>

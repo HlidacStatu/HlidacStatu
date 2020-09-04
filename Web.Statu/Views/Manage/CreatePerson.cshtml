@@ -1,90 +1,88 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Enums;
 
-@{
-    ViewBag.Title = "CreatePerson";
-    var statusList = Devmasters.Core.Enums
-                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum))
-                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
-                      .ToList();
-}
+@{ ViewBag.Title = "CreatePerson";
+                var statusList = Devmasters.Enums.EnumTools
+                                  .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum))
+                                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
+                                  .ToList(); }
 
 <h2>CreatePerson</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Osoba</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.TitulPred, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TitulPred, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TitulPred, "", new { @class = "text-danger" })
-        </div>
-    </div>
+@Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Jmeno, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Jmeno, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Jmeno, "", new { @class = "text-danger" })
-        </div>
-    </div>
+                <div class="form-horizontal">
+                    <h4>Osoba</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TitulPred, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.TitulPred, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TitulPred, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Prijmeni, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Prijmeni, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Prijmeni, "", new { @class = "text-danger" })
-        </div>
-    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Jmeno, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Jmeno, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Jmeno, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.TitulPo, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TitulPo, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TitulPo, "", new { @class = "text-danger" })
-        </div>
-    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Prijmeni, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Prijmeni, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Prijmeni, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Narozeni, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="datetime" class="form-control text-box single-line" id="Narozeni" name="Narozeni" placeholder="dd.mm.yyyy" value="@(Model.Narozeni?.ToString("dd.MM.yyyy"))">
-            <span class="field-validation-valid text-danger" data-valmsg-for="Narozeni" data-valmsg-replace="true"></span>
-            @Html.ValidationMessageFor(model => model.Narozeni, "", new { @class = "text-danger" })
-        </div>
-    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TitulPo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.TitulPo, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TitulPo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Umrti, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="datetime" class="form-control text-box single-line" id="Umrti" name="Umrti" placeholder="dd.mm.yyyy" value="@(Model.Umrti?.ToString("dd.MM.yyyy"))">
-            <span class="field-validation-valid text-danger" data-valmsg-for="Umrti" data-valmsg-replace="true"></span>
-            @Html.ValidationMessageFor(model => model.Umrti, "", new { @class = "text-danger" })
-        </div>
-    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Narozeni, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="datetime" class="form-control text-box single-line" id="Narozeni" name="Narozeni" placeholder="dd.mm.yyyy" value="@(Model.Narozeni?.ToString("dd.MM.yyyy"))">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Narozeni" data-valmsg-replace="true"></span>
+                            @Html.ValidationMessageFor(model => model.Narozeni, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.Status, statusList,
-                    new { @class = "form-control form-control-new", style = "width: 340px" }
-                )
-            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Vytvořit" class="btn btn-primary" />
-        </div>
-    </div>
-</div>
-}
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Umrti, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="datetime" class="form-control text-box single-line" id="Umrti" name="Umrti" placeholder="dd.mm.yyyy" value="@(Model.Umrti?.ToString("dd.MM.yyyy"))">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Umrti" data-valmsg-replace="true"></span>
+                            @Html.ValidationMessageFor(model => model.Umrti, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.Status, statusList,
+                                         new { @class = "form-control form-control-new", style = "width: 340px" }
+                                     )
+                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Vytvořit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>}
 
 <div>
     @Html.ActionLink("Zpět na vyhledávání", "FindPerson")

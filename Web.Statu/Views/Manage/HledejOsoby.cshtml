@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<HlidacStatu.Lib.Data.Osoba>
 @using Devmasters.Core;
 @using System.Linq;
+@using Devmasters.Enums;
 
-@{
-    ViewBag.Title = "Správa účtu " + User.Identity.Name;
-}
+
+@{ ViewBag.Title = "Správa účtu " + User.Identity.Name; }
 
 
 <p class="text-success">@ViewBag.StatusMessage</p>
@@ -39,24 +39,22 @@
             o.NameId = o.GetUniqueNamedId();
             o.Save();
         }
-        <div class="col-xs-4">
-            @o.TitulPred <a href="/manage/editosoba?id=@o.InternalId">@o.FullName()</a> @o.TitulPo
-        </div>
-        <div class="col-xs-1">@(o.Narozeni?.ToString("* dd.MM.yyyy")) @(o.Umrti?.ToString("✞ dd.MM.yyyy") ?? "")</div>
-        <div class="col-xs-1">@o.StatusOsoby().ToNiceDisplayName()</div>
-        <div class="col-xs-1">
-            @o.NameId
-        </div>
-        <div class="col-xs-4">
-    @foreach (var v in vazby)
-    {
-        @WebUtil.RenderVazba(v)
-        <br />
-    }
-        </div>
-        <div class="col-xs-1">
-            <a href="/osoba/@o.NameId">vice</a>
-        </div>
-        <div class="clearfix"></div>
-    }
+<div class="col-xs-4">
+    @o.TitulPred <a href="/manage/editosoba?id=@o.InternalId">@o.FullName()</a> @o.TitulPo
+</div>
+                <div class="col-xs-1">@(o.Narozeni?.ToString("* dd.MM.yyyy")) @(o.Umrti?.ToString("✞ dd.MM.yyyy") ?? "")</div>
+                                <div class="col-xs-1">@o.StatusOsoby().ToNiceDisplayName()</div>
+                                                <div class="col-xs-1">
+                                                    @o.NameId
+                                                </div>
+                                                                <div class="col-xs-4">
+                                                                    @foreach (var v in vazby)
+                                                                    {
+                                                    @WebUtil.RenderVazba(v)
+                                                                        <br />}
+                                                                </div>
+                                                                                <div class="col-xs-1">
+                                                                                    <a href="/osoba/@o.NameId">vice</a>
+                                                                                </div>
+                                                                                                <div class="clearfix"></div>}
 </div>

@@ -33,7 +33,7 @@ namespace HlidacStatu.Lib.Searching
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(Lib.Data.Osoba.Search.OrderResult))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(Lib.Data.Osoba.Search.OrderResult))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     )

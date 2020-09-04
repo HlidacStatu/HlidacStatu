@@ -1,21 +1,18 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
+@using Devmasters.Enums;
 @using Devmasters.Core
 @using HlidacStatu.Lib
 
-@{
-    ViewBag.Title = "Hierarchický přehled vazeb";
-    ViewBag.SubTitle = "Politik " + Model.FullNameWithYear(false);
-    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
-
-}
+@{ ViewBag.Title = "Hierarchický přehled vazeb";
+                ViewBag.SubTitle = "Politik " + Model.FullNameWithYear(false);
+                HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost; }
 @section metatags
 {
 
     @if (HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower())
                 || Model.NotInterestingToShow())
     {
-        <meta name="robots" content="noindex, noarchive">
-    }
+<meta name="robots" content="noindex, noarchive">}
 }
 
 @section scripts
@@ -148,12 +145,12 @@
 
 <p style="padding-top:30px;">
     @Html.Raw(
-                    HlidacStatu.Lib.Data.Relation.TiskVazeb(
-                        Model.FullName(false),
-                        Model.AktualniVazby(aktualnost),
-                        HlidacStatu.Lib.Data.Relation.TiskEnum.Html
+                        HlidacStatu.Lib.Data.Relation.TiskVazeb(
+                            Model.FullName(false),
+                            Model.AktualniVazby(aktualnost),
+                            HlidacStatu.Lib.Data.Relation.TiskEnum.Html
+                        )
                     )
-                )
 
 </p>
 

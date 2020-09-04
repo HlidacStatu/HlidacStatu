@@ -4,27 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Devmasters.Core;
+using Devmasters.Enums;
 
 namespace HlidacStatu.Lib.Issues
 {
 
-    [Devmasters.Core.ShowNiceDisplayName()]
-    [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValue)]
+    [Devmasters.Enums.ShowNiceDisplayName()]
+    [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValue)]
     public enum ImportanceLevel : int
     {
-        [Devmasters.Core.Disabled()]
+        [Devmasters.Enums.Disabled()]
         NeedHumanReview = -1,
 
 
-        [Devmasters.Core.NiceDisplayName("V pořádku")]
+        [Devmasters.Enums.NiceDisplayName("V pořádku")]
         Ok = 0,
-        [Devmasters.Core.NiceDisplayName("Formální problém")]
+        [Devmasters.Enums.NiceDisplayName("Formální problém")]
         Formal = 1,
-        [Devmasters.Core.NiceDisplayName("Malý nedostatek")]
+        [Devmasters.Enums.NiceDisplayName("Malý nedostatek")]
         Minor = 5,
-        [Devmasters.Core.NiceDisplayName("Vážný nedostatek")]
+        [Devmasters.Enums.NiceDisplayName("Vážný nedostatek")]
         Major = 20,
-        [Devmasters.Core.NiceDisplayName("Zásadní nedostatek s vlivem na platnost smlouvy")]
+        [Devmasters.Enums.NiceDisplayName("Zásadní nedostatek s vlivem na platnost smlouvy")]
         Fatal = 100,
     }
 

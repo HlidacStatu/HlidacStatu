@@ -1,4 +1,6 @@
 ﻿using Devmasters.Core;
+using Devmasters.Enums;
+
 using HlidacStatu.Lib.Data.Insolvence;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +14,25 @@ namespace HlidacStatu.Lib.Data
 
         public static string AllDbDataType = "#ALL#";
 
-        [Devmasters.Core.ShowNiceDisplayName()]
-        [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValue)]
+        [Devmasters.Enums.ShowNiceDisplayName()]
+        [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValue)]
         public enum PeriodTime
         {
             [Disabled()]
-            [Devmasters.Core.SortValue(0), Devmasters.Core.NiceDisplayName("Ihned")]
+            [Devmasters.Enums.SortValue(0), Devmasters.Enums.NiceDisplayName("Ihned")]
             Immediatelly = 0,
 
             [Disabled()]
-            [Devmasters.Core.SortValue(0), Devmasters.Core.NiceDisplayName("Každé 2 hodiny")]
+            [Devmasters.Enums.SortValue(0), Devmasters.Enums.NiceDisplayName("Každé 2 hodiny")]
             Hourly = 1,
 
-            [Devmasters.Core.SortValue(0), Devmasters.Core.NiceDisplayName("Denně")]
+            [Devmasters.Enums.SortValue(0), Devmasters.Enums.NiceDisplayName("Denně")]
             Daily = 2,
 
-            [Devmasters.Core.SortValue(0), Devmasters.Core.NiceDisplayName("Týdně")]
+            [Devmasters.Enums.SortValue(0), Devmasters.Enums.NiceDisplayName("Týdně")]
             Weekly = 3,
 
-            [Devmasters.Core.SortValue(0), Devmasters.Core.NiceDisplayName("Měsíčně")]
+            [Devmasters.Enums.SortValue(0), Devmasters.Enums.NiceDisplayName("Měsíčně")]
             Monthly = 4,
         }
 

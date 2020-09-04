@@ -1,4 +1,6 @@
 ﻿using Devmasters.Core;
+using Devmasters.Enums;
+
 using HlidacStatu.Util;
 using Nest;
 using System;
@@ -84,87 +86,87 @@ namespace HlidacStatu.Lib.Data.VZ
         public bool OnlyOnProfile { get; set; }
 
         [Description("Druh formuláře - mezinárodní (F*) i české (CZ*).")]
-        [Devmasters.Core.ShowNiceDisplayName]
+        [Devmasters.Enums.ShowNiceDisplayName]
         public enum DruhyFormularu
         {
-            [Devmasters.Core.NiceDisplayName("Předběžné oznámení")]
+            [Devmasters.Enums.NiceDisplayName("Předběžné oznámení")]
             F01,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zahájení zadávacího řízení")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zahájení zadávacího řízení")]
             F02,
-            [Devmasters.Core.NiceDisplayName("Oznámení o výsledku zadávacího řízení")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o výsledku zadávacího řízení")]
             F03,
-            [Devmasters.Core.NiceDisplayName("Pravidelné předběžné oznámení")]
+            [Devmasters.Enums.NiceDisplayName("Pravidelné předběžné oznámení")]
             F04,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zahájení zadávacího řízení veřejné služby")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zahájení zadávacího řízení veřejné služby")]
             F05,
-            [Devmasters.Core.NiceDisplayName("Oznámení o výsledku zadávacího řízení veřejné služby")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o výsledku zadávacího řízení veřejné služby")]
             F06,
-            [Devmasters.Core.NiceDisplayName("Systém kvalifikace veřejné služby")]
+            [Devmasters.Enums.NiceDisplayName("Systém kvalifikace veřejné služby")]
             F07,
-            [Devmasters.Core.NiceDisplayName("Oznámení na profilu kupujícího")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení na profilu kupujícího")]
             F08,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zahájení soutěže o návrh")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zahájení soutěže o návrh")]
             F12,
-            [Devmasters.Core.NiceDisplayName("Oznámení o výsledcích soutěže o návrh")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o výsledcích soutěže o návrh")]
             F13,
-            [Devmasters.Core.NiceDisplayName("Oprava ")]
+            [Devmasters.Enums.NiceDisplayName("Oprava ")]
             F14,
-            [Devmasters.Core.NiceDisplayName("Oznámení o dobrovolné průhlednosti ex ante ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o dobrovolné průhlednosti ex ante ")]
             F15,
-            [Devmasters.Core.NiceDisplayName("Oznámení předběžných informací - obrana a bezpečnost ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení předběžných informací - obrana a bezpečnost ")]
             F16,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zakázce - obrana a bezpečnost")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zakázce - obrana a bezpečnost")]
             F17,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zadání zakázky - obrana a bezpečnost")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zadání zakázky - obrana a bezpečnost")]
             F18,
-            [Devmasters.Core.NiceDisplayName("Oznámení o subdodávce - obrana a bezpečnost")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o subdodávce - obrana a bezpečnost")]
             F19,
-            [Devmasters.Core.NiceDisplayName("Oznámení o změně ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o změně ")]
             F20,
-            [Devmasters.Core.NiceDisplayName("Sociální a jiné zvláštní služby – veřejné zakázky ")]
+            [Devmasters.Enums.NiceDisplayName("Sociální a jiné zvláštní služby – veřejné zakázky ")]
             F21,
-            [Devmasters.Core.NiceDisplayName("Sociální a jiné zvláštní služby – veřejné služby")]
+            [Devmasters.Enums.NiceDisplayName("Sociální a jiné zvláštní služby – veřejné služby")]
             F22,
-            [Devmasters.Core.NiceDisplayName("Sociální a jiné zvláštní služby – koncese")]
+            [Devmasters.Enums.NiceDisplayName("Sociální a jiné zvláštní služby – koncese")]
             F23,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zahájení koncesního řízení ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zahájení koncesního řízení ")]
             F24,
-            [Devmasters.Core.NiceDisplayName("Oznámení o výsledku koncesního řízení")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o výsledku koncesního řízení")]
             F25,
 
-            [Devmasters.Core.NiceDisplayName("Předběžné oznámení zadávacího řízení v podlimitním režimu")]
+            [Devmasters.Enums.NiceDisplayName("Předběžné oznámení zadávacího řízení v podlimitním režimu")]
             CZ01,
-            [Devmasters.Core.NiceDisplayName("Oznámení o zahájení zadávacího řízení v podlimitním režimu ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o zahájení zadávacího řízení v podlimitním režimu ")]
             CZ02,
-            [Devmasters.Core.NiceDisplayName("Oznámení o výsledku zadávacího řízení v podlimitním režimu ")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení o výsledku zadávacího řízení v podlimitním režimu ")]
             CZ03,
-            [Devmasters.Core.NiceDisplayName("Oprava národního formuláře ")]
+            [Devmasters.Enums.NiceDisplayName("Oprava národního formuláře ")]
             CZ04,
-            [Devmasters.Core.NiceDisplayName("Oznámení profilu zadavatele")]
+            [Devmasters.Enums.NiceDisplayName("Oznámení profilu zadavatele")]
             CZ05,
-            [Devmasters.Core.NiceDisplayName("Zrušení/zneaktivnění profilu zadavatele")]
+            [Devmasters.Enums.NiceDisplayName("Zrušení/zneaktivnění profilu zadavatele")]
             CZ06,
-            [Devmasters.Core.NiceDisplayName("??")]
+            [Devmasters.Enums.NiceDisplayName("??")]
             CZ07,
 
-            [Devmasters.Core.NiceDisplayName("Záznam na profilu zadavatele")]
+            [Devmasters.Enums.NiceDisplayName("Záznam na profilu zadavatele")]
             ProfilZadavatele,
 
-            [Devmasters.Core.NiceDisplayName("Neznámý")]
+            [Devmasters.Enums.NiceDisplayName("Neznámý")]
             Unknown
 
         }
 
         [Description("Odvozené stavy zakázky pro Hlídače.")]
-        [Devmasters.Core.ShowNiceDisplayName]
+        [Devmasters.Enums.ShowNiceDisplayName]
         public enum StavyZakazky
         {
-            [Devmasters.Core.NiceDisplayName("Oznámen úmysl vyhlásit tendr")] Umysl = 1,
-            [Devmasters.Core.NiceDisplayName("Tendr zahájen")] Zahajeno = 100,
-            [Devmasters.Core.NiceDisplayName("Tendr se vyhodnocuje")] Vyhodnocovani = 200,
-            [Devmasters.Core.NiceDisplayName("Tendr byl ukončen")] Ukonceno = 300,
-            [Devmasters.Core.NiceDisplayName("Tendr byl zrušen")] Zruseno = 50,
-            [Devmasters.Core.NiceDisplayName("Nejasný stav")] Jine = 0,
+            [Devmasters.Enums.NiceDisplayName("Oznámen úmysl vyhlásit tendr")] Umysl = 1,
+            [Devmasters.Enums.NiceDisplayName("Tendr zahájen")] Zahajeno = 100,
+            [Devmasters.Enums.NiceDisplayName("Tendr se vyhodnocuje")] Vyhodnocovani = 200,
+            [Devmasters.Enums.NiceDisplayName("Tendr byl ukončen")] Ukonceno = 300,
+            [Devmasters.Enums.NiceDisplayName("Tendr byl zrušen")] Zruseno = 50,
+            [Devmasters.Enums.NiceDisplayName("Nejasný stav")] Jine = 0,
         }
 
         string _id = null;

@@ -2,16 +2,16 @@
 @using Devmasters.Core
 @using HlidacStatu.Lib.Data
 @using HlidacStatu.Util
+@using Devmasters.Enums;
 
-@{
-    ViewBag.Title = "PersonDetail";
-    var typeList = Devmasters.Core.Enums
-                      .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
-                      .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
-                      .ToList();
-    
-    var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor };
-}
+
+@{ ViewBag.Title = "PersonDetail";
+                var typeList = Devmasters.Enums.EnumTools
+                                  .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
+                                  .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
+                                  .ToList();
+
+                var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor }; }
 
 @section scripts
 {
@@ -72,221 +72,211 @@
         </button>
         @if (Model.Events().Count() > 0)
         {
-            <table class="table tableStickyHeader">
-                <thead>
-                    <tr>
-                        <th class="text-nowrap">
-                            Datum od
-                            <a href="?columnOrdering=datumod">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=datumod&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Datum do
-                            <a href="?columnOrdering=datumdo">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=datumdo&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Titulek
-                            <a href="?columnOrdering=titulek">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=titulek&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Typ události
-                            <a href="?columnOrdering=typ">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=typ&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Organizace
-                            <a href="?columnOrdering=organizace">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=organizace&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Role
-                            <a href="?columnOrdering=role">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=role&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Zdroj
-                            <a href="?columnOrdering=zdroj">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=zdroj&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th class="text-nowrap">
-                            Stav
-                            <a href="?columnOrdering=stav">
-                                <i class="fas fa-long-arrow-up"></i>
-                            </a>
-                            <a href="?columnOrdering=stav&descending=1">
-                                <i class="fas fa-long-arrow-down"></i>
-                            </a>
-                        </th>
-                        <th>akce</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{ 
-                        var co = Request.Params["columnOrdering"];
+<table class="table tableStickyHeader">
+    <thead>
+        <tr>
+            <th class="text-nowrap">
+                Datum od
+                <a href="?columnOrdering=datumod">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=datumod&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Datum do
+                <a href="?columnOrdering=datumdo">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=datumdo&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Titulek
+                <a href="?columnOrdering=titulek">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=titulek&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Typ události
+                <a href="?columnOrdering=typ">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=typ&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Organizace
+                <a href="?columnOrdering=organizace">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=organizace&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Role
+                <a href="?columnOrdering=role">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=role&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Zdroj
+                <a href="?columnOrdering=zdroj">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=zdroj&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                Stav
+                <a href="?columnOrdering=stav">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=stav&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th>akce</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ var co = Request.Params["columnOrdering"];
 
-                        Func<OsobaEvent, object> sortExpression;
-                        switch (co)
-                        {
-                            case "datumdo":
-                                sortExpression = (x => x.DatumDo);
-                                break;
-                            case "titulek":
-                                sortExpression = (x => x.Title);
-                                break;
-                            case "typ":
-                                sortExpression = (x => x.TypeName);
-                                break;
-                            case "organizace":
-                                sortExpression = (x => x.Organizace);
-                                break;
-                            case "role":
-                                sortExpression = (x => x.AddInfo);
-                                break;
-                            case "zdroj":
-                                sortExpression = (x => x.Zdroj);
-                                break;
-                            case "stav":
-                                sortExpression = (x => x.Status);
-                                break;
-                            case "datumod":
-                            default:
-                                sortExpression = (x => x.DatumOd);
-                                break;
-                        }
+                            Func<OsobaEvent, object> sortExpression;
+                            switch (co)
+                            {
+                                case "datumdo":
+                                    sortExpression = (x => x.DatumDo);
+                                    break;
+                                case "titulek":
+                                    sortExpression = (x => x.Title);
+                                    break;
+                                case "typ":
+                                    sortExpression = (x => x.TypeName);
+                                    break;
+                                case "organizace":
+                                    sortExpression = (x => x.Organizace);
+                                    break;
+                                case "role":
+                                    sortExpression = (x => x.AddInfo);
+                                    break;
+                                case "zdroj":
+                                    sortExpression = (x => x.Zdroj);
+                                    break;
+                                case "stav":
+                                    sortExpression = (x => x.Status);
+                                    break;
+                                case "datumod":
+                                default:
+                                    sortExpression = (x => x.DatumOd);
+                                    break;
+                            }
 
-                        int desc;
-                        IEnumerable<OsobaEvent> udalosti;
-                        if(int.TryParse(Request.Params["descending"], out desc) && desc == 1)
-                        {
-                            udalosti = Model.Events().OrderByDescending(sortExpression);
-                        }
-                        else
-                        {
-                            udalosti = Model.Events().OrderBy(sortExpression);
-                        }
-                    }
+                            int desc;
+                            IEnumerable<OsobaEvent> udalosti;
+                            if (int.TryParse(Request.Params["descending"], out desc) && desc == 1)
+                            {
+                                udalosti = Model.Events().OrderByDescending(sortExpression);
+                            }
+                            else
+                            {
+                                udalosti = Model.Events().OrderBy(sortExpression);
+                            } }
 
-                    @foreach (var udalost in udalosti)
+        @foreach (var udalost in udalosti)
+        {
+<tr>
+    <td>
+        @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
+    </td>
+    <td>
+        @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => udalost.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => udalost.TypeName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => udalost.Organizace)
+    </td>
+    <td>
+        @if (castkuZobrazitPro.Contains(udalost.Type))
+        {
+@Html.DisplayFor(modelItem => udalost.AddInfoNum) }
+                    else
                     {
-                        <tr>
-                            <td>
-                                @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
-                            </td>
-                            <td>
-                                @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => udalost.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => udalost.TypeName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => udalost.Organizace)
-                            </td>
-                            <td>
-                                @if (castkuZobrazitPro.Contains(udalost.Type))
+@Html.DisplayFor(modelItem => udalost.AddInfo)}
+    </td>
+    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+        @Html.DisplayFor(modelItem => udalost.Zdroj)
+    </td>
+    <td>
+        @{ if (udalost.Status.HasValue)
                                 {
-                                    @Html.DisplayFor(modelItem => udalost.AddInfoNum)
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => udalost.AddInfo)
-                                }
-                            </td>
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                                @Html.DisplayFor(modelItem => udalost.Zdroj)
-                            </td>
-                            <td>
-                                @{ 
-                                    if(udalost.Status.HasValue)
-                                    {
-                                        var flags = udalost.Status.Value
-                                            .ConvertToEnum<OsobaEvent.Statuses>()
-                                            .GetUniqueFlags<OsobaEvent.Statuses>();
+                                    var flags = udalost.Status.Value
+                                        .ConvertToEnum<OsobaEvent.Statuses>()
+                                        .GetUniqueFlags<OsobaEvent.Statuses>();
 
-                                        foreach(var flag in flags)
-                                        {
-                                            <p>@flag.ToNiceDisplayName()</p>
-                                        }
-                                    }
-                                    
-                                }
-                                
-                            </td>
-                            <td>
-                                <button type="button"
-                                        class="btn btn-primary btn-sm"
-                                        data-toggle="modal"
-                                        data-target="#eventModal"
-                                        data-personid="@Model.InternalId"
-                                        data-eventid="@udalost.pk"
-                                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
-                                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
-                                        data-titulek="@udalost.Title"
-                                        data-organizace="@udalost.Organizace"
-                                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
-                                        data-addinfo="@udalost.AddInfo"
-                                        data-typ="@udalost.Type"
-                                        data-zdroj="@udalost.Zdroj"
-                                        data-status="@udalost.Status"
-                                        data-action="edit">
-                                    Editovat
-                                </button>
-                                <button type="button"
-                                        class="btn btn-danger btn-sm"
-                                        data-toggle="modal"
-                                        data-target="#eventModal"
-                                        data-personid="@Model.InternalId"
-                                        data-eventid="@udalost.pk"
-                                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
-                                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
-                                        data-titulek="@udalost.Title"
-                                        data-organizace="@udalost.Organizace"
-                                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
-                                        data-addinfo="@udalost.AddInfo"
-                                        data-typ="@udalost.Type"
-                                        data-zdroj="@udalost.Zdroj"
-                                        data-status="@udalost.Status"
-                                        data-action="delete">
-                                    Smazat
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+                                    foreach (var flag in flags)
+                                    {
+            <p>@flag.ToNiceDisplayName()</p> }
+                                } }
+
+    </td>
+    <td>
+        <button type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#eventModal"
+                data-personid="@Model.InternalId"
+                data-eventid="@udalost.pk"
+                data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                data-titulek="@udalost.Title"
+                data-organizace="@udalost.Organizace"
+                data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                data-addinfo="@udalost.AddInfo"
+                data-typ="@udalost.Type"
+                data-zdroj="@udalost.Zdroj"
+                data-status="@udalost.Status"
+                data-action="edit">
+            Editovat
+        </button>
+        <button type="button"
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#eventModal"
+                data-personid="@Model.InternalId"
+                data-eventid="@udalost.pk"
+                data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                data-titulek="@udalost.Title"
+                data-organizace="@udalost.Organizace"
+                data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                data-addinfo="@udalost.AddInfo"
+                data-typ="@udalost.Type"
+                data-zdroj="@udalost.Zdroj"
+                data-status="@udalost.Status"
+                data-action="delete">
+            Smazat
+        </button>
+    </td>
+</tr>}
+    </tbody>
+</table>}
     </div>
 </div>
 <p>
@@ -331,8 +321,7 @@
                             <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
                                 @for (int i = 0; i < typeList.Count; i++)
                                 {
-                                    <option value="@typeList[i].Value">@typeList[i].Text</option>
-                                }
+                    <option value="@typeList[i].Value">@typeList[i].Text</option>}
                             </select>
                             <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
                         </div>
@@ -356,15 +345,13 @@
                             <label for="status" class="col-form-label">Stavy:</label><br />
                             @foreach (Enum value in Enum.GetValues(typeof(OsobaEvent.Statuses)))
                             {
-                            <div class="form-inline">
-                                <input type="checkbox"
-                                       class="form-control statusbox"
-                                       value="@value.ToString("D")"
-                                       name="@value.ToString("G")">
-                                <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
-                            </div>
-
-                            }
+                <div class="form-inline">
+                    <input type="checkbox"
+                           class="form-control statusbox"
+                           value="@value.ToString("D")"
+                           name="@value.ToString("G")">
+                    <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
+                </div>}
                             <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
@@ -477,7 +464,7 @@
         statusValue = 0;
 
         $('.statusbox').each( (i,el) => {
-            if( el.checked == true ) { 
+            if( el.checked == true ) {
                 statusValue = statusValue + parseInt(el.value);
             }
         });
@@ -610,7 +597,7 @@
     //        }, 800);
     //        return false;
     //    });
-        
+
     //    $('#back-to-top').tooltip('show');
 
     //});

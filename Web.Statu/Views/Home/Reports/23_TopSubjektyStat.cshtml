@@ -6,6 +6,7 @@
 @using System.Web.Mvc
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
+@using Devmasters.Enums;
 
 @using Devmasters.Core
 @using System.Data
@@ -13,33 +14,32 @@
 @using HlidacStatu.Lib.Data
 @using HlidacStatu.Lib.Render
 
-@{
-    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> firmyL =
-        new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+@{ Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> firmyL =
+                    new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
 
-    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> osobyL =
-           new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+                Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> osobyL =
+                       new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
 
-    Relation.AktualnostType aktualnost = Relation.AktualnostType.Aktualni;
-    firmyL = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>(
-        System.IO.File.ReadAllText(StaticData.App_Data_Path + $@"topFirmyStats.2018.{aktualnost.ToString()}.json")
-        );
+                Relation.AktualnostType aktualnost = Relation.AktualnostType.Aktualni;
+                firmyL = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>(
+                    System.IO.File.ReadAllText(StaticData.App_Data_Path + $@"topFirmyStats.2018.{aktualnost.ToString()}.json")
+                    );
 
 
-    var topF = firmyL
-        .OrderByDescending(o => o.Value.Data[2018].CelkemCena)
-        //.ThenByDescending(o => o.Value.Summary.Pocet)
-        .ToArray();
+                var topF = firmyL
+                    .OrderByDescending(o => o.Value.Data[2018].CelkemCena)
+                    //.ThenByDescending(o => o.Value.Summary.Pocet)
+                    .ToArray();
 
-    var scale = HlidacStatu.Util.RenderData.GetBestScale(
-        topF
-            .Select(m => m.Value.Data[2017].CelkemCena)
-            .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
-        ); //calculate it
-    scale = HlidacStatu.Util.RenderData.MaxScale.Miliarda; //manual settings
+                var scale = HlidacStatu.Util.RenderData.GetBestScale(
+                    topF
+                        .Select(m => m.Value.Data[2017].CelkemCena)
+                        .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
+                    ); //calculate it
+                scale = HlidacStatu.Util.RenderData.MaxScale.Miliarda; //manual settings
 
-    var tableSloupce = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>.Column[]
-        {
+                var tableSloupce = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>.Column[]
+                    {
 new  ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>.Column() {
 Name ="Firma",
 HtmlRender = (s) => {
@@ -98,16 +98,13 @@ return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Summary.CelkemCena);
 },
 CssClass ="text-right number"
 },
-};
+        };
 
-    var rds1 = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>(tableSloupce);
-    foreach (var i in topF)
-    {
-        rds1.AddRow(i);
-    }
-
-
-}
+                var rds1 = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>(tableSloupce);
+                foreach (var i in topF)
+                {
+                    rds1.AddRow(i);
+                } }
 <h3>Firmy a holdingy s největšími obchodními vztahy se státem dle registru smluv v roce 2018</h3>
 <p class="text-muted">
     <b>Data jsou platná k 1.1.2018. </b>
@@ -119,16 +116,16 @@ CssClass ="text-right number"
 
 @UtilChart.RenderReport("Suma ročních kontraktů podle osob navázaných na politiky", ReportModel.QueueItem.types.chart,
         UtilChart.SimpleBarChart(
-            false, false, 400, "chartinfo",  "Firmy", "Kč",
+            false, false, 400, "chartinfo", "Firmy", "Kč",
                 new[] {
                     rds1.Filter(new int[] { 0, 1 }, 20,"2018" ),
                     rds1.Filter(new int[] { 0, 2 }, 20,"2017" ),
-            },
+                        },
             tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>",
             loadEvents: @"function(event) {
-                    this.series.forEach(function(d,i){if(d.index==1)d.hide()})
-                }"
-            ),""
+        this.series.forEach(function(d,i){if(d.index==1)d.hide()})
+    }"
+            ), ""
         )
 
 @UtilChart.RenderReport("Top skokani", ReportModel.QueueItem.types.chart,
@@ -137,22 +134,22 @@ CssClass ="text-right number"
                 new[] {
                     rds1.Clone(topF.OrderByDescending(o=>o.Value.YearChange(2018).CenaChangePerc),
                         new int[]{0,3}, 20),
-            },
+                        },
             tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
-            ),""
+            ), ""
         )
 
 @Html.Raw(
     UtilChart.RenderReportTableT<KeyValuePair<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>>(
         "", rds1, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'pageLength': 25,
-                'order': [],
-                'lengthChange': false,
-                'info': false,
-                }", "t1")
+     'language': {
+        'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+    },
+    'pageLength': 25,
+    'order': [],
+    'lengthChange': false,
+    'info': false,
+    }", "t1")
         )
 
 

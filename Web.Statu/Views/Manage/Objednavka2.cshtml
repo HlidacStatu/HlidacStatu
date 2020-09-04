@@ -1,90 +1,85 @@
 ﻿@model HlidacStatu.Web.Models.ObjednavkaViewModel
 @using Microsoft.AspNet.Identity;
+@using Devmasters.Core
+@using Devmasters.Enums;
 
-@using  Devmasters.Core
-
-@{
-    ViewBag.Title = "Objednávka nadstandardních služeb";
-    HlidacStatu.Lib.Data.InvoiceItems.ShopItem sluzba = (HlidacStatu.Lib.Data.InvoiceItems.ShopItem)ViewBag.Sluzba;
-}
+@{ ViewBag.Title = "Objednávka nadstandardních služeb";
+                HlidacStatu.Lib.Data.InvoiceItems.ShopItem sluzba = (HlidacStatu.Lib.Data.InvoiceItems.ShopItem)ViewBag.Sluzba; }
 
 
 
 @using (Html.BeginForm("ObjednavkaPotvrzeni", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-    @Html.Hidden("sluzba",(int)sluzba)
+@Html.Hidden("sluzba", (int)sluzba)
 
-    <p>Objednávka nadstandardních služeb, objednáváte <b>@(sluzba.ToNiceDisplayName())</b>.</p>
-    <hr />
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.ICO, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.ICO, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.DIC, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.DIC, new { @class = "form-control" })
-        </div>
-        <p class="help-block">Uveďte DIČ včetně CZ, pokud jste plátci DPH.</p>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.JmenoFirmy, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.JmenoFirmy, new { @class = "form-control" })
-        </div>
-        <p class="help-block">Nechte prázdné pokud objednáváte jako fyzická osoba.</p>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.JmenoOsoby, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.JmenoOsoby, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Adresa, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Adresa, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Mesto, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Mesto, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.PSC, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.PSC, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Tel, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
-        </div>
-        <p class="help-block">Nepovinné, slouží pouze ke kontaktu v případě problémů.</p>
-    </div>
-
-
+                <p>Objednávka nadstandardních služeb, objednáváte <b>@(sluzba.ToNiceDisplayName())</b>.</p>
+                                <hr />
+                                                @Html.AntiForgeryToken()
+                                                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                                                                <div class="form-group">
+                                                                                    @Html.LabelFor(m => m.ICO, new { @class = "col-md-2 control-label" })
+                                                                                    <div class="col-md-10">
+                                                                                        @Html.TextBoxFor(m => m.ICO, new { @class = "form-control" })
+                                                                                    </div>
+                                                                                </div>
+                                                                                                <div class="form-group">
+                                                                                                    @Html.LabelFor(m => m.DIC, new { @class = "col-md-2 control-label" })
+                                                                                                    <div class="col-md-10">
+                                                                                                        @Html.TextBoxFor(m => m.DIC, new { @class = "form-control" })
+                                                                                                    </div>
+                                                                                                    <p class="help-block">Uveďte DIČ včetně CZ, pokud jste plátci DPH.</p>
+                                                                                                </div>
+                                                                                                                <div class="form-group">
+                                                                                                                    @Html.LabelFor(m => m.JmenoFirmy, new { @class = "col-md-2 control-label" })
+                                                                                                                    <div class="col-md-10">
+                                                                                                                        @Html.TextBoxFor(m => m.JmenoFirmy, new { @class = "form-control" })
+                                                                                                                    </div>
+                                                                                                                    <p class="help-block">Nechte prázdné pokud objednáváte jako fyzická osoba.</p>
+                                                                                                                </div>
+                                                                                                                                <div class="form-group">
+                                                                                                                                    @Html.LabelFor(m => m.JmenoOsoby, new { @class = "col-md-2 control-label" })
+                                                                                                                                    <div class="col-md-10">
+                                                                                                                                        @Html.TextBoxFor(m => m.JmenoOsoby, new { @class = "form-control" })
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    @Html.LabelFor(m => m.Adresa, new { @class = "col-md-2 control-label" })
+                                                                                                                                                    <div class="col-md-10">
+                                                                                                                                                        @Html.TextBoxFor(m => m.Adresa, new { @class = "form-control" })
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                    @Html.LabelFor(m => m.Mesto, new { @class = "col-md-2 control-label" })
+                                                                                                                                                                    <div class="col-md-10">
+                                                                                                                                                                        @Html.TextBoxFor(m => m.Mesto, new { @class = "form-control" })
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                                    @Html.LabelFor(m => m.PSC, new { @class = "col-md-2 control-label" })
+                                                                                                                                                                                    <div class="col-md-10">
+                                                                                                                                                                                        @Html.TextBoxFor(m => m.PSC, new { @class = "form-control" })
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                </div>
+                                                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                                                    @Html.LabelFor(m => m.Tel, new { @class = "col-md-2 control-label" })
+                                                                                                                                                                                                    <div class="col-md-10">
+                                                                                                                                                                                                        @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
+                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                    <p class="help-block">Nepovinné, slouží pouze ke kontaktu v případě problémů.</p>
+                                                                                                                                                                                                </div>
 
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input  onclick="ga('send', 'event', 'objednavka2', 'toStepFinal','@(this.User.Identity.GetUserName())'); return true;" type="submit" class="btn btn-primary" value="Zaregistrovat" /><a style="margin-left:40px;"  onclick="ga('send', 'event', 'objednavka2', 'toCenik', '@(this.User.Identity.GetUserName())'); return true;" href="/cenik" class="btn btn-warning">Zpět na ceník</a>
-
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-        </div>
-    </div>
 
 
-}
+                                                                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                                                                    <div class="col-md-offset-2 col-md-10">
+                                                                                                                                                                                                                        <input onclick="ga('send', 'event', 'objednavka2', 'toStepFinal','@(this.User.Identity.GetUserName())'); return true;" type="submit" class="btn btn-primary" value="Zaregistrovat" /><a style="margin-left:40px;" onclick="ga('send', 'event', 'objednavka2', 'toCenik', '@(this.User.Identity.GetUserName())'); return true;" href="/cenik" class="btn btn-warning">Zpět na ceník</a>
+
+                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                </div>
+
+                                                                                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                                                                                    <div class="col-md-offset-2 col-md-10">
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                </div>}
 

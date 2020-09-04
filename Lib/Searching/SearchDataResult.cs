@@ -81,7 +81,7 @@ namespace HlidacStatu.Lib.Searching
         protected static Func<List<System.Web.Mvc.SelectListItem>> getSmlouvyOrderList = () =>
         {
             return
-                Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
+                Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
                     m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     ).ToList();
         };

@@ -515,7 +515,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             if (prij.ico == s.Platce.ico)
                                 continue;
                             Firma f = Firmy.Get(prij.ico);
-                            if (f.Valid && f.PatrimStatu())
+                            if (f.Valid && f.PatrimStatuAlespon25procent())
                                 continue;
 
                             string dodavatel = prij.ico;

@@ -23,21 +23,21 @@ namespace HlidacStatu.Lib.Data
             public const int MaxResultWindow = 200;
 
 
-            [Devmasters.Core.ShowNiceDisplayName()]
-            [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValue)]
+            [Devmasters.Enums.ShowNiceDisplayName()]
+            [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValue)]
             public enum OrderResult
             {
-                [Devmasters.Core.SortValue(0)]
-                [Devmasters.Core.NiceDisplayName("podle relevance")]
+                [Devmasters.Enums.SortValue(0)]
+                [Devmasters.Enums.NiceDisplayName("podle relevance")]
                 Relevance = 0,
 
 
-                [Devmasters.Core.SortValue(1)]
-                [Devmasters.Core.NiceDisplayName("podle abecedy")]
+                [Devmasters.Enums.SortValue(1)]
+                [Devmasters.Enums.NiceDisplayName("podle abecedy")]
                 NameAsc = 1,
 
 
-                [Devmasters.Core.Disabled]
+                [Devmasters.Enums.Disabled]
                 FastestForScroll = 666
 
             }

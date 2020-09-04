@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Devmasters.Core;
 using HlidacStatu.Util;
+using Devmasters.Enums;
 
 namespace HlidacStatu.Lib.Data
 {

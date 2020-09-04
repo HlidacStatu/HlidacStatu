@@ -1,29 +1,27 @@
 ﻿@model Tuple<string, bool>
 @using Devmasters.Core;
-@{
-    ViewBag.Title = "Ukaž klasifikaci smlouvy";
-    HlidacStatu.Lib.Data.Smlouva sml = null;
-    Dictionary<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> classif = null;
-    Exception exc = null;
-    try
-    {
-        sml = HlidacStatu.Lib.Data.Smlouva.Load(Model.Item1);
-        classif = HlidacStatu.Lib.Data.Smlouva.SClassification.GetClassificationFromServer(sml);
+@using Devmasters.Enums;
 
-    }
-    catch (Exception e)
-    {
+@{ ViewBag.Title = "Ukaž klasifikaci smlouvy";
+                HlidacStatu.Lib.Data.Smlouva sml = null;
+                Dictionary<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes, decimal> classif = null;
+                Exception exc = null;
+                try
+                {
+                    sml = HlidacStatu.Lib.Data.Smlouva.Load(Model.Item1);
+                    classif = HlidacStatu.Lib.Data.Smlouva.SClassification.GetClassificationFromServer(sml);
 
-        exc = e;
-    }
-}
+                }
+                catch (Exception e)
+                {
+
+                    exc = e;
+                } }
 
 @if (sml == null)
 {
-    <h2>Smlouva nenalezena</h2>
-
-    return;
-}
+<h2>Smlouva nenalezena</h2>return;
+            }
 
 
 <table class="table table-new table-new--dotted table-hover">
@@ -51,7 +49,8 @@
         </tr>
         <tr>
             <td>Nalezené klasifikace</td>
-            <td><textarea rows="13" style="width:100%">
+            <td>
+                <textarea rows="13" style="width:100%">
 @if (classif == null)
 {
     if (exc != null)
@@ -71,7 +70,8 @@ else
     @Html.Raw(cl.Key.ToNiceDisplayName() + "\t" + cl.Value + "\n")
     }
 }
-</textarea></td>
+</textarea>
+            </td>
         </tr>
     </tbody>
 </table>

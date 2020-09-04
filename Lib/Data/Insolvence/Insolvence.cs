@@ -1,4 +1,6 @@
 ﻿using Devmasters.Core;
+using Devmasters.Enums;
+
 using HlidacStatu.Lib.ES;
 using HlidacStatu.Lib.Searching;
 using Nest;

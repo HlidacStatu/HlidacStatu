@@ -2,10 +2,10 @@
 {
     public partial class KIndexData
     {
-        [Devmasters.Core.ShowNiceDisplayName()]
+        [Devmasters.Enums.ShowNiceDisplayName()]
         public enum KIndexLabelValues
         {
-            [Devmasters.Core.NiceDisplayName("-")]
+            [Devmasters.Enums.NiceDisplayName("-")]
             None = -1,
             A = 0,
             B = 1,

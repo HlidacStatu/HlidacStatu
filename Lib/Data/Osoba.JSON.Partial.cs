@@ -53,7 +53,7 @@ namespace HlidacStatu.Lib.Data
                     Zdroj = m.Zdroj
                 }
                 ).ToArray();
-            string[] angazovanostDesc = Enums.EnumToEnumerable(typeof(Firma.RelationSimpleEnum))
+            string[] angazovanostDesc = Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(Firma.RelationSimpleEnum))
                 .Where(m => Convert.ToInt32(m.Value) < 0)
                 .Select(m => m.Key).ToArray();
 

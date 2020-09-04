@@ -49,7 +49,7 @@
             <ul>
                 @{
 
-                var oblastiList = Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny))
+                var oblastiList = Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny))
                     .Select(
                         m => new { Value = ((HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)int.Parse(m.Value)).ToString(), Text = m.Key }
                     )

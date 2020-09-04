@@ -1,38 +1,37 @@
 ﻿@model int
-@using  Devmasters.Core
+@using Devmasters.Core
 @using Microsoft.AspNet.Identity;
+@using Devmasters.Enums;
 
-@{
-    ViewBag.Title = "Objednávka nadstandardních služeb";
-    HlidacStatu.Lib.Data.InvoiceItems.ShopItem sluzba = (HlidacStatu.Lib.Data.InvoiceItems.ShopItem)Model;
-}
+
+@{ ViewBag.Title = "Objednávka nadstandardních služeb";
+                HlidacStatu.Lib.Data.InvoiceItems.ShopItem sluzba = (HlidacStatu.Lib.Data.InvoiceItems.ShopItem)Model; }
 
 
 
 @using (Html.BeginForm("Objednavka2", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-    @Html.Hidden("sluzba",@Model)
+@Html.Hidden("sluzba", @Model)
 
-    <p>Objednávka nadstandardních služeb, objednáváte <b>@(sluzba.ToNiceDisplayName())</b>.</p>
-    <hr />
-    <div class="form-group">
-        <div class="col-md-10">
-            <label for="ICO">Pokud máte IČ : </label>
-            @Html.TextBox("ICO", "", new { @id = "ICO", @class = "form-control", @style="display:inline" })
-            <input type="submit"  onclick="ga('send', 'event', 'objednavka', 'toStep2', '@(this.User.Identity.GetUserName())'); return true;" class="btn btn-primary" value="Předvyplnit údaje podle IČ" />
-        </div>
-        </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            Pokud IČ nemáte:
-            <input type="submit"  onclick="ga('send', 'event', 'objednavka', 'toStep2NoIco', '@(this.User.Identity.GetUserName())'); return true;" class="btn btn-default" value="Pokračovat bez IČ" />
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <a onclick="return trackInLink(this,'Objednavka');"  onclick="ga('send', 'event', 'objednavka', 'toCenik', '@(this.User.Identity.GetUserName())'); return true;" href="/cenik" class="btn btn-warning">Zpět na ceník</a>
-        </div>
-    </div>
-}
+                <p>Objednávka nadstandardních služeb, objednáváte <b>@(sluzba.ToNiceDisplayName())</b>.</p>
+                                <hr />
+                                                <div class="form-group">
+                                                    <div class="col-md-10">
+                                                        <label for="ICO">Pokud máte IČ : </label>
+                                                        @Html.TextBox("ICO", "", new { @id = "ICO", @class = "form-control", @style = "display:inline" })
+                                                        <input type="submit" onclick="ga('send', 'event', 'objednavka', 'toStep2', '@(this.User.Identity.GetUserName())'); return true;" class="btn btn-primary" value="Předvyplnit údaje podle IČ" />
+                                                    </div>
+                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-md-10">
+                                                                        Pokud IČ nemáte:
+                                                                        <input type="submit" onclick="ga('send', 'event', 'objednavka', 'toStep2NoIco', '@(this.User.Identity.GetUserName())'); return true;" class="btn btn-default" value="Pokračovat bez IČ" />
+                                                                    </div>
+                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <div class="col-md-10">
+                                                                                        <a onclick="return trackInLink(this,'Objednavka');" onclick="ga('send', 'event', 'objednavka', 'toCenik', '@(this.User.Identity.GetUserName())'); return true;" href="/cenik" class="btn btn-warning">Zpět na ceník</a>
+                                                                                    </div>
+                                                                                </div>}
 
 

@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Searching
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(OsobaEsOrderResult))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(OsobaEsOrderResult))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     )
@@ -72,22 +72,22 @@ namespace HlidacStatu.Lib.Searching
         }
 
 
-        [Devmasters.Core.ShowNiceDisplayName()]
+        [Devmasters.Enums.ShowNiceDisplayName()]
         public enum OsobaEsOrderResult
         {
-            [Devmasters.Core.SortValue(0)]
-            [Devmasters.Core.NiceDisplayName("podle relevance")]
+            [Devmasters.Enums.SortValue(0)]
+            [Devmasters.Enums.NiceDisplayName("podle relevance")]
             Relevance = 0,
 
-            [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("podle jména vzestupně")]
+            [Devmasters.Enums.SortValue(1)]
+            [Devmasters.Enums.NiceDisplayName("podle jména vzestupně")]
             NameAsc = 1,
 
-            [Devmasters.Core.NiceDisplayName("podle jména sestupně")]
-            [Devmasters.Core.SortValue(2)]
+            [Devmasters.Enums.NiceDisplayName("podle jména sestupně")]
+            [Devmasters.Enums.SortValue(2)]
             NameDesc = 2,
 
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             FastestForScroll = 666
 
         }

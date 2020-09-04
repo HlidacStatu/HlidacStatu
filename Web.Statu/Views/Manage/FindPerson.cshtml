@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<HlidacStatu.Lib.Data.Osoba>
 @using Devmasters.Core
-@{
-    ViewBag.Title = "FindPerson";
+@using Devmasters.Enums;
 
-    bool extendSearch = (Request.Params["extendSearch"] == null) ? false : true;
+@{ ViewBag.Title = "FindPerson";
 
-    string checkedattr = (extendSearch) ? "checked=\"checked\"" : "";
-}
+                bool extendSearch = (Request.Params["extendSearch"] == null) ? false : true;
+
+                string checkedattr = (extendSearch) ? "checked=\"checked\"" : ""; }
 
 <h2>FindPerson</h2>
 <div class="row">
@@ -36,74 +36,67 @@
 
 @if (Model == null)
 {
-    <p>Vyhledejte svoji osobu.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var osoba in Model.OrderByDescending(o=>o.Status).ThenByDescending(o=>o.Narozeni ?? new DateTime(1970,1,1)))
+<p>Vyhledejte svoji osobu.</p> }
+            else
+            {
+<ul class="list-group">
+    @foreach (var osoba in Model.OrderByDescending(o => o.Status).ThenByDescending(o => o.Narozeni ?? new DateTime(1970, 1, 1)))
+    {
+<li class="list-group-item d-flex flex-row">
+
+    <div class="col-sm-3 col-md-3">
+        <div class="person-profile-thumb person-profile-thumb--small">
+            <div class="photo">
+                <a href="@osoba.GetUrl(false)">
+                    <div class="profile-picture" style="background-image: url('@osoba.GetPhotoUrl(true)')"></div>
+                </a>
+                <br />
+                @if (osoba.HasPhoto())
+                {
+                    var zdroj = osoba.GetPhotoSource() ?? "";
+<a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Změnit fotku</a>
+                        <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a> }
+                                            else
+                                            {
+                        <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Přidat fotku</a>}
+
+            </div>
+            <div>
+                @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class = "section-title link--blue" })
+                <div class="new-p new-p--gray new-p--small">
+                    @(osoba.NarozeniUmrtiFull())
+                </div>
+                <div class="new-p new-p--gray new-p--small">
+                    @osoba.StatusOsoby().ToNiceDisplayName()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-sm-7 col-md-7">
+        <b>@osoba.NameId</b>
+        @if (osoba.Events().Count() > 0)
         {
-            <li class="list-group-item d-flex flex-row">
-
-                <div class="col-sm-3 col-md-3">
-                    <div class="person-profile-thumb person-profile-thumb--small">
-                        <div class="photo">
-                            <a href="@osoba.GetUrl(false)">
-                                <div class="profile-picture" style="background-image: url('@osoba.GetPhotoUrl(true)')"></div>
-                            </a>
-                            <br />
-                            @if (osoba.HasPhoto())
-                            {
-                                var zdroj = osoba.GetPhotoSource() ?? "";
-                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Změnit fotku</a>
-                                <a title="@zdroj" href="@zdroj" style="font-size:75%;text-decoration:none"><span class="text-muted">@(zdroj != "" ? "zdroj" : "")</span></a>
-                            }
-                            else
-                            {
-                                <a class="btn btn-default btn-sm" href="/manage/changePhoto/@osoba.NameId" role="button">Přidat fotku</a>
-                            }
-
-                        </div>
-                        <div>
-                            @Html.ActionLink(@osoba.FullName(), "PersonDetail", new { id = osoba.InternalId }, new { @class = "section-title link--blue" })
-                            <div class="new-p new-p--gray new-p--small">
-                                @(osoba.NarozeniUmrtiFull())
-                            </div>
-                            <div class="new-p new-p--gray new-p--small">
-                                @osoba.StatusOsoby().ToNiceDisplayName()
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row col-sm-7 col-md-7">
-                    <b>@osoba.NameId</b>
-                    @if (osoba.Events().Count() > 0)
-                    {
-                        <div class="col">
-                            <div class="search-result-label">
-                                Události
-                            </div>
-                            <div class="new-p text-wrap">
-                                @WebUtil.LowBox(80, osoba.Description(true, m => true))
-                            </div>
-                        </div>
-                    }
-                </div>
-                <div class="col-sm-2 col-md-2">
-                    @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
-                    @Html.ActionLink("Editovat události", "PersonDetail", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
-                </div>
-            </li>
-        }
-    </ul>
-}
+<div class="col">
+    <div class="search-result-label">
+        Události
+    </div>
+    <div class="new-p text-wrap">
+        @WebUtil.LowBox(80, osoba.Description(true, m => true))
+    </div>
+</div>                    }
+    </div>
+    <div class="col-sm-2 col-md-2">
+        @Html.ActionLink("Editovat osobu", "EditPersonNP", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
+        @Html.ActionLink("Editovat události", "PersonDetail", new { id = osoba.InternalId }, new { @class = "btn btn-primary btn-sm" })
+    </div>
+</li>}
+</ul>}
 
 <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
 
 
-<script>
-    // scroll top
+<script>// scroll top
     $(document).ready(function () {
         $(window).scroll(function () {
             if ($(this).scrollTop() > 800) {
@@ -123,5 +116,4 @@ else
 
         $('#back-to-top').tooltip('show');
 
-    });
-</script>
+    });</script>

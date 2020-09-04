@@ -1,4 +1,6 @@
 ﻿using Devmasters.Core;
+using Devmasters.Enums;
+
 using System;
 using System.Linq;
 
@@ -14,8 +16,8 @@ namespace HlidacStatu.Lib.Data
             string BookmarkName();
         }
 
-        [Devmasters.Core.ShowNiceDisplayName()]
-        [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValue)]
+        [Devmasters.Enums.ShowNiceDisplayName()]
+        [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValue)]
         public enum ItemTypes
         {
             [Disabled()]

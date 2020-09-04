@@ -1,5 +1,6 @@
 ﻿@using System.Web.Mvc;
 @using System.Linq;
+@using Devmasters.Enums;
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -102,10 +103,10 @@ else
         string postfix = "", string highlightPartDelimiter = " ..... ", string icon = "far fa-search")
 {
     @Html.Raw(HlidacStatu.Lib.Searching.Highlighter.HighlightContentIntoHtmlBlock(
-                                                highlights, path, contentToCompare,
-                                                foundContentFormat, noHLContent, prefix,
-                                                postfix, highlightPartDelimiter, icon)
-                                                )
+                                                    highlights, path, contentToCompare,
+                                                    foundContentFormat, noHLContent, prefix,
+                                                    postfix, highlightPartDelimiter, icon)
+                                                    )
 
 }
 
@@ -188,8 +189,7 @@ else if (infoFormat == 1)
 </div> }
 else if (infoFormat == 2 || infoFormat == 3)
 {
-<script>
-    ga('send', 'event', 'darujAd', 'shown', { nonInteraction: true });
+<script>ga('send', 'event', 'darujAd', 'shown', { nonInteraction: true });
 
     /**/</script>
                     <div class="alert alert-orange text-center">
@@ -466,8 +466,8 @@ else if (!string.IsNullOrWhiteSpace(platceIco) && !string.IsNullOrWhiteSpace(pri
 
     if (item != null)
     {
-        @AddBookmark(user, item, css);
-    }
+@AddBookmark(user, item, css);
+}
 }
 
 
@@ -571,7 +571,7 @@ string descr = "Uložit do záložek. Všechny uložené položky najdete na jed
         datatypeApi = datatypeApi + "." + datasetId;
     }
 
-    var periodList = Devmasters.Core.Enums
+    var periodList = Devmasters.Enums.EnumTools
                       .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.WatchDog.PeriodTime))
                       .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key, Disabled = (Convert.ToInt32(m.Value) < 2) })
                       .ToList();
@@ -674,11 +674,13 @@ else
                                     {
                                         if (kv.Value == "2")
                                         {
-                <option value="@kv.Value" selected="selected" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option> }
-                                        else //if (user?.IsInRole("betatester") == true || user?.IsInRole("canEditData") == true)
-                                        {
-                <option value="@kv.Value" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option>}
-                                    }
+                <option value="@kv.Value" selected="selected" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option>
+ }
+            else //if (user?.IsInRole("betatester") == true || user?.IsInRole("canEditData") == true)
+            {
+<option value="@kv.Value" @WebUtil.IfExists(kv.Disabled, "disabled='disabled'")>@kv.Text</option>
+}
+}
                                 </select>
                             </div>
                         </div>
@@ -831,7 +833,8 @@ else
                                                                             <select class="form-control" id="@(idPrefix)fbInputTyp">
                                                                                 @for (int i = 0; i < options.Length; i = i + 2)
                                                                                 {
-                                                            <option @WebUtil.IfExists(options[i] == selectOption, "selected='selected'") value="@options[i]">@options[i + 1]</option>}
+                                                            <option @WebUtil.IfExists(options[i] == selectOption, "selected='selected'") value="@options[i]">@options[i + 1]</option>
+}
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -882,50 +885,51 @@ else
               });
 
         }
-                                                                    </script> }
-                                                                                    else
-                                                                                    {
-                                                                    <text>
-                                                                        <!-- Button trigger modal -->
-                                                                        <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button>
+                                                                    </script>
+ }
+                                                                else
+                                                                {
+                                                <text>
+                                                    <!-- Button trigger modal -->
+                                                    <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button>
 
-                                                                        <!-- Modal -->
-                                                                        <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
-                                                                             aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                                <div class="modal-content">
-                                                                                    <!-- Modal Header -->
-                                                                                    <div class="modal-header">
-                                                                                        <button type="button" class="close"
-                                                                                                data-dismiss="modal">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                            <span class="sr-only">Close</span>
-                                                                                        </button>
-                                                                                        <h4 class="modal-title" id="@(idPrefix)fbTitle">
-                                                                                            Musíte být přihlášeni
-                                                                                        </h4>
-                                                                                    </div>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+                                                         aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <!-- Modal Header -->
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close"
+                                                                            data-dismiss="modal">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        <span class="sr-only">Close</span>
+                                                                    </button>
+                                                                    <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                                                                        Musíte být přihlášeni
+                                                                    </h4>
+                                                                </div>
 
-                                                                                    <!-- Modal Body -->
-                                                                                    <form class="form-horizontal" role="form">
-                                                                                        <div class="modal-body">
-                                                                                            <p>Pro poslání vzkazu musíte být přihlášeni.</p>
-                                                                                            <p>
-                                                                                                <a href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a> je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
-                                                                                            </p>
+                                                                <!-- Modal Body -->
+                                                                <form class="form-horizontal" role="form">
+                                                                    <div class="modal-body">
+                                                                        <p>Pro poslání vzkazu musíte být přihlášeni.</p>
+                                                                        <p>
+                                                                            <a href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a> je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
+                                                                        </p>
 
-                                                                                        </div>
+                                                                    </div>
 
-                                                                                        <!-- Modal Footer -->
-                                                                                        <div class="modal-footer">
-                                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                                                                Zavřít
-                                                                                            </button>
-                                                                                        </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </text>}
+                                                                    <!-- Modal Footer -->
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                                            Zavřít
+                                                                        </button>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </text>}
 
 }
 
@@ -1150,8 +1154,9 @@ else if (v.RelFrom.HasValue)
 
 <li role="presentation" @WebUtil.IfExists(first, " class='active' ")>
     <a href="#@(id+count.ToString())" onclick="ga('send', 'event', 'tabHorizontal', 'change_@count','@gaPageEventId'); return true;" aria-controls="@(id+count.ToString())" role="tab" data-toggle="tab">@Html.Raw(tabn)</a>
-</li>first = false;
-                }
+</li>
+first = false;
+}
     </ul>
 
     <div class="tab-content">

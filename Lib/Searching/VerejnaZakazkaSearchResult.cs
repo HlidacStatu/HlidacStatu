@@ -15,7 +15,7 @@ namespace HlidacStatu.Lib.Searching
             this.Page = 1;
             OblastiList = new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = m.Key }
                     )
@@ -58,55 +58,55 @@ namespace HlidacStatu.Lib.Searching
 
         //public static string PouzeZahajenyQuery = "form:F01,F02,F04,F05,F07,F12,F15,F16,F17,F21,F24,CZ01,CZ02";
 
-        [Devmasters.Core.ShowNiceDisplayName()]
+        [Devmasters.Enums.ShowNiceDisplayName()]
         public enum VZOrderResult
         {
-            [Devmasters.Core.SortValue(0)]
-            [Devmasters.Core.NiceDisplayName("podle relevance")]
+            [Devmasters.Enums.SortValue(0)]
+            [Devmasters.Enums.NiceDisplayName("podle relevance")]
             Relevance = 0,
 
-            [Devmasters.Core.SortValue(5)]
-            [Devmasters.Core.NiceDisplayName("nově zveřejněné první")]
+            [Devmasters.Enums.SortValue(5)]
+            [Devmasters.Enums.NiceDisplayName("nově zveřejněné první")]
             DateAddedDesc = 1,
 
-            [Devmasters.Core.NiceDisplayName("nově zveřejněné poslední")]
-            [Devmasters.Core.SortValue(6)]
+            [Devmasters.Enums.NiceDisplayName("nově zveřejněné poslední")]
+            [Devmasters.Enums.SortValue(6)]
             DateAddedAsc = 2,
 
-            [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("nejlevnější první")]
+            [Devmasters.Enums.SortValue(1)]
+            [Devmasters.Enums.NiceDisplayName("nejlevnější první")]
             PriceAsc = 3,
 
-            [Devmasters.Core.SortValue(2)]
-            [Devmasters.Core.NiceDisplayName("nejdražší první")]
+            [Devmasters.Enums.SortValue(2)]
+            [Devmasters.Enums.NiceDisplayName("nejdražší první")]
             PriceDesc = 4,
 
-            [Devmasters.Core.SortValue(7)]
-            [Devmasters.Core.NiceDisplayName("nově uzavřené první")]
+            [Devmasters.Enums.SortValue(7)]
+            [Devmasters.Enums.NiceDisplayName("nově uzavřené první")]
             DateSignedDesc = 5,
 
-            [Devmasters.Core.NiceDisplayName("nově uzavřené poslední")]
-            [Devmasters.Core.SortValue(8)]
+            [Devmasters.Enums.NiceDisplayName("nově uzavřené poslední")]
+            [Devmasters.Enums.SortValue(8)]
             DateSignedAsc = 6,
 
-            //[Devmasters.Core.NiceDisplayName("nejvíce chybové první")]
-            //[Devmasters.Core.SortValue(10)]
+            //[Devmasters.Enums.NiceDisplayName("nejvíce chybové první")]
+            //[Devmasters.Enums.SortValue(10)]
             //ConfidenceDesc = 7,
 
-            [Devmasters.Core.NiceDisplayName("podle odběratele")]
-            [Devmasters.Core.SortValue(98)]
+            [Devmasters.Enums.NiceDisplayName("podle odběratele")]
+            [Devmasters.Enums.SortValue(98)]
             CustomerAsc = 8,
     
-            [Devmasters.Core.NiceDisplayName("podle dodavatele")]
-            [Devmasters.Core.SortValue(99)]
+            [Devmasters.Enums.NiceDisplayName("podle dodavatele")]
+            [Devmasters.Enums.SortValue(99)]
             ContractorAsc = 9,
 
 
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             FastestForScroll = 666,
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             LastUpdate = 667,
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             PosledniZmena = 668,
 
         }
@@ -160,7 +160,7 @@ namespace HlidacStatu.Lib.Searching
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value="", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(VZOrderResult))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(VZOrderResult))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     )

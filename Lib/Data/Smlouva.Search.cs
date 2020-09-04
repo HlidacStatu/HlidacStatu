@@ -20,56 +20,56 @@ namespace HlidacStatu.Lib.Data
             public const int DefaultPageSize = 40;
 
 
-            [Devmasters.Core.ShowNiceDisplayName()]
-            [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValue)]
+            [Devmasters.Enums.ShowNiceDisplayName()]
+            [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValue)]
             public enum OrderResult
             {
-                [Devmasters.Core.SortValue(0)]
-                [Devmasters.Core.NiceDisplayName("podle relevance")]
+                [Devmasters.Enums.SortValue(0)]
+                [Devmasters.Enums.NiceDisplayName("podle relevance")]
                 Relevance = 0,
 
-                [Devmasters.Core.SortValue(5)]
-                [Devmasters.Core.NiceDisplayName("nově zveřejněné první")]
+                [Devmasters.Enums.SortValue(5)]
+                [Devmasters.Enums.NiceDisplayName("nově zveřejněné první")]
                 DateAddedDesc = 1,
 
-                [Devmasters.Core.NiceDisplayName("nově zveřejněné poslední")]
-                [Devmasters.Core.SortValue(6)]
+                [Devmasters.Enums.NiceDisplayName("nově zveřejněné poslední")]
+                [Devmasters.Enums.SortValue(6)]
                 DateAddedAsc = 2,
 
-                [Devmasters.Core.SortValue(1)]
-                [Devmasters.Core.NiceDisplayName("nejlevnější první")]
+                [Devmasters.Enums.SortValue(1)]
+                [Devmasters.Enums.NiceDisplayName("nejlevnější první")]
                 PriceAsc = 3,
 
-                [Devmasters.Core.SortValue(2)]
-                [Devmasters.Core.NiceDisplayName("nejdražší první")]
+                [Devmasters.Enums.SortValue(2)]
+                [Devmasters.Enums.NiceDisplayName("nejdražší první")]
                 PriceDesc = 4,
 
-                [Devmasters.Core.SortValue(7)]
-                [Devmasters.Core.NiceDisplayName("nově uzavřené první")]
+                [Devmasters.Enums.SortValue(7)]
+                [Devmasters.Enums.NiceDisplayName("nově uzavřené první")]
                 DateSignedDesc = 5,
 
-                [Devmasters.Core.NiceDisplayName("nově uzavřené poslední")]
-                [Devmasters.Core.SortValue(8)]
+                [Devmasters.Enums.NiceDisplayName("nově uzavřené poslední")]
+                [Devmasters.Enums.SortValue(8)]
                 DateSignedAsc = 6,
 
-                [Devmasters.Core.NiceDisplayName("nejvíce chybové první")]
-                [Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("nejvíce chybové první")]
+                [Devmasters.Enums.SortValue(10)]
                 ConfidenceDesc = 7,
 
-                [Devmasters.Core.NiceDisplayName("podle odběratele")]
-                [Devmasters.Core.SortValue(98)]
+                [Devmasters.Enums.NiceDisplayName("podle odběratele")]
+                [Devmasters.Enums.SortValue(98)]
                 CustomerAsc = 8,
 
-                [Devmasters.Core.NiceDisplayName("podle dodavatele")]
-                [Devmasters.Core.SortValue(99)]
+                [Devmasters.Enums.NiceDisplayName("podle dodavatele")]
+                [Devmasters.Enums.SortValue(99)]
                 ContractorAsc = 9,
 
-                [Devmasters.Core.Disabled]
+                [Devmasters.Enums.Disabled]
                 ClassificationRelevance = 665,
 
-                [Devmasters.Core.Disabled]
+                [Devmasters.Enums.Disabled]
                 FastestForScroll = 666,
-                [Devmasters.Core.Disabled]
+                [Devmasters.Enums.Disabled]
                 LastUpdate = 667,
 
             }

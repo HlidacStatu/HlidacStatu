@@ -27,49 +27,49 @@ namespace HlidacStatu.Lib.Data.VZ
 
 
 
-            [Devmasters.Core.ShowNiceDisplayName]
-            [Devmasters.Core.Sortable(Devmasters.Core.SortableAttribute.SortAlgorithm.BySortValueAndThenAlphabetically)]
+            [Devmasters.Enums.ShowNiceDisplayName]
+            [Devmasters.Enums.Sortable(Devmasters.Enums.SortableAttribute.SortAlgorithm.BySortValueAndThenAlphabetically)]
             public enum CPVSkupiny
             {
-                [Devmasters.Core.NiceDisplayName("IT, HW, SW"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("IT, HW, SW"), Devmasters.Enums.SortValue(10)]
                 IT = 1,
-                [Devmasters.Core.NiceDisplayName("Stavebnictví"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Stavebnictví"), Devmasters.Enums.SortValue(10)]
                 Stav = 2,
-                [Devmasters.Core.NiceDisplayName("Doprava"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Doprava"), Devmasters.Enums.SortValue(10)]
                 Doprava = 3,
-                [Devmasters.Core.NiceDisplayName("Strojírenské produkty"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Strojírenské produkty"), Devmasters.Enums.SortValue(10)]
                 Stroje = 4,
-                [Devmasters.Core.NiceDisplayName("Telekomunikace"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Telekomunikace"), Devmasters.Enums.SortValue(10)]
                 Telco = 5,
-                [Devmasters.Core.NiceDisplayName("Zdravotnictví, medicína"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Zdravotnictví, medicína"), Devmasters.Enums.SortValue(10)]
                 Zdrav = 6,
-                [Devmasters.Core.NiceDisplayName("Potraviny"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Potraviny"), Devmasters.Enums.SortValue(10)]
                 Jidlo = 7,
-                [Devmasters.Core.NiceDisplayName("Bezpečnost, vojsko, policie"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Bezpečnost, vojsko, policie"), Devmasters.Enums.SortValue(10)]
                 Bezpecnost = 8,
-                [Devmasters.Core.NiceDisplayName("Přírodní zdroje"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Přírodní zdroje"), Devmasters.Enums.SortValue(10)]
                 PrirodniZdroj = 9,
-                [Devmasters.Core.NiceDisplayName("Energetika"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Energetika"), Devmasters.Enums.SortValue(10)]
                 Energie = 10,
-                [Devmasters.Core.NiceDisplayName("Zemědělství a lesnictví"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Zemědělství a lesnictví"), Devmasters.Enums.SortValue(10)]
                 Agro = 11,
-                [Devmasters.Core.NiceDisplayName("Kancelářské služby a materiál"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Kancelářské služby a materiál"), Devmasters.Enums.SortValue(10)]
                 Kancelar = 12,
-                [Devmasters.Core.NiceDisplayName("Řemeslné služby a výrobky"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Řemeslné služby a výrobky"), Devmasters.Enums.SortValue(10)]
                 Remeslo = 13,
-                [Devmasters.Core.NiceDisplayName("Zdravotní, sociální a vzdělávací služby"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Zdravotní, sociální a vzdělávací služby"), Devmasters.Enums.SortValue(10)]
                 Social = 14,
-                [Devmasters.Core.NiceDisplayName("Finanční služby"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Finanční služby"), Devmasters.Enums.SortValue(10)]
                 Finance = 15,
-                [Devmasters.Core.NiceDisplayName("Právnické služby"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Právnické služby"), Devmasters.Enums.SortValue(10)]
                 Legal = 16,
-                [Devmasters.Core.NiceDisplayName("Technické služby	"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Technické služby	"), Devmasters.Enums.SortValue(10)]
                 TechSluzby = 17,
-                [Devmasters.Core.NiceDisplayName("Výzkum"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Výzkum"), Devmasters.Enums.SortValue(10)]
                 Vyzkum = 18,
-                [Devmasters.Core.NiceDisplayName("Marketing & PR"), Devmasters.Core.SortValue(10)]
+                [Devmasters.Enums.NiceDisplayName("Marketing & PR"), Devmasters.Enums.SortValue(10)]
                 Marketing = 20,
-                [Devmasters.Core.NiceDisplayName("Ostatní"), Devmasters.Core.SortValue(99)]
+                [Devmasters.Enums.NiceDisplayName("Ostatní"), Devmasters.Enums.SortValue(99)]
                 Jine = 19
             }
 

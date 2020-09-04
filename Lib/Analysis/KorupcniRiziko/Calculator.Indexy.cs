@@ -321,6 +321,8 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
                                 ? $"Pro {v.Count(m => m.HodnotaSmlouvy == 0)} smluv bez uvedené ceny použita průměrná hodnota smlouvy {ret.PrumernaHodnotaSmluvProVypocet}"
                                 : ""
                 })
+                .OrderByDescending(o=>o.HodnotaSmluv)
+                .ThenByDescending(o=>o.PocetSmluv)
                 .ToArray();
 
 

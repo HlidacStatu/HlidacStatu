@@ -524,15 +524,33 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public bool PatrimStatu(decimal minpodil = 0)
+        public bool PatrimStatuAlespon25procent()
         {
-            return JsemOVM() || JsemStatniFirma(minpodil);
+
+            if (JsemOVM())
+                return true;
+
+            if (
+                (this.Kod_PF != null && Firma.StatniFirmy_BasedKodPF.Contains(this.Kod_PF.Value))
+                || (StaticData.VsechnyStatniMestskeFirmy25percs.Contains(this.ICO))
+                )
+            {
+                return true;
+            }
+            else
+                return false;
+
+        }
+
+        public bool PatrimStatu()
+        {
+            return JsemOVM() || JsemStatniFirma();
         }
         public bool JsemOVM()
         {
             return StaticData.Urady_OVM.Contains(this.ICO);
         }
-        public bool JsemStatniFirma(decimal minpodil = 0)
+        public bool JsemStatniFirma()
         {
 
             if (

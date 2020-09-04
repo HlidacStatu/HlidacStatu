@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Searching
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(DotaceOrderResult))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(DotaceOrderResult))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     )
@@ -72,38 +72,38 @@ namespace HlidacStatu.Lib.Searching
         }
 
 
-        [Devmasters.Core.ShowNiceDisplayName()]
+        [Devmasters.Enums.ShowNiceDisplayName()]
         public enum DotaceOrderResult
         {
-            [Devmasters.Core.SortValue(0)]
-            [Devmasters.Core.NiceDisplayName("podle relevance")]
+            [Devmasters.Enums.SortValue(0)]
+            [Devmasters.Enums.NiceDisplayName("podle relevance")]
             Relevance = 0,
 
-            [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("podle data podpisu od nejnovějších")]
+            [Devmasters.Enums.SortValue(1)]
+            [Devmasters.Enums.NiceDisplayName("podle data podpisu od nejnovějších")]
             DateAddedDesc = 1,
 
-            [Devmasters.Core.NiceDisplayName("podle data podpisu od nejstarších")]
-            [Devmasters.Core.SortValue(2)]
+            [Devmasters.Enums.NiceDisplayName("podle data podpisu od nejstarších")]
+            [Devmasters.Enums.SortValue(2)]
             DateAddedAsc = 2,
 
-            [Devmasters.Core.SortValue(3)]
-            [Devmasters.Core.NiceDisplayName("podle částky od největší")]
+            [Devmasters.Enums.SortValue(3)]
+            [Devmasters.Enums.NiceDisplayName("podle částky od největší")]
             LatestUpdateDesc = 3,
 
-            [Devmasters.Core.SortValue(4)]
-            [Devmasters.Core.NiceDisplayName("podle částky od nejmenší")]
+            [Devmasters.Enums.SortValue(4)]
+            [Devmasters.Enums.NiceDisplayName("podle částky od nejmenší")]
             LatestUpdateAsc = 4,
 
-            [Devmasters.Core.SortValue(5)]
-            [Devmasters.Core.NiceDisplayName("podle IČO od největšího")]
+            [Devmasters.Enums.SortValue(5)]
+            [Devmasters.Enums.NiceDisplayName("podle IČO od největšího")]
             ICODesc = 5,
 
-            [Devmasters.Core.SortValue(6)]
-            [Devmasters.Core.NiceDisplayName("podle IČO od nejmenšího")]
+            [Devmasters.Enums.SortValue(6)]
+            [Devmasters.Enums.NiceDisplayName("podle IČO od nejmenšího")]
             ICOAsc = 6,
 
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             FastestForScroll = 666
 
         }

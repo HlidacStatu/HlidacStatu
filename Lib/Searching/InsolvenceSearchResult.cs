@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Searching
             return
                 new System.Web.Mvc.SelectListItem[] { new System.Web.Mvc.SelectListItem() { Value = "", Text = "---" } }
                 .Union(
-                    Devmasters.Core.Enums.EnumToEnumerable(typeof(InsolvenceOrderResult))
+                    Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(InsolvenceOrderResult))
                     .Select(
                         m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                     )
@@ -50,32 +50,32 @@ namespace HlidacStatu.Lib.Searching
         };
 
 
-        [Devmasters.Core.ShowNiceDisplayName()]
+        [Devmasters.Enums.ShowNiceDisplayName()]
         public enum InsolvenceOrderResult
         {
-            [Devmasters.Core.SortValue(0)]
-            [Devmasters.Core.NiceDisplayName("podle relevance")]
+            [Devmasters.Enums.SortValue(0)]
+            [Devmasters.Enums.NiceDisplayName("podle relevance")]
             Relevance = 0,
 
-            [Devmasters.Core.SortValue(1)]
-            [Devmasters.Core.NiceDisplayName("nově zahájené první")]
+            [Devmasters.Enums.SortValue(1)]
+            [Devmasters.Enums.NiceDisplayName("nově zahájené první")]
             DateAddedDesc = 1,
 
-            [Devmasters.Core.NiceDisplayName("nově zveřejněné poslední")]
-            [Devmasters.Core.SortValue(2)]
+            [Devmasters.Enums.NiceDisplayName("nově zveřejněné poslední")]
+            [Devmasters.Enums.SortValue(2)]
             DateAddedAsc = 2,
 
 
-            [Devmasters.Core.SortValue(3)]
-            [Devmasters.Core.NiceDisplayName("naposled změněné první")]
+            [Devmasters.Enums.SortValue(3)]
+            [Devmasters.Enums.NiceDisplayName("naposled změněné první")]
             LatestUpdateDesc = 3,
 
-            [Devmasters.Core.SortValue(4)]
-            [Devmasters.Core.NiceDisplayName("naposled změněné poslední")]
+            [Devmasters.Enums.SortValue(4)]
+            [Devmasters.Enums.NiceDisplayName("naposled změněné poslední")]
             LatestUpdateAsc =43,
 
 
-            [Devmasters.Core.Disabled]
+            [Devmasters.Enums.Disabled]
             FastestForScroll = 666
 
         }

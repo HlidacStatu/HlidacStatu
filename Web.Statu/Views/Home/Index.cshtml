@@ -1,4 +1,5 @@
-﻿@using HlidacStatu.Lib.Data;
+﻿@using Devmasters.Enums;
+@using HlidacStatu.Lib.Data;
 @using HlidacStatu.Lib.Data.External.Zabbix;
 @using Devmasters.Core;
 @using HlidacStatu.Util;
@@ -64,7 +65,7 @@
                 <li>
                     <a href="/pridatse">Přidat se</a>
                     @*<a href="https://github.com/HlidacStatu/Web/issues" target="_blank" style="color:orange"><span class="glyphicon glyphicon-alert"></span>&nbsp;Nahlásit chybu</a>*@
-                    <a  onclick="return trackOutLink(this,'Index.title');" href="https://www.darujme.cz/projekt/1200384">Podpořit nás</a>
+                    <a onclick="return trackOutLink(this,'Index.title');" href="https://www.darujme.cz/projekt/1200384">Podpořit nás</a>
                 </li>
             </ul>
         </div>
@@ -409,12 +410,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
 
                     Celkem <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                              new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total
-                        )
+                                   new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "*", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total
+                             )
                     </strong> zakázek,
                     <strong>
                         @RenderData.NiceNumber(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
-                                          new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total)
+                                               new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData() { Q = "zverejneno:[" + DateTime.Now.Date.Year + "-01-01 TO *]", Page = 0, PageSize = 0, ExactNumOfResults = true }).Total)
                     </strong> letos.
                 </p>
             </div>
@@ -425,7 +426,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                 </div>
                 @{
                     List<Tuple<string, string, long>> topVZ = new List<Tuple<string, string, long>>();
-                    foreach (var obl in Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
+                    foreach (var obl in Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CPVSkupiny)))
                     {
                         var num3M = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.CachedSimpleSearch(TimeSpan.FromHours(6),
                             new HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData()

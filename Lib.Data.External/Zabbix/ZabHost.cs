@@ -7,6 +7,7 @@ using Devmasters.Core;
 
 using Newtonsoft.Json;
 using HlidacStatu.Util;
+using Devmasters.Enums;
 
 namespace HlidacStatu.Lib.Data.External.Zabbix
 {

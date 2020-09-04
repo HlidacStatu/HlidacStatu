@@ -32,6 +32,7 @@ namespace HlidacStatu.Lib
         public static string Web_Root = null;
         public static string[] Mestske_Firmy = new string[] { };
         public static HashSet<string> VsechnyStatniMestskeFirmy = new HashSet<string>();
+        public static HashSet<string> VsechnyStatniMestskeFirmy25percs = new HashSet<string>();
 
         //public static List<string> CiziStaty = new List<string>();
         public static HashSet<string> Jmena = new HashSet<string>();
@@ -573,6 +574,11 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                 foreach (var ic in "25054040,48592307,27376516,06714366,25677063,27234835,28880757,28537319,29202311,28080378,28923405,27831248,27966216,02065801,06532438,44794274".Split(','))
                     VsechnyStatniMestskeFirmy.Add("60193913");//podrizenky Pražská energetika
 
+                VsechnyStatniMestskeFirmy25percs = System.IO.File
+                    .ReadAllLines(StaticData.App_Data_Path + "mistni_firmy_ico_min25percent.txt")
+                    .Where(s => !string.IsNullOrEmpty(s.Trim()))
+                    .ToHashSet();
+                VsechnyStatniMestskeFirmy25percs.Add("60193913");//Pražská energetika
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - FirmySVazbamiNaPolitiky_*");

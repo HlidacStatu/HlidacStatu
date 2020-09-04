@@ -109,7 +109,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 });
             }
             return list;
-                //Devmasters.Core.Enums.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
+                //Devmasters.Enums.EnumTools.EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.Search.OrderResult)).Select(
                 //    m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "Řadit " + m.Key }
                 //    ).ToList();
         }

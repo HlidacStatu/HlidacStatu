@@ -2,115 +2,107 @@
 @using Devmasters.Core
 @using HlidacStatu.Lib.Data
 @using HlidacStatu.Util
+@using Devmasters.Enums;
 
-@{
+@{ ViewBag.Title = "SmlouvaClassification";
 
-    ViewBag.Title = "SmlouvaClassification";
-
-    string GetNiceClassificationName(string enumNumber)
-    {
-        return ((Smlouva.SClassification.ClassificationsTypes)(int.Parse(enumNumber) - int.Parse(enumNumber) % 100)).ToNiceDisplayName();
-    }
-
-    List<SelectListItem> CreateClassificationList(int? classification)
-    {
-
-        List<SelectListItem> typeList = new List<SelectListItem>();
-        foreach (var main in Devmasters.Core.Enums
-                                    .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
-                                    .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
-                                    .Where(m => m.value % 100 == 0)
-                                    .OrderBy(m => m.key)
-                                )
-        {
-            typeList.Add(new System.Web.Mvc.SelectListItem() { Value = "", Text = " -Bez kategorie-", Selected = (classification is null) });
-
-            var sl = new System.Web.Mvc.SelectListItem()
-            {
-                Value = main.value.ToString(),
-                Text = $"{main.key}",
-                Selected = main.value == classification
-            };
-            typeList.Add(sl);
-            foreach (var item in Devmasters.Core.Enums
-                .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
-                .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
-                .Where(m => m.value % 100 != 0)
-                .Where(m => m.value - (m.value % 100) == main.value)
-                .OrderBy(m => m.key))
-            {
-                sl = new System.Web.Mvc.SelectListItem()
+                string GetNiceClassificationName(string enumNumber)
                 {
-                    Value = item.value.ToString(),
-                    Text = $"---{item.key}",
-                    Selected = item.value == classification
-                };
-                typeList.Add(sl);
+                    return ((Smlouva.SClassification.ClassificationsTypes)(int.Parse(enumNumber) - int.Parse(enumNumber) % 100)).ToNiceDisplayName();
+                }
 
-            }
-        }
-        return typeList;
+                List<SelectListItem> CreateClassificationList(int? classification)
+                {
 
-    }
+                    List<SelectListItem> typeList = new List<SelectListItem>();
+                    foreach (var main in Devmasters.Enums.EnumTools
+                                                .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                                                .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                                                .Where(m => m.value % 100 == 0)
+                                                .OrderBy(m => m.key)
+                                            )
+                    {
+                        typeList.Add(new System.Web.Mvc.SelectListItem() { Value = "", Text = " -Bez kategorie-", Selected = (classification is null) });
 
-    var classification1 = Model.Classification.Types.ElementAtOrDefault(0)?.TypeValue;
-    var typeList1 = CreateClassificationList(classification1);
+                        var sl = new System.Web.Mvc.SelectListItem()
+                        {
+                            Value = main.value.ToString(),
+                            Text = $"{main.key}",
+                            Selected = main.value == classification
+                        };
+                        typeList.Add(sl);
+                        foreach (var item in Devmasters.Enums.EnumTools
+                            .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                            .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                            .Where(m => m.value % 100 != 0)
+                            .Where(m => m.value - (m.value % 100) == main.value)
+                            .OrderBy(m => m.key))
+                        {
+                            sl = new System.Web.Mvc.SelectListItem()
+                            {
+                                Value = item.value.ToString(),
+                                Text = $"---{item.key}",
+                                Selected = item.value == classification
+                            };
+                            typeList.Add(sl);
 
-    var classification2 = Model.Classification.Types.ElementAtOrDefault(1)?.TypeValue;
-    var typeList2 = CreateClassificationList(classification2);
+                        }
+                    }
+                    return typeList;
 
-}
+                }
+
+                var classification1 = Model.Classification.Types.ElementAtOrDefault(0)?.TypeValue;
+                var typeList1 = CreateClassificationList(classification1);
+
+                var classification2 = Model.Classification.Types.ElementAtOrDefault(1)?.TypeValue;
+                var typeList2 = CreateClassificationList(classification2); }
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+@Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>Classification for smlouva - @Model.Id</h4>
-        <hr />
+                <div class="form-horizontal">
+                    <h4>Classification for smlouva - @Model.Id</h4>
+                    <hr />
 
-        <div class="form-group">
-            První kategorie
-            <div class="col-md-10">
-                <select class="form-control" id="typ1" name="typ1" onchange="drawSubtype(this.value);">
-                    @foreach (var item in typeList1)
-                    {
-                        if (item.Selected)
-                        {
-                            <option value="@item.Value" selected="selected">@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
+                    <div class="form-group">
+                        První kategorie
+                        <div class="col-md-10">
+                            <select class="form-control" id="typ1" name="typ1" onchange="drawSubtype(this.value);">
+                                @foreach (var item in typeList1)
+                                {
+                                    if (item.Selected)
+                                    {
+                <option value="@item.Value" selected="selected">@item.Text</option> }
+                                    else
+                                    {
+                <option value="@item.Value">@item.Text</option>}
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            Druhá kategorie
-            <div class="col-md-10">
-                <select class="form-control" id="typ2" name="typ2" onchange="drawSubtype(this.value);">
-                    @foreach (var item in typeList2)
-                    {
-                        if (item.Selected)
-                        {
-                            <option value="@item.Value" selected="selected">@item.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
+                    <div class="form-group">
+                        Druhá kategorie
+                        <div class="col-md-10">
+                            <select class="form-control" id="typ2" name="typ2" onchange="drawSubtype(this.value);">
+                                @foreach (var item in typeList2)
+                                {
+                                    if (item.Selected)
+                                    {
+                <option value="@item.Value" selected="selected">@item.Text</option> }
+                                    else
+                                    {
+                <option value="@item.Value">@item.Text</option>}
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Uložit" class="btn btn-primary" />
-            </div>
-        </div>
-    </div>
-}
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Uložit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>}

@@ -53,8 +53,8 @@
     <Reference Include="Devmasters.Cache, Version=1.472.20.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.1.472.20.2\lib\net40\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=1.472.20.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.1.472.20.1\lib\net40\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=1.472.20.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.1.472.20.3\lib\net40\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.DatabaseUpgrader, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.DatabaseUpgrader.1.472.1.1\lib\net40\Devmasters.DatabaseUpgrader.dll</HintPath>

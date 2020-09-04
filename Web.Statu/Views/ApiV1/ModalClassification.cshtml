@@ -1,85 +1,82 @@
 ﻿@model Tuple<string, string>
 
+@using Devmasters.Enums;
 @using System;
 @using System.Linq;
-@{
-    Layout = null;
-    string smlouvaId = Model.Item1;
+@{ Layout = null;
+                string smlouvaId = Model.Item1;
 
-    string modalId = Model.Item2;
-}
+                string modalId = Model.Item2; }
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">×</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="@(modalId)Title">
-                    Oprava zatřídění smlouvy do kategorií
-                </h4>
+<!-- Modal Header -->
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" id="@(modalId)Title">
+        Oprava zatřídění smlouvy do kategorií
+    </h4>
+</div>
+
+<!-- Modal Body -->
+<form class="form-horizontal" role="form">
+    <input type="hidden" id="@(modalId)data" name="@(modalId)data" value="@smlouvaId">
+    <div class="modal-body">
+
+        <input type="hidden" name="@(modalId)Url" id="@(modalId)Url" value="https://www.hlidacstatu.cz/Detail/@smlouvaId">
+        <input type="hidden" name="@(modalId)InputTyp" id="@(modalId)InputTyp" value="classification">
+        <div class="form-group">
+            <label class="col-sm-offset-1 col-sm-10" for="@(modalId)InputTyp">Zaškrtněte kategorie, do kterých smlouva podle vás patří</label>
+            <div class="col-sm-offset-1 col-sm-10">
+                <div class="checkbox" style="height:400px;overflow-y:auto;border:1px #d0d0d0 solid;width:80%;overflow-x:hidden;padding:10px;">
+                    @foreach (var main in Devmasters.Enums.EnumTools
+                        .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                        .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                        .Where(m => m.value % 100 == 0)
+                        .OrderBy(m => m.key)
+                    )
+                    {
+        <div>
+            <label>
+                <input type="checkbox" name="@(modalId)InputTxt" value="@(main.value)_@main.key" /><b>@main.key</b>
+            </label>
+        </div> foreach (var item in Devmasters.Enums.EnumTools
+                            .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
+                            .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
+                            .Where(m => m.value % 100 != 0)
+                            .Where(m => m.value - (m.value % 100) == main.value)
+                            .OrderBy(m => m.key)
+                        )
+                        {
+        <div>
+            <label>
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="@(modalId)InputTxt" value="@(item.value)_@item.key" />@(item.key)
+            </label>
+        </div>}
+                    }
+                </div>
             </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="@(modalId)InputEmail">Váš email</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="@(modalId)InputEmail" placeholder="Email" value="@(this.User?.Identity?.Name)">
+            </div>
+        </div>
 
-            <!-- Modal Body -->
-            <form class="form-horizontal" role="form">
-                <input type="hidden" id="@(modalId)data" name="@(modalId)data" value="@smlouvaId">
-                <div class="modal-body">
+    </div>
 
-                    <input type="hidden" name="@(modalId)Url" id="@(modalId)Url" value="https://www.hlidacstatu.cz/Detail/@smlouvaId">
-                    <input type="hidden" name="@(modalId)InputTyp" id="@(modalId)InputTyp" value="classification">
-                    <div class="form-group">
-                        <label class="col-sm-offset-1 col-sm-10" for="@(modalId)InputTyp">Zaškrtněte kategorie, do kterých smlouva podle vás patří</label>
-                        <div class="col-sm-offset-1 col-sm-10">
-                            <div class="checkbox" style="height:400px;overflow-y:auto;border:1px #d0d0d0 solid;width:80%;overflow-x:hidden;padding:10px;">
-                                @foreach (var main in Devmasters.Core.Enums
-                                    .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
-                                    .Select(m=> new { value = Convert.ToInt32(m.Value), key = m.Key })
-                                    .Where(m => m.value % 100 == 0)
-                                    .OrderBy(m => m.key)
-                                )
-                                {
-                                    <div>
-                                        <label>
-                                            <input type="checkbox" name="@(modalId)InputTxt" value="@(main.value)_@main.key" /><b>@main.key</b>
-                                        </label>
-                                    </div>
-                                    foreach (var item in Devmasters.Core.Enums
-                                        .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes))
-                                        .Select(m => new { value = Convert.ToInt32(m.Value), key = m.Key })
-                                        .Where(m => m.value % 100 != 0)
-                                        .Where(m => m.value - (m.value % 100) == main.value)
-                                        .OrderBy(m => m.key)
-                                    )
-                                    {
-                                        <div>
-                                            <label>
-                                                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="@(modalId)InputTxt" value="@(item.value)_@item.key" />@(item.key)
-                                            </label>
-                                        </div>
-                                }
-                                    }
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="@(modalId)InputEmail">Váš email</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="@(modalId)InputEmail" placeholder="Email" value="@(this.User?.Identity?.Name)">
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Zrušit
-                    </button>
-                    <button type="button" onclick="send@(modalId)();" class="btn btn-primary" >
-                        Odeslat opravené zatřídění
-                    </button>
-                </div>
-            </form>
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+            Zrušit
+        </button>
+        <button type="button" onclick="send@(modalId)();" class="btn btn-primary">
+            Odeslat opravené zatřídění
+        </button>
+    </div>
+</form>
 
 <script>
     function send@(modalId)() {
@@ -99,7 +96,7 @@
         {
             text = text + ", " + $(chkbxs[k]).val();
             console.log($(chkbxs[k]).val());
-        } 
+        }
 
         $.get("/ClassificationFeedback", { typ: typ, email: email, txt: text, url: url, data: adddata, auth: false })
             .fail(function () {

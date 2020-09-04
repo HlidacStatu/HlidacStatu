@@ -1,5 +1,7 @@
 ﻿using Devmasters.Core;
 using Devmasters.Core.Batch;
+using Devmasters.Enums;
+
 using Nest;
 using System;
 using System.Collections.Generic;

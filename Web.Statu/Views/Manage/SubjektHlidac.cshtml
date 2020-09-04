@@ -10,7 +10,7 @@
 
 
     HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
-    var periodList = Devmasters.Core.Enums
+    var periodList = Devmasters.Enums.EnumTools
                   .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.WatchDog.PeriodTime))
                   //.Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = m.Key, Disabled = (m.Value == "0" || m.Value == "1")})
                   .ToList();
