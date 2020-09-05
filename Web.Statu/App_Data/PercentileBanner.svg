@@ -66,8 +66,8 @@
                 </g>
                 <g id="_90perc" serif:id="90perc" transform="matrix(1.02986,0,0,1.247,-906.965,-43.7158)">
                     <g transform="matrix(1,0,0,1,20.7459,-35.3702)">
-                        <text x="1006.46px" y="350.534px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">9 z 10 organizací</text>
-                        <text x="1018.77px" y="374.534px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">má méně bodů</text>
+                        <text x="1006.46px" y="350.534px" style="font-family:'Cabin-Regular', 'Cabin';font-size:24px;fill:rgb(255,145,77);">9 z 10 or<tspan x="1092.81px " y="350.534px ">g</tspan>anizací</text>
+                        <text x="1018.77px" y="374.534px" style="font-family:'Cabin-Regular', 'Cabin';font-size:24px;fill:rgb(255,145,77);">má méně bodů</text>
                     </g>
                     <g transform="matrix(1.96112,7.35628e-34,0,1.96112,650.259,-689.33)">
                         <text id="t90" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
@@ -89,8 +89,8 @@
                 </g>
                 <g id="_10perc" serif:id="10perc" transform="matrix(1.02986,0,0,1.247,-562.611,-42.5269)">
                     <g transform="matrix(1,0,0,1,680.906,-87.793)">
-                        <text x="251.706px" y="512.477px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">Desetina organizací dosáhla</text>
-                        <text x="251.706px" y="536.477px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:24px;fill:rgb(255,145,77);">lepšího výsledku</text>
+                        <text x="251.706px" y="512.477px" style="font-family:'Cabin-Regular', 'Cabin';font-size:24px;fill:rgb(255,145,77);">D<tspan x="269.01px " y="512.477px ">e</tspan>setina or<tspan x="367.674px " y="512.477px ">g</tspan>anizací dosáhla</text>
+                        <text x="251.706px" y="536.477px" style="font-family:'Cabin-Regular', 'Cabin';font-size:24px;fill:rgb(255,145,77);">l<tspan x="257.25px " y="536.477px ">e</tspan>pšího výsl<tspan x="368.85px " y="536.477px ">e</tspan>dku</text>
                     </g>
                     <g transform="matrix(1.96112,7.35628e-34,0,1.96112,315.889,-690.284)">
                         <text id="t10" x="290.631px" y="731.482px" style="font-family:'Cabin-SemiBold', 'Cabin', Helvetica, sans-serif;font-weight:600;font-size:16.317px;">8,8</text>
@@ -108,8 +108,8 @@
                 <g transform="matrix(2.05972,0,0,2.494,-272.073,0.370227)">
                     <g id="rozsah">
                         <g id="rozsahText">
-                            <text x="320.369px" y="409.353px" style="font-family:'Cabin-Regular', 'Cabin', Helvetica, sans-serif;font-size:16.998px;fill:rgb(115,115,115);">Rozsah mezi 25. a 75. percentilem</text>
-                            <text x="330.851px" y="425.522px" style="font-family:'Cabin-Italic', 'Cabin', Helvetica, sans-serif;font-style:italic;font-size:12.999px;fill:rgb(115,115,115);">50 % organizací má body v tomto rozsahu.</text>
+                            <text x="326.991px" y="407.104px" style="font-family:'Cabin-Regular', 'Cabin';font-size:14px;fill:rgb(115,115,115);">5<tspan x="334.439px 344.085px 347.108px 359.568px 362.592px 370.166px 374.463px 381.309px 387.903px 395.603px 398.444px 404.912px 411.506px 417.736px 420.578px 423.601px 435.753px 442.347px 445.371px 453.014px 460.588px 468.232px 475.176px 478.199px 484.961px 487.985px 492.577px 500.15px 512.302px 516.894px 524.468px 527.492px 531.789px 539.363px 545.831px 551.501px 558.094px 565.556px 572.766px " y="407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px 407.104px ">0 % organizací má body v tomto rozsahu.</tspan></text>
+                            <text x="365.765px" y="422.104px" style="font-family:'Cabin-Italic', 'Cabin';font-style:italic;font-size:13px;fill:rgb(115,115,115);">R<tspan x="372.991px 379.554px 385.026px 389.964px 396.865px 403.324px 405.844px 416.139px 421.974px 427.445px 430.108px 432.628px 438.853px 445.378px 447.677px 450.197px 457.098px 459.618px 465.805px 472.329px 474.628px 477.148px 483.815px 489.65px 493.523px 498.838px 504.673px 511.249px 515.069px 517.732px 520.656px 526.491px " y="422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px 422.104px ">ozsah mezi 25. a 75. percentilem</tspan></text>
                         </g>
                     </g>
                 </g>
