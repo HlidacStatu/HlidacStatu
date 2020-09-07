@@ -30,7 +30,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 case KIndexData.KIndexParts.PercentBezCeny:
                     return "Procentní podíl smluv uzavřených se soukromými společnostmi za kalendářní rok, které mají skrytou cenu. Cenu je možné skrýt pouze z důvodu bankovního a obchodního tajemství" +
                         "a tato výjimka je velmi často zneužívána pro utajení hodnoty smlouvy. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva nemá skrytou cenu, hodnota <b>0.5</b> znamená polovinu smlouv se skrytou cenou.";
+                        "Hodnota <b>0</b> znamená, že žádná smlouva nemá skrytou cenu, hodnota <b>0.5</b> znamená polovinu smluv se skrytou cenou.";
                 case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
                     return "Procentní podíl smluv, u kterých jsme při analýze našli zásadní nedostatky. " +
                         "Hodnota <b>0</b> znamená, že žádná smlouva nemá zásadní nedostatky, hodnota <b>0.5</b> znamená polovinu smluv se zásadními nedostatky.";
@@ -46,7 +46,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         "Hodnota <b>0</b> znamená ideální stav." +
                         "Hodnota <b>od 0.25 do 1.0</b> znamená, že utajování ceny se týká jen vybraného okruhu dodavatelů.";
                 case KIndexData.KIndexParts.PercSmluvUlimitu:
-                    return "Procentní podíl smluv, jejichž hodnota pouze malou hodnotu nižší než je zákonný limit, podle které by se zakázka musela soutěžit podle zákona o zadávání veřejných zakázek. " +
+                    return "Procentní podíl smluv, jejichž hodnota je pouze o malou částku nižší než je zákonný limit, nad kterým by se zakázka musela soutěžit podle zákona o zadávání veřejných zakázek. " +
                         "Typicky se jedná o limit <b>6 miliónů</b> korun pro stavební zakázky a <b>2 miliony</b> pro ostatní." +
                         "Hodnota <b>0</b> znamená, že žádná smlouva není u limitu, hodnota <b>1.0</b> znamená všechny smluvy u limitu.";
                 case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
