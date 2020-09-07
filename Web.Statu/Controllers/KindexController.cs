@@ -297,7 +297,8 @@ namespace HlidacStatu.Web.Controllers
                         Kindex = KIndexData.KindexImageIcon(kidx.ForYear(rok.Value).KIndexLabel,
                                 "height: 40px",
                                 showNone: true),
-                        Radky = radky
+                        Radky = radky,
+                        KindexReady = kidx.ForYear(rok.Value).KIndexReady
                     };
 
                     return Json(result, JsonRequestBehavior.AllowGet);
