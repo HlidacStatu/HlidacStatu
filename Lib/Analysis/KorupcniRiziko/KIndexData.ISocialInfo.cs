@@ -158,7 +158,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Uzavřel {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvNovaFirma, "{0} smlouvu;{0} smlouvy;{0} smluv")} s nově založenými firmami.";
+                            return $"Uzavřeli {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvNovaFirma, "{0} smlouvu;{0} smlouvy;{0} smluv")} s nově založenými firmami.";
                         default:
                             return "";
                     }
@@ -166,13 +166,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     switch (lbl)
                     {
                         case KIndexLabelValues.A:
-                            return "Neuzavřel žádné smlouvy o víkendu či svátku.";
+                            return "Neuzavřeli žádné smlouvy o víkendu či svátku.";
                         case KIndexLabelValues.B:
                         case KIndexLabelValues.C:
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Uzavřel {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvOVikendu, "{0} smlouvu;{0} smlouvy;{0} smluv")} o víkendu nebo svátku.";
+                            return $"Uzavřeli {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvOVikendu, "{0} smlouvu;{0} smlouvy;{0} smluv")} o víkendu nebo svátku.";
                         default:
                             return "";
                     }
@@ -186,7 +186,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         case KIndexLabelValues.D:
                         case KIndexLabelValues.E:
                         case KIndexLabelValues.F:
-                            return $"Uzavřel {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvPolitiky, "{0} smlouvu;{0} smlouvy;{0} smluv")} s firmami, jejichž majitelé či ony sami sponzorovali politické strany.";
+                            return $"Uzavřeli {HlidacStatu.Util.PluralForm.Get((int)data.Statistika.PocetSmluvPolitiky, "{0} smlouvu;{0} smlouvy;{0} smluv")} s firmami, jejichž majitelé či ony samy sponzorovali politické strany.";
                         default:
                             return "";
                     }
