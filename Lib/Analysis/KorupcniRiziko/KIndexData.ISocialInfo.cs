@@ -195,11 +195,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     if (bonusR != null)
                     {
                         if (bonusR.Hodnota == -1*Consts.BonusPod50K_3)
-                            return "Dobrovolně zveřejňuje velké množství smluv pod 50.000 Kč.";
+                            return "Dobrovolně zveřejňuje velké množství smluv pod 50 000 Kč.";
                         if (bonusR.Hodnota == -1 * Consts.BonusPod50K_2)
-                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč.";
+                            return "Dobrovolně zveřejňuje smlouvy pod 50 000 Kč.";
                         if (bonusR.Hodnota == -1 * Consts.BonusPod50K_1)
-                            return "Dobrovolně zveřejňuje smlouvy pod 50.000 Kč.";
+                            return "Dobrovolně zveřejňuje smlouvy pod 50 000 Kč.";
                     }
                     return "Nesplňuje podmínku pro udělení bonusu za transparentnost.";
                 default:
