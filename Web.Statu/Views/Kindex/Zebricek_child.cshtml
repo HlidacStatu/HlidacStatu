@@ -110,21 +110,21 @@
                 }
                 else
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zrušit filter, zobrazit vše</a>
+                    <a style="padding-right:20px; white-space:nowrap;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zrušit filter, zobrazit vše</a>
                 }
                 @foreach (var group in filterGroups)
                 {
                     if (group.Key == selectedGroup)
                     {
-                        <span style="padding-right:20px;font-weight:bold"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
+                        <span style="padding-right:20px;font-weight:bold; white-space:nowrap;"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
                     }
                     else if (group.Key == selectedKraj)
                     {
-                        <span style="padding-right:20px;font-weight:bold"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
+                        <span style="padding-right:20px;font-weight:bold;  white-space:nowrap;"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
                     }
                     else
                     {
-                        <span style="padding-right:20px;">
+                        <span style="padding-right:20px; white-space:nowrap;">
                             <a href="@(ViewBag.SelectedLadder)?@filterUrlValue=@System.Net.WebUtility.UrlEncode(group.Key)&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group.Key </a>(@group.Value)
                         </span>
                     }
