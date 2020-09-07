@@ -149,12 +149,20 @@
                                 .FirstOrDefault();
 
                             <td class="porovnani number @(cmp.Ico)_@(i)">
+                                @if (cmp.AnnualData.KIndexReady)
+                                {
+                                    @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota ?? 0),
+                                        "height:25px",
+                                        showNone: true,
+                                        title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))
+
+                                }
+                                else
+                                {
+                                    <p>K-Index pro toto období nebyl spočítán</p>
+                                }
                                 @*@(hodnota?.ToString("F2") ?? "Chybí K–Index")*@
 
-                                @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota ?? 0),
-                                    "height:25px",
-                                    showNone: true,
-                                    title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))
                             </td>
                         }
                         
@@ -211,7 +219,7 @@
             $("#nazev").append(`<th class="porovnaniHead number ${data.Ico}_${unique}" style="width: 150px"><a href="#" onclick="RemoveCompany('${data.Ico}_${unique}'); return false;" style="color: red; float:right; margin-left: 5px;"><i class="far fa-trash-alt"></i></a><a href="/kindex/detail/${data.Ico}">${data.Jmeno}</a></th>`);
             $(`#kindex`).append(`<td class="porovnani number ${data.Ico}_${unique}">${data.Kindex}</td>`);
             data.Radky.forEach(radek => {
-                $(`#${radek.VelicinaName}`).append(`<td class="porovnani number ${data.Ico}_${unique}">${radek.Label}</td>`);
+                $(`#${radek.VelicinaName}`).append(`<td class="porovnani number ${data.Ico}_${unique}">${(data.KindexReady) ? radek.Label : "K-Index pro toto období nebyl spočítán"}</td>`);
             });
 
         }, "json");
