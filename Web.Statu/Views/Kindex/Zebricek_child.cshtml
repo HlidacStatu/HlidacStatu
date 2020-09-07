@@ -186,8 +186,8 @@
             @{
                 string[] rest = data
                     .Where(r => r.KIndex == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue || r.KIndex==0 )
-                    .Select(r => Html.KIndexIcon(KIndexData.KIndexLabelValues.None, 15, showNone: true).ToHtmlString()
-                        + $"<a href=\"/subjekt/{r.Ico} \">{r.Jmeno}</a>"
+                    .Select(r => 
+                        $"<a href=\"/subjekt/{r.Ico}\" >{Html.KIndexIcon(KIndexData.KIndexLabelValues.None, 15, showNone: true).ToHtmlString()}{r.Jmeno}</a>"
                     ).ToArray();
             }
             <p>K-Index nebyl spočítán pro @(rest.Count() > 1 ? "následující" : "" ) organizace, které mají méně než @(Consts.MinSmluvPerYear) smluv za rok nebo malý objem smluv.</p>
