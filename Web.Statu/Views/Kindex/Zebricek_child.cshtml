@@ -104,27 +104,23 @@
                 Skupiny, podle kterých lze filtrovat:
             </h4>
             <div>
-                @if (string.IsNullOrEmpty(selectedGroup))
+                @if (string.IsNullOrEmpty(selectedGroup) && string.IsNullOrEmpty(selectedKraj))
                 {
                     @*<span style="padding-right:20px;"><i class="far fa-arrow-square-right"></i>Zobrazeno vše</span>*@
                 }
                 else
                 {
-                    <a style="padding-right:20px;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zrušit filter, zobrazit vše</a>
+                    <a style="padding-right:20px; white-space:nowrap;" href="@(ViewBag.SelectedLadder)?rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>Zrušit filtr, zobrazit vše</a>
                 }
                 @foreach (var group in filterGroups)
                 {
-                    if (group.Key == selectedGroup)
+                    if (group.Key == selectedGroup || group.Key == selectedKraj)
                     {
-                        <span style="padding-right:20px;font-weight:bold"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
-                    }
-                    else if (group.Key == selectedKraj)
-                    {
-                        <span style="padding-right:20px;font-weight:bold"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
+                        <span style="padding-right:20px;font-weight:bold; white-space:nowrap;"><i class="fas fa-arrow-square-right"></i>@group.Key (@group.Value)</span>
                     }
                     else
                     {
-                        <span style="padding-right:20px;">
+                        <span style="padding-right:20px; white-space:nowrap;">
                             <a href="@(ViewBag.SelectedLadder)?@filterUrlValue=@System.Net.WebUtility.UrlEncode(group.Key)&rok=@selectedYear"><i class="fas fa-arrow-square-right"></i>@group.Key </a>(@group.Value)
                         </span>
                     }
@@ -190,8 +186,8 @@
             @{
                 string[] rest = data
                     .Where(r => r.KIndex == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYearKIndexValue || r.KIndex==0 )
-                    .Select(r => Html.KIndexIcon(KIndexData.KIndexLabelValues.None, 15, showNone: true).ToHtmlString()
-                        + $"<a href=\"/subjekt/{r.Ico} \">{r.Jmeno}</a>"
+                    .Select(r => 
+                        $"<a href=\"/subjekt/{r.Ico}\" >{Html.KIndexIcon(KIndexData.KIndexLabelValues.None, 15, showNone: true).ToHtmlString()}{r.Jmeno}</a>"
                     ).ToArray();
             }
             <p>K-Index nebyl spočítán pro @(rest.Count() > 1 ? "následující" : "" ) organizace, které mají méně než @(Consts.MinSmluvPerYear) smluv za rok nebo malý objem smluv.</p>

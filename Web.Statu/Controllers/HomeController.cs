@@ -194,6 +194,12 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
+        [ActionName("K-Index")]
+        public ActionResult Kindex()
+        {
+            return RedirectPermanent("/kindex");
+        }
+
         public ActionResult NovyClenTeamu()
         {
             return View();
