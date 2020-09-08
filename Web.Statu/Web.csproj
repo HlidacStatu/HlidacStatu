@@ -1638,6 +1638,7 @@
     <Content Include="Views\Kindex\Detail_child.cshtml" />
     <Content Include="Views\Home\Subjekt2.cshtml" />
     <Content Include="Views\Home\Subjekt2_child.cshtml" />
+    <Content Include="Views\Kindex\_SearchForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

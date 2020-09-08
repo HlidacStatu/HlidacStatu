@@ -1,0 +1,100 @@
+﻿<div style="position:relative">
+    <label for="findKindexCompany">Chcete-li najít K-Index konkrétní firmy, použijte tento vyhledávací box</label>
+    <input placeholder="Najít úřad/firmu" type="text" name="findKindexCompany" id="findKindexCompany" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
+    <div id="companies">
+
+    </div>
+
+</div>
+
+<style>
+    .whisp {
+        width: 100%;
+        text-align: left;
+        background-color: white;
+        border-left: 2px grey solid;
+        border-top: 0px;
+        border-bottom: 1px grey dotted;
+        border-right: 0px grey solid;
+        padding-bottom: 2px;
+    }
+
+        .whisp:focus {
+            background-color: lightblue;
+        }
+
+    #companies {
+        margin-bottom: 10px;
+        position:absolute;
+        z-index: 10;
+    }
+    
+</style>
+
+<script>
+
+    function FindCompany(caller) {
+        let req = "/kindex/findcompany/" + caller.value;
+        $.get(req, function (data) {
+            EmptyCompanies();
+            data.forEach(comp => {
+                var button = $('<button/>',
+                    {
+                        text: comp.Name,
+                        class: 'whisp',
+                        click: function () { NavigateToDetail(comp.Ico); EmptyCompanies(); CleanSearchBox(); }
+                    });
+
+                $("#companies").append(button);
+            });
+        }, "json");
+        Navigate();
+    }
+
+    function EmptyCompanies() {
+        $('#companies').empty();
+    }
+
+    function CleanSearchBox() {
+        $('#findKindexCompany').val("").focus();
+    }
+
+    function NavigateToDetail(ico) {
+        window.location.href = `/kindex/detail/${ico}`
+    }
+
+    function Navigate() {
+
+        var index = -1;
+
+        jQuery(parent).on('keydown', function (e) {
+            var checkboxes = $('#companies').find('button.whisp');
+            if (e.keyCode == 38) {
+                if (index > 0) {
+                    index = index - 1;
+                }
+                checkboxes[index].focus();
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            else if (e.keyCode == 40) {
+                if (index < checkboxes.length - 1) {
+                    index = index + 1;
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                else {
+                    index = checkboxes.length - 1;
+                }
+                checkboxes[index].focus();
+            }
+            else if (e.keyCode == 27) {
+                EmptyCompanies();
+                CleanSearchBox();
+            }
+
+        });
+    }
+
+
+</script>

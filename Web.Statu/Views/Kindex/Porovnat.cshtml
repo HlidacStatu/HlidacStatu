@@ -38,7 +38,7 @@
 
 <style>
     .whisp {
-        width: 600px;
+        width: 100%;
         text-align: left;
         background-color: white;
         border-left: 2px grey solid;
@@ -54,6 +54,8 @@
 
     #companies {
         margin-bottom: 10px;
+        position: absolute;
+        z-index: 10;
     }
 
     .porovnani {
@@ -89,7 +91,7 @@
     </div>
 </div>
 
-<div>
+<div style="position:relative">
     <label for="addComparison">Chcete-li přidat do porovnání další subjekt, použijte tento vyhledávací box</label>
     <input placeholder="Přidat úřad/firmu" type="text" name="addComparison" id="addComparison" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
     <div id="companies">
