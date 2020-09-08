@@ -119,7 +119,7 @@ else
                         </th>
                         <td>
                             <p class=" muted">
-                                Index korupčního rizika - zkráceně K–Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                                Index korupčního rizika - zkráceně K–Index, je ukazatel míry rizikových faktorů. Tyto faktory jsou spojovány s rizikem korupce a nehospodárným nakládáním veřejých peněz.
                             </p>
                             <a href="/kindex/detail/@Model.ICO">
                                 <img src="/socialbanner/kindex?v=@Model.ICO" style="width:80%;max-width:500px;min-width:150px;height:auto" />
@@ -506,7 +506,7 @@ else
                                 ); //podepsano:[2016-01-01 TO 2016-12-31]
                         }
         <li>
-            <div><a href="/subjekt/@ustat.Item">@HlidacStatu.Lib.Data.Firmy.GetJmeno(ustat.Item)</a></div>
+            <div>@Html.KIndexLabelLink(ustat.Item)<a href="/subjekt/@ustat.Item">@HlidacStatu.Lib.Data.Firmy.GetJmeno(ustat.Item)</a></div>
             <div style="margin-left:5px">
                 <a href='/HledatSmlouvy?Q=@query'>@ustat.ToNiceString(null, false)</a>
             </div>

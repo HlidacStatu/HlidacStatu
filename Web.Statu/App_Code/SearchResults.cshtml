@@ -447,14 +447,14 @@ else
                 {
                     if (HlidacStatu.Util.DataValidators.CheckCZICO(d.ICO))
                     {
-<a href="/subjekt/@d.ICO">@d.Jmeno</a><br /> }
-else
-{
-<span>@d.Jmeno</span><br /> }
+                        @Html.KIndexLabelLink(d.ICO)<a href="/subjekt/@d.ICO">@d.Jmeno</a><br /> }
+                    else
+                    {
+                        <span>@d.Jmeno</span><br /> }
 
-}
-@WebUtil.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
-}
+                }
+                @WebUtil.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+            }
         </td>
         <td>
             @Devmasters.Core.TextUtil.ShortenText(item.NazevZakazky, 50)

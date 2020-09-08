@@ -99,14 +99,14 @@
             Informace o @pojmenovani_o
             @if (Model.firma.Jmeno.Length > 40)
             {
-                <div style="padding-left:2em;">
-                    @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
+            <div style="padding-left:2em;">
+                @Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)<span class="text-info">@Model.firma.Jmeno</span>
 
                 </div>
             }
             else
             {
-                @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
+            @Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)<span class="text-info">@Model.firma.Jmeno</span>
             }
         </h2>
     </div>
