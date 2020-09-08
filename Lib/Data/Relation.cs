@@ -205,6 +205,21 @@ namespace HlidacStatu.Lib.Data
 
             foreach (var i in data)
             {
+                sb.AppendFormat($"{i.From?.Id}\t{i.From?.PrintName()}\t{i.To?.Id}\t{i.To?.PrintName()}\t{i.RelFrom?.ToShortDateString() ?? "Ø"}\t{i.RelTo?.ToShortDateString() ?? "Ø"}\t{i.Descr}\n");
+            }
+            return sb.ToString();
+        }
+        public static string ExportTabDataDebug(IEnumerable<Graph.Edge> data)
+        {
+            if (data == null)
+                return "";
+            if (data.Count() == 0)
+                return "";
+
+            StringBuilder sb = new StringBuilder(1024);
+
+            foreach (var i in data)
+            {
                 sb.AppendFormat($"{i.From?.UniqId}\t{i.To?.UniqId}\t{i.Descr} {i.RelFrom?.ToShortDateString() ?? "Ø"} -> {i.RelTo?.ToShortDateString() ?? "Ø"}\t{i.Root}\n");
             }
             return sb.ToString();

@@ -1,0 +1,227 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render;
+
+@{
+    Layout = null;
+
+
+
+    var minMaxDate = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("ico:" + Model.ICO, 1, 0,
+        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, platnyZaznam: true,
+        anyAggregation:
+        new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+            .Min("xmin", m => m
+                .Field(ff => ff.datumUzavreni)
+            )
+            .Max("xmax", m => m
+                .Field(ff => ff.datumUzavreni)
+            )
+    );
+
+    var aggMin = minMaxDate.ElasticResults.Aggregations["xmin"] as Nest.ValueAggregate;
+    var aggMax = minMaxDate.ElasticResults.Aggregations["xmax"] as Nest.ValueAggregate;
+
+    double? minEpoch = aggMin?.Value;
+    double? maxEpoch = aggMax?.Value;
+
+    DateTime? firstInRS = minEpoch.HasValue ? Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)minEpoch.Value / 1000).ToLocalTime() : (DateTime?)null;
+    DateTime? lastInRS = maxEpoch.HasValue ? Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)maxEpoch.Value / 1000).ToLocalTime() : (DateTime?)null;
+
+    if (firstInRS < new DateTime(1990, 1, 1) || firstInRS > DateTime.Now.AddYears(2))
+    {
+        firstInRS = null;
+    }
+    if (lastInRS < new DateTime(1990, 1, 1) || lastInRS > DateTime.Now.AddYears(2))
+    {
+        lastInRS = null;
+    }
+
+
+
+    var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model);
+
+    int chartMinDate = 2016;
+    int chartMaxDate = DateTime.Now.Year;
+
+
+}
+
+
+    <table class="table table-dotted">
+        <tbody>
+
+            <tr>
+                <td>Identifikační údaje</td>
+                <td>
+                    IČ: @Model.ICO
+                    @if (Model.DatovaSchranka != null && Model.DatovaSchranka.Length > 0)
+                    {
+                        <div>
+                            @Devmasters.Core.Lang.Plural.Get(Model.DatovaSchranka.Length, "datová schránka:", "datové schránky:", "datové schránky:")
+                            @Model.DatovaSchranka.Aggregate((f, s) => f + ", " + s)
+                        </div>
+                    }
+
+                </td>
+            </tr>
+                        <tr>
+                <td>Nové smlouvy, zakázky a další data této firmy do mailu</td>
+                <td>
+                    @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
+                                     "Hlídat všechny změny o <b>" + Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 30) + "</b> v celém Hlídači",
+                                     prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+
+                    @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+                    {
+                        <br />
+                            @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                                             $"Hlídat změny i "
+                                             + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
+                                             + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")}
+                </td>
+            </tr>
+            <tr>
+                <td>Sdílet stránku s ostatními</td>
+                <td>
+                    @WebUtil.ShareFacebook(Model.GetUrl(false))
+                    @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                    @WebUtil.ShareWidget(Model.GetUrl(false))
+                </td>
+            </tr>
+
+            @using (Html.ShowKIndex(this.User))
+            {
+                HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.ICO);
+                if (kidx != null && kidx.LastKIndexLabel() != HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+                {
+                    <tr>
+                        <td>
+                            Index korupčního rizika K–Index
+                        </td>
+                        <td>
+                            <p class=" muted">
+                                Index korupčního rizika - zkráceně K–Index, je ukazatel, který ukazuje míru rizikových faktorů, které jsou spojeny s nehospodárným nakládáním s veřejnými penězi a rizikem korupce.
+                            </p>
+                            @if (kidx.roky.Any(m => m.KIndexReady))
+                            {
+                                int? lastY = null;
+                                var klbl = kidx.LastKIndexLabel(out lastY);
+                                <table>
+                                    <tr>
+                                        <td>
+                                            @Html.KIndexLabelLink(kidx.Ico, klbl, "height:65px")
+
+                                        </td>
+                                        <td><div style="padding-left:1em;">
+                                            <b>@lastY</b>:<br />
+                                            @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(lastY.Value), 4, html: true))
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p>
+                                    K-Index v dalších letech
+                                    @foreach (int year in HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.CalculationYears)
+                                    {
+                                        var ann = kidx.roky.Where(y => y.Rok == year).FirstOrDefault();
+                                        string postfix = year == HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.CalculationYears.Max() ? "." : ", ";
+
+                                        if (ann != null && ann.KIndexReady && year != lastY)
+                                        {
+                                            <span>
+                                                <a href="@kidx.GetUrl(true,ann.Rok)">@Html.KIndexIcon(ann.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)
+                                            </span>
+                                        }
+                                    }
+                                </p>
+                                <a href="@kidx.GetUrl(true,lastY.Value)" class="btn btn-default btn-default-new">Více o Indexu korupčního rizika</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }@* Html.ShowKIndex *@
+            
+            <tr>
+                <td>Základní informace</td>
+                <td>
+                    <p>
+                    @if (Model.Datum_Zapisu_OR.HasValue)
+                    { 
+                        <span>Založena @(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy")).</span>
+                    }
+
+                    @if (Model.AktualniVazby( HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)?.Count() > 0)
+                    {
+                        if (Model.PatrimStatu())
+                        {
+                        <span>Řídí <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací")</a>.</span>
+                        }
+                        else
+                        {
+                        <span>Vlastní <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</a>.</span>
+                        }
+                    }
+                    else if (Model.Vazby()?.Count() > 0)
+                    {
+                        if (Model.PatrimStatu())
+                        {
+
+                        }
+                        else
+                        {
+                        <span>Vlastnila <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</a>.</span>
+                        }
+                    }
+
+                    @if (Model.ParentVazbyFirmy(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Count()>0)
+                    {
+
+                        if (Model.JsemOVM())
+                        {
+                            <span>Spadá pod <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jeden úřad", "{0} úřady", "{0} úřadů")</a>.</span>
+                        }
+                        else if (Model.PatrimStatu())
+                        {
+                            <span>Spadá <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu organizaci", "{0} organizace", "{0} organizací")</a>.</span>
+                        }
+                        else if (Model.JsemSoukromaFirma())
+                        {
+                            <span>Je vlastněna <a href="/subjektVazby/@Model.ICO">
+                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednou firmou", "{0} firmami", "{0} firmami")</a>.</span>
+                        }
+
+                    }
+
+                    @if (Model.KategorieOVM().Count() > 0)
+                    {
+                         <span>@Devmasters.Core.Lang.Plural.Get(Model.KategorieOVM().Count(),$"Patří do kategorie '{Model.KategorieOVM().First().nazev}'" ,"Je součástí {0} kategorií orgánu veřejné moci","Je součástí {0} kategorií orgánu veřejné moci").</span>
+                    }
+                    </p>
+                    <p>
+                        @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 4, html: true))
+                    </p>
+                    <a href="/subjekt_zakladni/@Model.ICO" class="btn btn-default btn-default-new">Více detailů</a>
+
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+
+
+

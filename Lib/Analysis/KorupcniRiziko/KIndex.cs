@@ -108,6 +108,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         }
 
+        public static bool HasKIndexValue(string ico)
+        {
+            var kidx = Get(ico);
+            if (kidx == null)
+                return false;
+            else
+            {
+                return kidx.roky.Any(m=>m.KIndexReady);
+            }
+        }
+
         public static Tuple<int?, KIndexData.KIndexLabelValues> GetLastLabel(string ico)
         {
             return instanceLabelByIco.Get(ico);

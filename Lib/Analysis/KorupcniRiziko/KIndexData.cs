@@ -128,6 +128,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public string GetUrl(bool local = true)
+        {
+            return GetUrl(local, null);
+        }
+        public string GetUrl(bool local, int? rok = null)
+        {
+            string url = "/kindex/detail/" + this.Ico;
+            if (rok.HasValue)
+                url = url + $"?rok={rok.Value}";
+            if (!local)
+                url = "https://www.hlidacstatu.cz" + url;
+
+            return url;
+        }
+
         public List<Annual> roky { get; set; } = new List<Annual>();
 
         public Annual ForYear(int year)

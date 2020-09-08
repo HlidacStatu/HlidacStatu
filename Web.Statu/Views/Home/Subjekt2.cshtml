@@ -115,93 +115,49 @@
 
     @WebUtil.AddVisitImg("/subjekt/" + Model.ICO)
 
-    @if (showEmptyVersion)
+
+
+    @if (Model.firma.JsemOVM())
     {
-<div class="container">
-    <table class="table table-new table-new--dotted">
-        <tbody>
-            @if (Model.firma.Datum_Zapisu_OR.HasValue)
-            {
-
-<tr>
-    <th>Založena</th>
-    <td>
-        <div>@(Model.firma.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
-    </td>
-</tr>}
-            @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
-            {
-<tr>
-    <th>IČO</th>
-    <td>@Model.firma.ICO</td>
-</tr>}
-            @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
-            {
-<tr>
-    <th>Datová schránka</th>
-    <td>@Model.firma.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
-</tr>}
-            <tr>
-                <td colspan="2">
-                    <div class="alert alert-warning" role="alert">
-                        Tento subjekt nemá žádné obchodní vztahy se státem ani s politickými stranami, proto o ni nezobrazujeme více detailů.
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>return;
-            }
-
-    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Profile", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
-
-    <div style="height:34px"></div>
-
-    @if (Model.firma.PatrimStatu())
-    {@*@Html.Partial("Subjekt_Vztahy", Model.firma)*@
-
-                    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
-                                    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
-                                                        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })*@ }
-                                                else
-                                                { @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
-                                        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })*@
-                                                                @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
-                                                                                @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })}
-
-    <hr class="morespace" />
-    @if (Request.QueryString["verze"] == "b1")
+        <h4>Úřad - orgán veřejné moci  <span class="text-muted">@Model.firma.StatusFull()</span></h4> }
+    else if (Model.firma.JsemStatniFirma())
     {
-@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat2", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })*@ }
-            else
-            {
-@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })*@}
-
-    @Html.Action("CachedAction_Child_2H", new
+        <h4>firma (spolu)vlastněná státem či samosprávou <span class="text-muted">@Model.firma.StatusFull()</span></h4> }
+    else
     {
-        model = Model.firma,
-        NameOfView = "Subjekt_OtherDB",
-        auth = this.User.Identity.IsAuthenticated,
-        key = Model.firma.ICO,
-        param1 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User)
-    })
+        <h4>soukromá firma <span class="text-muted">@Model.firma.StatusFull()</span></h4>}
+    @if (Model.firma.Jmeno == Model.ICO)
+    {
+        <div class="col-xs-12">Tuto firmu a informace o ni se nám nepodařilo dohledat</div> }
+    else
+    {
+        if (showEmptyVersion)
+        {
+            @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache4H, "Subjekt2_EmptyProfile", Model.firma, Model.ICO);            return;
+        }
+        else
+        {
+            @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache4H, "Subjekt2_Profile", Model.firma, Model.ICO);
+        }
+    }
 
-</div>
 
-@section onlyembed
+
+
+    @section onlyembed
 {
-    <div class="container text">
-        <h3>@ViewBag.Title</h3>
-        <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.firma.InfoFacts(), 2, true, true, html: true)) </p>
-        <p><a href="@Model.firma.GetUrl(false)" target="_top">Více informací o smlouvě</a></p>
-    </div>
-    <img src="@($"/socialbanner/subjekt?d={DateTime.Now.ToString("yyMMdd")}&v={Model.ICO}")"
-         style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
-}
+        <div class="container text">
+            <h3>@ViewBag.Title</h3>
+            <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.firma.InfoFacts(), 2, true, true, html: true)) </p>
+            <p><a href="@Model.firma.GetUrl(false)" target="_top">Více informací o smlouvě</a></p>
+        </div>
+        <img src="@($"/socialbanner/subjekt?d={DateTime.Now.ToString("yyMMdd")}&v={Model.ICO}")"
+             style="width:100%;height:auto;padding:1em 0 0 0 0;min-width:250px;" />
+    }
 
-@section footerscripts
+    @section footerscripts
 {
-    <script type="text/javascript">
+        <script type="text/javascript">
     SocialShareKit.init({
         url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.ICO }))',
         twitter: {
@@ -209,5 +165,5 @@
         }
     }
     );
-    </script>
-}
+        </script>
+    }

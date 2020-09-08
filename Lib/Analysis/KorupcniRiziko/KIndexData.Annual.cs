@@ -108,6 +108,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 get => KIndexData.KIndexLabelColor(this.KIndexLabel);
             }
 
+
             public string KIndexLabelIconUrl(bool local = true)
             {
                 return KIndexData.KIndexLabelIconUrl(this.KIndexLabel, local);
