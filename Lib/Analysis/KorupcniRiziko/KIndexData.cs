@@ -195,12 +195,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-        public string SmlouvyQueryForPart(int rok, KIndexData.KIndexParts part, string oborName = null)
+        public static string SmlouvyQueryForPart(string ico, KIndexData.KIndexParts part, KIndexData.Annual annual, string oborName = null)
         {
-            string baseQ = $"ico:{this.Ico} AND datumUzavreni:[{rok}-01-01 TO {rok + 1}-01-01}}";
-            var ann = this.ForYear(rok);
-            if (ann == null)
+            if (annual is null)
                 return null;
+            string baseQ = $"ico:{ico} AND datumUzavreni:[{annual.Rok}-01-01 TO {annual.Rok + 1}-01-01}}";
             switch (part)
             {
                 case KIndexParts.PercentBezCeny:
@@ -208,15 +207,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 case KIndexParts.PercSeZasadnimNedostatkem:
                     return baseQ + " AND " + "chyby:zasadni";
                 case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    return baseQ + " AND " + "hint.mlouvaSPolitickyAngazovanymSubjektem:>0";
+                    return baseQ + " AND " + "hint.smlouvaSPolitickyAngazovanymSubjektem:>0";
                 case KIndexParts.CelkovaKoncentraceDodavatelu:
-                    return ann.CelkovaKoncentraceDodavatelu?.Query;
+                    return annual?.CelkovaKoncentraceDodavatelu?.Query ?? "";
                 case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                    return ann.KoncentraceDodavateluBezUvedeneCeny?.Query;
+                    return annual?.KoncentraceDodavateluBezUvedeneCeny?.Query ?? "";
                 case KIndexParts.KoncentraceDodavateluObory:
-                    return ann.KoncetraceDodavateluObory.FirstOrDefault(m => m.OborName == oborName)?.Koncentrace?.Query;
+                    return annual?.KoncetraceDodavateluObory.FirstOrDefault(m => m.OborName == oborName)?.Koncentrace?.Query ?? "";
                 case KIndexParts.KoncentraceDodavateluCenyULimitu:
-                    return ann.KoncentraceDodavateluCenyULimitu?.Query;
+                    return annual?.KoncentraceDodavateluCenyULimitu?.Query ?? "";
                 case KIndexParts.PercSmluvUlimitu:
                     return baseQ + " AND " + "hint.smlouvaULimitu:>0";
                 case KIndexParts.PercNovaFirmaDodavatel:

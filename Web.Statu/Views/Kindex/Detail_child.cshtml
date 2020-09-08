@@ -620,6 +620,7 @@ else
             <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
         </div>
     }
+    <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
 }
 
 
@@ -703,7 +704,7 @@ else
 
 
         </div>
-
+        <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
 
     }
 }
@@ -724,8 +725,8 @@ else
         </div>
 
     </div>
-        if (currYear.KIndexVypocet.OboroveKoncentrace.Radky.Count() > 0)
-        {
+    if (currYear.KIndexVypocet.OboroveKoncentrace.Radky.Count() > 0)
+    {
         <div class="row">
             <div class="col-xs-12">
                 <form class="form-horizontal">
@@ -748,90 +749,91 @@ else
 
         foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
         {
-        <div class="boxobor @ro.Obor" style="display:none;">
-            <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
-            @if (ro.PodilSmluvBezCeny > 0)
-            {
-                <p>
-                    Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
-                </p>
-                <hr style="width:50%" />
-            }
-            <div class="row">
-                <div class="col-xs-12">
-                    @{
-                        KoncentraceDodavateluIndexy koncentrace = currYear.KoncetraceDodavateluObory
-                            .First(o => o.OborName == ro.Obor)
-                            .Koncentrace;
+            <div class="boxobor @ro.Obor" style="display:none;">
+                <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
+                @if (ro.PodilSmluvBezCeny > 0)
+                {
+                    <p>
+                        Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
+                    </p>
+                    <hr style="width:50%" />
+                }
+                <div class="row">
+                    <div class="col-xs-12">
+                        @{
+                            KoncentraceDodavateluIndexy koncentrace = currYear.KoncetraceDodavateluObory
+                                .First(o => o.OborName == ro.Obor)
+                                .Koncentrace;
 
-                        List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
-                                        .OrderByDescending(m => m.HodnotaSmluv)
-                                        .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
-                                        .Take(12)
-                                        .ToList();
-                        if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
-                        {
-                            data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
-                        }
-                    }
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6">
-                            @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
-                        </div>
-                        <div class="col-xs-12 col-sm-6">
-
-                            @using (Html.LowBox(250))
+                            List<Tuple<string, decimal>> data = koncentrace.TopDodavatele(3)
+                                            .OrderByDescending(m => m.HodnotaSmluv)
+                                            .Select(m => new Tuple<string, decimal>(HlidacStatu.Lib.Data.Firmy.GetJmeno(m.Ico), m.HodnotaSmluv))
+                                            .Take(12)
+                                            .ToList();
+                            if (koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2) > 0)
                             {
-                                <table class="table table-new table-new--dotted table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Dodavatel</th>
-                                            <th>Počet smluv</th>
-                                            <th>Objem v Kč</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
-                                        {
-                                            <tr>
-                                                <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
-                                                <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
-                                                <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
-                                            </tr>
-
-                                        }
-                                    </tbody>
-
-                                </table>
+                                data.Add(new Tuple<string, decimal>("ostatní", koncentrace.HodnotaSmluvProVypocet - data.Sum(m => m.Item2)));
                             }
+                        }
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                @UtilChart.SemiCircleDonut(data, "Koncentrace dodavatelů", "Podíl", 240)
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+
+                                @using (Html.LowBox(250))
+                                {
+                                    <table class="table table-new table-new--dotted table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Dodavatel</th>
+                                                <th>Počet smluv</th>
+                                                <th>Objem v Kč</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
+                                            {
+                                                <tr>
+                                                    <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
+                                                    <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
+                                                    <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                }
+                            </div>
                         </div>
+
+
+
                     </div>
-
-
-
                 </div>
+                <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear, ro.Obor)">Seznam smluv</a>
+            </div>
+        }
+
+    }
+
+}
+
+
+@helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
+{
+
+    string descr = "";
+    descr = KIndexData.PartsDescription(part);
+
+    if (!string.IsNullOrEmpty(descr))
+    {
+        <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
+            <div class="@_class" style="@style">
+                @Html.Raw(descr)
             </div>
         </div>
-        }
+    }
 
-        }
-
-        }
-
-
-        @helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
-        {
-
-            string descr = "";
-            descr = KIndexData.PartsDescription(part);
-
-            if (!string.IsNullOrEmpty(descr))
-            {
-                <div class="@WebUtil.IfExists(autohide,"collapse helpKidx")" aria-expanded="true">
-                    <div class="@_class" style="@style">
-                        @Html.Raw(descr)
-                    </div>
-                </div>
-            }
-
-        }
+}
