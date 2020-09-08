@@ -113,7 +113,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return KIndexData.KIndexLabelIconUrl(this.KIndexLabel, local);
             }
 
-
             KIndexParts[] _orderedValuesForInfofacts = null;
             static readonly object _lockObj = new object();
             public KIndexParts[] OrderedValuesFromBestForInfofacts(string ico)
@@ -148,6 +147,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
 
         }
+
 
     }
 }
