@@ -20,7 +20,12 @@
 <br />
 <img src="~/Content/kindex/iconD.svg" style="height:130px" />
 
+old:
 @Html.Action("CachedAction_Child_debug", new { model = "", NameOfView = "tmp_child", key = "1", auth = this.User.Identity.IsAuthenticated })
+
+<hr />
+new:
+@Html.CachedAction(HtmlExtensions.CachedActionLength.debug, "tmp_child", "", "1");
 
 <div class="row">
 

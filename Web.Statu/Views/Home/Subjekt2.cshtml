@@ -10,7 +10,7 @@
 @using HlidacStatu.Lib;
 
 
-@{
+@{ 
     ViewBag.HideTitle = true;
     string pojmenovani = "firma";
     string pojmenovani_o = "firmě";
@@ -54,19 +54,18 @@
 @section metatags
 {
     @{ bool noIndex = false;
-        if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
-          .SoukromeFirmy.ContainsKey(Model.ICO))
-        {
-            noIndex = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
-              .SoukromeFirmy[Model.ICO]
-              .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
-              .Where(p => p != null)
-              .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
-        } }
+                        if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+                          .SoukromeFirmy.ContainsKey(Model.ICO))
+                        {
+                            noIndex = HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+                              .SoukromeFirmy[Model.ICO]
+                              .Select(pid => HlidacStatu.Lib.StaticData.PolitickyAktivni.Get().Where(m => m.InternalId == pid).FirstOrDefault())
+                              .Where(p => p != null)
+                              .Any(p => HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(p.NameId.ToLower()));
+                        } }
     @if (noIndex || Model.firma.Status == 6)
     {
-        <meta name="robots" content="noindex, noarchive">
-}
+<meta name="robots" content="noindex, noarchive">}
 }
 
 @section scripts
@@ -95,18 +94,18 @@
 <div class="row">
     <div class="col-xs-12">
         <h2 class="new-title text-left">
-            @WebUtil.AddBookmark(this.User, Model)
-            Informace o @pojmenovani_o
+@WebUtil.AddBookmark(this.User, Model) 
+            Informace o @pojmenovani_o 
             @if (Model.firma.Jmeno.Length > 40)
             {
-                <div style="padding-left:2em;">
-                    @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
+            <div style="padding-left:2em;">
+                @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
 
-                </div>
+            </div>
             }
             else
             {
-                @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
+            @Html.KIndexLabelLink(Model.firma.ICO, 30)<span class="text-info">@Model.firma.Jmeno</span>
             }
         </h2>
     </div>
@@ -118,44 +117,41 @@
 
     @if (showEmptyVersion)
     {
-        <div class="container">
-            <table class="table table-new table-new--dotted">
-                <tbody>
-                    @if (Model.firma.Datum_Zapisu_OR.HasValue)
-                    {
+<div class="container">
+    <table class="table table-new table-new--dotted">
+        <tbody>
+            @if (Model.firma.Datum_Zapisu_OR.HasValue)
+            {
 
-                        <tr>
-                            <th>Založena</th>
-                            <td>
-                                <div>@(Model.firma.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
-                            </td>
-                        </tr>
-}
-                    @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
-                    {
-                        <tr>
-                            <th>IČO</th>
-                            <td>@Model.firma.ICO</td>
-                        </tr>
-}
-                    @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
-                    {
-                        <tr>
-                            <th>Datová schránka</th>
-                            <td>@Model.firma.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
-                        </tr>
-}
-                    <tr>
-                        <td colspan="2">
-                            <div class="alert alert-warning" role="alert">
-                                Tento subjekt nemá žádné obchodní vztahy se státem ani s politickými stranami, proto o ni nezobrazujeme více detailů.
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>return;
-    }
+<tr>
+    <th>Založena</th>
+    <td>
+        <div>@(Model.firma.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</div>
+    </td>
+</tr>}
+            @if (Model.firma.ICO != null && @Model.firma.ICO.Length > 0)
+            {
+<tr>
+    <th>IČO</th>
+    <td>@Model.firma.ICO</td>
+</tr>}
+            @if (Model.firma.DatovaSchranka != null && @Model.firma.DatovaSchranka.Length > 0)
+            {
+<tr>
+    <th>Datová schránka</th>
+    <td>@Model.firma.DatovaSchranka.Aggregate((f, s) => f + ", " + s)</td>
+</tr>}
+            <tr>
+                <td colspan="2">
+                    <div class="alert alert-warning" role="alert">
+                        Tento subjekt nemá žádné obchodní vztahy se státem ani s politickými stranami, proto o ni nezobrazujeme více detailů.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>return;
+            }
 
     @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Profile", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
 
@@ -164,22 +160,22 @@
     @if (Model.firma.PatrimStatu())
     {@*@Html.Partial("Subjekt_Vztahy", Model.firma)*@
 
-    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
-    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })*@ }
-else
-{ @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
-        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })*@
-@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
-@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })}
+                    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+                                    @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })
+                                                        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })*@ }
+                                                else
+                                                { @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Dodavatel", firma = Model.firma })
+                                        @Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Odberatel", firma = Model.firma })*@
+                                                                @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Dodavatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })
+                                                                                @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Odberatel", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO })}
 
     <hr class="morespace" />
     @if (Request.QueryString["verze"] == "b1")
     {
-        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat2", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })*@ }
-    else
-    {
-        @Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })*@}
+@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat2", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat2", firma = Model.firma })*@ }
+            else
+            {
+@Html.Action("CachedAction_Child_2H", new { model = Model.firma, NameOfView = "Subjekt_Stat", auth = this.User.Identity.IsAuthenticated, key = Model.firma.ICO }) @*@Html.Action("Subjekt_child", new { NameOfView = "Subjekt_Stat", firma = Model.firma })*@}
 
     @Html.Action("CachedAction_Child_2H", new
     {

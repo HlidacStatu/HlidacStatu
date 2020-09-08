@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -258,64 +257,38 @@ namespace HlidacStatu.Web.Framework
             return new Restricted(self, IfInRoles(user, roles));
         }
 
-    }
-    public class Restricted : IDisposable
-    {
-        public bool Allow { get; set; }
-
-        private StringBuilder _stringBuilderBackup;
-        private StringBuilder _stringBuilder;
-        private readonly HtmlHelper _htmlHelper;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Restricted"/> class.
-        /// </summary>
-        public Restricted(HtmlHelper htmlHelper, bool allow)
+        public enum CachedActionLength
         {
-            Allow = allow;
-            _htmlHelper = htmlHelper;
-            if (!allow) BackupCurrentContent();
+            Cache1H,
+            Cache20min,
+            Cache2H,
+            Cache4H,
+            Cache12H,
+            Cache24H,
+            Cache48H,
+            debug
         }
-
-        private void BackupCurrentContent()
+        public static MvcHtmlString CachedAction(this HtmlHelper self, CachedActionLength length, string viewName, object model, string primaryKey, bool? auth=null, string param1 =null, string param2 = null, string param3 = null, string param4 = null, string param5 = null, string param6 = null, string param7 = null, string param8 = null)
         {
-            // make backup of current buffered content
-            _stringBuilder = ((System.IO.StringWriter)_htmlHelper.ViewContext.Writer).GetStringBuilder();
-            _stringBuilderBackup = new StringBuilder().Append(_stringBuilder);
-        }
+            string cacheLength = length.ToString().Replace("Cache", "");
+            return self.Action("CachedAction_Child_" + cacheLength, new { 
+                model = model, 
+                NameOfView = viewName, 
+                auth = auth ?? self.ViewContext.RequestContext.HttpContext.User?.Identity?.IsAuthenticated,
+                key = primaryKey,
+                param1,
+                param2,
+                param3,
+                param4,
+                param5,
+                param6,
+                param7,
+                param8
+            }
 
-        private void DenyContent()
-        {
-            // restore buffered content backup (destroying any buffered content since Restricted object initialization)
-            _stringBuilder.Length = 0;
-            _stringBuilder.Append(_stringBuilderBackup);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!Allow)
-                DenyContent();
+            );
         }
     }
-    class DisposableHelper : IDisposable
-    {
-        private Action end;
 
-        // When the object is created, write "begin" function
-        public DisposableHelper(Action begin, Action end)
-        {
-            this.end = end;
-            begin();
-        }
-
-        // When the object is disposed (end of using block), write "end" function
-        public void Dispose()
-        {
-            end();
-        }
-    }
 
 }

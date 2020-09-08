@@ -46,7 +46,7 @@ namespace HlidacStatu.Web.Controllers
 
         [ChildActionOnly()]
 #if (!DEBUG)
-        [OutputCache(VaryByParam = "id;rok;group;kraj", Duration = 60 * 60 * 1)]
+        [OutputCache(VaryByParam = "id;rok", Duration = 60 * 60 * 1)]
 #endif
         public ActionResult Detail_child(string id, int? rok = null)
         {
@@ -243,8 +243,7 @@ namespace HlidacStatu.Web.Controllers
                 case "celkovy":
                     if (selectedPart.HasValue)
                         result = Statistics.GetStatistics(rok.Value)
-                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value)
-                            .Take(100);
+                            .SubjektOrderedListPartsCompanyAsc(selectedPart.Value);
                     else
                         result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
                     ViewBag.LadderTopic = "Kompletní žebříček úřadů a organizací";

@@ -351,12 +351,48 @@ namespace HlidacStatu.Web.Controllers
                 return RedirectToAction("Index");
 
 
-            string ico = id.Trim();
+            string ico = Util.ParseTools.NormalizeIco(id);
+
             if (string.IsNullOrEmpty(ico))
                 return RedirectToAction("Report", new { id = "1" });
 
-            if (ico.Length < 8)
-                ico = ico.PadLeft(8, '0');
+            //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
+            //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
+
+
+            HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
+
+            if (!HlidacStatu.Lib.Data.Firma.IsValid(firma))
+            {
+                if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
+                    return View("Subjekt_zahranicni", new HlidacStatu.Lib.Data.Firma() { ICO = ico, Jmeno = ico });
+                else
+                {
+                    if (!HlidacStatu.Util.DataValidators.CheckCZICO(ico))
+
+                        return View("Subjekt_err_spatneICO");
+                    else
+                        return View("Subjekt_err_nezname");
+                }
+            }
+            if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
+                return View("Subjekt_zahranicni", firma);
+
+            //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
+            return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
+        }
+
+
+        public ActionResult Subjekt2(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return RedirectToAction("Index");
+
+
+            string ico = Util.ParseTools.NormalizeIco(id);
+
+            if (string.IsNullOrEmpty(ico))
+                return RedirectToAction("Report", new { id = "1" });
 
             //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
             //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
