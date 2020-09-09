@@ -2,7 +2,6 @@
 
 using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 using HlidacStatu.Lib.Data;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -245,7 +244,16 @@ namespace HlidacStatu.Web.Controllers
                         result = Statistics.GetStatistics(rok.Value)
                             .SubjektOrderedListPartsCompanyAsc(selectedPart.Value);
                     else
-                        result = Statistics.GetStatistics(rok.Value).SubjektOrderedListKIndexCompanyAsc();
+                    {
+                        result = Statistics.GetStatistics(rok.Value)
+                            .SubjektOrderedListKIndexCompanyAsc()
+                            .Select(subj => { 
+                                var company = Firmy.Get(subj.Ico);
+                                subj.KrajId = company.KrajId;
+                                subj.Kraj = Util.CZ_Nuts.Nace2Kraj(company.KrajId, "(neznamý)");
+                                return subj;
+                            });
+                    }
                     ViewBag.LadderTopic = "Kompletní žebříček úřadů a organizací";
                     ViewBag.LadderTitle = "Kompletní žebříček úřadů a organizací podle K–Indexu";
                     break;
