@@ -207,8 +207,8 @@
     {
         if (DateTime.Now < new DateTime(2020, 9, 30, 15, 0, 0))
         {
-            <div class="alert alert-warning" role="alert" style="padding:2px">
-                <div class="text-center center-block" style="font-size:115%;color:red;">
+            <div class="alert alert-warning toplinemsg" role="alert" style="">
+                <div class="text-center center-block toplinemsgtxt " style="">
                     Pomůžeme vám s žádostí o voličský průkaz k volbách do krajských zastupitelstev. Na poslání žádosti
                     @Html.Raw(
                          Devmasters.Core.Lang.Plural.GetWithZero((int)((new DateTime(2020, 9, 25, 15, 0, 0) - DateTime.Now).TotalDays)

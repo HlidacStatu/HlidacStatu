@@ -1,7 +1,7 @@
 ﻿h1 small, h1 .small {
     padding-left: 3em;
     line-height: 2em;
-    display:block;
+    display: block;
 }
 
 h2 small, h2 .small {
@@ -1673,5 +1673,36 @@ div.verticaltab-container {
 }
 
 img.kindex {
-    vertical-align:baseline;
+    vertical-align: baseline;
 }
+
+
+.toplinemsg {
+    padding: 2px;
+}
+
+    .toplinemsg .toplinemsgtxt {
+        font-size: 115%;
+        color: red;
+    }
+@media (min-width: 768px) and (max-width: 991px) {
+    .toplinemsg {
+        padding: 1px;
+    }
+
+        .toplinemsg .toplinemsgtxt {
+            font-size: 90%;
+            color: red;
+        }
+
+}
+    @media (max-width: 767px) {
+        .toplinemsg {
+            padding: 1px;
+        }
+
+            .toplinemsg .toplinemsgtxt {
+                font-size: 90%;
+                color: red;
+            }
+    }
