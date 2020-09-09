@@ -24,7 +24,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Detail(string id, int? rok = null)
         {
-            if (!Framework.HtmlExtensions.ShowKIndex(this.User)    || string.IsNullOrWhiteSpace(id))
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User) || string.IsNullOrWhiteSpace(id))
             {
                 return Redirect("/");
             }

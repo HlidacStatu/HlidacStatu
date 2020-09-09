@@ -2,7 +2,7 @@
 @using Devmasters.Core
 @using HlidacStatu.Lib
 @using HlidacStatu.Lib.Render;
-
+@using HlidacStatu.Web.Framework
 
 @{
     ViewBag.Title = "Přehled vazeb";
@@ -33,68 +33,68 @@
         <li>@Html.KIndexLabelLink(Model.ICO)<a href="/Subjekt/@Model.ICO">@Model.Jmeno</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
-    }
+}
 
 
-    <p>
-        <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
-        </a>
-        <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
-        </a>
-        <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
-           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
-            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
-        </a>
-    </p>
-    <p>
+<p>
+    <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
+    </a>
+    <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
+    </a>
+    <a href="@Url.Action("SubjektVazby", new { id = Model.ICO, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
+       class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
+        @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
+    </a>
+</p>
+<p>
 
-    <p style="padding-top:30px;">
-        @Html.Raw(
-                        HlidacStatu.Lib.Data.Relation.TiskVazeb(
-                            Model.Jmeno,
-                            Model.AktualniVazby(aktualnost),
-                            HlidacStatu.Lib.Data.Relation.TiskEnum.Html
-                        )
+<p style="padding-top:30px;">
+    @Html.Raw(
+                    HlidacStatu.Lib.Data.Relation.TiskVazeb(
+                        Model.Jmeno,
+                        Model.AktualniVazby(aktualnost),
+                        HlidacStatu.Lib.Data.Relation.TiskEnum.Html
                     )
+                )
+</p>
     </p>
-    </p>
 
 
-    <p style="padding-top:30px;">
-    </p>
-    @{
-        var data = Model.AktualniVazby(aktualnost)
-                    .Where(v => v.To != null && v.To.Type == HlidacStatu.Lib.Data.Graph.Node.NodeType.Company)
-                    .GroupBy(f => f.To.Id, v => v, (ico, v) => new
-                    {
-                        ICO = ico,
-                        FirmaName = v.First().To.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-            VazbyPerIco = Model.VazbyProICO(ico),
-                        stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
-                    })
-                    .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO);
+<p style="padding-top:30px;">
+</p>
+@{
+    var data = Model.AktualniVazby(aktualnost)
+                .Where(v => v.To != null && v.To.Type == HlidacStatu.Lib.Data.Graph.Node.NodeType.Company)
+                .GroupBy(f => f.To.Id, v => v, (ico, v) => new
+                {
+                    ICO = ico,
+                    FirmaName = v.First().To.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
+                VazbyPerIco = Model.VazbyProICO(ico),
+                    stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+                })
+                .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO);
 
 
+}
+<p style="padding-top:30px;">
+    @foreach (var vPerIco in data)
+    {
+        <div>
+            <h4>@vPerIco.FirmaName</h4>
+            @WebUtil.RenderVazby(vPerIco.VazbyPerIco)
+
+
+        </div>
     }
-    <p style="padding-top:30px;">
-        @foreach (var vPerIco in data)
-        {
-            <div>
-                <h4>@vPerIco.FirmaName</h4>
-                @WebUtil.RenderVazby(vPerIco.VazbyPerIco)
+</p>
 
-
-            </div>
-        }
-    </p>
-
-    @section footerscripts
+@section footerscripts
 {
-        <script>
+    <script>
             @*var hier_config = {
                 chart: {
                     container: "#hierarchy",
@@ -104,6 +104,6 @@
                 nodeStructure: @Html.Raw(nodeStructure)
             };
             new Treant( hier_config );*@
-        </script>
+    </script>
 
-    }
+}

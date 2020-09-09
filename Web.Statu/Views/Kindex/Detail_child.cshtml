@@ -117,53 +117,61 @@
             }
 
         </div>
+        @WebUtil.AlertModal("Poslat zpětnou vazbu",
+        "Vyjádření subjektu k hodnocení K-index",
+        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky 12345. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+        "Rozumím")
     </div>
 
 }
 else
 {
-    <div class="jumbotron">
-        <div class="container">
-            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
-            <div class="row" style="display: flex;align-items: center;">
-                <div class="col-sm-2">
-                    @Html.KIndexIcon(currYear.KIndexLabel, "width:100px")
-                </div>
-                <div class="col-sm-10">
-                    <div style="font-size:26px;line-height:30px;">
-                        @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok), 3, true, false, lineFormat: "<div>{0}</div>", html: true))
-                    </div>
+<div class="jumbotron">
+    <div class="container">
+        <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+        <div class="row" style="display: flex;align-items: center;">
+            <div class="col-sm-2">
+                @Html.KIndexIcon(currYear.KIndexLabel, "width:100px")
+            </div>
+            <div class="col-sm-10">
+                <div style="font-size:26px;line-height:30px;">
+                    @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok), 3, true, false, lineFormat: "<div>{0}</div>", html: true))
                 </div>
             </div>
-            @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
-            {
-                <div style="margin-top:20px" class="text-warning">
-                    @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
-                </div>
-            }
-            @if (Model.roky.Any(m => m.KIndexReady))
-            {
-                <div class="row" style="margin-top:25px">
-                    <div class="col-sm-12">
-                        <h4>
-                            Spočítaný K–Index pro další roky:
-                            @foreach (int year in availableKindexYears.OrderBy(m => m))
-                            {
-                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
-                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
-
-                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
-                                {
-                                    <span><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
-
-                                }
-                            }
-                        </h4>
-                    </div>
-                </div>
-            }
         </div>
+        @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
+        {
+            <div style="margin-top:20px" class="text-warning">
+                @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
+            </div>
+        }
+        @if (Model.roky.Any(m => m.KIndexReady))
+        {
+            <div class="row" style="margin-top:25px">
+                <div class="col-sm-12">
+                    <h4>
+                        Spočítaný K–Index pro další roky:
+                        @foreach (int year in availableKindexYears.OrderBy(m => m))
+                        {
+                            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                            string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+                            if (kidx != null && kidx.KIndexReady && year != selectedYear)
+                            {
+                                <span><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                            }
+                        }
+                    </h4>
+                </div>
+            </div>
+        }
     </div>
+    @WebUtil.AlertModal("Poslat zpětnou vazbu",
+        "Vyjádření subjektu k hodnocení K-index",
+        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky 12345. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+        "Rozumím")
+</div>
 }
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
