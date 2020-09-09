@@ -73,7 +73,7 @@
 
                 </td>
             </tr>
-                        <tr>
+            <tr>
                 <td>Nové smlouvy, zakázky a další data této firmy do mailu</td>
                 <td>
                     @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
@@ -83,10 +83,10 @@
                     @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
                     {
                         <br />
-                            @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
-                                             $"Hlídat změny i "
-                                             + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
-                                             + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")}
+                        @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                                         $"Hlídat změny i "
+                                         + Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
+                                         + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")}
                 </td>
             </tr>
             <tr>
@@ -121,9 +121,10 @@
                                             @Html.KIndexLabelLink(kidx.Ico, klbl, "height:65px", linkToKindex: true)
 
                                         </td>
-                                        <td><div style="padding-left:1em;">
-                                            <b>@lastY</b>:<br />
-                                            @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(lastY.Value), 4, html: true))
+                                        <td>
+                                            <div style="padding-left:1em;">
+                                                <b>@lastY</b>:<br />
+                                                @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(lastY.Value), 4, html: true))
                                             </div>
                                         </td>
                                     </tr>
@@ -149,67 +150,85 @@
                     </tr>
                 }
             }@* Html.ShowKIndex *@
-            
+
             <tr>
                 <td>Základní informace</td>
                 <td>
                     <p>
-                    @if (Model.Datum_Zapisu_OR.HasValue)
-                    { 
-                        <span>Založena @(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy")).</span>
-                    }
-
-                    @if (Model.AktualniVazby( HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)?.Count() > 0)
-                    {
-                        if (Model.PatrimStatu())
+                        @if (Model.Datum_Zapisu_OR.HasValue)
                         {
-                        <span>Řídí <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací")</a>.</span>
-                        }
-                        else
-                        {
-                        <span>Vlastní <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</a>.</span>
-                        }
-                    }
-                    else if (Model.Vazby()?.Count() > 0)
-                    {
-                        if (Model.PatrimStatu())
-                        {
-
-                        }
-                        else
-                        {
-                        <span>Vlastnila <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</a>.</span>
-                        }
-                    }
-
-                    @if (Model.ParentVazbyFirmy(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Count()>0)
-                    {
-
-                        if (Model.JsemOVM())
-                        {
-                            <span>Spadá pod <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jeden úřad", "{0} úřady", "{0} úřadů")</a>.</span>
-                        }
-                        else if (Model.PatrimStatu())
-                        {
-                            <span>Spadá <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu organizaci", "{0} organizace", "{0} organizací")</a>.</span>
-                        }
-                        else if (Model.JsemSoukromaFirma())
-                        {
-                            <span>Je vlastněna <a href="/subjektVazby/@Model.ICO">
-                                @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednou firmou", "{0} firmami", "{0} firmami")</a>.</span>
+                            <span>Založena @(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy")).</span>
                         }
 
-                    }
+                        @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)?.Count() > 0)
+                        {
+                            if (Model.PatrimStatu())
+                            {
+                                <span>
+                                    Řídí <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací")
+                                    </a>.
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    Vlastní <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")
+                                    </a>.
+                                </span>
+                            }
+                        }
+                        else if (Model.Vazby()?.Count() > 0)
+                        {
+                            if (Model.PatrimStatu())
+                            {
 
-                    @if (Model.KategorieOVM().Count() > 0)
-                    {
-                         <span>@Devmasters.Core.Lang.Plural.Get(Model.KategorieOVM().Count(),$"Patří do kategorie '{Model.KategorieOVM().First().nazev}'" ,"Je součástí {0} kategorií orgánu veřejné moci","Je součástí {0} kategorií orgánu veřejné moci").</span>
-                    }
+                            }
+                            else
+                            {
+                                <span>
+                                    Vlastnila <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu dceřinnou společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")
+                                    </a>.
+                                </span>
+                            }
+                        }
+
+                        @if (Model.ParentVazbyFirmy(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Count() > 0)
+                        {
+
+                            if (Model.JsemOVM())
+                            {
+                                <span>
+                                    Spadá pod <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jeden úřad", "{0} úřady", "{0} úřadů")
+                                    </a>.
+                                </span>
+                            }
+                            else if (Model.PatrimStatu())
+                            {
+                                <span>
+                                    Spadá <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednu organizaci", "{0} organizace", "{0} organizací")
+                                    </a>.
+                                </span>
+                            }
+                            else if (Model.JsemSoukromaFirma())
+                            {
+                                <span>
+                                    Je vlastněna <a href="/subjektVazby/@Model.ICO">
+                                        @Devmasters.Core.Lang.Plural.Get(Model.Vazby().Count(), "jednou firmou", "{0} firmami", "{0} firmami")
+                                    </a>.
+                                </span>
+                            }
+
+                        }
+
+                        @if (Model.KategorieOVM().Count() > 0)
+                        {
+                            <span>@Devmasters.Core.Lang.Plural.Get(Model.KategorieOVM().Count(), $"Patří do kategorie '{Model.KategorieOVM().First().nazev}'", "Je součástí {0} kategorií orgánu veřejné moci", "Je součástí {0} kategorií orgánu veřejné moci").</span>
+                        }
                     </p>
                     <p>
                         @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 4, html: true))
@@ -218,7 +237,133 @@
 
                 </td>
             </tr>
-            
+
+            @{ var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                                           .Sum("souhrn", s => s
+                                               .Field(f => f.DotaceCelkem)
+                                           );
+                var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
+                    HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                    dotaceAggs, exactNumOfResults: true);
+
+                string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
+                decimal sumDotace = (decimal)dotaceSearch.ElasticResults.Aggregations.Sum("souhrn").Value;
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotace) + "</b>."; }
+            <tr>
+                <th id="_dotace">Dotace</th>
+                <td>
+                    @if (Model.JsemOVM())
+                    {
+                        <p>
+                            Úřad @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
+                                                       " nedostal žádnou dotaci.",
+                                                       " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                       " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                       " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                        </p> }
+                    else
+                    {
+                        <p>
+                            Firma @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+                            @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearch.Total,
+                                                       " nedostala žádnou dotaci.",
+                                                       " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                       " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                       " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                        </p>}
+                    @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+                    {
+
+                        var dotaceAggsH = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                            .Terms("icos", s => s
+                                .Field(f => f.Prijemce.Ico)
+                                .Size(5000)
+                                .Aggregations(a => a
+                                    .Sum("sum", ss => ss.Field(ff => ff.DotaceCelkem))
+                                )
+                            );
+                        var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("holding:" + Model.ICO, 1, 1,
+                            HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                            dotaceAggsH, exactNumOfResults: true);
+
+                        decimal sumDotaceH = 0;
+                        var items = ((BucketAggregate)dotaceSearchH.ElasticResults.Aggregations["icos"]).Items;
+                        foreach (KeyedBucket<object> item in items)
+                        {
+                            sumDotaceH += (decimal)item.Sum("sum").Value;
+                        }
+                        if (dotaceSearchH.Total - dotaceSearch.Total > 0)
+                        {
+                            var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotaceH - sumDotace) + "</b>.";
+                            var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumDotaceH) + "</b>.";
+                            string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
+                            if (Model.JsemOVM())
+                            {
+                                <p>
+                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                                    (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                                    úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                                    @Devmasters.Core.Lang.Plural.Get(items.Count,
+                                                              "dostala",
+                                                              "dostaly",
+                                                              "dostalo")
+                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                                                                          " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                          " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                          " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                                </p>
+                                <p>
+                                    Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
+                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                                           " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                           " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                           " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                                </p> }
+                            else
+                            {
+                                <p>
+                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                    (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                                    firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                                    @Devmasters.Core.Lang.Plural.Get(items.Count,
+                                                              "dostala",
+                                                              "dostaly",
+                                                              "dostalo")
+                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                                                                          " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                          " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                          " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                                </p>
+                                <p>
+                                    Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
+                                    @Html.Raw(Devmasters.Core.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                                           " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                           " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                           " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                                </p> }
+                        }
+                        else
+                        {
+                            if (Model.JsemOVM())
+                            {
+                                <p>
+                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                                    úřadu @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                                </p> }
+                            else
+                            {
+                                <p>
+                                    <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                    firmy @Devmasters.Core.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                                </p>}
+                        }
+                    }
+                </td>
+            </tr>
+
         </tbody>
     </table>
 
