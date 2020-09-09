@@ -205,9 +205,15 @@ namespace HlidacStatu.Web.Framework
                 }
                 else
                 {
-                    return htmlHelper.Raw($"<a href='/Subjekt/{ico}'>"
+                    if (label != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None || showNone)
+                    {
+                        if (label == Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
+                            return htmlHelper.KIndexIcon(label, style, showNone);
+                        else
+                            return htmlHelper.Raw($"<a href='/Subjekt/{ico}'>"
                             + KIndexIcon(htmlHelper, label, style, showNone).ToHtmlString()
                             + "</a>");
+                    }
                 }
             }
             return htmlHelper.Raw("");
