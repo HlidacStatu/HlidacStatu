@@ -119,7 +119,7 @@
         </div>
         @WebUtil.AlertModal("Poslat zpětnou vazbu",
         "Vyjádření subjektu k hodnocení K-index",
-        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky 12345. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
         "Rozumím")
     </div>
 
@@ -169,7 +169,7 @@ else
     </div>
     @WebUtil.AlertModal("Poslat zpětnou vazbu",
         "Vyjádření subjektu k hodnocení K-index",
-        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky 12345. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
         "Rozumím")
 </div>
 }
@@ -628,7 +628,9 @@ else
             <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
         </div>
     }
-    <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
+    <h3>
+        <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
+    </h3>
 }
 
 
@@ -712,7 +714,9 @@ else
 
 
         </div>
-        <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
+        <h3>
+            <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
+        </h3>
 
     }
 }
@@ -820,7 +824,9 @@ else
 
                     </div>
                 </div>
-                <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear, ro.Obor)">Seznam smluv</a>
+                <h3>
+                    <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear, ro.Obor)">Seznam smluv</a>
+                </h3>
             </div>
         }
 
