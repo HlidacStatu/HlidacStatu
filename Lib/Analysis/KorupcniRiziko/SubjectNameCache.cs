@@ -61,29 +61,29 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             var tokenizedSearchInput = Tokenize(search);
 
-            var tokenSearchAll = GetCompanies().Values
-                .Where(c => 
-                    tokenizedSearchInput.All(txt => 
-                        c.Tokens.Any(tkn => 
-                            tkn.StartsWith(txt)
-                        )
-                    )
-                )
-                .Take(take);
-            totalResult = totalResult.Union(tokenSearchAll).Take(take);
-            if (totalResult.Count() >= take)
-                return totalResult;
+            //var tokenSearchAll = GetCompanies().Values
+            //    .Where(c => 
+            //        tokenizedSearchInput.All(txt => 
+            //            c.Tokens.Any(tkn => 
+            //                tkn.StartsWith(txt)
+            //            )
+            //        )
+            //    )
+            //    .Take(take);
+            //totalResult = totalResult.Union(tokenSearchAll).Take(take);
+            //if (totalResult.Count() >= take)
+            //    return totalResult;
 
-            var tokenSearchAny = GetCompanies().Values
-                .Where(c =>
-                    tokenizedSearchInput.Any(txt =>
-                        c.Tokens.Any(tkn =>
-                            tkn.StartsWith(txt)
-                        )
-                    )
-                )
-                .Take(take);
-            totalResult = totalResult.Union(tokenSearchAny).Take(take);
+            //var tokenSearchAny = GetCompanies().Values
+            //    .Where(c =>
+            //        tokenizedSearchInput.Any(txt =>
+            //            c.Tokens.Any(tkn =>
+            //                tkn.StartsWith(txt)
+            //            )
+            //        )
+            //    )
+            //    .Take(take);
+            //totalResult = totalResult.Union(tokenSearchAny).Take(take);
 
             // přesnější, pomalejší než tokenSearchAny, ale zase by to možná mohlo zastoupit token search all
             //var tokenSearchCount = GetCompanies().Values
@@ -96,6 +96,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //    .OrderByDescending(x => x.hits)
             //    .Select(x => x.subject)
             //    .Take(take);
+            //totalResult = totalResult.Union(tokenSearchCount).Take(take);
+
+            var tokenSearchCount = GetCompanies().Values
+                .Select(c => new
+                {
+                    hits = tokenizedSearchInput.Sum(i => c.Tokens.Any(tkn => tkn.StartsWith(i)) ? i.Length : 0),
+                    subject = c
+                })
+                .Where(x => x.hits > 0)
+                .OrderByDescending(x => x.hits)
+                .Select(x => x.subject)
+                .Take(take);
+            totalResult = totalResult.Union(tokenSearchCount).Take(take);
 
             return totalResult;
         }
