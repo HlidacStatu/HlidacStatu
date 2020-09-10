@@ -156,28 +156,32 @@ else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny
             {
                 foreach (var o in item.Dluznici.Take(2))
                 {
-<div>@Html.Raw(o.ToHtml())</div> }
-if (item.Dluznici.Count == 3)
-{
-<div>@Html.Raw(item.Dluznici[2].ToHtml())</div> }
-else if (item.Dluznici.Count > 3)
-{
-<div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>}
-}
+                    <div>@Html.KIndexLabelLink(o.ICO)@Html.Raw(o.ToHtml())</div> 
+                }
+                if (item.Dluznici.Count == 3)
+                {
+                    <div>@Html.KIndexLabelLink(item.Dluznici[2].ICO)@Html.Raw(item.Dluznici[2].ToHtml())</div> 
+                }
+                else if (item.Dluznici.Count > 3)
+                {
+                    <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>}
+                }
         </td>
         <td>
             @if (item.Veritele?.Count > 0)
             {
                 foreach (var o in item.Veritele.Take(2))
                 {
-<div>@Html.KIndexLabelLink(o.ICO)@Html.Raw(o.ToHtml())</div> }
-if (item.Veritele.Count == 3)
-{
-<div>@Html.Raw(item.Veritele[2].ToHtml())</div> }
-else if (item.Veritele.Count > 3)
-{
-<div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>}
-}
+                    <div>@Html.KIndexLabelLink(o.ICO)@Html.Raw(o.ToHtml())</div> 
+                }
+                if (item.Veritele.Count == 3)
+                {
+                    <div>@Html.KIndexLabelLink(item.Veritele[2].ICO)@Html.Raw(item.Veritele[2].ToHtml())</div> 
+                }
+                else if (item.Veritele.Count > 3)
+                {
+                    <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>}
+                }
         </td>
         <td>
             @(item.DatumZalozeni?.Date.ToString("d.MM.yyyy") ?? "Neznámé")

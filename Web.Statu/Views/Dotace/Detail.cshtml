@@ -1,4 +1,5 @@
 ﻿@model HlidacStatu.Lib.Data.Dotace.Dotace
+@using HlidacStatu.Web.Framework;
 
 @{
     ViewBag.Title = "Hlídač dotací";
@@ -24,14 +25,14 @@
     Detail dotace "@Model.GetNazevDotace()"
 </h2>
 
-@if(!string.IsNullOrWhiteSpace(Model.Duplicita) && Model.Zdroj.Nazev != "cedr")
+@if (!string.IsNullOrWhiteSpace(Model.Duplicita) && Model.Zdroj.Nazev != "cedr")
 {
     <div class="alert alert-warning">
         <i class="fas fa-exclamation-circle"></i> Tento záznam je velmi pravděpodobně duplicitou dotace <a href="/Dotace/Detail/@Model.Duplicita.ToLower()">@Model.GetNazevDotace()</a>
     </div>
 }
 
-@if( Model.Chyba != null)
+@if (Model.Chyba != null)
 {
     foreach (var chyba in Model.Chyba)
     {
@@ -51,7 +52,7 @@
         <tr>
             <th>Příjemce dotace - jak je uvedeno v datech</th>
             <td>
-                @Model.Prijemce.ObchodniJmeno
+                @Html.KIndexLabelLink(Model.Prijemce.Ico)@Model.Prijemce.ObchodniJmeno
             </td>
         </tr>
         <tr>
@@ -190,21 +191,21 @@
                     if (rozhodnuti?.Cerpani != null
                         && rozhodnuti.Cerpani.Count > 1)
                     {
-                    <tr>
-                        <td></td>
-                        <td style="vertical-align:top;" class="text-right">Jednotlivá čerpání</td>
-                        <td colspan="5">
-                            <ul>
-                                @foreach (var row in rozhodnuti.Cerpani.OrderBy(r=> r.Rok))
-                                {
-                                    <li>
-                                        @(HlidacStatu.Util.RenderData.NicePrice(row.CastkaSpotrebovana ?? 0)) (v roce @row.Rok)
-                                    </li>
-                                    
-                                }
-                            </ul>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td></td>
+                            <td style="vertical-align:top;" class="text-right">Jednotlivá čerpání</td>
+                            <td colspan="5">
+                                <ul>
+                                    @foreach (var row in rozhodnuti.Cerpani.OrderBy(r => r.Rok))
+                                    {
+                                        <li>
+                                            @(HlidacStatu.Util.RenderData.NicePrice(row.CastkaSpotrebovana ?? 0)) (v roce @row.Rok)
+                                        </li>
+
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
                     }
 
                 }
