@@ -22,7 +22,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             [GroupValue("Hlavni")]
             [SortValue(3)]
-            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených s firmami, jejichž majitelé či ony sami sponzorovali politické strany")]
+            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených s firmami, jejichž majitelé či ony samy sponzorovali politické strany")]
             PercSmlouvySPolitickyAngazovanouFirmou = 8,
 
             [SortValue(10)]
