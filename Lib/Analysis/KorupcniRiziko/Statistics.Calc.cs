@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,15 +80,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 //poradi
                 stat.SubjektOrderedListKIndexAsc = datayear
                     .Where(m => m.Value.KIndexReady)
-                    .Select(m => (m.Key, m.Value.KIndex))
+                    .Select(m => {
+                        var company = Firmy.Get(m.Key);
+                        return (m.Key, m.Value.KIndex, company.KrajId);
+                    })
                     .OrderBy(m => m.KIndex)
                     .ToList();
                 foreach (KIndexData.KIndexParts part in Enum.GetValues(typeof(KIndexData.KIndexParts)))
                 {
                     stat.SubjektOrderedListPartsAsc.Add(part, datayear
                         .Where(m => m.Value.KIndexReady)
-                        .Where(m=> m.Value.KIndexVypocet.Radky.Any(r => r.VelicinaPart == part))
-                        .Select(m => (m.Key, m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota))
+                        .Where(m => m.Value.KIndexVypocet.Radky.Any(r => r.VelicinaPart == part))
+                        .Select(m => {
+                            var company = Firmy.Get(m.Key);
+                            return (m.Key, m.Value.KIndexVypocet.Radky.First(r => r.VelicinaPart == part).Hodnota, company.KrajId);
+                        })
                         .OrderBy(m => m.Hodnota)
                         .ToList()
                         );

@@ -248,9 +248,7 @@ namespace HlidacStatu.Web.Controllers
                         result = Statistics.GetStatistics(rok.Value)
                             .SubjektOrderedListKIndexCompanyAsc()
                             .Select(subj => { 
-                                var company = Firmy.Get(subj.Ico);
-                                subj.KrajId = company.KrajId;
-                                subj.Kraj = Util.CZ_Nuts.Nace2Kraj(company.KrajId, "(neznamý)");
+                                subj.Kraj = Util.CZ_Nuts.Nace2Kraj(subj.KrajId, "(neznamý)");
                                 return subj;
                             });
                     }
