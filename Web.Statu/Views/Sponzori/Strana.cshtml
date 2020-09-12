@@ -99,7 +99,7 @@
     };
 
 }
-    @Html.Action("CachedAction_Child_48H", new { model = model, NameOfView = "Top_Child" })
+    @Html.CachedAction( HtmlExtensions.CachedActionLength.Cache48H, "Top_Child",model, (string)ViewBag.Strana)
 
     @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
