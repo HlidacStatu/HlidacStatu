@@ -23,7 +23,7 @@
     KIndexData.Annual currYear = Model.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
 
 
-    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
+    HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(Model.Ico);
     ViewBag.Title = "K–Index ";
     ViewBag.SubTitle = "pro " + firma.Jmeno;
     ViewBag.HideTitle = true;
@@ -74,7 +74,7 @@
             else
             {
                 @WebUtil.AddBookmark(this.User, Model)}
-            @ViewBag.Title
+            @ViewBag.Title 
         </h1>
     </div>
 </div>
