@@ -34,13 +34,16 @@
     string filterUrlValue = "group";
     Dictionary<string, int> filterGroups = Model
         .GroupBy(k => k.Group, v => v, (k, v) => new { group = k, count = v.Count() })
+        .OrderBy(o=>o.group)
         .ToDictionary(k => k.group, c => c.count);
+
     if (filterGroups.Count < 2)
     {
         filterUrlValue = "kraj";
         filterGroups = Model
             .GroupBy(k => k.Kraj, v => v, (k, v) => new { group = k, count = v.Count() })
-        .ToDictionary(k => k.group, c => c.count);
+            .OrderBy(o=>o.group)
+            .ToDictionary(k => k.group, c => c.count);
 
     }
 
