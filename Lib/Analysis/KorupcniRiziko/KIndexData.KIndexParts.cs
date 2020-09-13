@@ -25,6 +25,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených s firmami, jejichž majitelé či ony samy sponzorovali politické strany")]
             PercSmlouvySPolitickyAngazovanouFirmou = 8,
 
+            [SortValue(4)]
+            [GroupValue("Doplnkove")]
+            [Devmasters.Enums.NiceDisplayName("Podíl smluv s cenou u limitu veřejných zakázek")]
+            PercSmluvUlimitu = 4,
+
+            [SortValue(6)]
+            [GroupValue("Doplnkove")]
+            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených o víkendu či svátku")]
+            PercUzavrenoOVikendu = 7,
+
+            [SortValue(5)]
+            [GroupValue("Doplnkove")]
+            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených s nově založenými firmami")]
+            PercNovaFirmaDodavatel = 6,
+
+
             [SortValue(10)]
             [GroupValue("Koncentrace")]
             [Devmasters.Enums.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů")]
@@ -37,29 +53,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             [SortValue(12)]
             [GroupValue("Koncentrace")]
-            [Devmasters.Enums.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů u hlavních oborů činnosti")]
-            KoncentraceDodavateluObory = 9,
-
-            [SortValue(13)]
-            [GroupValue("Koncentrace")]
             [Devmasters.Enums.NiceDisplayName("Koncentrace dodavatelů u smluv blízké u limitu VZ")]
             KoncentraceDodavateluCenyULimitu = 5,
 
+            [SortValue(13)]
+            [GroupValue("Koncentrace")]
+            [Devmasters.Enums.NiceDisplayName("Koncentrace zakázek do rukou malého počtu dodavatelů u hlavních oborů činnosti")]
+            KoncentraceDodavateluObory = 9,
 
-            [SortValue(21)]
-            [GroupValue("Doplnkove")]
-            [Devmasters.Enums.NiceDisplayName("Podíl smluv s cenou u limitu veřejných zakázek")]
-            PercSmluvUlimitu = 4,
-
-            [SortValue(22)]
-            [GroupValue("Doplnkove")]
-            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených s nově založenými firmami")]
-            PercNovaFirmaDodavatel = 6,
-
-            [SortValue(20)]
-            [GroupValue("Doplnkove")]
-            [Devmasters.Enums.NiceDisplayName("Podíl smluv uzavřených o víkendu či svátku")]
-            PercUzavrenoOVikendu = 7,
 
 
 

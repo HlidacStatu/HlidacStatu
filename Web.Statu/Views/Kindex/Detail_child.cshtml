@@ -671,14 +671,6 @@ switch (part)
 @helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
-    <div class="row">
-        <div class="col-xs-12">
-            <h3>Co tento parametr znamená?</h3>
-            @ParametrDescr(currYear, vradek.VelicinaPart, false, "well")
-
-            <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">Vyhledat odpovídající smlouvy</a>
-        </div>
-    </div>
     KoncentraceDodavateluIndexy koncentrace = null;
     bool showHodnota = true;
     switch (part)
@@ -696,6 +688,19 @@ switch (part)
         default:
             break;
     }
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Co tento parametr znamená?</h3>
+            @ParametrDescr(currYear, vradek.VelicinaPart, false, "well")
+
+            @if (koncentrace?.Dodavatele?.Count() > 0)
+            {
+                <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">Vyhledat odpovídající smlouvy</a>
+            }
+        </div>
+    </div>
+    
 
     if (koncentrace?.Dodavatele?.Count() > 0)
     {
@@ -802,10 +807,17 @@ switch (part)
                 <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
                 @if (ro.PodilSmluvBezCeny > 0)
                 {
+                    var oboryLbl = KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.KoncentraceDodavateluObory,
+                        currYear.KIndexVypocet.OboroveKoncentrace?
+                                    .Radky
+                                    .Where(m => m.Obor == ro.Obor)
+                                    .FirstOrDefault().Hodnota);
+
                     <p>
                         Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
-                        <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query(ro.Obor))">Vyhledat odpovídající smlouvy</a>
+                        Míra koncentrace dodavatelů v tomto oboru: @Html.KIndexIcon(oboryLbl)
                     </p>
+                        <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query(ro.Obor))">Vyhledat odpovídající smlouvy</a>
                     <hr style="width:50%" />
                 }
                 <div class="row">
