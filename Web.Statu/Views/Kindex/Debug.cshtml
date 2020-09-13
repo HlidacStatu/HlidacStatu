@@ -264,7 +264,7 @@
                 <div class="col-xs-6" style="font-size:11px">@item.VelicinaLongName</div>
                 <div class="col-xs-6" style="white-space: nowrap;font-size:11px;text-align:right">
                     @(item.Koeficient) x
-                    <span style="color:@(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)item.Velicina, item.Hodnota)))">
+                    <span style="color:@(KIndexData.KIndexLabelColor(KIndexData.DetailInfo.KIndexLabelForPart((KIndexData.KIndexParts)item.Velicina, item.Hodnota)))">
                         @HlidacStatu.Util.RenderData.NiceNumber(item.Hodnota)
                     </span>
                     =<b>@HlidacStatu.Util.RenderData.NiceNumber(item.Hodnota * item.Koeficient)</b>

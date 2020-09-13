@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HlidacStatu.Util.Cache;
+
 using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
@@ -13,7 +14,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         private static ElasticClient _esClient = ES.Manager.GetESClient_KIndex();
         private static MemoryCacheManager<KIndexData, string> instanceByIco
-       = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", getDirect,
+       = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", KIndexData.GetDirect,
 #if (!DEBUG)
                 TimeSpan.FromDays(10)
 #else
@@ -21,18 +22,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 #endif
            );
         static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
-        private static KIndexData getDirect(string ico)
-        {
-            var res = _esClient.Get<KIndexData>(ico);
-            if (res.Found == false)
-                return notFoundKIdx;
-            else if (!res.IsValid)
-            {
-                throw new ApplicationException(res.ServerError?.ToString());
-            }
-            else
-                return res.Source;
-        }
 
 
         private static MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, string> instanceLabelByIco
@@ -63,7 +52,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var f = instanceByIco.Get(ico);
             if (f != null && f.Ico == "-")
                 return null;
-            
+            //fill Annual
+            foreach (var r in f.roky)
+            {
+                if (r != null)
+                    r.Ico = ico;
+            }
             return f;
         }
 
@@ -115,7 +109,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 return false;
             else
             {
-                return kidx.roky.Any(m=>m.KIndexReady);
+                return kidx.roky.Any(m => m.KIndexReady);
             }
         }
 
@@ -127,7 +121,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static decimal Average(int year)
         {
-            var stat =  Statistics.KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year);
+            var stat = Statistics.KIndexStatTotal.Get().FirstOrDefault(m => m.Rok == year);
             if (stat == null)
                 return 0;
             else

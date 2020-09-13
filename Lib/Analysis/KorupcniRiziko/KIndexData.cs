@@ -25,64 +25,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-            public static string PartsDescription(KIndexData.KIndexParts part)
-        {
-            switch (part)
-            {
-                case KIndexData.KIndexParts.PercentBezCeny:
-                    return "Procentní podíl smluv uzavřených se soukromými společnostmi za kalendářní rok, které mají skrytou cenu. Cenu je možné skrýt pouze z důvodu bankovního a obchodního tajemství" +
-                        "a tato výjimka je velmi často zneužívána pro utajení hodnoty smlouvy. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva nemá skrytou cenu, hodnota <b>0.5</b> znamená polovinu smluv se skrytou cenou.";
-                case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
-                    return "Procentní podíl smluv, u kterých jsme při analýze našli zásadní nedostatky. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva nemá zásadní nedostatky, hodnota <b>0.5</b> znamená polovinu smluv se zásadními nedostatky.";
-                case KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu:
-                    return "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-                        $"Koncentraci dodavatelů počítáme pouze pro soukromé dodavatele, tzn. pouze pro smlouvy mezi organizací a soukromými dodavateli. " +
-                        "Pro výpočet používáme upravený <b>Herfindahl Hirschman Index</b> a způsob výpočtu podrobně popisujeme v metodice. " +
-                        "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
-                        "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich.";
-                case KIndexData.KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                    return "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-                        $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají utajenou cenu. Jinak řečeno - jestli k utajování ceny nedochází pouze u některý vybraných dodavatelů. " +
-                        "Hodnota <b>0</b> znamená ideální stav." +
-                        "Hodnota <b>od 0.25 do 1.0</b> znamená, že utajování ceny se týká jen vybraného okruhu dodavatelů.";
-                case KIndexData.KIndexParts.PercSmluvUlimitu:
-                    return "Procentní podíl smluv, jejichž hodnota je pouze o malou částku nižší než je zákonný limit, nad kterým by se zakázka musela soutěžit podle zákona o zadávání veřejných zakázek. " +
-                        "Typicky se jedná o limit <b>6 miliónů</b> korun pro stavební zakázky a <b>2 miliony</b> pro ostatní." +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva není u limitu, hodnota <b>1.0</b> znamená všechny smluvy u limitu.";
-                case KIndexData.KIndexParts.KoncentraceDodavateluCenyULimitu:
-                    return "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-                        $"V tomto parametru zkoumáme koncentraci dodavatelů u smluv, které mají cenu u limitu veřejných zakázek. " +
-                        $"Jinak řečeno - jestli se obcházení zákona o zadávání veřejných zakázek netýka pouze některých vybraných dodavatelů. " +
-                        "Hodnota <b>0</b> znamená  ideální stav." +
-                        "Hodnota <b>od 0.25 do 1.0</b> znamená, že ceny smluv u limitu VZ se týká jen vybraného okruhu dodavatelů.";
-                case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
-                    return "Procentní podíl smluv, které jsou uzavřeny z nově založenou firmou. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou s novými firmami.";
-                case KIndexData.KIndexParts.PercUzavrenoOVikendu:
-                    return "Procentní podíl smluv, které jsou podepsány o víkendu nebo státním svátku. Státní úřady obvykle neuzavírají smlouvy mimo pracovní dny. Historicky se u veřejně známých kauz stávalo, " +
-                        "že právě ty problematické smlouvy byly uzavřeny mimo pracovní den, aby se snížila možnost třetích stran na to reagovat. " +
-                        "Takto Ministerstvo dopravy obešlo konkurenci a <a href='https://www.idnes.cz/ekonomika/doprava/stat-obesel-skytoll-podpisem-smlouvy-s-kapschem-v-nedeli.A160830_175428_eko-doprava_suj' onclick=\"return trackOutLink(this, 'kindex-detail'); \">uzavřelo smlouvu za 5 miliard Kč v neděli</a>. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva takto uzavřená není, hodnota <b>0.5</b> znamená polovinu smluv uzavřenou mimo pracovní den.";
-                case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    return "Procentní podíl smluv, které jsou uzavřeny s firmou, která má vazbu na politiku, neboli sponzorovala politickou stranu, " +
-                        "nebo je přímo či nepřímo vlastněna sponzorem politické strany anebo ji přímo či nepřímo vlastní politik. " +
-                        "Hodnota <b>0</b> znamená, že žádná smlouva s takovou firmou uzavřená není, hodnota <b>0.5</b> znamená, že polovina smluv je uzavřena s takovými firmami.";
-                case KIndexData.KIndexParts.KoncentraceDodavateluObory:
-                    return "Koncentrace dodavatelů ukazuje míru nerovnoměrného rozdělení peněz mezi dodavatele. Neboli - zda malé množství dodavatelů dostává většinu peněz." +
-                        "Celkovou koncentraci dodavatelů počítáme v jiném parametru. Zde analyzujeme, zda nedochází ke koncentraci dodavatelů pouze v některých oblastech. " +
-                        "Např. pouze v oblasti IT, právní služeb apod. Způsob výpočtu podrobně popisujeme v metodice K-Indexu." +
-                        "Hodnota <b>0</b> znamená  ideální stav, ideální konkurenci mezi dodavateli, neboli že všichni dodavatelé mají pouze 1 smlouvu ve stejné výši." +
-                        "Hodnota <b>od 0.25 do 1.0</b> znamená vysokou koncentraci dodavatelů až monopolní postavení jednoho z nich v nejdůležitějších oborech.";
-                case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
-                    return "Bonus (proto má zápornou hodnotu) pro organizace, které jsou transparetní nad rámec zákona. Pokud vkládají do registru smluv smlouvy pod hodnotu 50.000 Kč (což nemusí), mohou dostat bonus. " +
-                        "Pokud je podíl smluv pod 50.000 Kč o 25% vyšší než je obvyklé (průměr celého registru smluv), pak mají bonus 0.25 bodů. Pokud je podíl vyšší o více než 50%, pak je bonus 0.5 bodů. Pokud je podíl vyšší o více než 75%, pak je bonus 0.75 bodů.";
-                default:
-                    return "";
-            }
-        }
-
         /// <summary>
         /// Returns IMG html tag with path to icon.
         /// </summary>
@@ -128,6 +70,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public static string GetMetodikaURL() => "https://texty.hlidacstatu.cz/k-index-index-korupcniho-rizika-metodika/";
+        public static string GetKratkaMetodikaURL() => "https://texty.hlidacstatu.cz/co-je-to-k-index/";
+
         public string GetUrl(bool local = true)
         {
             return GetUrl(local, null);
@@ -143,7 +88,17 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return url;
         }
 
-        public List<Annual> roky { get; set; } = new List<Annual>();
+        List<Annual> _roky = new List<Annual>();
+        public List<Annual> roky { 
+            get { return _roky; }
+
+            set {
+                _roky = value
+                    .Where(m=>m != null)
+                    .Select(m => { m.Ico = this.Ico; return m; })
+                    .ToList();
+            }
+        } 
 
         public Annual ForYear(int year)
         {
@@ -190,44 +145,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 throw new ApplicationException(res.ServerError?.ToString());
             }
             else
-                return res.Source;
-        }
-
-
-
-        public static string SmlouvyQueryForPart(string ico, KIndexData.KIndexParts part, KIndexData.Annual annual, string oborName = null)
-        {
-            if (annual is null)
-                return null;
-            string baseQ = $"ico:{ico} AND datumUzavreni:[{annual.Rok}-01-01 TO {annual.Rok + 1}-01-01}}";
-            switch (part)
             {
-                case KIndexParts.PercentBezCeny:
-                    return baseQ + " AND " + "cena:0";
-                case KIndexParts.PercSeZasadnimNedostatkem:
-                    return baseQ + " AND " + "chyby:zasadni";
-                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    return baseQ + " AND " + "hint.smlouvaSPolitickyAngazovanymSubjektem:>0";
-                case KIndexParts.CelkovaKoncentraceDodavatelu:
-                    return annual?.CelkovaKoncentraceDodavatelu?.Query ?? "";
-                case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                    return annual?.KoncentraceDodavateluBezUvedeneCeny?.Query ?? "";
-                case KIndexParts.KoncentraceDodavateluObory:
-                    return annual?.KoncetraceDodavateluObory.FirstOrDefault(m => m.OborName == oborName)?.Koncentrace?.Query ?? "";
-                case KIndexParts.KoncentraceDodavateluCenyULimitu:
-                    return annual?.KoncentraceDodavateluCenyULimitu?.Query ?? "";
-                case KIndexParts.PercSmluvUlimitu:
-                    return baseQ + " AND " + "hint.smlouvaULimitu:>0";
-                case KIndexParts.PercNovaFirmaDodavatel:
-                    return baseQ + " AND " + "( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )";
-                case KIndexParts.PercUzavrenoOVikendu:
-                    return baseQ + " AND " + "hint.denUzavreni:>0";
-                case KIndexParts.PercSmlouvyPod50kBonus:
-                    return baseQ + " AND " + "";
-                default:
-                    return baseQ ;
+                KIndexData f = res.Source;
+                //fill Annual
+                foreach (var r in f.roky)
+                {
+                    if (r != null)
+                        r.Ico = ico;
+                }
+                return f;
             }
         }
+
 
 
         public static string KIndexLabelColor(KIndexLabelValues label)
@@ -252,122 +181,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     return "#000000";
             }
         }
-   
-        public static KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal value)
-        {
-            switch (part)
-            {
-                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                case KIndexParts.PercentBezCeny:
-                    if (value == 0m)
-                        return KIndexLabelValues.A;
-                    else if (value < 0.05m)
-                        return KIndexLabelValues.B;
-                    else if (value < 0.1m)
-                        return KIndexLabelValues.C;
-                    else if (value < 0.15m)
-                        return KIndexLabelValues.D;
-                    else if (value < 0.2m)
-                        return KIndexLabelValues.E;
-                    else
-                        return KIndexLabelValues.F;
-
-                case KIndexParts.PercSeZasadnimNedostatkem:
-                    if (value == 0m)
-                        return KIndexLabelValues.A;
-                    else if (value < 0.01m)
-                        return KIndexLabelValues.C;
-                    else if (value < 0.015m)
-                        return KIndexLabelValues.D;
-                    else
-                        return KIndexLabelValues.F;
-
-                case KIndexParts.CelkovaKoncentraceDodavatelu:
-                case KIndexParts.KoncentraceDodavateluCenyULimitu:
-                case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                case KIndexParts.KoncentraceDodavateluObory:
-                    if (value < 0.05m)
-                        return KIndexLabelValues.A;
-                    else if (value < 0.1m)
-                        return KIndexLabelValues.B;
-                    else if (value < 0.15m)
-                        return KIndexLabelValues.C;
-                    else if (value < 0.2m)
-                        return KIndexLabelValues.D;
-                    else if (value < 0.25m)
-                        return KIndexLabelValues.E;
-                    else
-                        return KIndexLabelValues.F;
-
-                case KIndexParts.PercSmluvUlimitu:
-                    if (value == 0)
-                        return KIndexLabelValues.A;
-                    else if (value < 0.04m)
-                        return KIndexLabelValues.B;
-                    else if (value < 0.06m)
-                        return KIndexLabelValues.C;
-                    else if (value < 0.08m)
-                        return KIndexLabelValues.D;
-                    else if (value < 0.1m)
-                        return KIndexLabelValues.E;
-                    else
-                        return KIndexLabelValues.F;
-
-                case KIndexParts.PercNovaFirmaDodavatel:
-                case KIndexParts.PercUzavrenoOVikendu:
-                    if (value == 0)
-                        return KIndexLabelValues.A;
-                    else if (value < 0.02m)
-                        return KIndexLabelValues.B;
-                    else if (value < 0.03m)
-                        return KIndexLabelValues.C;
-                    else if (value < 0.04m)
-                        return KIndexLabelValues.D;
-                    else if (value < 0.5m)
-                        return KIndexLabelValues.E;
-                    else
-                        return KIndexLabelValues.F;
-
-                case KIndexParts.PercSmlouvyPod50kBonus:
-                    if (value > 0)
-                        return KIndexLabelValues.A;
-                    else
-                        return KIndexLabelValues.None;
-                default:
-                    return KIndexLabelValues.None;
-            }
-        }
-
-        public static decimal DefaultKIndexPartKoeficient(KIndexParts part)
-        {
-            switch (part)
-            {
-                case KIndexParts.PercentBezCeny:
-                    return 10m;
-                case KIndexParts.PercSeZasadnimNedostatkem:
-                    return 10m;
-                case KIndexParts.CelkovaKoncentraceDodavatelu:
-                    return 10m;
-                case KIndexParts.KoncentraceDodavateluBezUvedeneCeny:
-                    return 10m;
-                case KIndexParts.PercSmluvUlimitu:
-                    return 10m;
-                case KIndexParts.KoncentraceDodavateluCenyULimitu:
-                    return 10m;
-                case KIndexParts.PercNovaFirmaDodavatel:
-                    return 10m;
-                case KIndexParts.PercUzavrenoOVikendu:
-                    return 10m;
-                case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-                    return 10m;
-                case KIndexParts.KoncentraceDodavateluObory:
-                    return 10m;
-                case KIndexParts.PercSmlouvyPod50kBonus:
-                    return 1m;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+  
 
         public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true, bool showNone = false)
         {

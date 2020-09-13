@@ -482,6 +482,7 @@
     <Compile Include="Analysis\KorupcniRiziko\Calculator.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Consts.cs" />
     <Compile Include="Analysis\KorupcniRiziko\FinanceData.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KIndexData.DetailInfo.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.ISocialInfo.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.KIndexLabelValues.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.KIndexParts.cs" />

@@ -136,7 +136,7 @@
                             <div id="detail_@velicina" style="display:none">
                                 <div class="row">
                                     <div class="col-xs-11 col-lg-offset-1 box-stats" style="background-color:#f9f9fe">
-                                        @(Html.Raw(KIndexData.PartsDescription(velicina)))
+                                        @(Html.Raw(KIndexData.DetailInfo.PartsDescription(velicina)))
                                     </div>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@
                             <td class="porovnani number @(cmp.Ico)_@(i)">
                                 @if (cmp.AnnualData.KIndexReady)
                                 {
-                                    @Html.KIndexIcon(KIndexData.KIndexLabelForPart(velicina, hodnota ?? 0),
+                                    @Html.KIndexIcon(KIndexData.DetailInfo.KIndexLabelForPart(velicina, hodnota ?? 0),
                                         "height:25px",
                                         showNone: true,
                                         title: KIndexData.KIndexCommentForPart(velicina, cmp.AnnualData))

@@ -460,8 +460,8 @@ else
                         <td style="font-size:15px;">
                             @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)" onclick="showHelp(this,'#detail_@(radek.Velicina)');return false;">@ukazatTxt</a></small>
                         </td>
-                        <td style="text-align:right;font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
-                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:25px")
+                        <td style="text-align:right;font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.DetailInfo.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
+                            @Html.KIndexIcon(KIndexData.DetailInfo.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:25px")
                         </td>
                         <td>
                             @(KIndexData.KIndexCommentForPart(radek.VelicinaPart,currYear))
@@ -475,7 +475,7 @@ else
                                         <h3>
                                             Číselná hodnota parametru je @Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(radek.Hodnota, true)).
                                             Hodnotu tohoto parametru hodnotíme
-                                            @Html.KIndexIcon(KIndexData.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:19px").
+                                            @Html.KIndexIcon(KIndexData.DetailInfo.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:19px").
 
                                         </h3>
                                         @switch (radek.VelicinaPart)
@@ -498,7 +498,7 @@ else
                                                 @KoncentraceDetail(currYear, radek.VelicinaPart, statistics)
                                                 break;
                                             case KIndexData.KIndexParts.PercSmlouvyPod50kBonus:
-                                                @ParametrDescr(radek.VelicinaPart, false, "well")
+                                                @ParametrDescr(currYear, radek.VelicinaPart, false, "well")
                                                 break;
                                             default:
                                                 break;
@@ -604,10 +604,36 @@ else
 
 <hr style="margin-top:50px" />
 
+<a href="@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.GetKratkaMetodikaURL()" class="btn btn-default">Stručný popis výpočtu K-Indexu</a>
+<a href="@HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.GetMetodikaURL()" class="btn btn-default">Podrobná metodika K-Indexu</a>
 
 @helper ParametrDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics, bool percentValue = true)
 {
-    KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
+KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
+long pocetSmluv = 0;
+switch (part)
+{
+    case KIndexData.KIndexParts.PercentBezCeny:
+        pocetSmluv = currYear.Statistika.PocetSmluvBezCenySeSoukrSubj;
+        break;
+    case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
+        pocetSmluv = currYear.Statistika.PocetSmluvSeZasadnimNedostatkem;
+        break;
+    case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+        pocetSmluv = currYear.Statistika.PocetSmluvPolitiky;
+        break;
+    case KIndexData.KIndexParts.PercSmluvUlimitu:
+        pocetSmluv = currYear.Statistika.PocetSmluvULimitu;
+        break;
+    case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
+        pocetSmluv = currYear.Statistika.PocetSmluvNovaFirma;
+        break;
+    case KIndexData.KIndexParts.PercUzavrenoOVikendu:
+        pocetSmluv = currYear.Statistika.PocetSmluvOVikendu;
+        break;
+    default:
+        break;
+}
     <div class="row">
         <div class="col-xs-12">
             @if (percentValue)
@@ -617,10 +643,21 @@ else
                     Tzn. že hodnota parametru @(vradek.Hodnota.ToString("F4")) odpovídá @(vradek.Hodnota.ToString("P2")) podílu těchto smluv v rámci všech smluv.
                 </div>
             }
+            @if (pocetSmluv > 0)
+            {
+                <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">
+                    Vyhledat odpovídající smlouvy
+                </a>
+            }
         </div>
     </div>
-    <h3>Co tento parametr znamená?</h3>
-    @ParametrDescr(vradek.VelicinaPart, false, "well")
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Co tento parametr znamená?</h3>
+            @ParametrDescr(currYear, vradek.VelicinaPart, false, "well")
+        </div>
+    </div>
+
     if (part != KIndexData.KIndexParts.PercNovaFirmaDodavatel)
     {
         <h3>Jaké jsou obvyklé hodnoty parametru @vradek.VelicinaLongName?</h3>
@@ -628,18 +665,20 @@ else
             <img src="/kindex/PercentileBanner/@Model.Ico?part=@((int)vradek.VelicinaPart)" style="width:80%;max-width:800px;height:auto" />
         </div>
     }
-    <h3>
-        <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
-    </h3>
 }
 
 
 @helper KoncentraceDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics)
 {
     KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
-    <h3>Co tento parametr znamená?</h3>
-    @ParametrDescr(vradek.VelicinaPart, false, "well")
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Co tento parametr znamená?</h3>
+            @ParametrDescr(currYear, vradek.VelicinaPart, false, "well")
 
+            <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">Vyhledat odpovídající smlouvy</a>
+        </div>
+    </div>
     KoncentraceDodavateluIndexy koncentrace = null;
     bool showHodnota = true;
     switch (part)
@@ -714,9 +753,6 @@ else
 
 
         </div>
-        <h3>
-            <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear)">Seznam smluv</a>
-        </h3>
 
     }
 }
@@ -727,7 +763,8 @@ else
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <h3>Co tento parametr znamená?</h3>
-            @ParametrDescr(vradek.VelicinaPart, false, "well")
+            @ParametrDescr(currYear, vradek.VelicinaPart, false, "well")
+
         </div>
         <div class="col-xs-12 col-sm-6">
             <h3>Jaké jsou obvyklé hodnoty tohoto parametru?</h3>
@@ -767,6 +804,7 @@ else
                 {
                     <p>
                         Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
+                        <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query(ro.Obor))">Vyhledat odpovídající smlouvy</a>
                     </p>
                     <hr style="width:50%" />
                 }
@@ -820,13 +858,8 @@ else
                             </div>
                         </div>
 
-
-
                     </div>
                 </div>
-                <h3>
-                    <a href="/hledatsmlouvy?q=@KIndexData.SmlouvyQueryForPart(Model.Ico, part, currYear, ro.Obor)">Seznam smluv</a>
-                </h3>
             </div>
         }
 
@@ -835,11 +868,11 @@ else
 }
 
 
-@helper ParametrDescr(KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
+@helper ParametrDescr(KIndexData.Annual data, KIndexData.KIndexParts part, bool autohide = true, string _class = "bs-callout bs-callout-info small", string style = "")
 {
 
     string descr = "";
-    descr = KIndexData.PartsDescription(part);
+    descr = data.Info(part).Description;
 
     if (!string.IsNullOrEmpty(descr))
     {

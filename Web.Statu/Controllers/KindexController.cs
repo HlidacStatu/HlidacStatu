@@ -288,7 +288,7 @@ namespace HlidacStatu.Web.Controllers
                         .Select(r => new
                         {
                             VelicinaName = r.VelicinaName,
-                            Label = KIndexData.KindexImageIcon(KIndexData.KIndexLabelForPart(r.VelicinaPart, r.Hodnota),
+                            Label = KIndexData.KindexImageIcon(KIndexData.DetailInfo.KIndexLabelForPart(r.VelicinaPart, r.Hodnota),
                                 "height: 25px",
                                 showNone: true,
                                 KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))),
@@ -447,7 +447,7 @@ namespace HlidacStatu.Web.Controllers
                         shuffle: false,
                         " "),
                     label.ToString(),
-                    year);
+                    year.ToString());
             }
             
             return File(data, "image/png");

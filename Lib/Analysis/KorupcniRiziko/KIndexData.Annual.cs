@@ -19,6 +19,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             protected Annual() { }
 
+
+
             [Nest.Date]
             public DateTime LastUpdated { get; set; }
 
@@ -90,7 +92,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             public VypocetDetail KIndexVypocet { get; set; }
 
-
+            [Nest.Object(Ignore = true)]
+            public string Ico { get; set; }
             [Nest.Object(Ignore = true)]
             public KIndexLabelValues KIndexLabel
             {
@@ -108,6 +111,22 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 get => KIndexData.KIndexLabelColor(this.KIndexLabel);
             }
 
+            object _infoLock = new object();
+            Dictionary<KIndexParts, DetailInfo> _info = new Dictionary<KIndexParts, DetailInfo>();
+            public DetailInfo Info(KIndexParts part)
+            { 
+                if (_info.ContainsKey(part) == false)
+                {
+                    lock (_infoLock)
+                    {
+                        if (_info.ContainsKey(part) == false)
+                        {
+                            _info.Add(part, new DetailInfo(this.Ico, this, part));
+                        }
+                    }
+                }
+                return _info[part];
+            }
 
             public string KIndexLabelIconUrl(bool local = true)
             {

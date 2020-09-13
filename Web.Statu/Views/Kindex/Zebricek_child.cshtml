@@ -163,7 +163,7 @@
                         <td>
                             @if (part.HasValue)
                             {
-                                var lbl = KIndexData.KIndexLabelForPart(part.Value, record.item.KIndex);
+                                var lbl = KIndexData.DetailInfo.KIndexLabelForPart(part.Value, record.item.KIndex);
                                 @Html.KIndexLabelLink(record.item.Ico, lbl,"height:15px;" )
                             }
                             else

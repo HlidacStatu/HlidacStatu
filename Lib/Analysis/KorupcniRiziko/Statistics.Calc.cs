@@ -113,7 +113,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             .Where(a=>a!=null)
                             .Average(a => a.Hodnota);
 
-                    KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
+                    KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DetailInfo.DefaultKIndexPartKoeficient(part));
                     radky.Add(radek);
                 }
                 stat.AverageParts = new KIndexData.VypocetDetail() { Radky = radky.ToArray() };
@@ -141,7 +141,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                                 .Where(m=>m != null)
                                 .Select(m=>m.Hodnota)
                             );
-                        KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DefaultKIndexPartKoeficient(part));
+                        KIndexData.VypocetDetail.Radek radek = new KIndexData.VypocetDetail.Radek(part, val, KIndexData.DetailInfo.DefaultKIndexPartKoeficient(part));
                         radky.Add(radek);
                     }
                     stat.PercentileParts.Add(perc, new KIndexData.VypocetDetail() { Radky = radky.ToArray() });
