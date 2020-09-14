@@ -167,11 +167,11 @@
                             @if (part.HasValue)
                             {
                                 var lbl = KIndexData.DetailInfo.KIndexLabelForPart(part.Value, record.item.KIndex);
-                                @Html.KIndexLabelLink(record.item.Ico, lbl,"height:15px;" )
+                                @Html.KIndexLabelLink(record.item.Ico, lbl,"height:15px;", linkToKindex:true )
                             }
                             else
                             {
-                                @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear)
+                                @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear, linkToKindex:true)
                             }
                         </td>
                         <td>
