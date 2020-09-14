@@ -50,7 +50,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (string.IsNullOrEmpty(ico))
                 return null;
             var f = instanceByIco.Get(ico);
-            if (f != null && f.Ico == "-")
+            if (f == null || f.Ico == "-")
                 return null;
             //fill Annual
             foreach (var r in f.roky)
