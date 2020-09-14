@@ -817,9 +817,9 @@ switch (part)
                         Počet smluv organizace se skrytou cenou v tomto oboru: <b>@HlidacStatu.Util.RenderData.NiceNumber(ro.PodilSmluvBezCeny * ro.PocetSmluvCelkem + 1)</b>, tj. <b>@(HlidacStatu.Util.RenderData.NicePercent(ro.PodilSmluvBezCeny))</b>.
                         Míra koncentrace dodavatelů v tomto oboru: @Html.KIndexIcon(oboryLbl)
                     </p>
-                        <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query(ro.Obor))">Vyhledat odpovídající smlouvy</a>
-                    <hr style="width:50%" />
                 }
+                <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query(ro.Obor))">Vyhledat odpovídající smlouvy</a>
+                <hr style="width:50%" />
                 <div class="row">
                     <div class="col-xs-12">
                         @{
