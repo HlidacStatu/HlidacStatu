@@ -791,7 +791,7 @@ switch (part)
                                 <option>-- vyberte obor, který vás zajímá --</option>
                                 @foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
                                 {
-                                    <option value="@ro.Obor">@(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</option>
+                                    <option value="@(ro.Obor)_kind">@(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</option>
                                 }
                             </select>
                         </div>
@@ -803,7 +803,7 @@ switch (part)
 
         foreach (var ro in currYear.KIndexVypocet.OboroveKoncentrace.Radky)
         {
-            <div class="boxobor @ro.Obor" style="display:none;">
+            <div class="boxobor @(ro.Obor)_kind" style="display:none;">
                 <h4>Obor @(HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.ToClassifType(ro.Obor).ToNiceDisplayName())</h4>
                 @if (ro.PodilSmluvBezCeny > 0)
                 {
