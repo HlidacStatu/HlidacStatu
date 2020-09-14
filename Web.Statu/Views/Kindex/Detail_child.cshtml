@@ -646,7 +646,7 @@ switch (part)
             @if (pocetSmluv > 0)
             {
                 <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">
-                    Vyhledat odpovídající smlouvy
+                    <i class="far fa-file-search"></i> Vyhledat odpovídající smlouvy
                 </a>
             }
         </div>
@@ -696,7 +696,7 @@ switch (part)
 
             @if (koncentrace?.Dodavatele?.Count() > 0)
             {
-                <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())">Vyhledat odpovídající smlouvy</a>
+                <a class="btn btn-default" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode(currYear.Info(part).Query())"><i class="far fa-file-search"></i> Vyhledat odpovídající smlouvy</a>
             }
         </div>
     </div>
@@ -729,6 +729,7 @@ switch (part)
                     <table class="table table-new table-new--dotted table-hover">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Dodavatel</th>
                                 <th>Počet smluv</th>
                                 @if (showHodnota)
@@ -741,6 +742,7 @@ switch (part)
                             @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
                             {
                                 <tr>
+                                    <td><a href="/HledatSmlouvy?Q=icoPlatce:@(currYear.Ico)%20AND%20icoPrijemce:@(souh.Ico)"><i class="far fa-file-search"></i></a></td>
                                     <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
                                     <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
                                     @if (showHodnota)
@@ -848,6 +850,7 @@ switch (part)
                                     <table class="table table-new table-new--dotted table-hover">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Dodavatel</th>
                                                 <th>Počet smluv</th>
                                                 <th>Objem v Kč</th>
@@ -857,6 +860,7 @@ switch (part)
                                             @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
                                             {
                                                 <tr>
+                                                    <td><a href="/HledatSmlouvy?Q=icoPlatce:@(currYear.Ico)%20AND%20icoPrijemce:@(souh.Ico)"><i class="far fa-file-search"></i></a></td>
                                                     <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
                                                     <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
                                                     <td class="number text-nowrap">@HlidacStatu.Util.RenderData.NicePrice(souh.HodnotaSmluv)</td>
