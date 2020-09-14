@@ -292,6 +292,7 @@ namespace HlidacStatu.Web.Controllers
                                 "height: 25px",
                                 showNone: true,
                                 KIndexData.KIndexCommentForPart(r.VelicinaPart, kidx.ForYear(rok.Value))),
+                            Value = r.Hodnota.ToString("F2")
                         }).ToList();
 
                     var result = new
