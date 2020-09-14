@@ -10,9 +10,25 @@
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
 
+    HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(Model.id);
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.id);
+
+
     ViewBag.Title = "K-Index" ;
     ViewBag.SubTitle = "pro " + HlidacStatu.Lib.Data.Firmy.GetJmeno(Model.id);
     ViewBag.HideTitle = true;
+
+    if (f.Valid && kidx != null)
+    {
+        ViewBag.SocialShareTitle = $"Index korupčního rizika pro " + f.Jmeno;
+        ViewBag.SocialShareText = HlidacStatu.Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 4, true, true, ", ");
+        ViewBag.SocialShareType = "article";
+        ViewBag.SocialImage = "https://www.hlidacstatu.cz/socialbanner/kindex?v=" + Model.id;
+        ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1000\" />\n"
+                    + "<meta property=\"og:image:height\" content=\"1000\" />"
+                    + "<meta property=\"og:image:type\" content=\"image/png\" />";
+
+    }
 }
 
 

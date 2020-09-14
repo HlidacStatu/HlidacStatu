@@ -5,15 +5,15 @@
 @using Devmasters.Enums;
 
 @{ ViewBag.Title = Devmasters.Core.TextUtil.ShortenText(Model.predmet ?? "", 70);
-                ViewBag.SubTitle = "Smlouva číslo " + Model.Id;
+    ViewBag.SubTitle = "Smlouva číslo " + Model.Id;
 
-                ViewBag.SocialShareTitle = $"Smlouva {Model.Id}. {Model.predmet}";
-                ViewBag.SocialShareText = HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 4, true, true, ", ");
-                ViewBag.SocialShareType = "article";
-                ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/smlouva?d={DateTime.Now.ToString("yyMMdd")}&v=" + Model.Id;
-                ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
-                            + "<meta property=\"og:image:height\" content=\"1080\" />"
-                            + "<meta property=\"og:image:type\" content=\"image/png\" />";
+    ViewBag.SocialShareTitle = $"Smlouva {Model.Id}. {Model.predmet}";
+    ViewBag.SocialShareText = HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 4, true, true, ", ");
+    ViewBag.SocialShareType = "article";
+    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/smlouva?d={DateTime.Now.ToString("yyMMdd")}&v=" + Model.Id;
+    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                + "<meta property=\"og:image:height\" content=\"1080\" />"
+                + "<meta property=\"og:image:type\" content=\"image/png\" />";
 
 
 

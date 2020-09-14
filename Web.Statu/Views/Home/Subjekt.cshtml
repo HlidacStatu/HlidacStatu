@@ -43,12 +43,24 @@
     ViewBag.SocialShareTitle = Model.firma.Jmeno + " na HlidacStatu.cz";
     ViewBag.SocialShareText = $"{Model.firma.Jmeno} : {Devmasters.Core.TextUtil.RemoveHTML((string)ViewBag.statDescription)}";
     ViewBag.SocialShareType = "article";
-    ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/subjekt?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.ICO;
-    ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
-                + "<meta property=\"og:image:height\" content=\"1080\" />"
-                + "<meta property=\"og:image:type\" content=\"image/png\" />"
-                ;
 
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.firma.ICO);
+
+    if (kidx != null && kidx.ContainsKIndexReady())
+    {
+        ViewBag.SocialImage = "https://www.hlidacstatu.cz/socialbanner/kindex?v=" + Model.firma.ICO;
+        ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1000\" />\n"
+                        + "<meta property=\"og:image:height\" content=\"1000\" />"
+                        + "<meta property=\"og:image:type\" content=\"image/png\" />";
+    }
+    else
+    {
+        ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/subjekt?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.ICO;
+        ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+                    + "<meta property=\"og:image:height\" content=\"1080\" />"
+                    + "<meta property=\"og:image:type\" content=\"image/png\" />"
+                    ;
+    }
 
     bool showEmptyVersion = Model.firma.NotInterestingToShow(); }
 @section metatags

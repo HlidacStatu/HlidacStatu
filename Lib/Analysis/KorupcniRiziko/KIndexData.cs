@@ -37,6 +37,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return $"<img title='{title}' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
         }
 
+        public bool ContainsKIndexReady()
+        {
+            return roky.Where(m => m != null).Any(r => r.KIndexReady);
+        }
+
         //todo: neměl by tenhle být deprecated a používat se lastReadyKindex
         public Annual LastKIndex()
         {
