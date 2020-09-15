@@ -61,7 +61,17 @@
                 </h2>
             </div>
 
-            @{ string[] groupFilter = new[] { "Justice", "Samospráva", "Školství" }; }
+            <div class="block-col block-part">
+                <div class="block-tags">
+                    <a href="/kindex/zebricek/Ministerstva" class="tag">Ministerstva</a>
+                    <a href="/kindex/zebricek/Kraje_Praha" class="tag">Krajské úřady</a>
+                    <a href="/kindex/zebricek/Hasicsky_zachranny_sbor" class="tag">Hasičscké záchranné sbory</a>
+                    <a href="/kindex/zebricek/Krajska_reditelstvi_policie" class="tag">Krajská ředitelství policie</a>
+                    <a href="/kindex/zebricek/Statni_fondy" class="tag">Státní fondy</a>
+                    <a href="/kindex/zebricek/Vsechny_ustredni_organy_statni_spravy" class="tag">Všechny ústřední orgány státní správy</a>
+                </div>
+            </div>
+            @{ string[] groupFilter = new[] { "Justice", "Samospráva", "Školství","Státní úřady a organizace" }; }
             @foreach (var g in Devmasters.Enums.EnumTools.Groups(typeof(Firma.Zatrideni.StatniOrganizaceObor))
             .Except(groupFilter))
             {
