@@ -741,8 +741,9 @@ switch (part)
                         <tbody>
                             @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
                             {
+                                var q = $"ico:{currYear.Ico} AND datumUzavreni:[{currYear.Rok}-01-01 TO {currYear.Rok + 1}-01-01}} AND icoPrijemce:{souh.Ico}";
                                 <tr>
-                                    <td><a href="/HledatSmlouvy?Q=icoPlatce:@(currYear.Ico)%20AND%20icoPrijemce:@(souh.Ico)"><i class="far fa-file-search"></i></a></td>
+                                    <td><a href="/HledatSmlouvy?Q=@System.Net.WebUtility.UrlEncode(q)"><i class="far fa-file-search"></i></a></td>
                                     <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
                                     <td class="number">@HlidacStatu.Util.RenderData.NiceNumber(souh.PocetSmluv)</td>
                                     @if (showHodnota)
@@ -859,6 +860,8 @@ switch (part)
                                         <tbody>
                                             @foreach (var souh in koncentrace.Dodavatele.OrderByDescending(m => m.HodnotaSmluv).Take(100))
                                             {
+                                                var q = $"ico:{currYear.Ico} AND datumUzavreni:[{currYear.Rok}-01-01 TO {currYear.Rok + 1}-01-01}} AND icoPrijemce:{souh.Ico}";
+                                                q = q + $" AND obor:{ro.Obor}";
                                                 <tr>
                                                     <td><a href="/HledatSmlouvy?Q=icoPlatce:@(currYear.Ico)%20AND%20icoPrijemce:@(souh.Ico)"><i class="far fa-file-search"></i></a></td>
                                                     <td>@HlidacStatu.Lib.Data.Firmy.GetJmeno(souh.Ico)</td>
