@@ -5,27 +5,29 @@
 @using System.Linq
 @using HlidacStatu.Util;
 
-@{ ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
-                ViewBag.SocialShareText = Model.FullName() + ": " + Model.InfoFacts().RenderInfoFacts(2, true, true);
-                ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/osoba?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.NameId;
-                ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
-                            + "<meta property=\"og:image:height\" content=\"1080\" />"
-                            + "<meta property=\"og:image:type\" content=\"image/png\" />"
-                            ;
+@{ 
+    ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
+ViewBag.SocialShareText = Model.FullName() + ": " + Model.InfoFacts().RenderInfoFacts(2, true, true);
+ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/osoba?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.NameId;
+ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
+            + "<meta property=\"og:image:height\" content=\"1080\" />"
+            + "<meta property=\"og:image:type\" content=\"image/png\" />"
+            ;
 
-                HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
+HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)ViewBag.Aktualnost;
 
-                var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
+var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
 
-                ViewBag.HideTitle = true;
+ViewBag.HideTitle = true;
 
-                bool noIndex = HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower());
+bool noIndex = HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower());
 
-                //TODO better analysis based on records in other dbs
-                bool noReasonToShow = Model.NotInterestingToShow();
+//TODO better analysis based on records in other dbs
+bool noReasonToShow = Model.NotInterestingToShow();
 
 
-                ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear()); }
+ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear()); 
+}
 
 @section metatags
 {
@@ -128,18 +130,21 @@
         </div>
     </div>
 </div>
-                <br />
-                                <br />
-                                                <br /> }
-                                                            else
+<br />
+<br />
+<br /> 
+}
+    else
 
-                                                            { @*@Html.Action("Osoba_child", new { model = Model, auth = this.User.Identity.IsAuthenticated, aktualnost = aktualnost, NameOfView = "OsobaProfil" }) //+ (string.IsNullOrEmpty(Request.QueryString["beta"]) ? "" : "2")*@
-                                                                            @Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", key = Model.NameId, param1 = aktualnost.ToString(), param2 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User) })
+    { 
+    @Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", key = Model.NameId, param1 = aktualnost.ToString(), param2 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User) })
 
-                                                                                            <div style="margin-top:40px"></div> if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
-                                                                                                            {
-                                                                                            @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", key = Model.NameId, param1 = aktualnost.ToString() }) }
-                                                                                            @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)}
+    <div style="margin-top:40px"></div> 
+    if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
+    {
+        @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", key = Model.NameId, param1 = aktualnost.ToString() }) }
+        @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
+    }
 
 @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 

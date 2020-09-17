@@ -93,9 +93,9 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
                 excludeOsobaId = new int[] { };
 
             string sql = $@"select vazbakIco, vazbakOsobaId, datumOd, datumDo, typVazby, pojmenovaniVazby, podil from OsobaVazby 
-                            where osobaId = @osobaId and
-                                and (podil is null or podil >= {minPodil})
-                	and dbo.IsSomehowInInterval(@datumOd, @datumDo, datumOd, datumDo) = 1
+                            where osobaId = @osobaId 
+                            and (podil is null or podil >= {minPodil})
+                	        and dbo.IsSomehowInInterval(@datumOd, @datumDo, datumOd, datumDo) = 1
 ";
             var p = new IDataParameter[] {
                 new SqlParameter("osobaId",person.InternalId),
