@@ -252,7 +252,7 @@ namespace HlidacStatu.Lib.Data
                 //[NiceDisplayName("Stavební služby (Architektonické, technické, inspekční, projektové, …)")]
                 //stav_sluzba = 10115,
 
-                [NiceDisplayName("Doprava")]
+                [NiceDisplayName("Doprava a poštovní služby")]
                 doprava_obecne = 10200,
                 [NiceDisplayName("Osobní vozidla")]
                 doprava_osobni = 10201,
