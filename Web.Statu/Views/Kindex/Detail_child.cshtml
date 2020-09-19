@@ -734,7 +734,7 @@ switch (part)
                                 <th>Počet smluv</th>
                                 @if (showHodnota)
                                 {
-                                    <th>Objem v Kč</th>
+                                    <th>Kalkulovaná částka* v Kč</th>
                                 }
                             </tr>
                         </thead>
@@ -754,7 +754,14 @@ switch (part)
 
                             }
                         </tbody>
-
+                        <tfoot>
+                            <tr>
+                                <td colspan="@(showHodnota? 4 : 3)">
+                                    *) Kalkulováná částka je suma smluv s hodnotou a smluv bez uvedené ceny, kde jsme použili průměrnou hodnotu smluv
+                                    @(Model.Jmeno) v @(currYear.Rok) ve výši @HlidacStatu.Util.RenderData.NicePrice(koncentrace.PrumernaHodnotaSmluvProVypocet)
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 }
             </div>
@@ -854,7 +861,7 @@ switch (part)
                                                 <th></th>
                                                 <th>Dodavatel</th>
                                                 <th>Počet smluv</th>
-                                                <th>Objem v Kč</th>
+                                                <th>Kalkulovaná částka* v Kč</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -871,6 +878,14 @@ switch (part)
 
                                             }
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4">
+                                                    *) Kalkulováná částka je suma smluv s hodnotou a smluv bez uvedené ceny, kde jsme použili průměrnou hodnotu smluv
+                                                    @(Model.Jmeno) v @(currYear.Rok) ve výši @HlidacStatu.Util.RenderData.NicePrice(koncentrace.PrumernaHodnotaSmluvProVypocet)
+                                                </td>
+                                            </tr>
+                                        </tfoot>
 
                                     </table>
                                 }
