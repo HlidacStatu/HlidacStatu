@@ -1644,6 +1644,7 @@
     <Content Include="Views\Kindex\_SearchForm.cshtml" />
     <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />
     <Content Include="Views\Home\KapacitaNemocnic.cshtml" />
+    <Content Include="Views\Home\KapacitaNemocnic_child.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

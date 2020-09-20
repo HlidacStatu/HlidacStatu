@@ -26,7 +26,6 @@ namespace HlidacStatu.Web.Controllers
     public partial class HomeController : GenericAuthController
     {
 
-
         public ActionResult KapacitaNemocnic(string id, string nemocniceId)
         {
 
