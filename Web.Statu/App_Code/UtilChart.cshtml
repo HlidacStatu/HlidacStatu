@@ -3,6 +3,7 @@
 @using System.Linq;
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
+@using Devmasters.Core;
 
 @functions
 { private static new HtmlHelper<object> Html
@@ -18,6 +19,64 @@
     {
         get { return (WebViewPage)CurrentPage; }
     } }
+
+
+
+
+@helper SimpleLineChart(IEnumerable<(string name, IEnumerable<(DateTime date, int value)> values)> data,
+    string title, string valueName,
+    int height, string addStyle ="")
+{
+string containerId = "chart_" + Guid.NewGuid().ToString("N");
+List<string> sdata = new List<string>();
+foreach (var d in data)
+{
+
+    sdata.Add(
+        $"{{ name : '{d.name}', data :["
+        + d.values
+        .Select(m => $"['{m.date.ToUnixTimeInSec() * 1000}',{m.value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+        .Aggregate((f, s) => f + "," + s)
+        + $"]}}"
+    );
+}
+
+    <div id="@containerId" style="height:@(height)px;@addStyle"></div>
+    <script>
+Highcharts.chart('@containerId', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: 0,
+        plotShadow: false
+    },
+ title: {
+        text: '@title'
+    },
+
+    subtitle: {
+        text: 'zdroj ÚZIS a Hlídač státu'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Počet'
+        }
+    },
+
+    xAxis: {
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+    series: [
+        @(string.Join(",",sdata))
+    ]
+});</script>
+
+}
 
 
 

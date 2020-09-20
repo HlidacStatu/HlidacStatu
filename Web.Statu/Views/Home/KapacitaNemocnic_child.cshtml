@@ -8,119 +8,72 @@
 @{ 
     Layout = null;
 
-    NemocniceData first = Model.dny.First();
-    NemocniceData last = Model.dny.Last();
-    NemocniceData diff = Model.diffK; }
+    NemocniceData firstKraje = Model.dny.First().PoKrajich();
+    NemocniceData lastKraje = Model.dny.Last().PoKrajich();
+    NemocniceData diffKraje = Model.diffK.PoKrajich(); }
 
 
 <div class="jumbotron">
-    <h1 style="padding-bottom:40px;" class="text-center">Volné kapacity intenzivní péče v nemocnicích</h1>
-    <div>
+    <h2 style="padding-bottom:40px;" class="text-center">Volné kapacity intenzivní péče v nemocnicích
+    <small>aktualizováno @(lastKraje.lastUpdated.ToString("dd.MM.yyyy HH:mm"))</small>
+    </h2>
+    <p>
         Data ÚZIS, která Ministerstvo zdravotnictví tají nejen před veřejností, ale pouze omezeně k nim mají přístup i dispečinky záchranných služeb,
         nemocnice a lékaři.
-    </div>
+    </p>
+    <p>
+        Záchranky tato data mají teprve od pondělí, doktoři na JIP je stále nemají a místa pro pacienty obvolávají telefony. A velké nemocnice COVID pacienty odmítají, i když mají volná místa. 
+
+Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
+    </p>
 </div>
 
-<h2><a href="#nemocnice">Skočit na seznam jednotlivých nemocnic <i class="fas fa-hand-point-down"></i></a></h2>
+        <div class="bs-callout bs-callout-primary small">
+    <h4>Základní pojmy</h4>
+    <p>
+        <dl>
+        <dt>COVID lůžka</dt>
+        <dd>Lůžka speciálně vyhrazena pro infekční pacienty. Kromě obvykle fyzické izolace ve vyhrazeném prostoru je zde 
+            povinná vyšší ochrana lékařů a sester (ochranný oblek), obvykle kratší směny, speciální režim zaměstnanců.
+        </dd>
+        <dt>neCOVID lůžka</dt>
+        <dd>Obvyklá JIP/ARO/lůžka s kyslíkem, bez jinak obvyklého speciálního režimu. 
+            Podle možností nemocnice je možné některá z těchto lůžek změnit na COVID lůžka.           
+            To má samozřejmě vliv třeba na léčbu těch, které přivezou od dopravní nehody            
+        </dd>
+        <dt>Lékaři a sestry</dt>
+        <dd>Zkušenost z Wuhanu, Itálie a New Yorku z jara, z doby největší zátěže nemocnic ukazuje, že není důležité mít pouze dostatek přístrojů a lůžek, 
+                ale že kritickým faktorem je dostatek lékařů a sester, dostatek kapacity pro jejich obměnu (karanténa, nemoc, odpočinek). 
+                V nejhorších chvílích byl počet zdravotnického personálu hlavním problémem. Proto jejich počty také uvádíme.
+        </dd>
+        </dl>
+    </p>
+</div>
+
+<p>
+    Rychlá navigace:
+    <ul>
+        
+        <li><a href="#CR">Celá ČR</a></li>
+        @foreach (var h in lastKraje.hospitals)
+        {
+            <li><a href="#@h.region">@h.name</a></li>
+        }
+        <li><a href="#nemocnice">Seznam jednotlivých nemocnic</a></li>
+        <li><a href="#opendata">Open data</a></li>
+    </ul>
+</p>
 
 <hr/>
-
+@{     
+    NemocniceData diffCR = NemocniceData.Diff(firstKraje.CelaCR(), lastKraje.CelaCR());
+        @RenderH(firstKraje.CelaCR().hospitals.First(),diffCR.hospitals.First(), firstKraje.CelaCR())
+}
 <h2>Souhrn pro jednotlivé kraje</h2>
-
-@foreach (var h in last.hospitals)
+@foreach (var h in lastKraje.hospitals)
 {
-    NemocniceData.Hospital diffH = diff.hospitals.First(m => m.name == h.name);
-
-
-<h2>@h.name</h2>
-
-
-                <div class="row">
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Lůžka (ARO+JIP dospělí)</h4>
-                        <p>
-                            Celkem @h.AROJIP_luzka_celkem, volných @HlidacStatu.Util.RenderData.NicePercent(h.AROJIP_perc())
-                            <br />
-                            Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.AROJIP_luzka_covid</span> / neCOVID <span style="font-size:125%">@h.AROJIP_luzka_necovid</span>
-                            <br />
-                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_covid)">@(diffH.AROJIP_luzka_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_necovid)">@(diffH.AROJIP_luzka_necovid.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Lůžka (standardní s kyslíkem)</h4>
-                        <p>
-                            Celkem @h.Standard_luzka_s_kyslikem_celkem, volných @HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc())
-                            <br />
-                            Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.Standard_luzka_s_kyslikem_covid</span> / neCOVID <span style="font-size:125%">@h.Standard_luzka_s_kyslikem_necovid</span>
-                            <br />
-                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_covid)">@(diffH.Standard_luzka_s_kyslikem_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_necovid)">@(diffH.Standard_luzka_s_kyslikem_necovid.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-                    <div class="clearfix hidden-md hidden-lg"></div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Přístroje ECMO <small>podpora nejvaznejsich pripadu, plicni rizeni</small></h4>
-
-                        <p>
-                            Celkem @h.ECMO_celkem, volných: @h.ECMO_volna -  @HlidacStatu.Util.RenderData.NicePercent(h.ECMO_perc())
-                            <br />
-                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.ECMO_volna)">@(diffH.ECMO_volna.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Přístroje UPV <small>Uplna plicni ventilace</small></h4>
-                        <p>
-                            Celkem @h.UPV_celkem, volných: @h.UPV_volna -  @HlidacStatu.Util.RenderData.NicePercent(h.UPV_perc())
-                            <br />
-                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.UPV_volna)">@(diffH.UPV_volna.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-
-                    <div class="clearfix"></div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Přístroje CRRT <small>kontinuální dialýza</small></h4>
-                        <p>
-                            Celkem @h.CRRT_celkem, volných: @h.CRRT_volna -  @HlidacStatu.Util.RenderData.NicePercent(h.CRRT_perc())
-                            <br />
-                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.CRRT_volna)">@(diffH.CRRT_volna.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Lékaři <small>ARO+JIP dospělí</small></h4>
-                        <p>
-                            Celkem @h.Lekari_AROJIP_celkem
-                            <br />
-                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Lekari_AROJIP_celkem)">@(diffH.Lekari_AROJIP_celkem.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-                    <div class="clearfix hidden-md hidden-lg"></div>
-
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Sestry <small>ARO+JIP dospělí</small></h4>
-                        <p>
-                            Celkem @h.Sestry_AROJIP_celkem
-                            <br />
-                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Sestry_AROJIP_celkem)">@(diffH.Sestry_AROJIP_celkem.ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3" style="border-right:1px #d0d0d0 solid">
-                        <h4>Dostupné ventilátory <small>přenosné + operační sál</small></h4>
-                        <p>
-                            Celkem @(h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem)
-                            <br />
-                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor((diffH.Ventilatory_prenosne_celkem+diffH.Ventilatory_operacnisal_celkem))">@((h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem).ToString("+#;-#;0"))</span>
-                        </p>
-                    </div>
-
-                    <div class="clearfix"></div>
-
-                </div>
-                                <hr />
-
+    NemocniceData.Hospital diffH = diffKraje.hospitals.First(m => m.name == h.name);
+    @RenderH(h,diffH, firstKraje)
 }
 
 
@@ -140,7 +93,7 @@ tbl_nem_o = $('#nem_o').DataTable({
 </script>
 
 
-<p>Stav k @(last.lastUpdated.ToString("dd. MM. HH:mm")). Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
+<p>Stav k @(lastKraje.lastUpdated.ToString("dd. MM. HH:mm")). Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
 <table id="nem_o" class="table-sorted table table-bordered table-striped">
     <thead>
         <tr>
@@ -168,7 +121,7 @@ tbl_nem_o = $('#nem_o').DataTable({
             }
 
             <tr>
-                <td>@h.name<br />(změna od @first.lastUpdated.ToString("dd.MM.") do @h.lastModified.ToString("dd.MM. HH:mm"))</td>
+                <td>@h.name<br />(změna od @firstKraje.lastUpdated.ToString("dd.MM.") do @h.lastModified.ToString("dd.MM. HH:mm"))</td>
                 <td>@h.regionFull()</td>
                 <td data-order="@h.lastModified.Ticks">@(h.lastModified.ToString("dd.MM."))<br/>@(h.lastModified.ToString("HH:ss"))</td>
                 <td style='white-space: nowrap;font-weight:bold;' data-order="@h.AROJIP_luzka_covid">@h.AROJIP_luzka_covid / @h.AROJIP_luzka_necovid z @h.AROJIP_luzka_celkem
@@ -206,6 +159,10 @@ tbl_nem_o = $('#nem_o').DataTable({
     </tbody>
 </table>
 
+<hr />
+<h2 id="opendata">Open Data</h2>
+<a href="/KapacitaNemocnicData" target="_blank">Open data (json)</a>
+
 
 @functions { public string TColor(int val)
             {
@@ -223,4 +180,105 @@ tbl_nem_o = $('#nem_o').DataTable({
                 }
             }
 
+}
+
+@helper RenderH(NemocniceData.Hospital h, NemocniceData.Hospital diffH, NemocniceData first)
+{
+
+ 
+
+<h2 id="@h.region">@h.name</h2>
+
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Lůžka (ARO+JIP dospělí)</h4>
+                        <p>
+                            Celkem @h.AROJIP_luzka_celkem, volných @(h.AROJIP_luzka_covid+h.AROJIP_luzka_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.AROJIP_perc()))
+                            <br />
+                            Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.AROJIP_luzka_covid</span> / neCOVID <span style="font-size:125%">@h.AROJIP_luzka_necovid</span>
+                            <br />
+                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_covid)">@(diffH.AROJIP_luzka_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_necovid)">@(diffH.AROJIP_luzka_necovid.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                    <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Lůžka (standardní s kyslíkem)</h4>
+                        <p>
+                            Celkem @h.Standard_luzka_s_kyslikem_celkem, volných @(h.Standard_luzka_s_kyslikem_covid+h.Standard_luzka_s_kyslikem_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc()))
+                            <br />
+                            Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.Standard_luzka_s_kyslikem_covid</span> / neCOVID <span style="font-size:125%">@h.Standard_luzka_s_kyslikem_necovid</span>
+                            <br />
+                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_covid)">@(diffH.Standard_luzka_s_kyslikem_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_necovid)">@(diffH.Standard_luzka_s_kyslikem_necovid.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                    <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Přístroje ECMO <small>podpora nejvaznejsich pripadu, plicni rizeni</small></h4>
+
+                        <p>
+                            Celkem @h.ECMO_celkem, volných: @h.ECMO_volna (@HlidacStatu.Util.RenderData.NicePercent(h.ECMO_perc()))
+                            <br />
+                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.ECMO_volna)">@(diffH.ECMO_volna.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                                        <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Přístroje UPV <small>Umělá plicni ventilace</small></h4>
+                        <p>
+                            Celkem @h.UPV_celkem, volných: @h.UPV_volna (@HlidacStatu.Util.RenderData.NicePercent(h.UPV_perc()))
+                            <br />
+                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.UPV_volna)">@(diffH.UPV_volna.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Přístroje CRRT <small>kontinuální dialýza</small></h4>
+                        <p>
+                            Celkem @h.CRRT_celkem, volných: @h.CRRT_volna (@HlidacStatu.Util.RenderData.NicePercent(h.CRRT_perc()))
+                            <br />
+                            Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.CRRT_volna)">@(diffH.CRRT_volna.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                                        <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Lékaři <small>ARO+JIP dospělí</small></h4>
+                        <p>
+                            Celkem @h.Lekari_AROJIP_celkem
+                            <br />
+                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Lekari_AROJIP_celkem)">@(diffH.Lekari_AROJIP_celkem.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                    <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Sestry <small>ARO+JIP dospělí</small></h4>
+                        <p>
+                            Celkem @h.Sestry_AROJIP_celkem
+                            <br />
+                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Sestry_AROJIP_celkem)">@(diffH.Sestry_AROJIP_celkem.ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+                                        <div class="clearfix hidden-md hidden-lg"></div>
+
+                    <div class="col-xs-12 col-sm-3" style="border-right:1px #d0d0d0 solid">
+                        <h4>Dostupné ventilátory <small>přenosné + operační sál</small></h4>
+                        <p>
+                            Celkem @(h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem)
+                            <br />
+                            Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor((diffH.Ventilatory_prenosne_celkem+diffH.Ventilatory_operacnisal_celkem))">@((h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem).ToString("+#;-#;0"))</span>
+                        </p>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                </div>
+                <hr />
+   
 }

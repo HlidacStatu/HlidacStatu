@@ -25,7 +25,22 @@ namespace HlidacStatu.Web.Controllers
 {
     public partial class HomeController : GenericAuthController
     {
+        [OutputCache( Duration = 60 * 60 * 1)]
+        public ActionResult KapacitaNemocnicData()
+        {
+                        var client = NemocniceData.Client();
 
+            NemocniceData[] n = client.Search<NemocniceData>(s => s
+                    .Size(200)
+                    .Sort(o => o.Descending(f => f.lastUpdated))
+                    .Query(q => q.MatchAll())
+                )
+                .Hits
+                .Select(m => m.Source)
+                .ToArray();
+
+            return this.Content(Newtonsoft.Json.JsonConvert.SerializeObject(n),"text/json");
+        }
         public ActionResult KapacitaNemocnic(string id, string nemocniceId)
         {
 
@@ -62,15 +77,15 @@ namespace HlidacStatu.Web.Controllers
 
                 if (n != null)
                 {
-                    days.Add(n.PoKrajich());
+                    days.Add(n);
                 }
             }
 
-            days.Insert(0, first.PoKrajich());
-            days.Add(last.PoKrajich());
+            days.Insert(0, first);
+            days.Add(last);
 
 
-            NemocniceData diffK = NemocniceData.Diff(first.PoKrajich(), last.PoKrajich());
+            NemocniceData diffK = NemocniceData.Diff(first, last);
             NemocniceData diff = NemocniceData.Diff(first, last);
 
             (NemocniceData diffK, List<NemocniceData> dny, NemocniceData last, NemocniceData diffAll) model 

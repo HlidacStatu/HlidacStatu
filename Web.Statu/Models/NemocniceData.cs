@@ -90,6 +90,7 @@ namespace HlidacStatu.Web.Models
                     case "ULK": return "Ústecký kraj";
                     case "VYS": return "Kraj Vysočina";
                     case "ZLK": return "Zlínský kraj";
+                    case "CR": return "Česká republika";
                     default:
                         return "";
 
@@ -190,8 +191,8 @@ namespace HlidacStatu.Web.Models
             NemocniceData krajF = new NemocniceData();
             List<Hospital> krajFH = new List<Hospital>();
             int krajId = 0;
-            List<string> kraje = new string[] {"PHA","STC","JHM","MSK" }.Union(this.hospitals.Select(m => m.region).Distinct()).ToList();
-            foreach (var kraj in  kraje.OrderBy(o => kraje.IndexOf(o)))
+            List<string> kraje = new string[] { "PHA", "STC", "JHM", "MSK" }.Union(this.hospitals.Select(m => m.region).Distinct()).ToList();
+            foreach (var kraj in kraje.OrderBy(o => kraje.IndexOf(o)))
             {
                 var hsF = this.hospitals.Where(m => m.region == kraj).ToArray();
                 var fd = NemocniceData.Aggregate(hsF); fd.nemocniceID = ++krajId;
@@ -202,7 +203,19 @@ namespace HlidacStatu.Web.Models
 
             return krajF;
         }
+        public NemocniceData CelaCR()
+        {
+            NemocniceData cr = new NemocniceData();
+            List<Hospital> cdH = new List<Hospital>();
+            var fd = NemocniceData.Aggregate(this.hospitals); fd.nemocniceID = 0;
+            fd.name = "Celá ČR";
+            fd.region = "CR";
+            cdH.Add(fd);
+            cr.hospitals = cdH.ToArray();
+            cr.lastUpdated = this.lastUpdated;
 
+            return cr;
+        }
 
         public static DateTime? ToDateTime(string value, params string[] formats)
         {
