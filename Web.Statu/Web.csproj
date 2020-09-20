@@ -492,6 +492,7 @@
     <Compile Include="Controllers\ApiV1Controller.Watchdogs.cs" />
     <Compile Include="Controllers\ApiV1Controller.ZabbixProxyScripts.cs" />
     <Compile Include="Controllers\ApiV1Controller.cs" />
+    <Compile Include="Controllers\HomeController.Covid.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
@@ -546,6 +547,7 @@
     <Compile Include="Models\Apiv2\SearchResultDTO.cs" />
     <Compile Include="Models\DataViewModels.cs" />
     <Compile Include="Models\InsolvenceViewModels.cs" />
+    <Compile Include="Models\NemocniceData.cs" />
     <Compile Include="Models\WebyViewModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
@@ -1607,7 +1609,6 @@
     <Content Include="Views\Data\CreateFromBackup1.cshtml" />
     <Content Include="Views\Data\Promo\behind_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
-    <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
@@ -1641,6 +1642,8 @@
     <Content Include="Views\Home\Subjekt2_EmptyProfile.cshtml" />
     <Content Include="Views\Home\Subjekt2_child.cshtml" />
     <Content Include="Views\Kindex\_SearchForm.cshtml" />
+    <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />
+    <Content Include="Views\Home\KapacitaNemocnic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
