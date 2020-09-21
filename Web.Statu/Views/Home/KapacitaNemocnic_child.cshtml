@@ -67,13 +67,13 @@ Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
 <hr/>
 @{     
     NemocniceData diffCR = NemocniceData.Diff(firstKraje.CelaCR(), lastKraje.CelaCR());
-        @RenderH(firstKraje.CelaCR().hospitals.First(),diffCR.hospitals.First(), firstKraje.CelaCR())
+        @RenderH(firstKraje.CelaCR().hospitals.First(),diffCR.hospitals.First(), firstKraje.CelaCR(), Model.dny.Select(m=>m.CelaCR()))
 }
 <h2>Souhrn pro jednotlivé kraje</h2>
 @foreach (var h in lastKraje.hospitals)
 {
     NemocniceData.Hospital diffH = diffKraje.hospitals.First(m => m.name == h.name);
-    @RenderH(h,diffH, firstKraje)
+    @RenderH(h,diffH, firstKraje, Model.dny.Select(m=>m.PoKrajich()))
 }
 
 
@@ -182,10 +182,13 @@ tbl_nem_o = $('#nem_o').DataTable({
 
 }
 
-@helper RenderH(NemocniceData.Hospital h, NemocniceData.Hospital diffH, NemocniceData first)
+@helper RenderH(NemocniceData.Hospital h, NemocniceData.Hospital diffH, NemocniceData first, IEnumerable<NemocniceData> timedata)
 {
+var chartdata = timedata.Select(m => new  
+{ 
+    date = m.lastUpdated,data = m.hospitals.First(hh=>hh.name == h.name) 
+});
 
- 
 
 <h2 id="@h.region">@h.name</h2>
 
@@ -199,6 +202,17 @@ tbl_nem_o = $('#nem_o').DataTable({
                             Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.AROJIP_luzka_covid</span> / neCOVID <span style="font-size:125%">@h.AROJIP_luzka_necovid</span>
                             <br />
                             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_covid)">@(diffH.AROJIP_luzka_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.AROJIP_luzka_necovid)">@(diffH.AROJIP_luzka_necovid.ToString("+#;-#;0"))</span>
+                        </p>
+                        <p>
+                            @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
+                                    (name:"volná COVID lůžka", 
+                                     values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_covid } )
+                                    ),
+                                    (name:"volná neCOVID lůžka", 
+                                     values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_necovid } )
+                                    )
+                                },
+                                "","počet",200 )
                         </p>
                     </div>
                     <div class="clearfix hidden-md hidden-lg"></div>

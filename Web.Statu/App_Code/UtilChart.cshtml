@@ -23,7 +23,7 @@
 
 
 
-@helper SimpleLineChart(IEnumerable<(string name, IEnumerable<(DateTime date, int value)> values)> data,
+@helper SimpleLineChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
     string title, string valueName,
     int height, string addStyle ="")
 {
@@ -35,8 +35,8 @@ foreach (var d in data)
     sdata.Add(
         $"{{ name : '{d.name}', data :["
         + d.values
-        .Select(m => $"['{m.date.ToUnixTimeInSec() * 1000}',{m.value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
-        .Aggregate((f, s) => f + "," + s)
+            .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month - 1},{m.Date.Day},{m.Date.Hour},{m.Date.Minute}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+            .Aggregate((f, s) => f + "," + s)
         + $"]}}"
     );
 }
@@ -53,26 +53,26 @@ Highcharts.chart('@containerId', {
         text: '@title'
     },
 
-    subtitle: {
-        text: 'zdroj ÚZIS a Hlídač státu'
-    },
-
     yAxis: {
         title: {
             text: 'Počet'
         }
     },
+        tooltip: {
+        xDateFormat: '%d. %m. %Y %H:%M',
+        shared: true
+    },
+
+
 
     xAxis: {
+        type: 'datetime'
     },
 
     legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
     },
     series: [
-        @(string.Join(",",sdata))
+        @Html.Raw(string.Join(",",sdata))
     ]
 });</script>
 
