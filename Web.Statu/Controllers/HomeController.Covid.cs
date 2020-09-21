@@ -75,6 +75,8 @@ namespace HlidacStatu.Web.Controllers
             }
             days.Insert(0, first);
             days.AddRange(filteredN);
+            if (days.Last().lastUpdated < nAll.First().lastUpdated)
+                days.Add(nAll.First());
 
             NemocniceData last = days.Last();
 

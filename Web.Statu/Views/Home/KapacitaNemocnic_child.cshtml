@@ -11,6 +11,9 @@
     NemocniceData firstKraje = Model.dny.First().PoKrajich();
     NemocniceData lastKraje = Model.dny.Last().PoKrajich();
     NemocniceData diffKraje = Model.diffK.PoKrajich();
+
+    NemocniceData lastCr = Model.dny.Last().CelaCR();
+    NemocniceData firstCr = Model.dny.First().CelaCR();
         
     }
 
@@ -68,8 +71,8 @@ Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
 
 <hr/>
 @{     
-    NemocniceData diffCR = NemocniceData.Diff(firstKraje.CelaCR(), lastKraje.CelaCR());
-        @RenderH(firstKraje.CelaCR().hospitals.First(),diffCR.hospitals.First(), firstKraje.CelaCR(), Model.dny.Select(m=>m.CelaCR()))
+    NemocniceData diffCR = NemocniceData.Diff(firstCr, lastCr);
+        @RenderH(lastCr.hospitals.First(),diffCR.hospitals.First(), firstCr, Model.dny.Select(m=>m.CelaCR()))
 }
 <h2>Souhrn pro jednotlivé kraje</h2>
 @foreach (var h in lastKraje.hospitals)
