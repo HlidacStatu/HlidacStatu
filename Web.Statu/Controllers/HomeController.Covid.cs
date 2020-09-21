@@ -25,8 +25,8 @@ namespace HlidacStatu.Web.Controllers
 {
     public partial class HomeController : GenericAuthController
     {
-        [OutputCache( Duration = 60 * 60 * 1)]
-        public ActionResult KapacitaNemocnicData()
+        [OutputCache(VaryByParam = "id", Duration = 60 * 60 * 1)]
+        public ActionResult KapacitaNemocnicData(string id)
         {
                         var client = NemocniceData.Client();
 
@@ -39,6 +39,8 @@ namespace HlidacStatu.Web.Controllers
                 .Select(m => m.Source)
                 .ToArray();
 
+            if (id=="last")
+                this.Content(Newtonsoft.Json.JsonConvert.SerializeObject(n.First()),"text/json");
             return this.Content(Newtonsoft.Json.JsonConvert.SerializeObject(n),"text/json");
         }
         public ActionResult KapacitaNemocnic(string id, string nemocniceId)
@@ -55,35 +57,26 @@ namespace HlidacStatu.Web.Controllers
                 .Hits
                 .FirstOrDefault()?.Source;
 
-            NemocniceData last = client.Search<NemocniceData>(s => s
-                    .Size(1)
-                    .Sort(o => o.Descending(f => f.lastUpdated))
-                    .Query(q => q.MatchAll())
-                )
-                .Hits
-                .FirstOrDefault()?.Source;
+            NemocniceData[] nAll = client.Search<NemocniceData>(s => s
+                .Size(200)
+                .Sort(o => o.Descending(f => f.lastUpdated))
+                .Query(q => q.MatchAll())
+            )
+            .Hits
+            .Select(m => m.Source)
+            .ToArray();
 
-            for (int i = 1; i < (first.lastUpdated - last.lastUpdated).TotalDays; i++)
+            var filteredN = new List<NemocniceData>();
+            filteredN.Add(first);
+            foreach (var n in nAll.OrderBy(o=>o.lastUpdated))
             {
-                DateTime dt = first.lastUpdated.Date.AddDays(i).AddHours(14).AddMinutes(55);
-
-                NemocniceData n = client.Search<NemocniceData>(s => s
-                        .Size(1)
-                        .Sort(o => o.Ascending(f => f.lastUpdated))
-                        .Query(q => q.DateRange(d => d.GreaterThanOrEquals(dt).Field(f => f.lastUpdated)))
-                    )
-                    .Hits
-                    .FirstOrDefault()?.Source;
-
-                if (n != null)
-                {
-                    days.Add(n);
-                }
+                if ((n.lastUpdated - filteredN.Last().lastUpdated).TotalHours > 3.5)
+                    filteredN.Add(n);
             }
-
             days.Insert(0, first);
-            days.Add(last);
+            days.AddRange(filteredN);
 
+            NemocniceData last = days.Last();
 
             NemocniceData diffK = NemocniceData.Diff(first, last);
             NemocniceData diff = NemocniceData.Diff(first, last);

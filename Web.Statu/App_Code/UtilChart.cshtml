@@ -66,10 +66,12 @@ Highcharts.chart('@containerId', {
 
 
     xAxis: {
-        type: 'datetime'
+        type: 'datetime',
+        tickInterval: 24 * 3600 * 1000
     },
 
     legend: {
+        enabled:false
     },
     series: [
         @Html.Raw(string.Join(",",sdata))
