@@ -341,16 +341,18 @@ namespace HlidacStatu.Lib.Data
 
         public void Delete(string user)
         {
+            var tmpOsoba = Osoba.GetByInternalId(this.InternalId);
+            tmpOsoba.FlushCache();
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
-                db.Osoba.Attach(this);
-                db.Entry(this).State = System.Data.Entity.EntityState.Deleted;
+                db.Osoba.Attach(tmpOsoba);
+                db.Entry(tmpOsoba).State = System.Data.Entity.EntityState.Deleted;
 
-                foreach (var oe in this.NoFilteredEvents())
+                foreach (var oe in tmpOsoba.NoFilteredEvents())
                 {
                     oe.Delete(user);
                 }
-                Audit.Add<Osoba>(Audit.Operations.Delete, user, this, null);
+                Audit.Add<Osoba>(Audit.Operations.Delete, user, tmpOsoba, null);
                 db.SaveChanges();
             }
         }
