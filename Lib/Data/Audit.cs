@@ -22,9 +22,7 @@ namespace HlidacStatu.Lib.Data
         public string objectType { get; set; }
         [Nest.Keyword]
         public string objectId { get; set; }
-        [Nest.Keyword]
         public string valueBefore { get; set; }
-        [Nest.Keyword]
         public string valueAfter { get; set; }
         [Nest.Keyword]
         public string IP { get; set; }
