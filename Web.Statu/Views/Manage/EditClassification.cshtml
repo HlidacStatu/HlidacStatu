@@ -52,10 +52,10 @@
 
                 }
 
-                var classification1 = Model.Classification.Types.ElementAtOrDefault(0)?.TypeValue;
+                var classification1 = Model.Classification?.Types?.ElementAtOrDefault(0)?.TypeValue;
                 var typeList1 = CreateClassificationList(classification1);
 
-                var classification2 = Model.Classification.Types.ElementAtOrDefault(1)?.TypeValue;
+                var classification2 = Model.Classification?.Types?.ElementAtOrDefault(1)?.TypeValue;
                 var typeList2 = CreateClassificationList(classification2); }
 
 @using (Html.BeginForm())
