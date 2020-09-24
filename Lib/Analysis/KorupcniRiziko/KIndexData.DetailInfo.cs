@@ -122,7 +122,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             case KIndexLabelValues.E:
                                 return "Zakázky s podezřelou cenou se se koncentrují u malého počtu dodavatelů.";
                             case KIndexLabelValues.F:
-                                return $"Většinu zakázek se skrytou cenou {HlidacStatu.Util.PluralForm.Get(this.AnnualData.KoncentraceDodavateluCenyULimitu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")}.";
+                                return $"Většinu zakázek s cenou u limitu VZ {HlidacStatu.Util.PluralForm.Get(this.AnnualData.KoncentraceDodavateluCenyULimitu.TopDodavatele().Count(), "dostal {0} dodavatel;dostali {0} dodavatelé;dostalo {0} dodavatelů")}.";
                             default:
                                 return "";
                         }
