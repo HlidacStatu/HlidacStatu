@@ -568,6 +568,10 @@ namespace HlidacStatu.Lib.Data
 
         public bool IsSponzorBefore(DateTime date)
         {
+            if (this.JsemOVM())
+                return false;
+            if (this.JsemStatniFirma())
+                return false;
             return StaticData.SponzorujiciFirmy_Vsechny.Get()
                 .Where(m => m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor
                             && m.DatumOd < date)
