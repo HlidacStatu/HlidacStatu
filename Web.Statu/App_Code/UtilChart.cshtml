@@ -3,7 +3,8 @@
 @using System.Linq;
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
-@using Devmasters.Core;
+@using Devmasters;
+@using Devmasters.Collections;
 
 @functions
 { private static new HtmlHelper<object> Html
@@ -319,7 +320,7 @@ pie: {
         string _tableId = tableId;
         if (string.IsNullOrEmpty(tableId))
         {
-            _tableId = Devmasters.Core.TextUtil.GenRandomString("abcdefghijklmnopqrstuvwxyz", 10);
+            _tableId = Devmasters.TextUtil.GenRandomString("abcdefghijklmnopqrstuvwxyz", 10);
         }
 
         sb.AppendLine(@"<script>

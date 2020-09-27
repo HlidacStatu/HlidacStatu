@@ -23,8 +23,8 @@ namespace HlidacStatu.Web.Framework.Report
             return dataCache.Get();
         }
 
-        static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<List<covid_pomoc>> dataCache = 
-            new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<List<covid_pomoc>>(TimeSpan.FromMinutes(10), "covid_pomoc",
+        static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<covid_pomoc>> dataCache = 
+            new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<covid_pomoc>>(TimeSpan.FromMinutes(10), "covid_pomoc",
             (o) =>
             {
                 var ds = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("pomoc-covid");

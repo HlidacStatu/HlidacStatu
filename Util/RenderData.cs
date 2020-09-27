@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 namespace HlidacStatu.Util
@@ -17,6 +17,15 @@ namespace HlidacStatu.Util
             AllLowerCap,
             NoChange,
         }
+
+        public static string RenderInfoFacts(this IEnumerable<InfoFact> infofacts, int number,
+            bool takeSummary = true, bool shuffle = false,
+            string delimiterBetween = " ",
+            string lineFormat = "{0}", bool html = false)
+        {
+            return InfoFact.RenderInfoFacts(infofacts.ToArray(), number, takeSummary, shuffle, delimiterBetween, lineFormat, html);
+        }
+
         public static string GetIntervalString(DateTime from, DateTime to)
         {
             string sFrom = "";
@@ -144,7 +153,7 @@ namespace HlidacStatu.Util
                 if (res.Length > 2)
                     return res;
             }
-            return Devmasters.Core.TextUtil.ShortenText(strana, maxlength);
+            return Devmasters.TextUtil.ShortenText(strana, maxlength);
         }
 
         public static string GetSocialBannerUrl(ISocialInfo si, bool ratio1x1 = false, bool localUrl = true)
@@ -354,7 +363,7 @@ namespace HlidacStatu.Util
             if (html)
             {
                 return String.Format("<span title=\"{2:### ### ### ### ### ##0} {1}\">{0}</span>", 
-                    Devmasters.Core.TextUtil.ReplaceDuplicates(ret,' ').Replace(" ", "&nbsp;"), mena, number);
+                    Devmasters.TextUtil.ReplaceDuplicates(ret,' ').Replace(" ", "&nbsp;"), mena, number);
 
             }
             return ret;
@@ -378,7 +387,7 @@ namespace HlidacStatu.Util
             if (html)
             {
                 return String.Format("<span title=\"{1}\">{0}</span>",
-                    Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ').Replace(" ", "&nbsp;"), s);
+                    Devmasters.TextUtil.ReplaceDuplicates(s, ' ').Replace(" ", "&nbsp;"), s);
 
             }
             return s;
@@ -452,7 +461,7 @@ namespace HlidacStatu.Util
 
         public static string LimitedList(int maxItems, IEnumerable<string> data, string format = "{0}",
             string itemsDelimiter = "\n",
-            string moreTextPrefix = null, Devmasters.Core.Lang.PluralDef morePluralForm = null,
+            string moreTextPrefix = null, Devmasters.Lang.PluralDef morePluralForm = null,
             bool moreNumberFormat = true
             )
         {
@@ -461,7 +470,7 @@ namespace HlidacStatu.Util
 
         public static string LimitedList(int maxItems, IEnumerable<string[]> data, string format="{0}", 
             string itemsDelimiter = "\n", 
-            string moreTextPrefix = null, Devmasters.Core.Lang.PluralDef morePluralForm = null,
+            string moreTextPrefix = null, Devmasters.Lang.PluralDef morePluralForm = null,
             bool moreNumberFormat = true
             )
         {
@@ -500,7 +509,7 @@ namespace HlidacStatu.Util
                         more = moreTextPrefix;
                 }
                 if (morePluralForm != null)
-                    more = more + Devmasters.Core.Lang.Plural.Get(diff,morePluralForm);
+                    more = more + Devmasters.Lang.Plural.Get(diff,morePluralForm);
 
             }
             sb.Append(more);

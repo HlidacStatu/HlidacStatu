@@ -7,7 +7,7 @@
 {
 <text>
 ---
-**[@Raw(Devmasters.Core.TextUtil.NormalizeToBlockText(item.NazevZakazky ?? "")) (@Raw(item.EvidencniCisloZakazky))](@Raw(item.GetUrl(false))?utm_source=hlidac&utm_medium=platforma&utm_campaign=detail)**
+**[@Raw(Devmasters.TextUtil.NormalizeToBlockText(item.NazevZakazky ?? "")) (@Raw(item.EvidencniCisloZakazky))](@Raw(item.GetUrl(false))?utm_source=hlidac&utm_medium=platforma&utm_campaign=detail)**
 *@Raw(item.DatumUverejneni == null ? "" : item.DatumUverejneni.Value.ToShortDateString() + " - ")
 @Raw(item.LastestFormular() == null ? "" : item.LastestFormular().DruhFormulareName())*
 

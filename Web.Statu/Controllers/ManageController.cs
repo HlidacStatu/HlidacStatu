@@ -177,7 +177,7 @@ namespace HlidacStatu.Web.Controllers
                 wd.SearchRawQuery = "icoVazby:" + form["ico"];
                 wd.PeriodId = Convert.ToInt32(form["period"]);
                 wd.FocusId = Convert.ToInt32(form["focus"]);
-                wd.Name = Devmasters.Core.TextUtil.ShortenText(form["wdname"], 50);
+                wd.Name = Devmasters.TextUtil.ShortenText(form["wdname"], 50);
                 wd.Save();
                 return RedirectToAction("Watchdogs", "Manage");
             }
@@ -281,7 +281,7 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         public ActionResult HledejOsoby(string jmeno, string prijmeni, string narozeni)
         {
-            DateTime? nar = ParseTools.ToDateTime(narozeni, "yyyy-MM-dd");
+            DateTime? nar = Devmasters.DT.Util.ToDateTime(narozeni, "yyyy-MM-dd");
             var osoby = Osoba.Searching.GetAllByName(jmeno, prijmeni, nar);
             if (osoby.Count() == 0)
                 osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, nar);
@@ -318,16 +318,16 @@ namespace HlidacStatu.Web.Controllers
                 string prijmeni = cols[2];
                 string titulPred = cols[3];
                 string titulPo = cols[4];
-                DateTime? narozeni = ParseTools.ToDate(cols[5]);
+                DateTime? narozeni = Devmasters.DT.Util.ToDate(cols[5]);
 
                 Osoba.StatusOsobyEnum status = GetStatusFromText(cols[6]);
 
                 string clenstviStrana = ParseTools.NormalizaceStranaShortName(cols[7]);
-                DateTime? clenstviVznik = ParseTools.ToDate(cols[8]);
+                DateTime? clenstviVznik = Devmasters.DT.Util.ToDate(cols[8]);
 
                 string eventOrganizace = cols[9];
                 string eventRole = cols[10];
-                DateTime? eventVznik = ParseTools.ToDate(cols[11]);
+                DateTime? eventVznik = Devmasters.DT.Util.ToDate(cols[11]);
                 string eventTyp = cols[12];
 
                 // set person from fulltext when not properly defined
@@ -456,7 +456,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 if (!string.IsNullOrEmpty(id)
                     && !string.IsNullOrEmpty(a)
-                    && Devmasters.Core.TextUtil.IsNumeric(id)
+                    && Devmasters.TextUtil.IsNumeric(id)
                     )
                 {
                     var iId = Convert.ToInt32(id);
@@ -654,7 +654,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult Objednavka2(FormCollection form)
         {
             var _sluzba = form["sluzba"];
-            if (Devmasters.Core.TextUtil.IsNumeric(_sluzba)
+            if (Devmasters.TextUtil.IsNumeric(_sluzba)
                 &&
                 !Enum.IsDefined(typeof(HlidacStatu.Lib.Data.InvoiceItems.ShopItem), Convert.ToInt32(_sluzba))
                 )
@@ -690,7 +690,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ObjednavkaPotvrzeni(ObjednavkaViewModel data, FormCollection form)
         {
             var _sluzba = form["sluzba"];
-            if (Devmasters.Core.TextUtil.IsNumeric(_sluzba)
+            if (Devmasters.TextUtil.IsNumeric(_sluzba)
                 &&
                 !Enum.IsDefined(typeof(HlidacStatu.Lib.Data.InvoiceItems.ShopItem), Convert.ToInt32(_sluzba))
                 )
@@ -802,10 +802,10 @@ namespace HlidacStatu.Web.Controllers
                             {
                                 using (Devmasters.Imaging.InMemoryImage imi = new Devmasters.Imaging.InMemoryImage(fn))
                                 {
-                                    HlidacStatu.Util.IOTools.DeleteFile(fn);
+                                    Devmasters.IO.IOTools.DeleteFile(fn);
                                     if (this.User?.IsInRole("Admin") == true)
                                     {
-                                        //HlidacStatu.Util.IOTools.MoveFile(fn, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.jpg"));
+                                        //Devmasters.IO.IOTools.MoveFile(fn, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.jpg"));
                                         imi.Resize(new System.Drawing.Size(300, 300), true, Devmasters.Imaging.InMemoryImage.InterpolationsQuality.High, true);
                                         imi.SaveAsJPEG(HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.jpg"), 80);
                                         return Redirect("/Osoba/" + o.NameId);
@@ -813,8 +813,8 @@ namespace HlidacStatu.Web.Controllers
                                     else
                                     {
                                         imi.SaveAsJPEG(target, 80);
-                                        //HlidacStatu.Util.IOTools.MoveFile(fn, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.review.jpg"));
-                                        //HlidacStatu.Util.IOTools.MoveFile(HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "uploaded.jpg"), HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "original.uploaded.jpg"));
+                                        //Devmasters.IO.IOTools.MoveFile(fn, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.review.jpg"));
+                                        //Devmasters.IO.IOTools.MoveFile(HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "uploaded.jpg"), HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "original.uploaded.jpg"));
                                         using (HlidacStatu.Lib.Data.DbEntities db = new DbEntities())
                                         {
                                             var r = new Review()
@@ -844,7 +844,7 @@ namespace HlidacStatu.Web.Controllers
                                 {
                                     foreach (var f in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(rootfn), System.IO.Path.GetFileName(rootfn) + ".*"))
                                     {
-                                        HlidacStatu.Util.IOTools.DeleteFile(f);
+                                        Devmasters.IO.IOTools.DeleteFile(f);
                                     }
                                 }
                                 catch

@@ -1,10 +1,11 @@
 ﻿@using HlidacStatu.Web;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Web.Framework;
 @using System.Threading.Tasks;
 @using HlidacStatu.Web.Models;
+@using Devmasters.Collections;
 
 @{
     Layout = null;
@@ -261,7 +262,7 @@
     }
 <li class="@sclass">
     @Html.KIndexLabelLink(item.Subject().ICO)<a href="/subjekt/@item.Subject().ICO">@(item.Subject().Jmeno)</a> (
-    @HlidacStatu.Util.PluralForm.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
+    @Devmasters.Lang.Plural.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
     celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true))
 
     @Html.Raw(

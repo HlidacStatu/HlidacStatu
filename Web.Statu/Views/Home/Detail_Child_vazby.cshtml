@@ -1,5 +1,5 @@
 ﻿@model HlidacStatu.Lib.Data.Smlouva
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 
 @{
@@ -38,7 +38,7 @@
                     </td>
                     <td>
                         <div>
-                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.OtherVersions().Length, "jednu provázanou smlouvu", "{0} provázané smlouvy", "{0} provázaných smluv")):
+                            Nalezli jsme @(Devmasters.Lang.Plural.Get(Model.OtherVersions().Length, "jednu provázanou smlouvu", "{0} provázané smlouvy", "{0} provázaných smluv")):
                             <ul>
                                 @foreach (var os in Model.OtherVersions())
                                 {
@@ -59,7 +59,7 @@
                     </td>
                     <td>
                         <div>
-                            Nalezli jsme @(Devmasters.Core.Lang.Plural.Get(Model.PodobneSmlouvy().Length, "jednu podobnou smlouvu", "{0} podobné smlouvy", "{0} podobných smluv")):
+                            Nalezli jsme @(Devmasters.Lang.Plural.Get(Model.PodobneSmlouvy().Length, "jednu podobnou smlouvu", "{0} podobné smlouvy", "{0} podobných smluv")):
                             <ul>
                                 @foreach (var os in Model.PodobneSmlouvy())
                                 {

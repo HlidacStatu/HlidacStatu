@@ -1,6 +1,6 @@
 ﻿using Couchbase;
 using System.Linq;
-using Devmasters.Cache.V20;
+using Devmasters.Cache;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

@@ -13,7 +13,7 @@ namespace HlidacStatu.Util.Cache
     /// <typeparam name="TCache">Typ cache</typeparam>
     public abstract class Manager<T, Key, TCache>
         where T : class
-        where TCache : Devmasters.Cache.V20.BaseCache<T>
+        where TCache : Devmasters.Cache.BaseCache<T>
     {
         protected System.Func<Key, T> contentFunc = null;
         protected TimeSpan expiration = TimeSpan.Zero;

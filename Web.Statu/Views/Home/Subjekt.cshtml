@@ -34,14 +34,14 @@
     (HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet > 0) ?
         string.Format("<span><a href=\"/Hledat?Q=ico:{0}\">{1}</a><br />za celkem {2}</span>",
             Model.ICO,
-            HlidacStatu.Util.PluralForm.Get((int)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet, "{0} smlouva v registru;{0} smlouvy v registru;celkem {0} smluv v registru"),
+            Devmasters.Lang.Plural.Get((int)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet, "{0} smlouva v registru;{0} smlouvy v registru;celkem {0} smluv v registru"),
             HlidacStatu.Lib.Data.Smlouva.NicePrice(HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.CelkemCena, html: true, shortFormat: true)
 
         )
         : "Nenalezli jsme žádné smlouvy";
 
     ViewBag.SocialShareTitle = Model.firma.Jmeno + " na HlidacStatu.cz";
-    ViewBag.SocialShareText = $"{Model.firma.Jmeno} : {Devmasters.Core.TextUtil.RemoveHTML((string)ViewBag.statDescription)}";
+    ViewBag.SocialShareText = $"{Model.firma.Jmeno} : {Devmasters.TextUtil.RemoveHTML((string)ViewBag.statDescription)}";
     ViewBag.SocialShareType = "article";
 
     HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.firma.ICO);

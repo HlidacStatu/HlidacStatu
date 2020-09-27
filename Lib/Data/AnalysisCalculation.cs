@@ -1,5 +1,5 @@
-﻿using Devmasters.Core;
-using Devmasters.Core.Batch;
+﻿using Devmasters;
+using Devmasters.Batch;
 using Devmasters.Enums;
 
 using Nest;
@@ -117,7 +117,7 @@ namespace HlidacStatu.Lib.Data
 
             var lockObj = new object();
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<NespolehlivyPlatceDPH>(nespolehliveFirmy.Values,
+            Devmasters.Batch.Manager.DoActionForAll<NespolehlivyPlatceDPH>(nespolehliveFirmy.Values,
                 (nf) =>
                 {
                     var nespolehlivaFirma = Firmy.Get(nf.Ico);
@@ -176,8 +176,8 @@ namespace HlidacStatu.Lib.Data
 
                     return new ActionOutputData();
                 },
-                showProgress ? Devmasters.Core.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
-                showProgress ? new Devmasters.Core.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
+                showProgress ? Devmasters.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
+                showProgress ? new Devmasters.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
                 !System.Diagnostics.Debugger.IsAttached, maxDegreeOfParallelism:5);
 
             VazbyFiremNaUradyStat ret = new VazbyFiremNaUradyStat();
@@ -317,10 +317,10 @@ namespace HlidacStatu.Lib.Data
                       }
 
                       end:
-                      return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                      return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                   }, null,
-                    showProgress ? Devmasters.Core.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
-                    showProgress ? new Devmasters.Core.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null
+                    showProgress ? Devmasters.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
+                    showProgress ? new Devmasters.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null
                     ,true
                     , prefix: "UradyObchodujiciSFirmami_s_vazbouNaPolitiky " + aktualnost.ToNiceDisplayName()
             );
@@ -341,7 +341,7 @@ namespace HlidacStatu.Lib.Data
             Dictionary<string, List<int>> pol_SVazbami = new Dictionary<string, List<int>>();
             Dictionary<string, List<int>> pol_SVazbami_StatniFirmy = new Dictionary<string, List<int>>();
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(StaticData.PolitickyAktivni.Get(),
+            Devmasters.Batch.Manager.DoActionForAll<Osoba>(StaticData.PolitickyAktivni.Get(),
             (p) =>
             {
 
@@ -402,10 +402,10 @@ namespace HlidacStatu.Lib.Data
                     }
 
                 }
-                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             },
-            showProgress ? Devmasters.Core.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
-            showProgress ? new Devmasters.Core.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
+            showProgress ? Devmasters.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
+            showProgress ? new Devmasters.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
             false
             , prefix: "LoadFirmySVazbamiNaPolitiky " + aktualnostVztahu.ToNiceDisplayName()
             );
@@ -458,10 +458,10 @@ namespace HlidacStatu.Lib.Data
 
                               }
                       }
-                      return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                      return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                   }, null,
-                    showProgress ? Devmasters.Core.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
-                    showProgress ? new Devmasters.Core.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null
+                    showProgress ? Devmasters.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
+                    showProgress ? new Devmasters.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null
                 , false
                 , prefix: "SmlouvyIdSPolitiky "
             );
@@ -480,7 +480,7 @@ namespace HlidacStatu.Lib.Data
 
             int size = 500;
             var firmyCasPodezrele = Lib.StaticData.FirmyCasovePodezreleZalozene.Get().Where(m => m.days >= -60 && m.days <= 60).OrderBy(m => m.days);
-            Devmasters.Core.Batch.Manager.DoActionForAll<IcoSmlouvaMinMax, object>(firmyCasPodezrele,
+            Devmasters.Batch.Manager.DoActionForAll<IcoSmlouvaMinMax, object>(firmyCasPodezrele,
                 (firma, param) =>
                 {
                     //hledej top objednatele pro danne ico
@@ -524,12 +524,12 @@ namespace HlidacStatu.Lib.Data
 
                     }
                     badFirmySobjednateli.Add(firma.ico, objednatele.ToList());
-                    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                    return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
 
                 },
                 null,
-                logOutputFunc ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-                progressOutputFunc ?? new Devmasters.Core.Batch.ActionProgressWriter(0.1f).Write,
+                logOutputFunc ?? Devmasters.Batch.Manager.DefaultOutputWriter,
+                progressOutputFunc ?? new Devmasters.Batch.ActionProgressWriter(0.1f).Write,
                 parallel: false, maxDegreeOfParallelism: 4, prefix: "FirmyCasovePodezreleZalozene"
             );
 
@@ -541,7 +541,7 @@ namespace HlidacStatu.Lib.Data
             HlidacStatu.Util.Consts.Logger.Debug("Creating transpozice, zajima me seznam uradu (dodavatelu) a k nim firmy, ktere dostavali zakazky");
             var rawFirmy = badFirmySobjednateli.Where(f => firmyCasPodezrele.Any(p => p.ico == f.Key)).ToArray();
             HlidacStatu.Util.Consts.Logger.Debug("Filtered transpozice, zajima me seznam uradu (dodavatelu) a k nim firmy, ktere dostavali zakazky");
-            Devmasters.Core.Batch.Manager.DoActionForAll<KeyValuePair<string, List<Analysis.BasicData<string>>>, object>(rawFirmy,
+            Devmasters.Batch.Manager.DoActionForAll<KeyValuePair<string, List<Analysis.BasicData<string>>>, object>(rawFirmy,
             (firma, param) =>
             {
                 try
@@ -561,12 +561,12 @@ namespace HlidacStatu.Lib.Data
                 {
                     System.Diagnostics.Debugger.Break();
                 }
-                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
 
             },
                 null,
-                logOutputFunc ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-                progressOutputFunc ?? new Devmasters.Core.Batch.ActionProgressWriter(0.1f).Write,
+                logOutputFunc ?? Devmasters.Batch.Manager.DefaultOutputWriter,
+                progressOutputFunc ?? new Devmasters.Batch.ActionProgressWriter(0.1f).Write,
                 parallel: false, maxDegreeOfParallelism: 4
             );
             HlidacStatu.Util.Consts.Logger.Debug("DONE transpozice, zajima me seznam uradu (dodavatelu) a k nim firmy, ktere dostavali zakazky");
@@ -588,7 +588,7 @@ namespace HlidacStatu.Lib.Data
 
 
             HlidacStatu.Util.Consts.Logger.Debug("GetFirmyCasovePodezreleZalozene - getting first smlouva for all ico from ES");
-            Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(allIcos,
+            Devmasters.Batch.Manager.DoActionForAll<string, object>(allIcos,
             (ico, param) =>
             {
                 Firma ff = Firmy.Get(ico);
@@ -596,7 +596,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     if (ff.PatrimStatu()) //statni firmy tam nechci
                     {
-                        return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                        return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                     }
                     else
                     {
@@ -607,7 +607,7 @@ namespace HlidacStatu.Lib.Data
                             var epoch = ((Nest.ValueAggregate)res.ElasticResults.Aggregations.First().Value).Value;
                             if (epoch.HasValue)
                             {
-                                var mindate = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000);
+                                var mindate = Devmasters.DT.Util.FromEpochTimeToUTC((long)epoch / 1000);
 
                                 lock (lockFirmy)
                                 {
@@ -623,7 +623,7 @@ namespace HlidacStatu.Lib.Data
                                         firmy.Add(ico, new AnalysisCalculation.IcoSmlouvaMinMax()
                                         {
                                             ico = ico,
-                                            minUzavreni = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)epoch / 1000)
+                                            minUzavreni = Devmasters.DT.Util.FromEpochTimeToUTC((long)epoch / 1000)
                                         });
                                     }
                                     if (ff.Datum_Zapisu_OR.HasValue)
@@ -639,11 +639,11 @@ namespace HlidacStatu.Lib.Data
                         }
                     }
                 }
-                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             },
             null,
-            logOutputFunc ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-            progressOutputFunc ?? new Devmasters.Core.Batch.ActionProgressWriter(0.1f).Write,
+            logOutputFunc ?? Devmasters.Batch.Manager.DefaultOutputWriter,
+            progressOutputFunc ?? new Devmasters.Batch.ActionProgressWriter(0.1f).Write,
             true
             );
 
@@ -651,7 +651,7 @@ namespace HlidacStatu.Lib.Data
             //List<string> privateCompanyIcos = new List<string>();
             ////filter statni firmy && add vznik
 
-            //Devmasters.Core.Batch.Manager.DoActionForAll<string, object>(firmy.Keys,
+            //Devmasters.Batch.Manager.DoActionForAll<string, object>(firmy.Keys,
             //(ico, param) =>
             //{
             //    Firma ff = Firmy.Get(ico);
@@ -659,7 +659,7 @@ namespace HlidacStatu.Lib.Data
             //    {
             //        if (ff.PatrimStatu()) //statni firmy tam nechci
             //        {
-            //            return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+            //            return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             //        }
             //        else
             //        {
@@ -672,11 +672,11 @@ namespace HlidacStatu.Lib.Data
             //        }
             //    }
 
-            //    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+            //    return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             //},
             //null,
-            //Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-            //new Devmasters.Core.Batch.ActionProgressWriter(1f).Write,
+            //Devmasters.Batch.Manager.DefaultOutputWriter,
+            //new Devmasters.Batch.ActionProgressWriter(1f).Write,
             //true, maxDegreeOfParallelism: 5
             //);
 

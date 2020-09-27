@@ -10,7 +10,7 @@ using System.Web.Http.Description;
 using HlidacStatu.Web.Framework;
 using System.Linq;
 using HlidacStatu.Lib.Data.External.Zabbix;
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 namespace HlidacStatu.Web.Controllers

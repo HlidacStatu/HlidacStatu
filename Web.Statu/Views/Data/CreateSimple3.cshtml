@@ -6,7 +6,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Lib.Data.External.DataSets;
 @using System.Text.RegularExpressions;
 @{
@@ -67,11 +67,11 @@
         {
             <p>
                 CSV soubor, který jsme použili pro vytvoření tohoto datasetu,
-                obsahuje <b>@Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>.
+                obsahuje <b>@Devmasters.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>.
                 Tyto záznamy můžeme nyní uložit do datasetu. Stejně tak data můžete později (najednou i po částech) nahrát do Hlídače ve <a href="@Url.Action("manage",new { id = Model.Name })">správě datasetu</a>.
             </p>
             <p>
-                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.DatasetId, fileid= Model.FileId, delimiter=Model.Delimiter })">Nahrát @Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů") nyní</a>
+                <a class="btn btn-success" href="@Url.Action("importdata",new { id = Model.DatasetId, fileid= Model.FileId, delimiter=Model.Delimiter })">Nahrát @Devmasters.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů") nyní</a>
                 <a class="btn btn-primary" href="@Url.Action("manage",new { id = Model.DatasetId })">Spravovat dataset</a>
                 <a class="btn btn-default" href="/">Zpět na titulku</a>
             </p>

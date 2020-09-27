@@ -220,8 +220,8 @@ namespace HlidacStatu.Web.Controllers
                 string email = "";
                 try
                 {
-                    string apiKey = Devmasters.Core.Util.Config.GetConfigValue("MailerliteApiKey");
-                    string groupId = Devmasters.Core.Util.Config.GetConfigValue("MailerliteGroupId");
+                    string apiKey = Devmasters.Config.GetWebConfigValue("MailerliteApiKey");
+                    string groupId = Devmasters.Config.GetWebConfigValue("MailerliteGroupId");
                     if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(groupId))
                     {
                         email = UserManager.FindById(userId).Email;

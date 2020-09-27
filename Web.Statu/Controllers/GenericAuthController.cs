@@ -234,7 +234,7 @@ namespace HlidacStatu.Web.Controllers
             Response.StatusCode = 404;
 
 
-            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Logging.LogMessage()
                 .SetMessage("Url not found")
                 .SetCustomKeyValue("URL", Request.RawUrl)
                 );
@@ -257,7 +257,7 @@ namespace HlidacStatu.Web.Controllers
                 return;
             }
 
-            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+            HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Logging.LogMessage()
                 .SetMessage("Url not found")
                 .SetCustomKeyValue("URL", Request.RawUrl)
                 );

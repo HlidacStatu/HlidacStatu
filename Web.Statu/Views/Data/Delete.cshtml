@@ -3,7 +3,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Lib.Data.External.DataSets;
 @using System.Text.RegularExpressions;
 @{
@@ -34,7 +34,7 @@
     <div class="col-xs-12">
         <h2>Opravdu chcete smazat dataset ID: <b>@Model.DatasetId</b>?</h2>
         <p>
-            Dataset  @Devmasters.Core.Lang.Plural.GetWithZero((int)numOfRec, "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů").
+            Dataset  @Devmasters.Lang.Plural.GetWithZero((int)numOfRec, "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů").
             <div class="text-danger">Tato operace je nevratná, smažeme všechna data BEZ NÁHRADY A BEZ MOŽNOSTI OBNOVY !</div>
         </p>
         <form method="post" class="form-horizontal form-control-new--small">

@@ -51,9 +51,9 @@ namespace HlidacStatu.Lib.Data
                     {
                         var path = HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "original.uploaded.jpg");
                         var pathSmall = HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.uploaded.jpg");
-                        HlidacStatu.Util.IOTools.MoveFile(pathSmall, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.jpg"));
+                        Devmasters.IO.IOTools.MoveFile(pathSmall, HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.jpg"));
 
-                        if (Devmasters.Core.TextUtil.IsValidEmail(this.createdBy))
+                        if (Devmasters.TextUtil.IsValidEmail(this.createdBy))
                         {
                             using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
                             {
@@ -88,7 +88,7 @@ namespace HlidacStatu.Lib.Data
             this.reviewed = DateTime.Now;
             this.reviewResult = (int)ReviewAction.Denied;
             this.comment = reason;
-            if (Devmasters.Core.TextUtil.IsValidEmail(this.createdBy))
+            if (Devmasters.TextUtil.IsValidEmail(this.createdBy))
             {
                 switch (this.ItemType)
                 {

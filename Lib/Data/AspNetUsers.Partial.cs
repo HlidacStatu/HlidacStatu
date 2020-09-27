@@ -30,12 +30,12 @@ namespace HlidacStatu.Lib.Data
             {
                 //var roleId = db.AspNetRoles.Where(m => m.Name == role).FirstOrDefault();
                 string roleId = null;
-                using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+                using (Devmasters.PersistLib p = new Devmasters.PersistLib())
                 {
-                    var res = p.ExecuteScalar(Devmasters.Core.Util.Config.GetConfigValue("CnnString"),
+                    var res = p.ExecuteScalar(Devmasters.Config.GetWebConfigValue("CnnString"),
                          System.Data.CommandType.Text, "select id from aspnetroles  where name = @role",
                          new System.Data.IDataParameter[] { new System.Data.SqlClient.SqlParameter("role", role) });
-                    if (Devmasters.Core.PersistLib.IsNull(res))
+                    if (Devmasters.PersistLib.IsNull(res))
                         return false;
                 }
 

@@ -311,7 +311,7 @@ namespace HlidacStatu.Lib.Data
                 else
                 {
                     var ret = new System.Collections.Generic.List<Item>();
-                    Devmasters.Core.Batch.Manager.DoActionForAll<string>(icos.Select(m=>m.Trim()).Distinct(),
+                    Devmasters.Batch.Manager.DoActionForAll<string>(icos.Select(m=>m.Trim()).Distinct(),
                         ic =>
                         {
                             var f = Firmy.Get(ic);
@@ -332,7 +332,7 @@ namespace HlidacStatu.Lib.Data
                                     }
                                 }
                             }
-                            return new Devmasters.Core.Batch.ActionOutputData();
+                            return new Devmasters.Batch.ActionOutputData();
                         }, !System.Diagnostics.Debugger.IsAttached);
 
                     return ret.ToArray();

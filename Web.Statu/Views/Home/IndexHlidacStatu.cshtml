@@ -24,10 +24,10 @@
                     foreach (var post in HlidacStatu.Lib.StaticData.LastBlogPosts.Get().Take(8))
                     {
                         <dl>
-                            <dt><a href="@post.Link">@Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Title.Rendered))</a></dt>
+                            <dt><a href="@post.Link">@Devmasters.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Title.Rendered))</a></dt>
                             <dd><em>@(post.Date?.ToString("d. MMMM yyyy"))</em></dd>
                             <dd>
-                                @Devmasters.Core.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Excerpt.Rendered))
+                                @Devmasters.TextUtil.RemoveHTML(System.Net.WebUtility.HtmlDecode(post.Excerpt.Rendered))
                             </dd>
                         </dl>
                     }

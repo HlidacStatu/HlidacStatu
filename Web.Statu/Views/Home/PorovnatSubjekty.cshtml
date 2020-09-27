@@ -40,9 +40,9 @@
         Name = "Subjekt",
         HtmlRender = (s) =>
         {
-            return string.Format(Html.KIndexLabelLink(s.Subject().ICO) + @"<a title='{1}' href='/subjekt/{0}'>{2}</a>", s.Subject().ICO, s.Subject().Jmeno, Devmasters.Core.TextUtil.ShortenText(s.Subject().Jmeno, 50));
+            return string.Format(Html.KIndexLabelLink(s.Subject().ICO) + @"<a title='{1}' href='/subjekt/{0}'>{2}</a>", s.Subject().ICO, s.Subject().Jmeno, Devmasters.TextUtil.ShortenText(s.Subject().Jmeno, 50));
         },
-        TextRender = (s) => { return Devmasters.Core.TextUtil.ShortenText(s.Subject().Jmeno, 40); },
+        TextRender = (s) => { return Devmasters.TextUtil.ShortenText(s.Subject().Jmeno, 40); },
         ValueRender = (s) => { return s.Subject().Jmeno; },
         OrderValueRender = (s) => { return s.Subject().Jmeno; }
     };

@@ -5,7 +5,7 @@ using HlidacStatu.Util;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Data.Entity.Infrastructure;
-using static Devmasters.Core.DateTimeUtil;
+using static Devmasters.DT.Util;
 using HlidacStatu.Lib.Db.Insolvence;
 
 namespace HlidacStatu.Lib.Data.Insolvence
@@ -321,9 +321,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
             d.ICO = td.ICO;
             d.IdOsoby = td.IdOsoby;
             d.IdPuvodce = td.IdPuvodce;
-            d.Mesto = Devmasters.Core.TextUtil.ShortenText(td.Mesto, 150);
+            d.Mesto = Devmasters.TextUtil.ShortenText(td.Mesto, 150);
             d.Okres = td.Okres;
-            d.PlneJmeno = Devmasters.Core.TextUtil.ShortenText(td.PlneJmeno, 250);
+            d.PlneJmeno = Devmasters.TextUtil.ShortenText(td.PlneJmeno, 250);
             d.PSC = td.Psc;
             d.RC = td.Rc;
             d.RizeniId = this.SpisovaZnacka;

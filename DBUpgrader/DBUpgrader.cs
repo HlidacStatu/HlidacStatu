@@ -13,7 +13,7 @@ namespace HlidacStatu.DBUpgrades
         {
 
             MsSqlDatabaseUpgrader core = new MsSqlDatabaseUpgrader(
-                Devmasters.Core.Util.Config.GetConfigValue("CnnString"),
+                Devmasters.Config.GetWebConfigValue("CnnString"),
                 typeof(UpgradeDB),
                 MsSqlDatabaseObjectTypeForDatabaseVersion.ExtendedProperty
             );

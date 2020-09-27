@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core;
+using Devmasters;
 using HlidacStatu.Util;
 using Devmasters.Enums;
 
@@ -363,7 +363,7 @@ namespace HlidacStatu.Lib.Data
                                 subjName,
                                 PrintFlatRelations(rel, level + 1, relations, typ,renderedIds, withStats),
                                 last ? "" : "connect",
-                                PluralForm.Get((int)stat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
+                                Devmasters.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
                                 Smlouva.NicePrice(stat.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true),
                                 "aktualnost" + ((int)rel.Aktualnost).ToString(),
                                 (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba("/{0}/") : string.Empty

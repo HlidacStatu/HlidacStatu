@@ -11,8 +11,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static DataSetDB Instance = new DataSetDB();
 
 
-        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> AllDataSets =
-            new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> AllDataSets =
+            new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
@@ -26,8 +26,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         }
                     );
 
-        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> ProductionDataSets =
-            new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> ProductionDataSets =
+            new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
@@ -136,7 +136,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     {
                         foreach (var i in toRemove.OrderByDescending(n => n))
                         {
-                            reg.orderList = HlidacStatu.Util.ArrayTools.TrimArray<string>(i, null, reg.orderList);
+                            reg.orderList = Devmasters.Collections.ArrayExt.TrimArray<string>(i, null, reg.orderList);
                             changedOrderList = true;
                         }
                     }

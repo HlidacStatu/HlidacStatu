@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core;
+using Devmasters;
 using System.Text.RegularExpressions;
 using HlidacStatu.Util;
 
@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Data
             {
                 this.Lenght = this.PlainTextContent?.Length ?? 0;
                 this.WordCount = ParseTools.CountWords(this.PlainTextContent);
-                var variance = Util.StringTools.WordsVarianceInText(this.PlainTextContent);
+                var variance = Devmasters.TextUtil.WordsVarianceInText(this.PlainTextContent);
                 this.UniqueWordsCount = variance.Item2;
                 this.WordsVariance = variance.Item1;
 
@@ -95,7 +95,7 @@ namespace HlidacStatu.Lib.Data
             {
                 if (string.IsNullOrEmpty(forEmail))
                     throw new ArgumentNullException("forEmail");
-                return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(forEmail + this.hash + "__" + forEmail);
+                return Devmasters.Crypto.Hash.ComputeHashToHex(forEmail + this.hash + "__" + forEmail);
             }
 
 
@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib.Data
 
                 string localFile = Lib.Init.PrilohaLocalCopy.GetFullPath(smlouva, att);
                 var tmpPath = System.IO.Path.GetTempPath();
-                HlidacStatu.Util.IOTools.DeleteFile(tmpPath);
+                Devmasters.IO.IOTools.DeleteFile(tmpPath);
                 if (!System.IO.Directory.Exists(tmpPath))
                 {
                     try
@@ -148,7 +148,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             Consts.Logger.Debug($"Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
                             byte[] data = null;
-                            using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
+                            using (Devmasters.Net.HttpClient.URLContent web = new Devmasters.Net.HttpClient.URLContent(att.odkaz))
                             {
                                 web.Timeout = web.Timeout * 10;
                                 data = web.GetBinary().Binary;
@@ -164,7 +164,7 @@ namespace HlidacStatu.Lib.Data
                                 {
                                     byte[] data = null;
                                     Consts.Logger.Debug($"Second try: Downloading priloha {att.nazevSouboru} for smlouva {smlouva.Id} from URL {att.odkaz}");
-                                    using (Devmasters.Net.Web.URLContent web = new Devmasters.Net.Web.URLContent(att.odkaz))
+                                    using (Devmasters.Net.HttpClient.URLContent web = new Devmasters.Net.HttpClient.URLContent(att.odkaz))
                                     {
                                         web.Tries = 5;
                                         web.IgnoreHttpErrors = true;
@@ -194,7 +194,7 @@ namespace HlidacStatu.Lib.Data
                 }
                 finally
                 {
-                    HlidacStatu.Util.IOTools.DeleteFile(tmpFnSystem);
+                    Devmasters.IO.IOTools.DeleteFile(tmpFnSystem);
                 }
                 return tmpFn;
 

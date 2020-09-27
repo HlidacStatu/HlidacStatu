@@ -2,7 +2,8 @@
 @using HlidacStatu.Lib;
 @using HlidacStatu.Util;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
+@using Devmasters.Collections;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Lib.Data.Insolvence;
 @using HlidacStatu.Lib.Render;
@@ -47,7 +48,7 @@
                                 }
                                 <p class="box-stats__title">
                                     <strong>@HlidacStatu.Util.RenderData.NiceNumber(politici.Count())</strong><br>
-                                    @Devmasters.Core.Lang.Plural.Get(politici.Count(), "Politik", "Politici", "Politiků") v insolvenci
+                                    @Devmasters.Lang.Plural.Get(politici.Count(), "Politik", "Politici", "Politiků") v insolvenci
                                 </p>
                             </div>
                             <div class="box-stats__media">
@@ -83,7 +84,7 @@
                                 }
                                 <p class="box-stats__title">
                                     <strong>@HlidacStatu.Util.RenderData.NiceNumber(firmyPolitikuVInsolvenci.Count())</strong><br>
-                                    @Devmasters.Core.Lang.Plural.Get(firmyPolitikuVInsolvenci.Count(),"Firma","Firmy","Firem") s vazbou na politiky<sup>*)</sup> v insolvenci
+                                    @Devmasters.Lang.Plural.Get(firmyPolitikuVInsolvenci.Count(),"Firma","Firmy","Firem") s vazbou na politiky<sup>*)</sup> v insolvenci
                                     <br/> <span class="text-muted small">(vypisujeme náhodný výběr)</span>
                                 </p>
                             </div>
@@ -91,7 +92,7 @@
                                 <div style="display:block">
                                     @foreach (var p in insolvenceFiremPolitiku.Take(20).Shuffle())
                                         {
-                                            var pd = new Devmasters.Core.Lang.PluralDef() { Values = new string[] { " a ještě jedna", "{0} další","{0} dalších" } };
+                                            var pd = new Devmasters.Lang.PluralDef() { Values = new string[] { " a ještě jedna", "{0} další","{0} dalších" } };
                                             var o = p.Item1.Osoba();
                                             sb.AppendLine($"<b>{o.FullNameWithYear()}</b><br/>");
                                             sb.AppendLine($"<div class='text-muted small-link' style='padding-left:2em;'>");
@@ -101,7 +102,7 @@
                                                     2,
                                                     p.Item2.OrderByDescending(oo => oo.Zahajeni)
                                                         .Select(m => $"<a href='{Rizeni.GetUrlFromId(m.SpisovaZnacka)}'>"
-                                                            + $"{Devmasters.Core.TextUtil.ShortenText(HlidacStatu.Lib.Data.Firmy.Get(m.VybraniDluznici.First()).Jmeno,20)}</a>"
+                                                            + $"{Devmasters.TextUtil.ShortenText(HlidacStatu.Lib.Data.Firmy.Get(m.VybraniDluznici.First()).Jmeno,20)}</a>"
                                                             + $" /z {m.Zahajeni.ToString("yyyy")}/"),
                                                     "{0}","<br/>",
                                                     moreTextPrefix:"<br/>a ",

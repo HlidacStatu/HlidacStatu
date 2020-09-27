@@ -1,5 +1,5 @@
-﻿using Devmasters.Core;
-using Devmasters.Core.Collections;
+﻿using Devmasters;
+using Devmasters.Collections;
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Enhancers;
@@ -88,7 +88,7 @@ namespace HlidacStatu.Plugin.Enhancers
             //check formal valid ICO
             string ico = subj.ico;
             if (!string.IsNullOrEmpty(ico)
-                && !Devmasters.Core.TextUtil.IsNumeric(ico)
+                && !Devmasters.TextUtil.IsNumeric(ico)
                 && Util.DataValidators.IsZahranicniAdresa(subj.adresa) == false
                 )
             {

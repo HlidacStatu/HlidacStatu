@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Util;
@@ -243,7 +243,7 @@ namespace HlidacStatu.Lib.Data
                     return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
                     //return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") ;
                 case Types.Osobni:
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
+                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)
@@ -312,7 +312,7 @@ namespace HlidacStatu.Lib.Data
                     return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                     //return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
+                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)

@@ -216,7 +216,7 @@ namespace HlidacStatu.Lib.Searching
 
         public override string SocialInfoTitle()
         {
-            string spocet = Devmasters.Core.Lang.Plural.GetWithZero((int)this.Total, 
+            string spocet = Devmasters.Lang.Plural.GetWithZero((int)this.Total, 
                 "Žádné zakázky jsme na H"
                 );
             return $"Nalezeno {this.Total}";

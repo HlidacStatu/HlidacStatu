@@ -17,16 +17,16 @@ namespace HlidacStatu.Util
         static DataValidators()
         {
 
-            if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("WebAppDataPath")))
             {
-                root = Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath");
+                root = Devmasters.Config.GetWebConfigValue("WebAppDataPath");
             }
             else if (System.Web.HttpContext.Current != null) //inside web app
             {
                 root = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/");
             }
             else
-                root = Util.IOTools.GetExecutingDirectoryName(true);
+                root = Devmasters.IO.IOTools.GetExecutingDirectoryName(true);
 
             if (!root.EndsWith(@"\"))
                 root = root + @"\";
@@ -38,9 +38,9 @@ namespace HlidacStatu.Util
                 .Select(mm =>
                 {
                     if (mm.Length == 1)
-                        return new KeyValuePair<string, string>(Devmasters.Core.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), "xx");
+                        return new KeyValuePair<string, string>(Devmasters.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), "xx");
                     else
-                        return new KeyValuePair<string, string>(Devmasters.Core.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), mm[1].Length == 0 ? "xx" : mm[1].Trim());
+                        return new KeyValuePair<string, string>(Devmasters.TextUtil.RemoveDiacritics(mm[0]).Trim().ToLower(), mm[1].Length == 0 ? "xx" : mm[1].Trim());
                 });
             foreach (var kv in tmp.Where(m => !string.IsNullOrEmpty(m.Key)))
             {
@@ -49,10 +49,10 @@ namespace HlidacStatu.Util
             }
 
             czobce = System.IO.File.ReadLines(root + "czobce.txt")
-                    .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
+                    .Select(m => Devmasters.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
             skobce = System.IO.File.ReadLines(root + "skobce.txt")
-                    .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
+                    .Select(m => Devmasters.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
 
 
@@ -113,10 +113,10 @@ namespace HlidacStatu.Util
             if ((month == 4 || month == 6 || month == 9 || month == 11) && (day > 30)) return false;
 
             // prestupny unor 29 dni
-            if ((month == 2) && (DateTools.IsPrestupnyRok(year) == true) && (day > 29)) return false;
+            if ((month == 2) && (Devmasters.DT.Util.IsPrestupnyRok(year) == true) && (day > 29)) return false;
 
             // neprestupny unor 28 dni
-            if ((month == 2) && (DateTools.IsPrestupnyRok(year) == false) && (day > 28)) return false;
+            if ((month == 2) && (Devmasters.DT.Util.IsPrestupnyRok(year) == false) && (day > 28)) return false;
 
             birthDate = new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local);
             if (birthDate > DateTime.Now)
@@ -156,7 +156,7 @@ namespace HlidacStatu.Util
             if (string.IsNullOrEmpty(ico))
                 return false;
 
-            if (!Devmasters.Core.TextUtil.IsNumeric(ico))
+            if (!Devmasters.TextUtil.IsNumeric(ico))
                 return false;
             if (ico.Length < 8)
             {
@@ -200,7 +200,7 @@ namespace HlidacStatu.Util
         {
             if (!string.IsNullOrEmpty(adresa))
             {
-                string dadresa = Devmasters.Core.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
+                string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
 
 
 
@@ -228,7 +228,7 @@ namespace HlidacStatu.Util
         {
             if (!string.IsNullOrEmpty(adresa))
             {
-                string dadresa = Devmasters.Core.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
+                string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
                 foreach (var o in czobce)
                 {
                     //(\s|,|;)mexiko($|\s)
@@ -246,7 +246,7 @@ namespace HlidacStatu.Util
         {
             if (!string.IsNullOrEmpty(adresa))
             {
-                string dadresa = Devmasters.Core.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
+                string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
                 foreach (var o in skobce)
                 {
                     if (dadresa.Contains(o))

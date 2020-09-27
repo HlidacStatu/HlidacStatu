@@ -6,7 +6,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Lib.Data.External.DataSets;
 @using System.Text.RegularExpressions;
 @{
@@ -72,7 +72,7 @@
         else
         {
             <p>
-                CSV soubor obsahuje <b>@Devmasters.Core.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>
+                CSV soubor obsahuje <b>@Devmasters.Lang.Plural.Get(Model.NumOfRows, "jeden záznam", "{0} záznamy", "{0} záznamů")</b>
                 a ty byly nahrány do Hlídače státu.
             </p>
             <p>

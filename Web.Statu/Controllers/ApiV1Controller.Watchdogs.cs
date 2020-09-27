@@ -52,7 +52,7 @@ namespace HlidacStatu.Web.Controllers
                     switch (id.ToLower())
                     {
                         case "add":
-                            var expirDate = HlidacStatu.Util.ParseTools.ToDateTime(expiration, "yyyy-MM-ddTHH:mm:ss");
+                            var expirDate = Devmasters.DT.Util.ToDateTime(expiration, "yyyy-MM-ddTHH:mm:ss");
                             if (string.IsNullOrEmpty(query))
                             {
                                 return Json(ApiResponseStatus.Error(-99, "No query"), JsonRequestBehavior.AllowGet);

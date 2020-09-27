@@ -69,7 +69,7 @@ namespace HlidacStatu.Util
                 System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage(from, to);
                 msg.Bcc.Add("michal@michalblaha.cz");
                 msg.Subject = subject;
-                if (!string.IsNullOrEmpty(replyTo) && Devmasters.Core.TextUtil.IsValidEmail(replyTo))
+                if (!string.IsNullOrEmpty(replyTo) && Devmasters.TextUtil.IsValidEmail(replyTo))
                     msg.ReplyToList.Add(new System.Net.Mail.MailAddress(replyTo));
                 msg.IsBodyHtml = false;
                 msg.BodyEncoding = System.Text.Encoding.UTF8;

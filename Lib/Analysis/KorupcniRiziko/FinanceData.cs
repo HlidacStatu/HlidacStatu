@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 if (obdobi != null)
                     return;
 
-                using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent("https://monitor.statnipokladna.cz/api/obdobi"))
+                using (Devmasters.Net.HttpClient.URLContent url = new Devmasters.Net.HttpClient.URLContent("https://monitor.statnipokladna.cz/api/obdobi"))
                 {
                     var html = url.GetContent();
                     JArray data = JArray.Parse(html.Text);
@@ -119,7 +119,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             try
             {
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url))
                 {
                     net.Timeout = 1000 * 180;
                     var json = net.GetContent();

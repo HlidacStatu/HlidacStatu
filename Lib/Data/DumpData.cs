@@ -20,9 +20,9 @@ namespace HlidacStatu.Lib.Data
         {
 
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
             string sql = @"select top 1 * from [DumpData] where mesic = @mesic and rok = @rok order by created desc";
-            using (var p = new Devmasters.Core.PersistLib())
+            using (var p = new Devmasters.PersistLib())
             {
                 var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, new IDataParameter[] {
                             new System.Data.SqlClient.SqlParameter("mesic", (int)dump.mesic),
@@ -50,7 +50,7 @@ namespace HlidacStatu.Lib.Data
 
         public static void SaveDumpProcessed(XML.indexDump dump, DateTime? processed, Exception ex = null)
         {
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
             string sql = @"INSERT INTO [dbo].[DumpData]
            ([Created]
            ,[Processed]
@@ -73,7 +73,7 @@ namespace HlidacStatu.Lib.Data
             try
             {
 
-                using (var p = new Devmasters.Core.PersistLib())
+                using (var p = new Devmasters.PersistLib())
                 {
                     p.ExecuteNonQuery(cnnStr, System.Data.CommandType.Text, sql, new IDataParameter[] {
                         new System.Data.SqlClient.SqlParameter("created", DateTime.Now),

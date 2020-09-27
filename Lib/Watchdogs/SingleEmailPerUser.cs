@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Watchdogs
             string openingText = null,
             int? maxDegreeOfParallelism = 20,
             Action<string> logOutputFunc = null,
-            Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc = null
+            Action<Devmasters.Batch.ActionProgressData> progressOutputFunc = null
             )
         {
             bool saveWatchdogStatus =
@@ -38,7 +38,7 @@ namespace HlidacStatu.Lib.Watchdogs
             Util.Consts.Logger.Info($"SingleEmailPerUser {groupedByUserNoSpecContact.Count()} emails.");
 
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<KeyValuePair<string, WatchDog[]>>(groupedByUserNoSpecContact,
+            Devmasters.Batch.Manager.DoActionForAll<KeyValuePair<string, WatchDog[]>>(groupedByUserNoSpecContact,
                 (kv) =>
                 {
                     WatchDog[] userWatchdogs = kv.Value;
@@ -56,7 +56,7 @@ namespace HlidacStatu.Lib.Watchdogs
 
                     Util.Consts.Logger.Info($"SingleEmailPerUser {kv.Key} sent result {res.ToString()}.");
 
-                    return new Devmasters.Core.Batch.ActionOutputData();
+                    return new Devmasters.Batch.ActionOutputData();
                 },
                 logOutputFunc, progressOutputFunc,
                 true, maxDegreeOfParallelism: maxDegreeOfParallelism

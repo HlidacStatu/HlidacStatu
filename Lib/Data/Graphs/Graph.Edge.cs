@@ -262,7 +262,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             if (j == i)
                                 continue;
-                            if (HlidacStatu.Util.DateTools
+                            if (Devmasters.DT.Util
                                 .IsContinuingIntervals(tmp[i].RelFrom, tmp[i].RelTo, tmp[j].RelFrom, tmp[j].RelTo))
                             {
                                 var merged = MergeEdges(tmp[i], tmp[j]);
@@ -306,8 +306,8 @@ namespace HlidacStatu.Lib.Data
                 e.From = longest.From;
                 e.To = longest.To;
                 e.Distance = longest.Distance;
-                e.RelFrom = Util.DateTools.LowerDate(e1.RelFrom, e2.RelFrom);
-                e.RelTo = Util.DateTools.HigherDate(e1.RelTo, e2.RelTo);
+                e.RelFrom = Devmasters.DT.Util.LowerDate(e1.RelFrom, e2.RelFrom);
+                e.RelTo = Devmasters.DT.Util.HigherDate(e1.RelTo, e2.RelTo);
                 e.UpdateAktualnost();
                 return e;
             }

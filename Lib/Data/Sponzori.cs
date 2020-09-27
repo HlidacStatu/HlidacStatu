@@ -1,4 +1,6 @@
-﻿using HlidacStatu.Lib.Render;
+﻿using Devmasters.Collections;
+
+using HlidacStatu.Lib.Render;
 using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
@@ -73,8 +75,8 @@ namespace HlidacStatu.Lib.Data
 
 
 
-            public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>> GetStranyPerYear
-                = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>>(
+            public static Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>> GetStranyPerYear
+                = new Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<StranaPerYear>>(
                 TimeSpan.FromDays(4), "sponzori_stranyPerYear", (obj) =>
                 {
                     using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
@@ -216,8 +218,8 @@ namespace HlidacStatu.Lib.Data
                 ;
         }
 
-        public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>> AllSponzorsPerYearPerStranaOsoby
-            = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>> AllSponzorsPerYearPerStranaOsoby
+            = new Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
                 TimeSpan.FromDays(4), "ucty_index_allSponzoriOsoby", (obj) =>
                 {
                     List<Sponsors.Sponzorstvi<Osoba>> result = new List<Sponsors.Sponzorstvi<Osoba>>();
@@ -246,8 +248,8 @@ namespace HlidacStatu.Lib.Data
 
                 });
 
-        public static Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>> AllSponzorsPerYearPerStranaFirmy
-        = new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>>(
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>> AllSponzorsPerYearPerStranaFirmy
+        = new Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>>(
             TimeSpan.FromDays(4), "sponzori_index_allSponzoriFirmy", (obj) =>
             {
                 List<Sponsors.Sponzorstvi<Firma.Lazy>> result = new List<Sponsors.Sponzorstvi<Firma.Lazy>>();

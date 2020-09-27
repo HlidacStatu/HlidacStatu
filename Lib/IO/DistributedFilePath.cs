@@ -68,7 +68,7 @@ namespace HlidacStatu.Lib.IO
 
         protected virtual string GetHash(T obj)
         {
-            return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(funcToGetId(obj)).Substring(0, this.hashLen);
+            return Devmasters.Crypto.Hash.ComputeHashToHex(funcToGetId(obj)).Substring(0, this.hashLen);
         }
 
 

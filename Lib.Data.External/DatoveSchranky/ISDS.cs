@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 namespace HlidacStatu.Lib.Data.External.DatoveSchranky
@@ -142,9 +142,9 @@ namespace HlidacStatu.Lib.Data.External.DatoveSchranky
         {
             try
             {
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent("https://www.mojedatovaschranka.cz/sds/ws/call"))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent("https://www.mojedatovaschranka.cz/sds/ws/call"))
                 {
-                    net.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    net.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
                     net.RequestParams.RawContent = request;
                     var resp = net.GetContent().Text;
 

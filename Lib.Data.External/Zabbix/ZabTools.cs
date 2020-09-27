@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 namespace HlidacStatu.Lib.Data.External.Zabbix
@@ -10,8 +10,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
     public class ZabTools
     {
 
-        static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>> webyList =
-                new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>> webyList =
+                new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>>(
                 TimeSpan.FromMinutes(30), "statniweby_list", (obj) =>
                 {
                     try
@@ -36,8 +36,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 					}
                 });
 
-        static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyData =
-        new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyData =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
                 TimeSpan.FromSeconds(70), "statniweby_data", (obj) =>
                 {
                     List<ZabHostAvailability> d = null;
@@ -51,8 +51,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                 });
 
 
-        static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyDataLastHour =
-        new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyDataLastHour =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
                 TimeSpan.FromSeconds(70), "statniweby_data_Lasthour", (obj) =>
                 {
                     List<ZabHostAvailability> d = null;
@@ -64,8 +64,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         return d;
                     }
                 });
-        static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>> webySslData =
-        new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>> webySslData =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>>(
                 TimeSpan.FromHours(6), "statniweby_ssl_data", (obj) =>
                 {
                     List<ZabHostSslStatus> d = null;
@@ -287,8 +287,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
         public static ZabHostAvailability GetHostAvailabilityLong(ZabHost host)
         {
-            Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<ZabHostAvailability> webData =
-new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<ZabHostAvailability>(
+            Devmasters.Cache.LocalMemory.LocalMemoryCache<ZabHostAvailability> webData =
+new Devmasters.Cache.LocalMemory.LocalMemoryCache<ZabHostAvailability>(
         TimeSpan.FromMinutes(10), "statniweby_host_" + host.hostid, (obj) =>
         {
             ZabHostAvailability d = null;

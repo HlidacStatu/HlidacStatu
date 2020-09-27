@@ -1,6 +1,6 @@
 ﻿using Couchbase;
 using System.Linq;
-using Devmasters.Cache.V20;
+using Devmasters.Cache;
 using System;
 using System.Configuration;
 
@@ -42,7 +42,7 @@ namespace HlidacStatu.Util.Cache
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key");
             if (key.Length > 250)
-                return Devmasters.Core.CryptoLib.Hash.ComputeHash(key);
+                return Devmasters.Crypto.Hash.ComputeHashToBase64(key);
             else
                 return key;
         }
@@ -67,9 +67,9 @@ namespace HlidacStatu.Util.Cache
                     bucketConn.Insert<T>(fixKey(key), value, expiration);
             }
             else
-                BaseCache<T>.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+                BaseCache<T>.Logger.Warning(new Devmasters.Logging.LogMessage()
                     .SetMessage("CouchbaseCacheProvider> null value")
-                    .SetLevel(Devmasters.Core.Logging.PriorityLevel.Warning)
+                    .SetLevel(Devmasters.Logging.PriorityLevel.Warning)
                     .SetCustomKeyValue("objectType", typeof(T).ToString())
                     .SetCustomKeyValue("cache key", key)
                     );

@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Lib.ES;
 using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
@@ -159,7 +159,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             var client = Manager.GetESClient_Insolvence();
             var page = search.Page - 1 < 0 ? 0 : search.Page - 1;
 
-            var sw = new StopWatchEx();
+            var sw = new Devmasters.DT.StopWatchEx();
             sw.Start();
             search.OrigQuery = search.Q;
             search.Q = Lib.Searching.Tools.FixInvalidQuery(search.Q ?? "", queryShorcuts, queryOperators);

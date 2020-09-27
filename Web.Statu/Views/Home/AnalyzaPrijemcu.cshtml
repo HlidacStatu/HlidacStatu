@@ -8,7 +8,7 @@
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
 
-@using Devmasters.Core
+@using Devmasters
 @using System.Data
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
@@ -215,7 +215,7 @@
         <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 2 roky)</h4>
         @UtilChart.RenderReport("Hodnota uzavřených smluv za poslední 2 roky po měsících", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_yearmonth_chart_pocet", "Měsíc a rok", "Hodnota smluv v Kč",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: HlidacStatu.Util.DateTools.FirstDayOfMonth(DateTime.Now).AddYears(-2))
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: Devmasters.DT.Util.FirstDayOfMonth(DateTime.Now).AddYears(-2))
                         //, xValueFormat: "{value:%Y}"
                         )
                         , ""
@@ -252,14 +252,14 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="new-p new-p--big" style="margin-top: 10px;">
-            Analýzu jsme provedli pro dotaz <span class="emphasized small">@(Devmasters.Core.TextUtil.ShortenText(Model.Query, 690, "..."))</span>.
+            Analýzu jsme provedli pro dotaz <span class="emphasized small">@(Devmasters.TextUtil.ShortenText(Model.Query, 690, "..."))</span>.
         </div>
     </div>
 </div>
 <div style="margin-top:20px"></div>
 <div class="row">
     <div class="col-xs-12">
-        @WebUtil.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny novinky o {Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "...")} v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky o " + Devmasters.Core.TextUtil.ShortenText(Model.Query, 60, "..."))
+        @WebUtil.AddWatchDog(this.User, Model.Query, null, $"Hlídat všechny novinky o {Devmasters.TextUtil.ShortenText(Model.Query, 60, "...")} v celém Hlídači", btnCss: "btn btn-warning btn-sm", prefillWDname: "Novinky o " + Devmasters.TextUtil.ShortenText(Model.Query, 60, "..."))
     </div>
 </div>
 <div style="margin-top:20px"></div>
@@ -279,7 +279,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", globalSearch.Smlouvy.ToRouteValues(1))">
-                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.Smlouvy.Total, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
+                            @Devmasters.Lang.Plural.Get((int)globalSearch.Smlouvy.Total, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                         </a>
                     </div>
                 }
@@ -287,7 +287,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(globalSearch.Query)&ftx=@globalSearch.OsobaFtx.ToString()">
-                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.Osoby.Total, "jednoho politika", "{0} politiky", "{0} politiků")
+                            @Devmasters.Lang.Plural.Get((int)globalSearch.Osoby.Total, "jednoho politika", "{0} politiky", "{0} politiků")
                         </a>
                     </div>
                 }
@@ -295,7 +295,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="@Url.Action("Hledat", "VZ", globalSearch.VZ.ToRouteValues(1))">
-                            @Devmasters.Core.Lang.Plural.Get((int)globalSearch.VZ.Total, "jednu veřejnou zakázku", "{0} veřejné zakázky", "{0} veřejných zakázek")
+                            @Devmasters.Lang.Plural.Get((int)globalSearch.VZ.Total, "jednu veřejnou zakázku", "{0} veřejné zakázky", "{0} veřejných zakázek")
                         </a>
                     </div>
                 }

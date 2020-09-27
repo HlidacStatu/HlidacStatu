@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core.Batch;
+using Devmasters.Batch;
 
 namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
 {
@@ -30,9 +30,9 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
                     {
                         profily2.Add(pz.Source);
 
-                        return new Devmasters.Core.Batch.ActionOutputData();
+                        return new Devmasters.Batch.ActionOutputData();
                     }, null,
-                    outputWriter ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Core.Batch.Manager.DefaultProgressWriter,
+                    outputWriter ?? Devmasters.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Batch.Manager.DefaultProgressWriter,
                     false, elasticClient: Lib.ES.Manager.GetESClient_VZ());
 
                 Console.WriteLine("Let's go mining");
@@ -65,9 +65,9 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
                             if (pz != null)
                                 profily2.Add(pz);
                         }
-                        return new Devmasters.Core.Batch.ActionOutputData();
+                        return new Devmasters.Batch.ActionOutputData();
                     }, null, 
-                    outputWriter ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Core.Batch.Manager.DefaultProgressWriter
+                    outputWriter ?? Devmasters.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Batch.Manager.DefaultProgressWriter
                     , false);
 
 
@@ -75,12 +75,12 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
 
             Console.WriteLine("Let's go mining");
             HlidacStatu.Util.Consts.Logger.Debug("ProfilyZadavatelu: Let's go mining num." + profily2.Count);
-            Devmasters.Core.Batch.Manager.DoActionForAll<VZ.ProfilZadavatele>(Devmasters.Core.Algorithms.RandomShuffle(profily2),
+            Devmasters.Batch.Manager.DoActionForAll<VZ.ProfilZadavatele>(Devmasters.Collections.Algorithms.RandomShuffle(profily2),
                 (p) =>
                 {
                     parser.ProcessProfileZadavatelu(p, from);
-                    return new Devmasters.Core.Batch.ActionOutputData();
-                }, outputWriter ?? Devmasters.Core.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Core.Batch.Manager.DefaultProgressWriter, true);
+                    return new Devmasters.Batch.ActionOutputData();
+                }, outputWriter ?? Devmasters.Batch.Manager.DefaultOutputWriter, progressWriter ?? Devmasters.Batch.Manager.DefaultProgressWriter, true);
 
 
         }

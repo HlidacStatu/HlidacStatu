@@ -34,14 +34,14 @@ namespace HlidacStatu.Lib.Data
                     this.Ico = f.ICO;
                     this.Jmeno = f.Jmeno;
                     this.JmenoBezKoncovky = f.JmenoBezKoncovky();
-                    this.JmenoBezKoncovkyAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.JmenoBezKoncovky);
+                    this.JmenoBezKoncovkyAscii = Devmasters.TextUtil.RemoveDiacritics(this.JmenoBezKoncovky);
                 }
                 public FirmaInElastic(string ico, string jmeno)
                 {
                     this.Ico = ico;
                     this.Jmeno = jmeno;
                     this.JmenoBezKoncovky = Firma.JmenoBezKoncovky(jmeno); ;
-                    this.JmenoBezKoncovkyAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.JmenoBezKoncovky);
+                    this.JmenoBezKoncovkyAscii = Devmasters.TextUtil.RemoveDiacritics(this.JmenoBezKoncovky);
                 }
 
                 public void Save()

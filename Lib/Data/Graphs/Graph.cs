@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 using HlidacStatu.Util.Cache;
 using Newtonsoft.Json.Linq;
@@ -184,7 +184,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
             if (excludeICO == null)
                 excludeICO = new ExcludeDataCol();
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
             List<Edge> relations = new List<Edge>();
             if (level == 0 && parent == null)
@@ -205,7 +205,7 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
             //get zakladni informace o subj.
 
             //find politician in the DB
-            var db = new Devmasters.Core.PersistLib();
+            var db = new Devmasters.PersistLib();
             var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, parameters);
             //string sqlFirma = "select top 1 stav_subjektu from firma where ico = @ico";
 
@@ -486,13 +486,13 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
             where vazbakico=@ico 
         ";
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
             List<Graph.Edge> relations = new List<Graph.Edge>();
             //get zakladni informace o subj.
 
             //find politician in the DB
-            var db = new Devmasters.Core.PersistLib();
+            var db = new Devmasters.PersistLib();
             var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, new IDataParameter[] {
                         new SqlParameter("ico",ico)
                     });
@@ -538,13 +538,13 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
                         where vazbakico=@ico 
                     ";
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
             List<Graph.Edge> relations = new List<Graph.Edge>();
             //get zakladni informace o subj.
 
             //find politician in the DB
-            var db = new Devmasters.Core.PersistLib();
+            var db = new Devmasters.PersistLib();
             var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, new IDataParameter[] {
                         new SqlParameter("ico",ico)
                     });
@@ -594,13 +594,13 @@ Relation.AktualnostType aktualnost = Relation.AktualnostType.Libovolny)
         	and dbo.IsSomehowInInterval(@datumOd, @datumDo, datumOd, datumDo) = 1
         ";
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
             List<Graph.Edge> relations = currRelations?.ToList() ?? new List<Graph.Edge>();
             //get zakladni informace o subj.
 
             //find politician in the DB
-            var db = new Devmasters.Core.PersistLib();
+            var db = new Devmasters.PersistLib();
             var sqlCall = HlidacStatu.Lib.DirectDB.GetRawSql(System.Data.CommandType.Text, sql, new IDataParameter[] {
                         new SqlParameter("ico",ico),
                         new SqlParameter("datumOd",datumOd),

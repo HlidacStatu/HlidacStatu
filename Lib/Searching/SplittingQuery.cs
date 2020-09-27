@@ -181,7 +181,7 @@ namespace HlidacStatu.Lib.Searching
 
             List<Part> tmpParts = new List<Part>();
             //prvni rozdelit podle ""
-            var fixTxts = Util.StringTools.SplitStringToPartsWithQuotes(query, '\"');
+            var fixTxts = Devmasters.TextUtil.SplitStringToPartsWithQuotes(query, '\"');
 
 
             //spojit a rozdelit podle mezer

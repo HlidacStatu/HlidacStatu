@@ -22,7 +22,7 @@ namespace HlidacStatu.Web.Framework
 
             try
             {
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(ki.ValueForData))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(ki.ValueForData))
                 {
                     net.Timeout = 7000;
                     net.IgnoreHttpErrors = true;
@@ -43,7 +43,7 @@ namespace HlidacStatu.Web.Framework
 
         public static byte[] GetScreenshot(string url, string cacheName = null, bool refreshCache = false)
         {
-            string[] webShotServiceUrls = Devmasters.Core.Util.Config.GetConfigValue("WebShot.Service.Url")
+            string[] webShotServiceUrls = Devmasters.Config.GetWebConfigValue("WebShot.Service.Url")
             ?.Split(';')
             ?.Where(m => !string.IsNullOrEmpty(m))
             ?.ToArray();

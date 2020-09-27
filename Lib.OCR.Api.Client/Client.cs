@@ -12,8 +12,8 @@ namespace HlidacStatu.Lib.OCR.Api
 
         static Client()
         {
-            if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("OCR.ApiUrl")))
-                ApiUrl = Devmasters.Core.Util.Config.GetConfigValue("OCR.ApiUrl");
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("OCR.ApiUrl")))
+                ApiUrl = Devmasters.Config.GetWebConfigValue("OCR.ApiUrl");
         }
 
         public static void SetCustomApiURL(string url)
@@ -43,7 +43,7 @@ namespace HlidacStatu.Lib.OCR.Api
             Critical = 999,
         }
 
-        public static Devmasters.Core.Logging.Logger logger = new Devmasters.Core.Logging.Logger("HlidacStatu.Lib.OCR.Api.Client");
+        public static Devmasters.Logging.Logger logger = new Devmasters.Logging.Logger("HlidacStatu.Lib.OCR.Api.Client");
 
         public static TimeSpan defaultWaitingTime = TimeSpan.FromHours(1);
 

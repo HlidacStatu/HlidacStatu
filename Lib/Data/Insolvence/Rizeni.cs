@@ -5,7 +5,7 @@ using HlidacStatu.Util;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Data.Entity.Infrastructure;
-using static Devmasters.Core.DateTimeUtil;
+using Devmasters.DT;
 using HlidacStatu.Lib.Db.Insolvence;
 using Nest;
 
@@ -152,8 +152,8 @@ namespace HlidacStatu.Lib.Data.Insolvence
                     {
 
                         if (StaticData.PolitickyAktivni.Get().Any(m =>
-                            m.JmenoAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Jmeno())
-                            && m.PrijmeniAscii == Devmasters.Core.TextUtil.RemoveDiacritics(d.Prijmeni())
+                            m.JmenoAscii == Devmasters.TextUtil.RemoveDiacritics(d.Jmeno())
+                            && m.PrijmeniAscii == Devmasters.TextUtil.RemoveDiacritics(d.Prijmeni())
                             && m.Narozeni == d.GetDatumNarozeni() && d.GetDatumNarozeni().HasValue
                             )
                         )
@@ -166,7 +166,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
         public HlidacStatu.Lib.OCR.Api.CallbackData CallbackDataForOCRReq(int prilohaindex)
         {
-            var url = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
+            var url = Devmasters.Config.GetWebConfigValue("ESConnection");
 
             url = url + $"/{Lib.ES.Manager.defaultIndexName_Insolvence}/rizeni/{System.Net.WebUtility.UrlEncode(this.SpisovaZnacka)}/_update";
 
@@ -225,7 +225,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
             try
             {
                 string html = "";
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url))
                 {
                     html = net.GetContent().Text;
                 }
@@ -828,12 +828,12 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             if (this.Dluznici.Count > 0)
             {
 
-                sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Dluznici.Count,
+                sumTxt = Devmasters.Lang.Plural.GetWithZero(this.Dluznici.Count,
         "",
         "Dlužníkem je " + this.Dluznici.First().FullNameWithYear(),
         "Dlužníky jsou " + this.Dluznici.Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s),
         "Dlužníky jsou" + this.Dluznici.Take(3).Select(m => m.FullNameWithYear()).Aggregate((f, s) => f + ", " + s)
-            + "a " + Devmasters.Core.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
+            + "a " + Devmasters.Lang.Plural.Get(this.Dluznici.Count - 3, " jeden další", "{0} další", "{0} dalších")
             + ". "
         );
                 data.Add(new InfoFact()
@@ -845,7 +845,7 @@ HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 4, true, true, "", "
             if (this.Veritele.Count > 0)
             {
 
-                sumTxt = Devmasters.Core.Lang.Plural.GetWithZero(this.Veritele.Count,
+                sumTxt = Devmasters.Lang.Plural.GetWithZero(this.Veritele.Count,
                 "",
                 "Evidujeme jednoho věřitele.",
                 "Evidujeme {0} věřitele.",

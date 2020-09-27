@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core;
+using Devmasters;
 
 
 namespace HlidacStatu.Lib.Data.External
 {
     public class Merk
     {
-        static string token = Devmasters.Core.Util.Config.GetConfigValue("MerkAPIKey");
+        static string token = Devmasters.Config.GetWebConfigValue("MerkAPIKey");
         static string rootUrl = "https://api.merk.cz:443/";
 
         static string searchICOUrl = rootUrl + "company/?regno={0}&country_code=cz";
@@ -48,9 +48,9 @@ namespace HlidacStatu.Lib.Data.External
             {
                 res = Search(searchNameUrl, Firma.JmenoBezKoncovky(name));
             }
-            string n1 = Devmasters.Core.TextUtil.RemoveDiacritics(Firma.JmenoBezKoncovky(name)).ToLowerInvariant();
+            string n1 = Devmasters.TextUtil.RemoveDiacritics(Firma.JmenoBezKoncovky(name)).ToLowerInvariant();
             var r1 = res
-                .Where(r => Devmasters.Core.TextUtil.RemoveDiacritics(Firma.JmenoBezKoncovky(r.name)).ToLowerInvariant() == n1)
+                .Where(r => Devmasters.TextUtil.RemoveDiacritics(Firma.JmenoBezKoncovky(r.name)).ToLowerInvariant() == n1)
                 .FirstOrDefault();
 
             if (r1 == null)
@@ -87,7 +87,7 @@ namespace HlidacStatu.Lib.Data.External
         {
 
 
-            using (Devmasters.Net.Web.URLContent http = new Devmasters.Net.Web.URLContent(url))
+            using (Devmasters.Net.HttpClient.URLContent http = new Devmasters.Net.HttpClient.URLContent(url))
             {
                 http.Timeout = 30000;
                 http.RequestParams.Headers.Add("Authorization", "Token " + token);
@@ -98,7 +98,7 @@ namespace HlidacStatu.Lib.Data.External
                     return a;
 
                 }
-                catch (Devmasters.Net.Web.UrlContentException e)
+                catch (Devmasters.Net.HttpClient.UrlContentException e)
                 {
                     HlidacStatu.Util.Consts.Logger.Error("Merk request " + url, e);
                     //if (e.StatusCode == System.Net.HttpStatusCode.NotFound)

@@ -12,7 +12,7 @@
                     <input class="form-search__input" id="Q" name="Q" placeholder="hledaný výraz ..."
                            style="max-width: none;" type="text" value="@Model.RenderQuery()">
 
-                    <button class="form-search__btn" type="submit">Hledat pouze v @(Devmasters.Core.TextUtil.ShortenText(@Model.DataSet.Registration().name, 40))</button>
+                    <button class="form-search__btn" type="submit">Hledat pouze v @(Devmasters.TextUtil.ShortenText(@Model.DataSet.Registration().name, 40))</button>
                 </form>
             </div>
             <div class="col-sm-2 col-sm-offset-9 col-xs-12 ">

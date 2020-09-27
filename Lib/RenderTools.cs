@@ -18,7 +18,7 @@ namespace HlidacStatu.Lib
     public static class RenderTools
     {
 
-        public static void ProgressWriter_OutputFunc_EndIn(Devmasters.Core.Batch.ActionProgressData data)
+        public static void ProgressWriter_OutputFunc_EndIn(Devmasters.Batch.ActionProgressData data)
         {
             DateTime end = data.EstimatedFinish;
             string send = "";
@@ -50,11 +50,11 @@ namespace HlidacStatu.Lib
         {
 
             var end = DateTime.Now;
-            Devmasters.Core.DateTimeSpan dts = Devmasters.Core.DateTimeSpan.CompareDates(end - ts, end);
+            Devmasters.DT.DateTimeSpan dts = Devmasters.DT.DateTimeSpan.CompareDates(end - ts, end);
             string s = "";
             if (dts.Years > 0 && minDatePart > DateTimePart.Year)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Years, "{0} rok;{0} roky;{0} let");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Years, "{0} rok;{0} roky;{0} let");
             }
             else if (dts.Years > 0)
             {
@@ -62,13 +62,13 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s += string.Format(" {0:" + numFormat + "} let", part);
                 else
-                    s += HlidacStatu.Util.PluralForm.Get((int)part, " {0} rok; {0} roky; {0} let"); ;
+                    s += Devmasters.Lang.Plural.Get((int)part, " {0} rok; {0} roky; {0} let"); ;
                 return s;
             }
 
             if (dts.Months > 0 && minDatePart > DateTimePart.Month)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Months, "{0} měsíc;{0} měsíce;{0} měsíců");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Months, "{0} měsíc;{0} měsíce;{0} měsíců");
             }
             else if (dts.Months > 0)
             {
@@ -76,13 +76,13 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s += string.Format(" {0:" + numFormat + "} měsíců", part);
                 else
-                    s += HlidacStatu.Util.PluralForm.Get((int)part, " {0} měsíc; {0} měsíce; {0} měsíců"); ;
+                    s += Devmasters.Lang.Plural.Get((int)part, " {0} měsíc; {0} měsíce; {0} měsíců"); ;
                 return s;
             }
 
             if (dts.Days > 0 && minDatePart > DateTimePart.Day)
             {
-                s = " " + HlidacStatu.Util.PluralForm.Get(dts.Days, " {0} den;{0} dny;{0} dnů");
+                s = " " + Devmasters.Lang.Plural.Get(dts.Days, " {0} den;{0} dny;{0} dnů");
             }
             else if (dts.Days > 0)
             {
@@ -90,13 +90,13 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s = " " + string.Format(" {0:" + numFormat + "} dní", part);
                 else
-                    s = " " + HlidacStatu.Util.PluralForm.Get((int)part, " {0} den;{0} dny;{0} dnů"); ;
+                    s = " " + Devmasters.Lang.Plural.Get((int)part, " {0} den;{0} dny;{0} dnů"); ;
                 return s;
             }
 
             if (dts.Hours > 0 && minDatePart > DateTimePart.Hour)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Hours, " {0} hodinu;{0} hodiny;{0} hodin");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Hours, " {0} hodinu;{0} hodiny;{0} hodin");
             }
             else if (dts.Hours > 0)
             {
@@ -104,13 +104,13 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s += string.Format(" {0:" + numFormat + "} hodin", part);
                 else
-                    s += " " + HlidacStatu.Util.PluralForm.Get((int)part, " {0} hodinu;{0} hodiny;{0} hodin");
+                    s += " " + Devmasters.Lang.Plural.Get((int)part, " {0} hodinu;{0} hodiny;{0} hodin");
                 return s;
             }
 
             if (dts.Minutes > 0 && minDatePart > DateTimePart.Minute)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Minutes, "minutu;{0} minuty;{0} minut");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Minutes, "minutu;{0} minuty;{0} minut");
             }
             else if (dts.Minutes > 0)
             {
@@ -118,13 +118,13 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s += string.Format(" {0:" + numFormat + "} minut", part);
                 else
-                    s += " " + HlidacStatu.Util.PluralForm.Get((int)part, "minutu;{0} minuty;{0} minut"); ;
+                    s += " " + Devmasters.Lang.Plural.Get((int)part, "minutu;{0} minuty;{0} minut"); ;
                 return s;
             }
 
             if (dts.Seconds > 0 && minDatePart > DateTimePart.Second)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Seconds, "sekundu;{0} sekundy;{0} sekund");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Seconds, "sekundu;{0} sekundy;{0} sekund");
             }
             else
             {
@@ -132,12 +132,12 @@ namespace HlidacStatu.Lib
                 if (part % 1 > 0)
                     s += string.Format(" {0:" + numFormat + "} sekund", part);
                 else
-                    s += " " + HlidacStatu.Util.PluralForm.Get((int)part, "sekundu;{0} sekundy;{0} sekund"); ;
+                    s += " " + Devmasters.Lang.Plural.Get((int)part, "sekundu;{0} sekundy;{0} sekund"); ;
                 return s;
             }
 
             //if (dts.Milliseconds > 0)
-            //    s += " " + HlidacStatu.Util.PluralForm.Get(dts.Milliseconds, "{0} ms;{0} ms;{0} ms");
+            //    s += " " + Devmasters.Lang.Plural.Get(dts.Milliseconds, "{0} ms;{0} ms;{0} ms");
 
             return s.Trim();
 
@@ -146,34 +146,34 @@ namespace HlidacStatu.Lib
         public static string FormatAvailability2(TimeSpan ts)
         {
             var end = DateTime.Now;
-            Devmasters.Core.DateTimeSpan dts = Devmasters.Core.DateTimeSpan.CompareDates(end - ts, end);
+            Devmasters.DT.DateTimeSpan dts = Devmasters.DT.DateTimeSpan.CompareDates(end - ts, end);
             string s = "";
             if (dts.Years > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Years, "rok;{0} roky;{0} let");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Years, "rok;{0} roky;{0} let");
             }
             if (dts.Months > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Months, "měsíc;{0} měsíce;{0} měsíců");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Months, "měsíc;{0} měsíce;{0} měsíců");
             }
             if (dts.Days > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Days, "den;{0} dny;{0} dnů");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Days, "den;{0} dny;{0} dnů");
             }
             if (dts.Hours > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Hours, "hodinu;{0} hodiny;{0} hodin");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Hours, "hodinu;{0} hodiny;{0} hodin");
             }
             if (dts.Minutes > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Minutes, "minutu;{0} minuty;{0} minut");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Minutes, "minutu;{0} minuty;{0} minut");
             }
             if (dts.Seconds > 0)
             {
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Seconds, "sekundu;{0} sekundy;{0} sekund");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Seconds, "sekundu;{0} sekundy;{0} sekund");
             }
             if (dts.Milliseconds > 0)
-                s += " " + HlidacStatu.Util.PluralForm.Get(dts.Milliseconds, "{0} ms;{0} ms;{0} ms");
+                s += " " + Devmasters.Lang.Plural.Get(dts.Milliseconds, "{0} ms;{0} ms;{0} ms");
 
             return s.Trim();
 
@@ -191,19 +191,19 @@ namespace HlidacStatu.Lib
                 sec = DateTime.MaxValue;
 
             bool after = first > sec;
-            Devmasters.Core.DateTimeSpan dateDiff = Devmasters.Core.DateTimeSpan.CompareDates(first, sec);
+            Devmasters.DT.DateTimeSpan dateDiff = Devmasters.DT.DateTimeSpan.CompareDates(first, sec);
             string txtDiff = string.Empty;
             if (dateDiff.Years > 0)
             {
-                txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Years, "rok;{0} roky;{0} let");
+                txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Years, "rok;{0} roky;{0} let");
             }
             else if (dateDiff.Months > 3)
             {
-                txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Months, "měsíc;{0} měsíce;{0} měsíců");
+                txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Months, "měsíc;{0} měsíce;{0} měsíců");
             }
             else
             {
-                txtDiff = Devmasters.Core.Lang.Plural.GetWithZero(dateDiff.Days,  "dnes","den","{0} dny","{0} dnů");
+                txtDiff = Devmasters.Lang.Plural.GetWithZero(dateDiff.Days,  "dnes","den","{0} dny","{0} dnů");
             }
 
             if (after)
@@ -226,21 +226,21 @@ namespace HlidacStatu.Lib
                 sec = DateTime.MaxValue;
 
             bool after = first > sec;
-            Devmasters.Core.DateTimeSpan dateDiff = Devmasters.Core.DateTimeSpan.CompareDates(first, sec);
+            Devmasters.DT.DateTimeSpan dateDiff = Devmasters.DT.DateTimeSpan.CompareDates(first, sec);
             if (after)
             {
                 string txtDiff = string.Empty;
                 if (dateDiff.Years > 0)
                 {
-                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Years, "roce;{0} letech;{0} letech");
+                    txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Years, "roce;{0} letech;{0} letech");
                 }
                 else if (dateDiff.Months > 3)
                 {
-                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Months, "měsíci;{0} měsících;{0} měsících");
+                    txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Months, "měsíci;{0} měsících;{0} měsících");
                 }
                 else
                 {
-                    txtDiff = Devmasters.Core.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinách", "jednom dni", "{0} dnech", "{0} dny", "{0} dnů");
+                    txtDiff = Devmasters.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinách", "jednom dni", "{0} dnech", "{0} dny", "{0} dnů");
                 }
 
                 return string.Format(afterTemplate, txtDiff);
@@ -250,15 +250,15 @@ namespace HlidacStatu.Lib
                 string txtDiff = string.Empty;
                 if (dateDiff.Years > 0)
                 {
-                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Years, "rokem;{0} roky;{0} roky");
+                    txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Years, "rokem;{0} roky;{0} roky");
                 }
                 else if (dateDiff.Months > 3)
                 {
-                    txtDiff = HlidacStatu.Util.PluralForm.Get(dateDiff.Months, "měsícem;{0} měsíci;{0} měsíci");
+                    txtDiff = Devmasters.Lang.Plural.Get(dateDiff.Months, "měsícem;{0} měsíci;{0} měsíci");
                 }
                 else
                 {
-                    txtDiff = Devmasters.Core.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinami", "dnem", "{0} dny", "{0} dny");
+                    txtDiff = Devmasters.Lang.Plural.GetWithZero(dateDiff.Days, "pár hodinami", "dnem", "{0} dny", "{0} dny");
                 }
 
                 return string.Format(beforeTemplate, txtDiff);

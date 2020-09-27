@@ -1,10 +1,10 @@
 ﻿@model HlidacStatu.Lib.Data.Smlouva
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using HlidacStatu.Web.Framework
 @using Devmasters.Enums;
 
-@{ ViewBag.Title = Devmasters.Core.TextUtil.ShortenText(Model.predmet ?? "", 70);
+@{ ViewBag.Title = Devmasters.TextUtil.ShortenText(Model.predmet ?? "", 70);
     ViewBag.SubTitle = "Smlouva číslo " + Model.Id;
 
     ViewBag.SocialShareTitle = $"Smlouva {Model.Id}. {Model.predmet}";

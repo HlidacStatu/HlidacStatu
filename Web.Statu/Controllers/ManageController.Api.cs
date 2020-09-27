@@ -240,7 +240,7 @@ namespace HlidacStatu.Web.Controllers
                 wd.SearchTerm = query;
                 wd.PeriodId = period;
                 wd.FocusId = focus;
-                wd.Name = Devmasters.Core.TextUtil.ShortenText(name, 50);
+                wd.Name = Devmasters.TextUtil.ShortenText(name, 50);
                 if (dt.ToLower() == typeof(Smlouva).Name.ToLower())
                     wd.dataType = typeof(Smlouva).Name;
                 else if (dt.ToLower() == typeof(VerejnaZakazka).Name.ToLower())

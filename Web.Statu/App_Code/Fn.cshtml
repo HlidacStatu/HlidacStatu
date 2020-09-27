@@ -40,7 +40,7 @@ else
         {
             if (length.HasValue == false)
                 return value.ToString();
-            return Devmasters.Core.TextUtil.ShortenText(value.ToString(), length.Value);
+            return Devmasters.TextUtil.ShortenText(value.ToString(), length.Value);
         }
     }
 
@@ -85,7 +85,7 @@ else
             inputformats = new string[] { };
         }
         format = format ?? "d.MM.yyyy";
-        DateTime? dat = HlidacStatu.Util.ParseTools.ToDateTime(value.ToString(), inputformats);
+        DateTime? dat = Devmasters.DT.Util.ToDateTime(value.ToString(), inputformats);
         if (dat.HasValue)
             return dat.Value.ToString(format);
         else
@@ -111,9 +111,9 @@ else
 
         //remove /n/r on the beginning
         s = System.Text.RegularExpressions.Regex.Replace(s, "^(\\s)*", "");
-        s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\n\n");
-        s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\r\r");
-        s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\t\t");
+        s = Devmasters.TextUtil.ReplaceDuplicates(s, "\n\n");
+        s = Devmasters.TextUtil.ReplaceDuplicates(s, "\r\r");
+        s = Devmasters.TextUtil.ReplaceDuplicates(s, "\t\t");
 
         return s;
         //return s;
@@ -123,7 +123,7 @@ else
         if (text == null)
             return string.Empty;
         else
-            return Devmasters.Core.TextUtil.ReplaceHTMLEntities(text.ToString());
+            return Devmasters.TextUtil.ReplaceHTMLEntities(text.ToString());
     }
     public static bool IsNullOrEmpty(dynamic text)
     {

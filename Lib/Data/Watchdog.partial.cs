@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Lib.Data.Insolvence;
@@ -125,7 +125,7 @@ namespace HlidacStatu.Lib.Data
 
             //send info about disabled wd
             var uuser = this.UnconfirmedUser();
-            if (uuser != null && Devmasters.Core.TextUtil.IsValidEmail(uuser.Email))
+            if (uuser != null && Devmasters.TextUtil.IsValidEmail(uuser.Email))
             {
                 using (MailMessage msg = new MailMessage())
                 {

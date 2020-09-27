@@ -2,15 +2,16 @@
 using System.Linq;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Data.OsobyES;
-using Devmasters.Core;
+using Devmasters;
+using Devmasters.Collections;
 
 namespace PeopleLoader
 {
     class Program
     {
 
-        public static Devmasters.Core.Batch.ActionProgressWriter progressWriter =
-                new Devmasters.Core.Batch.ActionProgressWriter(0.1f, HlidacStatu.Lib.RenderTools.ProgressWriter_OutputFunc_EndIn);
+        public static Devmasters.Batch.ActionProgressWriter progressWriter =
+                new Devmasters.Batch.ActionProgressWriter(0.1f, HlidacStatu.Lib.RenderTools.ProgressWriter_OutputFunc_EndIn);
 
         static void Main(string[] args)
         {
@@ -28,7 +29,7 @@ namespace PeopleLoader
 
                 System.Console.WriteLine("Converting all records");
                 List<OsobaES> osobyES = new List<OsobaES>();
-                Devmasters.Core.Batch.Manager.DoActionForAll<Osoba>(osoby,
+                Devmasters.Batch.Manager.DoActionForAll<Osoba>(osoby,
                 os =>
                 {
                     var o = new OsobaES()
@@ -48,7 +49,7 @@ namespace PeopleLoader
                     };
                     osobyES.Add(o);
 
-                    return new Devmasters.Core.Batch.ActionOutputData();
+                    return new Devmasters.Batch.ActionOutputData();
                 }, null, progressWriter.Write, true, maxDegreeOfParallelism: 10);
 
                 System.Console.WriteLine("Deleting all records");

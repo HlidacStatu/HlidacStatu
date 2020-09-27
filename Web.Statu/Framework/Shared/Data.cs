@@ -9,8 +9,8 @@ namespace HlidacStatu.Web.Framework.Shared
     //{
 
     //    [Obsolete("use Lib.Data.Sponsors.AllSponzorsPerYearPerStranaOsoby")]
-    //    public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>
-    //        TopSponzoriOsoby = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
+    //    public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>
+    //        TopSponzoriOsoby = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Osoba>>>(
     //                TimeSpan.FromHours(48), "ucty_index_topSponzoriOsoby", (obj) =>
     //                {
     //                    List<Sponsors.Sponzorstvi<Osoba>> result = new List<Sponsors.Sponzorstvi<Osoba>>();
@@ -46,8 +46,8 @@ namespace HlidacStatu.Web.Framework.Shared
 
 
     //    [Obsolete("use Lib.Data.Sponsors.AllSponzorsPerYearPerStranaFirmy")]
-    //    public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma>>>
-    //TopSponzoriFirmy = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma>>>(
+    //    public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma>>>
+    //TopSponzoriFirmy = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma>>>(
     //        TimeSpan.FromHours(48), "ucty_index_topSponzoriFirmy", (obj) =>
     //        {
     //            List<Sponsors.Sponzorstvi<Firma>> result = new List<Sponsors.Sponzorstvi<Firma>>();

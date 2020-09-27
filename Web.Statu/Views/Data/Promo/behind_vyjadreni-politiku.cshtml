@@ -1,7 +1,8 @@
 ﻿@model object
 @using Nest;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
+@using Devmasters.Collections;
 
 @{
     Layout = null;
@@ -77,8 +78,8 @@
             @{ var first = true; }
             @foreach (var kv in servery)
             {
-                string cas = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
-                    + "-" + Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
+                string cas = Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
+                    + "-" + Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
 
                 if (first == true)
                 {
@@ -89,7 +90,7 @@
                     <span>, </span>
                 }
                 <span>
-                    <a href="/data/Hledat/vyjadreni-politiku?q=server%3A@(kv.Key)"><b>@(kv.Key)</b></a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                    <a href="/data/Hledat/vyjadreni-politiku?q=server%3A@(kv.Key)"><b>@(kv.Key)</b></a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
                 </span>
             }
         </h4>
@@ -112,8 +113,8 @@
 
                     @foreach (var kv in chunk)
                     {
-                        string cas = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
-                        + "-" + Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
+                        string cas = Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
+                        + "-" + Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
                         var o = kv.Key;
                         var fchar = o.Prijmeni.First();
                         if (o.Prijmeni.ToLower().StartsWith("ch"))
@@ -138,13 +139,13 @@
                             {
                                 first = false;
                                 <div>
-                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
                                 </div>
                             }
                             else
                             {
                                 <div>
-                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1, " + cas + ")", "&nbsp;({0}, " + cas + ")", "&nbsp;({0:### ###}, " + cas + ")"))
+                                    <a href="/data/Hledat/vyjadreni-politiku?order=datum%20desc&q=osobaid%3A@(o.NameId)">@(o.Jmeno)&nbsp;@(o.Prijmeni)</a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1, " + cas + ")", "&nbsp;({0}, " + cas + ")", "&nbsp;({0:### ###}, " + cas + ")"))
                                 </div>
                             }
                         </div>

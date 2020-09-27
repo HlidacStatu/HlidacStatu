@@ -69,8 +69,8 @@ namespace HlidacStatu.Web.Controllers
         public HttpResponseMessage Vsechny()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(1024 * 500);
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
-            using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
+            using (Devmasters.PersistLib p = new Devmasters.PersistLib())
             {
 
                 var reader = p.ExecuteReader(cnnStr, CommandType.Text, "select ico, jmeno from firma where ISNUMERIC(ico) = 1", null);
@@ -80,7 +80,7 @@ namespace HlidacStatu.Web.Controllers
                     string name = reader.GetString(1).Trim();
                     if (!string.IsNullOrWhiteSpace(ico)
                         && !string.IsNullOrWhiteSpace(name)
-                        && Devmasters.Core.TextUtil.IsNumeric(ico))
+                        && Devmasters.TextUtil.IsNumeric(ico))
                     {
                         ico = Util.ParseTools.NormalizeIco(ico);
                         sb.AppendLine(ico + "\t" + name);

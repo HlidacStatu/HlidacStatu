@@ -9,7 +9,7 @@ namespace HlidacStatu.Lib
 {
     public class Init
     {
-        //public static Devmasters.Core.Logging.Logger Logger = new Devmasters.Core.Logging.Logger("HlidacSmluv");
+        //public static Devmasters.Logging.Logger Logger = new Devmasters.Logging.Logger("HlidacSmluv");
         //public static System.Globalization.CultureInfo enCulture = System.Globalization.CultureInfo.InvariantCulture; //new System.Globalization.CultureInfo("en-US");
         //public static System.Globalization.CultureInfo czCulture = new System.Globalization.CultureInfo("cs-CZ");
         //public static Random Rnd = new Random();
@@ -29,12 +29,12 @@ namespace HlidacStatu.Lib
             lock (lockObj)
             {
                 //TelemetryConfiguration.Active.InstrumentationKey = " your key ";
-                if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense")))
-                    Newtonsoft.Json.Schema.License.RegisterLicense(Devmasters.Core.Util.Config.GetConfigValue("NewtonsoftJsonSchemaLicense"));
+                if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("NewtonsoftJsonSchemaLicense")))
+                    Newtonsoft.Json.Schema.License.RegisterLicense(Devmasters.Config.GetWebConfigValue("NewtonsoftJsonSchemaLicense"));
 
-                if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
+                if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("WebAppDataPath")))
                 {
-                    WebAppDataPath = Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath");
+                    WebAppDataPath = Devmasters.Config.GetWebConfigValue("WebAppDataPath");
                 }
                 else if (System.Web.HttpContext.Current != null) //inside web app
                 {
@@ -60,9 +60,9 @@ namespace HlidacStatu.Lib
                 if (initialised == false)
                 {
 
-                    if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath")))
+                    if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("WebAppDataPath")))
                     {
-                        WebAppDataPath = Devmasters.Core.Util.Config.GetConfigValue("WebAppDataPath");
+                        WebAppDataPath = Devmasters.Config.GetWebConfigValue("WebAppDataPath");
                     }
                     else if (System.Web.HttpContext.Current != null) //inside web app
                     {

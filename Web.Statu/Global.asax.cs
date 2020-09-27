@@ -17,7 +17,7 @@ namespace HlidacStatu.Web
 
         public static volatile MemoryCacheManager<string, string> CachedDatasets = null;
 
-        public static Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]> BannedIPs = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<string[]> BannedIPs = null;
 
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
@@ -40,16 +40,16 @@ namespace HlidacStatu.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
 
-            BannedIPs = new Devmasters.Cache.V20.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
+            BannedIPs = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
                 TimeSpan.FromSeconds(30), "BannedIPs", (obj) =>
                 {
 
                     var ret = new System.Collections.Generic.List<string>();
                     try
                     {
-                        using (Devmasters.Core.PersistLib p = new Devmasters.Core.PersistLib())
+                        using (Devmasters.PersistLib p = new Devmasters.PersistLib())
                         {
-                            var ds = p.ExecuteDataset(Devmasters.Core.Util.Config.GetConfigValue("CnnString"),
+                            var ds = p.ExecuteDataset(Devmasters.Config.GetWebConfigValue("CnnString"),
                                  System.Data.CommandType.Text, "select IP from BannedIPs where Expiration is null or expiration > GetDate()",
                                  null);
                             foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
@@ -105,12 +105,12 @@ namespace HlidacStatu.Web
                 if (httpException.GetHttpCode() == 404)
                 {
 
-                    HlidacStatu.Util.Consts.Logger.Error(new Devmasters.Core.Logging.LogMessage()
+                    HlidacStatu.Util.Consts.Logger.Error(new Devmasters.Logging.LogMessage()
                         .SetMessage("HTTP Error 400")
                         .SetException(exception)
                         .SetVersionOfAllAssemblies()
                         .SetCustomKeyValue("Url", this.Request.Url.AbsoluteUri)
-                        .SetContext(Devmasters.Core.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
+                        //.SetContext(Devmasters.Net.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty)) //TODO
                         .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                         );
 
@@ -122,12 +122,12 @@ namespace HlidacStatu.Web
                     httpException.Message.Contains("potentially dangerous Request.Path")
                     )
                 {
-                    HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+                    HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Logging.LogMessage()
                         .SetMessage("Hack")
                         .SetException(exception)
                         .SetVersionOfAllAssemblies()
                         .SetCustomKeyValue("adSourceUrl", this.Request.Url.AbsoluteUri)
-                        .SetContext(Devmasters.Core.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
+                        //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty)) //TO
                         .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                         );
                     goto finishResponse;
@@ -140,21 +140,21 @@ namespace HlidacStatu.Web
                     || exception.Message.Contains("only be accessed via SSL")
                 )
             {
-                HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Core.Logging.LogMessage()
+                HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Logging.LogMessage()
                     .SetMessage("HTTP Error SSL")
                     .SetException(exception)
                     .SetVersionOfAllAssemblies()
                     .SetCustomKeyValue("adSourceUrl", this.Request.Url.AbsoluteUri)
-                    .SetContext(Devmasters.Core.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
+                    //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
                     .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                     );
                 goto finishResponse;
             }
             try
             {
-                HlidacStatu.Util.Consts.Logger.Fatal(new Devmasters.Core.Logging.LogMessage()
+                HlidacStatu.Util.Consts.Logger.Fatal(new Devmasters.Logging.LogMessage()
                     .SetMessage("HTTP Error 500")
-                    .SetContext(Devmasters.Core.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
+                    //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
                     .SetCustomKeyValue("referrer", this.Request?.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                     .SetException(exception)
                     .SetVersionOfAllAssemblies()

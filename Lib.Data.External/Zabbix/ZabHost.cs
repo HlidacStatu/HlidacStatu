@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using HlidacStatu.Lib;
-using Devmasters.Core;
+using Devmasters;
 
 using Newtonsoft.Json;
 using HlidacStatu.Util;
@@ -52,12 +52,12 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
             this.hostid = hostId;
             this.host = host;
             this.url = url;
-            this.urad = Devmasters.Core.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Urad:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
-            this.popis = Devmasters.Core.TextUtil.ShortenHTML(ParseTools.GetRegexGroupValue(description, @"Popis:\s?(?<txt>[^\x0a\x0d]*)", "txt"), 10000, new string[] {"a","b"} );
-            this.publicname = Devmasters.Core.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Nazev:\s?(?<txt>[^\x0a\x0d]*)", "txt"));            
-            string sgroup = Devmasters.Core.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Poznamka:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.urad = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Urad:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.popis = Devmasters.TextUtil.ShortenHTML(ParseTools.GetRegexGroupValue(description, @"Popis:\s?(?<txt>[^\x0a\x0d]*)", "txt"), 10000, new string[] {"a","b"} );
+            this.publicname = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Nazev:\s?(?<txt>[^\x0a\x0d]*)", "txt"));            
+            string sgroup = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Poznamka:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
 
-            this.customUrl = Devmasters.Core.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"URL:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.customUrl = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"URL:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
 
             this.groups.Clear();
             if (!string.IsNullOrEmpty(sgroup))
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
             if (string.IsNullOrEmpty(publicname))
                 publicname = this.host;
-            _hash = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(hostid + "xxttxx" + hostid);
+            _hash = Devmasters.Crypto.Hash.ComputeHashToHex(hostid + "xxttxx" + hostid);
         }
         public string hostid { get; set; }
         public string host { get; set; }

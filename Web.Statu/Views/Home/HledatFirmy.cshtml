@@ -2,7 +2,7 @@
 @using System.Linq;
 @using HlidacStatu.Web
 @using HlidacStatu.Lib
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Web.Framework;
 @{
     ViewBag.Title = "Hledání subjektů";
@@ -38,7 +38,7 @@
             </div>
             <div class="col-xs-11">
                 <div class="new-p--big">
-                    Pro hledaný výraz <span title="@Model.Query" class="emphasized">@Devmasters.Core.TextUtil.ShortenText(Model.Query, 80, "...")</span> jsme bohužel nic nenašli
+                    Pro hledaný výraz <span title="@Model.Query" class="emphasized">@Devmasters.TextUtil.ShortenText(Model.Query, 80, "...")</span> jsme bohužel nic nenašli
                 </div>
             </div>
         </div>

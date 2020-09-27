@@ -3,7 +3,8 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
+@using Devmasters.Collections;
 @using HlidacStatu.Lib.Data.External.DataSets;
 @using System.Text.RegularExpressions;
 @{
@@ -215,7 +216,7 @@
 
         var ret = html.Replace("\t", " ");
         ret = ret.Replace("\r", "\n");
-        ret = Devmasters.Core.TextUtil.ReplaceDuplicates(ret, "\n");
+        ret = Devmasters.TextUtil.ReplaceDuplicates(ret, "\n");
         ret = Regex.Replace(ret, @"\n\s*(?<t>.*)\n", "\n" + @"${t}");
 
         ret = Regex.Replace(ret, regexval, evalMatch, regexQueryOption);

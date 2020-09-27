@@ -2,7 +2,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Lib.Data.Insolvence;
 @using G = HlidacStatu.Lib.Data
@@ -12,7 +12,7 @@
     ViewBag.SubTitle = "Insolvence " + Model.Rizeni.SpisovaZnacka;
 
     //ViewBag.SocialShareTitle = Model.NazevZakazky;
-    //ViewBag.SocialShareText = Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 200));
+    //ViewBag.SocialShareText = Devmasters.TextUtil.FormatPlainTextForArticle(Devmasters.TextUtil.ShortenText(Model.PopisZakazky, 200));
 
     var dluznici = Model.Rizeni.Dluznici.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
     var veritele = Model.Rizeni.Veritele.OrderBy(o => o.PlneJmeno).Select(o => new OsobaViewModel { Osoba = o });
@@ -301,7 +301,7 @@ else
 {
     <div class="onlyembed">
         <div class="container text">
-            <h3>Insolvence @Devmasters.Core.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
+            <h3>Insolvence @Devmasters.TextUtil.ShortenText(Model.Rizeni.SpisovaZnacka, 60)</h3>
             <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Rizeni.InfoFacts(), 2, true, true, html: true)) </p>
             <p><a href="@Model.GetUrl(false)" target="_top">Více informací o insolvenčním řízení</a></p>
         </div>

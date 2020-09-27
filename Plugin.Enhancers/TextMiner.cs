@@ -1,4 +1,4 @@
-﻿using Devmasters.Core.Collections;
+﻿using Devmasters.Collections;
 
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Enhancers;
@@ -26,7 +26,7 @@ namespace HlidacStatu.Plugin.Enhancers
             All,
         }
 
-        string pathToOcr = Devmasters.Core.Util.Config.GetConfigValue("ReadIrisMonitorPath");
+        string pathToOcr = Devmasters.Config.GetWebConfigValue("ReadIrisMonitorPath");
         public TextMiner()
         {
             if (!pathToOcr.EndsWith("\\"))
@@ -103,7 +103,7 @@ namespace HlidacStatu.Plugin.Enhancers
                             HlidacStatu.Lib.OCR.Api.Result res = null;
                             if (asyncOCR)
                             {                                //res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
-                                //    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
+                                //    Devmasters.Config.GetWebConfigValue("OCRServerApiKey"),
                                 //    downloadedFile, "TextMiner",
                                 //    HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity
                                 //    ); //TODOcallBackData: item.CallbackDataForOCRReq(i) );
@@ -115,7 +115,7 @@ namespace HlidacStatu.Plugin.Enhancers
                             {
                                 Base.Logger.Debug($"TextMiner Client.TextFromFile Doing OCR Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
                                 res = HlidacStatu.Lib.OCR.Api.Client.TextFromFile(
-                                    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
+                                    Devmasters.Config.GetWebConfigValue("OCRServerApiKey"),
                                     downloadedFile, "TextMiner",
                                     HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High, intensity);
                                 Base.Logger.Debug($"TextMiner Client.TextFromFile Done OCR Id:{item.Id} att:{att.nazevSouboru}  async:{asyncOCR}  skipOCR:{intensity.ToString()}");
@@ -215,7 +215,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         finally
                         {
                             Base.Logger.Debug($"deleting temporary {downloadedFile} file TextMiner Client.TextFromFile Id:" + item.Id + " att:" + att.nazevSouboru);
-                            HlidacStatu.Util.IOTools.DeleteFile(downloadedFile);
+                            Devmasters.IO.IOTools.DeleteFile(downloadedFile);
                         }
 
                     }

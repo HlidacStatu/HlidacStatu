@@ -102,7 +102,7 @@ namespace HlidacStatu.Web.Framework
                     string tmpf = System.IO.Path.GetTempFileName();
                     context.Request.SaveAs(tmpf, true);
                     ret.Add(new KeyValuePair<string, string>("RAW", System.IO.File.ReadAllText(tmpf)));
-                    Util.IOTools.DeleteFile(tmpf);
+                    Devmasters.IO.IOTools.DeleteFile(tmpf);
                 }
                 catch (Exception)
                 {

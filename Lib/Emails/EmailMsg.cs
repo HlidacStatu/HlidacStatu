@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Emails
 
             try
             {
-                var result = engineRazor.RunCompile(template, Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(template), null, model);
+                var result = engineRazor.RunCompile(template, Devmasters.Crypto.Hash.ComputeHashToHex(template), null, model);
 
                 return result;
 

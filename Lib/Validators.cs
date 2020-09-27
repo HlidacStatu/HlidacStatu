@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Lib.Data;
 using System;
 using System.Collections.Generic;
@@ -36,15 +36,15 @@ namespace HlidacStatu.Lib
             if (string.IsNullOrEmpty(text))
                 return null;
 
-            string normalizedText = Devmasters.Core.TextUtil
+            string normalizedText = Devmasters.TextUtil
                                         .ReplaceDuplicates(Regex.Replace(text, @"[,;\[\]:]", " "), ' ');
             // Zakomentováno 12.12.2019 - při nahrávání dotací byl problém se jménem Ĺudovit
             //fix errors Ĺ => Í,ĺ => í 
             //normalizedText = normalizedText.Replace((char)314, (char)237).Replace((char)313, (char)205);
 
             //remove tituly
-            var titulyPo = Osoba.TitulyPo.Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
-            var titulyPred = Osoba.TitulyPred.Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
+            var titulyPo = Osoba.TitulyPo.Select(m => Devmasters.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
+            var titulyPred = Osoba.TitulyPred.Select(m => Devmasters.TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
 
             List<string> lWords = new List<string>();
 
@@ -96,9 +96,9 @@ namespace HlidacStatu.Lib
 
             //reset normalizedText after titulPred, titulPo
             normalizedText = lWords.Aggregate((f, s) => f + " " + s).Trim();
-            normalizedText = Devmasters.Core.TextUtil
+            normalizedText = Devmasters.TextUtil
                             .ReplaceDuplicates(normalizedText.Replace(".", ". "), ' ');
-            normalizedText = Devmasters.Core.TextUtil
+            normalizedText = Devmasters.TextUtil
                             .ReplaceDuplicates(normalizedText, " ");
             string[] wordsFromNormalizedText = normalizedText.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
             string[] words = wordsFromNormalizedText.Select(m=>TextUtil.RemoveDiacritics(m).ToLower()).ToArray();
@@ -252,7 +252,7 @@ namespace HlidacStatu.Lib
             if (string.IsNullOrEmpty(text))
                 return null;
 
-            string value = Devmasters.Core.TextUtil.RemoveDiacritics(TextUtil.NormalizeToBlockText(text).ToLower());
+            string value = Devmasters.TextUtil.RemoveDiacritics(TextUtil.NormalizeToBlockText(text).ToLower());
 
             foreach (var k in Firma.Koncovky.Select(m => m.ToLower()).OrderByDescending(m => m.Length))
             {
@@ -281,7 +281,7 @@ namespace HlidacStatu.Lib
                     string wordCombination = cutWords.Aggregate((f, s) => f + " " + s);
                     string koncovka;
                     string firmaBezKoncovky = Lib.Data.Firma.JmenoBezKoncovkyFull(wordCombination, out koncovka);
-                    string simpleName = Devmasters.Core.TextUtil.RemoveDiacritics(firmaBezKoncovky).ToLower().Trim();
+                    string simpleName = Devmasters.TextUtil.RemoveDiacritics(firmaBezKoncovky).ToLower().Trim();
                     //+ "|" + koncovka;
 
 

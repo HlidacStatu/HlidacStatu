@@ -1,5 +1,5 @@
 ﻿@model HlidacStatu.Lib.Data.Firma
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using HlidacStatu.Lib.Data
 @using System.Text
@@ -114,7 +114,7 @@
         <div class="col-xs-12">
             <label for="txt" class="control-label">Pojmenování hlídače</label>
             <div style="width:100%">
-                <input type="text" class="form-control" name="wdname" id="wdname" placeholder="Pojmenování hlídače pro přehlednost" value="@Devmasters.Core.TextUtil.ShortenText("Hlídač " + Model.Jmeno + " a vlastněných subjektů",50)">
+                <input type="text" class="form-control" name="wdname" id="wdname" placeholder="Pojmenování hlídače pro přehlednost" value="@Devmasters.TextUtil.ShortenText("Hlídač " + Model.Jmeno + " a vlastněných subjektů",50)">
             </div>
         </div>
         <div class="col-xs-12">

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Devmasters.Core;
+using Devmasters;
 
 
 namespace HlidacStatu.Lib.Data
@@ -52,7 +52,7 @@ namespace HlidacStatu.Lib.Data
                 case Types.SponzorZuctu:
                     return ""; // Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "") + " (z transp.účtu)";
                 case Types.OsobniVztah:
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
+                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)
@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data
                 case Types.SponzorZuctu:
                     return ""; // Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "") + " (z transp.účtu)" + zdroj;
                 case Types.OsobniVztah:
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.Core.TextUtil.IsNumeric(AddInfo))
+                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
                         Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
                         if (o != null)

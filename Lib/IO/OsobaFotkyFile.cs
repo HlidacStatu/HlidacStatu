@@ -11,11 +11,11 @@ namespace HlidacStatu.Lib.IO
     public class OsobaFotkyFile : DistributedFilePath<Lib.Data.Osoba>
     {
         public OsobaFotkyFile()
-            : this(Devmasters.Core.Util.Config.GetConfigValue("OsobaFotkyDataPath"))
+            : this(Devmasters.Config.GetWebConfigValue("OsobaFotkyDataPath"))
         { }
 
         public OsobaFotkyFile(string root)
-        : base(2, root, (s) => { return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(s.NameId).Substring(0, 2) + "\\" + s.NameId; })
+        : base(2, root, (s) => { return Devmasters.Crypto.Hash.ComputeHashToHex(s.NameId).Substring(0, 2) + "\\" + s.NameId; })
         {
             InitPaths();
         }

@@ -87,7 +87,7 @@ namespace HlidacStatu.Lib.Data
                 ParallelOptions po = new ParallelOptions();
                 po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
 
-                Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+                Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
                 sw.Start();
                 Parallel.ForEach(datasets, po,
                     ds =>

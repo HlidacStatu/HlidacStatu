@@ -4,7 +4,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Web.Framework
 
 
@@ -14,7 +14,7 @@
                 ViewBag.SubTitle = "Zakázka " + Model.EvidencniCisloZakazky;
 
                 ViewBag.SocialShareTitle = Model.NazevZakazky;
-                ViewBag.SocialShareText = Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 200));
+                ViewBag.SocialShareText = Devmasters.TextUtil.FormatPlainTextForArticle(Devmasters.TextUtil.ShortenText(Model.PopisZakazky, 200));
 
                 ViewBag.SocialShareType = "article";
                 ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/zakazka?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.Id;
@@ -75,7 +75,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Popis zakázky</td>
-                                                                            <td>@Html.Raw(Devmasters.Core.TextUtil.FormatPlainTextForArticle(Devmasters.Core.TextUtil.ShortenText(Model.PopisZakazky, 2000)))</td>
+                                                                            <td>@Html.Raw(Devmasters.TextUtil.FormatPlainTextForArticle(Devmasters.TextUtil.ShortenText(Model.PopisZakazky, 2000)))</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Zadavatel</td>
@@ -204,7 +204,7 @@
                                                                             <td>
 
                                                                                 @WebUtil.ShareFacebook(Model.GetUrl(false))
-                                                                                @WebUtil.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                                                                                @WebUtil.ShareTwitter(Model.GetUrl(false), $"Zakázka '{Devmasters.TextUtil.ShortenText(Model.NazevZakazky, 80)}' na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
                                                                                 @WebUtil.ShareWidget(Model.GetUrl(false))
                                                                             </td>
                                                                         </tr>
@@ -249,7 +249,7 @@
 {
     <div class="onlyembed">
         <div class="container text">
-            <h3>@Devmasters.Core.TextUtil.ShortenText(Model.NazevZakazky, 60)</h3>
+            <h3>@Devmasters.TextUtil.ShortenText(Model.NazevZakazky, 60)</h3>
             <p>@Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(), 2, true, true, html: true)) </p>
             <p><a href="@Model.GetUrl(false)" target="_top">Více informací o zakázce</a></p>
         </div>

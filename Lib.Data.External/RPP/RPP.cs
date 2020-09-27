@@ -10,11 +10,11 @@ namespace HlidacStatu.Lib.Data.External.RPP
     public partial class RPP
     {
         System.Net.Http.HttpClient wc = null;
-        Devmasters.Net.Web.UrlContentContext authCook = null;
+        Devmasters.Net.HttpClient.UrlContentContext authCook = null;
         string root = "https://rpp-ais.egon.gov.cz";
         public RPP()
         {
-            using (var net = new Devmasters.Net.Web.URLContent(root + "/AISP/verejne/ovm-spuu/katalog-kategorii-ovm"))
+            using (var net = new Devmasters.Net.HttpClient.URLContent(root + "/AISP/verejne/ovm-spuu/katalog-kategorii-ovm"))
             {
                 var res = net.GetContent();
                 authCook = res.Context;

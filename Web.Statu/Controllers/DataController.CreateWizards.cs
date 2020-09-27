@@ -362,7 +362,7 @@ namespace HlidacStatu.Web.Controllers
 
 
             if (DataSet.ExistsDataset(reg.datasetId))
-                reg.datasetId = reg.datasetId + "-" + Devmasters.Core.TextUtil.GenRandomString(5);
+                reg.datasetId = reg.datasetId + "-" + Devmasters.TextUtil.GenRandomString(5);
 
             datasetIndexStatCache.Invalidate();
 
@@ -467,7 +467,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     if (model.Delimiter == "auto")
                     {
-                        model.Delimiter = Util.IOTools.DetectCSVDelimiter(r);
+                        model.Delimiter = Devmasters.IO.IOTools.DetectCSVDelimiter(r);
                     }
 
 
@@ -602,7 +602,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     if (model.Delimiter == "auto")
                     {
-                        model.Delimiter = Util.IOTools.DetectCSVDelimiter(r);
+                        model.Delimiter = Devmasters.IO.IOTools.DetectCSVDelimiter(r);
                     }
 
                     var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture)
@@ -642,7 +642,7 @@ namespace HlidacStatu.Web.Controllers
                                     if (destType == typeof(string))
                                         value = svalue;
                                     else if (destType == typeof(DateTime) || destType == typeof(DateTime?))
-                                        value = Util.ParseTools.ToDateTime(svalue);
+                                        value = Devmasters.DT.Util.ToDateTime(svalue);
                                     else if (destType == typeof(decimal) || destType == typeof(decimal?))
                                     {
                                         value = Util.ParseTools.ToDecimal(svalue);
@@ -651,7 +651,7 @@ namespace HlidacStatu.Web.Controllers
                                     }
                                     else if (destType == typeof(long) || destType == typeof(long?)
                                         || destType == typeof(int) || destType == typeof(int?))
-                                        value = Util.ParseTools.ToDate(svalue);
+                                        value = Devmasters.DT.Util.ToDate(svalue);
                                     else if (destType == typeof(bool) || destType == typeof(bool?))
                                     {
                                         if (bool.TryParse(svalue, out bool tryp))
@@ -735,7 +735,7 @@ namespace HlidacStatu.Web.Controllers
             try
             {
 
-                Devmasters.Core.Batch.Manager.DoActionForAll<Tuple<object, string>>(items,
+                Devmasters.Batch.Manager.DoActionForAll<Tuple<object, string>>(items,
                     (item) =>
                     {
 
@@ -749,7 +749,7 @@ namespace HlidacStatu.Web.Controllers
                             errors.Add(ex);
                         }
 
-                        return new Devmasters.Core.Batch.ActionOutputData();
+                        return new Devmasters.Batch.ActionOutputData();
                     }, true
                     );
 
@@ -775,9 +775,9 @@ namespace HlidacStatu.Web.Controllers
 
         private string GuestBestCSVValueType(string value)
         {
-            if (Util.ParseTools.ToDate(value).HasValue)
+            if (Devmasters.DT.Util.ToDate(value).HasValue)
                 return "date";
-            else if (Util.ParseTools.ToDateTime(value).HasValue)
+            else if (Devmasters.DT.Util.ToDateTime(value).HasValue)
                 return "datetime";
             else if (Util.ParseTools.ToDecimal(value).HasValue)
                 return "number";

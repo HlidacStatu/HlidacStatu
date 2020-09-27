@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Util;
@@ -63,8 +63,8 @@ namespace HlidacStatu.Lib.Data
             return !string.IsNullOrEmpty(this.Jmeno) && !string.IsNullOrEmpty(this.Prijmeni) && this.InternalId > 0;
         }
 
-        //public string JmenoAscii { get { return Devmasters.Core.TextUtil.RemoveDiacritics(this.Jmeno) ?? ""; } }
-        //public string PrijmeniAscii { get { return Devmasters.Core.TextUtil.RemoveDiacritics(this.Prijmeni) ?? ""; } }
+        //public string JmenoAscii { get { return Devmasters.TextUtil.RemoveDiacritics(this.Jmeno) ?? ""; } }
+        //public string PrijmeniAscii { get { return Devmasters.TextUtil.RemoveDiacritics(this.Prijmeni) ?? ""; } }
 
         OsobaExternalId[] _externalIds = null;
         public OsobaExternalId[] ExternalIds()
@@ -362,7 +362,7 @@ namespace HlidacStatu.Lib.Data
             string narozeni, StatusOsobyEnum status, string user
         )
         {
-            return GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, ParseTools.ToDate(narozeni), status, user);
+            return GetOrCreateNew(titulPred, jmeno, prijmeni, titulPo, Devmasters.DT.Util.ToDate(narozeni), status, user);
         }
         public static Osoba GetOrCreateNew(string titulPred, string jmeno, string prijmeni, string titulPo,
             DateTime? narozeni, StatusOsobyEnum status, string user, DateTime? umrti = null)
@@ -708,9 +708,9 @@ namespace HlidacStatu.Lib.Data
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
 
-                this.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.Jmeno);
-                this.PrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.Prijmeni);
-                this.PuvodniPrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.PuvodniPrijmeni);
+                this.JmenoAscii = Devmasters.TextUtil.RemoveDiacritics(this.Jmeno);
+                this.PrijmeniAscii = Devmasters.TextUtil.RemoveDiacritics(this.Prijmeni);
+                this.PuvodniPrijmeniAscii = Devmasters.TextUtil.RemoveDiacritics(this.PuvodniPrijmeni);
 
                 if (string.IsNullOrEmpty(this.NameId))
                 {
@@ -763,9 +763,9 @@ namespace HlidacStatu.Lib.Data
             if (!char.IsLetter(this.JmenoAscii[0]) || !char.IsLetter(this.PrijmeniAscii[0]))
                 return "";
 
-            string basic = Devmasters.Core.TextUtil.ShortenText(this.JmenoAscii, 23) + "-" + Devmasters.Core.TextUtil.ShortenText(this.PrijmeniAscii, 23).Trim();
+            string basic = Devmasters.TextUtil.ShortenText(this.JmenoAscii, 23) + "-" + Devmasters.TextUtil.ShortenText(this.PrijmeniAscii, 23).Trim();
             basic = basic.ToLowerInvariant().NormalizeToPureTextLower();
-            basic = Devmasters.Core.TextUtil.ReplaceDuplicates(basic, ' ').Trim();
+            basic = Devmasters.TextUtil.ReplaceDuplicates(basic, ' ').Trim();
             basic = basic.Replace(" ", "-");
             Osoba exists = null;
             int num = 0;
@@ -1031,9 +1031,9 @@ namespace HlidacStatu.Lib.Data
                     osobaToUpdate.Status = osoba.Status;
                     osobaToUpdate.Umrti = osoba.Umrti;
 
-                    osobaToUpdate.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Jmeno);
-                    osobaToUpdate.PrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.Prijmeni);
-                    osobaToUpdate.PuvodniPrijmeniAscii = Devmasters.Core.TextUtil.RemoveDiacritics(osoba.PuvodniPrijmeni);
+                    osobaToUpdate.JmenoAscii = Devmasters.TextUtil.RemoveDiacritics(osoba.Jmeno);
+                    osobaToUpdate.PrijmeniAscii = Devmasters.TextUtil.RemoveDiacritics(osoba.Prijmeni);
+                    osobaToUpdate.PuvodniPrijmeniAscii = Devmasters.TextUtil.RemoveDiacritics(osoba.PuvodniPrijmeni);
                     osobaToUpdate.LastUpdate = DateTime.Now;
 
                     db.SaveChanges();
@@ -1135,7 +1135,7 @@ namespace HlidacStatu.Lib.Data
 
                     var statDesc = "";
                     if (stat.StatniFirmy.Count > 0)
-                        statDesc += $"Angažoval se v {Devmasters.Core.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě", "{0} státních firmách", "{0} státních firmách")}. ";
+                        statDesc += $"Angažoval se v {Devmasters.Lang.Plural.Get(stat.StatniFirmy.Count, "jedné státní firmě", "{0} státních firmách", "{0} státních firmách")}. ";
                     //neziskovky
                     if (stat.SoukromeFirmy.Count > 0)
                     {
@@ -1143,20 +1143,20 @@ namespace HlidacStatu.Lib.Data
                         statDesc += $"Angažoval se {(stat.StatniFirmy.Count > 0 ? "také" : "")} v ";
                         if (stat.NeziskovkyCount()>0 && stat.KomercniFirmyCount() == 0)
                         {
-                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                            statDesc += $"{Devmasters.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
                         }
                         else if (stat.NeziskovkyCount() > 0)
                         {
-                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
-                            statDesc += $" a {Devmasters.Core.Lang.Plural.Get(stat.KomercniFirmyCount(), "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
+                            statDesc += $"{Devmasters.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
+                            statDesc += $" a {Devmasters.Lang.Plural.Get(stat.KomercniFirmyCount(), "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
                         }
                         else
                         {
-                            statDesc += $"{Devmasters.Core.Lang.Plural.Get(stat.SoukromeFirmy.Count, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
+                            statDesc += $"{Devmasters.Lang.Plural.Get(stat.SoukromeFirmy.Count, "jedné soukr.firmě", "{0} soukr.firmách", "{0} soukr.firmách")}";
                         }
 
                         statDesc += $". Tyto subjekty mají se státem od 2016 celkem "
-                            + Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
+                            + Devmasters.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                             + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true)
                             + ". ";
                     }
@@ -1174,9 +1174,9 @@ namespace HlidacStatu.Lib.Data
                         decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;
 
                         f.Add(new InfoFact($"{this.FullName()} "
-                            + Devmasters.Core.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}", $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}")
+                            + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}", $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}")
                             + $" sponzoroval{(this.Muz() ? "" : "a")} " +
-                            Devmasters.Core.Lang.Plural.Get(strany.Length, "stranu " + strany[0], "{0} polit. strany", "{0} polit. stran")
+                            Devmasters.Lang.Plural.Get(strany.Length, "stranu " + strany[0], "{0} polit. strany", "{0} polit. stran")
                             + $" v&nbsp;celkové výši <b>{HlidacStatu.Util.RenderData.ShortNicePrice(celkem, html: true)}</b>. "
                             + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
                             , InfoFact.ImportanceLevel.Medium)
@@ -1194,18 +1194,18 @@ namespace HlidacStatu.Lib.Data
                             //string typy = "";
                             //if (ostat.NeziskovkyCount() > 0 && ostat.KomercniFirmyCount())
                             //{
-                            //    typy = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count,
+                            //    typy = Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count,
                             //}
 
                             if (stat.BasicStatPerYear[rok].CelkemCena == 0)
-                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
+                                ss = Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
                                         $"Jeden subjekt, ve kterém se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřel", 
                                         $"{{0}} subjekty, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
                                         $"{{0}} subjektů, ve kterých se angažuval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
                                         )
                                     + $" smlouvy v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
-                                ss = Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
+                                ss = Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
                                             $"Jeden subjekt, ve které se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřela", 
                                             $"{{0}} subjekty, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely", 
                                             $"{{0}} subjektů, ve kterých se angažoval{(this.Muz() ? "" : "a")}, v&nbsp;roce {rok} uzavřely"
@@ -1219,7 +1219,7 @@ namespace HlidacStatu.Lib.Data
                             string ss = "";
                             if (stat.BasicStatPerYear[rok-1].CelkemCena == 0)
                                 ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
-                                Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
+                                Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
                                         $"jednom subjektu, která v&nbsp;roce {rok - 1} uzavřela", 
                                         $"{{0}} subjektech, které v&nbsp;roce {rok} uzavřely", 
                                         $"{{0}} subjektech, které v&nbsp;roce {rok - 1} uzavřely"
@@ -1227,7 +1227,7 @@ namespace HlidacStatu.Lib.Data
                                 + $" smlouvy v neznámé výši, protože <b>hodnota všech smluv byla utajena</b>. ";
                             else
                                 ss = $"Je angažován{(this.Muz() ? "" : "a")} v&nbsp;" +
-                                    Devmasters.Core.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
+                                    Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, 
                                         $"jednom subjektu, která v&nbsp;roce {rok - 1} uzavřela", 
                                         $"{{0}} subjektech, které v&nbsp;roce {rok} uzavřely", 
                                         $"{{0}} subjektech, které v&nbsp;roce {rok - 1} uzavřely"
@@ -1245,7 +1245,7 @@ namespace HlidacStatu.Lib.Data
             return _infofacts;
         }
 
-        Devmasters.Core.Vokativ _vokativ = null;
+        Devmasters.Lang.Vokativ _vokativ = null;
 
 
         public bool NotInterestingToShow()
@@ -1262,7 +1262,7 @@ namespace HlidacStatu.Lib.Data
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.FullName(), 70);
+            return Devmasters.TextUtil.ShortenText(this.FullName(), 70);
         }
         public string SocialInfoSubTitle()
         {

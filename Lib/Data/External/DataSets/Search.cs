@@ -65,7 +65,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             string sort = null, bool excludeBigProperties = true, bool withHighlighting = false,
             bool exactNumOfResults = false)
         {
-            Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+            Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
 
             sw.Start();
             var query = Lib.Searching.Tools.FixInvalidQuery(queryString, queryShorcuts, queryOperators);

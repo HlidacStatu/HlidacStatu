@@ -194,7 +194,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (local == false)
                 url = "https://www.hlidacstatu.cz";
 
-            bool hranate = Devmasters.Core.Util.Config.GetConfigValue("KIdxIconStyle") == "hranate";
+            bool hranate = Devmasters.Config.GetWebConfigValue("KIdxIconStyle") == "hranate";
             switch (value)
             {
                 case KIndexLabelValues.None:

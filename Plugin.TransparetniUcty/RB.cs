@@ -31,7 +31,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
             //https://www.rb.cz/o-nas/povinne-uverejnovane-informace/transparentni-ucty?p_p_id=Transparentaccountportlet_WAR_Transparentaccountportlet_INSTANCE_e6cf4781&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=nextTransactions&p_p_cacheability=cacheLevelPage&p_p_col_id=_DynamicNestedPortlet_INSTANCE_f5c4beca__column-1-1&p_p_col_count=1&idBankAccount=24389217&fromIndex=51&dateFrom=2016-3-1&dateTo=2018-3-9&q=
             //https://www.rb.cz/o-nas/povinne-uverejnovane-informace/transparentni-ucty?p_p_id=Transparentaccountportlet_WAR_Transparentaccountportlet_INSTANCE_e6cf4781&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=nextTransactions&p_p_cacheability=cacheLevelPage&p_p_col_id=_DynamicNestedPortlet_INSTANCE_f5c4beca__column-1-1&p_p_col_count=1&idBankAccount=24389217&fromIndex=0&dateFrom=2016-3-1&dateTo=2018-3-17&q=
 
-            using (Devmasters.Net.Web.URLContent baseUrl = new Devmasters.Net.Web.URLContent(this.Ucet.Url))
+            using (Devmasters.Net.HttpClient.URLContent baseUrl = new Devmasters.Net.HttpClient.URLContent(this.Ucet.Url))
             {
                 baseUrl.IgnoreHttpErrors = true;
                 var html = baseUrl.GetContent(Encoding.UTF8);
@@ -53,7 +53,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
                                 + "&idBankAccount={2}&fromIndex={3}&dateFrom={4}&dateTo={5}&q="
                             , webReqInstance, dynamicInst, internalIdBankAccount, page * 20 +1, fromDate.Value.ToString("yyyy-M-d"), toDate.Value.ToString("yyyy-M-d"));
 
-                        using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url, html.Context))
+                        using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url, html.Context))
                         {
                             net.IgnoreHttpErrors = true;
                             var json = net.GetContent().Text;
@@ -71,7 +71,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
                                                  Castka = HlidacStatu.Util.ParseTools.ToDecimal(m.amount) ?? 0,
                                                  CisloProtiuctu = "",
                                                  CisloUctu = this.Ucet.CisloUctu,
-                                                 Datum = HlidacStatu.Util.ParseTools.ToDateTime(m.datumDate,"dd.MM.yyyy").Value,
+                                                 Datum = Devmasters.DT.Util.ToDateTime(m.datumDate,"dd.MM.yyyy").Value,
                                                  KS = m.constSymbol,
                                                  NazevProtiuctu = m.accountName,
                                                  PopisTransakce = m.type,

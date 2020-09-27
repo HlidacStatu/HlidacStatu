@@ -1,4 +1,4 @@
-﻿using Devmasters.Core.Batch;
+﻿using Devmasters.Batch;
 using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using HlidacStatu.Util;
@@ -193,7 +193,7 @@ AggregationContainerDescriptor<Lib.Data.Smlouva> anyAggregation = null,
 bool? platnyZaznam = null, bool includeNeplatne = false, bool logError = true, bool fixQuery = true,
 bool withHighlighting = false, bool exactNumOfResults = false)
             {
-                order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order);
+                order = Devmasters.TextUtil.NormalizeToNumbersOnly(order);
                 OrderResult eorder = OrderResult.Relevance;
                 System.Enum.TryParse<OrderResult>(order, out eorder);
 
@@ -226,7 +226,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                     return result;
                 }
 
-                Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+                Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
                 sw.Start();
 
                 if (fixQuery)
@@ -463,7 +463,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
 
             public static string QueryHash(string typ, string q)
             {
-                return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(typ.ToLower() + "|" + q.ToLower() + "|" + q.Reverse());
+                return Devmasters.Crypto.Hash.ComputeHashToHex(typ.ToLower() + "|" + q.ToLower() + "|" + q.Reverse());
             }
 
             public static bool IsQueryHashCorrect(string typ, string q, string h)

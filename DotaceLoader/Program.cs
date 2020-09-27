@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Configuration;
 using System.Collections.Generic;
 using HlidacStatu.Lib;
-using Devmasters.Cache.V20.File;
+using Devmasters.Cache.File;
 using System.Linq;
 
 namespace DotaceLoader
@@ -42,7 +42,7 @@ namespace DotaceLoader
                         foreach (var record in dotaceExport)
                         {
                             string constructedId = record.IdDotace;
-                            constructedId = Devmasters.Core.TextUtil.NormalizeToURL(constructedId);
+                            constructedId = Devmasters.TextUtil.NormalizeToURL(constructedId);
 
                             Dotace dotace = JsonConvert.DeserializeObject<Dotace>(record.Data);
                             dotace.IdDotace = constructedId;

@@ -5,7 +5,7 @@
     ViewBag.Title = "Statistika OCR serverů";
     ViewBag.SubTitle = "";
 
-    var dataCache = new Devmasters.Cache.V20
+    var dataCache = new Devmasters.Cache
     .LocalMemory.LocalMemoryCache<string>(TimeSpan.FromMinutes(2), "Ocrstat.data.json",
         (o) =>
         {
@@ -34,7 +34,7 @@
 
 
 
-    string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+    string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
     string sql = @"select 'Celkem' as 'type',
 (select count(*) from ItemToOcrQueue with (nolock) where started is null) as waiting,
 (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null) as running,
@@ -52,12 +52,12 @@ from ItemToOcrQueue t with (nolock)
 order by type";
 
     string sdata = $"<p>Za posledních 24 hodin jsme našimi OCR servery vydolovali data z celkem "
-        + $"<b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.doneIn24hours - (int)json.queueStat.imgDoneIn24hours, "0 dokumentů", "1 dokumentu", "{0} dokumentů", "{0} dokumentů")}</b>"
-        + $" a <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn24hours, "0 scanů", "1 scan", "{0} scany", "{0} scanů")}</b>, ";
+        + $"<b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.doneIn24hours - (int)json.queueStat.imgDoneIn24hours, "0 dokumentů", "1 dokumentu", "{0} dokumentů", "{0} dokumentů")}</b>"
+        + $" a <b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn24hours, "0 scanů", "1 scan", "{0} scany", "{0} scanů")}</b>, ";
 
     List<string> sdatalist = new List<string>();
 
-    using (var p = new Devmasters.Core.PersistLib())
+    using (var p = new Devmasters.PersistLib())
     {
         var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
         foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
@@ -66,31 +66,31 @@ order by type";
             string col0 = ((string)dr[0]).ToLower();
             if (col0.ToLower() == "dataset")
             {
-                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jeden</b> záznam datasetu", "<b>{0}</b> záznamy datasetů", "<b>{0}</b> záznamů datasetů"));
+                sdatalist.Add(Devmasters.Lang.Plural.Get(num, "<b>jeden</b> záznam datasetu", "<b>{0}</b> záznamy datasetů", "<b>{0}</b> záznamů datasetů"));
             }
             else if (col0.ToLower() == "insolvence")
             {
-                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> insolvenci", "<b>{0}</b> insolvence", "<b>{0}</b> insolvencí"));
+                sdatalist.Add(Devmasters.Lang.Plural.Get(num, "<b>jednu</b> insolvenci", "<b>{0}</b> insolvence", "<b>{0}</b> insolvencí"));
             }
             if (col0.ToLower() == "smlouva")
             {
-                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> smlouvu", "<b>{0}</b> smlouvy", "<b>{0}</b> smluv"));
+                sdatalist.Add(Devmasters.Lang.Plural.Get(num, "<b>jednu</b> smlouvu", "<b>{0}</b> smlouvy", "<b>{0}</b> smluv"));
             }
             if (col0.ToLower() == "verejnazakazka")
             {
-                sdatalist.Add(Devmasters.Core.Lang.Plural.Get(num, "<b>jednu</b> veř.zakázku", "<b>{0}</b> veř.zakázky", "<b>{0}</b> veř.zakázek"));
+                sdatalist.Add(Devmasters.Lang.Plural.Get(num, "<b>jednu</b> veř.zakázku", "<b>{0}</b> veř.zakázky", "<b>{0}</b> veř.zakázek"));
             }
 
         }
     }
     sdata = sdata + "" + sdatalist.Aggregate((f, s) => f + ", " + s) + ".</p>";
-    sdata = sdata + $"<p>Za posledních hodinu jsme našimi OCR servery vydolovali data z celkem <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.doneIn1hour - (int)json.queueStat.imgDoneIn1hour, "0 dokumentů", "1 dokumentu", "{0} dokumentů", "{0} dokumentů")}</b>"
-         + $" dokumentů a <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn1hour, "0 scanů", "1 scany", "{0} scanů", "{0} scanů")}</b>.</p>";
+    sdata = sdata + $"<p>Za posledních hodinu jsme našimi OCR servery vydolovali data z celkem <b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.doneIn1hour - (int)json.queueStat.imgDoneIn1hour, "0 dokumentů", "1 dokumentu", "{0} dokumentů", "{0} dokumentů")}</b>"
+         + $" dokumentů a <b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.imgDoneIn1hour, "0 scanů", "1 scany", "{0} scanů", "{0} scanů")}</b>.</p>";
 
 
     sdata += $"<p> Na zpracování čeká <b>{json.queueStat.inQueue}</b> dokumentů a <b>{json.queueStat.processing}</b> se právě zpracovává."
-        + $". Právě probíhá OCR <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgprocessing, "0 scanů", "1 scanu", "{0} scanů", "{0} scanů")}</b>, "
-        + $" <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)json.queueStat.imgInQueue, "žádné nečekají", "1 scan čeká", "další {0} scany čekají", "dalších {0} scanů čeká")}</b> ve frontě.</p>";
+        + $". Právě probíhá OCR <b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.imgprocessing, "0 scanů", "1 scanu", "{0} scanů", "{0} scanů")}</b>, "
+        + $" <b>{Devmasters.Lang.Plural.GetWithZero((int)json.queueStat.imgInQueue, "žádné nečekají", "1 scan čeká", "další {0} scany čekají", "dalších {0} scanů čeká")}</b> ve frontě.</p>";
 
 }
 @section scripts

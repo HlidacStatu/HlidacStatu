@@ -1,4 +1,6 @@
-﻿using HlidacStatu.Util;
+﻿using Devmasters;
+
+using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +16,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             Tokens = Tokenize($"{name} {ico}");
         }
 
-        public static Devmasters.Cache.V20.File.FileCache<Dictionary<string,SubjectNameCache>> CachedCompanies = 
-            new Devmasters.Cache.V20.File.FileCache<Dictionary<string, SubjectNameCache>>(
+        public static Devmasters.Cache.File.FileCache<Dictionary<string,SubjectNameCache>> CachedCompanies = 
+            new Devmasters.Cache.File.FileCache<Dictionary<string, SubjectNameCache>>(
                 Lib.Init.WebAppDataPath, TimeSpan.Zero, "KIndexCompanies",
                     (o) =>
                     {

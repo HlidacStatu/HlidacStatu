@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Devmasters.Core.Logging;
+using Devmasters.Logging;
 
 namespace HlidacStatu.Plugin.TransparetniUcty
 {

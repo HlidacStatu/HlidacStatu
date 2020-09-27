@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Devmasters.Core;
-using Devmasters.Net.Web;
+using Devmasters;
+using Devmasters.Net.HttpClient;
 using HlidacStatu.Util;
 using HtmlAgilityPack;
 
@@ -43,7 +43,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 						var cols = row.ChildNodes.Where(n => n.Name == "td").Select(n => n.InnerHtml).ToArray();
 						var p = new SimpleBankovniPolozka();
 						p.CisloUctu = Ucet.CisloUctu;
-						var date = ParseTools.ToDateTime(cols[0], "d.M.yyyy");
+						var date = Devmasters.DT.Util.ToDateTime(cols[0], "d.M.yyyy");
 						if (!date.HasValue || (fromDate.HasValue && date.Value < fromDate.Value) || (toDate.HasValue && date.Value > toDate.Value))
 						{
 							continue; //skip this, it's not row with data

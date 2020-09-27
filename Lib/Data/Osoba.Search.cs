@@ -1,4 +1,4 @@
-﻿using Devmasters.Core.Batch;
+﻿using Devmasters.Batch;
 using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using HlidacStatu.Util;
@@ -70,7 +70,7 @@ namespace HlidacStatu.Lib.Data
             public static OsobaSearchResult SimpleSearch(string query, int page, int pageSize, string order,
                 bool exactNumOfResults = false)
             {
-                order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order);
+                order = Devmasters.TextUtil.NormalizeToNumbersOnly(order);
                 OrderResult eorder = OrderResult.Relevance;
                 System.Enum.TryParse<OrderResult>(order, out eorder);
 

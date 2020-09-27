@@ -7,7 +7,7 @@
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
 
-@using Devmasters.Core
+@using Devmasters
 @using System.Data
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
@@ -64,7 +64,7 @@
                             @foreach (var sm in uu.Smlouvy.OrderByDescending(o => o.CalculatedPriceWithVATinCZK).Take(10))
                             {
                             <li>
-                                <a href="/detail/@sm.Id">@Devmasters.Core.TextUtil.ShortenText(sm.predmet,40, "…")</a> za @HlidacStatu.Util.RenderData.ShortNicePrice(sm.CalculatedPriceWithVATinCZK) (z @sm.datumUzavreni.ToString("dd.MM.yyyy"))
+                                <a href="/detail/@sm.Id">@Devmasters.TextUtil.ShortenText(sm.predmet,40, "…")</a> za @HlidacStatu.Util.RenderData.ShortNicePrice(sm.CalculatedPriceWithVATinCZK) (z @sm.datumUzavreni.ToString("dd.MM.yyyy"))
                             </li>
                             }
                         </ul>

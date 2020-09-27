@@ -289,7 +289,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     }
     nazevOdkazu = nazevOdkazu ?? "Opravit";
     _class = _class ?? "btn btn-link";
-    string modalId = Devmasters.Core.TextUtil.GenRandomString(10);
+    string modalId = Devmasters.TextUtil.GenRandomString(10);
 
     <a href="#" data-toggle="modal" id="btn@(modalId)" data-target="#@(modalId)Form" data-remote="false" class="@_class" style="@style">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>@(nazevOdkazu)
@@ -311,7 +311,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 }
 
 @helper AddReview(string itemType, string link)
-{var id = "rev_" + Devmasters.Core.TextUtil.GenRandomString(5);<!-- Link trigger modal -->
+{var id = "rev_" + Devmasters.TextUtil.GenRandomString(5);<!-- Link trigger modal -->
     <a href="@link" data-toggle="modal" data-target="#@id" data-remote="false" class="toReviewBtn btn btn-link">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Opravit
     </a> <!-- Default bootstrap modal example -->
@@ -370,8 +370,8 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
 }
 
 @helper ShareWidget(string url, string title = "Vložit do vlastní stránky", int width = 500)
-{var modalid = Devmasters.Core.TextUtil.GenRandomString(8);
-    var wid = Devmasters.Core.TextUtil.GenRandomString(5);
+{var modalid = Devmasters.TextUtil.GenRandomString(8);
+    var wid = Devmasters.TextUtil.GenRandomString(5);
     var pageUrl = new Uri(url);
     var rootUrl = pageUrl.Scheme + "://" + pageUrl.Host;
     var embedUrl = url.Replace(rootUrl, "");
@@ -494,7 +494,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     @AddBookmark(user, isBookmarked, name, url, id, (int)HlidacStatu.Lib.Data.Bookmark.ItemTypes.SingleItem, css)
 }
 @helper AddBookmarkUrl(System.Security.Principal.IPrincipal user, string title, string url, string css = "")
-{var id = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(url);
+{var id = Devmasters.Crypto.Hash.ComputeHashToHex(url);
     bool isBookmarked = false;
 
     if (user?.Identity?.IsAuthenticated == true)
@@ -589,7 +589,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
         btnText = $"Hlídat nové {dataTypeName}";
         if (!string.IsNullOrEmpty(query))
         {
-            btnText += $" pro hledání '{Devmasters.Core.TextUtil.ShortenText(query, 30, "...")}'";
+            btnText += $" pro hledání '{Devmasters.TextUtil.ShortenText(query, 30, "...")}'";
         }
     }
     if (preBtnText == null)
@@ -1105,7 +1105,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
         gaPageEventId = CurrPageUrlPath;
     }
 
-    var modalid = Devmasters.Core.TextUtil.GenRandomString(8);<!-- Button trigger modal -->
+    var modalid = Devmasters.TextUtil.GenRandomString(8);<!-- Button trigger modal -->
     <a href="#" class="@style" onclick="ga('send', 'event', 'exportBtn', 'click','@gaPageEventId'); return true;" role="button" data-toggle="modal" data-target="#modal@(modalid)"><span class="small">Exportovat výsledky do Excelu</span></a> <!-- Modal -->
     <div class="modal fade" id="modal@(modalid)" tabindex="-1" role="dialog" aria-labelledby="modal@(modalid)">
         <div class="modal-dialog" role="document">

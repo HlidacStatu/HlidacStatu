@@ -133,7 +133,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 		private static string DownloadStatement(string statementUrl, string root)
 		{
 			var pdfTmpFile = Path.Combine(root, "statement.pdf");
-			using (var net = new Devmasters.Net.Web.URLContent(statementUrl))
+			using (var net = new Devmasters.Net.HttpClient.URLContent(statementUrl))
 			{
 				File.WriteAllBytes(pdfTmpFile, net.GetBinary().Binary);
 			}
@@ -145,14 +145,14 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 			var txtTmpFile = Path.Combine(root, "statement.txt");
 			var psi = new System.Diagnostics.ProcessStartInfo(pdf2txt[0],
 				string.Format(pdf2txt[1], pdfTmpFile, txtTmpFile));
-			var pe = new ProcessExecutor(psi, 60);
+			var pe = new Devmasters.ProcessExecutor(psi, 60);
 			pe.Start();
 			return txtTmpFile;
 		}
 
 		private Dictionary<string, DateTime> GetBankStatementLinks()
 		{
-			using (var url = new Devmasters.Net.Web.URLContent(Ucet.Url))
+			using (var url = new Devmasters.Net.HttpClient.URLContent(Ucet.Url))
 			{
 				var doc = new XPath(url.GetContent().Text);
 				return doc.GetNodes(
@@ -287,16 +287,16 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 				var datum = Datum.Split('.'); // 25.04.
 				return new SimpleBankovniPolozka
 				{
-					AddId = Devmasters.Core.TextUtil.NormalizeToBlockText(AddId),
+					AddId = Devmasters.TextUtil.NormalizeToBlockText(AddId),
 					Castka = Castka,
-					CisloProtiuctu = Devmasters.Core.TextUtil.NormalizeToBlockText(CisloProtiuctu),
-					CisloUctu = Devmasters.Core.TextUtil.NormalizeToBlockText(ucet.CisloUctu),
-					KS = Devmasters.Core.TextUtil.NormalizeToBlockText(KS),
-					NazevProtiuctu = Devmasters.Core.TextUtil.NormalizeToBlockText(NazevProtiuctu),
-					PopisTransakce = Devmasters.Core.TextUtil.NormalizeToBlockText(PopisTransakce),
-					SS = Devmasters.Core.TextUtil.NormalizeToBlockText(SS),
-					VS = Devmasters.Core.TextUtil.NormalizeToBlockText(VS),
-					ZpravaProPrijemce = Devmasters.Core.TextUtil.NormalizeToBlockText(ZpravaProPrijemce),
+					CisloProtiuctu = Devmasters.TextUtil.NormalizeToBlockText(CisloProtiuctu),
+					CisloUctu = Devmasters.TextUtil.NormalizeToBlockText(ucet.CisloUctu),
+					KS = Devmasters.TextUtil.NormalizeToBlockText(KS),
+					NazevProtiuctu = Devmasters.TextUtil.NormalizeToBlockText(NazevProtiuctu),
+					PopisTransakce = Devmasters.TextUtil.NormalizeToBlockText(PopisTransakce),
+					SS = Devmasters.TextUtil.NormalizeToBlockText(SS),
+					VS = Devmasters.TextUtil.NormalizeToBlockText(VS),
+					ZpravaProPrijemce = Devmasters.TextUtil.NormalizeToBlockText(ZpravaProPrijemce),
 					ZdrojUrl = zdroj,
 					Datum = new DateTime(month.Year, Convert.ToInt32(datum[1]), Convert.ToInt32(datum[0]))
 				};

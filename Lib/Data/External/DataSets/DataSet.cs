@@ -166,7 +166,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (useTextProperties)
                 txts.AddRange(_getPreviewTextValueFromItem(item));
 
-            return Devmasters.Core.TextUtil.ShortenText(
+            return Devmasters.TextUtil.ShortenText(
                 string.Join(" ", txts)
                 , maxLength
                 );
@@ -435,7 +435,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public void SendErrorMsgToAuthor(string url, string errMsg)
         {
-            if (Devmasters.Core.TextUtil.IsValidEmail(this.Registration().createdBy ?? ""))
+            if (Devmasters.TextUtil.IsValidEmail(this.Registration().createdBy ?? ""))
             {
                 try
                 {
@@ -1063,7 +1063,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.Registration().name, 70);
+            return Devmasters.TextUtil.ShortenText(this.Registration().name, 70);
         }
 
         public string SocialInfoSubTitle()
@@ -1136,7 +1136,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     var itemLastDate = (DateTime)last.Result.First().DbCreated;
 
                     dbCreated = new DateTime(Math.Min(dbCreated.Ticks, itemFirstDate.Ticks));
-                    var sCreated = $"Databáze byla založena {Devmasters.Core.DateTimeUtil.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()}. "; 
+                    var sCreated = $"Databáze byla založena {Devmasters.DT.Util.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()}. "; 
                     string minMax ="";
                     if (total == 0)
                     {
@@ -1144,11 +1144,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     }
                     else
                     {
-                        minMax += Devmasters.Core.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
+                        minMax += Devmasters.Lang.Plural.GetWithZero(total, "Neobsahuje žádný záznam",
                             "Obsahuje <b>jeden záznam</b>", "Obsahuje <b>{0} záznamy</b>", "Obsahuje <b>{0} záznamů</b>")
                             + ", nejstarší byl vložen <b>"
-                            + (Devmasters.Core.DateTimeUtil.Ago(itemFirstDate, HlidacStatu.Util.Consts.csCulture).ToLower())
-                            + "</b>, nejnovější <b>" + (Devmasters.Core.DateTimeUtil.Ago(itemLastDate, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + (Devmasters.DT.Util.Ago(itemFirstDate, HlidacStatu.Util.Consts.csCulture).ToLower())
+                            + "</b>, nejnovější <b>" + (Devmasters.DT.Util.Ago(itemLastDate, HlidacStatu.Util.Consts.csCulture).ToLower())
                             + "</b>.";
                     }
                     var stat = sCreated + " " + minMax;

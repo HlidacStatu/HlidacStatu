@@ -36,10 +36,10 @@ namespace HlidacStatu.Web.Models
             {
                 if (string.IsNullOrEmpty(s))
                     throw new System.ArgumentException("Cannot by null or empty", "s");
-                s = Devmasters.Core.TextUtil.RemoveDiacritics(s).ToLower();
+                s = Devmasters.TextUtil.RemoveDiacritics(s).ToLower();
                 s = System.Text.RegularExpressions.Regex.Replace(s, "[^a-z0-9]", " ");
                 s = System.Text.RegularExpressions.Regex.Replace(s, "\\s", " ");
-                s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ');
+                s = Devmasters.TextUtil.ReplaceDuplicates(s, ' ');
                 s = s.Replace(" ", "_");
                 if (!Char.IsLetter(s.FirstOrDefault()))
                     s = "p" + s;

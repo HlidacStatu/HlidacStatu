@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;

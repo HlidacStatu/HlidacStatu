@@ -73,7 +73,7 @@
         .Select(o => new
         {
             ico = o.ico,
-            datum = Devmasters.Core.DateTimeUtil.FromEpochTimeToUTC((long)o.epochTime / 1000),
+            datum = Devmasters.DT.Util.FromEpochTimeToUTC((long)o.epochTime / 1000),
             sum = o.sum
         })
         .Where(m=>(now - m.datum).TotalDays<2)

@@ -66,7 +66,7 @@
                         //found corresponding edge
                         var foundE = this.edges
                             .Where(m => m.From?.UniqId == prev?.UniqId && m.To?.UniqId == n.UniqId)
-                            .Where(m=> HlidacStatu.Util.DateTools.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
+                            .Where(m=> Devmasters.DT.Util.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
                             .OrderBy(e=>e.NumberOfDaysFromToday())
                             .ThenByDescending(e=>e.LengthOfEdgeInDays())
                             .FirstOrDefault(); //TODO zmena na vsechna obdobi

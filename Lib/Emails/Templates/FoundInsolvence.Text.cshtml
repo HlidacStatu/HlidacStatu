@@ -19,7 +19,7 @@ V době @Model.Interval @Model.TotalTxt pro dotaz "@Model.Query"
     <text>
         ==================
         Dlužníci: @Raw(item.Dluznici != null && item.Dluznici.Count > 0 ? (item.Dluznici[0].PlneJmeno) : "neuveden")
-        Věřitelé: @Raw(item.Veritele != null && item.Veritele.Count > 0 ? Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 1, "jeden věřitel", "{0} věřitelé", "{0} věřitelů") : "neuvedeni")
+        Věřitelé: @Raw(item.Veritele != null && item.Veritele.Count > 0 ? Devmasters.Lang.Plural.Get(item.Veritele.Count - 1, "jeden věřitel", "{0} věřitelé", "{0} věřitelů") : "neuvedeni")
         Poslední změna: @Raw(item.PosledniZmena != null ? item.PosledniZmena.ToShortDateString() : "neuvedena")
         Datum vzniku insolvence: @Raw(item.DatumZalozeni != null ? item.DatumZalozeni.Value.ToShortDateString() : "neuvedena")
         Stav řízení: @item.StavRizeni()

@@ -10,9 +10,9 @@ namespace HlidacStatu.Lib.Data.External
     public class Discourse
     {
         //TODO
-        static string defaultApiUsername = Devmasters.Core.Util.Config.GetConfigValue("DiscourseAPIUsername"); //
-        static string defaultApiKey = Devmasters.Core.Util.Config.GetConfigValue("DiscourseAPIKey");
-        static string defaultBaseUrl = FixRootUrl(Devmasters.Core.Util.Config.GetConfigValue("DiscourseAPIBaseUrl")); //"{0}";
+        static string defaultApiUsername = Devmasters.Config.GetWebConfigValue("DiscourseAPIUsername"); //
+        static string defaultApiKey = Devmasters.Config.GetWebConfigValue("DiscourseAPIKey");
+        static string defaultBaseUrl = FixRootUrl(Devmasters.Config.GetWebConfigValue("DiscourseAPIBaseUrl")); //"{0}";
         string baseUrlQS = null; //baseUrl + "&api_username={1}&api_key={2}";
         string baseUrl = null;
         //using(var client = new System.Net.WebClient()) {  client.UploadData(address,"PUT",data);}
@@ -80,7 +80,7 @@ namespace HlidacStatu.Lib.Data.External
         public bool InviteNewUser(string email)
         {
 
-            using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(GetUrl("invites", false)))
+            using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(GetUrl("invites", false)))
             {
 
                 try
@@ -88,7 +88,7 @@ namespace HlidacStatu.Lib.Data.External
 
                     //net.ContentType = "application/json";
 
-                    net.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    net.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
                     net.RequestParams.Form.Add("api_key", apiKey);
                     net.RequestParams.Form.Add("api_username", apiUsername);
 
@@ -143,7 +143,7 @@ Michal Bláha");
 
         public bool PostToTopic(int topicId, string post)
         {
-            using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(GetUrl("posts", false)))
+            using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(GetUrl("posts", false)))
             {
 
                 try
@@ -151,7 +151,7 @@ Michal Bláha");
 
                     //net.ContentType = "application/json";
 
-                    net.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    net.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
                     net.RequestParams.Form.Add("api_key", apiKey);
                     net.RequestParams.Form.Add("api_username", apiUsername);
 

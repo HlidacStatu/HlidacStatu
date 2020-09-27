@@ -6,7 +6,7 @@ namespace HlidacStatu.Lib.OCR
     public static class DocTools
     {
 
-        public static Devmasters.Core.Logging.Logger baselogger = new Devmasters.Core.Logging.Logger("HlidacStatu.Lib.OCR");
+        public static Devmasters.Logging.Logger baselogger = new Devmasters.Logging.Logger("HlidacStatu.Lib.OCR");
 
         public static string OrigFilenameDelimiter = "_!_";
 
@@ -25,9 +25,9 @@ namespace HlidacStatu.Lib.OCR
             if (string.IsNullOrEmpty(ext) || ext == ".")
                 ext = ".bin";
             if (name.Length < 1)
-                name = name + Devmasters.Core.TextUtil.GenRandomString(5);
+                name = name + Devmasters.TextUtil.GenRandomString(5);
             if (name.Length > 40)
-                name = name.Substring(0, 30) + Devmasters.Core.TextUtil.GenRandomString(9);
+                name = name.Substring(0, 30) + Devmasters.TextUtil.GenRandomString(9);
             return OrigFilenameDelimiter + name + ext;
         }
 

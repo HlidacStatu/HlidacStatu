@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Data.TransparentniUcty
                     this.Datum.ToString("dd.MM.yyyy", Util.Consts.czCulture),
                     this.VS };
 
-            this.Id = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(data.Aggregate((f, s) => f + "|" + s));
+            this.Id = Devmasters.Crypto.Hash.ComputeHashToHex(data.Aggregate((f, s) => f + "|" + s));
 
         }
 

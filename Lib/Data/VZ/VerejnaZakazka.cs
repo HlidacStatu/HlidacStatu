@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Util;
@@ -572,7 +572,7 @@ namespace HlidacStatu.Lib.Data.VZ
         {
             if (string.IsNullOrEmpty(Dataset) || string.IsNullOrEmpty(EvidencniCisloZakazky))
                 throw new NullReferenceException();
-            this.Id = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(Dataset + "|" + EvidencniCisloZakazky);
+            this.Id = Devmasters.Crypto.Hash.ComputeHashToHex(Dataset + "|" + EvidencniCisloZakazky);
         }
 
         public string GetUrl(bool local = true)
@@ -682,7 +682,7 @@ namespace HlidacStatu.Lib.Data.VZ
                 if (xd.Root.Element(name) == null)
                     return default(T);
                 else
-                    return (T)HlidacStatu.Util.ParseTools.ChangeType(HlidacStatu.Util.ParseTools.ToDateTime(xd.Root.Element(name)?.Value, "yyyy-MM-ddThh:mm:ss", "dd.MM.yyyy"), typeof(T));
+                    return (T)HlidacStatu.Util.ParseTools.ChangeType(Devmasters.DT.Util.ToDateTime(xd.Root.Element(name)?.Value, "yyyy-MM-ddThh:mm:ss", "dd.MM.yyyy"), typeof(T));
             }
             else
                 throw new NotImplementedException();
@@ -822,7 +822,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.NazevZakazky, 50);
+            return Devmasters.TextUtil.ShortenText(this.NazevZakazky, 50);
         }
 
         public string SocialInfoSubTitle()
@@ -843,7 +843,7 @@ namespace HlidacStatu.Lib.Data.VZ
             else
                 return $"{this.CPVText(this.CPV[0])} ({this.CPV[0]})"
                     + $"{this.CPVText(this.CPV[1])} ({this.CPV[1]}) "
-                    + Devmasters.Core.Lang.Plural.Get(this.CPV.Length - 2, "a další obor", "+ {0} obory", "+ {0} oborů")
+                    + Devmasters.Lang.Plural.Get(this.CPV.Length - 2, "a další obor", "+ {0} obory", "+ {0} oborů")
                     ;
 
         }
@@ -881,7 +881,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
                     List<InfoFact> f = new List<InfoFact>();
 
-                    string hlavni = $"Veřejná zakázka od <b>{Devmasters.Core.TextUtil.ShortenText(this.Zadavatel?.Jmeno, 60)}</b>"
+                    string hlavni = $"Veřejná zakázka od <b>{Devmasters.TextUtil.ShortenText(this.Zadavatel?.Jmeno, 60)}</b>"
                         + (this.DatumUverejneni.HasValue
                                 ? " vyhlášena dne " + DatumUverejneni.Value.ToShortDateString()
                                 : ". "
@@ -954,7 +954,7 @@ namespace HlidacStatu.Lib.Data.VZ
 
                                 }
                                 f.Add(new InfoFact($"V dodavateli {Firmy.GetJmeno(ss.ICO)} se "
-                                    + Devmasters.Core.Lang.Plural.Get(politici.Count()
+                                    + Devmasters.Lang.Plural.Get(politici.Count()
                                                                         , " angažuje jedna politicky angažovaná osoba - "
                                                                         , " angažují {0} politicky angažované osoby - "
                                                                         , " angažuje {0} politicky angažovaných osob - ")
@@ -1119,8 +1119,8 @@ namespace HlidacStatu.Lib.Data.VZ
             v.LhutaDoruceni = this.LhutaDoruceni;
             v.KonecnaHodnotaBezDPH = this.KonecnaHodnotaBezDPH;
             v.OdhadovanaHodnotaBezDPH = this.OdhadovanaHodnotaBezDPH;
-            v.NazevZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(this.NazevZakazky);
-            v.PopisZakazky = Devmasters.Core.TextUtil.NormalizeToBlockText(this.PopisZakazky);
+            v.NazevZakazky = Devmasters.TextUtil.NormalizeToBlockText(this.NazevZakazky);
+            v.PopisZakazky = Devmasters.TextUtil.NormalizeToBlockText(this.PopisZakazky);
             v.ZadavatelJmeno = this.Zadavatel?.Jmeno;
             v.ZadavatelIco = this.Zadavatel?.ICO;
 

@@ -110,7 +110,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 string url = $"https://monitor.statnipokladna.cz/data/xml/{propertyPrefix}.xml";
                 try
                 {
-                    using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                    using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url))
                     {
                         net.Timeout = 1000 * 180;
                         var d = net.GetContent();

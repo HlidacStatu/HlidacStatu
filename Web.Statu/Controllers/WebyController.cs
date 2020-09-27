@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Devmasters.Core;
+using Devmasters;
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Data.External.Zabbix;
 using HlidacStatu.Web.Framework;
@@ -22,7 +22,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult Dalsi(string id)
         {
             ViewBag.ID = id;
-            if (Devmasters.Core.TextUtil.IsNumeric(id))
+            if (Devmasters.TextUtil.IsNumeric(id))
             { //priorita
 
                 int iid = Convert.ToInt32(id);

@@ -3,7 +3,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Util;
 @using HlidacStatu.Web.Framework;
 
@@ -41,7 +41,7 @@
 
     ViewBag.AdditionalForm = new HlidacStatu.Web.Framework.DoubleForm() {
         SecondaryAction = $"/data/Hledat/{Model.DatasetId}",
-        SecondaryActionLabel = $"Hledat pouze v {Devmasters.Core.TextUtil.ShortenText(Model.Registration().name, 40)}"
+        SecondaryActionLabel = $"Hledat pouze v {Devmasters.TextUtil.ShortenText(Model.Registration().name, 40)}"
     };
 
 }
@@ -70,7 +70,7 @@
 
             @if (showFrontPromo == false && showBehindPromo == false)
             {
-                <p class="lead">@Html.Raw(Devmasters.Core.TextUtil.FormatPlainTextForArticle(reg.description))</p>
+                <p class="lead">@Html.Raw(Devmasters.TextUtil.FormatPlainTextForArticle(reg.description))</p>
             }
             <p>@Html.Raw(Model.InfoFacts().RenderInfoFacts(1, true, true, html: true))</p>
             @if (Model.Registration().betaversion)

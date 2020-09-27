@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Devmasters.Core;
-using Devmasters.Core.Collections;
+using Devmasters;
+using Devmasters.Collections;
 
 namespace HlidacStatu.Util
 {
@@ -33,7 +33,7 @@ namespace HlidacStatu.Util
             if (html)
                 return Text;
             else
-                return Devmasters.Core.TextUtil.RemoveHTML(Text);
+                return Devmasters.TextUtil.RemoveHTML(Text);
         }
 
         public static string RenderInfoFacts(InfoFact[] infofacts, int number,

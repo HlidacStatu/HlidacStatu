@@ -43,8 +43,8 @@ namespace HlidacStatu.Web.Controllers
 
                 if (!string.IsNullOrEmpty(Request.QueryString["getocr"]))
                 {
-                    using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent(
-                        $"https://ocr.hlidacstatu.cz/AddApi.ashx?apikey={Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey")}&email={this.User.Identity.Name}"
+                    using (Devmasters.Net.HttpClient.URLContent url = new Devmasters.Net.HttpClient.URLContent(
+                        $"https://ocr.hlidacstatu.cz/AddApi.ashx?apikey={Devmasters.Config.GetWebConfigValue("OCRServerApiKey")}&email={this.User.Identity.Name}"
                         ))
                     {
                         var json = Newtonsoft.Json.Linq.JToken.Parse(url.GetContent().Text);
@@ -126,7 +126,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult OCRStats(string type = "")
         {
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
             string sql = @"select 'Celkem' as 'type',
 		                        (select count(*) from ItemToOcrQueue with (nolock) where started is null) as waiting,
 		                        (select count(*) from ItemToOcrQueue with (nolock) where started is not null and done is null) as running,
@@ -142,7 +142,7 @@ namespace HlidacStatu.Web.Controllers
 		                        and started< dateadd(hh,-24,getdate()) and itemtype = t.itemtype) as errors
 		                        from ItemToOcrQueue t with (nolock)
 		                        order by type";
-            using (var p = new Devmasters.Core.PersistLib())
+            using (var p = new Devmasters.PersistLib())
             {
                 var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, null);
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
@@ -170,12 +170,12 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, parameters: new Framework.ApiCall.CallParameter[] { new Framework.ApiCall.CallParameter("Dump", date) }).Authentificated)
             {
-                HlidacStatu.Util.Consts.Logger.Info(new Devmasters.Core.Logging.LogMessage()
+                HlidacStatu.Util.Consts.Logger.Info(new Devmasters.Logging.LogMessage()
                     .SetMessage("Downloading smlouvy.dump.zip")
                     .SetCustomKeyValue("UserId", this.User.Identity.Name)
                             );
 
-                DateTime? specificDate = ParseTools.ToDateTime(date, "yyyy-MM-dd");
+                DateTime? specificDate = Devmasters.DT.Util.ToDateTime(date, "yyyy-MM-dd");
                 string onlyfile = $"{datatype}.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
                 string fn = HlidacStatu.Lib.StaticData.Dumps_Path + $"{onlyfile}" + ".zip";
 
@@ -240,7 +240,7 @@ namespace HlidacStatu.Web.Controllers
             string strana, string rok, string castka
             )
         {
-            DateTime? dat = HlidacStatu.Util.ParseTools.ToDateTimeFromCode(datumNarozeni);
+            DateTime? dat = Devmasters.DT.Util.ToDateTimeFromCode(datumNarozeni);
             if (dat.HasValue == false)
             {
                 return new HttpStatusCodeResult(500, "Use date format yyyy-MM-dd");
@@ -815,7 +815,7 @@ namespace HlidacStatu.Web.Controllers
             var auth = Framework.ApiAuth.IsApiAuth(this, "TeamMember");
             if (auth.Authentificated)
             {
-                DateTime? nar = ParseTools.ToDateTimeFromCode(narozeni);
+                DateTime? nar = Devmasters.DT.Util.ToDateTimeFromCode(narozeni);
                 if (nar.HasValue == false)
                 {
                     return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { valid = false, error = "Invalid date format. Use yyyy-MM-dd format." }), "application/json");
@@ -890,7 +890,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this, "TeamMember").Authentificated)
             {
-                DateTime? dt = ParseTools.ToDateTime(narozen
+                DateTime? dt = Devmasters.DT.Util.ToDateTime(narozen
                     , "yyyy-MM-dd");
                 if (dt.HasValue == false)
                 {

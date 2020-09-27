@@ -70,12 +70,12 @@ namespace Vybory_PSP
             {
                 //parse HP jednani
                 //for (int cisloJednani = lastJednani; cisloJednani > 0; cisloJednani--)
-                Devmasters.Core.Batch.Manager.DoActionForAll<int>(Enumerable.Range(1, lastJednani).Reverse(),
+                Devmasters.Batch.Manager.DoActionForAll<int>(Enumerable.Range(1, lastJednani).Reverse(),
                     (cisloJednani) =>
                 {
                     var jednani = JednaniKomplexni(vyborId, cisloJednani, string.Format(jednaniUrlTemplate, cisloJednani));
                     if (jednani == null)
-                        return new Devmasters.Core.Batch.ActionOutputData();
+                        return new Devmasters.Batch.ActionOutputData();
                     //add usneseni
                     var docFromUsneseni = vsechnausneseni
                         .Where(m => m.datum == jednani.datum)
@@ -108,14 +108,14 @@ namespace Vybory_PSP
                         jednani = jednani.Merge(exists, jednani, out changed);
 
                     //add OCR
-                    Devmasters.Core.Batch.Manager.DoActionForAll<jednani.dokument>(jednani.dokumenty,
+                    Devmasters.Batch.Manager.DoActionForAll<jednani.dokument>(jednani.dokumenty,
                         d =>
                         {
                             if (string.IsNullOrWhiteSpace(d.DocumentPlainText))
                             {
                                 Console.WriteLine("OCR for " + d.DocumentUrl);
                                 var ocrRes = HlidacStatu.Lib.OCR.Api.Client.TextFromUrl(
-                                    Devmasters.Core.Util.Config.GetConfigValue("OCRServerApiKey"),
+                                    Devmasters.Config.GetWebConfigValue("OCRServerApiKey"),
                                     new Uri(d.DocumentUrl),
                                     "Vybory-PSP-parser", HlidacStatu.Lib.OCR.Api.Client.TaskPriority.High,
                                      HlidacStatu.Lib.OCR.Api.Client.MiningIntensity.Maximum,
@@ -131,7 +131,7 @@ namespace Vybory_PSP
                                     Console.WriteLine($"Invalid OCR {d.DocumentUrl} - {ocrRes.Error}");
                                 }
                             }
-                            return new Devmasters.Core.Batch.ActionOutputData();
+                            return new Devmasters.Batch.ActionOutputData();
 
                         }, null,null, true, prefix:$"Jednani {cisloJednani} OCR:");
 
@@ -149,7 +149,7 @@ namespace Vybory_PSP
                     if (changed)
                         id = dsc.AddItemToDataset(datasetname, jednani, DatasetConnector.AddItemMode.Rewrite).Result;
                     Console.WriteLine($"Saved vybor {jednani.vybor} jednani {jednani.Id} id {id}");
-                    return new Devmasters.Core.Batch.ActionOutputData();
+                    return new Devmasters.Batch.ActionOutputData();
 
                 }, null, null, true, maxDegreeOfParallelism:5, prefix: "cisloJednani: ");
             }
@@ -351,7 +351,7 @@ namespace Vybory_PSP
             try
             {
                 string html = "";
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url))
                 {
                     net.IgnoreHttpErrors = false;
                     //Console.WriteLine($"Downloading {url} ");
@@ -408,7 +408,7 @@ namespace Vybory_PSP
                 sanitisedNamePart = Regex.Replace(sanitisedNamePart, reservedWordPattern, "_reservedWord_.", RegexOptions.IgnoreCase);
             }
 
-            return Devmasters.Core.TextUtil.RemoveDiacritics(sanitisedNamePart);
+            return Devmasters.TextUtil.RemoveDiacritics(sanitisedNamePart);
         }
 
         static string regexRokFromTxt = @"č\. \s* (?<cislo>\d*)

@@ -51,7 +51,7 @@ namespace HlidacStatu.Lib.Data
                     if (System.Web.HttpContext.Current != null)
                         path = Lib.StaticData.App_Data_Path;
                     else
-                        path = Util.IOTools.GetExecutingDirectoryName(true);
+                        path = Devmasters.IO.IOTools.GetExecutingDirectoryName(true);
                     foreach (var s in System.IO.File.ReadAllLines(path+ "Czech.3-2-5.dic"))
                     {
                         slova.Add(s);
@@ -122,7 +122,7 @@ namespace HlidacStatu.Lib.Data
 
                 private static string classificationBaseUrl()
                 {
-                    string[] baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url")
+                    string[] baseUrl = Devmasters.Config.GetWebConfigValue("Classification.Service.Url")
                         .Split(',', ';');
                     //Dictionary<string, DateTime> liveEndpoints = new Dictionary<string, DateTime>();
 
@@ -137,7 +137,7 @@ namespace HlidacStatu.Lib.Data
                 /// <returns></returns>
                 public static string[] FindCitations(string text)
                 {
-                    var stopw = new Devmasters.Core.StopWatchEx();
+                    var stopw = new Devmasters.DT.StopWatchEx();
                     stopw.Start();
                     string[] sText = Stems(text);
                     stopw.Stop();

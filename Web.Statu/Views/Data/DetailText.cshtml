@@ -1,7 +1,7 @@
 ﻿@model HlidacStatu.Web.Models.DataDetailModel
 
 @using Nest;
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using Newtonsoft.Json.Linq;
 @{
@@ -40,7 +40,7 @@
     dynamic itemModel = (dynamic)itemjmodel;
 
     ViewBag.SocialShareTitle = $"<b>{ViewBag.Title}</b>";
-    ViewBag.SocialShareText =  Devmasters.Core.TextUtil.ShortenText(plainText,400);
+    ViewBag.SocialShareText =  Devmasters.TextUtil.ShortenText(plainText,400);
     ViewBag.SocialShareHtml = $"<pre style='overflow-x: auto;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;'>{plainText}</pre>";
 
     ViewBag.SocialShareHtmlFooter = Model.Dataset.DatasetItemUrl(Model.Data,false) ;

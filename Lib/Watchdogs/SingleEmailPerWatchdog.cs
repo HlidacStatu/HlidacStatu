@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Watchdogs
             string openingText = null,
             int? maxDegreeOfParallelism = 20,
             Action<string> logOutputFunc = null,
-            Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc = null
+            Action<Devmasters.Batch.ActionProgressData> progressOutputFunc = null
             )
         {
             bool saveWatchdogStatus =
@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Watchdogs
 
             Util.Consts.Logger.Info($"SingleEmailPerWatchdog Start processing {watchdogs.Count()} watchdogs.");
 
-            Devmasters.Core.Batch.Manager.DoActionForAll<WatchDog>(watchdogs,
+            Devmasters.Batch.Manager.DoActionForAll<WatchDog>(watchdogs,
                 (userWatchdog) =>
                 {
                     AspNetUser user = userWatchdog.UnconfirmedUser();
@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Watchdogs
 
                     Util.Consts.Logger.Info($"SingleEmailPerWatchdog watchdog {userWatchdog.Id} sent result {res.ToString()}.");
 
-                    return new Devmasters.Core.Batch.ActionOutputData();
+                    return new Devmasters.Batch.ActionOutputData();
                 },
                 logOutputFunc, progressOutputFunc,
                 true, maxDegreeOfParallelism: maxDegreeOfParallelism

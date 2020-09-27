@@ -81,7 +81,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                DateTime? dt = ParseTools.ToDateTime(narozeni, "yyyy-MM-dd");
+                DateTime? dt = Devmasters.DT.Util.ToDateTime(narozeni, "yyyy-MM-dd");
                 if (dt.HasValue == false && string.IsNullOrEmpty(funkce))
                 {
                     var status = ApiResponseStatus.InvalidFormat;
@@ -156,8 +156,8 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
-                string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+                string jmenoasc = Devmasters.TextUtil.RemoveDiacritics(jmeno);
+                string prijmeniasc = Devmasters.TextUtil.RemoveDiacritics(prijmeni);
                 found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                             .Where(o =>
                                 string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)
@@ -195,8 +195,8 @@ namespace HlidacStatu.Web.Controllers
             if (found?.Count() > 0)
                 return found;
 
-            string jmenoasc = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
-            string prijmeniasc = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+            string jmenoasc = Devmasters.TextUtil.RemoveDiacritics(jmeno);
+            string prijmeniasc = Devmasters.TextUtil.RemoveDiacritics(prijmeni);
             found = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
                         .Where(o =>
                             string.Equals(o.JmenoAscii, jmenoasc, StringComparison.OrdinalIgnoreCase)

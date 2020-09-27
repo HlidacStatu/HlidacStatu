@@ -58,8 +58,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         data.Add(hit.Source);
 
 
-                    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
-                }, null, Devmasters.Core.Batch.Manager.DefaultOutputWriter, Devmasters.Core.Batch.Manager.DefaultProgressWriter,
+                    return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                }, null, Devmasters.Batch.Manager.DefaultOutputWriter, Devmasters.Batch.Manager.DefaultProgressWriter,
                 false, prefix: "GET data ");
 
 

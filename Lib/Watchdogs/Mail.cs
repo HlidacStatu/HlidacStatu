@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Watchdogs
             string openingText = null,
             int maxDegreeOfParallelism = 20,
             Action<string> logOutputFunc = null,
-            Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc = null
+            Action<Devmasters.Batch.ActionProgressData> progressOutputFunc = null
             )
         {
             return SendWatchdogsInOneEmail(new WatchDog[] { watchdog },

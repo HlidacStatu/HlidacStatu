@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         static int[] Percentiles = new int[] { 1, 5, 10, 25,33, 50, 66, 75, 90, 95, 99 };
 
-        public static Devmasters.Cache.V20.File.FileCache<Analysis.KorupcniRiziko.Statistics[]> KIndexStatTotal = new Devmasters.Cache.V20.File.FileCache<Analysis.KorupcniRiziko.Statistics[]>(
+        public static Devmasters.Cache.File.FileCache<Analysis.KorupcniRiziko.Statistics[]> KIndexStatTotal = new Devmasters.Cache.File.FileCache<Analysis.KorupcniRiziko.Statistics[]>(
                 Lib.Init.WebAppDataPath, TimeSpan.Zero, "KIndexStat",
                     (o) =>
                     {

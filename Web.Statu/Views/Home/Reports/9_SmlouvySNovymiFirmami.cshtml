@@ -5,7 +5,7 @@
 @using System.Web.Mvc
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
-@using Devmasters.Core
+@using Devmasters
 @using System.Data
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
@@ -38,8 +38,8 @@
             HtmlRender = (s) => {
                 AnalysisCalculation.IcoSmlouvaMinMax data = (AnalysisCalculation.IcoSmlouvaMinMax)s;
                 return ((data.days.Value < 0)
-                        ? ("Firma založena " + HlidacStatu.Util.PluralForm.Get((int)Math.Abs(data.days.Value),"{0} den;{0} dny;{0} dnů") + " po podepsání smlouvy")
-                        : ("Firma založena " + HlidacStatu.Util.PluralForm.Get((int)Math.Abs(data.days.Value),"{0} den;{0} dny;{0} dnů") + " před podepsáním smlouvy")
+                        ? ("Firma založena " + Devmasters.Lang.Plural.Get((int)Math.Abs(data.days.Value),"{0} den;{0} dny;{0} dnů") + " po podepsání smlouvy")
+                        : ("Firma založena " + Devmasters.Lang.Plural.Get((int)Math.Abs(data.days.Value),"{0} den;{0} dny;{0} dnů") + " před podepsáním smlouvy")
                        )
                     ;
 
@@ -62,7 +62,7 @@
                 var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(data.ico);
 
                 return "<a href=\"/hledatsmlouvy?Q=ico:" + data.ico + "\">" +
-                    HlidacStatu.Util.PluralForm.Get((int)stat.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                    Devmasters.Lang.Plural.Get((int)stat.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
                 "</a>" +
                 "<br />celkem " +
                 HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.Summary.CelkemCena, html: true, shortFormat: true)

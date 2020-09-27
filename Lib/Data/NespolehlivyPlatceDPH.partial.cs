@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH;
 using System;
 using System.Collections.Generic;

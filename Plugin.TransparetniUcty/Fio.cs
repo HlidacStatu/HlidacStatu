@@ -60,7 +60,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
         {
             var polozky = new HashSet<IBankovniPolozka>();
 
-            using (var net = new Devmasters.Net.Web.URLContent(url))
+            using (var net = new Devmasters.Net.HttpClient.URLContent(url))
             {
                 net.IgnoreHttpErrors = true;
                 var content = net.GetContent(Encoding.UTF8).Text;
@@ -95,17 +95,17 @@ namespace HlidacStatu.Plugin.TransparetniUcty
                     var p = new SimpleBankovniPolozka
                     {
                         CisloUctu = Ucet.CisloUctu,
-                        Datum = ParseTools.ToDateTime(doc.GetNodeText(xroot + "/td[1]"), "dd.MM.yyyy").Value,
+                        Datum = Devmasters.DT.Util.ToDateTime(doc.GetNodeText(xroot + "/td[1]"), "dd.MM.yyyy").Value,
                         Castka = parseAmount(System.Net.WebUtility.HtmlDecode(doc.GetNodeText(xroot + "/td[2]"))),
                         PopisTransakce = System.Net.WebUtility.HtmlDecode(doc.GetNodeText(xroot + "/td[3]")),
                         NazevProtiuctu = System.Net.WebUtility.HtmlDecode(doc.GetNodeText(xroot + "/td[4]")),
-                        ZpravaProPrijemce = Devmasters.Core.TextUtil.NormalizeToBlockText(
+                        ZpravaProPrijemce = Devmasters.TextUtil.NormalizeToBlockText(
                             System.Net.WebUtility.HtmlDecode(doc.GetNodeHtml(xroot + "/td[5]"))
                                 ?.Replace("<br>", " \n")
                         )
                     };
 
-                    var poznamka = Devmasters.Core.TextUtil.NormalizeToBlockText(
+                    var poznamka = Devmasters.TextUtil.NormalizeToBlockText(
                         System.Net.WebUtility.HtmlDecode(doc.GetNodeHtml(xroot + "/td[9]"))
                         ?.Replace("<br>", " \n")
                         );

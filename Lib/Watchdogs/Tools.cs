@@ -49,7 +49,7 @@ namespace HlidacStatu.Lib.Watchdogs
                 case WatchDog.PeriodTime.Weekly:
                     return (newRun.Value - lastSearch).TotalDays >= 6.5;
                 case WatchDog.PeriodTime.Monthly:
-                    return Devmasters.Core.DateTimeSpan.CompareDates(newRun.Value, lastRun.Value).Months > 0;
+                    return Devmasters.DT.DateTimeSpan.CompareDates(newRun.Value, lastRun.Value).Months > 0;
             }
             return true;
         }

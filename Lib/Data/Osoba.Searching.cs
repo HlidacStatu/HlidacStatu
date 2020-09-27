@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace HlidacStatu.Lib.Data
                     return new Osoba[0];
                 }
 
-                string nquery = Devmasters.Core.TextUtil.RemoveDiacritics(name.NormalizeToPureTextLower());
+                string nquery = Devmasters.TextUtil.RemoveDiacritics(name.NormalizeToPureTextLower());
                 birthYear = birthYear?.Trim();
                 bool isValidYear = int.TryParse(birthYear, out int validYear);
                 // diakritika, velikost
@@ -87,7 +87,7 @@ namespace HlidacStatu.Lib.Data
 
             public static IEnumerable<Osoba> GetPolitikByNameFtx(string jmeno, int maxNumOfResults = 1500)
             {
-                string nquery = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno.NormalizeToPureTextLower());
+                string nquery = Devmasters.TextUtil.RemoveDiacritics(jmeno.NormalizeToPureTextLower());
 
                 var res = Lib.StaticData.PolitickyAktivni.Get()
                .Where(m => m != null)
@@ -232,8 +232,8 @@ namespace HlidacStatu.Lib.Data
             }
             public static IEnumerable<Osoba> GetAllByNameAscii(string jmeno, string prijmeni, DateTime? narozeni)
             {
-                jmeno = Devmasters.Core.TextUtil.RemoveDiacritics(jmeno);
-                prijmeni = Devmasters.Core.TextUtil.RemoveDiacritics(prijmeni);
+                jmeno = Devmasters.TextUtil.RemoveDiacritics(jmeno);
+                prijmeni = Devmasters.TextUtil.RemoveDiacritics(prijmeni);
                 using (Lib.Data.DbEntities db = new Data.DbEntities())
                 {
                     if (narozeni.HasValue)

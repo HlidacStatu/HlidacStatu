@@ -287,7 +287,7 @@ namespace HlidacStatu.Lib.Data
 
         public HlidacStatu.Lib.OCR.Api.CallbackData CallbackDataForOCRReq(int prilohaindex)
         {
-            var url = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
+            var url = Devmasters.Config.GetWebConfigValue("ESConnection");
 
             if (this.platnyZaznam)
                 url = url + $"/{Lib.ES.Manager.defaultIndexName}/smlouva/{this.Id}/_update";
@@ -315,7 +315,7 @@ namespace HlidacStatu.Lib.Data
 
         public string FullTitle()
         {
-            return string.Format("Smlouva č. {0}: {1}", this.Id, Devmasters.Core.TextUtil.ShortenText(this.predmet ?? "", 70));
+            return string.Format("Smlouva č. {0}: {1}", this.Id, Devmasters.TextUtil.ShortenText(this.predmet ?? "", 70));
         }
 
         public Issues.ImportanceLevel GetConfidenceLevel()
@@ -442,8 +442,8 @@ namespace HlidacStatu.Lib.Data
                 {
                     List<InfoFact> f = new List<InfoFact>();
 
-                    string hlavni = $"Smlouva mezi {Devmasters.Core.TextUtil.ShortenText(this.Platce.nazev, 60)} a "
-                        + $"{Devmasters.Core.TextUtil.ShortenText(this.Prijemce.First().nazev, 60)}";
+                    string hlavni = $"Smlouva mezi {Devmasters.TextUtil.ShortenText(this.Platce.nazev, 60)} a "
+                        + $"{Devmasters.TextUtil.ShortenText(this.Prijemce.First().nazev, 60)}";
                     if (this.Prijemce.Count() == 0)
                         hlavni += $".";
                     else if (this.Prijemce.Count() == 1)
@@ -556,7 +556,7 @@ namespace HlidacStatu.Lib.Data
 
                                 }
                                 f.Add(new InfoFact($"V dodavateli {Firmy.GetJmeno(ss.ico)} se "
-                                    + Devmasters.Core.Lang.Plural.Get(politici.Count()
+                                    + Devmasters.Lang.Plural.Get(politici.Count()
                                                                         , " angažuje jedna politicky angažovaná osoba - "
                                                                         , " angažují {0} politicky angažované osoby - "
                                                                         , " angažuje {0} politicky angažovaných osob - ")
@@ -717,7 +717,7 @@ namespace HlidacStatu.Lib.Data
                 .Where(f => f.Valid)
                 .ToList();
 
-            this.Hint.DenUzavreni = (int)Util.DateTools.TypeOfDay(this.datumUzavreni);
+            this.Hint.DenUzavreni = (int)Devmasters.DT.Util.TypeOfDay(this.datumUzavreni);
 
             if (firmy.Count() == 0)
                 this.Hint.PocetDniOdZalozeniFirmy = 9999;
@@ -894,7 +894,7 @@ namespace HlidacStatu.Lib.Data
                         try
                         {
 
-                            using (Devmasters.Net.Web.URLContent url = new Devmasters.Net.Web.URLContent(attUrl))
+                            using (Devmasters.Net.HttpClient.URLContent url = new Devmasters.Net.HttpClient.URLContent(attUrl))
                             {
 
                                 url.Timeout = url.Timeout * 10;
@@ -1008,7 +1008,7 @@ namespace HlidacStatu.Lib.Data
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.predmet, 45, "...");
+            return Devmasters.TextUtil.ShortenText(this.predmet, 45, "...");
         }
 
         public string ToAuditJson()
@@ -1069,7 +1069,7 @@ namespace HlidacStatu.Lib.Data
                 {
 
                     string html = "";
-                    using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(this.odkaz))
+                    using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(this.odkaz))
                     {
                         net.Timeout = 3000;
                         html = net.GetContent().Text;
@@ -1081,7 +1081,7 @@ namespace HlidacStatu.Lib.Data
                         //https://smlouvy.gov.cz/smlouva/9569679/xml/registr_smluv_smlouva_9569679.xml
                         //https://smlouvy.gov.cz/smlouva/13515796/xml/registr_smluv_smlouva_13515796.xml
                         var xmlUrl = $"https://smlouvy.gov.cz/smlouva/{this.identifikator.idVerze}/xml/registr_smluv_smlouva_{this.identifikator.idVerze}.xml";
-                        using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(xmlUrl))
+                        using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(xmlUrl))
                         {
                             net.Timeout = 3000;
                             html = net.GetContent().Text;
@@ -1172,7 +1172,7 @@ namespace HlidacStatu.Lib.Data
             return mustQs;
         }
 
-        public static IEnumerable<string> _allIdsFromES(bool deleted, Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        public static IEnumerable<string> _allIdsFromES(bool deleted, Action<string> outputWriter = null, Action<Devmasters.Batch.ActionProgressData> progressWriter = null)
         {
             List<string> ids = new List<string>();
             var client = deleted ? ES.Manager.GetESClient_Sneplatne() : ES.Manager.GetESClient();
@@ -1194,7 +1194,7 @@ namespace HlidacStatu.Lib.Data
             searchFunc, (hit, param) =>
             {
                 ids.Add(hit.Id);
-                return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
             }, null, outputWriter, progressWriter, false, blockSize: 100);
 
             return ids;
@@ -1227,7 +1227,7 @@ namespace HlidacStatu.Lib.Data
             return AllIdsFromES(null);
         }
 
-        public static IEnumerable<string> AllIdsFromES(bool? deleted, Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        public static IEnumerable<string> AllIdsFromES(bool? deleted, Action<string> outputWriter = null, Action<Devmasters.Batch.ActionProgressData> progressWriter = null)
         {
             if (deleted.HasValue)
                 return _allIdsFromES(deleted.Value, outputWriter, progressWriter);
@@ -1308,7 +1308,7 @@ namespace HlidacStatu.Lib.Data
                         + s.datumUzavreni.ToString("dd.MM.yyyy") + "\t"
                         + s.casZverejneni.ToString("dd.MM.yyyy") + "\t"
                         + s.CalculatedPriceWithVATinCZK.ToString(Util.Consts.czCulture) + "\t"
-                        + Devmasters.Core.TextUtil.NormalizeToBlockText(s.predmet) + "\t"
+                        + Devmasters.TextUtil.NormalizeToBlockText(s.predmet) + "\t"
                         + s.Platce.nazev + "\t"
                         + s.Platce.ico + "\t"
                         + ((s.Prijemce?.Count() > 0) ?
@@ -1317,7 +1317,7 @@ namespace HlidacStatu.Lib.Data
                         );
 
                     Console.Write(c++);
-                    return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                    return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                 }, null, null, null, false);
 
 

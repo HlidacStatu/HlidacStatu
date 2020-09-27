@@ -8,7 +8,7 @@ namespace HlidacStatu.Plugin.Enhancers
 {
     public class Base
     {
-        public static Devmasters.Core.Logging.Logger Logger = new Devmasters.Core.Logging.Logger("HlidacStatu.Plugin");
+        public static Devmasters.Logging.Logger Logger = new Devmasters.Logging.Logger("HlidacStatu.Plugin");
 
 
     }

@@ -142,7 +142,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             isZahranicniSubjekt = isZahranicniSubjekt || HlidacStatu.Util.DataValidators.IsZahranicniAdresa(d.adresa);
 
             //zjisti, zda nejde o 340/2015
-            string dnazev = Devmasters.Core.TextUtil.RemoveDiacritics(d.nazev).Trim();
+            string dnazev = Devmasters.TextUtil.RemoveDiacritics(d.nazev).Trim();
 
             // obchodní tajemství
             string[] obchodni_taj_regex = new string[] {

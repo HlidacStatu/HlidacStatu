@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 
 using HlidacStatu.Util;
 
@@ -28,7 +28,7 @@ namespace HlidacStatu.Lib.Data
         public static Firma LoadError = new Firma() { ICO = "error", Valid = false };
 
 
-        static string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+        static string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
 
         public static string[] StatniFirmyICO = new string[] { "45274649", "25702556", "70994226", "47114983", "42196451", "60193531", "00002739", "00514152", "00000493", "00001279", "24821993", "00000205", "60193468", "00000515", "49710371", "70890013", "70889953", "70890005", "25291581", "70889988", "70890021", "00007536", "26463318", "00024007", "25401726", "00015679", "00010669", "49241494", "14450216", "00001481", "00001490", "00002674", "43833560", "48204285", "00013251", "00014125", "27146235", "49973720", "00311391", "25125877", "00013455", "60197901", "60196696", "00251976", "62413376", "00577880", "44848943", "63078333", "45279314", "13695673", "27772683", "45273448", "28196678", "27786331", "61459445", "27364976", "24829871", "27257258", "17047234", "27378225", "27892646", "27195872", "45795908", "28244532", "61860336", "27145573", "25674285", "25085531", "27232433", "24729035", "27257517", "49901982", "27309941", "28786009", "47115726", "26871823", "26470411", "26206803", "28255933", "28707052", "26376547", "60698101", "27804721", "26840065", "25938924", "00128201", "26051818", "28861736" };
@@ -128,7 +128,7 @@ namespace HlidacStatu.Lib.Data
             set
             {
                 this._jmeno = value;
-                this.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(value);
+                this.JmenoAscii = Devmasters.TextUtil.RemoveDiacritics(value);
             }
         }
         public string JmenoAscii { get; set; }
@@ -339,7 +339,7 @@ namespace HlidacStatu.Lib.Data
 
         public string SocialInfoTitle()
         {
-            return Devmasters.Core.TextUtil.ShortenText(this.Jmeno, 50);
+            return Devmasters.TextUtil.ShortenText(this.Jmeno, 50);
         }
 
         public string SocialInfoSubTitle()
@@ -367,13 +367,13 @@ namespace HlidacStatu.Lib.Data
         public void Save()
         {
 
-            this.JmenoAscii = Devmasters.Core.TextUtil.RemoveDiacritics(this.Jmeno);
+            this.JmenoAscii = Devmasters.TextUtil.RemoveDiacritics(this.Jmeno);
 
             string sql = @"exec Firma_Save @ICO,@DIC,@Datum_zapisu_OR,@Stav_subjektu,@Jmeno,@Jmenoascii,@Kod_PF,@Source, @Popis, @VersionUpdate, @krajId, @okresId, @status  ";
             string sqlNACE = @"INSERT into firma_NACE(ico, nace) values(@ico,@nace)";
             string sqlDS = @"INSERT into firma_DS(ico, DatovaSchranka) values(@ico,@DatovaSchranka)";
 
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
             try
             {
 
@@ -956,7 +956,7 @@ namespace HlidacStatu.Lib.Data
                     else
                     {
                         f.Add(new InfoFact($"V roce <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                            Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear[rok].Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
+                            Devmasters.Lang.Plural.Get((int)stat.BasicStatPerYear[rok].Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
                             + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok].CelkemCena, html: true)}</b>. "
                             , InfoFact.ImportanceLevel.Summary)
                             );
@@ -971,7 +971,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             f.Add(new InfoFact(
                                 $"V <b>{rok} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktu " +
-                                Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
+                                Devmasters.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
                                 + $", což je celkem <b>{stat.RatingPerYear[rok].PercentBezCeny.ToString("P2")}</b> ze všech. ",
                                  InfoFact.ImportanceLevel.Medium)
                                 );
@@ -980,7 +980,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             f.Add(new InfoFact(
                                 $"V <b>{rok - 1} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktů " +
-                                Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
+                                Devmasters.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
                                 + $", což je celkem <b>{stat.RatingPerYear[rok - 1].PercentBezCeny.ToString("P2")}</b> ze všech. "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
@@ -992,14 +992,14 @@ namespace HlidacStatu.Lib.Data
                         if (numFatalIssue > 0)
                         {
                             f.Add(new InfoFact($@"Má v registru smluv
-                                    <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")}
+                                    <b>{Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")}
                                         tak závažné nedostatky v rozporu se zákonem,
                                     </b>že jsou velmi pravděpodobně neplatné. ", InfoFact.ImportanceLevel.High));
                         }
                         if (numVazneIssue > 0)
                         {
                             f.Add(new InfoFact($@"Má v registru smluv
-                                    <b>{Devmasters.Core.Lang.Plural.GetWithZero((int)numFatalIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")}</b>
+                                    <b>{Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue, "0 smluv", "jednu smlouvu obsahující", "{0} smlouvy obsahující", "{0:### ### ##0} smluv obsahujících ")}</b>
                                         vážné nedostatky. "
                                         , InfoFact.ImportanceLevel.Medium)
                                         );
@@ -1018,9 +1018,9 @@ namespace HlidacStatu.Lib.Data
                             decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;
 
                             f.Add(new InfoFact($"{sName} "
-                                + Devmasters.Core.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}", $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}")
+                                + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}", $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}")
                                 + $" sponzoroval{(sMuzsky ? "" : "a")} " +
-                                Devmasters.Core.Lang.Plural.Get(strany.Length, strany[0], "{0} polit.strany", "{0} polit.stran")
+                                Devmasters.Lang.Plural.Get(strany.Length, strany[0], "{0} polit.strany", "{0} polit.stran")
                                 + $" v&nbsp;celkové výši <b>{HlidacStatu.Util.RenderData.ShortNicePrice(celkem, html: true)}</b>. "
                                 + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
                                 , InfoFact.ImportanceLevel.Medium)
@@ -1060,7 +1060,7 @@ namespace HlidacStatu.Lib.Data
                                 }
                                 f.Add(new InfoFact(
                                     $"Ve firmě se "
-                                    + Devmasters.Core.Lang.Plural.Get(politici.Count()
+                                    + Devmasters.Lang.Plural.Get(politici.Count()
                                                                         , " angažuje jedna politicky angažovaná osoba - "
                                                                         , " angažují {0} politicky angažované osoby - "
                                                                         , " angažuje {0} politicky angažovaných osob - ")
@@ -1073,7 +1073,7 @@ namespace HlidacStatu.Lib.Data
                         if (PatrimStatu() && stat.RatingPerYear[rok].NumSPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                Devmasters.Lang.Plural.Get((int)stat.RatingPerYear[rok].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
                                 + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.RatingPerYear[rok].SumKcSPolitiky, html: true)}</b> "
                                 + $" (tj. {stat.RatingPerYear[rok].PercentKcSPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
@@ -1082,7 +1082,7 @@ namespace HlidacStatu.Lib.Data
                         else if (PatrimStatu() && stat.RatingPerYear[rok - 1].NumSPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok - 1}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Core.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                Devmasters.Lang.Plural.Get((int)stat.RatingPerYear[rok - 1].NumSPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
                                 + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.RatingPerYear[rok - 1].SumKcSPolitiky, html: true)}</b> "
                                 + $" (tj. {stat.RatingPerYear[rok - 1].PercentKcSPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
@@ -1091,7 +1091,7 @@ namespace HlidacStatu.Lib.Data
 
 
                         f.Add(new InfoFact($"Od roku <b>2016</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                            Devmasters.Core.Lang.Plural.Get((int)stat.BasicStatPerYear.SummaryAfter2016().Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
+                            Devmasters.Lang.Plural.Get((int)stat.BasicStatPerYear.SummaryAfter2016().Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
                             + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true)}</b>. "
                             , InfoFact.ImportanceLevel.Low)
                             );
@@ -1105,7 +1105,7 @@ namespace HlidacStatu.Lib.Data
                         if (statHolding.Summary.Pocet > 3)
                         {
                             f.Add(new InfoFact($"V roce <b>{rok}</b> uzavřel celý holding " +
-                                Devmasters.Core.Lang.Plural.Get((int)statHolding.Data[rok].Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
+                                Devmasters.Lang.Plural.Get((int)statHolding.Data[rok].Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
                                 + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(statHolding.Data[rok].CelkemCena, html: true)}</b>. "
                                 , InfoFact.ImportanceLevel.Low)
                                 );

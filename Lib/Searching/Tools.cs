@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Nest;
-using Devmasters.Core.Batch;
+using Devmasters.Batch;
 using System.Threading;
 
 namespace HlidacStatu.Lib.Searching
@@ -96,7 +96,7 @@ namespace HlidacStatu.Lib.Searching
                 newquery = Regex.Replace(newquery, invalidFormatRegex, " ", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Trim();
             }
 
-            var textParts = Util.StringTools.SplitStringToPartsWithQuotes(newquery, '\"');
+            var textParts = Devmasters.TextUtil.SplitStringToPartsWithQuotes(newquery, '\"');
             //make operator UpperCase and space around '(' and ')'
             if (textParts.Count > 0)
             {
@@ -499,7 +499,7 @@ namespace HlidacStatu.Lib.Searching
             System.Func<IHit<T>, object, ActionOutputData> action,
             object actionParameters,
             System.Action<string> logOutputFunc,
-            System.Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc,
+            System.Action<Devmasters.Batch.ActionProgressData> progressOutputFunc,
             bool parallel,
             int blockSize = 500, int? maxDegreeOfParallelism = null,
             bool IdOnly = false,
@@ -563,9 +563,9 @@ namespace HlidacStatu.Lib.Searching
 
         public static void DoActionForQuery<T>(ElasticClient client,
             Func<int, int, ISearchResponse<T>> searchFunc,
-            System.Func<IHit<T>, object, Devmasters.Core.Batch.ActionOutputData> action, object actionParameters,
+            System.Func<IHit<T>, object, Devmasters.Batch.ActionOutputData> action, object actionParameters,
             System.Action<string> logOutputFunc,
-            System.Action<Devmasters.Core.Batch.ActionProgressData> progressOutputFunc,
+            System.Action<Devmasters.Batch.ActionProgressData> progressOutputFunc,
             bool parallel,
             int blockSize = 500, int? maxDegreeOfParallelism = null, string prefix = ""
             )

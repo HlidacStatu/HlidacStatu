@@ -1,6 +1,7 @@
 ﻿@using System.Linq;
 @using System.Web.Mvc;
-@using Devmasters.Core;
+@using Devmasters;
+@using Devmasters.Collections;
 @using Devmasters.Enums;
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Web
@@ -71,7 +72,7 @@ if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Len
 @RenderOsobaVazba(item.Vazby()[2]) }
 else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length > 2)
 {
-<span>@HlidacStatu.Util.PluralForm.Get(item.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>}
+<span>@Devmasters.Lang.Plural.Get(item.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb")</span>}
 }
         </td>
     </tr>
@@ -164,7 +165,7 @@ else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny
                 }
                 else if (item.Dluznici.Count > 3)
                 {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>}
+                    <div>@Devmasters.Lang.Plural.Get(item.Dluznici.Count - 2, "a jeden další dlužník", "a další {0} dlužníci", "a dalších {0} dlužníků")</div>}
                 }
         </td>
         <td>
@@ -180,7 +181,7 @@ else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny
                 }
                 else if (item.Veritele.Count > 3)
                 {
-                    <div>@Devmasters.Core.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>}
+                    <div>@Devmasters.Lang.Plural.Get(item.Veritele.Count - 2, "a jeden další věřitel", "a další {0} věřitelé", "a dalších {0} věřitelů")</div>}
                 }
         </td>
         <td>
@@ -224,7 +225,7 @@ else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny
             @WebUtil.AddBookmark(user, rec)
         </td>
         <td><a href="@rec.GetUrl(true)">@rec.ICO</a></td>
-        <td>@Html.KIndexLabelLink(rec.ICO)<a href="@rec.GetUrl(true)">@Devmasters.Core.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
+        <td>@Html.KIndexLabelLink(rec.ICO)<a href="@rec.GetUrl(true)">@Devmasters.TextUtil.ShortenText(rec.Jmeno, 40, "...")</a></td>
         <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
         @if (small == false)
         {
@@ -311,7 +312,7 @@ else
 <li>@subj.nazev</li>}
                     }
 </ol>
-                    @WebUtil.IfExists(rec.Prijemce.Count() > 2, HlidacStatu.Util.PluralForm.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+                    @WebUtil.IfExists(rec.Prijemce.Count() > 2, Devmasters.Lang.Plural.Get(rec.Prijemce.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
                 }
     </td>
     <td>@Html.Raw(rec.NicePrice(html: true))</td>
@@ -320,7 +321,7 @@ else
                 <tr class="bg@(bgLevel) last">
                     <td></td>
                     <td colspan="@WebUtil.IfExists(small,"5","6")">
-                        @Devmasters.Core.TextUtil.ShortenText(rec.predmet, 200)
+                        @Devmasters.TextUtil.ShortenText(rec.predmet, 200)
                         @if (small && rec.GetRelevantClassification().Count() > 0)
                         {
         <span class="text-success">&nbsp;|&nbsp;<b>Obor</b>: @(rec.GetRelevantClassification().First().ClassifTypeName())</span> }
@@ -378,7 +379,7 @@ else
     <div class="table-new searching__watcher__table">
         @if (result.Total > maxItems)
         {
-<h4>Zobrazujeme @(Devmasters.Core.Lang.Plural.Get((int)maxItems, "první výsledek", "první {0} výsledky", "prvních {0} výsledků"))</h4>}
+<h4>Zobrazujeme @(Devmasters.Lang.Plural.Get((int)maxItems, "první výsledek", "první {0} výsledky", "prvních {0} výsledků"))</h4>}
         <table class="table table-hover">
             <thead>
                 @SearchResults.VZHeader(skipBookmark)
@@ -457,11 +458,11 @@ else
                         <span>@d.Jmeno</span><br /> }
 
                 }
-                @WebUtil.IfExists(item.Dodavatele.Count() > 2, HlidacStatu.Util.PluralForm.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
+                @WebUtil.IfExists(item.Dodavatele.Count() > 2, Devmasters.Lang.Plural.Get(item.Dodavatele.Count() - 2, "+{0} dodavatel;+{0} další dodavatelé;+{0} dalších dodavatelů"));
             }
         </td>
         <td>
-            @Devmasters.Core.TextUtil.ShortenText(item.NazevZakazky, 50)
+            @Devmasters.TextUtil.ShortenText(item.NazevZakazky, 50)
         </td>
         <td class="number">
             <b>
@@ -484,7 +485,7 @@ else if (item.OdhadovanaHodnotaBezDPH.HasValue)
     <td colspan="2"><span class="small">@(item.LastestFormular()?.DruhFormulare().ToNiceDisplayName())</span></td>
     <td colspan="4">
         <span class="small">
-            @Devmasters.Core.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
+            @Devmasters.TextUtil.ShortenText(item.PopisZakazky, 900, "...")
         </span>
     </td>
 </tr>}
@@ -514,7 +515,7 @@ else if (item.OdhadovanaHodnotaBezDPH.HasValue)
             <a href="@(item.GetUrl(true,query))">Detail</a>
         </td>
         <td>
-            @Html.KIndexLabelLink(item.Prijemce.Ico)@Devmasters.Core.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
+            @Html.KIndexLabelLink(item.Prijemce.Ico)@Devmasters.TextUtil.ShortenText((string.IsNullOrWhiteSpace(item.Prijemce.HlidacJmeno) ?
 item.Prijemce.ObchodniJmeno :
 item.Prijemce.HlidacJmeno)
 , 40)
@@ -558,7 +559,7 @@ else
     string controllerName, string[] ignoreRouteValues = null, object htmlAttributes = null,
     bool showExport = false, string exportType = null, System.Security.Principal.IPrincipal user = null, string exportMoreParams = null)
 {int ipage = 1;
-    if (Devmasters.Core.TextUtil.IsNumeric(page))
+    if (Devmasters.TextUtil.IsNumeric(page))
     {
         ipage = HlidacStatu.Util.ParseTools.ToInt(page) ?? 1;
     }

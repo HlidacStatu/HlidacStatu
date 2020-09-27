@@ -3,7 +3,7 @@
 @using System.Collections.Generic
 @using System.Linq
 
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
 @{ var f = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
     ViewBag.Title = "Index korupčního rizika";
@@ -47,17 +47,17 @@
     int toY = Model.roky.Max(m => m.Rok);
     int pocetRoku = (toY - fromY) + 1;
 
-    HlidacStatu.Util.Graphics.Gradient gradIndex = new HlidacStatu.Util.Graphics.Gradient(
-        new HlidacStatu.Util.Graphics.RGB("00b300") //10%
-        , new HlidacStatu.Util.Graphics.RGB("FFA500") //20%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //30%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //50%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //90%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
+    Devmasters.Imaging.RGBAGradient gradIndex = new Devmasters.Imaging.RGBAGradient(
+        new Devmasters.Imaging.RGB("00b300") //10%
+        , new Devmasters.Imaging.RGB("FFA500") //20%
+        , new Devmasters.Imaging.RGB("FF0000") //30%
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000") //50%
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000") //90%
+        , new Devmasters.Imaging.RGB("FF0000")
         ); }
 
 

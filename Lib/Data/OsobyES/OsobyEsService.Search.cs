@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using HlidacStatu.Lib.Searching;
 using Nest;
 using System;
@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
 
             page = page - 1 < 0 ? 0 : page - 1;
 
-            var sw = new StopWatchEx();
+            var sw = new Devmasters.DT.StopWatchEx();
             sw.Start();
             
 

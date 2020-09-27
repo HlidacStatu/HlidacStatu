@@ -11,11 +11,11 @@ namespace HlidacStatu.Lib.IO
     public class PrilohaFile : DistributedFilePath<Lib.Data.Smlouva>
     {
         public PrilohaFile()
-            : this(Devmasters.Core.Util.Config.GetConfigValue("PrilohyDataPath"))
+            : this(Devmasters.Config.GetWebConfigValue("PrilohyDataPath"))
         { }
 
         public PrilohaFile(string root)
-        : base(3, root, (s) => { return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(s.Id).Substring(0, 3) + "\\" + s.Id; })
+        : base(3, root, (s) => { return Devmasters.Crypto.Hash.ComputeHashToHex(s.Id).Substring(0, 3) + "\\" + s.Id; })
         {
         }
         public override string GetFullDir(Smlouva obj)
@@ -48,13 +48,13 @@ namespace HlidacStatu.Lib.IO
                 return string.Empty;
             return this.GetRelativeDir(obj) + Encode(prilohaUrl);
 
-            //return base.GetRelativePath(obj, Devmasters.Core.CryptoLib.Hash.ComputeHash(prilohaUrl));
+            //return base.GetRelativePath(obj, Devmasters.Crypto.Hash.ComputeHash(prilohaUrl));
         }
 
 
         public static string Encode(string prilohaUrl)
         {
-            return Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(prilohaUrl);
+            return Devmasters.Crypto.Hash.ComputeHashToHex(prilohaUrl);
             //using (MD5 md5Hash = MD5.Create())
             //{
             //    byte[] md5= md5Hash.ComputeHash(Encoding.UTF8.GetBytes(prilohaUrl));

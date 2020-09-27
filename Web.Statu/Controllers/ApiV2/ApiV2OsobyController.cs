@@ -45,7 +45,7 @@ namespace HlidacStatu.Web.Controllers
         //[HttpGet, Route()]
         //public ActionResult Hledat(string jmeno, string prijmeni, string narozen)
         //{
-        //    DateTime? dt = ParseTools.ToDateTime(narozen
+        //    DateTime? dt = Devmasters.DT.Util.ToDateTime(narozen
         //            , "yyyy-MM-dd");
         //    if (dt.HasValue == false)
         //    {

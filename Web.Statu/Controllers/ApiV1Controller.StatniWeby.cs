@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Lib.Data.External.DataSets;
@@ -49,7 +49,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                if (Devmasters.Core.TextUtil.IsNumeric(id))
+                if (Devmasters.TextUtil.IsNumeric(id))
                     return _DataHost(Convert.ToInt32(id), h);
                 else
                     return Json(ApiResponseStatus.StatniWebNotFound, JsonRequestBehavior.AllowGet);

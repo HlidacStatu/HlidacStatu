@@ -2,8 +2,8 @@
 @using Nest;
 @using HlidacStatu.Lib.Data;
 @using System.Linq;
-@using Devmasters.Core;
-@using Devmasters.Core.Collections;
+@using Devmasters;
+@using Devmasters.Collections;
 
 @{
     ViewBag.Title = "Sponzoři politických stran a politiků";
@@ -131,7 +131,7 @@
                         {
                             <div class="table-row">
                                 <div class="table-col">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(sponzor.CastkaCelkem, html: true))</div>
-                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> (@Devmasters.Core.TextUtil.ShortenText(sponzor.Strana,20)) </div>
+                                <div class="table-col"><a href="@sponzor.Sponzor.GetUrl(true)">@sponzor.Sponzor.FullName()</a> (@Devmasters.TextUtil.ShortenText(sponzor.Strana,20)) </div>
                             </div>
                         }
 

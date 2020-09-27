@@ -1,6 +1,7 @@
 ﻿@using System.Web.Mvc;
-@using Devmasters.Core;
+@using Devmasters;
 @using Nest;
+@using Devmasters.Collections;
 @using HlidacStatu.Lib;
 @using System.Linq;
 @using HlidacStatu.Lib.Data.External.Zabbix;
@@ -57,7 +58,7 @@
 }
 
 @helper Chart(string dataName, int hoursBack, int height, bool detail, string hash = "")
-{var uniqueId = "_chart_" + Devmasters.Core.TextUtil.GenRandomString(8);
+{var uniqueId = "_chart_" + Devmasters.TextUtil.GenRandomString(8);
     var colsize = 0; //data.Select(d => d.ColSize(fromDate, toDate)).Max();
     var colors = new string[] { ZabAvailability.GetStatusChartColor(Statuses.OK),
         ZabAvailability.GetStatusChartColor(Statuses.Pomalé),

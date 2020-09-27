@@ -7,7 +7,7 @@
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
 
-@using Devmasters.Core
+@using Devmasters
 @using System.Data
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
@@ -32,7 +32,7 @@
                         Osoba o = (Osoba)s;
                         return string.Format("<a href='{0}'>{1}</a>", o.GetUrl(), o.FullNameWithYear(true))
                         + "<br />"
-                        + Devmasters.Core.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3),250).Replace("\n", "<br />");
+                        + Devmasters.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3),250).Replace("\n", "<br />");
                     },
                     OrderValueRender = (s) => {
                         Osoba o = (Osoba)s;
@@ -69,7 +69,7 @@
                             }
                             else if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
                             {
-                                sout = sout + "<a href='" + o.GetUrl() + "'>" + HlidacStatu.Util.PluralForm.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
+                                sout = sout + "<a href='" + o.GetUrl() + "'>" + Devmasters.Lang.Plural.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
                             }
                         }
                         else

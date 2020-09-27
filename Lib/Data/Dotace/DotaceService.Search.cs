@@ -1,4 +1,6 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
+using Devmasters.DT;
+
 using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using Nest;
@@ -75,7 +77,7 @@ namespace HlidacStatu.Lib.Data.Dotace
                 Q = query,
                 Page = page,
                 PageSize = pagesize,
-                Order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order),
+                Order = Devmasters.TextUtil.NormalizeToNumbersOnly(order),
                 ExactNumOfResults = exactNumOfResults
             }, withHighlighting, anyAggregation); ;
         }

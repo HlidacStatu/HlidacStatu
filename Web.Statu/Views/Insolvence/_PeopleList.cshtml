@@ -65,7 +65,7 @@
 	HtmlString statisticsForIco(string ico)
 	{
 		var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico);
-		var pocetSmluv = HlidacStatu.Util.PluralForm.Get((int)stat.Summary.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv");
+		var pocetSmluv = Devmasters.Lang.Plural.Get((int)stat.Summary.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv");
 		var smlouvyText = $" - Nalezeli jsme {pocetSmluv} v Registru smluv o celkové hodnotě <strong>{HlidacStatu.Util.RenderData.NicePrice(stat.Summary.CelkemCena, mena: "Kč")}</strong>.";
 
 		var sponzori = StaticData.SponzorujiciFirmy_Vsechny.Get().Where(s => s.ICO == ico).Select(s => s.Title);
@@ -74,7 +74,7 @@
 		var vazby = new List<int>();
 		StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.TryGetValue(ico, out vazby);
 		var politici = vazby == null ? new List<G.Osoba>() : StaticData.PolitickyAktivni.Get()?.Where(p => vazby.Contains(p.InternalId)) ?? new List<G.Osoba>();
-		var maji = HlidacStatu.Util.PluralForm.Get(politici.Count(), "má;mají;mají");
+		var maji = Devmasters.Lang.Plural.Get(politici.Count(), "má;mají;mají");
 		var provazaniPolitici = politici.Any() ? $"<br /> - {string.Join(", ", politici.Select(p => $"<a href='/osoba/{p.NameId}'>{p.FullName()}</a>"))} {maji} vazby na tuto firmu." : "";
 
 		return new HtmlString($"{smlouvyText}{sponzoriText}{provazaniPolitici}");

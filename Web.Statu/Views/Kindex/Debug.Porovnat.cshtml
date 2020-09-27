@@ -3,7 +3,8 @@
 @using System.Collections.Generic
 @using System.Linq
 
-@using Devmasters.Core
+@using Devmasters
+@using Devmasters.Collections
 @using HlidacStatu.Util
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
 
@@ -41,17 +42,17 @@
         rok = toY;
     }
 
-    HlidacStatu.Util.Graphics.Gradient gradIndex = new HlidacStatu.Util.Graphics.Gradient(
-        new HlidacStatu.Util.Graphics.RGB("00b300") //10%
-        , new HlidacStatu.Util.Graphics.RGB("FFA500") //20%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //30%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //50%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
-        , new HlidacStatu.Util.Graphics.RGB("FF0000") //90%
-        , new HlidacStatu.Util.Graphics.RGB("FF0000")
+    Devmasters.Imaging.RGBAGradient gradIndex = new Devmasters.Imaging.RGBAGradient(
+        new Devmasters.Imaging.RGB("00b300") //10%
+        , new Devmasters.Imaging.RGB("FFA500") //20%
+        , new Devmasters.Imaging.RGB("FF0000") //30%
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000") //50%
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000")
+        , new Devmasters.Imaging.RGB("FF0000") //90%
+        , new Devmasters.Imaging.RGB("FF0000")
     ); }
 
 
@@ -79,10 +80,10 @@ else
 </h2>
 
 
-@{ HlidacStatu.Util.Graphics.Gradient grad = new HlidacStatu.Util.Graphics.Gradient(
-                            new HlidacStatu.Util.Graphics.RGB("00b300")
-                            , new HlidacStatu.Util.Graphics.RGB("FFA500")
-                            , new HlidacStatu.Util.Graphics.RGB("FF0000")
+@{ Devmasters.Imaging.RGBAGradient grad = new Devmasters.Imaging.RGBAGradient(
+                            new Devmasters.Imaging.RGB("00b300")
+                            , new Devmasters.Imaging.RGB("FFA500")
+                            , new Devmasters.Imaging.RGB("FF0000")
                         );
     decimal min = 0;
     decimal max = 0;

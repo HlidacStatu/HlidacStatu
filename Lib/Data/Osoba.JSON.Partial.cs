@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using Devmasters.Core;
+using Devmasters;
 using System.Linq.Expressions;
 using System.ComponentModel;
 using System.Collections.Specialized;
@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Data
                 Osoba o = null;
                 var t = this;
 
-                DateTime? narozeni = ParseTools.ToDateTime(t.Narozeni, "yyyy-MM-dd");
+                DateTime? narozeni = Devmasters.DT.Util.ToDateTime(t.Narozeni, "yyyy-MM-dd");
                 //find existing
                 if (this.Id > 0)
                     o = Osoby.GetById.Get(this.Id);
@@ -103,7 +103,7 @@ namespace HlidacStatu.Lib.Data
                 o.Pohlavi = (t.Gender == gender.Žena) ? "f" : "m";
                 o.Jmeno = t.Jmeno;
                 o.Narozeni = narozeni.Value;
-                o.Umrti = ParseTools.ToDateTime(t.Umrti, "yyyy-MM-dd");
+                o.Umrti = Devmasters.DT.Util.ToDateTime(t.Umrti, "yyyy-MM-dd");
                 o.Prijmeni = t.Prijmeni;
                 o.Status = (int)t.Status;
                 o.NameId = t.NameId;
@@ -115,8 +115,8 @@ namespace HlidacStatu.Lib.Data
                     ev.pk = e.pk;
                     ev.Organizace = e.Organizace;
                     ev.AddInfoNum = e.AddInfoNum;
-                    ev.DatumOd = ParseTools.ToDateTime(e.DatumOd, "yyyy-MM-dd");
-                    ev.DatumDo = ParseTools.ToDateTime(e.DatumDo, "yyyy-MM-dd");
+                    ev.DatumOd = Devmasters.DT.Util.ToDateTime(e.DatumOd, "yyyy-MM-dd");
+                    ev.DatumDo = Devmasters.DT.Util.ToDateTime(e.DatumDo, "yyyy-MM-dd");
                     ev.Note = e.Note;
                     ev.Title = e.Title;
                     ev.Type = (int)e.Typ;
@@ -133,12 +133,12 @@ namespace HlidacStatu.Lib.Data
                         var os = Osoby.GetByNameId.Get(v.VazbaKOsoba);
                         if (os != null)
                         {
-                            OsobaVazby.AddOrUpdate(o.InternalId, os.InternalId, (int)v.TypVazby, v.Popis, 0, ParseTools.ToDateTime(v.DatumOd, "yyyy-MM-dd"), ParseTools.ToDateTime(v.DatumDo, "yyyy-MM-dd"), v.Zdroj);
+                            OsobaVazby.AddOrUpdate(o.InternalId, os.InternalId, (int)v.TypVazby, v.Popis, 0, Devmasters.DT.Util.ToDateTime(v.DatumOd, "yyyy-MM-dd"), Devmasters.DT.Util.ToDateTime(v.DatumDo, "yyyy-MM-dd"), v.Zdroj);
                         }
                     }
                     else
                     {
-                        OsobaVazby.AddOrUpdate(o.InternalId, v.VazbaKIco, (int)v.TypVazby, v.Popis, 0, ParseTools.ToDateTime(v.DatumOd, "yyyy-MM-dd"), ParseTools.ToDateTime(v.DatumDo, "yyyy-MM-dd"), v.Zdroj);
+                        OsobaVazby.AddOrUpdate(o.InternalId, v.VazbaKIco, (int)v.TypVazby, v.Popis, 0, Devmasters.DT.Util.ToDateTime(v.DatumOd, "yyyy-MM-dd"), Devmasters.DT.Util.ToDateTime(v.DatumDo, "yyyy-MM-dd"), v.Zdroj);
                     }
                 }
                 return o;

@@ -64,7 +64,7 @@ namespace HlidacStatu.Web.Controllers
         public HttpResponseMessage Dump(string datatype, string date)
         {
 
-            DateTime? specificDate = ParseTools.ToDateTime(date, "yyyy-MM-dd");
+            DateTime? specificDate = Devmasters.DT.Util.ToDateTime(date, "yyyy-MM-dd");
             string onlyfile = $"{datatype}.dump" + (specificDate.HasValue ? "-" + specificDate.Value.ToString("yyyy-MM-dd") : "");
             string fn = HlidacStatu.Lib.StaticData.Dumps_Path + $"{onlyfile}" + ".zip";
 

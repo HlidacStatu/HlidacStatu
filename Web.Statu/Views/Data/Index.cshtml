@@ -3,7 +3,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using System.Collections.Generic;
 
 @{
@@ -480,12 +480,12 @@
                 <div class="col-xs-12 col-sm-offset-1 col-sm-7">
                     @if (!string.IsNullOrEmpty(dss.Ds.description))
                     {
-                        @(Devmasters.Core.TextUtil.ShortenText(dss.Ds.description.ToString(), 240, "..."))
+                        @(Devmasters.TextUtil.ShortenText(dss.Ds.description.ToString(), 240, "..."))
                     }
                 </div>
                 <div class="col-xs-2 col-sm-2 text-muted">
                     <b>@Html.Raw(HlidacStatu.Util.RenderData.NiceNumber(dss.RecordNum, true))</b>&nbsp;záznamů
-                    @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dss.RecordNumWeek, "", ", jeden&nbsp;nový", ", {0}&nbsp;nové", ", {0:### ### ###}&nbsp;nových"))
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)dss.RecordNumWeek, "", ", jeden&nbsp;nový", ", {0}&nbsp;nové", ", {0:### ### ###}&nbsp;nových"))
                     @if (dss.LastRecord.HasValue)
                     {
                         <span>Poslední:@(dss.LastRecord.Value.ToString("d.M.yyyy H:mm"))</span>

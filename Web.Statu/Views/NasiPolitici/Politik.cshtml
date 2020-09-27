@@ -286,7 +286,7 @@
                                 var text = kv.Key.Split('|');
 
                                 <span>
-                                    @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
+                                    @Devmasters.TextUtil.ShortenText(Model.FullName(), 35) osobně  @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value, " není v insolvečním rejstříku", " se vyskytuje v <b>jedné insolvenci</b>", " se vyskytuje v <b>{0} insolvencích</b>", " se vyskytuje v <b>{0} insolvencích</b>")) jako @text[1].
                                     @if (kv.Value > 0)
                                     {
                                         @WebUtil.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")
@@ -305,7 +305,7 @@
                                 var text = kv.Key.Split('|');
 
                                 <span>
-                                    Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value, " nejsou v insolvečním rejstříku", " se vyskytují v <b>jedné insolvenci</b>", " se vyskytují v <b>{0} insolvencích</b>", " se vyskytují v <b>{0} insolvencích</b>")) jako @text[1].
+                                    Firmy navázané na @Devmasters.TextUtil.ShortenText(Model.FullName(), 35)  @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value, " nejsou v insolvečním rejstříku", " se vyskytují v <b>jedné insolvenci</b>", " se vyskytují v <b>{0} insolvencích</b>", " se vyskytují v <b>{0} insolvencích</b>")) jako @text[1].
                                     @if (kv.Value > 0)
                                     {
                                         @WebUtil.AddSearchBtn("/insolvence/hledat", string.Format(osobaInsQuery, text[0]), $" Vyhledat je.")

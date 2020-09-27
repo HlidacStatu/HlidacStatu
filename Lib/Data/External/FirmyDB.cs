@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data.External
     public partial class FirmyDB
     {
 
-        static string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+        static string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
 
         public static void AddZahranicniFirma(string ico, string jmeno, string adresa)
@@ -42,9 +42,9 @@ namespace HlidacStatu.Lib.Data.External
                         new System.Data.SqlClient.SqlParameter("dic", ico),
                         new System.Data.SqlClient.SqlParameter("stav", (int)1),
                         new System.Data.SqlClient.SqlParameter("jmeno", jmeno),
-                        new System.Data.SqlClient.SqlParameter("jmenoascii", Devmasters.Core.TextUtil.RemoveDiacritics(jmeno)),
+                        new System.Data.SqlClient.SqlParameter("jmenoascii", Devmasters.TextUtil.RemoveDiacritics(jmeno)),
                         new System.Data.SqlClient.SqlParameter("versionupdate", (long)0),
-                        new System.Data.SqlClient.SqlParameter("adresa", Devmasters.Core.TextUtil.ShortenText(adresa,100)),
+                        new System.Data.SqlClient.SqlParameter("adresa", Devmasters.TextUtil.ShortenText(adresa,100)),
                         });
             }
         }
@@ -92,7 +92,7 @@ namespace HlidacStatu.Lib.Data.External
                 {
                     return res.Tables[0]
                         .AsEnumerable()
-                        .Where(r => Devmasters.Core.TextUtil.IsNumeric((string)r["ICO"]))
+                        .Where(r => Devmasters.TextUtil.IsNumeric((string)r["ICO"]))
                         .Select(m => FromDataRow(m));
                 }
                 else
@@ -158,7 +158,7 @@ namespace HlidacStatu.Lib.Data.External
                 {
                     var allIcos = res.Tables[0]
                         .AsEnumerable()
-                        .Where(r => Devmasters.Core.TextUtil.IsNumeric((string)r["ICO"]))
+                        .Where(r => Devmasters.TextUtil.IsNumeric((string)r["ICO"]))
                         .Select(r => (string)r["ICO"])
                         .ToArray();
                     if (includedIcosInHoldings == false)
@@ -198,7 +198,7 @@ namespace HlidacStatu.Lib.Data.External
                 {
                     return res.Tables[0]
                         .AsEnumerable()
-                        .Where(r => Devmasters.Core.TextUtil.IsNumeric((string)r["ICO"]))
+                        .Where(r => Devmasters.TextUtil.IsNumeric((string)r["ICO"]))
                         .Select(r => FromDataRow(r, skipDS_Nace));
                 }
                 else
@@ -250,7 +250,7 @@ namespace HlidacStatu.Lib.Data.External
 
         public static string NameFromIco(string ico, bool IcoIfNotFound = false)
         {
-            string cnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+            string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
             using (PersistLib p = new PersistLib())
             {
                 string sql = @"select jmeno from Firma where ico = @ico";

@@ -12,16 +12,16 @@ namespace HlidacStatu.Util
 
         public static char Ch = 'Ȼ';
 
-        public static Devmasters.Core.Batch.MultiOutputWriter outputWriter =
-            new Devmasters.Core.Batch.MultiOutputWriter(
-                Devmasters.Core.Batch.Manager.DefaultOutputWriter,
-                new Devmasters.Core.Batch.LoggerWriter(HlidacStatu.Util.Consts.Logger).OutputWriter
+        public static Devmasters.Batch.MultiOutputWriter outputWriter =
+            new Devmasters.Batch.MultiOutputWriter(
+                Devmasters.Batch.Manager.DefaultOutputWriter,
+                new Devmasters.Batch.LoggerWriter(HlidacStatu.Util.Consts.Logger).OutputWriter
             );
 
-        public static Devmasters.Core.Batch.MultiProgressWriter progressWriter =
-            new Devmasters.Core.Batch.MultiProgressWriter(
-                new Devmasters.Core.Batch.ActionProgressWriter(0.1f).Write,
-                new Devmasters.Core.Batch.ActionProgressWriter(10, new Devmasters.Core.Batch.LoggerWriter(HlidacStatu.Util.Consts.Logger).ProgressWriter).Write
+        public static Devmasters.Batch.MultiProgressWriter progressWriter =
+            new Devmasters.Batch.MultiProgressWriter(
+                new Devmasters.Batch.ActionProgressWriter(0.1f).Write,
+                new Devmasters.Batch.ActionProgressWriter(10, new Devmasters.Batch.LoggerWriter(HlidacStatu.Util.Consts.Logger).ProgressWriter).Write
             );
 
         public static RegexOptions DefaultRegexQueryOption = RegexOptions.IgnoreCase 
@@ -33,7 +33,7 @@ namespace HlidacStatu.Util
         public static System.Globalization.CultureInfo csCulture = System.Globalization.CultureInfo.GetCultureInfo("cs");
         public static Random Rnd = new Random();
 
-        public static Devmasters.Core.Logging.Logger Logger = new Devmasters.Core.Logging.Logger("HlidacStatu");
+        public static Devmasters.Logging.Logger Logger = new Devmasters.Logging.Logger("HlidacStatu");
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
 @using Devmasters.Enums;
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using System.Linq
 @using HlidacStatu.Util;
@@ -191,15 +191,15 @@
                 @if (dotaceSearchH.Total > 0)
                 {
     <p>
-        <b>@Devmasters.Core.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
+        <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
         na osobu @Model.Jmeno @Model.Prijmeni
         (z @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-        @Devmasters.Core.Lang.Plural.Get(items.Count,
+        @Devmasters.Lang.Plural.Get(items.Count,
                "dostala",
                "dostaly",
                "dostalo")
 
-        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
+        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)dotaceSearchH.Total,
                          " žádnou dotaci.",
                          " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
                          " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
@@ -233,8 +233,8 @@
                     string surl = WebUtil.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
 
     <p>
-        @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35) osobně
-        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+        @Devmasters.TextUtil.ShortenText(Model.FullName(), 35) osobně
+        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value,
                 " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
 
             </p>}
@@ -259,8 +259,8 @@
                     string surl = WebUtil.GetSearchUrl("/insolvence/hledat", string.Format(osobaInsQuery, text[0]));
 
     <p>
-        Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)
-        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+        Firmy navázané na @Devmasters.TextUtil.ShortenText(Model.FullName(), 35)
+        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value,
                 " nejsou v insolvečním rejstříku", " se vyskytují v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytují v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytují v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
 
 
@@ -282,8 +282,8 @@
                     string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"osobaid{text[0]}:" + Model.NameId);
 
     <p>
-        Firmy navázané na @Devmasters.Core.TextUtil.ShortenText(Model.FullName(), 35)
-        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)kv.Value,
+        Firmy navázané na @Devmasters.TextUtil.ShortenText(Model.FullName(), 35)
+        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value,
                 $" jsme ve veřejných zakázkach jako {text[1]} nenašli",
                 $" se vyskytují v <a href='{surl}'><b>jedné veřejné zakázce</b></a> jako {text[1]}",
                 $" se vyskytují v <a href='{surl}'><b>{{0}} veřejných zakázkách</b></a> jako {text[1]}",

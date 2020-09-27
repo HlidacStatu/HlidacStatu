@@ -1,6 +1,6 @@
 ﻿@using HlidacStatu.Web;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Web.Framework;
 @using System.Threading.Tasks;
 @using HlidacStatu.Web.Models;
@@ -96,7 +96,7 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
                             <div>
                                 V roce @y  
                                 <strong>
-                                    <a href="@item.Url()">@HlidacStatu.Util.PluralForm.Get((int)iy.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
+                                    <a href="@item.Url()">@Devmasters.Lang.Plural.Get((int)iy.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
                                 </strong>
 
                                 za celkem <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(iy.CelkemCena, html: true, shortFormat: true))</strong>.

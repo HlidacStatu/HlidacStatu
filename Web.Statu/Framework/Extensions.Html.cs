@@ -233,7 +233,7 @@ namespace HlidacStatu.Web.Framework
 
         public static bool ShowKIndex(System.Security.Principal.IPrincipal user)
         {
-            if (Devmasters.Core.Util.Config.GetConfigValue("KIndex") == "private")
+            if (Devmasters.Config.GetWebConfigValue("KIndex") == "private")
             {
                 return IfInRoles(user, "KIndex");
             }

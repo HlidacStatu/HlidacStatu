@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<HlidacStatu.Lib.Data.WatchDog>
 @using Devmasters.Enums;
-@using Devmasters.Core;
+@using Devmasters;
 
 @{ ViewBag.Title = "Hlídači nových údajů v databázích Hlídače"; }
 
@@ -99,7 +99,7 @@
         <span class="text-muted small">Kontrola @stype @wd.Period.ToNiceDisplayName().ToLower()</span>
     </td>
     <td>
-        <a href="/Hledat?q=@(System.Net.WebUtility.UrlEncode(wd.SearchTerm))">@Devmasters.Core.TextUtil.ShortenText(wd.SearchTerm, 100, " ....")</a>
+        <a href="/Hledat?q=@(System.Net.WebUtility.UrlEncode(wd.SearchTerm))">@Devmasters.TextUtil.ShortenText(wd.SearchTerm, 100, " ....")</a>
         @if (!string.IsNullOrEmpty(wd.SpecificContact))
         {
 <br /> <span class="text-muted small">Kontakt: @wd.SpecificContact</span>                }

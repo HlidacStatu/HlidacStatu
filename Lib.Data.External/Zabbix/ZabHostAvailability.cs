@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Devmasters.Core;
+using Devmasters;
 
 namespace HlidacStatu.Lib.Data.External.Zabbix
 {
@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
             {
                 if (inicialized == false)
                 {
-                    var sdata = Devmasters.Core.Util.Config.GetConfigValue("ZabbixIgnoreDataIntervals") ?? "";
+                    var sdata = Devmasters.Config.GetWebConfigValue("ZabbixIgnoreDataIntervals") ?? "";
                     //~2019-08-11T20:10:00~2019-08-11T23:53:00~Zabbix reinstall | hostid~2019-08-11T23:58:00~2019-08-11T23:53:00~Zabbix reinstall |2019-08-11T23:53:00~2019-08-12T10:59:00 enable IP6 
                     try
                     {
@@ -43,8 +43,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         {
                             var parts = sd.Split(new char[] { '~' }, StringSplitOptions.None).Select(m=>m.Trim()).ToArray();
                             string hostid = parts[0].Trim();
-                            var from = Util.ParseTools.ToDateTime(parts[1], "yyyy-MM-ddTHH:mm:ss");
-                            var to = Util.ParseTools.ToDateTime(parts[2], "yyyy-MM-ddTHH:mm:ss");
+                            var from = Devmasters.DT.Util.ToDateTime(parts[1], "yyyy-MM-ddTHH:mm:ss");
+                            var to = Devmasters.DT.Util.ToDateTime(parts[2], "yyyy-MM-ddTHH:mm:ss");
                             var descr = parts[3];
 
                             if (from.HasValue && to.HasValue)

@@ -29,7 +29,7 @@
         @if (@slackData[0] > 0)
         {
             <h3 style="margin-top:0;margin-bottom:40px">
-                Máme již @slackData[0] spolupracovníků @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero(slackData[1], "", ", zrovna je <b class='text-danger'>jeden</b> online", ", zrovna jsou <b class='text-danger'>{0}</b> online", ", zrovna je <b class='text-danger'>{0}</b> online")).
+                Máme již @slackData[0] spolupracovníků @Html.Raw(Devmasters.Lang.Plural.GetWithZero(slackData[1], "", ", zrovna je <b class='text-danger'>jeden</b> online", ", zrovna jsou <b class='text-danger'>{0}</b> online", ", zrovna je <b class='text-danger'>{0}</b> online")).
             </h3>
         }*@
             @using (Html.BeginForm("PridatSe", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

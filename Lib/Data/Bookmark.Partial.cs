@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using System;
@@ -57,7 +57,7 @@ namespace HlidacStatu.Lib.Data
 
             Bookmark b = new Bookmark()
             {
-                Name = Devmasters.Core.TextUtil.ShortenText(name,250),
+                Name = Devmasters.TextUtil.ShortenText(name,250),
                 Folder = "",
                 Created=DateTime.Now,
                 Url = url,

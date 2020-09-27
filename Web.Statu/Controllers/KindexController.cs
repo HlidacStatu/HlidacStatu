@@ -299,7 +299,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         UniqueId = Guid.NewGuid(),
                         Ico = kidx.Ico,
-                        Jmeno = Devmasters.Core.TextUtil.ShortenText(kidx.Jmeno, 55),
+                        Jmeno = Devmasters.TextUtil.ShortenText(kidx.Jmeno, 55),
                         Kindex = KIndexData.KindexImageIcon(kidx.ForYear(rok.Value).KIndexLabel,
                                 "height: 40px",
                                 showNone: true),

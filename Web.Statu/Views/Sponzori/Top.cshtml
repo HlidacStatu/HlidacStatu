@@ -1,6 +1,6 @@
 ﻿@model HlidacStatu.Lib.Render.ReportDataSource<HlidacStatu.Lib.Data.Sponsors.Sponzorstvi<HlidacStatu.Lib.Data.Bookmark.IBookmarkable>>[]
 
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using System.Linq;
 @using HlidacStatu.Web.Framework
@@ -33,8 +33,8 @@
     ViewBag.ShowBookmarkUrl = true;
 
 
-    Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<string> content =
-        new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<string>(
+    Devmasters.Cache.LocalMemory.LocalMemoryCache<string> content =
+        new Devmasters.Cache.LocalMemory.LocalMemoryCache<string>(
             TimeSpan.FromDays(2),
             "/sponzori/top?rok=" + (rok == 0 ? "" : rok.ToString()),
         (p) => Html.Action("Action_Child", new { model = Model, rok = ViewBag.Rok, NameOfView = "Top_Child" }).ToHtmlString()

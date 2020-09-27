@@ -91,8 +91,8 @@ namespace HlidacStatu.Web
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
-            //    ClientId = Devmasters.Core.Util.Config.GetConfigValue("oauth_id"),
-            //    ClientSecret = Devmasters.Core.Util.Config.GetConfigValue("oauth_secr")
+            //    ClientId = Devmasters.Config.GetWebConfigValue("oauth_id"),
+            //    ClientSecret = Devmasters.Config.GetWebConfigValue("oauth_secr")
             //});
 
             //stage 

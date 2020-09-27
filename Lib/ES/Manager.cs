@@ -13,8 +13,8 @@ namespace HlidacStatu.Lib.ES
     public class Manager
     {
 
-        public static Devmasters.Core.Logging.Logger ESTraceLogger = new Devmasters.Core.Logging.Logger("HlidacStatu.Lib.ES.Trace");
-        public static Devmasters.Core.Logging.Logger ESLogger = new Devmasters.Core.Logging.Logger("HlidacStatu.Lib.ES");
+        public static Devmasters.Logging.Logger ESTraceLogger = new Devmasters.Logging.Logger("HlidacStatu.Lib.ES.Trace");
+        public static Devmasters.Logging.Logger ESLogger = new Devmasters.Logging.Logger("HlidacStatu.Lib.ES");
         public static bool ESTraceLoggerExists = log4net.LogManager.Exists("HlidacStatu.Lib.ES.Trace")?.Logger?.IsEnabledFor(log4net.Core.Level.Debug) == true;
 
 
@@ -71,8 +71,8 @@ namespace HlidacStatu.Lib.ES
 
         static Manager()
         {
-            if (!string.IsNullOrEmpty(Devmasters.Core.Util.Config.GetConfigValue("DefaultIndexName")))
-                defaultIndexName = Devmasters.Core.Util.Config.GetConfigValue("DefaultIndexName");
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("DefaultIndexName")))
+                defaultIndexName = Devmasters.Config.GetWebConfigValue("DefaultIndexName");
             System.Net.ServicePointManager.DefaultConnectionLimit = 1000;
         }
 
@@ -214,7 +214,7 @@ namespace HlidacStatu.Lib.ES
         public static ConnectionSettings GetElasticSearchConnectionSettings(string indexName, int timeOut = 60000, int? connectionLimit = null)
         {
 
-            string esUrl = Devmasters.Core.Util.Config.GetConfigValue("ESConnection");
+            string esUrl = Devmasters.Config.GetWebConfigValue("ESConnection");
 
             //var singlePool = new Elasticsearch.Net.SingleNodeConnectionPool(new Uri(esUrl));
             var pool = new Elasticsearch.Net.StaticConnectionPool(esUrl
@@ -248,7 +248,7 @@ namespace HlidacStatu.Lib.ES
                 })
                 ;
 
-            if (System.Diagnostics.Debugger.IsAttached || ESTraceLoggerExists || Devmasters.Core.Util.Config.GetConfigValue("ESDebugDataEnabled") == "true")
+            if (System.Diagnostics.Debugger.IsAttached || ESTraceLoggerExists || Devmasters.Config.GetWebConfigValue("ESDebugDataEnabled") == "true")
                 settings = settings.DisableDirectStreaming();
 
             if (connectionLimit.HasValue)
@@ -641,7 +641,7 @@ namespace HlidacStatu.Lib.ES
             where T : class
         {
             Elasticsearch.Net.ServerError serverErr = esReq.ServerError;
-            ESLogger.Error(new Devmasters.Core.Logging.LogMessage()
+            ESLogger.Error(new Devmasters.Logging.LogMessage()
                     .SetMessage("ES query error: " + text
                         + "\n\nCause:" + serverErr?.Error?.ToString()
                         + "\n\nDetail:" + esReq.DebugInformation

@@ -111,7 +111,7 @@ namespace HlidacStatu.Lib.Data.VZ
             {
                 if (string.IsNullOrWhiteSpace(skupinaJmeno))
                     return null;
-                if (Devmasters.Core.TextUtil.IsNumeric(skupinaJmeno))
+                if (Devmasters.TextUtil.IsNumeric(skupinaJmeno))
                 {
                     int iSkup;
                     if (int.TryParse(skupinaJmeno, out iSkup))
@@ -137,7 +137,7 @@ namespace HlidacStatu.Lib.Data.VZ
             {
                 if (String.IsNullOrWhiteSpace(value))
                     return string.Empty;
-                if (Devmasters.Core.TextUtil.IsNumeric(value))
+                if (Devmasters.TextUtil.IsNumeric(value))
                 {
                     int iSkup;
                     if (int.TryParse(value, out iSkup))
@@ -322,7 +322,7 @@ namespace HlidacStatu.Lib.Data.VZ
                         CPV = cpv,
                         Page = page,
                         PageSize = pageSize,
-                        Order = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(order),
+                        Order = Devmasters.TextUtil.NormalizeToNumbersOnly(order),
                         Zahajeny = Zahajeny,
                         ExactNumOfResults = exactNumOfResults
                     }, withHighlighting: withHighlighting
@@ -359,7 +359,7 @@ namespace HlidacStatu.Lib.Data.VZ
                     = (aggr) => { return baseAggrDesc; };
 
 
-                Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+                Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
                 sw.Start();
 
                 if (fixQuery)

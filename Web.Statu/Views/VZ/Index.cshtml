@@ -1,7 +1,7 @@
 ﻿@using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 
 @{
     ViewBag.Title = "Hlídač veřejných zakázek";
@@ -64,14 +64,14 @@
             <a href="/verejnezakazky/hledat?q=*&oblast=@HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.NormalizeOblastValue(obl.Value)&order=1" class="list-group-item">
                 <h4 class="list-group-item-heading">@obl.Key</h4>
                 <p class="list-group-item-text">
-                    Celkem @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)numAll, "<b>Žádná zakázka</b> za poslední roky", "<b>Jedna zakázka</b> za poslední roky", "<b>{0} zakázky</b> za poslední roky", "<b>{0} zakázek</b> za poslední roky"))
+                    Celkem @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numAll, "<b>Žádná zakázka</b> za poslední roky", "<b>Jedna zakázka</b> za poslední roky", "<b>{0} zakázky</b> za poslední roky", "<b>{0} zakázek</b> za poslední roky"))
                     @if (numAll == 0)
                     {<text>.</text> }
                 else
                 {
                     <text>
-                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)num1M, ", <b>žádná</b> za poslední měsíc.", ", <b>jedna</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc a"))
-                        @Html.Raw(Devmasters.Core.Lang.Plural.GetWithZero((int)num1W, " <b>žádná</b> za poslední týden.", ", <b>jedna</b> za poslední týden.", ", <b>{0}</b> za poslední týden.", ", <b>{0}</b> za poslední týden."))
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)num1M, ", <b>žádná</b> za poslední měsíc.", ", <b>jedna</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc", ", <b>{0}</b> za poslední měsíc a"))
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)num1W, " <b>žádná</b> za poslední týden.", ", <b>jedna</b> za poslední týden.", ", <b>{0}</b> za poslední týden.", ", <b>{0}</b> za poslední týden."))
                     </text>
                 }
                 </p>

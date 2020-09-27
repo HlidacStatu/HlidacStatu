@@ -1,4 +1,4 @@
-﻿@using Devmasters.Core;
+﻿@using Devmasters;
 @using Microsoft.AspNet.Identity;
 
 @{
@@ -18,7 +18,7 @@
         <div class="panel-body">
             <p>
                 Můžete si založit maximálně
-                <b>@HlidacStatu.Util.PluralForm.Get(maxW, "{0} hlídače;{0} hlídače;{0} hlídačů")</b> nových smluv.
+                <b>@Devmasters.Lang.Plural.Get(maxW, "{0} hlídače;{0} hlídače;{0} hlídačů")</b> nových smluv.
             </p>
             <p>
                 <h4>Pokud potřebujete přidat více hlídačů nových smluv</h4>

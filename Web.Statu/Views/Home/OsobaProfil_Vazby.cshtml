@@ -1,5 +1,5 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using System.Linq
 
@@ -14,9 +14,9 @@
 
     var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, aktualnost);
     var statDescription = string.Format("Celkem {0} v reg.smluv od 2016 za celkem {1}, {2}",
-        HlidacStatu.Util.PluralForm.Get((int)ostat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
+        Devmasters.Lang.Plural.Get((int)ostat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
         HlidacStatu.Lib.Data.Smlouva.NicePrice(ostat.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true),
-        HlidacStatu.Util.PluralForm.Get(ostat.SoukromeFirmy.Count, "angažován(a) v 1 firmě;angažován(a) v {0} firmách;angažován(a) v {0} firmách")
+        Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, "angažován(a) v 1 firmě;angažován(a) v {0} firmách;angažován(a) v {0} firmách")
         );
 }
 
@@ -62,7 +62,7 @@
                         {
                             <span>
                                 <a href="@Url.Action("Hledat", new { Q = "ico:" + ico })">
-                                    @HlidacStatu.Util.PluralForm.Get((int)vPerIco.Value.BasicStatPerYear.SummaryAfter2016().Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
+                                    @Devmasters.Lang.Plural.Get((int)vPerIco.Value.BasicStatPerYear.SummaryAfter2016().Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
                                 </a>
                                 <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true))
                             </span>
@@ -88,7 +88,7 @@
         {
             <p>
                 @Model.FullName() se angažuje či angažoval
-                <b>@Devmasters.Core.Lang.Plural.Get(numBezSmluv, "v jedné firmě", "v dalších {0} firmách", "v dalších {0} společnostech")</b>,
+                <b>@Devmasters.Lang.Plural.Get(numBezSmluv, "v jedné firmě", "v dalších {0} firmách", "v dalších {0} společnostech")</b>,
                 které nemají žádné obchodní vztahy se státem (uložené v registru smluv).
             </p>
         }

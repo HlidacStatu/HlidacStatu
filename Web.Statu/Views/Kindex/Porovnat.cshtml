@@ -111,7 +111,7 @@
                     @foreach ( (var cmp, int i) in Model.Select((value, i) => (value, i)) )
                     {
                         <th class="porovnaniHead number @(cmp.Ico)_@(i)">
-                            <a href="#" onclick="RemoveCompany('@(cmp.Ico)_@(i)'); return false;" style="color: red; float:right; margin-left: 5px;"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.Core.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
+                            <a href="#" onclick="RemoveCompany('@(cmp.Ico)_@(i)'); return false;" style="color: red; float:right; margin-left: 5px;"><i class="far fa-trash-alt"></i></a> <a href="/kindex/detail/@cmp.Ico">@(Devmasters.TextUtil.ShortenText(@cmp.Jmeno, 55))</a>
                         </th>
                     }
 

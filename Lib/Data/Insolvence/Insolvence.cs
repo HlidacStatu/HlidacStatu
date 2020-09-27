@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Lib.ES;
@@ -343,7 +343,7 @@ MORATORIUM =
             }
         }
 
-        public static IEnumerable<string> AllIdsFromES(Action<string> outputWriter = null, Action<Devmasters.Core.Batch.ActionProgressData> progressWriter = null)
+        public static IEnumerable<string> AllIdsFromES(Action<string> outputWriter = null, Action<Devmasters.Batch.ActionProgressData> progressWriter = null)
         {
 
             Func<int, int, Nest.ISearchResponse<Lib.Data.Insolvence.Rizeni>> searchFunc = (size, page) =>
@@ -363,7 +363,7 @@ MORATORIUM =
                         searchFunc, (hit, param) =>
                         {
                             ids.Add(hit.Id);
-                            return new Devmasters.Core.Batch.ActionOutputData() { CancelRunning = false, Log = null };
+                            return new Devmasters.Batch.ActionOutputData() { CancelRunning = false, Log = null };
                         }, null, outputWriter, progressWriter, false, prefix: "get_id_Insolvence ", blockSize: 10);
             return ids;
         }

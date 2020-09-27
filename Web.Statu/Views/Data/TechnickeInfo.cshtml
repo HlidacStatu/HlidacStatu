@@ -3,7 +3,7 @@
 @using Nest;
 @using HlidacStatu.Lib;
 @using System.Linq;
-@using Devmasters.Core;
+@using Devmasters;
 
 @{
     var reg = Model.Registration();
@@ -72,14 +72,14 @@
                     }
                     <td>
                         <p>
-                            Datový zdroj @Devmasters.Core.Lang.Plural.GetWithZero((int)Model.SearchData("", 1, 0).Total
+                            Datový zdroj @Devmasters.Lang.Plural.GetWithZero((int)Model.SearchData("", 1, 0).Total
 , "neobsahuje žádný záznam", "obsahuje jeden záznam", "obsahuje {0} záznamy", "obsahuje {0} záznamů")
                         </p>
                         @if (first.Total > 0)
                         {
                             <p>
-                                Nejstarší záznam byl vložen @(Devmasters.Core.DateTimeUtil.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
-                                , nejnovější @(Devmasters.Core.DateTimeUtil.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()).
+                                Nejstarší záznam byl vložen @(Devmasters.DT.Util.Ago((DateTime)first.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower())
+                                , nejnovější @(Devmasters.DT.Util.Ago((DateTime)last.Result.First().DbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()).
                             </p>
                         }
                     </td>

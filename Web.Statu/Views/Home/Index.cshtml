@@ -1,7 +1,7 @@
 ﻿@using Devmasters.Enums;
 @using HlidacStatu.Lib.Data;
 @using HlidacStatu.Lib.Data.External.Zabbix;
-@using Devmasters.Core;
+@using Devmasters;
 @using HlidacStatu.Util;
 @using HlidacStatu.Web.Framework.Report;
 
@@ -212,7 +212,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                 {
                     <span class="tag">
                         <a href="@wp.Link">
-                            @Devmasters.Core.TextUtil.ShortenText(wp.Title.Rendered, 55)
+                            @Devmasters.TextUtil.ShortenText(wp.Title.Rendered, 55)
                         </a>
                     </span>
 
@@ -666,7 +666,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                                         </div>
                                         <div class="status-row--message">
                                             <b>@item.Status().ToNiceDisplayName()</b> -
-                                            @Devmasters.Core.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
+                                            @Devmasters.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
                                         </div>
                                     </li>
 
@@ -683,7 +683,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fde54c', end
                                         </div>
                                         <div class="status-row--message">
                                             <b>@item.Status().ToNiceDisplayName()</b> -
-                                            @Devmasters.Core.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
+                                            @Devmasters.TextUtil.ShortenText(ZabTools.StatusDescription(item.Status().Value, false), 30)
                                         </div>
                                     </li>
 

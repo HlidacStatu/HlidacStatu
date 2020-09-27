@@ -1,5 +1,5 @@
 ﻿@model HlidacStatu.Lib.Data.Smlouva
-@using Devmasters.Core
+@using Devmasters
 @using HlidacStatu.Lib
 @using HlidacStatu.Web.Framework
  
@@ -7,8 +7,8 @@
     Layout = null;
 }
 @{
-    string hlavni = $"Smlouva mezi subjekty "+ Html.KIndexLabelLink(Model.Platce.ico) + "<a href='/Subjekt/{ Model.Platce.ico}'>{Devmasters.Core.TextUtil.ShortenText(Model.Platce.nazev, 60)}</a> a "
-+ Html.KIndexLabelLink(Model.Prijemce.First().ico) + $"<a href='/Subjekt/{Model.Prijemce.First().ico}'>{Devmasters.Core.TextUtil.ShortenText(Model.Prijemce.First().nazev, 60)}</a>";
+    string hlavni = $"Smlouva mezi subjekty "+ Html.KIndexLabelLink(Model.Platce.ico) + "<a href='/Subjekt/{ Model.Platce.ico}'>{Devmasters.TextUtil.ShortenText(Model.Platce.nazev, 60)}</a> a "
++ Html.KIndexLabelLink(Model.Prijemce.First().ico) + $"<a href='/Subjekt/{Model.Prijemce.First().ico}'>{Devmasters.TextUtil.ShortenText(Model.Prijemce.First().nazev, 60)}</a>";
     if (Model.Prijemce.Count() == 0)
     {
         hlavni += $".";

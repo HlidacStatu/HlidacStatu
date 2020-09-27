@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Devmasters.Collections;
+
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Util;
 
@@ -193,7 +195,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                     ret.KoncetraceDodavateluObory = new List<KoncentraceDodavateluObor>();
 
-                    Devmasters.Core.Batch.Manager.DoActionForAll<int>(obory.Keys,
+                    Devmasters.Batch.Manager.DoActionForAll<int>(obory.Keys,
                         (oborid) =>
                         {
 
@@ -220,7 +222,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                                     });
                                 };
                             }
-                            return new Devmasters.Core.Batch.ActionOutputData();
+                            return new Devmasters.Batch.ActionOutputData();
                         }, null, null, !System.Diagnostics.Debugger.IsAttached, maxDegreeOfParallelism: 10 // 
                         );
                 } // if (ret.CelkovaKoncentraceDodavatelu != null)
@@ -541,7 +543,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         }
                     }
 
-                    return new Devmasters.Core.Batch.ActionOutputData();
+                    return new Devmasters.Batch.ActionOutputData();
                 }, null,
                 null, null,
                 false, blockSize: 100);

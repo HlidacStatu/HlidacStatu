@@ -1,6 +1,6 @@
 ﻿using com.sun.org.apache.bcel.@internal.generic;
 
-using Devmasters.Core;
+using Devmasters;
 using Devmasters.Enums;
 
 using Elastic.Apm.Api;
@@ -120,7 +120,7 @@ namespace HlidacStatu.Lib.Data
                     ClassificationsTypes t;
                     if (Enum.TryParse(value.ToString(), out t))
                     {
-                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
                         {
                             Util.Consts.Logger.Warning("Missing Classification value" + value);
                             return "(neznámý)";
@@ -138,7 +138,7 @@ namespace HlidacStatu.Lib.Data
                     ClassificationsTypes t;
                     if (Enum.TryParse(value.ToString(), out t))
                     {
-                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
                             return null;
                         else
                             return t;
@@ -153,7 +153,7 @@ namespace HlidacStatu.Lib.Data
                         value = value + "_obecne";
                     if (Enum.TryParse(value, out t))
                     {
-                        if (Devmasters.Core.TextUtil.IsNumeric(t.ToString()))
+                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
                             return ifNotFound;
                         else
                             return t;
@@ -510,7 +510,7 @@ namespace HlidacStatu.Lib.Data
 
             private static string classificationBaseUrl()
             {
-                string[] baseUrl = Devmasters.Core.Util.Config.GetConfigValue("Classification.Service.Url")
+                string[] baseUrl = Devmasters.Config.GetWebConfigValue("Classification.Service.Url")
                     .Split(',', ';');
                 //Dictionary<string, DateTime> liveEndpoints = new Dictionary<string, DateTime>();
 
@@ -676,15 +676,15 @@ namespace HlidacStatu.Lib.Data
 
             private static string CallEndpoint(string endpoint, string content, string id, int timeoutMs)
             {
-                using (Devmasters.Net.Web.URLContent request = new Devmasters.Net.Web.URLContent(classificationBaseUrl() + $"/{endpoint}?doc_id={id}"))
+                using (Devmasters.Net.HttpClient.URLContent request = new Devmasters.Net.HttpClient.URLContent(classificationBaseUrl() + $"/{endpoint}?doc_id={id}"))
                 {
-                    request.Method = Devmasters.Net.Web.MethodEnum.POST;
+                    request.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
                     request.Tries = 3;
                     request.TimeInMsBetweenTries = 5000;
                     request.Timeout = timeoutMs;
                     request.ContentType = "application/json; charset=utf-8";
                     request.RequestParams.RawContent = content;
-                    Devmasters.Net.Web.TextContentResult response = null;
+                    Devmasters.Net.HttpClient.TextContentResult response = null;
                     try
                     {
                         Util.Consts.Logger.Debug($"Calling classifier endpoint [{endpoint}] for {id} from " + request.Url);

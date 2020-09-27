@@ -7,7 +7,7 @@
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
 @using HlidacStatu.Util
-@using Devmasters.Core
+@using Devmasters
 @using System.Data
 @using System.Data.SqlClient
 @using HlidacStatu.Lib.Data
@@ -400,14 +400,14 @@
             {
                 ministrTopTxt.Append(" dominovala ");
             }
-            ministrTopTxt.Append($" na <b>{Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")}</b>");
+            ministrTopTxt.Append($" na <b>{Devmasters.Lang.Plural.Get(topStranaNaMinTopList[i].pocetMin, "jednom ministerstvu", "{0} resortech", "{0} resortech")}</b>");
             ministrTopTxt.Append($" ({(topStranaNaMinTopList[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s))})");
         }
     }
 
     @Html.Raw(ministrTopTxt.ToString());
 </p>
-<meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + topTxt + "<br /><br />" + Devmasters.Core.TextUtil.ShortenText(ministrTopTxt.ToString(),170,"..."))" />
+<meta property="og:hlidac_html" content="@Html.Encode("<h2 style='padding-top:0'>Jak zodpovídají jednotlivé politické strany za fungování státu a jednotlivé resorty?</h2>" + topTxt + "<br /><br />" + Devmasters.TextUtil.ShortenText(ministrTopTxt.ToString(),170,"..."))" />
 <meta property="og:hlidac_footer" content="Analýza působení stran od @startDate.ToString("d. M. yyyy")" />
 <meta property="og:hlidac_subfooter" content="vypočítáno ke dni @DateTime.Now.ToString("d. M. yyyy")" />
 
@@ -491,7 +491,7 @@
                 <span>nejdéle bez přestávky zodpovídala </span>
             }
             za
-            <b>@Devmasters.Core.Lang.Plural.Get(topStranaNaMinTopList2[i].pocetMin, "jedno ministerstvo", "{0} resorty", "{0} resortů")</b>
+            <b>@Devmasters.Lang.Plural.Get(topStranaNaMinTopList2[i].pocetMin, "jedno ministerstvo", "{0} resorty", "{0} resortů")</b>
             (@(topStranaNaMinTopList2[i].ministerstva.Select(m => m.Replace("Ministerstvo ", "")).Aggregate((f, s) => f + ", " + s)))
         </span>
     }

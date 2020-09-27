@@ -73,7 +73,7 @@ namespace Vybory_PSP
                     return null;
                 HtmlNode n = GetNode(doc, xpath);
                 if (n != null)
-                    return Devmasters.Core.TextUtil.NormalizeToBlockText(n.InnerText);
+                    return Devmasters.TextUtil.NormalizeToBlockText(n.InnerText);
                 else
                     return null;
             }

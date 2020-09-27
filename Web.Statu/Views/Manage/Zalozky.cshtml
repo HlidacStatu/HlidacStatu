@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<HlidacStatu.Lib.Data.Bookmark>
 @using System.Linq;
 @using System.Collections.Generic;
-@using Devmasters.Core;
+@using Devmasters;
 
 @{
     ViewBag.Title = "Uložené záložky";
@@ -50,7 +50,7 @@
             </td>
             <td>
                 <a href="@bm.Url">
-                    @Devmasters.Core.TextUtil.ShortenText(bm.Name, 250) <sup><span class="glyphicon glyphicon-link"></span></sup>
+                    @Devmasters.TextUtil.ShortenText(bm.Name, 250) <sup><span class="glyphicon glyphicon-link"></span></sup>
                 </a>
             </td>
             <td>

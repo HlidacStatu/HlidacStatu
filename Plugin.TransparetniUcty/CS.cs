@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using Devmasters.Core;
-using Devmasters.Net.Web;
+using Devmasters;
+using Devmasters.Net.HttpClient;
 using Newtonsoft.Json;
 
 namespace HlidacStatu.Plugin.TransparetniUcty

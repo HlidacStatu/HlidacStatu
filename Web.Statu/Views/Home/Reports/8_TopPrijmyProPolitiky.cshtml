@@ -1,5 +1,5 @@
 ﻿@using Nest
-@using Devmasters.Core;
+@using Devmasters;
 @using System
 @using System.Collections.Generic
 @using System.Linq
@@ -154,7 +154,7 @@
                 (<a href="@Url.Action("politikVazby", new { id = i.politik.NameId })">všechny vazby osoby</a>)
             </td>
             <td>
-                Celková částka:@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(i.stat.CelkemCena, html: true, shortFormat: true)) z celkem  @HlidacStatu.Util.PluralForm.Get((int)i.stat.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
+                Celková částka:@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(i.stat.CelkemCena, html: true, shortFormat: true)) z celkem  @Devmasters.Lang.Plural.Get((int)i.stat.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
             </td>
             <td>
                 @{
@@ -176,13 +176,13 @@
                     @foreach (var vPerIco in pfirmy.Take(numToDisplay))
                     {
                         <span>
-                            @vPerIco.FirmaName,  <a href="/subjekt/@vPerIco.ICO">@HlidacStatu.Util.PluralForm.Get((int)vPerIco.stat.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
+                            @vPerIco.FirmaName,  <a href="/subjekt/@vPerIco.ICO">@Devmasters.Lang.Plural.Get((int)vPerIco.stat.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
                             na @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.stat.Summary.CelkemCena, html: true, shortFormat: true)).<br />
                         </span>
                     }
                     @if (pfirmy.Count() > numToDisplay)
                     {<span>
-                            ... a @HlidacStatu.Util.PluralForm.Get(pfirmy.Count() - numToDisplay, "další firma;další {0} firmy;dalších {0} firem").
+                            ... a @Devmasters.Lang.Plural.Get(pfirmy.Count() - numToDisplay, "další firma;další {0} firmy;dalších {0} firem").
                         </span>
                     }
                 </div>

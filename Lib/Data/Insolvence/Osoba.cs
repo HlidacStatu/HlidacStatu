@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using System;
 using System.Linq;
 
@@ -104,7 +104,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 			}
 			else if (!string.IsNullOrEmpty(Rc))
 			{
-                return Util.ParseTools.RodneCisloToDate(Rc);
+                return Devmasters.DT.Util.RodneCisloToDate(Rc);
             }
             return null;
 		}

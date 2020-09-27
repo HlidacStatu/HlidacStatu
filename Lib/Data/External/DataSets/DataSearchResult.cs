@@ -205,7 +205,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
                 if (this.Total > actualNumToRender)
                 {
-                    content = $"<h4>Zobrazujeme {Devmasters.Core.Lang.Plural.Get(actualNumToRender, "první výsledek","první {0} výsledky","prvních {0} výsledků")}</h4>" 
+                    content = $"<h4>Zobrazujeme {Devmasters.Lang.Plural.Get(actualNumToRender, "první výsledek","první {0} výsledky","prvních {0} výsledků")}</h4>" 
                         + content
                         + $"<div class=\"text-center\"><a class=\"btn btn-default btn-default-new\" href=\"{this.DataSet.DatasetSearchUrl(query)}\">zobrazit všechny nalezené záznamy</a></div>";
                 }

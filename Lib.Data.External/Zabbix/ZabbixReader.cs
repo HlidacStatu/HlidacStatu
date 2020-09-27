@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Devmasters.Core;
-using Devmasters.Core.Collections;
+using Devmasters;
+using Devmasters.Collections;
 using HlidacStatu.Lib;
 
 namespace HlidacStatu.Lib.Data.External.Zabbix
@@ -12,9 +12,9 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
         : IDisposable
     {
 
-        static string zabbixServer = Devmasters.Core.Util.Config.GetConfigValue("ZabbixServerUrl"); 
+        static string zabbixServer = Devmasters.Config.GetWebConfigValue("ZabbixServerUrl"); 
 
-        ZabbixApi.Zabbix zabbix = new ZabbixApi.Zabbix(Devmasters.Core.Util.Config.GetConfigValue("ZabbixAPIUser"), Devmasters.Core.Util.Config.GetConfigValue("ZabbisAPIPassword"), zabbixServer + "/api_jsonrpc.php");
+        ZabbixApi.Zabbix zabbix = new ZabbixApi.Zabbix(Devmasters.Config.GetWebConfigValue("ZabbixAPIUser"), Devmasters.Config.GetWebConfigValue("ZabbisAPIPassword"), zabbixServer + "/api_jsonrpc.php");
 
         public ZabbixReader()
         {
@@ -289,8 +289,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         history = 4,
                         sortfield = "clock",
                         sortorder = "ASC",
-                        time_from = DateTimeUtil.ToEpochTimeFromUTC(DateTime.UtcNow.AddHours(-1 * hoursBack)),
-                        time_till = DateTimeUtil.ToEpochTimeFromUTC(DateTime.UtcNow)
+                        time_from = Devmasters.DT.Util.ToEpochTimeFromUTC(DateTime.UtcNow.AddHours(-1 * hoursBack)),
+                        time_till = Devmasters.DT.Util.ToEpochTimeFromUTC(DateTime.UtcNow)
 
 
                     };
@@ -301,7 +301,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         var h = new ZabHistoryItem()
                         {
                             itemId = r.itemid,
-                            clock = DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(r.clock)),
+                            clock = Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(r.clock)),
                             svalue = r.value
                         };
                         history.Add(h);
@@ -346,8 +346,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     history = historyType,
                     sortfield = "clock",
                     sortorder = "ASC",
-                    time_from = DateTimeUtil.ToEpochTimeFromUTC(DateTime.UtcNow.AddHours(-1 * hoursBack)),
-                    time_till = DateTimeUtil.ToEpochTimeFromUTC(DateTime.UtcNow)
+                    time_from = Devmasters.DT.Util.ToEpochTimeFromUTC(DateTime.UtcNow.AddHours(-1 * hoursBack)),
+                    time_till = Devmasters.DT.Util.ToEpochTimeFromUTC(DateTime.UtcNow)
 
 
                 };
@@ -358,7 +358,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     var h = new ZabHistoryItem()
                     {
                         itemId = r.itemid,
-                        clock = DateTimeUtil.FromEpochTimeToUTC(Convert.ToInt64(r.clock)).ToLocalTime() ,
+                        clock = Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(r.clock)).ToLocalTime() ,
                         value = HlidacStatu.Util.ParseTools.ToDecimal(r.value)
                     };
                     history.Add(h);

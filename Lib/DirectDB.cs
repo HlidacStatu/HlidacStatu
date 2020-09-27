@@ -10,7 +10,7 @@ namespace HlidacStatu.Lib
 {
     public class DirectDB
     {
-        static string defaultCnnStr = Devmasters.Core.Util.Config.GetConfigValue("CnnString");
+        static string defaultCnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
 
 
         public static IEnumerable<T> GetList<T>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
@@ -38,7 +38,7 @@ namespace HlidacStatu.Lib
         private static IEnumerable<T> GetList<T>(Func<DataRow, T> fillFnc, string sql, System.Data.CommandType type, IDataParameter[] param, string cnnString)
         {
             //bool isStruct = typeof(T).IsValueType && !typeof(T).IsEnum;
-            using (var p = new Devmasters.Core.PersistLib())
+            using (var p = new Devmasters.PersistLib())
             {
                 var res = new List<T>();
                 try
@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib
         private static T GetRowValue<T>(DataRow dr, int index)
         {
             var dval = dr[index];
-            bool isDbNull = Devmasters.Core.PersistLib.IsNull(dval);
+            bool isDbNull = Devmasters.PersistLib.IsNull(dval);
             if (isDbNull)
                 return default(T);
             else
@@ -116,7 +116,7 @@ namespace HlidacStatu.Lib
 
         public static void NoResult(string sql, System.Data.CommandType type , IDataParameter[] param = null, string cnnString = null)
         {
-            using (var p = new Devmasters.Core.PersistLib())
+            using (var p = new Devmasters.PersistLib())
             {
                 try
                 {
@@ -183,7 +183,7 @@ namespace HlidacStatu.Lib
         private static String ParameterValueForSQL(SqlParameter sp)
         {
             String retval = "";
-            if (Devmasters.Core.PersistLib.IsNull(sp.Value))
+            if (Devmasters.PersistLib.IsNull(sp.Value))
                 return "null";
 
             switch (sp.SqlDbType)

@@ -194,7 +194,7 @@ namespace HlidacStatu.Lib.Render
                 {
                     if (length.HasValue == false)
                         return value.ToString();
-                    return Devmasters.Core.TextUtil.ShortenText(value.ToString(), length.Value);
+                    return Devmasters.TextUtil.ShortenText(value.ToString(), length.Value);
                 }
             }
 
@@ -247,7 +247,7 @@ namespace HlidacStatu.Lib.Render
                     inputformats = new string[] { };
                 }
                 format = format ?? "d.MM.yyyy";
-                DateTime? dat = HlidacStatu.Util.ParseTools.ToDateTime(value.ToString(), inputformats);
+                DateTime? dat = Devmasters.DT.Util.ToDateTime(value.ToString(), inputformats);
                 if (dat.HasValue)
                     return dat.Value.ToString(format);
                 else
@@ -274,9 +274,9 @@ namespace HlidacStatu.Lib.Render
 
                 //remove /n/r on the beginning
                 s = System.Text.RegularExpressions.Regex.Replace(s, "^(\\s)*", "");
-                s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\n\n");
-                s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\r\r");
-                s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, "\t\t");
+                s = Devmasters.TextUtil.ReplaceDuplicates(s, "\n\n");
+                s = Devmasters.TextUtil.ReplaceDuplicates(s, "\r\r");
+                s = Devmasters.TextUtil.ReplaceDuplicates(s, "\t\t");
 
                 return s;
                 //return s;
@@ -299,12 +299,12 @@ namespace HlidacStatu.Lib.Render
                 if (text == null)
                     return string.Empty;
                 else
-                    return Devmasters.Core.TextUtil.ReplaceHTMLEntities(text.ToString());
+                    return Devmasters.TextUtil.ReplaceHTMLEntities(text.ToString());
             }
 
             public static string fn_Pluralize(int number, string zeroText, string oneText, string twoText, string moreText)
             {
-                return Devmasters.Core.Lang.Plural.GetWithZero(number, zeroText, oneText, twoText, moreText);
+                return Devmasters.Lang.Plural.GetWithZero(number, zeroText, oneText, twoText, moreText);
             }
 
             public static string fn_GetRegexGroupValue(string text, string regex, string groupname)

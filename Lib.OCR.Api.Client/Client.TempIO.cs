@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.OCR.Api
             {
                 lock (lockObj)
                 {
-                    TempDirectory = Devmasters.Core.Util.Config.GetConfigValue("OCR.Temp.Directory");
+                    TempDirectory = Devmasters.Config.GetWebConfigValue("OCR.Temp.Directory");
                     if (string.IsNullOrEmpty(TempDirectory))
                     {
                         TempDirectory = System.IO.Path.GetTempPath();
@@ -31,7 +31,7 @@ namespace HlidacStatu.Lib.OCR.Api
             {
                 do
                 {
-                    string tempName = Devmasters.Core.TextUtil.GenRandomString(12);
+                    string tempName = Devmasters.TextUtil.GenRandomString(12);
                     string fn = TempDirectory + tempName;
                     try
                     {

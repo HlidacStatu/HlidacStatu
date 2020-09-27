@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using System;
@@ -38,7 +38,7 @@ namespace HlidacStatu.Lib.Data
 
         public byte[] PrintToPDF()
         {
-            //string url = string.Format(Devmasters.Core.Util.Config.GetConfigValue("SiteURL") + "api/InvoicePrint.ashx?id={0}&h={1}",
+            //string url = string.Format(Devmasters.Config.GetWebConfigValue("SiteURL") + "api/InvoicePrint.ashx?id={0}&h={1}",
             //    this.ID, System.Web.HttpUtility.UrlEncode(this.GetInvoiceHash()));
             //url = url.Trim();
             //return Feedback.Lib.PDF.Net.PDFClient.GetURLinPDF(url);

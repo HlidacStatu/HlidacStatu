@@ -152,7 +152,7 @@ namespace HlidacStatu.Lib.Data
                 return res;
             }
 
-            var totalsw = new Devmasters.Core.StopWatchEx();
+            var totalsw = new Devmasters.DT.StopWatchEx();
             totalsw.Start();
 
             ParallelOptions po = new ParallelOptions();
@@ -186,7 +186,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+                        Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
                         sw.Start();
 
                         res.Firmy = Firma.Search.SimpleSearch(query, 0, 50);
@@ -215,7 +215,7 @@ namespace HlidacStatu.Lib.Data
                 {
                     try
                     {
-                        Devmasters.Core.StopWatchEx sw = new Devmasters.Core.StopWatchEx();
+                        Devmasters.DT.StopWatchEx sw = new Devmasters.DT.StopWatchEx();
                         sw.Start();
 
                         res.Osoby = Osoba.Search.SimpleSearch(query, 1, 10, Osoba.Search.OrderResult.Relevance);

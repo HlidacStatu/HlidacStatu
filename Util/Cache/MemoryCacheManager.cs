@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Devmasters.Cache.V20.LocalMemory;
+using Devmasters.Cache.LocalMemory;
 
 namespace HlidacStatu.Util.Cache
 {
 
     public class MemoryCacheManager<T, Key>
-        : Manager<T,Key, Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<T>>
+        : Manager<T,Key, Devmasters.Cache.LocalMemory.LocalMemoryCache<T>>
         where T : class
     {
     
@@ -17,7 +17,7 @@ namespace HlidacStatu.Util.Cache
         }
         protected override LocalMemoryCache<T> getTCacheInstance(Key key, TimeSpan expiration, Func<Key, T> contentFunc)
         {
-            return new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key));
+            return new Devmasters.Cache.LocalMemory.LocalMemoryCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key));
         }
 
         private static MemoryCacheManager<T, Key> GetSafeInstance(Type instanceType)

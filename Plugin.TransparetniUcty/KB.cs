@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using Devmasters.Core;
+using Devmasters;
 using HlidacStatu.Util;
 using HtmlAgilityPack;
 
@@ -110,7 +110,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 
         private DateTime ParseDate(string value)
         {
-            var dat = ParseTools.ToDateTime(value, "d. M. yyyy");
+            var dat = Devmasters.DT.Util.ToDateTime(value, "d. M. yyyy");
             if (dat.HasValue)
             {
                 return dat.Value;

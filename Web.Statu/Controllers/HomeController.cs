@@ -1,4 +1,4 @@
-﻿using Devmasters.Core;
+﻿using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Lib;
@@ -30,8 +30,8 @@ namespace HlidacStatu.Web.Controllers
         public static string[] DontIndexOsoby = null;
         static HomeController()
         {
-            DontIndexOsoby = Devmasters.Core.Util.Config
-                 .GetConfigValue("DontIndexOsoby")
+            DontIndexOsoby = Devmasters.Config
+                 .GetWebConfigValue("DontIndexOsoby")
                  .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
                  .Select(m => m.ToLower())
                  .ToArray();
@@ -257,13 +257,13 @@ namespace HlidacStatu.Web.Controllers
                     {
 
                         var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                        var password = Devmasters.Core.TextUtil.GenRandomString(8);
+                        var password = Devmasters.TextUtil.GenRandomString(8);
                         var result = UserManager.Create(user, password);
                         result = UserManager.AddToRole(user.Id, "TeamMember");
 
-                        using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent("https://www.hlidacstatu.cz/account/confirmemail"))
+                        using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent("https://www.hlidacstatu.cz/account/confirmemail"))
                         {
-                            net.Method = Devmasters.Net.Web.MethodEnum.POST;
+                            net.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
                             net.RequestParams.Form.Add("email", model.Email);
                             net.GetContent();
                         }
@@ -356,8 +356,8 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrEmpty(ico))
                 return RedirectToAction("Report", new { id = "1" });
 
-            //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
-            //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
+            //if (!Devmasters.TextUtil.IsNumeric(ico))
+            //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
 
 
             HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
@@ -394,8 +394,8 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrEmpty(ico))
                 return RedirectToAction("Report", new { id = "1" });
 
-            //if (!Devmasters.Core.TextUtil.IsNumeric(ico))
-            //    ico = Devmasters.Core.TextUtil.NormalizeToNumbersOnly(ico);
+            //if (!Devmasters.TextUtil.IsNumeric(ico))
+            //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
 
 
             HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
@@ -444,8 +444,8 @@ namespace HlidacStatu.Web.Controllers
 
             if (auth == false || (auth == true && this.User?.Identity?.IsAuthenticated == true))
             {
-                if (!string.IsNullOrEmpty(email) && Devmasters.Core.TextUtil.IsValidEmail(email)
-                    && !string.IsNullOrEmpty(to) && Devmasters.Core.TextUtil.IsValidEmail(to)
+                if (!string.IsNullOrEmpty(email) && Devmasters.TextUtil.IsValidEmail(email)
+                    && !string.IsNullOrEmpty(to) && Devmasters.TextUtil.IsValidEmail(to)
                     )
                 {
                     try
@@ -507,7 +507,7 @@ text zpravy: {txt}
 
                 try
                 {
-                    string connectionString = Devmasters.Core.Util.Config.GetConfigValue("RabbitMqConnectionString");
+                    string connectionString = Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString");
                     if (string.IsNullOrWhiteSpace(connectionString))
                         throw new Exception("Missing RabbitMqConnectionString");
 
@@ -805,10 +805,10 @@ text zpravy: {txt}
             }
 
 
-            if (!string.IsNullOrWhiteSpace(qs["cenaOd"]) && Devmasters.Core.TextUtil.IsNumeric(qs["cenaOd"]))
+            if (!string.IsNullOrWhiteSpace(qs["cenaOd"]) && Devmasters.TextUtil.IsNumeric(qs["cenaOd"]))
                 query += " cena:>" + qs["cenaOd"];
 
-            if (!string.IsNullOrWhiteSpace(qs["cenaDo"]) && Devmasters.Core.TextUtil.IsNumeric(qs["cenaDo"]))
+            if (!string.IsNullOrWhiteSpace(qs["cenaDo"]) && Devmasters.TextUtil.IsNumeric(qs["cenaDo"]))
                 query += " cena:<" + qs["cenaDo"];
 
             if (!string.IsNullOrWhiteSpace(qs["zverejnenoOd"]) && !string.IsNullOrWhiteSpace(qs["zverejnenoDo"]))
@@ -1250,7 +1250,7 @@ text zpravy: {txt}
                     , q, null);
 
             if (System.Diagnostics.Debugger.IsAttached ||
-                Devmasters.Core.Util.Config.GetConfigValue("LogSearchTimes") == "true")
+                Devmasters.Config.GetWebConfigValue("LogSearchTimes") == "true")
             {
                 HlidacStatu.Util.Consts.Logger.Info($"Search times: {q}\n" + res.SearchTimesReport());
 
@@ -1309,7 +1309,7 @@ text zpravy: {txt}
             //    page += "/";
 
             string widgetjs = System.IO.File.ReadAllText(path)
-                .Replace("#RND#", id ?? Devmasters.Core.TextUtil.GenRandomString(4))
+                .Replace("#RND#", id ?? Devmasters.TextUtil.GenRandomString(4))
                 .Replace("#MAXWIDTH#", width != null ? ",maxWidth:" + width : "")
                 .Replace("#WEBROOT#", this.Request.Url.Scheme + "://" + this.Request.Url.Host)
                 ;
@@ -1538,7 +1538,7 @@ text zpravy: {txt}
                 string socialFooter = "";
                 string socialSubFooter = "";
                 string socialFooterImg = "";
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(pageUrl))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(pageUrl))
                 {
                     net.Timeout = 40000;
                     var cont = net.GetContent().Text;

@@ -26,7 +26,7 @@ namespace HlidacStatu.Util
         {
             var words = ParseTools.CountWords(plaintext);
             var length = plaintext?.Length ?? 0;
-            var variance = Util.StringTools.WordsVarianceInText(plaintext);
+            var variance = Devmasters.TextUtil.WordsVarianceInText(plaintext);
             var uniqueWordsCount = variance.Item2;
             var wordsVariance = variance.Item1;
 
@@ -110,7 +110,7 @@ namespace HlidacStatu.Util
         }
         public static string IcoToMerkIco(string ico)
         {
-            if (Devmasters.Core.TextUtil.IsNumeric(ico))
+            if (Devmasters.TextUtil.IsNumeric(ico))
             {
                 long tmp;
                 if (long.TryParse(ico.Trim(), out tmp))
@@ -133,9 +133,9 @@ namespace HlidacStatu.Util
 
             //remove /n/r on the beginning
             ns = System.Text.RegularExpressions.Regex.Replace(ns, "^(\\s)*", "");
-            ns = Devmasters.Core.TextUtil.ReplaceDuplicates(ns, "\n\n");
-            ns = Devmasters.Core.TextUtil.ReplaceDuplicates(ns, "\r\r");
-            ns = Devmasters.Core.TextUtil.ReplaceDuplicates(ns, "\t\t");
+            ns = Devmasters.TextUtil.ReplaceDuplicates(ns, "\n\n");
+            ns = Devmasters.TextUtil.ReplaceDuplicates(ns, "\r\r");
+            ns = Devmasters.TextUtil.ReplaceDuplicates(ns, "\t\t");
             ns = ns.Trim();
 
             //remove /n/r on the beginning again
@@ -214,13 +214,13 @@ namespace HlidacStatu.Util
                 return string.Empty;
 
             var s = strana.ToLower();
-            s = Devmasters.Core.TextUtil.ReplaceDuplicates(s, ' ');
-            s = Devmasters.Core.TextUtil.RemoveDiacritics(s);
+            s = Devmasters.TextUtil.ReplaceDuplicates(s, ' ');
+            s = Devmasters.TextUtil.RemoveDiacritics(s);
 
             string[] vals = StranyZkratky.Keys
                     //.Union(StranyZkratky
                     //            .Values
-                    //            .Select(m => Devmasters.Core.TextUtil.RemoveDiacritics(m).ToLower())
+                    //            .Select(m => Devmasters.TextUtil.RemoveDiacritics(m).ToLower())
                     //            .Distinct()
                     //            )
                     .ToArray();
@@ -249,97 +249,6 @@ namespace HlidacStatu.Util
 
         }
 
-        static string[] dateFormats = new string[] {
-                "d.M.yyyy", "d. M. yyyy",
-                "dd.MM.yyyy", "dd. MM. yyyy",
-                "dd.MM.yy", "dd. MM. yy",
-                "d.M.yy", "d. M. yy",
-                "yyyy-MM-dd", "yyyy-M-d",
-                "yy-MM-dd", "yy-M-d",
-        };
-        static string[] timeFormats = new string[] {"",
-                "H:m:s","HH:mm:ss",
-                "H:m","HH:mm",
-                "H: m: s","HH: mm: ss",
-                "H: m: s","HH: mm: ss tt",
-                "h: m: s","HH: mm: ss tt",
-                "H:m:s.f","HH:mm:ss.f",
-                "H:m:s.ff","HH:mm:ss.ff",
-                "H:m:s.fff","HH:mm:ss.fff",
-                "H:m:s.ffff","HH:mm:ss.ffff",
-                "H:m:s.fffff","HH:mm:ss.fffff",
-                "H:m:s.fK","HH:mm:ss.fK",
-                "H:m:s.ffK","HH:mm:ss.ffK",
-                "H:m:s.fffK","HH:mm:ss.fffK",
-                "H:m:s.ffffK","HH:mm:ss.ffffK",
-                "H:m:s.fffffK","HH:mm:ss.fffffK",
-            };
-
-        static object lockComb = new object();
-        static string[] combinations = null;
-        public static DateTime? ToDateTime(string value)
-        {
-
-            if (combinations == null)
-                lock (lockComb)
-                {
-                    if (combinations == null)
-                    {
-                        List<string> cc = new List<string>();
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.ff");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffK");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.fff");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.fffK");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffff");
-                        cc.Add("yyyy-MM-ddTHH:mm:ss.ffffK");
-                        foreach (var d in dateFormats)
-                            foreach (var t in timeFormats)
-                                cc.Add((d + " " + t).Trim());
-
-                        combinations = cc.ToArray();
-                    }
-                };
-
-
-            return ToDateTime(value, combinations);
-
-        }
-        public static DateTime? ToDate(string value)
-        {
-            return ToDateTime(value,
-                dateFormats
-                );
-        }
-        public static DateTime? ToDateTimeFromCode(string value)
-        {
-            return ToDateTime(value, "yyyy-MM-dd", "yyyy-M-d", "yy-MM-D");
-        }
-
-        public static DateTime? ToDateTime(string value, params string[] formats)
-        {
-            if (string.IsNullOrEmpty(value))
-                return null;
-            foreach (var f in formats)
-            {
-                var dt = ToDateTime(value, f);
-                if (dt.HasValue)
-                    return dt;
-            }
-            return null;
-        }
-
-        public static DateTime? ToDateTime(string value, string format)
-        {
-            if (string.IsNullOrEmpty(value))
-                return null;
-
-            DateTime tmp;
-            if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out tmp))
-                return new DateTime?(tmp);
-            else
-                return null;
-        }
-
         public static int? ToInt(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -355,7 +264,7 @@ namespace HlidacStatu.Util
 
         public static decimal? FromTextToDecimal(string value)
         {
-            return ToDecimal(Devmasters.Core.TextUtil.NormalizeToNumbersOnly(value));
+            return ToDecimal(Devmasters.TextUtil.NormalizeToNumbersOnly(value));
         }
 
         public static decimal? ToDecimal(string value)
@@ -497,26 +406,6 @@ namespace HlidacStatu.Util
             return myRegex.Replace(txt, replacement);
         }
 
-        public static DateTime? RodneCisloToDate(string rc)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(rc))
-                    return null;
-                var suffix = rc.Substring(0, 2);
-                string syear = (Convert.ToInt32((DateTime.Now.Year - 18).ToString().Substring(2)) > Convert.ToInt32(suffix) ? "20" : "19") + suffix;
-                int year = Convert.ToInt32(syear);
-                int month = Convert.ToInt32(rc.Substring(2, 2));
-                month = month > 50 ? month - 50 : month;
-                int day = Convert.ToInt32(rc.Substring(4, 2));
-                return new DateTime(year, month, day);
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
-        }
 
         public static T ChangeType<T>(object value)
         {

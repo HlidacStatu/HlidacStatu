@@ -71,14 +71,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 private string NormalizeFilename(string filename)
                 {
-                    string validFilename = HlidacStatu.Util.IOTools.MakeValidFileName(filename);
+                    string validFilename = Devmasters.IO.IOTools.MakeValidFileName(filename);
 
                     if (string.IsNullOrWhiteSpace(validFilename) || validFilename.Length < 3)
-                        validFilename = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(filename);
+                        validFilename = Devmasters.Crypto.Hash.ComputeHashToHex(filename);
 
                     var generatedFileName = this.ItemId + "_" + validFilename;
                     if (generatedFileName.Length > 80)
-                        generatedFileName = Devmasters.Core.CryptoLib.Hash.ComputeHashToHex(generatedFileName);
+                        generatedFileName = Devmasters.Crypto.Hash.ComputeHashToHex(generatedFileName);
 
                     return generatedFileName;
                 }
@@ -101,7 +101,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
                 public bool Save(Uri url)
                 {
-                    using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(url.AbsoluteUri))
+                    using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url.AbsoluteUri))
                     {
                         net.Timeout = 180 * 1000;
                         net.Tries = 3;
@@ -148,7 +148,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                             int nextVersion = FindNextVersion(fullname);
                             int lastVersion = nextVersion - 1;
                             System.IO.FileInfo fiLast = new System.IO.FileInfo(VersionedFilename(fullname, lastVersion));
-                            if (HlidacStatu.Util.IO.BinaryCompare.FilesContentsAreEqual(fiLast, data))
+                            if (Devmasters.IO.BinaryCompare.FilesContentsAreEqual(fiLast, data))
                             {
                                 data = null;
                                 return true;

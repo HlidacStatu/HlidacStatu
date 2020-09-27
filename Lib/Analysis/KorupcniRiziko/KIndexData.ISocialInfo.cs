@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (html)
                 return txt;
             else
-                return Devmasters.Core.TextUtil.RemoveHTML(txt);
+                return Devmasters.TextUtil.RemoveHTML(txt);
         }
   
 

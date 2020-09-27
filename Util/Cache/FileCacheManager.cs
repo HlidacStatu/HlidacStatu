@@ -9,7 +9,7 @@ namespace HlidacStatu.Util.Cache
     }
 
     public class FileCacheManager
-        : Manager<byte[], KeyAndId, Devmasters.Cache.V20.File.BinaryFileCache>
+        : Manager<byte[], KeyAndId, Devmasters.Cache.File.BinaryFileCache>
     {
 
         public FileCacheManager(string keyPrefix, System.Func<KeyAndId, byte[]> func, TimeSpan expiration)
@@ -18,15 +18,15 @@ namespace HlidacStatu.Util.Cache
         }
 
         
-        protected override Devmasters.Cache.V20.File.BinaryFileCache getTCacheInstance(KeyAndId key, TimeSpan expiration, Func<KeyAndId, byte[]> contentFunc)
+        protected override Devmasters.Cache.File.BinaryFileCache getTCacheInstance(KeyAndId key, TimeSpan expiration, Func<KeyAndId, byte[]> contentFunc)
         {
-            return new Devmasters.Cache.V20.File.BinaryFileCache(
-                Devmasters.Core.Util.Config.GetConfigValue("FileCachePath"),
+            return new Devmasters.Cache.File.BinaryFileCache(
+                Devmasters.Config.GetWebConfigValue("FileCachePath"),
                 expiration, key.CacheNameOnDisk,
                 (o) => contentFunc.Invoke(key)
                 );
 
-            // return new Devmasters.Cache.V20.LocalMemory.LocalMemoryCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key));
+            // return new Devmasters.Cache.LocalMemory.LocalMemoryCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key));
 
         }
 

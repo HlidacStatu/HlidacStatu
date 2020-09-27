@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Devmasters.Core;
+using Devmasters;
 using HlidacStatu.Lib;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Data.External.Zabbix;

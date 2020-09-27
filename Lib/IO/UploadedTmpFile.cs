@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.IO
     public class UploadedTmpFile : DistributedFilePath<string>
     {
         public UploadedTmpFile()
-            : this(Devmasters.Core.Util.Config.GetConfigValue("PrilohyDataPath") + "\\_TmpUploaded")
+            : this(Devmasters.Config.GetWebConfigValue("PrilohyDataPath") + "\\_TmpUploaded")
         { }
 
         public UploadedTmpFile(string root)

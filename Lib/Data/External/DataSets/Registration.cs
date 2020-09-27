@@ -68,10 +68,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (string.IsNullOrEmpty(shortName))
                 return;
 
-            shortName = Devmasters.Core.TextUtil.RemoveDiacritics(shortName).Trim();
+            shortName = Devmasters.TextUtil.RemoveDiacritics(shortName).Trim();
 
             shortName = System.Text.RegularExpressions.Regex.Replace(shortName, invalidregex, "-").ToLower();
-            shortName = Devmasters.Core.TextUtil.ReplaceDuplicates(shortName, "-");
+            shortName = Devmasters.TextUtil.ReplaceDuplicates(shortName, "-");
             shortName = System.Text.RegularExpressions.Regex.Replace(shortName, "^(-)*", "");
             shortName = System.Text.RegularExpressions.Regex.Replace(shortName, "(-)*$", "");
 
@@ -79,7 +79,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             if (shortName.Length > 120)
                 shortName = shortName.Substring(0, 120);
             if (shortName.Length < 5)
-                shortName = shortName + "-" + Devmasters.Core.TextUtil.GenRandomString(10);
+                shortName = shortName + "-" + Devmasters.TextUtil.GenRandomString(10);
             this.datasetId = shortName;
         }
 

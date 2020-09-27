@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Devmasters.Core;
+using Devmasters;
 
 namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
 {
@@ -20,7 +20,7 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
         static Parser()
         {
             int threads;
-            int.TryParse(Devmasters.Core.Util.Config.GetConfigValue("ProfilZadavatelu.Parser"), out threads);
+            int.TryParse(Devmasters.Config.GetWebConfigValue("ProfilZadavatelu.Parser"), out threads);
             if (threads < 1)
                 threads = defaultMaxNumberOfThreads;
             sem = new Semaphore(threads, threads, "HlidacStatu.Lib.Data.External.ProfilZadavatelu.Parsers");
@@ -75,14 +75,14 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
 
 
             var xml = "";
-            Devmasters.Core.StopWatchEx sw = new StopWatchEx();
+            Devmasters.DT.StopWatchEx sw = new  Devmasters.DT.StopWatchEx();
             sw.Start();
             var surl = string.Format(xmlUrlTemp, from, to);
             var ReqLog = new Lib.Data.Logs.ProfilZadavateleDownload() { Date = DateTime.Now, ProfileId = profil.Id, RequestedUrl = surl };
             try
             {
                 sem.WaitOne();
-                using (Devmasters.Net.Web.URLContent net = new Devmasters.Net.Web.URLContent(surl))
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(surl))
                 {
                     //net.TimeInMsBetweenTries = 20*1000;
                     //net.Tries = 1;
@@ -91,7 +91,7 @@ namespace HlidacStatu.Lib.Data.External.ProfilZadavatelu
                     ReqLog.HttpValid = true;
                 }
             }
-            catch (Devmasters.Net.Web.UrlContentException ex)
+            catch (Devmasters.Net.HttpClient.UrlContentException ex)
             {
                 ReqLog.HttpValid = false;
                 ReqLog.HttpError = ex.ToString();
