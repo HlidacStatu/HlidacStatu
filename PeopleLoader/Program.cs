@@ -23,9 +23,16 @@ namespace PeopleLoader
             using (DbEntities db = new DbEntities())
             {
                 System.Console.WriteLine("Loading all records from db");
+
                 var osoby = db.Osoba
                     .Where(m => m.Status > 0)
                     .ToList();
+
+                //first fix people where is missing osoba.nameid
+                foreach (var osoba in osoby.Where(o => o.NameId == null || o.NameId.Length < 1))
+                {
+                    osoba.Save();
+                }
 
                 System.Console.WriteLine("Converting all records");
                 List<OsobaES> osobyES = new List<OsobaES>();
