@@ -53,8 +53,8 @@
     <Reference Include="Devmasters.Logging, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Logging.2.1.1\lib\net48\Devmasters.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Net, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Net.2.1.2\lib\net48\Devmasters.Net.dll</HintPath>
+    <Reference Include="Devmasters.Net, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Net.2.1.3\lib\net48\Devmasters.Net.dll</HintPath>
     </Reference>
     <Reference Include="GhostscriptSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
