@@ -1,6 +1,8 @@
 ﻿<div style="position:relative">
     <label for="findKindexCompany">Chcete-li najít K-Index konkrétní firmy, použijte tento vyhledávací box</label>
     <input placeholder="Najít úřad/firmu" type="text" name="findKindexCompany" id="findKindexCompany" class="form-control companyahead input-lg" oninput="FindCompany(this)" />
+    <div class="loading-spinner" style="display:none">
+    </div>
     <div id="companies">
 
     </div>
@@ -23,12 +25,32 @@
             background-color: lightblue;
         }
 
+    .loading-spinner {
+        border: 10px solid #f3f3f3; /* Light grey */
+        border-top: 10px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+
+        position: absolute;
+        top: 29px;
+        right: 20px;
+        z-index: 10;
+    }
+
+
+    @@keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     #companies {
         margin-bottom: 10px;
         position:absolute;
         z-index: 10;
     }
-    
+
 </style>
 
 <script>
@@ -42,7 +64,7 @@
                     {
                         text: comp.Name,
                         class: 'whisp',
-                        click: function () { NavigateToDetail(comp.Ico); EmptyCompanies(); CleanSearchBox(); }
+                        click: function () { NavigateToDetail(comp.Ico, comp.Name); EmptyCompanies(); }
                     });
 
                 $("#companies").append(button);
@@ -59,7 +81,9 @@
         $('#findKindexCompany').val("").focus();
     }
 
-    function NavigateToDetail(ico) {
+    function NavigateToDetail(ico, name) {
+        $('#findKindexCompany').val(name);
+        $('.loading-spinner').show();
         window.location.href = `/kindex/detail/${ico}`
     }
 
