@@ -73,10 +73,11 @@ namespace FullTextSearch
 
             var summedResults = results
                 .GroupBy(r => r.Sentence,
-                    (sentence, result) => new ScoredSentence<T>(sentence, result.Sum(x => x.Score)));
+                    (sentence, result) => new ScoredSentence<T>(sentence, result.Sum(x => x.Score)))
+                .ToList();
 
             // přidat score za nejdelší řetězec
-            foreach(var result in summedResults)
+            foreach(ScoredSentence<T> result in summedResults)
             {
                 result.Score += ScoreSentence(result.Sentence, tokenizedQuery); 
             }
@@ -105,41 +106,59 @@ namespace FullTextSearch
                 basicScore *= 1.2;
             }
 
-            // bonus for first three words
-            var results = new List<ScoredSentence<T>>();
-            foreach(var sentence in token.Sentences)
-            {
-                double score = basicScore;
-                for(int wordPosition = 0; wordPosition < 3; wordPosition++)
-                {
-                    if (sentence.Tokens.Count > wordPosition)
-                        if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
-                        {
-                            score = score * (1.3 - (0.1 * wordPosition));
-                            break;
-                        }
-                }
-                results.Add(new ScoredSentence<T>(sentence, score));
-            }
-                
-            return results;
+            //bonus for first three words
+
+            //var results = new List<ScoredSentence<T>>();
+            //foreach (var sentence in token.Sentences)
+            //{
+            //    double score = basicScore;
+            //    for (int wordPosition = 0; wordPosition < 3; wordPosition++)
+            //    {
+            //        if (sentence.Tokens.Count > wordPosition)
+            //            if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
+            //            {
+            //                score = score * (1.3 - (0.1 * wordPosition));
+            //                break;
+            //            }
+            //    }
+            //    results.Add(new ScoredSentence<T>(sentence, score));
+            //}
+
+            return token.Sentences.Select(s => new ScoredSentence<T>(s, basicScore)).ToList();
         }
 
         private Double ScoreSentence(Sentence<T> sentence, string[] tokenizedQuery)
         {
+            double score = 0;
+            string firstQueryToken = tokenizedQuery.FirstOrDefault();
+            // bonus for first three words
+            if (!string.IsNullOrWhiteSpace(firstQueryToken))
+            {
+                for (int wordPosition = 0; wordPosition < 3; wordPosition++)
+                {
+                    if (sentence.Tokens.Count > wordPosition)
+                        if (sentence.Tokens[wordPosition].Word.StartsWith(firstQueryToken))
+                        {
+                            score += firstQueryToken.Length * (0.3 - (0.1 * wordPosition));
+                            break;
+                        }
+                }
+
+            }
+
             // Query == sentence
             if (sentence.Text == string.Join(" ", tokenizedQuery))
             {
-                return 20;
+                return 20 + score;
             }
 
             // sentence starts with query without its last word
-            if (tokenizedQuery.Length > 1)
+            if (tokenizedQuery.Length > 2) // 3+ words
             {
                 string shorterQuery = string.Join(" ", tokenizedQuery.Take(tokenizedQuery.Length - 1));
                 if (sentence.Text.StartsWith(shorterQuery) )
                 {
-                    return 10;
+                    return 10 + score;
                 }
 
             }
@@ -148,7 +167,7 @@ namespace FullTextSearch
             // protože by to mohlo zamíchat pořadím. Navíc takový výpočet není levný
             // a pro velký počet dokumentů by to mohlo znamenat pomalé hledání.
 
-            return 0;
+            return score;
         }
 
     }
