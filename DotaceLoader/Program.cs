@@ -4,9 +4,6 @@ using HlidacStatu.Lib.Data.Dotace;
 using Newtonsoft.Json;
 using System.Configuration;
 using System.Collections.Generic;
-using HlidacStatu.Lib;
-using Devmasters.Cache.File;
-using System.Linq;
 
 namespace DotaceLoader
 {

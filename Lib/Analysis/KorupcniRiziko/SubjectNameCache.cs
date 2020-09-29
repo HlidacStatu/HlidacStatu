@@ -1,5 +1,5 @@
 ﻿using Devmasters;
-
+using FullTextSearch;
 using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             Name = name;
             Ico = ico;
-            Tokens = Tokenize($"{name} {ico}");
         }
 
         public static Devmasters.Cache.File.FileCache<Dictionary<string,SubjectNameCache>> CachedCompanies = 
@@ -40,54 +39,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return CachedCompanies.Get();
         }
 
-        public static IEnumerable<SubjectNameCache> FullTextSearch(string search, int take = 50)
-        {
-            if (string.IsNullOrEmpty(search))
-                return new List<SubjectNameCache>();
-            
-            IEnumerable<SubjectNameCache> fullSearchNames = GetCompanies().Values
-                .Where(c => c.Name.ToLower().StartsWith(search.ToLower()))
-                .Take(take);
-
-            IEnumerable<SubjectNameCache> totalResult = fullSearchNames;
-            if (totalResult.Count() >= take)
-                return totalResult;
-
-            var fullSearchIcos = GetCompanies()
-                .Where(c => c.Key.StartsWith(search))
-                .Select(c => c.Value)
-                .Take(take);
-            totalResult = totalResult.Union(fullSearchIcos).Take(take);
-            if (totalResult.Count() >= take)
-                return totalResult;
-
-            var tokenizedSearchInput = Tokenize(search);
-
-            var tokenSearchCount = GetCompanies().Values
-                .Select(c => new
-                {
-                    hits = tokenizedSearchInput.Sum(i => c.Tokens.Any(tkn => tkn.StartsWith(i)) ? i.Length : 0),
-                    subject = c
-                })
-                .Where(x => x.hits > 0)
-                .OrderByDescending(x => x.hits)
-                .Select(x => x.subject)
-                .Take(take);
-            totalResult = totalResult.Union(tokenSearchCount).Take(take);
-
-            return totalResult;
-        }
-
-
+        [Search]
         public string Name { get; set; }
+        [Search]
         public string Ico { get; set; }
-        public string[] Tokens { get; set; }
-        
-        private static string[] Tokenize(string input)
-        {
-            return input.ToLower().KeepLettersNumbersAndSpace().RemoveAccents().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-        }
-
         
     }
 }

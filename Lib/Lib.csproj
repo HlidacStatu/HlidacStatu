@@ -984,6 +984,10 @@
       <Project>{ec43f4f2-5fe7-4255-8d4d-7e70f07d1773}</Project>
       <Name>DBUpgrader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FullTextSearch\FullTextSearch.csproj">
+      <Project>{02124506-2c1c-49d6-b70c-0173a2977c58}</Project>
+      <Name>FullTextSearch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HlidacStatu.Lib.Db.Insolvence\HlidacStatu.Lib.Db.Insolvence.csproj">
       <Project>{18cdeb72-04c2-45f2-9bd4-b1676aa0ca07}</Project>
       <Name>HlidacStatu.Lib.Db.Insolvence</Name>

@@ -17,10 +17,7 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet, Route()]
         public IEnumerable<SubjectNameCache> AllSubjects()
         {
-            return SubjectNameCache.GetCompanies().Values.Select(snc => {
-                snc.Tokens = null;
-                return snc;
-            });
+            return SubjectNameCache.GetCompanies().Values;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

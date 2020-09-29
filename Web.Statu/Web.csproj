@@ -1737,6 +1737,10 @@
       <Project>{dda06de1-d9ac-4cff-92d8-a7d051779cff}</Project>
       <Name>HlidacWebu.CustomMonitors</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FullTextSearch\FullTextSearch.csproj">
+      <Project>{02124506-2c1c-49d6-b70c-0173a2977c58}</Project>
+      <Name>FullTextSearch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HlidacStatu.ExportData\HlidacStatu.ExportData.csproj">
       <Project>{912aae41-60a4-4579-bd7d-fa13fbc423f5}</Project>
       <Name>HlidacStatu.ExportData</Name>
