@@ -81,47 +81,55 @@
 
 @if (currYear.KIndexReady == false)
 {
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
-                <div class="col-sm-2">
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+            <div class="col-sm-2">
 
-                </div>
-                <div class="col-sm-10">
-                    <h2>
-                        K–Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
-                    </h2>
+            </div>
+            <div class="col-sm-10">
+                <h2>
+                    K–Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
+                </h2>
+            </div>
+        </div>
+        @if (Model.roky.Any(m => m.KIndexReady))
+        {
+            <div class="row" style="margin-top:15px">
+                <div class="col-sm-12">
+                    <h4>
+                        Spočítaný K–Index pro další roky:
+                        @foreach (int year in availableKindexYears.OrderBy(m => m))
+                        {
+                            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                            string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+                            if (kidx != null && kidx.KIndexReady && year != selectedYear)
+                            {
+                                <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                            }
+                        }
+                    </h4>
                 </div>
             </div>
-            @if (Model.roky.Any(m => m.KIndexReady))
-            {
-                <div class="row" style="margin-top:15px">
-                    <div class="col-sm-12">
-                        <h4>
-                            Spočítaný K–Index pro další roky:
-                            @foreach (int year in availableKindexYears.OrderBy(m => m))
-                            {
-                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
-                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
+        }
 
-                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
-                                {
-                                    <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
-
-                                }
-                            }
-                        </h4>
-                    </div>
-                </div>
-            }
-
-        </div>
-        @WebUtil.AlertModal("Poslat zpětnou vazbu",
-        "Vyjádření subjektu k hodnocení K-index",
-        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
-        "Rozumím")
     </div>
+    @WebUtil.AlertModal("Poslat zpětnou vazbu",
+    "Vyjádření subjektu k hodnocení K-Index",
+    "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+    "Rozumím")
+
+    @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+    "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+    "Důvod pro přepočítání",
+    "Přepočítat K-Index",
+    "/kindex/recalculateFeedback",
+    mustAuth: true,
+    addData: Model.Ico)
+</div>
 
 }
 else
@@ -168,9 +176,17 @@ else
         }
     </div>
     @WebUtil.AlertModal("Poslat zpětnou vazbu",
-        "Vyjádření subjektu k hodnocení K-index",
-        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+        "Vyjádření subjektu k hodnocení K-Index",
+        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
         "Rozumím")
+
+    @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+    "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+    "Důvod pro přepočítání",
+    "Přepočítat K-Index",
+    "/kindex/recalculateFeedback",
+    mustAuth: true,
+    addData: Model.Ico)
 </div>
 }
 

@@ -216,7 +216,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     {
         @Html.Raw(ifEmpty) }
     else
-      if (hasValue.GetType() == typeof(string))
+         if (hasValue.GetType() == typeof(string))
     {
         @IfExists(!string.IsNullOrEmpty(hasValue.ToString()), exists, ifEmpty) }
     else
@@ -772,7 +772,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 </div>
                 <div class="modal-body">
                     <p>
-                       @Html.Raw(alertText)
+                        @Html.Raw(alertText)
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -955,6 +955,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                                     Zavřít
                                 </button>
                             </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -1047,7 +1048,136 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 }
 
 
+@helper FeedbackUniversal(string headerText, string subText, string noteLabel, string btnText, string url, bool mustAuth = false, string addData = "")
+{
+    System.Security.Principal.IPrincipal user = CurrPage.User;
+    string style = "btn btn-primary btn-sm";
+    string idPrefix = System.Guid.NewGuid().ToString("N");
+    
 
+    if (mustAuth == false || (mustAuth && user?.Identity?.IsAuthenticated == true))
+    {<!-- Button trigger modal -->
+        <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button> <!-- Modal -->
+        <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+             aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                            @headerText
+                        </h4>
+                        @subText
+                    </div>
+
+                    <!-- Modal Body -->
+                    <form class="form-horizontal" role="form">
+                        <div class="modal-body">
+
+                            <input type="hidden" name="@(idPrefix)fbUrl" id="@(idPrefix)fbUrl" value="@Request.Url.AbsoluteUri" />
+                            
+                            @if(!string.IsNullOrWhiteSpace(noteLabel))
+                            {
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="@(idPrefix)fbInputTxt">@noteLabel</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="@(idPrefix)fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="@(idPrefix)fbInputEmail">Váš email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control"
+                                           id="@(idPrefix)fbInputEmail" placeholder="Email" value="@(CurrPage.User?.Identity?.Name)" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Zrušit
+                            </button>
+                            <button type="button" onclick="send@(idPrefix)();" class="btn btn-primary" data-dismiss="modal">
+                                Odeslat
+                            </button>
+                            <br />
+                            <div><a class="btn btn-default btn-sm" href="/Kontakt">Další kontakty zde</a></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+        function send@(idPrefix)() {
+            var prf = '#@(idPrefix)';
+            var email = $(prf + "fbInputEmail").val();
+            var text = $(prf + "fbInputTxt").val();
+            var url = $(prf + "fbUrl").val();
+            
+            $.get("@url", { email: email, txt: text, url: url, data: "@addData", auth: @mustAuth.ToString().ToLower() })
+              .always(function () {
+                  alert("Děkujeme za zaslání zprávy.");
+              });
+        }
+        </script>
+    }
+    else
+    {
+        <text>
+            <!-- Button trigger modal -->
+            <button class="@style" data-toggle="modal" data-target="#@(idPrefix)fbForm">@btnText</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="@(idPrefix)fbForm" tabindex="-1" role="dialog"
+                 aria-labelledby="@(idPrefix)fbTitle" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <button type="button" class="close"
+                                    data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="@(idPrefix)fbTitle">
+                                Musíte být přihlášeni
+                            </h4>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <form class="form-horizontal" role="form">
+                            <div class="modal-body">
+                                <p>Pro poslání vzkazu musíte být přihlášeni.</p>
+                                <p>
+                                    <a href="/account/Register?nextUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">Registrace</a> je jednoduchá a zdarma. Pokud už jste zaregistrováni, stačí se <a href="/account/Login?returnUrl=@(System.Net.WebUtility.UrlEncode(CurrentPage.Request.Url.PathAndQuery))">přihlásit</a>.
+                                </p>
+
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Zavřít
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </text>
+    }
+
+}
 
 
 

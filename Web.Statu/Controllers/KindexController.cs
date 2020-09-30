@@ -267,6 +267,40 @@ namespace HlidacStatu.Web.Controllers
             return View(result);
         }
 
+        public ActionResult RecalculateFeedback(string email, string txt, string url, string data)
+        {
+            // create a task, so user doesn't have to wait for anything
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                var f = Firmy.Get(Util.ParseTools.NormalizeIco(data));
+                if (f.Valid)
+                {
+
+                    try
+                    {
+                        string connectionString = Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString");
+                        if (string.IsNullOrWhiteSpace(connectionString))
+                            throw new Exception("Missing RabbitMqConnectionString");
+
+                        var message = new Q.Messages.RecalculateKindex()
+                        {
+                            Comment = txt,
+                            Created = DateTime.Now,
+                            Ico = f.ICO,
+                            User = this.User.Identity.Name
+                        };
+
+                        Q.Publisher.QuickPublisher.Publish(message, connectionString);
+                    }
+                    catch (Exception ex)
+                    {
+                        Util.Consts.Logger.Fatal($"Problem sending data to RecalculateKindex queue. Message={ex}");
+                    }
+                }
+            });
+            return Content("");
+        }
+
         // Used for searching
         public JsonResult FindCompany(string id)
         {
