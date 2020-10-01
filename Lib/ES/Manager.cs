@@ -1,5 +1,6 @@
 ﻿using Nest;
 
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,7 +24,7 @@ namespace HlidacStatu.Lib.ES
         {
             Smlouvy,
             Firmy,
-            KIndex,
+            KIndex,KIndexBackup,
             VerejneZakazky,
             ProfilZadavatele,
             VerejneZakazkyRaw2006,
@@ -53,6 +54,7 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
         public static string defaultIndexName_Firmy = "firmy";
         public static string defaultIndexName_KIndex = "kindex";
+        public static string defaultIndexName_KIndexBackup = "kindexbackup";
         public static string defaultIndexName_Logs = "logs";
         //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
         public static string defaultIndexName_Insolvence = "insolvencnirestrik";
@@ -177,6 +179,10 @@ namespace HlidacStatu.Lib.ES
         public static ElasticClient GetESClient_KIndex(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_KIndex, timeOut, connectionLimit, IndexType.Firmy);
+        }
+        public static ElasticClient GetESClient_KIndexBackup(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_KIndexBackup, timeOut, connectionLimit, IndexType.Firmy);
         }
 
         static string dataSourceIndexNamePrefix = "data_";
@@ -506,6 +512,13 @@ namespace HlidacStatu.Lib.ES
                        .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)
                            .Map<Analysis.KorupcniRiziko.KIndexData>(map => map.AutoMap(maxRecursion: 2))
+                       );
+                    break;
+                case IndexType.KIndexBackup:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Map<Analysis.KorupcniRiziko.Backup>(map => map.AutoMap(maxRecursion: 2))
                        );
                     break;
                 case IndexType.Logs:

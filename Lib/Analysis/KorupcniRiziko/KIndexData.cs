@@ -117,8 +117,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Nest.Date]
         public DateTime LastSaved { get; set; }
 
-        public void Save()
+        public void Save(string comment)
         {
+            Backup.CreateBackup(comment, this.Ico);
+
             //calculate fields before saving
             this.LastSaved = DateTime.Now;
             var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni

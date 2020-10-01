@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private static MemoryCacheManager<KIndexData, string> instanceByIco
        = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", KIndexData.GetDirect,
 #if (!DEBUG)
-                TimeSpan.FromDays(10)
+                TimeSpan.FromHours(1)
 #else
                 TimeSpan.FromSeconds(10)
 #endif
