@@ -20,11 +20,10 @@ namespace HlidacStatu.Web.Models
 
         [Nest.Date]
         public DateTime lastUpdated { get; set; }
-        public Hospital[] hospitals { get; set; }
+        public Region[] regions { get; set; }
 
-        public class Hospital
+        public class Region
         {
-            public int nemocniceID { get; set; }
             public string name { get; set; }
 
             [Nest.Keyword]
@@ -102,11 +101,11 @@ namespace HlidacStatu.Web.Models
         {
             NemocniceData d = new NemocniceData();
             d.lastUpdated = new DateTime((l.lastUpdated - f.lastUpdated).Ticks);
-            List<NemocniceData.Hospital> hs = new List<Hospital>();
-            foreach (var fh in f.hospitals)
+            List<NemocniceData.Region> hs = new List<Region>();
+            foreach (var fh in f.regions)
             {
-                Hospital h = new Hospital();
-                Hospital lh = l.hospitals.FirstOrDefault(m => m.nemocniceID == fh.nemocniceID);
+                Region h = new Region();
+                Region lh = l.regions.FirstOrDefault(m => m.region == fh.region);
 
                 if (lh != null)
                 {
@@ -115,13 +114,13 @@ namespace HlidacStatu.Web.Models
                 }
 
             }
-            d.hospitals = hs.ToArray();
+            d.regions = hs.ToArray();
             return d;
         }
 
-        public static Hospital Diff(Hospital fh, Hospital lh)
+        public static Region Diff(Region fh, Region lh)
         {
-            Hospital h = new Hospital();
+            Region h = new Region();
             h.lastModified = new DateTime(Math.Abs((lh.lastModified - fh.lastModified).Ticks));
 
             h.AROJIP_luzka_celkem = lh.AROJIP_luzka_celkem - fh.AROJIP_luzka_celkem;
@@ -136,7 +135,7 @@ namespace HlidacStatu.Web.Models
             h.IHD_volna = lh.IHD_volna - fh.IHD_volna;
             h.Lekari_AROJIP_celkem = lh.Lekari_AROJIP_celkem - fh.Lekari_AROJIP_celkem;
             h.name = lh.name;
-            h.nemocniceID = lh.nemocniceID;
+            //h.regionId = lh.regionId;
             h.region = lh.region;
             h.Sestry_AROJIP_celkem = lh.Sestry_AROJIP_celkem - fh.Sestry_AROJIP_celkem;
             h.Standard_luzka_celkem = lh.Standard_luzka_celkem - fh.Standard_luzka_celkem;
@@ -151,9 +150,9 @@ namespace HlidacStatu.Web.Models
             return h;
         }
 
-        public static Hospital Aggregate(IEnumerable<Hospital> hospitals)
+        public static Region Aggregate(IEnumerable<Region> hospitals)
         {
-            Hospital h = new Hospital();
+            Region h = new Region();
 
             h.AROJIP_luzka_celkem = hospitals.Sum(m => m.AROJIP_luzka_celkem);
             h.AROJIP_luzka_covid = hospitals.Sum(m => m.AROJIP_luzka_covid);
@@ -169,7 +168,7 @@ namespace HlidacStatu.Web.Models
             h.IHD_volna = hospitals.Sum(m => m.IHD_volna);
             h.Lekari_AROJIP_celkem = hospitals.Sum(m => m.Lekari_AROJIP_celkem);
             h.name = "";
-            h.nemocniceID = 0;
+            //h.regionId = 0;
             h.region = hospitals.First().region;
             h.Sestry_AROJIP_celkem = hospitals.Sum(m => m.Sestry_AROJIP_celkem);
             h.Standard_luzka_celkem = hospitals.Sum(m => m.Standard_luzka_celkem);
@@ -189,29 +188,29 @@ namespace HlidacStatu.Web.Models
         public NemocniceData PoKrajich()
         {
             NemocniceData krajF = new NemocniceData();
-            List<Hospital> krajFH = new List<Hospital>();
+            List<Region> krajFH = new List<Region>();
             int krajId = 0;
-            List<string> kraje = new string[] { "PHA", "STC", "JHM", "MSK" }.Union(this.hospitals.Select(m => m.region).Distinct()).ToList();
+            List<string> kraje = new string[] { "PHA", "STC", "JHM", "MSK" }.Union(this.regions.Select(m => m.region).Distinct()).ToList();
             foreach (var kraj in kraje.OrderBy(o => kraje.IndexOf(o)))
             {
-                var hsF = this.hospitals.Where(m => m.region == kraj).ToArray();
-                var fd = NemocniceData.Aggregate(hsF); fd.nemocniceID = ++krajId;
+                var hsF = this.regions.Where(m => m.region == kraj).ToArray();
+                var fd = NemocniceData.Aggregate(hsF); //fd.regionId = ++krajId;
                 fd.name = hsF.First().regionFull();
                 krajFH.Add(fd);
             }
-            krajF.hospitals = krajFH.ToArray(); krajF.lastUpdated = this.lastUpdated;
+            krajF.regions = krajFH.ToArray(); krajF.lastUpdated = this.lastUpdated;
 
             return krajF;
         }
         public NemocniceData CelaCR()
         {
             NemocniceData cr = new NemocniceData();
-            List<Hospital> cdH = new List<Hospital>();
-            var fd = NemocniceData.Aggregate(this.hospitals); fd.nemocniceID = 0;
+            List<Region> cdH = new List<Region>();
+            var fd = NemocniceData.Aggregate(this.regions); //fd.regionId = 0;
             fd.name = "Celá ČR";
             fd.region = "CR";
             cdH.Add(fd);
-            cr.hospitals = cdH.ToArray();
+            cr.regions = cdH.ToArray();
             cr.lastUpdated = this.lastUpdated;
 
             return cr;

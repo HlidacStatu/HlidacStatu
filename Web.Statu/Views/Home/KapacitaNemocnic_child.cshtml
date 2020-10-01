@@ -1,4 +1,4 @@
-﻿@model (NemocniceData diffK, List<NemocniceData> dny, NemocniceData last, NemocniceData diffAll)
+﻿@model NemocniceData[]
 
 @using System
 @using System.Collections.Generic
@@ -8,14 +8,25 @@
 @{ 
     Layout = null;
 
-    NemocniceData firstKraje = Model.dny.First().PoKrajich();
-    NemocniceData lastKraje = Model.dny.Last().PoKrajich();
-    NemocniceData diffKraje = Model.diffK.PoKrajich();
+    NemocniceData[] dny = Model;
 
-    NemocniceData lastCr = Model.dny.Last().CelaCR();
-    NemocniceData firstCr = Model.dny.First().CelaCR();
-        
-    }
+    NemocniceData firstKraje = dny.First();
+    NemocniceData lastKraje = dny.Last();
+    NemocniceData diffKraje = NemocniceData.Diff(firstKraje,lastKraje);
+
+    NemocniceData lastCr = dny.Last().CelaCR();
+    NemocniceData firstCr = dny.First().CelaCR();
+
+    string[] prefered = new string[] { "PHA", "STC", "JHM", "MSK" };
+    List<string> krajeSort = prefered
+    .Union(lastKraje.regions
+        .Select(m => m.region.ToUpper())
+        .Where(m=>prefered.Contains(m)==false)
+        .OrderBy(m=>m)
+        )
+    .ToList();
+
+}
 
 
 <div class="jumbotron">
@@ -23,14 +34,7 @@
     <small>aktualizováno @(lastKraje.lastUpdated.ToString("dd.MM.yyyy HH:mm"))</small>
     </h2>
     <p>
-        Data ÚZIS, která Ministerstvo zdravotnictví tají nejen před veřejností, ale pouze omezeně k nim mají přístup i dispečinky záchranných služeb,
-        nemocnice a lékaři.<span style="color:red">Od 22.9. 9:00 opět ÚZIS data blokuje.</span>
-    </p>
-    <p>Zde najdete <a href="https://texty.hlidacstatu.cz/kapacita-nemocnic-29-9-2020-pro-cr-a-jednotlive-kraje/">data k 29. září 2020</a>.</p>
-    <p>
-        Záchranky tato data mají teprve od pondělí, doktoři na JIP je stále nemají a místa pro pacienty obvolávají telefony. A velké nemocnice COVID pacienty odmítají, i když mají volná místa. 
-
-Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
+        Data ÚZIS, která Ministerstvo zdravotnictví tajila nejen před veřejností, ale po zveřejnění dat naším serverem a následným veřejným tlakem od 1.10.2020 zveřejňuje 1x denně.
     </p>
 </div>
 
@@ -61,11 +65,10 @@ Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
     <ul>
         
         <li><a href="#CR">Celá ČR</a></li>
-        @foreach (var h in lastKraje.hospitals)
+        @foreach (var h in lastKraje.regions.OrderBy(o => krajeSort.IndexOf(o.region)).ToArray())
         {
-            <li><a href="#@h.region">@h.name</a></li>
+            <li><a href="#@h.region">@h.regionFull()</a></li>
         }
-        <li><a href="#nemocnice">Seznam jednotlivých nemocnic</a></li>
         <li><a href="#opendata">Open data</a></li>
     </ul>
 </p>
@@ -73,103 +76,20 @@ Tato data budeme pravidelně aktualizovat a v plném rozsahu je zveřejňujeme.
 <hr/>
 @{     
     NemocniceData diffCR = NemocniceData.Diff(firstCr, lastCr);
-        @RenderH(lastCr.hospitals.First(),diffCR.hospitals.First(), firstCr, Model.dny.Select(m=>m.CelaCR()))
+        @RenderH(lastCr.regions.First(),diffCR.regions.First(), firstCr, dny.Select(m=>m.CelaCR()))
 }
 <h2>Souhrn pro jednotlivé kraje</h2>
-@foreach (var h in lastKraje.hospitals)
+@foreach (var h in lastKraje.regions.OrderBy(o => krajeSort.IndexOf(o.region)).ToArray())
 {
-    NemocniceData.Hospital diffH = diffKraje.hospitals.First(m => m.name == h.name);
-    @RenderH(h,diffH, firstKraje, Model.dny.Select(m=>m.PoKrajich()))
+    NemocniceData.Region diffH = diffKraje.regions.First(m => m.region == h.region);
+    @RenderH(h,diffH, firstKraje, dny.Select(m=>m.PoKrajich()))
 }
 
-
-<h1 id="nemocnice">Seznam jednotlivých nemocnic</h1>
-<script>
-var tbl_nem_o;
-$(document).ready(function () {
-tbl_nem_o = $('#nem_o').DataTable({
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [],
-                'lengthMenu': [[25, 50, 100, -1], [25, 50, 100, "Všechny"]],
-                'info': false,
-                });
-});
-</script>
-
-
-<p>Stav k @(lastKraje.lastUpdated.ToString("dd. MM. HH:mm")). Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
-<table id="nem_o" class="table-sorted table table-bordered table-striped">
-    <thead>
-        <tr>
-            <td>Nemocnice</td>
-            <td>Region</td>
-            <td>Údaje nemocnice zaslala naposledy</td>
-            <td>Lůžka ARO+JIP dosp.<br />(COVID / neCOVID)</td>
-            <td>Lůžka s kyslíkem<br />(COVID / neCOVID)</td>
-            <td>Přístroje ECMO</td>
-            <td>Přístroje UPV</td>
-            <td>Přístroje CRRT</td>
-            <td>Lékaři</td>
-            <td>Sestry</td>
-            <td>Ventilátory sál</td>
-            <td>Ventilátory přenosné</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var h in Model.last.hospitals)
-        {
-            NemocniceData.Hospital dh = Model.diffAll.hospitals.FirstOrDefault(m => m.nemocniceID == h.nemocniceID);
-            if (dh == null)
-            {
-                dh = new NemocniceData.Hospital();
-            }
-
-            <tr>
-                <td>@h.name<br />(změna od @firstKraje.lastUpdated.ToString("dd.MM.") do @h.lastModified.ToString("dd.MM. HH:mm"))</td>
-                <td>@h.regionFull()</td>
-                <td data-order="@h.lastModified.Ticks">@(h.lastModified.ToString("dd.MM."))<br/>@(h.lastModified.ToString("HH:ss"))</td>
-                <td style='white-space: nowrap;font-weight:bold;' data-order="@h.AROJIP_luzka_covid">@h.AROJIP_luzka_covid / @h.AROJIP_luzka_necovid z @h.AROJIP_luzka_celkem
-                <br/>
-                <span style="font-weight:normal;color:@TColor(dh.AROJIP_luzka_covid)">@(dh.AROJIP_luzka_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(dh.AROJIP_luzka_necovid)">@(dh.AROJIP_luzka_necovid.ToString("+#;-#;0"))</span> 
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.Standard_luzka_s_kyslikem_covid">@h.Standard_luzka_s_kyslikem_covid / @h.Standard_luzka_s_kyslikem_necovid z @h.Standard_luzka_s_kyslikem_celkem
-                <br/>
-                <span style="font-weight:normal;color:@TColor(dh.Standard_luzka_s_kyslikem_covid)">@(dh.Standard_luzka_s_kyslikem_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(dh.Standard_luzka_s_kyslikem_necovid)">@(dh.Standard_luzka_s_kyslikem_necovid.ToString("+#;-#;0"))</span> 
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.ECMO_volna">@h.ECMO_volna z @h.ECMO_celkem
-                <br/><span style="font-weight:normal;color:@TColor(dh.ECMO_volna)">@(dh.ECMO_volna.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.UPV_volna">@h.UPV_volna z @h.UPV_celkem
-                <br/><span style="font-weight:normal;color:@TColor(dh.UPV_volna)">@(dh.UPV_volna.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.CRRT_volna">@h.CRRT_volna z @h.CRRT_celkem
-                <br/><span style="font-weight:normal;color:@TColor(dh.CRRT_volna)">@(dh.CRRT_volna.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.Lekari_AROJIP_celkem">@h.Lekari_AROJIP_celkem
-                <br/><span style="font-weight:normal;color:@TColor(dh.Lekari_AROJIP_celkem)">@(dh.Lekari_AROJIP_celkem.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@h.Sestry_AROJIP_celkem">@h.Sestry_AROJIP_celkem
-                <br/><span style="font-weight:normal;color:@TColor(dh.Sestry_AROJIP_celkem)">@(dh.Sestry_AROJIP_celkem.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@(h.Ventilatory_operacnisal_celkem)">@(h.Ventilatory_operacnisal_celkem)
-                <br/><span style="font-weight:normal;color:@TColor(dh.Ventilatory_operacnisal_celkem)">@(dh.Ventilatory_operacnisal_celkem.ToString("+#;-#;0"))</span>
-                </td>
-                <td style='white-space: nowrap;font-weight:bold;'  data-order="@(h.Ventilatory_prenosne_celkem)">@(h.Ventilatory_prenosne_celkem)
-                <br/><span style="font-weight:normal;color:@TColor(dh.Ventilatory_prenosne_celkem)">@(dh.Ventilatory_prenosne_celkem.ToString("+#;-#;0"))</span>
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
 
 <hr />
 <h2 id="opendata">Open Data</h2>
 <ul>
-    <li><a href="/KapacitaNemocnicData" target="_blank">Všechna data</a></li>
-    <li><a href="/KapacitaNemocnicData/last" target="_blank">Aktuální stav (nejnovější záznam)</a></li>
+    <li><a href="/data/index/kapacity-nemocnic" target="_blank">Všechna data</a></li>
 </ul>
 
 
@@ -191,19 +111,19 @@ tbl_nem_o = $('#nem_o').DataTable({
 
 }
 
-@helper RenderH(NemocniceData.Hospital h, NemocniceData.Hospital diffH, NemocniceData first, IEnumerable<NemocniceData> timedata)
+@helper RenderH(NemocniceData.Region h, NemocniceData.Region diffH, NemocniceData first, IEnumerable<NemocniceData> timedata)
 {
 var chartdata = timedata.Select(m => new  
 { 
-    date = m.lastUpdated,data = m.hospitals.First(hh=>hh.name == h.name) 
+    date = m.lastUpdated,data = m.regions.First(hh=>hh.region == h.region) 
 });
 
 
-<h2 id="@h.region">@h.name</h2>
+<h2 id="@h.region">@h.regionFull()</h2>
 
 
 <div class="row">
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-4 singlebox">
         <h4>Lůžka (ARO+JIP dospělí)</h4>
         <p>
             Celkem @h.AROJIP_luzka_celkem, volných @(h.AROJIP_luzka_covid+h.AROJIP_luzka_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.AROJIP_perc()))
@@ -226,7 +146,7 @@ var chartdata = timedata.Select(m => new
     </div>
     <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-4 singlebox">
         <h4>Lůžka (standardní s kyslíkem)</h4>
         <p>
             Celkem @h.Standard_luzka_s_kyslikem_celkem, volných @(h.Standard_luzka_s_kyslikem_covid+h.Standard_luzka_s_kyslikem_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc()))
@@ -249,7 +169,7 @@ var chartdata = timedata.Select(m => new
     </div>
     <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-4 singlebox">
         <h4>Přístroje ECMO <small>podpora nejvaznejsich pripadu, plicni rizeni</small></h4>
 
         <p>
@@ -269,9 +189,9 @@ var chartdata = timedata.Select(m => new
                 "","počet",200 )
         </p>
     </div>
-                        <div class="clearfix hidden-md hidden-lg"></div>
+    <div class="clearfix"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-4 singlebox">
         <h4>Přístroje UPV <small>Umělá plicni ventilace</small></h4>
         <p>
             Celkem @h.UPV_celkem, volných: @h.UPV_volna (@HlidacStatu.Util.RenderData.NicePercent(h.UPV_perc()))
@@ -292,9 +212,9 @@ var chartdata = timedata.Select(m => new
 
     </div>
 
-    <div class="clearfix"></div>
+        <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-4 singlebox">
         <h4>Přístroje CRRT <small>kontinuální dialýza</small></h4>
         <p>
             Celkem @h.CRRT_celkem, volných: @h.CRRT_volna (@HlidacStatu.Util.RenderData.NicePercent(h.CRRT_perc()))
@@ -313,9 +233,8 @@ var chartdata = timedata.Select(m => new
                 "","počet",200 )
         </p>
     </div>
-                        <div class="clearfix hidden-md hidden-lg"></div>
-
-    <div class="col-xs-12 col-sm-3 singlebox">
+    
+    @*<div class="col-xs-12 col-sm-3 singlebox">
         <h4>Lékaři <small>ARO+JIP dospělí</small></h4>
         <p>
             Celkem @h.Lekari_AROJIP_celkem
@@ -351,7 +270,7 @@ var chartdata = timedata.Select(m => new
     </div>
                         <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-3 singlebox" >
         <h4>Dostupné ventilátory <small>přenosné + operační sál</small></h4>
         <p>
             Celkem @(h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem)
@@ -366,7 +285,7 @@ var chartdata = timedata.Select(m => new
                 },
                 "","počet",200 )
         </p>
-    </div>
+    </div>*@
 
     <div class="clearfix"></div>
 

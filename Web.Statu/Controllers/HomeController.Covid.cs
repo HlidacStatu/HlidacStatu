@@ -49,43 +49,18 @@ namespace HlidacStatu.Web.Controllers
             var client = NemocniceData.Client();
             List<NemocniceData> days = new List<NemocniceData>();
 
-            NemocniceData first = client.Search<NemocniceData>(s => s
-                    .Size(1)
-                    .Sort(o => o.Ascending(f => f.lastUpdated))
-                    .Query(q => q.MatchAll())
-                )
-                .Hits
-                .FirstOrDefault()?.Source;
+            Lib.Data.External.DataSets.DataSet ds = Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("kapacity-nemocnic");
 
-            NemocniceData[] nAll = client.Search<NemocniceData>(s => s
-                .Size(200)
-                .Sort(o => o.Descending(f => f.lastUpdated))
-                .Query(q => q.MatchAll())
-            )
-            .Hits
-            .Select(m => m.Source)
-            .ToArray();
 
-            var filteredN = new List<NemocniceData>();
-            filteredN.Add(first);
-            foreach (var n in nAll.OrderBy(o=>o.lastUpdated))
-            {
-                if ((n.lastUpdated - filteredN.Last().lastUpdated).TotalHours > 3.5)
-                    filteredN.Add(n);
-            }
-            days.Insert(0, first);
-            days.AddRange(filteredN);
-            if (days.Last().lastUpdated < nAll.First().lastUpdated)
-                days.Add(nAll.First());
+            NemocniceData[] nAll = ds
+                .SearchDataRaw("*", 1, 1000).Result
+                .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<NemocniceData>(s.Item2))
+                .OrderBy(m=>m.lastUpdated)
+                .ToArray();
 
-            NemocniceData last = days.Last();
 
-            NemocniceData diffK = NemocniceData.Diff(first, last);
-            NemocniceData diff = NemocniceData.Diff(first, last);
 
-            (NemocniceData diffK, List<NemocniceData> dny, NemocniceData last, NemocniceData diffAll) model 
-                = (diffK, days, last, diff);
-            return View(model);
+            return View(nAll);
         }
 
 

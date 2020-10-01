@@ -1,4 +1,4 @@
-﻿@model (NemocniceData diffK, List<NemocniceData> dny, NemocniceData last, NemocniceData diffAll)
+﻿@model NemocniceData[]
 
 @using System
 @using System.Collections.Generic
@@ -8,9 +8,8 @@
 
 @{ ViewBag.Title = "Kapacita nemocnic";
 
-    NemocniceData first = Model.dny.First();
-    NemocniceData last = Model.dny.Last();
-    NemocniceData diff = Model.diffK; }
+
+    }
 
 @section breadcrumb
 {
