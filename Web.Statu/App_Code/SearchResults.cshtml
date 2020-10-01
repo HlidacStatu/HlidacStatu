@@ -424,7 +424,7 @@ else
                           Html.Raw("&nbsp;"),
                           WebUtil.IfExists(HlidacStatu.Web.Framework.LimitedAccess.IsAuthenticatedOrSearchCrawler(req),
                             $"<a href='{item.GetUrl(true, query)}'>{item.EvidencniCisloZakazky}</a>",
-                            $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='/verejnezakazky/zakazka/@item.Id'>{item.EvidencniCisloZakazky}</a>"
+                            $"<a href='#' data-toggle='modal' data-target='#VZInfoAnon' data-url='{item.GetUrl(true, query)}'>{item.EvidencniCisloZakazky}</a>"
                             )
                       )
         </td>
