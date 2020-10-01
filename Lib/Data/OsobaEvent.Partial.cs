@@ -240,8 +240,11 @@ namespace HlidacStatu.Lib.Data
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
                 case Types.Sponzor:
+                    if (Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                    }
                     return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
-                    //return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") ;
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -309,6 +312,10 @@ namespace HlidacStatu.Lib.Data
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
                 case Types.Sponzor:
+                    if (Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                    }
                     return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                     //return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:

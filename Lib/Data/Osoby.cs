@@ -12,60 +12,61 @@ namespace HlidacStatu.Lib.Data
     public class Osoby
     {
         internal static volatile MemoryCacheManager<IEnumerable<OsobaEvent>, int> CachedEvents
-= MemoryCacheManager<IEnumerable<OsobaEvent>, int>.GetSafeInstance("osobyEvents",
-    osobaInternalId =>
-    {
-        using (DbEntities db = new DbEntities())
-        {
-            return db.OsobaEvent
-                .AsNoTracking()
-                .Where(m => m.OsobaId == osobaInternalId)
-                .ToArray();
-        }
-    },
-    TimeSpan.FromMinutes(2));
+            = MemoryCacheManager<IEnumerable<OsobaEvent>, int>
+                .GetSafeInstance("osobyEvents", 
+                osobaInternalId =>
+                {
+                    using (DbEntities db = new DbEntities())
+                    {
+                        return db.OsobaEvent
+                            .AsNoTracking()
+                            .Where(m => m.OsobaId == osobaInternalId)
+                            .ToArray();
+                    }
+                },
+                TimeSpan.FromMinutes(2));
 
         internal static volatile MemoryCacheManager<IEnumerable<OsobaEvent>, int> CachedFirmySponzoring
-= MemoryCacheManager<IEnumerable<OsobaEvent>, int>.GetSafeInstance("osobyFirmySponzoring",
-    osobaInternalId =>
-    {
-        using (DbEntities db = new DbEntities())
-        {
-            var res = db.FirmaEvent.SqlQuery(@"
-                    select fe.* from firmaevent fe with (nolock)
-	                    inner join osobaVazby ov with (nolock) on ov.vazbakico=fe.ico and fe.Type=" + (int)OsobaEvent.Types.Sponzor
-                                + @" and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
-                    and osobaid=" + osobaInternalId)
-                    .AsNoTracking();
-            var res1 = res.Select(m =>
+            = MemoryCacheManager<IEnumerable<OsobaEvent>, int>
+                .GetSafeInstance("osobyFirmySponzoring",
+                osobaInternalId =>
+                {
+                    using (DbEntities db = new DbEntities())
                     {
-                        Osoba o = Osoby.GetById.Get(osobaInternalId);
-                        var v = o.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
-                        string vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({o.ShortName()} byl ve statut.orgánu)";
-                        if (v != null)
+                        var res = db.FirmaEvent.SqlQuery(@"
+                            select fe.* from firmaevent fe with (nolock)
+	                            inner join osobaVazby ov with (nolock) on ov.vazbakico=fe.ico and fe.Type=" + (int)OsobaEvent.Types.Sponzor
+                                        + @" and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
+                            and osobaid=" + osobaInternalId)
+                            .AsNoTracking();
+                        var res1 = res.Select(m =>
                         {
-                            vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({o.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
-                        }
-                        return new OsobaEvent()
-                        {
-                            OsobaId = osobaInternalId,
-                            Organizace = m.AddInfo,
-                            AddInfoNum = m.AddInfoNum,
-                            Created = m.Created,
-                            DatumDo = m.DatumDo,
-                            DatumOd = m.DatumOd,
-                            Note = "",
-                            Title = vazba,
-                            Type = m.Type,
-                            Zdroj = m.Zdroj
-                        };
+                            Osoba o = Osoby.GetById.Get(osobaInternalId);
+                            //var v = o.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
+                            string vazba = $"Člen statut. orgánu ve firmě {Firmy.GetJmeno(m.ICO)} sponzorující";
+                            //if (v != null)
+                            //{
+                            //    vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({o.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
+                            //}
+                            return new OsobaEvent()
+                            {
+                                OsobaId = osobaInternalId,
+                                Organizace = m.AddInfo,
+                                AddInfoNum = m.AddInfoNum,
+                                Created = m.Created,
+                                DatumDo = m.DatumDo,
+                                DatumOd = m.DatumOd,
+                                Note = vazba,
+                                Title = "",
+                                Type = m.Type,
+                                Zdroj = m.Zdroj
+                            };
+                        })
+                        .ToArray();
+                        return res1;
                     }
-                    )
-                    .ToArray();
-            return res1;
-        }
-    },
-    TimeSpan.FromMinutes(2));
+                },
+                TimeSpan.FromMinutes(2));
 
 
 
