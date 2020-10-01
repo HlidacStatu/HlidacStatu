@@ -470,7 +470,8 @@ namespace HlidacStatu.Lib.Data
             if (!this.OnRadar && duplicated.OnRadar)
                 this.OnRadar = duplicated.OnRadar;
 
-            if (this.Status < duplicated.Status)
+            if (this.Status != (int)Osoba.StatusOsobyEnum.Politik
+                && this.Status < duplicated.Status)
                 this.Status = duplicated.Status;
 
 
