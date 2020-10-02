@@ -312,7 +312,8 @@ namespace HlidacStatu.Lib.Data
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
                 case Types.Sponzor:
-                    if (Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(Note) 
+                        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
                     }
