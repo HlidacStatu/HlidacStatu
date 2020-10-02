@@ -10,17 +10,20 @@ namespace FullTextSearch
         public List<Sentence<T>> Sentences { get; private set; } = new List<Sentence<T>>();
 
         private readonly ITokenizer _tokenizer;
-        
+
+        private readonly Options _options;
 
         public Index(IEnumerable<T> inputObjects)
         {
             _tokenizer = Tokenizer.DefaultTokenizer();
+            _options = Options.DefaultOptions();
             BuildIndex(inputObjects);
         }
 
-        public Index(IEnumerable<T> inputObjects, ITokenizer tokenizer)
+        public Index(IEnumerable<T> inputObjects, ITokenizer tokenizer, Options options)
         {
             _tokenizer = tokenizer;
+            _options = options;
             BuildIndex(inputObjects);
         }
 
@@ -93,7 +96,6 @@ namespace FullTextSearch
                 
         }
 
-
         // Neověřuju na začátku, jestli jsou stejné
         // předpokládám, že sem už stejné texty lezou - asi chybně
         private List<ScoredSentence<T>> ScoreToken(Token<T> token, string queryToken)
@@ -101,47 +103,41 @@ namespace FullTextSearch
             double basicScore = queryToken.Length;
             
             // bonus for whole word
-            if (queryToken.Length == token.Word.Length)
+            if (_options.WholeWordBonusMultiplier.HasValue 
+                && queryToken.Length == token.Word.Length)
             {
-                basicScore *= 1.2;
+                basicScore *= _options.WholeWordBonusMultiplier.Value;
             }
-
-            //bonus for first three words
-
-            //var results = new List<ScoredSentence<T>>();
-            //foreach (var sentence in token.Sentences)
-            //{
-            //    double score = basicScore;
-            //    for (int wordPosition = 0; wordPosition < 3; wordPosition++)
-            //    {
-            //        if (sentence.Tokens.Count > wordPosition)
-            //            if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
-            //            {
-            //                score = score * (1.3 - (0.1 * wordPosition));
-            //                break;
-            //            }
-            //    }
-            //    results.Add(new ScoredSentence<T>(sentence, score));
-            //}
 
             return token.Sentences.Select(s => new ScoredSentence<T>(s, basicScore)).ToList();
         }
 
         private Double ScoreSentence(Sentence<T> sentence, string[] tokenizedQuery)
         {
+            if (tokenizedQuery.Length == 0)
+                return 0;
+
             double score = 0;
-            string firstQueryToken = tokenizedQuery.FirstOrDefault();
+
+            int tokenPosition = 0;
             // bonus for first three words
-            if (!string.IsNullOrWhiteSpace(firstQueryToken))
+            if (_options.FirstWordsBonus != null)
             {
-                for (int wordPosition = 0; wordPosition < 3; wordPosition++)
+                for (int wordPosition = 0; wordPosition < _options.FirstWordsBonus.BonusWordsCount; wordPosition++)
                 {
-                    if (sentence.Tokens.Count > wordPosition)
-                        if (sentence.Tokens[wordPosition].Word.StartsWith(firstQueryToken))
+                    if (sentence.Tokens.Count > wordPosition 
+                        && tokenPosition < tokenizedQuery.Length)
+                    {
+                        string queryToken = tokenizedQuery[tokenPosition];
+                        if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
                         {
-                            score += firstQueryToken.Length * (0.3 - (0.1 * wordPosition));
-                            break;
+                            score += queryToken.Length 
+                                * (_options.FirstWordsBonus.MaxBonusMultiplier - 
+                                    (_options.FirstWordsBonus.BonusMultiplierDegradation * wordPosition));
+
+                            tokenPosition++;
                         }
+                    }
                 }
 
             }
@@ -149,7 +145,7 @@ namespace FullTextSearch
             // Query == sentence
             if (sentence.Text == string.Join(" ", tokenizedQuery))
             {
-                return 20 + score;
+                return _options.ExactMatchBonus ?? + score;
             }
 
             // sentence starts with query without its last word
@@ -158,7 +154,7 @@ namespace FullTextSearch
                 string shorterQuery = string.Join(" ", tokenizedQuery.Take(tokenizedQuery.Length - 1));
                 if (sentence.Text.StartsWith(shorterQuery) )
                 {
-                    return 10 + score;
+                    return _options.ExactMatchBonus ?? + score;
                 }
 
             }

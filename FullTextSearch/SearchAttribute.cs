@@ -6,5 +6,9 @@ namespace FullTextSearch
     {
         // Not implemented yet
         public double Weight { get; set; }
+
+        // Not implemented yet
+        // Boost score only if whole word is found (ICO)
+        public bool WholeWord { get; set; }
     }
 }

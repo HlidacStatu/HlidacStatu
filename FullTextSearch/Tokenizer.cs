@@ -21,7 +21,7 @@ namespace FullTextSearch
 
         public static Tokenizer DefaultTokenizer()
         {
-            char[] defaultSplitChars = " ,.?!:;\t".ToCharArray();
+            char[] defaultSplitChars = " ,.?!:;\t-_".ToCharArray();
             var defaultPipeline = new List<Func<string, string>>()
             {
                 x => x.ToLowerInvariant(),
