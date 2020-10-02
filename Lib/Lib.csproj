@@ -53,14 +53,14 @@
     <Reference Include="Devmasters.Batch, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Batch.2.1.0\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.2.1.1\lib\net48\Devmasters.Cache.dll</HintPath>
+    <Reference Include="Devmasters.Cache, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.2.1.2\lib\net48\Devmasters.Cache.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net48\Devmasters.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.2.1.4\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.2.1.5\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Crypto, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Crypto.2.1.0\lib\net48\Devmasters.Crypto.dll</HintPath>
@@ -68,8 +68,8 @@
     <Reference Include="Devmasters.DatabaseUpgrader, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.DatabaseUpgrader.1.472.1.1\lib\net40\Devmasters.DatabaseUpgrader.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.DT, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.DT.2.1.0\lib\net48\Devmasters.DT.dll</HintPath>
+    <Reference Include="Devmasters.DT, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.DT.2.1.1\lib\net48\Devmasters.DT.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Enums, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Enums.2.1.4\lib\net48\Devmasters.Enums.dll</HintPath>

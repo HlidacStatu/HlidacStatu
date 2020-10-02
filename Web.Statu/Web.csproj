@@ -62,8 +62,8 @@
     <Reference Include="Devmasters.Batch, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Batch.2.1.0\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.2.1.1\lib\net48\Devmasters.Cache.dll</HintPath>
+    <Reference Include="Devmasters.Cache, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.2.1.2\lib\net48\Devmasters.Cache.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net48\Devmasters.Collections.dll</HintPath>

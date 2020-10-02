@@ -10,8 +10,8 @@ namespace HlidacStatu.Web.Controllers
     public partial class DataController : GenericAuthController
     {
 
-        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]> datasetIndexStatCache =
-            new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromMinutes(15),
+        static Devmasters.Cache.LocalMemory.LocalMemoryCache<Models.DatasetIndexStat[]> datasetIndexStatCache =
+            new Devmasters.Cache.LocalMemory.LocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromMinutes(15),
                 (o)=>
                 {
                     List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>() ;

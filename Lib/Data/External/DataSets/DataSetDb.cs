@@ -11,8 +11,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public static DataSetDB Instance = new DataSetDB();
 
 
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> AllDataSets =
-            new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<DataSet[]> AllDataSets =
+            new Devmasters.Cache.LocalMemory.LocalMemoryCache<DataSet[]>(
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
@@ -26,8 +26,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         }
                     );
 
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]> ProductionDataSets =
-            new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<DataSet[]>(
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<DataSet[]> ProductionDataSets =
+            new Devmasters.Cache.LocalMemory.LocalMemoryCache<DataSet[]>(
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
