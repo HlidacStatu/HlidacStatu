@@ -4,6 +4,7 @@
 @using HlidacStatu.Lib
 @using System.Linq
 @using HlidacStatu.Util;
+@using HlidacStatu.Web.Framework;
 
 @{ 
     ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
@@ -137,12 +138,21 @@ ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear());
     else
 
     { 
-    @Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", key = Model.NameId, param1 = aktualnost.ToString(), param2 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User) })
+                    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H,"OsobaProfil",Model,Model.NameId,
+                   this.User.Identity.IsAuthenticated,aktualnost.ToString(), HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User))
+    @*@Html.Action("CachedAction_Child_12H", new { model = Model, auth = this.User.Identity.IsAuthenticated, NameOfView = "OsobaProfil", 
+    key = Model.NameId, param1 = aktualnost.ToString(), param2 = HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User) })*@
 
     <div style="margin-top:40px"></div> 
-    if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
-    {
-        @Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", key = Model.NameId, param1 = aktualnost.ToString() }) }
+        if ((ostat.SoukromeFirmy.Count + ostat.StatniFirmy.Count) > 0)
+        {
+                @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "OsobaProfil_Vazby", Model, Model.NameId,
+                                             this.User.Identity.IsAuthenticated, aktualnost)
+
+            @*@Html.Action("CachedAction_Child_12H", new { model = Model, aktualnost = aktualnost, NameOfView = "OsobaProfil_Vazby", 
+           key = Model.NameId, param1 = aktualnost.ToString() }) *@
+
+        }
         @Html.Partial("~/Views/Home/_PolitikDisclaimer.cshtml", this.ViewData)
     }
 

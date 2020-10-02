@@ -284,7 +284,10 @@ namespace HlidacStatu.Web.Framework
             Cache48H,
             debug
         }
-        public static MvcHtmlString CachedAction(this HtmlHelper self, CachedActionLength length, string viewName, object model, string primaryKey, bool? auth=null, string param1 =null, string param2 = null, string param3 = null, string param4 = null, string param5 = null, string param6 = null, string param7 = null, string param8 = null)
+        public static MvcHtmlString CachedAction(this HtmlHelper self, CachedActionLength length, string viewName, object model, 
+            string primaryKey, bool? auth=null, 
+            object param1 =null, object param2 = null, object param3 = null, object param4 = null, 
+            object param5 = null, object param6 = null, object param7 = null, object param8 = null)
         {
             string cacheLength = length.ToString().Replace("Cache", "");
             return self.Action("CachedAction_Child_" + cacheLength, new { 
