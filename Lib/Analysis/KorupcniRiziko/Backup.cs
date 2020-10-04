@@ -36,6 +36,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             var res = ES.Manager.GetESClient_KIndexBackup().Index<Backup>(b, o => o.Id(b.Id)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
+                Util.Consts.Logger.Error("KIndex backup save error\n" + res.ServerError?.ToString());
                 throw new ApplicationException(res.ServerError?.ToString());
             }
         }
