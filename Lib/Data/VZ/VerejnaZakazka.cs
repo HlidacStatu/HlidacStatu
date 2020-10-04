@@ -505,7 +505,7 @@ namespace HlidacStatu.Lib.Data.VZ
             public void CalculateDocStats()
             {
                 this.Lenght = this.PlainText.Length;
-                this.WordCount = HlidacStatu.Util.ParseTools.CountWords(this.PlainText);
+                this.WordCount = Devmasters.TextUtil.CountWords(this.PlainText);
             }
 
 

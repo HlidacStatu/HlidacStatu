@@ -58,7 +58,7 @@ namespace HlidacStatu.Plugin.Enhancers
             var zahr = Util.DataValidators.ZahranicniAdresa(subj.adresa);
             if (!string.IsNullOrEmpty(zahr) && !string.IsNullOrEmpty(subj.ico))
             {
-                var currPref = Util.ParseTools.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
+                var currPref = Devmasters.RegexUtil.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
                 if (string.IsNullOrEmpty(currPref))
                 {
                     //NENI PREFIX, DOPLN HO
@@ -78,7 +78,7 @@ namespace HlidacStatu.Plugin.Enhancers
             }
             else
             {
-                var currPref2 = Util.ParseTools.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
+                var currPref2 = Devmasters.RegexUtil.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
                 if (!string.IsNullOrEmpty(currPref2) && subj.ico != null)
                 {
                     subj.ico = subj.ico.Replace(currPref2, "");

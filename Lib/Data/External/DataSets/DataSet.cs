@@ -385,7 +385,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     if (schema.Format == "date-time")
                         return typeof(Nullable<DateTime>);
                     else if (schema.Format == "date")
-                        return typeof(Nullable<HlidacStatu.Util.Date>);
+                        return typeof(Nullable<Devmasters.DT.Date>);
                     else
                         return typeof(string);
                 }
@@ -411,7 +411,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     if (schema.Format == "date" || schema.Format == "date-time")
                         return typeof(DateTime);
                     else if (schema.Format == "date")
-                        return typeof(HlidacStatu.Util.Date);
+                        return typeof(Devmasters.DT.Date);
                     else
                         return typeof(string);
                 }

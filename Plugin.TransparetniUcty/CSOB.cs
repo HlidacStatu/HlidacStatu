@@ -154,7 +154,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
 		{
 			using (var url = new Devmasters.Net.HttpClient.URLContent(Ucet.Url))
 			{
-				var doc = new XPath(url.GetContent().Text);
+				var doc = new Devmasters.XPath(url.GetContent().Text);
 				return doc.GetNodes(
 							   "//div[@class='npw-transaction-group']/ul[@class='npw-documents']//a[text()[contains(.,'Transakce')]]")
 						   ?.Select(n => new

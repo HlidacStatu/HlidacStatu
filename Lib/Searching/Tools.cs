@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Nest;
 using Devmasters.Batch;
 using System.Threading;
+using Devmasters;
 
 namespace HlidacStatu.Lib.Searching
 {
@@ -365,7 +366,7 @@ namespace HlidacStatu.Lib.Searching
                         string cpv = "";
                         if (replaceWith.Contains("${oblast}"))
                         {
-                            var oblastVal = ParseTools.GetRegexGroupValue(modifiedQ, @"oblast:(?<oblast>\w*)", "oblast");
+                            var oblastVal = Devmasters.RegexUtil.GetRegexGroupValue(modifiedQ, @"oblast:(?<oblast>\w*)", "oblast");
                             var cpvs = Lib.Data.VZ.VerejnaZakazka.Searching.CPVOblastToCPV(oblastVal);
                             if (cpvs != null)
                             {
@@ -382,7 +383,7 @@ namespace HlidacStatu.Lib.Searching
                         //string cpv = "";
                         //if (m.Success)
                         //    cpv = m.Groups["q"].Value;
-                        cpv = ParseTools.GetRegexGroupValue(modifiedQ, @"cpv:(?<q>(-|,|\d)*)\s*", "q");
+                        cpv = Devmasters.RegexUtil.GetRegexGroupValue(modifiedQ, @"cpv:(?<q>(-|,|\d)*)\s*", "q");
                         lookFor = @"cpv:(?<q>(-|,|\d)*)\s*";
                         if (!string.IsNullOrEmpty(cpv))
                         {
@@ -425,7 +426,7 @@ namespace HlidacStatu.Lib.Searching
 
                     else if (doFullReplace && lookFor.Contains("chyby:"))
                     {
-                        string levelVal = ParseTools.GetRegexGroupValue(modifiedQ, @"chyby:(?<level>\w*)", "level")?.ToLower() ?? "";
+                        string levelVal = Devmasters.RegexUtil.GetRegexGroupValue(modifiedQ, @"chyby:(?<level>\w*)", "level")?.ToLower() ?? "";
                         string levelQ = "";
                         if (levelVal == "fatal" || levelVal == "zasadni")
                             levelQ = Lib.Issues.Util.IssuesByLevelQuery(Lib.Issues.ImportanceLevel.Fatal);

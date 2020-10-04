@@ -229,7 +229,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                 {
                     html = net.GetContent().Text;
                 }
-                XPath doc = new XPath(html);
+                Devmasters.XPath doc = new Devmasters.XPath(html);
                 var spocet = doc.GetNodeText("//table[@class='vysledekLustrace']//tr//td[contains(text(),'POČET')]/following-sibling::*")?.Trim();
                 var pocet = Util.ParseTools.ToInt(spocet);
                 if (pocet.HasValue && pocet.Value == 0)

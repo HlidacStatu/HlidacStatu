@@ -135,8 +135,8 @@ namespace HlidacStatu.Util
                     return NazvyStranŹkratky[i, 1];
             }
 
-            var words = ParseTools.GetWords(strana);
-            if (ParseTools.CountWords(strana) > 3)
+            var words = Devmasters.TextUtil.GetWords(strana);
+            if (Devmasters.TextUtil.CountWords(strana) > 3)
             {
                 //vratim zkratku z prvnich pismen
                 var res = "";

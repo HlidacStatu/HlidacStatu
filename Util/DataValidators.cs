@@ -64,7 +64,7 @@ namespace HlidacStatu.Util
             if (string.IsNullOrEmpty(ico))
                 return null;
 
-            var pref = Util.ParseTools.GetRegexGroupValue(ico, @"^(?<pref>\w{2}-).{1,}", "pref");
+            var pref = Devmasters.RegexUtil.GetRegexGroupValue(ico, @"^(?<pref>\w{2}-).{1,}", "pref");
 
             return pref;//je-li prefix, je to zahranicni ico
         }

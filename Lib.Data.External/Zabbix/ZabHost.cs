@@ -52,12 +52,12 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
             this.hostid = hostId;
             this.host = host;
             this.url = url;
-            this.urad = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Urad:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
-            this.popis = Devmasters.TextUtil.ShortenHTML(ParseTools.GetRegexGroupValue(description, @"Popis:\s?(?<txt>[^\x0a\x0d]*)", "txt"), 10000, new string[] {"a","b"} );
-            this.publicname = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Nazev:\s?(?<txt>[^\x0a\x0d]*)", "txt"));            
-            string sgroup = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"Poznamka:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.urad = Devmasters.TextUtil.NormalizeToBlockText(Devmasters.RegexUtil.GetRegexGroupValue(description, @"Urad:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.popis = Devmasters.TextUtil.ShortenHTML(Devmasters.RegexUtil.GetRegexGroupValue(description, @"Popis:\s?(?<txt>[^\x0a\x0d]*)", "txt"), 10000, new string[] {"a","b"} );
+            this.publicname = Devmasters.TextUtil.NormalizeToBlockText(Devmasters.RegexUtil.GetRegexGroupValue(description, @"Nazev:\s?(?<txt>[^\x0a\x0d]*)", "txt"));            
+            string sgroup = Devmasters.TextUtil.NormalizeToBlockText(Devmasters.RegexUtil.GetRegexGroupValue(description, @"Poznamka:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
 
-            this.customUrl = Devmasters.TextUtil.NormalizeToBlockText(ParseTools.GetRegexGroupValue(description, @"URL:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
+            this.customUrl = Devmasters.TextUtil.NormalizeToBlockText(Devmasters.RegexUtil.GetRegexGroupValue(description, @"URL:\s?(?<txt>[^\x0a\x0d]*)", "txt"));
 
             this.groups.Clear();
             if (!string.IsNullOrEmpty(sgroup))

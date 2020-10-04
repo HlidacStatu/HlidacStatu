@@ -309,7 +309,7 @@ namespace HlidacStatu.Lib.Render
 
             public static string fn_GetRegexGroupValue(string text, string regex, string groupname)
             {
-                return HlidacStatu.Util.ParseTools.GetRegexGroupValue(text, regex, groupname);
+                return Devmasters.RegexUtil.GetRegexGroupValue(text, regex, groupname);
             }
 
             public static bool fn_IsNullOrEmpty(dynamic text)

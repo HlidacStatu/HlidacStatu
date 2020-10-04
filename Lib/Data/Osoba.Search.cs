@@ -92,7 +92,7 @@ namespace HlidacStatu.Lib.Data
                 List<Osoba> foundPepole = new List<Osoba>();
 
                 string regex = @"osoba\w{0,13}:\s?(?<osoba>[\w-]{3,25})";
-                List<string> peopleIds = Util.ParseTools.GetRegexGroupValues(query, regex, "osoba").ToList();
+                List<string> peopleIds = Devmasters.RegexUtil.GetRegexGroupValues(query, regex, "osoba").ToList();
                 long total = peopleIds.LongCount();
 
                 if (peopleIds is null || peopleIds.Count == 0)

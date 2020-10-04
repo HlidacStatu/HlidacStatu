@@ -260,7 +260,7 @@ namespace HlidacStatu.Web.Controllers
             catch (Exception e)
             {
                 var msg = e?.InnerException?.Message ?? e.Message;
-                msg = HlidacStatu.Util.ParseTools.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
+                msg = Devmasters.RegexUtil.ReplaceWithRegex(msg, "", @".*: \s* error \s* CS\d{1,8}:");
 
                 return Content($"<h2>Chyba v template - zpráva pro autora této databáze</h2><pre>{msg}</pre>");
             }

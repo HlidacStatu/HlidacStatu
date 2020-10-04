@@ -225,7 +225,7 @@ namespace HlidacStatu.Lib.Searching
                     foreach (var mt in mezery)
                     {
                         string findPrefixReg = @"(^|\s|[(]) (?<p>(\w|\.)*:) (?<q>(-|\w)* )\s*";
-                        var prefix = HlidacStatu.Util.ParseTools.GetRegexGroupValue(mt, findPrefixReg, "p");
+                        var prefix = Devmasters.RegexUtil.GetRegexGroupValue(mt, findPrefixReg, "p");
                         if (!string.IsNullOrEmpty(prefix))
                             tmpParts.Add(new Part()
                             {

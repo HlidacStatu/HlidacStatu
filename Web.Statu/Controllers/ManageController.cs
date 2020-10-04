@@ -796,7 +796,7 @@ namespace HlidacStatu.Web.Controllers
                         if (System.IO.File.Exists(fn))
                         {
                             //C:\Windows\TEMP\tmp3EB0.tmp.0.faces.jpg
-                            var rootfn = HlidacStatu.Util.ParseTools.GetRegexGroupValue(fn, @"(?<tempfn>.*)\.\d{1,2}\.faces\.jpg$", "tempfn");
+                            var rootfn = Devmasters.RegexUtil.GetRegexGroupValue(fn, @"(?<tempfn>.*)\.\d{1,2}\.faces\.jpg$", "tempfn");
                             var target = HlidacStatu.Lib.Init.OsobaFotky.GetFullPath(o, "small.uploaded.jpg");
                             try
                             {

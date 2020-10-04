@@ -92,7 +92,7 @@ namespace HlidacStatu.Web.Controllers
                 if (string.IsNullOrEmpty(f) || f?.Contains("..") == true)
                     return File(HlidacStatu.Lib.Init.WebAppRoot + @"Content\Img\personNoPhoto.png", "image/png");
 
-                var nameId = HlidacStatu.Util.ParseTools.GetRegexGroupValue(f, @"\d{2} \\ (?<nameid>\w* - \w* (-\d{1,3})?) - small\.jpg", "nameid");
+                var nameId = Devmasters.RegexUtil.GetRegexGroupValue(f, @"\d{2} \\ (?<nameid>\w* - \w* (-\d{1,3})?) - small\.jpg", "nameid");
                 if (string.IsNullOrEmpty(nameId))
                     return File(HlidacStatu.Lib.Init.WebAppRoot + @"Content\Img\personNoPhoto.png", "image/png");
                 else
@@ -1543,25 +1543,25 @@ text zpravy: {txt}
                     net.Timeout = 40000;
                     var cont = net.GetContent().Text;
                     socialTitle = System.Net.WebUtility.HtmlDecode(
-                        HlidacStatu.Util.ParseTools
+                        Devmasters.RegexUtil
                         .GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_title\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
                         .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                     socialHtml = System.Net.WebUtility.HtmlDecode(
-                        HlidacStatu.Util.ParseTools
+                        Devmasters.RegexUtil
                         .GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_html\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
                         .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                     socialFooter = System.Net.WebUtility.HtmlDecode(
-                        HlidacStatu.Util.ParseTools.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_footer\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
+                        Devmasters.RegexUtil.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_footer\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
                         .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                     socialSubFooter = System.Net.WebUtility.HtmlDecode(
-                        HlidacStatu.Util.ParseTools.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_subfooter\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
+                        Devmasters.RegexUtil.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_subfooter\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
                         .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                     socialFooterImg = System.Net.WebUtility.HtmlDecode(
-                        HlidacStatu.Util.ParseTools.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_footerimg\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
+                        Devmasters.RegexUtil.GetRegexGroupValues(cont, @"<meta \s*  property=\""og:hlidac_footerimg\"" \s*  content=\""(?<v>.*)\"" \s* />", "v")
                         .OrderByDescending(o => o.Length).FirstOrDefault()
                         );
                 }

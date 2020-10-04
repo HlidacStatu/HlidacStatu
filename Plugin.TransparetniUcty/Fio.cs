@@ -68,7 +68,7 @@ namespace HlidacStatu.Plugin.TransparetniUcty
                 {
                     throw new StatementTooLongException();
                 }
-                var doc = new XPath(content);
+                var doc = new Devmasters.XPath(content);
 
                 var xoverviewRows = "//div[contains(@class, 'pohybySum')]/table/tbody/tr";
                 var overviewRows = doc.GetNodes(xoverviewRows)?.Count ?? 0;

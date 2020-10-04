@@ -36,9 +36,9 @@ namespace HlidacStatu.Plugin.TransparetniUcty
                 baseUrl.IgnoreHttpErrors = true;
                 var html = baseUrl.GetContent(Encoding.UTF8);
 
-                var webReqInstance = HlidacStatu.Util.ParseTools.GetRegexGroupValue(html.Text, "Transparentaccountportlet_INSTANCE_(?<inst>[a-z0-9]*)_", "inst");
-                var dynamicInst = HlidacStatu.Util.ParseTools.GetRegexGroupValue(html.Text, "p_p_id_DynamicNestedPortlet_INSTANCE_(?<inst>[a-z0-9]*)_", "inst");
-                var internalIdBankAccount = HlidacStatu.Util.ParseTools.GetRegexGroupValue(html.Text, @"idBankAccount=(?<id>\d*)", "id");
+                var webReqInstance = Devmasters.RegexUtil.GetRegexGroupValue(html.Text, "Transparentaccountportlet_INSTANCE_(?<inst>[a-z0-9]*)_", "inst");
+                var dynamicInst = Devmasters.RegexUtil.GetRegexGroupValue(html.Text, "p_p_id_DynamicNestedPortlet_INSTANCE_(?<inst>[a-z0-9]*)_", "inst");
+                var internalIdBankAccount = Devmasters.RegexUtil.GetRegexGroupValue(html.Text, @"idBankAccount=(?<id>\d*)", "id");
                 if (!string.IsNullOrEmpty(webReqInstance))
                 {
                     bool getSomeData = true;

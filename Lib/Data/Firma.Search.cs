@@ -66,7 +66,7 @@ namespace HlidacStatu.Lib.Data
                     .GetSimpleQuery(query, new Searching.Rules.IRule[] { new Searching.Rules.Firmy_OVMKategorie() })
                     .FullQuery();
                 
-                string[] specifiedIcosInQuery = Util.ParseTools.GetRegexGroupValues(modifQ, @"(ico\w{0,11}\: \s? (?<ic>\d{3,8}))", "ic");
+                string[] specifiedIcosInQuery = Devmasters.RegexUtil.GetRegexGroupValues(modifQ, @"(ico\w{0,11}\: \s? (?<ic>\d{3,8}))", "ic");
                 if (specifiedIcosInQuery != null && specifiedIcosInQuery.Length > 0)
                 {
                     foreach (var ic in specifiedIcosInQuery.Skip((page-1)*size).Take(size))

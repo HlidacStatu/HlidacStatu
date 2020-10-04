@@ -109,7 +109,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         var data = net.GetBinary().Binary;
                         var fn = net.ResponseParams.Headers["Content-Disposition"];
                         if (!string.IsNullOrWhiteSpace(fn))
-                            fn = HlidacStatu.Util.ParseTools.GetRegexGroupValue(fn, "filename=\"(?<fn>.*)\"", "fn");
+                            fn = Devmasters.RegexUtil.GetRegexGroupValue(fn, "filename=\"(?<fn>.*)\"", "fn");
 
                         var attrs = new FileAttributes()
                         {

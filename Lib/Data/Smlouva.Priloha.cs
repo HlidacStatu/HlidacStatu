@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data
             public void UpdateStatistics()
             {
                 this.Lenght = this.PlainTextContent?.Length ?? 0;
-                this.WordCount = ParseTools.CountWords(this.PlainTextContent);
+                this.WordCount = Devmasters.TextUtil.CountWords(this.PlainTextContent);
                 var variance = Devmasters.TextUtil.WordsVarianceInText(this.PlainTextContent);
                 this.UniqueWordsCount = variance.Item2;
                 this.WordsVariance = variance.Item1;
