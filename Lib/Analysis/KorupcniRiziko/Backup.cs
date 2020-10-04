@@ -10,6 +10,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         [Nest.Keyword]
         public string Id { get; set; }
+
         public DateTime Created { get; set; }
 
         public string Comment { get; set; }
@@ -20,6 +21,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexData kidx = KIndexData.GetDirect(ico);
             if (kidx == null)
                 return;
+            CreateBackup(comment, kidx);
         }
         public static void CreateBackup(string comment, KIndexData kidx)
         {

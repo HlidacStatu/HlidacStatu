@@ -18,14 +18,19 @@ namespace HlidacStatu.Lib.Data
             }
 
 
+            string _uniqId = null;
             public string UniqId
             {
                 get
                 {
-                    if (Type == NodeType.Person)
-                        return "p-" + Id;
-                    else
-                        return "c-" + Id;
+                    if (_uniqId == null)
+                    {
+                        if (Type == NodeType.Person)
+                            _uniqId= "p-" + Id;
+                        else
+                            _uniqId= "c-" + Id;
+                    }
+                    return _uniqId;
                 }
             }
             public enum NodeType { Company, Person }
