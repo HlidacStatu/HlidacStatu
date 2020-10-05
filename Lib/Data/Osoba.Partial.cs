@@ -1320,7 +1320,7 @@ namespace HlidacStatu.Lib.Data
         {
 
             if (string.IsNullOrEmpty(this.NameId))
-                this.NameId = GetUniqueNamedId();
+                return "";
 
             string url = "/osoba/" + this.NameId;
             if (!string.IsNullOrEmpty(foundWithQuery))
