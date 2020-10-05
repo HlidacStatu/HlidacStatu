@@ -125,36 +125,68 @@ namespace FullTextSearch
             {
                 for (int wordPosition = 0; wordPosition < _options.FirstWordsBonus.BonusWordsCount; wordPosition++)
                 {
-                    if (sentence.Tokens.Count > wordPosition 
-                        && tokenPosition < tokenizedQuery.Length)
+                    if (wordPosition >= sentence.Tokens.Count
+                        || tokenPosition >= tokenizedQuery.Length)
+                        break;
+                    
+                    string queryToken = tokenizedQuery[tokenPosition];
+                    if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
                     {
-                        string queryToken = tokenizedQuery[tokenPosition];
-                        if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
-                        {
-                            score += queryToken.Length 
-                                * (_options.FirstWordsBonus.MaxBonusMultiplier - 
-                                    (_options.FirstWordsBonus.BonusMultiplierDegradation * wordPosition));
+                        score += queryToken.Length 
+                            * (_options.FirstWordsBonus.MaxBonusMultiplier - 
+                                (_options.FirstWordsBonus.BonusMultiplierDegradation * wordPosition));
 
-                            tokenPosition++;
-                        }
+                        tokenPosition++;
                     }
                 }
-
             }
 
+            //bonus for longest word chain
+            tokenPosition = 0;
+            double chainScore = 0;
+            // bonus for first three words
+            if (_options.ChainBonusMultiplier.HasValue)
+            {
+                for (int wordPosition = 0; wordPosition < sentence.Tokens.Count; wordPosition++)
+                {
+                    if (tokenPosition >= tokenizedQuery.Length)
+                        break;
+                    
+                    string queryToken = tokenizedQuery[tokenPosition];
+                    if (sentence.Tokens[wordPosition].Word.StartsWith(queryToken))
+                    {
+                        chainScore += queryToken.Length;
+                        tokenPosition++;
+                    }
+                    else if (chainScore > 0) // after previous match there is no other match
+                        break;
+                }
+
+                if (chainScore > 1)
+                    score += chainScore * _options.ChainBonusMultiplier.Value; //todo: put it to options
+            }
+
+            
+
             // Query == sentence
+            // toto téměř nikdy nenastane! sentence je potřeba rozdělit do chlívků
+            // podle parametrů, ze kterých se pomocí reflexe vytvořili věty
+            // pak je potřeba vyhledávat pouze v těchto chlívcích!
             if (sentence.Text == string.Join(" ", tokenizedQuery))
             {
-                return _options.ExactMatchBonus ?? + score;
+                return score + _options.ExactMatchBonus ?? 0;
             }
 
             // sentence starts with query without its last word
+            // toto téměř nikdy nenastane! sentence je potřeba rozdělit do chlívků
+            // podle parametrů, ze kterých se pomocí reflexe vytvořili věty
+            // pak je potřeba vyhledávat pouze v těchto chlívcích!
             if (tokenizedQuery.Length > 2) // 3+ words
             {
                 string shorterQuery = string.Join(" ", tokenizedQuery.Take(tokenizedQuery.Length - 1));
                 if (sentence.Text.StartsWith(shorterQuery) )
                 {
-                    return _options.ExactMatchBonus ?? + score;
+                    return score + _options.AlmostExactMatchBonus ?? 0;
                 }
 
             }
