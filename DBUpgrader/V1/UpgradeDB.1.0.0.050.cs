@@ -18,10 +18,7 @@ namespace HlidacStatu.DBUpgrades
 			public static void Init_1_0_0_50(IDatabaseUpgrader du)
 			{
 
-                string sql = @"
-
-
-";
+                
                 //du.RunDDLCommands(sql);
                 du.AddColumnToTable("Created", "datetime", "Bookmarks", false);
 

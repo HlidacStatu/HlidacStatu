@@ -182,10 +182,6 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Tmp()
         {
-            int a = 22;
-            int b = 2;
-            //int c = (a / (b - 2));
-            //Console.Write(c);
             return View();
         }
 
