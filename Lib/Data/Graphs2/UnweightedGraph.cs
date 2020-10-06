@@ -20,11 +20,11 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// <param name="to"></param>
         public void AddEdge(Vertex<T> from, Vertex<T> to, string bindingName)
         {
-            Vertex<T> vertex1 = GetOrAddVertex(from);
-            Vertex<T> vertex2 = GetOrAddVertex(to);
+            //Vertex<T> vertex1 = GetOrAddVertex(from);
+            //Vertex<T> vertex2 = GetOrAddVertex(to);
 
-            vertex1.AddNeighbor(vertex2);
-            vertex2.AddNeighbor(vertex1);
+            //vertex1.AddEdge(vertex2);
+            //vertex2.AddEdge(vertex1);
 
         }
 
@@ -46,36 +46,51 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public IEnumerable<Vertex<T>> ShortestPath(Vertex<T> from, Vertex<T> to)
+        public IEnumerable<Edge<T>> ShortestPath(Vertex<T> from, Vertex<T> to)
         {
-            var visitHistory = new Dictionary<Vertex<T>, Vertex<T>>();
+            var visitHistory = new Stack<Edge<T>>();
+            var visitedVertices = new HashSet<Vertex<T>>();
 
-            var queue = new Queue<(Vertex<T> vertex, Vertex<T> parent)>();
-            queue.Enqueue((from, null));
+            Queue<Vertex<T>> queuedVertices = new Queue<Vertex<T>>();
+            queuedVertices.Enqueue(from);
 
-            var result = new List<Vertex<T>>();
-            while (queue.Count > 0)
+            while (queuedVertices.Count > 0)
             {
-                var (vertex, parent) = queue.Dequeue();
-                visitHistory.Add(vertex, parent);
+                var currentVertex = queuedVertices.Dequeue();
+                visitedVertices.Add(currentVertex);
 
-                if(vertex == to)
+                bool isSearchedVertex = currentVertex == to;
+                if (isSearchedVertex)
                 {
-                    result.Add(vertex);
-                                        
-                    while (visitHistory.TryGetValue(vertex, out Vertex<T> previous) && previous != null)
+                    var results = new List<Edge<T>>();
+                    var previousVertex = to;
+
+                    while(visitHistory.Count > 0)
                     {
-                        result.Add(previous);
+                        var edge = visitHistory.Pop();
+
+                        if(edge.To == previousVertex)
+                        {
+                            results.Add(edge);
+                            previousVertex = edge.From;
+                        }
+
+                        if(edge.From == from)
+                        {
+                            break;
+                        }
                     }
 
-                    return result.Reverse<Vertex<T>>();
+                    return results.Reverse<Edge<T>>();
                 }
 
-                foreach (var neighbor in vertex.Neighbors)
+                foreach (var edge in currentVertex.Edges)
                 {
-                    if (!visitHistory.Keys.Contains(neighbor))
+                    bool unvisitedVertex = !visitedVertices.Contains(edge.To);
+                    if (unvisitedVertex)
                     {
-                        queue.Enqueue((vertex: neighbor, parent: vertex ));
+                        visitHistory.Push(edge);
+                        queuedVertices.Enqueue(edge.To);
                     }
                 }
             }
@@ -91,22 +106,22 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// <returns></returns>
         public IEnumerable<Vertex<T>> BreathFirstIterator(Vertex<T> from)
         {
-            var visited = new HashSet<Vertex<T>>();
+            var visitedVertices = new HashSet<Vertex<T>>();
             
-            Queue<Vertex<T>> queue = new Queue<Vertex<T>>();
-            queue.Enqueue(from);
+            Queue<Vertex<T>> queuedVertices = new Queue<Vertex<T>>();
+            queuedVertices.Enqueue(from);
 
-            while (queue.Count > 0)
+            while (queuedVertices.Count > 0)
             {
-                var currentVertex = queue.Dequeue();
-                visited.Add(currentVertex);
+                var currentVertex = queuedVertices.Dequeue();
+                visitedVertices.Add(currentVertex);
                 yield return currentVertex;
                 
-                foreach (var neighbor in currentVertex.Neighbors)
+                foreach (var edge in currentVertex.Edges)
                 {
-                    if(!visited.Contains(neighbor))
+                    if(!visitedVertices.Contains(edge.To))
                     {
-                        queue.Enqueue(neighbor);
+                        queuedVertices.Enqueue(edge.To);
                     }
                 }
             }

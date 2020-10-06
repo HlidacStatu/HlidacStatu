@@ -6,38 +6,18 @@ namespace HlidacStatu.Lib.Data.Graphs2
 {
     public class Vertex<T>
     {
-        public Vertex(T value, IEnumerable<Vertex<T>> neighbors = null)
+        public T Value { get; }
+        public List<Edge<T>> Edges { get; } = new List<Edge<T>>();
+
+        public Vertex(T value)
         {
             Value = value;
-            Neighbors = neighbors?.ToList() ?? new List<Vertex<T>>();
         }
 
-        public T Value { get; }
-
-        public List<Vertex<T>> Neighbors { get; }
-
-        public void AddNeighbor(Vertex<T> vertex)
+        public void AddEdge(Vertex<T> from, Vertex<T> to, string bindingName)
         {
-            Neighbors.Add(vertex);
+            Edges.Add(new Edge<T>(from, to, bindingName));
         }
-
-        //public void AddNeighbors(IEnumerable<Vertex<T>> newNeighbors)
-        //{
-        //    Neighbors.AddRange(newNeighbors);
-        //}
-
-        //public void RemoveNeighbor(Vertex<T> vertex)
-        //{
-        //    Neighbors.Remove(vertex);
-        //}
-
-        //public override string ToString()
-        //{
-        //    return Neighbors.Aggregate(
-        //            new StringBuilder($"{Value}: "),
-        //            (sb, n) => sb.Append($"{n.Value} "))
-        //        .ToString();
-        //}
 
     }
 }
