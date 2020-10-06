@@ -106,7 +106,7 @@ namespace ZabbixApi
 
                 return jsonResult;
             }
-            catch (System.Exception e)
+            catch
             {
 
                 throw;

@@ -18,7 +18,7 @@ namespace HlidacStatu.DBUpgrades
 			public static void Init_1_0_0_39(IDatabaseUpgrader du)
 			{
 
-                string sql = @"";
+                //string sql = @"";
 
                 du.AddColumnToTable("SpecificContact", "nvarchar(100)", "watchdog", true);
 

@@ -18,8 +18,7 @@ namespace HlidacStatu.DBUpgrades
 			public static void Init_1_0_0_44(IDatabaseUpgrader du)
 			{
 
-                string sql = @"
-";
+                
                 du.AddColumnToTable("comment", "nvarchar(500)", "review", true);
                 //du.RunDDLCommands(sql);
 

@@ -18,7 +18,7 @@ namespace HlidacStatu.DBUpgrades
 			public static void Init_1_0_0_58(IDatabaseUpgrader du)
 			{
                 du.AddColumnToTable("priority", "int", "ItemToOcrQueue", true);
-                string sql = @"update ItemToOcrQueue set priority = 10";
+                //string sql = @"update ItemToOcrQueue set priority = 10";
                 //du.RunDDLCommands(sql);
 
             }

@@ -40,12 +40,6 @@ namespace DotNet.Highcharts.Options.Exporting
 		public string Symbol { get; set; }
 
 		/// <summary>
-		/// See navigation.buttonOptions
-		/// => symbolFill. Defaults to #A8BF77
-		/// </summary>
-		public Color? SymbolFill { get; set; }
-
-		/// <summary>
 		/// The horizontal positioin of the button relative to the align
 		/// option. Defaults to 10
 		/// </summary>

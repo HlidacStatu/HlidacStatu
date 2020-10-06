@@ -18,6 +18,8 @@
 
             opt.AlmostExactMatchBonus = 10;
 
+            opt.ChainBonusMultiplier = 3;
+
             return opt;
         }
 
@@ -25,6 +27,7 @@
         public double? WholeWordBonusMultiplier { get; set; }
         public double? ExactMatchBonus { get; set; }
         public double? AlmostExactMatchBonus { get; set; }
+        public double? ChainBonusMultiplier { get; set; }
 
     }
 

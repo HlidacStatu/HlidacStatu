@@ -27,38 +27,10 @@ namespace HlidacStatu.Web.Controllers
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) 
+            : base(userManager, signInManager)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
         }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-
-
 
 
         //
@@ -112,6 +84,18 @@ namespace HlidacStatu.Web.Controllers
         {
             Osoba o1 = Osoba.GetByNameId(osoba1.Trim());
             Osoba o2 = Osoba.GetByNameId(osoba2.Trim());
+            if (o1 != null && o2 != null)
+            {
+                o1.MergeWith(o2, this.User.Identity.Name);
+                return Redirect(o1.GetUrl(true));
+            }
+            return View("index");
+        }
+
+        public ActionResult OsobaMergeById(int osoba1Id, int osoba2Id)
+        {
+            Osoba o1 = Osoba.GetByInternalId(osoba1Id);
+            Osoba o2 = Osoba.GetByInternalId(osoba2Id);
             if (o1 != null && o2 != null)
             {
                 o1.MergeWith(o2, this.User.Identity.Name);

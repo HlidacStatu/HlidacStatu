@@ -127,6 +127,14 @@ else
                             </a>
                             <br />
                             <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
+                            <br />
+                            @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+                            "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+                            "Důvod pro přepočítání",
+                            "Přepočítat K-Index",
+                            "/kindex/recalculateFeedback",
+                            mustAuth: true,
+                            addData: Model.ICO)
                         </td>
                     </tr>
                     

@@ -88,11 +88,23 @@
                         <a href="/manage/reviews">Reviews</a>
                     </dd>
 
-                    <dt>Spojení dvou osob do jedné:</dt>
+                    <dt>Spojení dvou osob do jedné podle Name Id:</dt>
                     <dd>
                         <form class="form-inline" action="/manage/osobamerge">
                             <div class="form-group-sm">
                                 <label for="osoba1">Hlavní osoba (nameId)</label>
+                                <input class="form-control" type="text" name="osoba1" id="osoba1" />
+                                <label for="osoba1">Duplikátní záznam</label>
+                                <input class="form-control" type="text" name="osoba2" id="osoba2" />
+                                <button type="submit" class="btn btn-sm btn-default">Spojit do hlavní osoby</button>
+                            </div>
+                        </form>
+                    </dd>
+                    <dt>Spojení dvou osob do jedné podle ID osoby:</dt>
+                    <dd>
+                        <form class="form-inline" action="/manage/OsobaMergeById">
+                            <div class="form-group-sm">
+                                <label for="osoba1">Hlavní osoba (internal Id)</label>
                                 <input class="form-control" type="text" name="osoba1" id="osoba1" />
                                 <label for="osoba1">Duplikátní záznam</label>
                                 <input class="form-control" type="text" name="osoba2" id="osoba2" />
