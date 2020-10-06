@@ -63,7 +63,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        [AuthorizeAndAudit(Roles = "PrivateApi,Admin")]
+        [AuthorizeAndAudit(Roles = "KomercniLicence,PrivateApi,Admin")]
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet, Route("vsechny")]
         public HttpResponseMessage Vsechny()

@@ -18,7 +18,7 @@ namespace HlidacStatu.Web.Controllers
         /// </remarks>
         /// <param name="id">Id veřejné zakázky</param>
         /// <returns>detail veřejné zakázky</returns>
-        [AuthorizeAndAudit(Roles = "Admin")]
+        [AuthorizeAndAudit(Roles = "Admin,KomercniLicence")]
         [HttpGet, Route("{id?}")]
         public Lib.Data.VZ.VerejnaZakazka Detail(string id = null)
         {
@@ -57,7 +57,7 @@ namespace HlidacStatu.Web.Controllers
         /// 9: podle dodavatele<br />
         /// </param>
         /// <returns>nalezené veřejné zakázky</returns>
-        [AuthorizeAndAudit(Roles = "Admin")]
+        [AuthorizeAndAudit(Roles = "Admin,KomercniLicence")]
         [HttpGet, Route("hledat")]
         public SearchResultDTO<Lib.Data.VZ.VerejnaZakazka>Hledat(string dotaz = null, int? strana=null, int? razeni=null)
         {

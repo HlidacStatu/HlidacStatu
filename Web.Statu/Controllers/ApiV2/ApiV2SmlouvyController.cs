@@ -75,8 +75,8 @@ namespace HlidacStatu.Web.Controllers
                 var filtered = result.ElasticResults.Hits
                     .Select(m => 
                         Lib.Data.Smlouva.Export(m.Source,
-                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin"),
-                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
+                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin") || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence"),
+                            this.ApiAuth.ApiCall.UserRoles.Contains("Admin") || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence")
                             )
                         )
                     .ToArray();
@@ -104,7 +104,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Smlouva nenalezena"));
             }
-            var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin"), this.User.IsInRole("Admin"));
+            var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin") || this.User.IsInRole("KomercniLicence"), this.User.IsInRole("Admin") || this.User.IsInRole("KomercniLicence"));
 
             return s;
         }

@@ -55,9 +55,9 @@ namespace HlidacStatu.Web.Controllers
 
             bool isLimited = !(
                     this.ApiAuth.ApiCall.UserRoles.Contains("novinar")
-                    ||
-                    this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
-                    );
+                    || this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
+                    || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence")
+ );
 
             result = Lib.Data.Insolvence.Insolvence.SimpleSearch(dotaz, strana.Value,
                 ApiV2Controller.DefaultResultPageSize,razeni.Value,false, isLimited);
@@ -95,8 +95,8 @@ namespace HlidacStatu.Web.Controllers
             }
             bool isLimited = !(
                     this.ApiAuth.ApiCall.UserRoles.Contains("novinar")
-                    ||
-                    this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
+                    || this.ApiAuth.ApiCall.UserRoles.Contains("Admin")
+                    || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence")
                     );
 
             var ins = Lib.Data.Insolvence.Insolvence.LoadFromES(id,true,isLimited);

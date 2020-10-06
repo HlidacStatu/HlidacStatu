@@ -13,7 +13,6 @@ namespace HlidacStatu.Web.Controllers
     {
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route()]
         public IEnumerable<SubjectNameCache> AllSubjects()
         {
@@ -21,7 +20,6 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("full/{ico}")]
         public KIndexData FullDetail(string ico)
         {
@@ -42,7 +40,6 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [AuthorizeAndAudit(Roles = "Admin")]
         [HttpGet, Route("{ico}")]
         public KIndexDTO Detail(string ico)
         {
