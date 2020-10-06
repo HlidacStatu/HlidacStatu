@@ -41,17 +41,17 @@
 
                 }
 
-                public IEnumerable<Edge> ShortestTo(string ico, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
+                public IEnumerable<Edge> ShortestTo(string ico)
                 {
                     var node = this.nodes
                         .Where(n => n.Type == Node.NodeType.Company && n.Id == ico)
                         .FirstOrDefault();
                     if (node == null)
                         return new Edge[] { };
-                    return this.ShortestTo(node, overlapDateFrom,overlapDateTo);
+                    return this.ShortestTo(node);
                 }
 
-                public IEnumerable<Edge> ShortestTo(Node node, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
+                public IEnumerable<Edge> ShortestTo(Node node)
                 {
                     calls++;
                     List<Edge> edges = new List<Edge>();
@@ -66,7 +66,7 @@
                         //found corresponding edge
                         var foundE = this.edges
                             .Where(m => m.From?.UniqId == prev?.UniqId && m.To?.UniqId == n.UniqId)
-                            .Where(m=> Devmasters.DT.Util.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
+                            //.Where(m=> Devmasters.DT.Util.IsOverlappingIntervals(overlapDateFrom,overlapDateTo,m.RelFrom, m.RelTo))
                             .OrderBy(e=>e.NumberOfDaysFromToday())
                             .ThenByDescending(e=>e.LengthOfEdgeInDays())
                             .FirstOrDefault(); //TODO zmena na vsechna obdobi

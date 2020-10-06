@@ -18,6 +18,7 @@ namespace HlidacStatu.Lib.Data
             }
 
 
+            public int UniqIdHashCode { get; private set; }
             string _uniqId = null;
             public string UniqId
             {
@@ -29,6 +30,7 @@ namespace HlidacStatu.Lib.Data
                             _uniqId= "p-" + Id;
                         else
                             _uniqId= "c-" + Id;
+                        UniqIdHashCode = _uniqId.GetHashCode();
                     }
                     return _uniqId;
                 }

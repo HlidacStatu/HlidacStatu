@@ -32,6 +32,7 @@
                     vertices[name] = newvertices.ToDictionary(k => k, v => weight);
                 }
 
+                long compares = 0;
                 public List<T> ShortestPath(T start, T finish)
                 {
                     var previous = new Dictionary<T, T>(comparer);
@@ -56,6 +57,7 @@
 
                     while (lnodes.Count != 0)
                     {
+                        compares++;
                         lnodes.Sort((x, y) => distances[x] - distances[y]);
 
                         var smallest = lnodes[0];
@@ -91,6 +93,7 @@
 
                     if (path != null)
                         path.Reverse();
+                    Console.Write("c=" + compares);
                     return path;
                 }
 

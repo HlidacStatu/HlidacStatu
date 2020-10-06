@@ -497,11 +497,11 @@ namespace HlidacStatu.Lib.Data
 
         Graph.Shortest.EdgePath shortestGraph = null;
 
-        public Graph.Edge[] VazbyProICO(string ico, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
+        public Graph.Edge[] VazbyProICO(string ico)
         {
-            return _vazbyProIcoCache.Get((this, ico, overlapDateFrom, overlapDateTo));
+            return _vazbyProIcoCache.Get((this, ico));
         }
-        private Graph.Edge[] _vazbyProICO(string ico, DateTime? overlapDateFrom = null, DateTime? overlapDateTo = null)
+        private Graph.Edge[] _vazbyProICO(string ico)
         {
             List<Graph.Edge> ret = new List<Graph.Edge>();
 
@@ -511,7 +511,7 @@ namespace HlidacStatu.Lib.Data
             }
             try
             {
-                return shortestGraph.ShortestTo(ico, overlapDateFrom, overlapDateTo).ToArray();
+                return shortestGraph.ShortestTo(ico).ToArray();
             }
             catch (Exception e)
             {
@@ -1338,10 +1338,10 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        static private MemoryCacheManager<Graph.Edge[], (Osoba o, string ico, DateTime? overlapDateFrom, DateTime? overlapDateTo)> _vazbyProIcoCache
-       = MemoryCacheManager<Graph.Edge[], (Osoba o, string ico, DateTime? overlapDateFrom, DateTime? overlapDateTo)>
+        static private MemoryCacheManager<Graph.Edge[], (Osoba o, string ico)> _vazbyProIcoCache
+       = MemoryCacheManager<Graph.Edge[], (Osoba o, string ico)>
             .GetSafeInstance("_vazbyOsobaProIcoCache", key => {
-                return key.o._vazbyProICO(key.ico, key.overlapDateFrom, key.overlapDateTo);            
+                return key.o._vazbyProICO(key.ico);
             } ,
                 TimeSpan.FromHours(2)
            );
