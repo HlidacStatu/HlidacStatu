@@ -1,6 +1,12 @@
 ﻿namespace HlidacStatu.Lib.Data.Graphs2
 {
-    public class Edge<T>
+    public interface IEdge<T>
+    {
+        Vertex<T> From { get; }
+        Vertex<T> To { get; }
+    }
+
+    public class Edge<T> : IEdge<T>
     {
         public string BindingName { get; }
         public Vertex<T> From { get; }

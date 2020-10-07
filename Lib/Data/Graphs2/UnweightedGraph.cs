@@ -12,7 +12,8 @@ namespace HlidacStatu.Lib.Data.Graphs2
         }
 
         public HashSet<Vertex<T>> Vertices { get; }
-
+        public IEnumerable<Edge<T>> Edges { get => Vertices.SelectMany(v => v.OutgoingEdges); }
+        
         /// <summary>
         /// Přidá nové položky do grafu.
         /// </summary>
@@ -20,12 +21,11 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// <param name="to"></param>
         public void AddEdge(Vertex<T> from, Vertex<T> to, string bindingName)
         {
-            //Vertex<T> vertex1 = GetOrAddVertex(from);
-            //Vertex<T> vertex2 = GetOrAddVertex(to);
+            Vertex<T> vertex1 = GetOrAddVertex(from);
+            Vertex<T> vertex2 = GetOrAddVertex(to);
 
-            //vertex1.AddEdge(vertex2);
-            //vertex2.AddEdge(vertex1);
-
+            vertex1.AddOutgoingEdge(from, to, bindingName);
+            
         }
 
         private Vertex<T> GetOrAddVertex(Vertex<T> vertex)
@@ -48,6 +48,13 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// <returns></returns>
         public IEnumerable<Edge<T>> ShortestPath(Vertex<T> from, Vertex<T> to)
         {
+            bool fromExists = Vertices.TryGetValue(from, out from);
+            bool toExists = Vertices.TryGetValue(to, out to);
+            if (!fromExists)
+                throw new Exception("From parameter not found in vertices");
+            if (!toExists)
+                throw new Exception("To parameter was not found in vertices");
+
             var visitHistory = new Stack<Edge<T>>();
             var visitedVertices = new HashSet<Vertex<T>>();
 
@@ -58,39 +65,19 @@ namespace HlidacStatu.Lib.Data.Graphs2
             {
                 var currentVertex = queuedVertices.Dequeue();
                 visitedVertices.Add(currentVertex);
-
-                bool isSearchedVertex = currentVertex == to;
-                if (isSearchedVertex)
-                {
-                    var results = new List<Edge<T>>();
-                    var previousVertex = to;
-
-                    while(visitHistory.Count > 0)
-                    {
-                        var edge = visitHistory.Pop();
-
-                        if(edge.To == previousVertex)
-                        {
-                            results.Add(edge);
-                            previousVertex = edge.From;
-                        }
-
-                        if(edge.From == from)
-                        {
-                            break;
-                        }
-                    }
-
-                    return results.Reverse<Edge<T>>();
-                }
-
-                foreach (var edge in currentVertex.Edges)
+                
+                foreach (var edge in currentVertex.OutgoingEdges)
                 {
                     bool unvisitedVertex = !visitedVertices.Contains(edge.To);
                     if (unvisitedVertex)
                     {
                         visitHistory.Push(edge);
                         queuedVertices.Enqueue(edge.To);
+
+                        bool isSearchedVertex = edge.To == to;
+                        if (isSearchedVertex)
+                            return GetPath(from, to, visitHistory);
+
                     }
                 }
             }
@@ -98,6 +85,31 @@ namespace HlidacStatu.Lib.Data.Graphs2
             throw new Exception("No path was found");
             
         }
+
+        private IEnumerable<Edge<T>> GetPath(Vertex<T> from, Vertex<T> to, Stack<Edge<T>> visitHistory)
+        {
+            var results = new List<Edge<T>>();
+            var previousVertex = to;
+
+            while (visitHistory.Count > 0)
+            {
+                var edge = visitHistory.Pop();
+
+                if (edge.To == previousVertex)
+                {
+                    results.Add(edge);
+                    previousVertex = edge.From;
+                }
+
+                if (edge.From == from)
+                {
+                    break;
+                }
+            }
+
+            return results.Reverse<Edge<T>>();
+        }
+        
 
         /// <summary>
         /// Projde (do šířky) všechny vrcholy od konkrétního bodu a postupně je vypíše.
@@ -117,7 +129,7 @@ namespace HlidacStatu.Lib.Data.Graphs2
                 visitedVertices.Add(currentVertex);
                 yield return currentVertex;
                 
-                foreach (var edge in currentVertex.Edges)
+                foreach (var edge in currentVertex.OutgoingEdges)
                 {
                     if(!visitedVertices.Contains(edge.To))
                     {

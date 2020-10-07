@@ -130,7 +130,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HlidacStatu.ExportData", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIndexGenerator", "..\PrivateInternals\Images\KIndexGenerator\KIndexGenerator.csproj", "{6C394E28-31D3-42A7-A7FB-75FFB1D752D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullTextSearch", "FullTextSearch\FullTextSearch.csproj", "{02124506-2C1C-49D6-B70C-0173A2977C58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullTextSearch", "FullTextSearch\FullTextSearch.csproj", "{02124506-2C1C-49D6-B70C-0173A2977C58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphTest", "Tests\GraphTest\GraphTest.csproj", "{C1854417-72FD-4042-AC26-1951CD15A87A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1142,6 +1144,30 @@ Global
 		{02124506-2C1C-49D6-B70C-0173A2977C58}.x86Only|x64.Build.0 = Release|Any CPU
 		{02124506-2C1C-49D6-B70C-0173A2977C58}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{02124506-2C1C-49D6-B70C-0173A2977C58}.x86Only|x86.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|x64.Build.0 = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Debug|x86.Build.0 = Debug|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|x64.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|x64.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|x86.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Release|x86.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|x64.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|x64.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|x86.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.Stage|x86.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|Any CPU.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|Any CPU.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x64.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x64.Build.0 = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x86.ActiveCfg = Release|Any CPU
+		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1172,10 +1198,11 @@ Global
 		{1F1533F7-08AB-4E39-9EC3-D33B559E2E2E} = {F4002F1A-7F3B-4004-B6D1-6E38A55E0E6B}
 		{01F5CEF0-2640-46CC-923E-80C3297C279B} = {1F2C4408-345E-4AC7-BDE2-B471997CD3CE}
 		{18FD0A87-E369-438E-915A-C15D6167D66D} = {89DAEB9A-7392-4DDE-8C79-E7D5929E0DEE}
+		{C1854417-72FD-4042-AC26-1951CD15A87A} = {F0B0A6EA-FAB7-4F57-9C96-C13E4B1F3812}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
