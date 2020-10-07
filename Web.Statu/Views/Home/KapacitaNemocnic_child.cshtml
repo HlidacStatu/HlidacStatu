@@ -134,11 +134,11 @@ var chartdata = timedata.Select(m => new
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
-                    (name:"ARO+JIP volná COVID lůžka", 
-                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_covid } )
-                    ),
                     (name:"ARO+JIP volná neCOVID lůžka", 
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_necovid } )
+                    ),
+                    (name:"ARO+JIP volná COVID lůžka", 
+                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_covid } )
                     )
                 },
                 "","počet",200 )
@@ -157,11 +157,11 @@ var chartdata = timedata.Select(m => new
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
-                    (name:"volná COVID lůžka s kyslíkem", 
-                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Standard_luzka_s_kyslikem_covid} )
-                    ),
                     (name:"volná neCOVID lůžka s kyslíkem", 
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Standard_luzka_s_kyslikem_necovid} )
+                    ),
+                    (name:"volná COVID lůžka s kyslíkem", 
+                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Standard_luzka_s_kyslikem_covid} )
                     )
                 },
                 "","počet",200 )

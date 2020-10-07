@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Models
             {
                 switch (this.region)
                 {
-                    case "HKK": return "Hradecký kraj";
+                    case "HKK": return "Královéhradecký kraj";
                     case "JHC": return "Jihočeský kraj";
                     case "JHM": return "Jihomoravský kraj";
                     case "KVK": return "Karlovarský kraj";
