@@ -24,7 +24,9 @@ namespace HlidacStatu.Lib.Data.Graphs2
             Vertex<T> vertex1 = GetOrAddVertex(from);
             Vertex<T> vertex2 = GetOrAddVertex(to);
 
-            vertex1.AddOutgoingEdge(from, to, bindingName);
+            var edge = new Edge<T>(vertex1, vertex2, bindingName);
+
+            vertex1.AddOutgoingEdge(edge);
             
         }
 
@@ -55,7 +57,7 @@ namespace HlidacStatu.Lib.Data.Graphs2
             if (!toExists)
                 throw new Exception("To parameter was not found in vertices");
 
-            var visitHistory = new Stack<Edge<T>>();
+            var visitHistory = new List<Edge<T>>();
             var visitedVertices = new HashSet<Vertex<T>>();
 
             Queue<Vertex<T>> queuedVertices = new Queue<Vertex<T>>();
@@ -68,17 +70,16 @@ namespace HlidacStatu.Lib.Data.Graphs2
                 
                 foreach (var edge in currentVertex.OutgoingEdges)
                 {
-                    bool unvisitedVertex = !visitedVertices.Contains(edge.To);
-                    if (unvisitedVertex)
-                    {
-                        visitHistory.Push(edge);
-                        queuedVertices.Enqueue(edge.To);
+                    if (visitedVertices.Contains(edge.To))
+                        continue;
+                    
+                    visitHistory.Add(edge);
+                    queuedVertices.Enqueue(edge.To);
 
-                        bool isSearchedVertex = edge.To == to;
-                        if (isSearchedVertex)
-                            return GetPath(from, to, visitHistory);
+                    bool isSearchedVertex = edge.To == to;
+                    if (isSearchedVertex)
+                        return GetPath(from, to, visitHistory);
 
-                    }
                 }
             }
 
@@ -86,27 +87,19 @@ namespace HlidacStatu.Lib.Data.Graphs2
             
         }
 
-        private IEnumerable<Edge<T>> GetPath(Vertex<T> from, Vertex<T> to, Stack<Edge<T>> visitHistory)
+        private IEnumerable<Edge<T>> GetPath(Vertex<T> from, Vertex<T> to, List<Edge<T>> visitHistory)
         {
             var results = new List<Edge<T>>();
             var previousVertex = to;
 
-            while (visitHistory.Count > 0)
+            do
             {
-                var edge = visitHistory.Pop();
+                var edge = visitHistory.Where(e => e.To.Equals(previousVertex)).FirstOrDefault();
+                results.Add(edge);
+                previousVertex = edge.From;
 
-                if (edge.To == previousVertex)
-                {
-                    results.Add(edge);
-                    previousVertex = edge.From;
-                }
-
-                if (edge.From == from)
-                {
-                    break;
-                }
-            }
-
+            } while (!previousVertex.Equals(from));
+            
             return results.Reverse<Edge<T>>();
         }
         
