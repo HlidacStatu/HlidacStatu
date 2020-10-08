@@ -33,10 +33,13 @@ namespace HlidacStatu.Lib.Data.Graphs2
 
         public override int GetHashCode()
         {
-            int hash = 17;
-            hash = hash * 23 + this.From.GetHashCode();
-            hash = hash * 23 + this.To.GetHashCode();
-            return hash;
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + this.From.GetHashCode();
+                hash = hash * 23 + this.To.GetHashCode();
+                return hash;
+            }
         }
 
     }
