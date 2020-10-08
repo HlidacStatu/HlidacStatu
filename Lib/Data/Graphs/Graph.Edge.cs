@@ -11,6 +11,7 @@ namespace HlidacStatu.Lib.Data
         [System.Diagnostics.DebuggerDisplay("{debuggerdisplay,nq}")]
         public class Edge : IComparable<Edge>
         {
+            [Obsolete("Tohle už nepoužíváme. Nahrazeno IEquatable.")]
             [Newtonsoft.Json.JsonIgnore]
             public string UniqId
             {
