@@ -627,7 +627,6 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Graphs2\Edge.cs" />
-    <Compile Include="Data\Graphs2\IBindable.cs" />
     <Compile Include="Data\Graphs2\UnweightedGraph.cs" />
     <Compile Include="Data\Graphs2\Vertex.cs" />
     <Compile Include="Data\Graphs\Graph.cs" />
