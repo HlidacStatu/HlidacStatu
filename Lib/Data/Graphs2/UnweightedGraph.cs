@@ -4,35 +4,37 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data.Graphs2
 {
-    public class UnweightedGraph<T>
+    public class UnweightedGraph
     {
-        public UnweightedGraph(IEnumerable<Vertex<T>> initialNodes = null)
+        public UnweightedGraph(IEnumerable<IVertex> initialNodes = null)
         {
-            Vertices = initialNodes?.ToHashSet() ?? new HashSet<Vertex<T>>();
+            Vertices = initialNodes?.ToHashSet() ?? new HashSet<IVertex>();
         }
 
-        public HashSet<Vertex<T>> Vertices { get; }
-        public IEnumerable<Edge<T>> Edges { get => Vertices.SelectMany(v => v.OutgoingEdges); }
+        public HashSet<IVertex> Vertices { get; }
+        public IEnumerable<IEdge> Edges { get => Vertices.SelectMany(v => v.OutgoingEdges); }
         
         /// <summary>
-        /// Přidá nové položky do grafu.
+        /// Add new directed unweighted edge to graph. If Vertices (from, to) doesn't exist. It adds them too.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        public void AddEdge(Vertex<T> from, Vertex<T> to, string bindingName)
+        /// <param name="from">Starting vertex</param>
+        /// <param name="to">Destination vertex</param>
+        public void AddEdge<T>(IVertex from, IVertex to, T bindingPayload)
         {
-            Vertex<T> vertex1 = GetOrAddVertex(from);
-            Vertex<T> vertex2 = GetOrAddVertex(to);
-
-            var edge = new Edge<T>(vertex1, vertex2, bindingName);
-
-            vertex1.AddOutgoingEdge(edge);
+            IVertex vertex1 = GetOrAddVertex(from);
+            IVertex vertex2 = GetOrAddVertex(to);
             
+            //dont like this, but can't think better solution right now
+            var edge = new Edge<T>(vertex1, vertex2, bindingPayload); 
+
+            // There can be only one direct outgoing edge from A to B
+            // Other outgoing edges from A to B are skipped in graph
+            vertex1.AddOutgoingEdge(edge);
         }
 
-        private Vertex<T> GetOrAddVertex(Vertex<T> vertex)
+        private IVertex GetOrAddVertex(IVertex vertex)
         {
-            if (Vertices.TryGetValue(vertex, out Vertex<T> actual))
+            if (Vertices.TryGetValue(vertex, out IVertex actual))
             {
                 return actual;
             }
@@ -43,12 +45,12 @@ namespace HlidacStatu.Lib.Data.Graphs2
 
 
         /// <summary>
-        /// Najde nejkratší cestu v neohodnoceném grafu. Vrátí seznam vrcholů.
+        /// Finds shortest path from point A to point B.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        public IEnumerable<Edge<T>> ShortestPath(Vertex<T> from, Vertex<T> to)
+        /// <param name="from">Starting vertex</param>
+        /// <param name="to">Destination vertex</param>
+        /// <returns>Edges in order along the path (from => to)</returns>
+        public IEnumerable<IEdge> ShortestPath(IVertex from, IVertex to)
         {
             bool fromExists = Vertices.TryGetValue(from, out from);
             bool toExists = Vertices.TryGetValue(to, out to);
@@ -57,10 +59,10 @@ namespace HlidacStatu.Lib.Data.Graphs2
             if (!toExists)
                 throw new Exception("To parameter was not found in vertices");
 
-            var visitHistory = new List<Edge<T>>();
-            var visitedVertices = new HashSet<Vertex<T>>();
+            var visitHistory = new List<IEdge>();
+            var visitedVertices = new HashSet<IVertex>();
 
-            Queue<Vertex<T>> queuedVertices = new Queue<Vertex<T>>();
+            Queue<IVertex> queuedVertices = new Queue<IVertex>();
             queuedVertices.Enqueue(from);
 
             while (queuedVertices.Count > 0)
@@ -87,9 +89,12 @@ namespace HlidacStatu.Lib.Data.Graphs2
             
         }
 
-        private IEnumerable<Edge<T>> GetPath(Vertex<T> from, Vertex<T> to, List<Edge<T>> visitHistory)
+        /// <summary>
+        /// Function to find path in visitHistory
+        /// </summary>
+        private IEnumerable<IEdge> GetPath(IVertex from, IVertex to, List<IEdge> visitHistory)
         {
-            var results = new List<Edge<T>>();
+            var results = new List<IEdge>();
             var previousVertex = to;
 
             do
@@ -100,7 +105,7 @@ namespace HlidacStatu.Lib.Data.Graphs2
 
             } while (!previousVertex.Equals(from));
             
-            return results.Reverse<Edge<T>>();
+            return results.Reverse<IEdge>();
         }
         
 
@@ -109,11 +114,11 @@ namespace HlidacStatu.Lib.Data.Graphs2
         /// </summary>
         /// <param name="from">Vrchol, ze kterého se bude graf procházet</param>
         /// <returns></returns>
-        public IEnumerable<Vertex<T>> BreathFirstIterator(Vertex<T> from)
+        public IEnumerable<IVertex> BreathFirstIterator(IVertex from)
         {
-            var visitedVertices = new HashSet<Vertex<T>>();
+            var visitedVertices = new HashSet<IVertex>();
             
-            Queue<Vertex<T>> queuedVertices = new Queue<Vertex<T>>();
+            Queue<IVertex> queuedVertices = new Queue<IVertex>();
             queuedVertices.Enqueue(from);
 
             while (queuedVertices.Count > 0)
