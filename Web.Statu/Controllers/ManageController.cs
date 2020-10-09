@@ -92,10 +92,10 @@ namespace HlidacStatu.Web.Controllers
             return View("index");
         }
 
-        public ActionResult OsobaMergeById(int osoba1Id, int osoba2Id)
+        public ActionResult OsobaMergeById(int osoba1, int osoba2)
         {
-            Osoba o1 = Osoba.GetByInternalId(osoba1Id);
-            Osoba o2 = Osoba.GetByInternalId(osoba2Id);
+            Osoba o1 = Osoba.GetByInternalId(osoba1);
+            Osoba o2 = Osoba.GetByInternalId(osoba2);
             if (o1 != null && o2 != null)
             {
                 o1.MergeWith(o2, this.User.Identity.Name);

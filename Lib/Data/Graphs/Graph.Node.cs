@@ -58,7 +58,10 @@ namespace HlidacStatu.Lib.Data
                 }
             }
 
-
+            public override int GetHashCode()
+            {
+                return _uniqId.GetHashCode();
+            }
         }
 
     }

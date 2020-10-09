@@ -11,6 +11,7 @@ namespace HlidacStatu.Lib.Data
         [System.Diagnostics.DebuggerDisplay("{debuggerdisplay,nq}")]
         public class Edge : IComparable<Edge>
         {
+            [Obsolete("Tohle už nepoužíváme. Použij raději this.GetHashCode()")]
             [Newtonsoft.Json.JsonIgnore]
             public string UniqId
             {
@@ -347,10 +348,25 @@ namespace HlidacStatu.Lib.Data
             {
                 if (other == null)
                     return 1;
-                if (this.UniqId == other.UniqId)
+                if (this.GetHashCode() == other.GetHashCode())
                     return 0;
                 else
                     return -1;
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hash = 17;
+                    hash = hash * 23 + this.From?.GetHashCode() ?? 0;
+                    hash = hash * 23 + this.To?.GetHashCode() ?? 0;
+                    hash = hash * 23 + this.RelFrom?.ToShortDateString().GetHashCode() ?? 0;
+                    hash = hash * 23 + this.RelTo?.ToShortDateString().GetHashCode() ?? 0;
+                    hash = hash * 23 + this.Root.GetHashCode();
+                    return hash;
+
+                }
             }
         }
 

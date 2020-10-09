@@ -2,23 +2,23 @@
 
 namespace HlidacStatu.Lib.Data.Graphs2
 {
-    public interface IEdge<T>
+    public interface IEdge
     {
-        Vertex<T> From { get; }
-        Vertex<T> To { get; }
+        IVertex From { get; }
+        IVertex To { get; }
     }
 
-    public class Edge<T> : IEdge<T>, IEquatable<Edge<T>>
+    public class Edge<T> : IEdge, IEquatable<Edge<T>>
     {
-        public string BindingName { get; }
-        public Vertex<T> From { get; }
-        public Vertex<T> To { get; }
+        public T BindingPayload { get; }
+        public IVertex From { get; }
+        public IVertex To { get; }
 
-        public Edge(Vertex<T> from, Vertex<T> to, string bindingName)
+        public Edge(IVertex from, IVertex to, T bindingPayload)
         {
-            From = from ?? throw new System.ArgumentNullException(nameof(from));
-            To = to ?? throw new System.ArgumentNullException(nameof(to));
-            BindingName = bindingName;
+            From = from ?? throw new ArgumentNullException(nameof(from));
+            To = to ?? throw new ArgumentNullException(nameof(to));
+            BindingPayload = bindingPayload;
         }
 
         public bool Equals(Edge<T> other)
@@ -33,10 +33,14 @@ namespace HlidacStatu.Lib.Data.Graphs2
 
         public override int GetHashCode()
         {
-            int hash = 17;
-            hash = hash * this.From.GetHashCode();
-            hash = hash * this.To.GetHashCode();
-            return hash;
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + this.From.GetHashCode();
+                hash = hash * 23 + this.To.GetHashCode();
+                return hash;
+            }
         }
+
     }
 }

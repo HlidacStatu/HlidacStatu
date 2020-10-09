@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.Data
                 if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
                     return false;
 
-                return x.UniqId == y.UniqId;
+                return x.GetHashCode() == y.GetHashCode();
             }
 
             public int GetHashCode(Edge obj)
@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Data
                 if (Object.ReferenceEquals(obj, null)) return 0;
 
                 //Get hash code for the Name field if it is not null.
-                return obj.UniqId == null ? 0 : obj.UniqId.GetHashCode();
+                return obj.GetHashCode();
 
             }
         }
