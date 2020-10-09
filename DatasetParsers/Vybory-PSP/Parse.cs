@@ -240,7 +240,7 @@ namespace Vybory_PSP
                             }
                             else if (fUrl.StartsWith("text/orig"))
                             {
-                                if (typDok.ToLower() == "mp3")
+                                if (typDok.ToLower().Contains(".mp3"))
                                 {
                                     //direct link to file
                                     mp3s.Add(new jednani.mp3()
