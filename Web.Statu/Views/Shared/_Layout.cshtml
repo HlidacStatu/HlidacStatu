@@ -17,11 +17,21 @@
          ViewBag.ShowBookmarkUrl = true/false
          */
 
-        if (string.IsNullOrEmpty(ViewBag.Query)
-            && Request.QueryString["Q"] != null
-        )
+        try
         {
-            ViewBag.Query = Request.QueryString["Q"];
+            if (string.IsNullOrEmpty(ViewBag.Query)
+                && Request.QueryString["Q"] != null
+            )
+            {
+                ViewBag.Query = Request.QueryString["Q"];
+            }
+        }
+        catch (System.Web.HttpRequestValidationException)
+        {
+            if (ViewData.ContainsKey("InvokeErrorAction") == false)
+            {
+                throw;
+            }
         }
 
         string title = ViewBag.Title;
@@ -158,7 +168,7 @@
         ga('create', 'UA-154075-22', 'auto');
         ga('send', 'pageview');
 
-        @WebUtil.RenderSmartLookTrackingCode(false)
+        //@WebUtil.RenderSmartLookTrackingCode(false)
 
     </script>
     @RenderSection("scripts", required: false)

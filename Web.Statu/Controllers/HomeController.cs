@@ -1297,6 +1297,41 @@ text zpravy: {txt}
         }
 
 
+        public enum ErrorPages
+        { 
+            Ok = 0,
+            NotFound = 404,
+            Error = 500,
+            ErrorHack = 5666
+        }
+
+        public ActionResult Error(string id, string nextUrl = null, string nextUrlText = null)
+        {
+            ViewBag.NextText = nextUrl;
+            ViewBag.NextUrlText = nextUrlText;
+            ViewBag.InvokeErrorAction = true;
+            //Response.StatusCode = 404;
+            ErrorPages errp = (ErrorPages)Devmasters.Enums.EnumTools.GetValueOrDefaultValue(id, typeof(ErrorPages));
+
+            switch (errp)
+            {
+                case ErrorPages.Ok:
+                    return Redirect("/");
+                case ErrorPages.NotFound:
+                    return View("err404");
+                case ErrorPages.Error:
+                    return View("err500");
+                case ErrorPages.ErrorHack:
+                    return View("err500hack");
+                default:
+                    return Redirect("/");
+            }
+
+
+
+        }
+
+
 
         public ActionResult Widget(string id, string width)
         {

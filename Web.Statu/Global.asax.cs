@@ -1,5 +1,7 @@
 ﻿using HlidacStatu.Util.Cache;
+
 using Newtonsoft.Json;
+
 using System;
 using System.Linq;
 using System.Web;
@@ -113,7 +115,7 @@ namespace HlidacStatu.Web
                         //.SetContext(Devmasters.Net.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty)) //TODO
                         .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                         );
-
+                    InvokeErrorAction(Controllers.HomeController.ErrorPages.NotFound, this.Context, httpException);
                     goto finishResponse;
                 }
                 if (
@@ -130,6 +132,7 @@ namespace HlidacStatu.Web
                         //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty)) //TO
                         .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                         );
+                    InvokeErrorAction(Controllers.HomeController.ErrorPages.ErrorHack, this.Context, httpException);
                     goto finishResponse;
                 }
 
@@ -148,6 +151,27 @@ namespace HlidacStatu.Web
                     //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
                     .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
                     );
+
+                InvokeErrorAction( Controllers.HomeController.ErrorPages.ErrorHack , this.Context, httpException);
+                goto finishResponse;
+            }
+            if (exception.GetType() == typeof(System.Web.HttpRequestValidationException)
+                ||
+                exception.GetType() == typeof(System.Web.HttpParseException)
+                ||
+                exception.GetType() == typeof(System.Web.HttpException)
+                )
+            {
+                HlidacStatu.Util.Consts.Logger.Warning(new Devmasters.Logging.LogMessage()
+                    .SetMessage("HTTP Error SSL")
+                    .SetException(exception)
+                    .SetVersionOfAllAssemblies()
+                    .SetCustomKeyValue("adSourceUrl", this.Request.Url.AbsoluteUri)
+                    //.SetContext(Devmasters.WebContextLogger.LogFatalWebError(exception, this.Context, true, string.Empty))
+                    .SetCustomKeyValue("referrer", this.Request.UrlReferrer != null ? this.Request.UrlReferrer.AbsoluteUri : "")
+                    );
+
+                    InvokeErrorAction(Controllers.HomeController.ErrorPages.ErrorHack, this.Context, httpException);
                 goto finishResponse;
             }
             try
@@ -161,6 +185,7 @@ namespace HlidacStatu.Web
                     .SetCustomKeyValue("Url", this.Request?.Url?.AbsoluteUri)
                     );
 
+                    InvokeErrorAction(Controllers.HomeController.ErrorPages.ErrorHack, this.Context, httpException);
 
             }
             catch (Exception)
@@ -174,5 +199,29 @@ namespace HlidacStatu.Web
             return;
         }
 
+        void InvokeErrorAction(Controllers.HomeController.ErrorPages errPage, HttpContext httpContext, Exception exception)
+        {
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Home";
+            routeData.Values["action"] = "Error";
+            routeData.Values["errPage"] = errPage.ToString();
+            routeData.Values["InvokeErrorAction"] = true;
+
+
+            //var httpcx = new HttpContext(new HttpRequest("error", "https://www.hlidacstatu.cz/error",""), httpContext.Response);
+
+
+            Response.Redirect("/Error/"+errPage);
+
+            if (false)
+            {
+                using (var controller = new Controllers.HomeController())
+                {
+                    ((IController)controller).Execute(
+                    new RequestContext(new HttpContextWrapper(httpContext), routeData));
+                }
+            }
+
+        }
     }
 }

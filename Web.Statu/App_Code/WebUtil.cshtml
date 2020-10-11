@@ -8,7 +8,7 @@
 @functions
 { private static new HtmlHelper<object> Html
     {
-        get { return ((WebViewPage)CurrentPage).Html; }
+        get { return ((WebViewPage)CurrentPage)?.Html; }
     }
 
     private static UrlHelper UrlH

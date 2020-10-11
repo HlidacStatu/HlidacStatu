@@ -94,7 +94,15 @@ namespace HlidacStatu.Web.Framework.IHttpModules
             StringBuilder sb = new StringBuilder(512);
             foreach (string key in context.Request.QueryString.AllKeys)
             {
-                string val = context.Request.QueryString[key];
+                string val ="";
+                try
+                {
+                    val = context.Request.QueryString[key];
+                }
+                catch (System.Web.HttpRequestValidationException ex)
+                {
+                    val = System.Net.WebUtility.UrlEncode(ex.Message);
+                }
                 if (key == "__VIEWSTATE")
                     sb.Append("&" + key + string.Format("=<{0} bytes>", val.Length));
                 else
