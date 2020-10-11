@@ -56,8 +56,8 @@ namespace HlidacStatu.Web
                     {
                         using (Devmasters.PersistLib p = new Devmasters.PersistLib())
                         {
-                            p.ExecuteNonQuery(Devmasters.Config.GetWebConfigValue("CnnString"),
-                                 System.Data.CommandType.Text, "delete from BannedIPs where expiration < GetDate()", null);
+                            //p.ExecuteNonQuery(Devmasters.Config.GetWebConfigValue("CnnString"),
+                            //     System.Data.CommandType.Text, "delete from BannedIPs where expiration < GetDate()", null);
 
                             var ds = p.ExecuteDataset(Devmasters.Config.GetWebConfigValue("CnnString"),
                                  System.Data.CommandType.Text, "select IP from BannedIPs where Expiration is null or expiration > GetDate()",
