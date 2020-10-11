@@ -10,8 +10,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
     public class ZabTools
     {
 
-        static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHost>> webyList =
-                new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHost>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>> webyList =
+                new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHost>>(
                 TimeSpan.FromMinutes(30), "statniweby_list", (obj) =>
                 {
                     try
@@ -36,8 +36,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 					}
                 });
 
-        static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostAvailability>> webyData =
-        new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostAvailability>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyData =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
                 TimeSpan.FromSeconds(140), "statniweby_data", (obj) =>
                 {
                     List<ZabHostAvailability> d = null;
@@ -51,8 +51,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                 });
 
 
-        static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostAvailability>> webyDataLastHour =
-        new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostAvailability>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>> webyDataLastHour =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostAvailability>>(
                 TimeSpan.FromSeconds(140), "statniweby_data_Lasthour", (obj) =>
                 {
                     List<ZabHostAvailability> d = null;
@@ -64,8 +64,8 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                         return d;
                     }
                 });
-        static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostSslStatus>> webySslData =
-        new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<ZabHostSslStatus>>(
+        static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>> webySslData =
+        new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<ZabHostSslStatus>>(
                 TimeSpan.FromHours(6), "statniweby_ssl_data", (obj) =>
                 {
                     List<ZabHostSslStatus> d = null;

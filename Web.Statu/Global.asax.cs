@@ -17,7 +17,7 @@ namespace HlidacStatu.Web
 
         public static volatile MemoryCacheManager<string, string> CachedDatasets = null;
 
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<string[]> BannedIPs = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<string[]> BannedIPs = null;
 
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
@@ -40,7 +40,7 @@ namespace HlidacStatu.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
 
-            BannedIPs = new Devmasters.Cache.LocalMemory.LocalMemoryCache<string[]>(
+            BannedIPs = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<string[]>(
                 TimeSpan.FromSeconds(30), "BannedIPs", (obj) =>
                 {
 

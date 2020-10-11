@@ -15,7 +15,6 @@
 @using HlidacStatu.Web.Framework.Report;
 
 @{ 
-    Layout = null;
 
     string url = "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv";
     List<(DateTime, int)> umrti = new List<(DateTime, int)>();
@@ -50,7 +49,7 @@
 <h2>Počet úmrtí v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2019:"Zachránili jsme tisíce mrtvých".</p>
 <p class="text-warning" style="font-size:19px">Za <b>163 dní</b> od 22.3. do 31.8.2020 zemřelo <b>@untilSep1 osob</b>.
-<br/><span class="text-danger">Za <b>@((int)(lastDate-sept1).TotalDays) dní</b> od 1.9. <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>.</span>
+<br/><span class="text-danger">Za <b>@((int)(lastDate-sept1).TotalDays) dní</b> od 1.9. zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>.</span>
     </p>
 <div style="width:600px">
     @SimpleColumnChart(new (string name, 

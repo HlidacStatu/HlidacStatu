@@ -81,16 +81,16 @@ namespace HlidacStatu.Lib
 
         //public static Devmasters.Cache.File.FileCache<Dictionary<string, QueryStatistic.StatData>> FirmyStatsCache = null;
 
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.Osoba>> PolitickyAktivni = null;
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.Osoba>> Politici = null;
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Vsechny = null;
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Nedavne = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> PolitickyAktivni = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> Politici = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Vsechny = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Nedavne = null;
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<double>> BasicStatisticData = null;
 
         public static Dictionary<string, string> CPVKody = new Dictionary<string, string>();
 
-        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<Text.WordpressPost.WpPost[]> LastBlogPosts = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]> LastBlogPosts = null;
 
 
         public static Dictionary<string, HlidacStatu.Lib.Analysis.TemplatedQuery> Afery = new Dictionary<string, Analysis.TemplatedQuery>();
@@ -248,7 +248,7 @@ namespace HlidacStatu.Lib
                 //        );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Politici");
-                Politici = new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.Osoba>>(
+                Politici = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
                         TimeSpan.FromHours(36), "politiciOnly", (obj) =>
                         {
                             List<Osoba> osoby = null;
@@ -273,7 +273,7 @@ namespace HlidacStatu.Lib
 
                         }
                     );
-                PolitickyAktivni = new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.Osoba>>(
+                PolitickyAktivni = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>>(
                         TimeSpan.FromHours(36), "politickyAktivni", (obj) =>
                         {
                             List<Osoba> osoby = new List<Osoba>();
@@ -378,7 +378,7 @@ namespace HlidacStatu.Lib
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_Vsechny ");
 
 
-                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.FirmaEvent>>(
+                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
                                 TimeSpan.FromHours(3), (obj) =>
                                 {
                                     List<FirmaEvent> firmy = null;
@@ -400,7 +400,7 @@ namespace HlidacStatu.Lib
                             );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_nedavne");
-                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.LocalMemoryCache<List<Lib.Data.FirmaEvent>>(
+                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
                         TimeSpan.FromHours(3), (obj) =>
                         {
                             return StaticData.SponzorujiciFirmy_Vsechny.Get()
@@ -855,7 +855,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - LastBlogPosts");
-                LastBlogPosts = new Devmasters.Cache.LocalMemory.LocalMemoryCache<Text.WordpressPost.WpPost[]>(
+                LastBlogPosts = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Text.WordpressPost.WpPost[]>(
                     TimeSpan.FromHours(3), (obj) =>
                         {
                             try
