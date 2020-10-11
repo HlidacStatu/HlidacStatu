@@ -163,7 +163,11 @@ XINTEXT (0->0.7mld),
             //        + "<meta property=\"og:image:type\" content=\"image/png\" />"
             ;
             viewCache = "éH";
-            break;        
+            break;
+        case 99:
+            Layout = null;
+
+            break;
         default:
             break;
     }
@@ -178,6 +182,30 @@ XINTEXT (0->0.7mld),
         Response.Redirect("/");
         Response.End();
     }
+}
+
+@if (Model == 99)
+{ 
+
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,400i,600,700&amp;subset=latin-ext" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-vlOMx0hKjUCl4WzuhIhSNZSm2yQCaf0mOU1hEDK/iztH3gU4v5NMmJln9273A6Jz" crossorigin="anonymous">
+
+
+        @Styles.Render("~/Content/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    //@Scripts.Render("~/bundles/highcharts8")
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="/Scripts/highcharts.global.options.js"></script>
+
+
 }
 
 @section scripts
@@ -214,6 +242,12 @@ XINTEXT (0->0.7mld),
 }
 @Html.Action("Report_child_"+viewCache, new { routedata = data })
 
-@WebUtil.FeedbackModal("Poslat opravu či připomínku")
+@if (Model == 99)
+{
 
+}
+else
+{
+    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
+}
 

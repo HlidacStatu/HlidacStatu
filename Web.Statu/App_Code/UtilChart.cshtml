@@ -24,6 +24,66 @@
 
 
 
+@helper SimpleColumnChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
+    string title, string valueName,
+    int height, string addStyle ="", string chartType = "column")
+{
+string containerId = "chart_" + Guid.NewGuid().ToString("N");
+List<string> sdata = new List<string>();
+foreach (var d in data)
+{
+
+    sdata.Add(
+        $"{{ name : '{d.name}', data :["
+        + d.values
+            .Select(m => $"[Date.UTC({m.Date.Year},{m.Date.Month - 1},{m.Date.Day},{m.Date.Hour},{m.Date.Minute}),{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]")
+            .Aggregate((f, s) => f + "," + s)
+        + $"]}}"
+    );
+}
+
+    <div id="@containerId" style="height:@(height)px;@addStyle"></div>
+    <script>
+Highcharts.chart('@containerId', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: 0,
+        plotShadow: false,
+        type: '@chartType'
+    },
+ title: {
+        text: '@title'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Počet'
+        }
+    },
+        tooltip: {
+        xDateFormat: '%d. %m. %Y %H:%M',
+        shared: true
+    },
+
+
+
+    xAxis: {
+        type: 'datetime',
+        tickInterval: 24 * 3600 * 1000
+    },
+
+    legend: {
+        enabled:false
+    },
+    series: [
+        @Html.Raw(string.Join(",",sdata))
+    ]
+});</script>
+
+}
+
+
+
 @helper SimpleLineChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
     string title, string valueName,
     int height, string addStyle ="")

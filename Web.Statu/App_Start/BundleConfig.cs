@@ -36,11 +36,12 @@ namespace HlidacStatu.Web
                 );
             bundles.Add(highchartsBundle);
 
-            var highcharts6Bundle = new Bundle("~/bundles/highcharts6");
-            highcharts6Bundle.Include(
-                "~/Scripts/Highcharts-6/js/highcharts.js"
+            var highcharts8Bundle = new Bundle("~/bundles/highcharts8");
+            highcharts8Bundle.Include(
+                "~/Scripts/Highcharts-8/js/highcharts.js",
+                "~/Scripts/highcharts.global.options.js"
                 );
-            bundles.Add(highcharts6Bundle);
+            bundles.Add(highcharts8Bundle);
 
             var typeaheadBundle = new Bundle("~/bundles/typeahead");
             typeaheadBundle.Include(
