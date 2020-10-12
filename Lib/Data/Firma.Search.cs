@@ -86,9 +86,9 @@ namespace HlidacStatu.Lib.Data
 
 
                 //
-                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(ico:|icoprijemce:|icoplatce:|icododavatel:|icozadavatel:)", "ico:", regexQueryOption);
+                modifQ = Regex.Replace(modifQ, "(ico:|icoprijemce:|icoplatce:|icododavatel:|icozadavatel:)", "ico:", regexQueryOption);
 
-                modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|jmenozadavatel:)", "jmeno:", regexQueryOption);
+                modifQ = Regex.Replace(modifQ, "(jmenoPrijemce:|jmenoPlatce:|jmenododavatel:|jmenozadavatel:)", "jmeno:", regexQueryOption);
 
                 //modifQ = System.Text.RegularExpressions.Regex.Replace(modifQ, "\\s(AND|OR)\\s", " ", regexQueryOption);
 
@@ -143,7 +143,7 @@ namespace HlidacStatu.Lib.Data
                         HlidacStatu.Util.Consts.Logger.Error("", e);
                     throw;
                 }
-                return new Data.Search.GeneralResult<Firma>(query, 0, found, size, false) { Page = page };
+                //return new Data.Search.GeneralResult<Firma>(query, 0, found, size, false) { Page = page };
             }
 
             public static QueryContainer GetSimpleQuery(string query)

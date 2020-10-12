@@ -1096,7 +1096,7 @@ namespace HlidacStatu.Lib.Data
                                     else
                                         return null;
                                 }
-                                catch (Exception e)
+                                catch
                                 {
                                     return null;
                                 }
@@ -1261,11 +1261,6 @@ namespace HlidacStatu.Lib.Data
                 client = ES.Manager.GetESClient_Sneplatne();
                 res = client.DocumentExists<Lib.Data.Smlouva>(id);
                 return res.Exists;
-                if (res.IsValid)
-                    return res.Exists;
-                else
-                    throw new ApplicationException(res.DebugInformation, res.OriginalException);
-
             }
             else
                 return res.Exists;

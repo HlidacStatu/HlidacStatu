@@ -59,7 +59,7 @@ namespace HlidacStatu.Lib.Enhancers
         {
             return this.Equals(obj as Enhancement);
         }
-        public bool Equals(Enhancement other)
+        public bool Equals(Enhancement other) // todo: use GetHashCode for comparison instead of comparing strings
         {
             if (other == null)
                 return false;
@@ -83,6 +83,19 @@ namespace HlidacStatu.Lib.Enhancers
 
             return true;
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + this.EnhancerType.GetHashCode();
+                hash = hash * 23 + this.Title.GetHashCode();
+                hash = hash * 23 + this.Changed?.ParameterName.GetHashCode() ?? 0;
+                return hash;
+            }
+        }
+
         public static bool operator ==(Enhancement enh1, Enhancement enh2)
         {
             if (((object)enh1) == null || ((object)enh2) == null)

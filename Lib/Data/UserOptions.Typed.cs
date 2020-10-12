@@ -28,7 +28,7 @@ namespace HlidacStatu.Lib.Data
             this.Value = uo.GetValue();
         }
 
-        public virtual T GetValue()
+        public new virtual T GetValue()
         {
             return DeserializeFromString(base.GetValue());
         }
@@ -40,7 +40,7 @@ namespace HlidacStatu.Lib.Data
         protected abstract string SerializeToString(T value);
         protected abstract T DeserializeFromString(string value);
 
-        public virtual void Remove()
+        public new virtual void Remove()
         {
             new DbEntities().UserOption_Remove(this.OptionId, this.UserId, this.LanguageId);
         }

@@ -108,7 +108,7 @@ namespace HlidacStatu.Lib.Data
                     ext = new System.IO.FileInfo(att.nazevSouboru).Extension;
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     HlidacStatu.Util.Consts.Logger.Warning("invalid file name " + (att?.nazevSouboru ?? "(null)"));
                 }

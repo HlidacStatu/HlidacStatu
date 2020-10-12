@@ -363,7 +363,6 @@ namespace HlidacStatu.Lib.Searching
                     //VZ
                     else if (doFullReplace && replaceWith.Contains("${oblast}"))
                     {
-                        string cpv = "";
                         if (replaceWith.Contains("${oblast}"))
                         {
                             var oblastVal = Devmasters.RegexUtil.GetRegexGroupValue(modifiedQ, @"oblast:(?<oblast>\w*)", "oblast");
@@ -592,17 +591,17 @@ namespace HlidacStatu.Lib.Searching
                 if (result.IsValid == false)
                     Lib.ES.Manager.LogQueryError<T>(result);
             }
-            catch (Exception e1)
+            catch (Exception)
             {
-                System.Threading.Thread.Sleep(10000);
+                Thread.Sleep(10000);
                 try
                 {
                     result = searchFunc(blockSize, currIteration);
 
                 }
-                catch (Exception e2)
+                catch (Exception)
                 {
-                    System.Threading.Thread.Sleep(20000);
+                    Thread.Sleep(20000);
                     try
                     {
                         result = searchFunc(blockSize, currIteration);
@@ -610,7 +609,7 @@ namespace HlidacStatu.Lib.Searching
                     }
                     catch (Exception ex)
                     {
-                        HlidacStatu.Util.Consts.Logger.Error("Cannot read data from Elastic, skipping iteration" + currIteration, ex);
+                        Consts.Logger.Error("Cannot read data from Elastic, skipping iteration" + currIteration, ex);
                         return;
                     }
                 }
@@ -678,7 +677,7 @@ namespace HlidacStatu.Lib.Searching
                             }
                         });
                     }
-                    catch (OperationCanceledException e)
+                    catch (OperationCanceledException)
                     {
                         //Catestrophic Failure
                         canceled = true;

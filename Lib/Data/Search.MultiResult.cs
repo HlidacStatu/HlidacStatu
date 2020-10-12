@@ -265,7 +265,6 @@ namespace HlidacStatu.Lib.Data
                 },
                 () =>
                  {
-                     Elastic.Apm.Api.ISpan sp = null;
                      try
                      {
                          apmtran.CaptureSpan("Dataset GeneralSearch", "search", () =>

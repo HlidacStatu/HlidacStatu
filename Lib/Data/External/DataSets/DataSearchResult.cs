@@ -140,7 +140,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         };
 
 
-        public object ToRouteValues(int page)
+        public new object ToRouteValues(int page)
         {
             return new
             {

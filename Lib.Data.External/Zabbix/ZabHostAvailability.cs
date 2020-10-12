@@ -94,7 +94,6 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
             this.Host = host;
             List<ZabAvailability> avail = new List<ZabAvailability>();
-            bool stop = false;
             ZabHistoryItem first = measures.First();
             ZabAvailability prev = new ZabAvailability() { Time = first.clock, Response = first.value };
             avail.Add(prev);

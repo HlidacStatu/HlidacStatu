@@ -367,7 +367,6 @@ namespace HlidacStatu.Lib.Data.VZ
         public void UpdatePosledniZmena(bool force = false, bool save = false)
         {
             DateTime? prevVal = this.PosledniZmena;
-            bool changed = false;
             if (this.PosledniZmena.HasValue && force == false)
                 return;
             else if (this.LastestFormular() != null)
@@ -796,7 +795,6 @@ namespace HlidacStatu.Lib.Data.VZ
                             return vz;
                         }
                         */
-            return null;
         }
 
         public string ToAuditJson()

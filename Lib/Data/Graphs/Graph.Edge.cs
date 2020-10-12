@@ -258,7 +258,6 @@ namespace HlidacStatu.Lib.Data
 
                     for (int i = 0; i < tmp.Count; i++)
                     {
-                        var overlapped = false;
                         for (int j = 0; j < tmp.Count; j++)
                         {
                             if (j == i)
