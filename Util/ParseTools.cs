@@ -262,15 +262,13 @@ namespace HlidacStatu.Util
             if (value.EndsWith(",00") || value.EndsWith(".00"))
                 value = value.Substring(0, value.Length - 3);
 
-            System.Globalization.NumberStyles styles = System.Globalization.NumberStyles.AllowLeadingWhite
-                | System.Globalization.NumberStyles.AllowTrailingWhite
-                | System.Globalization.NumberStyles.AllowThousands
-                | System.Globalization.NumberStyles.AllowCurrencySymbol
-                ;
-            decimal tmp;
-            if (decimal.TryParse(value, System.Globalization.NumberStyles.Any, Consts.czCulture, out tmp))
-                return tmp;
-            else if (decimal.TryParse(value, System.Globalization.NumberStyles.Any, Consts.enCulture, out tmp))
+            //System.Globalization.NumberStyles styles = System.Globalization.NumberStyles.AllowLeadingWhite
+            //    | System.Globalization.NumberStyles.AllowTrailingWhite
+            //    | System.Globalization.NumberStyles.AllowThousands
+            //    | System.Globalization.NumberStyles.AllowCurrencySymbol
+            //    ;
+            if (decimal.TryParse(value, System.Globalization.NumberStyles.Any, Consts.czCulture, out decimal tmp) 
+                || decimal.TryParse(value, System.Globalization.NumberStyles.Any, Consts.enCulture, out tmp))
                 return tmp;
             else
                 return null;

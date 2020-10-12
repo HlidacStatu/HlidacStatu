@@ -11,7 +11,7 @@ namespace HlidacStatu.Web.Framework.Report
 {
     public static class GlobalStatistics
     {
-        public static HlidacStatu.Lib.Render.ReportDataSource PocetSmluvPerUzavreni(string query, Nest.DateInterval interval)
+        public static ReportDataSource PocetSmluvPerUzavreni(string query, Nest.DateInterval interval)
         {
             DateTime minDate = new DateTime(2012, 1, 1);
             DateTime maxDate = DateTime.Now.Date.AddDays(1);
@@ -77,28 +77,6 @@ namespace HlidacStatu.Web.Framework.Report
         {
             minDate = minDate ?? new DateTime(2012, 1, 1);
             maxDate = maxDate ?? DateTime.Now.Date.AddDays(1);
-
-            string datumFormat = "MMM yyyy";
-            switch (interval)
-            {
-                case DateInterval.Day:
-                    datumFormat = "dd.MM.yy";
-                    break;
-                case DateInterval.Week:
-                    datumFormat = "dd.MM.yy";
-                    break;
-                case DateInterval.Month:
-                    datumFormat = "MMM yyyy";
-                    break;
-                case DateInterval.Quarter:
-                    datumFormat = "MMM yyyy";
-                    break;
-                case DateInterval.Year:
-                    datumFormat = "yyyy";
-                    break;
-                default:
-                    break;
-            }
 
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                 .DateHistogram("x-agg", h => h
@@ -291,7 +269,7 @@ namespace HlidacStatu.Web.Framework.Report
             rds.Title = "Smlouvy podle hodnoty";
             var data = ((PercentilesAggregate)res.ElasticResults.Aggregations["x-agg"]).Items.ToArray();
             double prevVal = 0;
-            double prevPercent = 0;
+            
             for (int i = 0; i < data.Count(); i++)
             {
                 string x = data[i].Percentile.ToString("N0") + " Kč";

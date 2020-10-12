@@ -312,7 +312,7 @@ namespace Vybory_PSP
                 page++;
             }
 
-            return ret;
+            //return ret;
         }
         private static void FilePage(string url, out string title, out string fileUrl, out string ext)
         {
@@ -411,14 +411,14 @@ namespace Vybory_PSP
             return Devmasters.TextUtil.RemoveDiacritics(sanitisedNamePart);
         }
 
-        static string regexRokFromTxt = @"č\. \s* (?<cislo>\d*)
-\s*
-(
-	(ze \s* dne \s* ) (\d* \. \d* \. (?<rok>\d{4})) 
-|
-	(z \s* roku \s* ) ( (?<rok>\d{4})) 
+//        static string regexRokFromTxt = @"č\. \s* (?<cislo>\d*)
+//\s*
+//(
+//	(ze \s* dne \s* ) (\d* \. \d* \. (?<rok>\d{4})) 
+//|
+//	(z \s* roku \s* ) ( (?<rok>\d{4})) 
 
-)";
+//)";
 
 
         private static string NormalizeUrl(string url, string prefix = "https://apps.odok.cz")

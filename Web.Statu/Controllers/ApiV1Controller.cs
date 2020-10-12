@@ -693,15 +693,15 @@ namespace HlidacStatu.Web.Controllers
         {
             if (Framework.ApiAuth.IsApiAuth(this).Authentificated)
             {
-                string urlListTemplate = "https://www.hlidacstatu.cz/Api/V1/ClassificationList?date={0}&page={1}&pagesize={2}";
+                //string urlListTemplate = "https://www.hlidacstatu.cz/Api/V1/ClassificationList?date={0}&page={1}&pagesize={2}";
                 string urlItemTemplate = "https://www.hlidacstatu.cz/api/v1/GetForClassification/{0}";
 
 
                 if (pageSize > 500)
                     pageSize = 500;
 
-                var items = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("NOT(_exists_:prilohy.datlClassification)", 0, pageSize,
-                    HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.DateAddedDesc, platnyZaznam: true);
+                var items = Smlouva.Search.SimpleSearch("NOT(_exists_:prilohy.datlClassification)", 0, pageSize,
+                    Smlouva.Search.OrderResult.DateAddedDesc, platnyZaznam: true);
 
                 if (!items.IsValid)
                 {

@@ -20,8 +20,6 @@ namespace HlidacStatu.Web.Controllers
     [Authorize]
     public partial class ManageController : GenericAuthController
     {
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
 
         public ManageController()
         {
@@ -1067,16 +1065,7 @@ namespace HlidacStatu.Web.Controllers
         #endregion Controllers
 
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
+        
 
         #region Helpers
         // Used for XSRF protection when adding external logins
