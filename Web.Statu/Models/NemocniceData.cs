@@ -65,7 +65,9 @@ namespace HlidacStatu.Web.Models
 
 
             public int Lekari_AROJIP_celkem { get; set; }
+            public int Lekari_AROJIP_dostupni { get; set; }
             public int Sestry_AROJIP_celkem { get; set; }
+            public int Sestry_AROJIP_dostupni { get; set; }
             public int Ventilatory_prenosne_celkem { get; set; }
             public int Ventilatory_operacnisal_celkem { get; set; }
             public int Standard_luzka_celkem { get; set; }
@@ -134,10 +136,12 @@ namespace HlidacStatu.Web.Models
             h.IHD_celkem = lh.IHD_celkem - fh.IHD_celkem;
             h.IHD_volna = lh.IHD_volna - fh.IHD_volna;
             h.Lekari_AROJIP_celkem = lh.Lekari_AROJIP_celkem - fh.Lekari_AROJIP_celkem;
+            h.Lekari_AROJIP_dostupni = lh.Lekari_AROJIP_dostupni- fh.Lekari_AROJIP_dostupni;
             h.name = lh.name;
             //h.regionId = lh.regionId;
             h.region = lh.region;
             h.Sestry_AROJIP_celkem = lh.Sestry_AROJIP_celkem - fh.Sestry_AROJIP_celkem;
+            h.Sestry_AROJIP_dostupni = lh.Sestry_AROJIP_dostupni - fh.Sestry_AROJIP_dostupni;
             h.Standard_luzka_celkem = lh.Standard_luzka_celkem - fh.Standard_luzka_celkem;
             h.Standard_luzka_s_kyslikem_celkem = lh.Standard_luzka_s_kyslikem_celkem - fh.Standard_luzka_s_kyslikem_celkem;
             h.Standard_luzka_s_kyslikem_covid = lh.Standard_luzka_s_kyslikem_covid - fh.Standard_luzka_s_kyslikem_covid;
@@ -167,10 +171,12 @@ namespace HlidacStatu.Web.Models
             h.IHD_celkem = hospitals.Sum(m => m.IHD_celkem);
             h.IHD_volna = hospitals.Sum(m => m.IHD_volna);
             h.Lekari_AROJIP_celkem = hospitals.Sum(m => m.Lekari_AROJIP_celkem);
+            h.Lekari_AROJIP_dostupni= hospitals.Sum(m => m.Lekari_AROJIP_dostupni);
             h.name = "";
             //h.regionId = 0;
             h.region = hospitals.First().region;
             h.Sestry_AROJIP_celkem = hospitals.Sum(m => m.Sestry_AROJIP_celkem);
+            h.Sestry_AROJIP_dostupni= hospitals.Sum(m => m.Sestry_AROJIP_dostupni);
             h.Standard_luzka_celkem = hospitals.Sum(m => m.Standard_luzka_celkem);
             h.Standard_luzka_s_kyslikem_celkem = hospitals.Sum(m => m.Standard_luzka_s_kyslikem_celkem);
             h.Standard_luzka_s_kyslikem_covid = hospitals.Sum(m => m.Standard_luzka_s_kyslikem_covid);

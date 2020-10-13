@@ -137,7 +137,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.AROJIP_luzka_covid } )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
     <div class="clearfix hidden-md hidden-lg"></div>
@@ -160,7 +160,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Standard_luzka_s_kyslikem_covid} )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
     <div class="clearfix "></div>
@@ -172,7 +172,6 @@ var chartdata = timedata.Select(m => new
             Celkem @h.ECMO_celkem, volných: @h.ECMO_volna (@HlidacStatu.Util.RenderData.NicePercent(h.ECMO_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.ECMO_volna)">@(diffH.ECMO_volna.ToString("+#;-#;0"))</span>
-            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -183,7 +182,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.ECMO_volna } )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
     <div class="clearfix hidden-md hidden-lg"></div>
@@ -194,7 +193,6 @@ var chartdata = timedata.Select(m => new
             Celkem @h.UPV_celkem, volných: @h.UPV_volna (@HlidacStatu.Util.RenderData.NicePercent(h.UPV_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.UPV_volna)">@(diffH.UPV_volna.ToString("+#;-#;0"))</span>
-            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -205,7 +203,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.UPV_volna } )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
 
     </div>
@@ -218,7 +216,6 @@ var chartdata = timedata.Select(m => new
             Celkem @h.CRRT_celkem, volných: @h.CRRT_volna (@HlidacStatu.Util.RenderData.NicePercent(h.CRRT_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.CRRT_volna)">@(diffH.CRRT_volna.ToString("+#;-#;0"))</span>
-            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -229,7 +226,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.CRRT_volna } )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
     
@@ -239,15 +236,17 @@ var chartdata = timedata.Select(m => new
             Celkem @h.Lekari_AROJIP_celkem
             <br />
             Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Lekari_AROJIP_celkem)">@(diffH.Lekari_AROJIP_celkem.ToString("+#;-#;0"))</span>
-            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
                     (name:"Lékaři ARO+JIP celkem", 
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Lekari_AROJIP_celkem} )
+                    ),
+                    (name:"Lékaři ARO+JIP dostupní", 
+                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Lekari_AROJIP_dostupni} )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
     <div class="clearfix "></div>
@@ -258,15 +257,17 @@ var chartdata = timedata.Select(m => new
             Celkem @h.Sestry_AROJIP_celkem
             <br />
             Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Sestry_AROJIP_celkem)">@(diffH.Sestry_AROJIP_celkem.ToString("+#;-#;0"))</span>
-             <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
        </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
                     (name:"Sestry ARO+JIP celkem", 
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Sestry_AROJIP_celkem} )
+                    ),
+                    (name:"Sestry ARO+JIP dostupné", 
+                        values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Sestry_AROJIP_dostupni} )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
                         <div class="clearfix hidden-md hidden-lg"></div>
@@ -285,7 +286,7 @@ var chartdata = timedata.Select(m => new
                         values:chartdata.Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Ventilatory_prenosne_celkem+m.data.Ventilatory_operacnisal_celkem } )
                     )
                 },
-                "","počet",200 )
+                "","počet",200, minY:0 )
         </p>
     </div>
 

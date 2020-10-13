@@ -86,7 +86,7 @@ Highcharts.chart('@containerId', {
 
 @helper SimpleLineChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
     string title, string valueName,
-    int height, string addStyle ="")
+    int height, string addStyle ="", int? minY=null)
 {
 string containerId = "chart_" + Guid.NewGuid().ToString("N");
 List<string> sdata = new List<string>();
@@ -117,6 +117,12 @@ Highcharts.chart('@containerId', {
     yAxis: {
         title: {
             text: 'Počet'
+        }
+        @if (minY.HasValue)
+        { 
+            <text>
+            , min: @(minY.Value)
+            </text>
         }
     },
         tooltip: {
