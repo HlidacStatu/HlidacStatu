@@ -127,9 +127,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     }
 
                 }
-                catch (Exception e)
+                catch
                 {
-
                     return null;
                 }
 

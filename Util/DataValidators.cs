@@ -180,7 +180,7 @@ namespace HlidacStatu.Util
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

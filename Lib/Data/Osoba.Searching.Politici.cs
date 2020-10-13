@@ -109,7 +109,7 @@ namespace HlidacStatu.Lib.Data
 
                         return Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(res.Content.ReadAsStringAsync().Result);
                     }
-                    catch (Exception e)
+                    catch
                     {
                         throw;
                     }

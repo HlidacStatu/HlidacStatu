@@ -3,7 +3,6 @@ using HlidacStatu.Lib.Searching;
 using HlidacStatu.Lib.Searching.Rules;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
-using HlidacStatu.Util;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -62,9 +61,9 @@ namespace HlidacStatu.Lib.Data
 
 
             static string regex = "[^/]*\r\n/(?<regex>[^/]*)/\r\n[^/]*\r\n";
-            static System.Text.RegularExpressions.RegexOptions options = ((System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace | System.Text.RegularExpressions.RegexOptions.Multiline)
-                        | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            static System.Text.RegularExpressions.Regex regFindRegex = new System.Text.RegularExpressions.Regex(regex, options);
+            static RegexOptions options = ((RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline)
+                        | RegexOptions.IgnoreCase);
+            static Regex regFindRegex = new Regex(regex, options);
 
 
             public static OsobaSearchResult SimpleSearch(string query, int page, int pageSize, string order,

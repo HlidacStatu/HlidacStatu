@@ -139,30 +139,30 @@ namespace HlidacStatu.Lang
         public string GetStemmedTextAllVariants(string text, string delimiter = "|")
         {
             throw new NotImplementedException();
-            var stems = GetStems(text);
-            if (stems == null || stems.Count == 0)
-                return string.Empty;
-            else
-            {
-                List<string> variants = new List<string>();
-                int maxVariants = stems.Max(m => m.NumOfStems + 1);
-                for (int variant = 0; variant < maxVariants; variant++)
-                {
-                    string var = "";
-                    for (int stem = 0; stem < stems.Count; stem++)
-                    {
-                        if (variant == 0)
-                            var = var + stems[stem].First;
-                        else
-                        {
-                            //if ()
-                        }
-                    }
-                    //variants.Add(variant);
+            //var stems = GetStems(text);
+            //if (stems == null || stems.Count == 0)
+            //    return string.Empty;
+            //else
+            //{
+            //    List<string> variants = new List<string>();
+            //    int maxVariants = stems.Max(m => m.NumOfStems + 1);
+            //    for (int variant = 0; variant < maxVariants; variant++)
+            //    {
+            //        string var = "";
+            //        for (int stem = 0; stem < stems.Count; stem++)
+            //        {
+            //            if (variant == 0)
+            //                var = var + stems[stem].First;
+            //            else
+            //            {
+            //                //if ()
+            //            }
+            //        }
+            //        //variants.Add(variant);
 
 
-                }
-            }
+            //    }
+            //}
         }
 
         public NHunspell.Hunspell HunspellObj

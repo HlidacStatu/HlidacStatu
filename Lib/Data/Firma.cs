@@ -94,7 +94,6 @@ namespace HlidacStatu.Lib.Data
 
                 default:
                     return "";
-                    break;
             }
 
         }

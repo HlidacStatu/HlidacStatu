@@ -616,21 +616,21 @@ namespace HlidacStatu.Lib.Data
         {
             return int.MaxValue;
 
-            var max = Invoices.GetMaxNumberOfWatchdogs(userId);
-            if (max == int.MaxValue)
-                return int.MaxValue;
+            //var max = Invoices.GetMaxNumberOfWatchdogs(userId);
+            //if (max == int.MaxValue)
+            //    return int.MaxValue;
 
-            if (DateTime.Now < limit)
-                return int.MaxValue;
+            //if (DateTime.Now < limit)
+            //    return int.MaxValue;
 
-            //var userCreated = DateTime.Now.Date.AddDays(-40);
-            //var usert = new Lib.Data.DbEntities().AspNetUserTokens.Where(m => m.Id == userId).FirstOrDefault();
-            //if (usert != null)
-            //    userCreated = usert.Created.AddDays(30);
+            ////var userCreated = DateTime.Now.Date.AddDays(-40);
+            ////var usert = new Lib.Data.DbEntities().AspNetUserTokens.Where(m => m.Id == userId).FirstOrDefault();
+            ////if (usert != null)
+            ////    userCreated = usert.Created.AddDays(30);
 
-            var curr = new Lib.Data.DbEntities().WatchDogs.Count(m => m.UserId == userId && m.StatusId > 0);
+            //var curr = new Lib.Data.DbEntities().WatchDogs.Count(m => m.UserId == userId && m.StatusId > 0);
 
-            return max - curr;
+            //return max - curr;
         }
 
 

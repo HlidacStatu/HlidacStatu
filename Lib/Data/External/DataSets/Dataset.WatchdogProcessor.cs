@@ -139,9 +139,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 return ret;
             }
 
-            static string HtmlTemplate = @"
-";
-            static string TextTemplate = @"";
+//            static string HtmlTemplate = @"
+//";
+//            static string TextTemplate = @"";
         }
     }
 }

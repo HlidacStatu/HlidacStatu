@@ -20,11 +20,11 @@ namespace HlidacStatu.Lib.Searching
                 if (this.ElasticResults != null)
                     return this.ElasticResults.Hits.Select(m => m.Source);
                 else
-                    return new Data.Dotace.Dotace[] { };
+                    return new Dotace[] { };
             }
         }
 
-        public object ToRouteValues(int page)
+        public new object ToRouteValues(int page)
         {
             return new
             {

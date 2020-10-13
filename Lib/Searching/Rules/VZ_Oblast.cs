@@ -29,7 +29,6 @@ namespace HlidacStatu.Lib.Searching.Rules
 
             if (part.Prefix.Equals("oblast:", StringComparison.InvariantCultureIgnoreCase))
             {
-                string cpv = "";
                 var oblastVal = part.Value;
                 var cpvs = Lib.Data.VZ.VerejnaZakazka.Searching.CPVOblastToCPV(oblastVal);
                 if (cpvs != null)

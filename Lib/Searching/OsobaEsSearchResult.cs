@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Searching
             }
         }
 
-        public object ToRouteValues(int page)
+        public new object ToRouteValues(int page)
         {
             return new
             {

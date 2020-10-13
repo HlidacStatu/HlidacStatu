@@ -483,7 +483,7 @@ namespace HlidacStatu.Lib
                                 pol.Add(celkemKc);
                                 return pol;
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 pol.Add(0);
                                 pol.Add(0);

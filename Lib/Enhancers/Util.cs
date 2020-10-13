@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Enhancers
                             HlidacStatu.Util.Consts.Logger.Info("Creating instance of enhancer plugin " + type.FullName);
 
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //NoveInzeraty.Lib.Constants.NIRoot.Error("Cannot make instance of parser " + type.FullName, e);
                     }

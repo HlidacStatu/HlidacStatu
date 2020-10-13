@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Data
 
                 return a;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

@@ -278,7 +278,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
 
                     throw new DbEntityValidationException(sb.ToString(), e);
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateException)
                 {
                     //Add your code to inspect the inner exception and/or
                     //e.Entries here.

@@ -99,7 +99,6 @@ namespace HlidacStatu.Lib.Issues
                         return ImportanceLevel.NeedHumanReview;
                     default:
                         throw new NotImplementedException();
-                        break;
                 }
             }
         }

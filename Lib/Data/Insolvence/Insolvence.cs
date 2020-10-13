@@ -245,7 +245,7 @@ MORATORIUM =
                     return null;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 // TODO: handle error
                 throw;
@@ -282,7 +282,7 @@ MORATORIUM =
                         Rizeni = h.Source
                     }).First();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // TODO: handle error
                 throw;
@@ -315,7 +315,7 @@ MORATORIUM =
                 return rs;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // TODO: handle error
                 throw;

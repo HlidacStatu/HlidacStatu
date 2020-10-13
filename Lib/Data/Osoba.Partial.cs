@@ -1236,7 +1236,7 @@ namespace HlidacStatu.Lib.Data
                                         $"{{0}} subjektech, které v&nbsp;roce {rok} uzavřely",
                                         $"{{0}} subjektech, které v&nbsp;roce {rok - 1} uzavřely"
                                         )
-                                + $" smlouvy za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
+                                + $" smlouvy za celkem <b>{RenderData.ShortNicePrice(stat.BasicStatPerYear[rok - 1].CelkemCena, html: true)}</b>. ";
 
                             f.Add(new InfoFact(ss, InfoFact.ImportanceLevel.Medium)
                             );
@@ -1249,12 +1249,12 @@ namespace HlidacStatu.Lib.Data
             return _infofacts;
         }
 
-        Devmasters.Lang.Vokativ _vokativ = null;
+        //Devmasters.Lang.Vokativ _vokativ = null;
 
 
         public bool NotInterestingToShow()
         {
-            var res = this.StatusOsoby() == HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum.NeniPolitik
+            var res = this.StatusOsoby() == StatusOsobyEnum.NeniPolitik
                     && this.MaVztahySeStatem() == false;
 
             res = res || (this.StatusOsoby() == StatusOsobyEnum.Sponzor

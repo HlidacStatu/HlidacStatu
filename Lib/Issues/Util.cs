@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Issues
                             {
                                 tt = s.GetTypes();
                             }
-                            catch (Exception e)
+                            catch
                             {
                             }
                             if (tt != null)
@@ -127,7 +127,7 @@ namespace HlidacStatu.Lib.Issues
                         HlidacStatu.Util.Consts.Logger.Info("Creating instance of issueAnalyzer plugin " + type.FullName);
 
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //NoveInzeraty.Lib.Constants.NIRoot.Error("Cannot make instance of parser " + type.FullName, e);
                     }

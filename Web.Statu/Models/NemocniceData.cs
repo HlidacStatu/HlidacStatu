@@ -189,7 +189,7 @@ namespace HlidacStatu.Web.Models
         {
             NemocniceData krajF = new NemocniceData();
             List<Region> krajFH = new List<Region>();
-            int krajId = 0;
+            //int krajId = 0;
             List<string> kraje = new string[] { "PHA", "STC", "JHM", "MSK" }.Union(this.regions.Select(m => m.region).Distinct()).ToList();
             foreach (var kraj in kraje.OrderBy(o => kraje.IndexOf(o)))
             {

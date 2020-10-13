@@ -281,26 +281,26 @@ namespace HlidacStatu.Web
 #endif
 
 
-            var routeData = new RouteData();
-            routeData.Values["controller"] = "Home";
-            routeData.Values["action"] = "Error";
-            routeData.Values["errPage"] = errPage.ToString();
-            routeData.Values["InvokeErrorAction"] = true;
+            //var routeData = new RouteData();
+            //routeData.Values["controller"] = "Home";
+            //routeData.Values["action"] = "Error";
+            //routeData.Values["errPage"] = errPage.ToString();
+            //routeData.Values["InvokeErrorAction"] = true;
 
 
-            //var httpcx = new HttpContext(new HttpRequest("error", "https://www.hlidacstatu.cz/error",""), httpContext.Response);
+            ////var httpcx = new HttpContext(new HttpRequest("error", "https://www.hlidacstatu.cz/error",""), httpContext.Response);
 
 
-            Response.Redirect("/Error/" + errPage);
+            //Response.Redirect("/Error/" + errPage);
 
-            if (false)
-            {
-                using (var controller = new Controllers.HomeController())
-                {
-                    ((IController)controller).Execute(
-                    new RequestContext(new HttpContextWrapper(httpContext), routeData));
-                }
-            }
+            //if (false)
+            //{
+            //    using (var controller = new Controllers.HomeController())
+            //    {
+            //        ((IController)controller).Execute(
+            //        new RequestContext(new HttpContextWrapper(httpContext), routeData));
+            //    }
+            //}
 
         }
     }

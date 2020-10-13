@@ -212,77 +212,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult PridatSe(Models.PridatSeModel model, FormCollection form)
         {
             return RedirectPermanent("https://www.hlidacstatu.cz/texty/pridejte-se/");
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            else
-            {
-                try
-                {
-                    using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient())
-                    {
-                        smtp.Send("info@hlidacstatu.cz", "michal@michalblaha.cz", "Nový spolupracovník Hlidac Statu",
-                            "Email: " + model.Email + "\n"
-                            + "Jmeno: " + model.Jmeno + "\n"
-                            + "Prijmeni: " + model.Prijmeni + "\n"
-                            + "Tel: " + model.Phone + "\n"
-                            + "Vzkaz: " + model.Vzkaz + "\n"
-                            + "Temata: " + string.Join(", ", model.TypPrace) + "\n"
-                            );
-                        smtp.Send("info@hlidacstatu.cz", "fipa@me.com", "Nový spolupracovník Hlidac Statu",
-                            "Email: " + model.Email + "\n"
-                            + "Jmeno: " + model.Jmeno + "\n"
-                            + "Prijmeni: " + model.Prijmeni + "\n"
-                            + "Tel: " + model.Phone + "\n"
-                            + "Vzkaz: " + model.Vzkaz + "\n"
-                            + "Temata: " + string.Join(", ", model.TypPrace) + "\n"
-                            );
-                        smtp.Send("info@hlidacstatu.cz", "platforma+public-support@hlidacstatu.cz", "Nový spolupracovník Hlidac Statu",
-                            "Email: " + model.Email + "\n"
-                            + "Jmeno: " + model.Jmeno + "\n"
-                            + "Prijmeni: " + model.Prijmeni + "\n"
-                            + "Tel: " + model.Phone + "\n"
-                            + "Vzkaz: " + model.Vzkaz + "\n"
-                            + "Temata: " + string.Join(", ", model.TypPrace) + "\n"
-                            );
-                    }
-
-                    //register into HlidacSmluv
-                    try
-                    {
-
-                        var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                        var password = Devmasters.TextUtil.GenRandomString(8);
-                        var result = UserManager.Create(user, password);
-                        result = UserManager.AddToRole(user.Id, "TeamMember");
-
-                        using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent("https://www.hlidacstatu.cz/account/confirmemail"))
-                        {
-                            net.Method = Devmasters.Net.HttpClient.MethodEnum.POST;
-                            net.RequestParams.Form.Add("email", model.Email);
-                            net.GetContent();
-                        }
-                        new HlidacStatu.Lib.Data.External.Discourse().InviteNewUser(model.Email);
-
-                    }
-                    catch (Exception e)
-                    {
-
-                        HlidacStatu.Util.Consts.Logger.Error("PridatSe new user. Error: " + e);
-                    }
-
-
-                    return RedirectToAction("NovyClenTeamu");
-                }
-                catch (Exception e)
-                {
-                    HlidacStatu.Util.Consts.Logger.Error("Join new user. ", e);
-                    ModelState.AddModelError("", "Nastala neočekávaná chyba. Omlouváme se, vaši registraci vyřídíme ručně do nejdříve.");
-
-                    return View(model);
-                }
-            }
+            
         }
 
         public ActionResult VerejneZakazky(string q)

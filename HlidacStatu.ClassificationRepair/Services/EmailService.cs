@@ -25,8 +25,10 @@ namespace HlidacStatu.ClassificationRepair
         {
             try
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 var mimeMessage = new MimeMessage();
                 mimeMessage.From.Add(new MailboxAddress(_emailSettings.FromAddress));
+
                 foreach (string recipient in recipients)
                 {
                     mimeMessage.To.Add(new MailboxAddress(recipient));
@@ -50,6 +52,7 @@ namespace HlidacStatu.ClassificationRepair
                     await client.SendAsync(mimeMessage);
                     await client.DisconnectAsync(true);
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
             }
             catch (Exception ex)
             {

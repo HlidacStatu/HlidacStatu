@@ -589,35 +589,19 @@ namespace HlidacStatu.Web.Controllers
                     if (ds == null)
                         return Json(ApiResponseStatus.DatasetNotFound, JsonRequestBehavior.AllowGet);
 
-                    if (false)
-                    {
-                        var res = ds.SearchDataRaw(q, page.Value, 50, null);
-
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder(512 * (int)res.Total);
-                        sb.Append($"{{ \"total\": {res.Total}, \"page\": {page}, \"results\" : [ ");
-                        foreach (var item in res.Result)
-                        {
-                            sb.Append(item.Item2 + ", ");
-                        }
-                        sb.Remove(sb.Length - 2, 2);
-                        sb.Append($"]}}");
-
-                        return Content(sb.ToString(), "application/json");
-                    }
-                    else
-                    {
-                        bool bDesc = (desc == "1" || desc?.ToLower() == "true");
-                        var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
-                        res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
+                    
+                    bool bDesc = (desc == "1" || desc?.ToLower() == "true");
+                    var res = ds.SearchData(q, page.Value, 50, sort + (bDesc ? " desc" : ""));
+                    res.Result = res.Result.Select(m => { m.DbCreatedBy = null; return m; });
 
 
-                        return Content(
-                            Newtonsoft.Json.JsonConvert.SerializeObject(
-                            new { total = res.Total, page = res.Page, results = res.Result }
-                        )
-                        , "application/json");
+                    return Content(
+                        Newtonsoft.Json.JsonConvert.SerializeObject(
+                        new { total = res.Total, page = res.Page, results = res.Result }
+                    )
+                    , "application/json");
 
-                    }
+                    
 
                 }
                 catch (DataSetException dex)
@@ -703,9 +687,9 @@ namespace HlidacStatu.Web.Controllers
                 try
                 {
                     var ds = DataSet.CachedDatasets.Get(id.ToLower());
-                    var value = ds.ItemExists(dataid);
+                    bool value = ds.ItemExists(dataid);
                     //remove from item
-                    if (value == null)
+                    if (value == false)
                         return Content(Newtonsoft.Json.JsonConvert.SerializeObject(false), "application/json");
                     else
                         return Content(Newtonsoft.Json.JsonConvert.SerializeObject(true), "application/json");

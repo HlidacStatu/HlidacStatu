@@ -246,7 +246,7 @@ Cookie: _ga=GA1.2.1208733850.1580933391; JSessionID=R3890696782
                 string responseBody = await response.Content.ReadAsStringAsync();
                 return responseBody;
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 return string.Empty;
             }
