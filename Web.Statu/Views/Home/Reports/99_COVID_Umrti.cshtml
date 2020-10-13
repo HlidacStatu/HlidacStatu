@@ -76,11 +76,11 @@ foreach (var d in data)
             {
                 if (m.Value != vmax && m.Value != 427)
                 {
-                    return $"[{i},{m.Value.ToString(HlidacStatu.Util.Consts.enCulture)}]";
+                    return $"[{i},{m.Value.ToString("#####0",HlidacStatu.Util.Consts.enCulture)}]";
                 }
                 else
                 {
-                    return $"{{x:{i},y:{m.Value:N0}, selected:true, marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                    return $"{{x:{i},y:{m.Value:#####0}, selected:true, marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
                 };
             }
             )
@@ -92,6 +92,7 @@ foreach (var d in data)
 
     <div id="@containerId" style="height:@(height)px;@addStyle"></div>
     <script>
+    var myStartDate = new Date(2020, 3, 22, 0, 0, 0, 0);
 Highcharts.chart('@containerId', 
     {
     chart:
@@ -189,7 +190,15 @@ Highcharts.chart('@containerId',
     xAxis:
     {
         gridLineWidth: 1,
-
+        tickPixelInterval: 70,
+        labels: {
+            formatter: function() {
+                var d = new Date(myStartDate);
+                d.setDate(d.getDate() + this.value);
+                var s= d.getDate()+'.'+d.getMonth()+'.';
+                return s;
+            }
+        }
     },
 
     legend:

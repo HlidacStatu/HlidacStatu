@@ -56,7 +56,7 @@ namespace HlidacStatu.Web.Controllers
                 .SearchDataRaw("*", 1, 1000).Result
                 .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<NemocniceData>(s.Item2))
                 .OrderByDescending(m=>m.lastUpdated)
-                .Take(28)
+                .Take(36)
                 .Reverse()
                 .ToArray();
 

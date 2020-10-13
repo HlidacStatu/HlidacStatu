@@ -123,7 +123,7 @@ var chartdata = timedata.Select(m => new
 
 
 <div class="row">
-    <div class="col-xs-12 col-sm-4 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Lůžka (ARO+JIP dospělí)</h4>
         <p>
             Celkem @h.AROJIP_luzka_celkem, volných @(h.AROJIP_luzka_covid+h.AROJIP_luzka_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.AROJIP_perc()))
@@ -146,7 +146,7 @@ var chartdata = timedata.Select(m => new
     </div>
     <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-4 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Lůžka (standardní s kyslíkem)</h4>
         <p>
             Celkem @h.Standard_luzka_s_kyslikem_celkem, volných @(h.Standard_luzka_s_kyslikem_covid+h.Standard_luzka_s_kyslikem_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc()))
@@ -167,15 +167,16 @@ var chartdata = timedata.Select(m => new
                 "","počet",200 )
         </p>
     </div>
-    <div class="clearfix hidden-md hidden-lg"></div>
+    <div class="clearfix "></div>
 
-    <div class="col-xs-12 col-sm-4 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Přístroje ECMO <small>podpora nejvaznejsich pripadu, plicni rizeni</small></h4>
 
         <p>
             Celkem @h.ECMO_celkem, volných: @h.ECMO_volna (@HlidacStatu.Util.RenderData.NicePercent(h.ECMO_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.ECMO_volna)">@(diffH.ECMO_volna.ToString("+#;-#;0"))</span>
+            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -189,14 +190,15 @@ var chartdata = timedata.Select(m => new
                 "","počet",200 )
         </p>
     </div>
-    <div class="clearfix"></div>
+    <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-4 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Přístroje UPV <small>Umělá plicni ventilace</small></h4>
         <p>
             Celkem @h.UPV_celkem, volných: @h.UPV_volna (@HlidacStatu.Util.RenderData.NicePercent(h.UPV_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.UPV_volna)">@(diffH.UPV_volna.ToString("+#;-#;0"))</span>
+            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -212,14 +214,15 @@ var chartdata = timedata.Select(m => new
 
     </div>
 
-        <div class="clearfix hidden-md hidden-lg"></div>
+        <div class="clearfix"></div>
 
-    <div class="col-xs-12 col-sm-4 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Přístroje CRRT <small>kontinuální dialýza</small></h4>
         <p>
             Celkem @h.CRRT_celkem, volných: @h.CRRT_volna (@HlidacStatu.Util.RenderData.NicePercent(h.CRRT_perc()))
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.CRRT_volna)">@(diffH.CRRT_volna.ToString("+#;-#;0"))</span>
+            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -234,12 +237,13 @@ var chartdata = timedata.Select(m => new
         </p>
     </div>
     
-    @*<div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Lékaři <small>ARO+JIP dospělí</small></h4>
         <p>
             Celkem @h.Lekari_AROJIP_celkem
             <br />
             Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Lekari_AROJIP_celkem)">@(diffH.Lekari_AROJIP_celkem.ToString("+#;-#;0"))</span>
+            <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
         </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
@@ -250,15 +254,16 @@ var chartdata = timedata.Select(m => new
                 "","počet",200 )
         </p>
     </div>
-    <div class="clearfix hidden-md hidden-lg"></div>
+    <div class="clearfix "></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox">
+    <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Sestry <small>ARO+JIP dospělí</small></h4>
         <p>
             Celkem @h.Sestry_AROJIP_celkem
             <br />
             Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Sestry_AROJIP_celkem)">@(diffH.Sestry_AROJIP_celkem.ToString("+#;-#;0"))</span>
-        </p>
+             <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
+       </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
                     (name:"Sestry ARO+JIP celkem", 
@@ -270,13 +275,14 @@ var chartdata = timedata.Select(m => new
     </div>
                         <div class="clearfix hidden-md hidden-lg"></div>
 
-    <div class="col-xs-12 col-sm-3 singlebox" >
+    <div class="col-xs-12 col-sm-6 singlebox" >
         <h4>Dostupné ventilátory <small>přenosné + operační sál</small></h4>
         <p>
             Celkem @(h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem)
             <br />
             Změna počtu od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor((diffH.Ventilatory_prenosne_celkem+diffH.Ventilatory_operacnisal_celkem))">@((h.Ventilatory_prenosne_celkem+h.Ventilatory_operacnisal_celkem).ToString("+#;-#;0"))</span>
-        </p>
+              <br/><span class="text-info">pozor na měřítko, osa Y nezačíná na nule</span>
+      </p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
                     (name:"Dostupné ventilátory přenosné+oper.sál", 
@@ -285,7 +291,7 @@ var chartdata = timedata.Select(m => new
                 },
                 "","počet",200 )
         </p>
-    </div>*@
+    </div>
 
     <div class="clearfix"></div>
 

@@ -215,12 +215,8 @@ namespace HlidacStatu.Web
             string ip = req.UserHostAddress;
             lock (_autoAddBlackList)
             {
-                if (attackers.ContainsKey(ip))
-                {
-                    attackers[ip].num++;
-                }
-                else
-                    attackers.Add(ip, new attack() { ip = ip, last = DateTime.Now, num = 1 });
+                if (!attackers.ContainsKey(ip))
+                    attackers.Add(ip, new attack() { ip = ip, last = DateTime.Now, num = 0 });
             }
 
             var att = attackers[ip];
