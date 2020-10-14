@@ -27,7 +27,7 @@
         while (csv.Read())
         {
             DateTime? dt = Devmasters.DT.Util.ToDateTime(csv.GetField<string>("datum"), "yyyy-MM-dd");
-            int umr = csv.GetField<int>("kumulativni_pocet_umrti");
+            int umr = csv.GetField<int>("kumulativni_pocet_nakazenych");
             if (dt.HasValue && umr>0)
             {
                 umrti.Add((dt.Value, umr));
@@ -46,15 +46,15 @@
         ); }
 
 <div style="width:700px;text-align:center">
-<h2>Počet úmrtí v souvislosti s COVID-19</h2>
+<h2>Počet nakažených v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2020:"Zachránili jsme tisíce mrtvých".</p>
 <p class="text-warning" style="font-size:19px">Za <b>163 dní</b> od 22.3. do 31.8.2020 zemřelo <b>@untilSep1 osob</b>.
 <br/><span class="text-danger">Za <b>@((int)(lastDate-sept1).TotalDays) dní</b> od 1.9. zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>.</span>
     </p>
 <div style="width:600px">
     @SimpleColumnChart(new (string name, 
-    IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Úmrtí ", values: data.Where(m => m.Date < sept1.AddYears(1))) }, 
-    "COVID-19 úmrtí", "Úmrtí", 500, chartType:"area")
+    IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Nakažení ", values: data.Where(m => m.Date < sept1.AddYears(1))) }, 
+    "COVID-19 nakažení", "Nakažení", 500, chartType:"area")
 </div>
 
 </div>
@@ -127,8 +127,8 @@ Highcharts.chart('@containerId',
         backgroundColor: 'rgba(255,255,255,0.8)',
         borderColor: "#000",
         style: {fontSize: '13px'},
-        x: -140,
-        y: 100,
+        x: -150,
+        y: 0,
         allowOverlap: true
       },
       labels: [{
@@ -136,7 +136,7 @@ Highcharts.chart('@containerId',
           xAxis: 0,
           yAxis: 0,
           x: 156,
-          y: 421
+          y: 17279
         },
         text: '<b>Babiš 24.srpna<b><br/>„Jsem trochu v šoku z toho,<br/>co vypadlo z ministerstva zdravotnictví.<br/>Vůbec se mi to nelíbí“.'
       }],
@@ -148,8 +148,8 @@ Highcharts.chart('@containerId',
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderColor: "#FFAAAA",
         style: {fontSize: '13px'},
-        x: 200,
-        y: 0,
+        x: 180,
+        y: 150,
         allowOverlap: true
     },
       labels: [{
@@ -157,7 +157,7 @@ Highcharts.chart('@containerId',
           xAxis: 0,
           yAxis: 0,
           x: 171,
-          y: 457
+          y: 20792
         },
         text: '<b>Babiš 8.září<b><br/>„Čtu, co teď vydala WHO.<br/>Ta WHO, která ani nevěděla, že je pandemie.<br/>Podle mě by měla mlčet.<br/>A posílám statistiku počtu úmrtí.<br/>Jsme na tom velmi dobře.“.'
       }],
@@ -169,7 +169,7 @@ Highcharts.chart('@containerId',
         borderColor: "#000000",
         style: {fontSize: '13px'},
         x: -180,
-        y: -180,
+        y: -240,
         allowOverlap: true
     },
       labels: [{
@@ -177,7 +177,7 @@ Highcharts.chart('@containerId',
           xAxis: 0,
           yAxis: 0,
           x: 181,
-          y: 512
+          y: 24084
         },
         text: '<b>Babiš 18.září<b><br/>„Neřešte stále covid-19,<br/>Dneska i mladí lidé mají zájem o zahrady.<br/>Schvalme zahrádkářský zákon“.'
       }],

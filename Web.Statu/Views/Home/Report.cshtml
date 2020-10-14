@@ -165,6 +165,7 @@ XINTEXT (0->0.7mld),
             viewCache = "0H";
             break;
         case 99:
+        case 999:
             Layout = null;
             viewCache = "0H";
 
@@ -185,7 +186,7 @@ XINTEXT (0->0.7mld),
     }
 }
 
-@if (Model == 99)
+@if (Model == 99 || Model == 999)
 { 
 
 
@@ -243,7 +244,7 @@ XINTEXT (0->0.7mld),
 }
 @Html.Action("Report_child_"+viewCache, new { routedata = data })
 
-@if (Model == 99)
+@if (Model == 99 || Model == 999)
 {
 
 }
