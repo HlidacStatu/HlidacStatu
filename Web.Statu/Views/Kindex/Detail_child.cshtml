@@ -74,120 +74,145 @@
             else
             {
                 @WebUtil.AddBookmark(this.User, Model)}
-            @ViewBag.Title 
+            @ViewBag.Title
         </h1>
     </div>
 </div>
 
 @if (currYear.KIndexReady == false)
 {
-<div class="jumbotron">
-    <div class="container">
-        <div class="row">
-            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
-            <div class="col-sm-2">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+                <div class="col-sm-2">
 
+                </div>
+                <div class="col-sm-10">
+                    <h2>
+                        K–Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
+                    </h2>
+                </div>
             </div>
-            <div class="col-sm-10">
-                <h2>
-                    K–Index pro tento rok jsme nespočítali, protože organizace má v registru smluv příliš málo smluv.
-                </h2>
-            </div>
-        </div>
-        @if (Model.roky.Any(m => m.KIndexReady))
-        {
-            <div class="row" style="margin-top:15px">
-                <div class="col-sm-12">
-                    <h4>
-                        Spočítaný K–Index pro další roky:
-                        @foreach (int year in availableKindexYears.OrderBy(m => m))
-                        {
-                            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
-                            string postfix = year == availableKindexYears.Max() ? "." : ", ";
-
-                            if (kidx != null && kidx.KIndexReady && year != selectedYear)
+            @if (Model.roky.Any(m => m.KIndexReady))
+            {
+                <div class="row" style="margin-top:15px">
+                    <div class="col-sm-12">
+                        <h4>
+                            Spočítaný K–Index pro další roky:
+                            @foreach (int year in availableKindexYears.OrderBy(m => m))
                             {
-                                <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
 
+                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
+                                {
+                                    <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                                }
                             }
-                        }
-                    </h4>
+                        </h4>
+                    </div>
                 </div>
-            </div>
-        }
+            }
 
-    </div>
-    @WebUtil.AlertModal("Poslat zpětnou vazbu",
-    "Vyjádření subjektu k hodnocení K-Index",
-    "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
-    "Rozumím")
-
-    @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-    "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-    "Důvod pro přepočítání",
-    "Přepočítat K-Index",
-    "/kindex/recalculateFeedback",
-    mustAuth: true,
-    addData: Model.Ico)
-</div>
-
-}
-else
-{
-<div class="jumbotron">
-    <div class="container">
-        <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
-        <div class="row" style="display: flex;align-items: center;">
-            <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndex)">
-                @Html.KIndexIcon(currYear.KIndexLabel, "width:100px")
-            </div>
-            <div class="col-sm-10">
-                <div style="font-size:26px;line-height:30px;">
-                    @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok), 3, true, false, lineFormat: "<div>{0}</div>", html: true))
-                </div>
-            </div>
         </div>
-        @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
-        {
-            <div style="margin-top:20px" class="text-warning">
-                @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
-            </div>
-        }
-        @if (Model.roky.Any(m => m.KIndexReady))
-        {
-            <div class="row" style="margin-top:25px">
-                <div class="col-sm-12">
-                    <h4>
-                        Spočítaný K–Index pro další roky:
-                        @foreach (int year in availableKindexYears.OrderBy(m => m))
-                        {
-                            var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
-                            string postfix = year == availableKindexYears.Max() ? "." : ", ";
-
-                            if (kidx != null && kidx.KIndexReady && year != selectedYear)
-                            {
-                                <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
-
-                            }
-                        }
-                    </h4>
-                </div>
-            </div>
-        }
-    </div>
-    @WebUtil.AlertModal("Poslat zpětnou vazbu",
+        @WebUtil.AlertModal("Poslat zpětnou vazbu",
         "Vyjádření subjektu k hodnocení K-Index",
         "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
         "Rozumím")
 
-    @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-    "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-    "Důvod pro přepočítání",
-    "Přepočítat K-Index",
-    "/kindex/recalculateFeedback",
-    mustAuth: true,
-    addData: Model.Ico)
-</div>
+        @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+        "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+        "Důvod pro přepočítání",
+        "Přepočítat K-Index",
+        "/kindex/recalculateFeedback",
+        mustAuth: true,
+        addData: Model.Ico)
+    </div>
+
+}
+else
+{
+    <div class="jumbotron">
+        <div class="container">
+            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+            <div class="row" style="display: flex;align-items: center;">
+                <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndex)">
+                    @Html.KIndexIcon(currYear.KIndexLabel, "width:100px")
+                </div>
+                <div class="col-sm-10">
+                    <div style="font-size:26px;line-height:30px;">
+                        @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.InfoFacts(currYear.Rok), 3, true, false, lineFormat: "<div>{0}</div>", html: true))
+                    </div>
+                </div>
+            </div>
+            @if (currYear.KIndexReady && currYear.KIndexIssues != null && currYear.KIndexIssues.Count() > 0)
+            {
+                <div style="margin-top:20px" class="text-warning">
+                    @currYear.KIndexIssues.Aggregate((f, s) => f + " " + s)
+                </div>
+            }
+            @if (Model.roky.Any(m => m.KIndexReady))
+            {
+                <div class="row" style="margin-top:25px">
+                    <div class="col-sm-12">
+                        <h4>
+                            Spočítaný K–Index pro další roky:
+                            @foreach (int year in availableKindexYears.OrderBy(m => m))
+                            {
+                                var kidx = Model.roky.Where(y => y.Rok == year).FirstOrDefault();
+                                string postfix = year == availableKindexYears.Max() ? "." : ", ";
+
+                                if (kidx != null && kidx.KIndexReady && year != selectedYear)
+                                {
+                                    <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                                }
+                            }
+                        </h4>
+                    </div>
+                </div>
+            }
+        </div>
+        @WebUtil.AlertModal("Poslat zpětnou vazbu",
+            "Vyjádření subjektu k hodnocení K-Index",
+            "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+            "Rozumím")
+
+        @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+        "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+        "Důvod pro přepočítání",
+        "Přepočítat K-Index",
+        "/kindex/recalculateFeedback",
+        mustAuth: true,
+        addData: Model.Ico)
+    </div>
+}
+
+@if (this.User?.IsInRole("canEditData") == true)
+{
+    <div>
+        <a href="/manage/AddKindexFeedback?ico=@Model.Ico&year=@selectedYear" style="font-size:2em">
+            <i class="far fa-axe"></i> Přidat zpětnou vazbu subjektu
+        </a>
+    </div>
+}
+
+@if (KindexFeedback.TryGetKindexFeedback(Model.Ico, selectedYear, out KindexFeedback feedback))
+{
+    <div class="bs-callout bs-callout-warning" style="padding-bottom:30px;">
+        <h4>Vyjádření subjektu k hodnocení K-Index</h4>
+        <p>@feedback.Text</p>
+        <br />
+        <dl>
+            <dt>Autor</dt>
+            <dd>@feedback.Author</dd>
+            <dt>Datum</dt>
+            <dd>@(feedback.SignDate?.ToString("dd.MM.yyyy") ?? " - ")</dd>
+        </dl>
+
+    </div>
 }
 
 <div class="bs-callout bs-callout-primary" style="padding-bottom:30px;">
@@ -625,31 +650,31 @@ else
 
 @helper ParametrDetail(KIndexData.Annual currYear, KIndexData.KIndexParts part, Statistics statistics, bool percentValue = true)
 {
-KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
-long pocetSmluv = 0;
-switch (part)
-{
-    case KIndexData.KIndexParts.PercentBezCeny:
-        pocetSmluv = currYear.Statistika.PocetSmluvBezCenySeSoukrSubj;
-        break;
-    case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
-        pocetSmluv = currYear.Statistika.PocetSmluvSeZasadnimNedostatkem;
-        break;
-    case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
-        pocetSmluv = currYear.Statistika.PocetSmluvPolitiky;
-        break;
-    case KIndexData.KIndexParts.PercSmluvUlimitu:
-        pocetSmluv = currYear.Statistika.PocetSmluvULimitu;
-        break;
-    case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
-        pocetSmluv = currYear.Statistika.PocetSmluvNovaFirma;
-        break;
-    case KIndexData.KIndexParts.PercUzavrenoOVikendu:
-        pocetSmluv = currYear.Statistika.PocetSmluvOVikendu;
-        break;
-    default:
-        break;
-}
+    KIndexData.VypocetDetail.Radek vradek = currYear.KIndexVypocet.Radky.Where(m => m.VelicinaPart == part).First();
+    long pocetSmluv = 0;
+    switch (part)
+    {
+        case KIndexData.KIndexParts.PercentBezCeny:
+            pocetSmluv = currYear.Statistika.PocetSmluvBezCenySeSoukrSubj;
+            break;
+        case KIndexData.KIndexParts.PercSeZasadnimNedostatkem:
+            pocetSmluv = currYear.Statistika.PocetSmluvSeZasadnimNedostatkem;
+            break;
+        case KIndexData.KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
+            pocetSmluv = currYear.Statistika.PocetSmluvPolitiky;
+            break;
+        case KIndexData.KIndexParts.PercSmluvUlimitu:
+            pocetSmluv = currYear.Statistika.PocetSmluvULimitu;
+            break;
+        case KIndexData.KIndexParts.PercNovaFirmaDodavatel:
+            pocetSmluv = currYear.Statistika.PocetSmluvNovaFirma;
+            break;
+        case KIndexData.KIndexParts.PercUzavrenoOVikendu:
+            pocetSmluv = currYear.Statistika.PocetSmluvOVikendu;
+            break;
+        default:
+            break;
+    }
     <div class="row">
         <div class="col-xs-12">
             @if (percentValue)
@@ -716,7 +741,7 @@ switch (part)
             }
         </div>
     </div>
-    
+
 
     if (koncentrace?.Dodavatele?.Count() > 0)
     {

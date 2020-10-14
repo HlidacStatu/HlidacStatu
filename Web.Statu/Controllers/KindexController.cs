@@ -356,7 +356,7 @@ namespace HlidacStatu.Web.Controllers
             }
             return Json(null, JsonRequestBehavior.AllowGet);
         }
-
+        
         //todo: What are we going to do with this?
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {

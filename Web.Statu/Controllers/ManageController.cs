@@ -1,4 +1,5 @@
-﻿using HlidacStatu.Lib.Data;
+﻿using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+using HlidacStatu.Lib.Data;
 using HlidacStatu.Util;
 using HlidacStatu.Web.Framework;
 using HlidacStatu.Web.Models;
@@ -100,6 +101,37 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect(o1.GetUrl(true));
             }
             return View("index");
+        }
+
+        [Authorize(Roles = "canEditData")]
+        public ActionResult AddKindexFeedback(string ico, int year)
+        {
+            if (string.IsNullOrWhiteSpace(ico))
+                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+
+            var kindexFeedback = new KindexFeedback()
+            {
+                Ico = ico,
+                Year = year
+            };
+            return View(kindexFeedback);
+        }
+
+        // set classification
+        [Authorize(Roles = "canEditData")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddKindexFeedback(KindexFeedback feedback)
+        {
+            if (ModelState.IsValid)
+            {
+                feedback.Save();
+            }
+
+            return RedirectToAction(
+                nameof(KindexController.Detail),
+                nameof(KindexController).Replace("Controller", ""),
+                new { id = feedback.Ico, rok = feedback.Year });
         }
 
         public ActionResult SubjektHlidac(string Id)
