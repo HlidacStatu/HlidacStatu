@@ -357,6 +357,19 @@ namespace HlidacStatu.Web.Controllers
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Feedback(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var feedback = KindexFeedback.GetById(id);
+
+            if (feedback is null)
+                return NotFound();
+            
+            return View(feedback);
+        }
+
         //todo: What are we going to do with this?
         public ActionResult Debug(string id, string ico = "", int? rok = null)
         {

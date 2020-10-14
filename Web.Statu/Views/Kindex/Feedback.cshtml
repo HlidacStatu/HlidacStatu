@@ -1,0 +1,55 @@
+﻿@model KindexFeedback
+
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using System.Linq;
+
+
+@{
+    
+    ViewBag.Title = $"Vyjádření subjektu {Model.Company} k hodnocení K-index za rok {Model.Year}.";
+}
+
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li>Podrobně</li>
+        <li class="active">@(ViewBag.Title)</li>
+    </ol>
+}
+
+
+@{
+    var feedbacks = KindexFeedback.GetKindexFeedbacks(Model.Ico, Model.Year);
+}
+@if (feedbacks.Count() > 0)
+{
+    <div class="bs-callout bs-callout-warning" style="padding-bottom:30px;">
+        <h4>Vyjádření subjektu k hodnocení K-Index</h4>
+        @foreach (var feedback in feedbacks)
+        {
+            string linkText = $"{feedback.SignDate?.ToString("dd.MM.yyyy") ?? "???"} {feedback.Author}";
+            if (Model.Id == feedback.Id)
+            {
+                <span>@linkText</span>
+            }
+            else
+            {
+                <a href="/kindex/feedback/@feedback.Id">@linkText</a>
+            }
+            <br />
+        }
+    </div>
+}
+
+<p>@Model.Text</p>
+<br />
+<dl>
+    <dt>Autor</dt>
+    <dd>@Model.Author</dd>
+    <dt>Datum</dt>
+    <dd>@(Model.SignDate?.ToString("dd.MM.yyyy") ?? " - ")</dd>
+</dl>

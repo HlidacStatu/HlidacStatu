@@ -494,8 +494,11 @@ namespace HlidacStatu.Lib.Data
             return this;
         }
 
-
-        Graph.Shortest.EdgePath shortestGraph = null;
+        //Napojení na graf
+        //Graph.Shortest.EdgePath shortestGraph = null;
+        #region shortest path
+        private Graphs2.UnweightedGraph _graph = null;
+        private Graphs2.Vertex<string> _startingVertex = null; //not for other use except as a search starting point
 
         public Graph.Edge[] VazbyProICO(string ico)
         {
@@ -503,27 +506,51 @@ namespace HlidacStatu.Lib.Data
         }
         private Graph.Edge[] _vazbyProICO(string ico)
         {
-            List<Graph.Edge> ret = new List<Graph.Edge>();
+            if (_graph is null || _graph.Vertices.Count == 0)
+                InitializeGraph();
 
-            if (shortestGraph == null)
-            {
-                shortestGraph = new Graph.Shortest.EdgePath(this.Vazby());
-            }
+            if (_startingVertex is null)
+                _startingVertex = new Graphs2.Vertex<string>("p-" + this.InternalId);
+
             try
             {
-                return shortestGraph.ShortestTo(ico).ToArray();
+                var shortestPath = _graph.ShortestPath(_startingVertex, CreateVertexFromIco(ico));
+                var result = shortestPath.Select(x => ((Graphs2.Edge<Graph.Edge>)x).BindingPayload).ToArray();
+                return result; // shortestGraph.ShortestTo(ico).ToArray();
             }
             catch (Exception e)
             {
                 Util.Consts.Logger.Error("Vazby ERROR for " + this.NameId, e);
-                return ret.ToArray();
+                return Array.Empty<Graph.Edge>();
             }
         }
-        public long VazbyProICOCalls()
+        
+        private void InitializeGraph()
         {
-            return shortestGraph?.calls ?? -1;
+            _graph = new Graphs2.UnweightedGraph();
+            foreach (var vazba in this.Vazby())
+            {
+                if (vazba.From is null)
+                {
+                    _startingVertex = new Graphs2.Vertex<string>(vazba.To.UniqId);
+                    continue;
+                }
+
+                if (vazba.To is null)
+                    continue;
+
+                var fromVertex = new Graphs2.Vertex<string>(vazba.From.UniqId);
+                var toVertex = new Graphs2.Vertex<string>(vazba.To.UniqId);
+
+                _graph.AddEdge(fromVertex, toVertex, vazba);
+            }
         }
 
+        private static Graphs2.Vertex<string> CreateVertexFromIco(string ico)
+        {
+            return new Graphs2.Vertex<string>($"c-{ico}");
+        }
+        #endregion
 
         object lockObj = new object();
         void updateVazby(bool refresh = false)

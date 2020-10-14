@@ -214,11 +214,12 @@
                     <div class="row">
                         @if (this.User?.IsInRole("canEditData") == true)
                         {
-            <div class="col-xs-1">
-                <a href="/manage/EditClassification/@Model.Id" style="font-size:2em">
-                    <i class="far fa-axe"></i>
-                </a>
-            </div>}
+                            <div class="col-xs-1">
+                                <a href="/manage/EditClassification/@Model.Id" style="font-size:2em">
+                                    <i class="far fa-axe"></i>
+                                </a>
+                            </div>
+                        }
                         <div class="col-xs-11">
                             @if (Model.GetRelevantClassification().Count() == 0)
                             {

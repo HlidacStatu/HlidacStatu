@@ -554,6 +554,7 @@
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.StatistickeUdaje.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.VypocetDetail.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndexData.UcetniJednotkaInfo.cs" />
+    <Compile Include="Analysis\KorupcniRiziko\KindexFeedback.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluIndexy.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KoncentraceDodavateluObor.cs" />
     <Compile Include="Analysis\KorupcniRiziko\SubjectNameCache.cs" />
