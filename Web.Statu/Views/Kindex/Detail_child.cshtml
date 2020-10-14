@@ -59,8 +59,8 @@
 
         return (result > 100) ? 100 : result;
 
-//return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
-};
+        //return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
+    };
 }
 
 
@@ -118,17 +118,17 @@
 
         </div>
         @WebUtil.AlertModal("Poslat zpětnou vazbu",
-        "Vyjádření subjektu k hodnocení K-Index",
-        "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
-        "Rozumím")
+         "Vyjádření subjektu k hodnocení K-Index",
+         "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+         "Rozumím")
 
         @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-        "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-        "Důvod pro přepočítání",
-        "Přepočítat K-Index",
-        "/kindex/recalculateFeedback",
-        mustAuth: true,
-        addData: Model.Ico)
+         "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+         "Důvod pro přepočítání",
+         "Přepočítat K-Index",
+         "/kindex/recalculateFeedback",
+         mustAuth: true,
+         addData: Model.Ico)
     </div>
 
 }
@@ -176,17 +176,17 @@ else
             }
         </div>
         @WebUtil.AlertModal("Poslat zpětnou vazbu",
-            "Vyjádření subjektu k hodnocení K-Index",
-            "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
-            "Rozumím")
+             "Vyjádření subjektu k hodnocení K-Index",
+             "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+             "Rozumím")
 
         @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-        "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-        "Důvod pro přepočítání",
-        "Přepočítat K-Index",
-        "/kindex/recalculateFeedback",
-        mustAuth: true,
-        addData: Model.Ico)
+         "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+         "Důvod pro přepočítání",
+         "Přepočítat K-Index",
+         "/kindex/recalculateFeedback",
+         mustAuth: true,
+         addData: Model.Ico)
     </div>
 }
 
@@ -199,19 +199,18 @@ else
     </div>
 }
 
-@if (KindexFeedback.TryGetKindexFeedback(Model.Ico, selectedYear, out KindexFeedback feedback))
+@{ 
+    var feedbacks = KindexFeedback.GetKindexFeedbacks(Model.Ico, selectedYear);
+}
+@if (feedbacks.Count() > 0 )
 {
     <div class="bs-callout bs-callout-warning" style="padding-bottom:30px;">
         <h4>Vyjádření subjektu k hodnocení K-Index</h4>
-        <p>@feedback.Text</p>
-        <br />
-        <dl>
-            <dt>Autor</dt>
-            <dd>@feedback.Author</dd>
-            <dt>Datum</dt>
-            <dd>@(feedback.SignDate?.ToString("dd.MM.yyyy") ?? " - ")</dd>
-        </dl>
-
+        @foreach(var feedback in feedbacks)
+        {
+            <a href="/kindex/feedback/@feedback.Id">@(feedback.SignDate?.ToString("dd.MM.yyyy") ?? "???") @feedback.Author</a>
+            <br />
+        }
     </div>
 }
 

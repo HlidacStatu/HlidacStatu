@@ -1704,6 +1704,7 @@
     <Content Include="Views\Home\err500.cshtml" />
     <Content Include="Views\Home\err500hack.cshtml" />
     <Content Include="Views\Manage\AddKindexFeedback.cshtml" />
+    <Content Include="Views\Kindex\Feedback.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

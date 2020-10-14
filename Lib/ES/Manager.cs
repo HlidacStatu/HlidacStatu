@@ -185,7 +185,7 @@ namespace HlidacStatu.Lib.ES
         }
         public static ElasticClient GetESClient_KindexFeedback(int timeOut = 60000, int connectionLimit = 80)
         {
-            return GetESClient(defaultIndexName_KindexFeedback, timeOut, connectionLimit, IndexType.Dotace);
+            return GetESClient(defaultIndexName_KindexFeedback, timeOut, connectionLimit, IndexType.KindexFeedback);
         }
 
         static string dataSourceIndexNamePrefix = "data_";
