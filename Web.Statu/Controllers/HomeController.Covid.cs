@@ -30,7 +30,7 @@ namespace HlidacStatu.Web.Controllers
         {
                         var client = NemocniceData.Client();
 
-            NemocniceData[] n = client.Search<NemocniceData>(s => s
+            NemocniceOnlyData[] n = client.Search<NemocniceOnlyData>(s => s
                     .Size(200)
                     .Sort(o => o.Descending(f => f.lastUpdated))
                     .Query(q => q.MatchAll())
