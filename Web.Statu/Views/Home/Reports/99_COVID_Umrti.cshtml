@@ -41,6 +41,8 @@
 
     DateTime lastDate = umrti.Last().Item1;
     int lastUmr = umrti.Last().Item2;
+    int lastUmr7 = lastUmr - umrti.Where(m => m.Item1 == lastDate.AddDays(-7)).First().Item2;
+
     List<HlidacStatu.Lib.Render.ReportDataTimeValue> data = new List<ReportDataTimeValue>(
         umrti.Select(m => new ReportDataTimeValue() { Date = m.Item1, Value = m.Item2 })
         ); }
@@ -49,7 +51,7 @@
 <h2>Počet úmrtí v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2020:"Zachránili jsme tisíce mrtvých".</p>
 <p class="text-warning" style="font-size:19px">Za <b>163 dní</b> od 22.3. do 31.8.2020 zemřelo <b>@untilSep1 osob</b>.
-<br/><span class="text-danger">Za <b>@((int)(lastDate-sept1).TotalDays) dní</b> od 1.9. zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>.</span>
+<br/><span class="text-danger"><b>Od 1.9.</b> zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>, za poslední týden <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr7) lidí</b>.</span>
     </p>
 <div style="width:600px">
     @SimpleColumnChart(new (string name, 
@@ -69,18 +71,27 @@ List<string> sdata = new List<string>();
 foreach (var d in data)
 {
     var vmax = d.values.Max(max => max.Value);
+    var count = d.values.Count();
     sdata.Add(
         $"{{ name : '{d.name}', data :["
         + d.values
             .Select((m,i) =>
             {
-                if (m.Value != vmax && m.Value != 427)
+                if (m.Value == 427)
                 {
-                    return $"[{i},{m.Value.ToString("#####0",HlidacStatu.Util.Consts.enCulture)}]";
+                    return $"{{x:{i},y:{m.Value:#####0},  color:'#505050', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                }
+                else if (i == count - 1)
+                { 
+                    return $"{{x:{i},y:{m.Value:#####0}, color: '#ff0000', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                }
+                else if (i >= count - 8)
+                {
+                    return $"{{x:{i},y:{m.Value:#####0}, color: '#ef820d' }}";
                 }
                 else
                 {
-                    return $"{{x:{i},y:{m.Value:#####0}, selected:true, marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                    return $"[{i},{m.Value.ToString("#####0", HlidacStatu.Util.Consts.enCulture)}]";
                 };
             }
             )
@@ -100,7 +111,7 @@ Highcharts.chart('@containerId',
         plotBackgroundColor: null,
         plotBorderWidth: 0,
         plotShadow: false,
-        type: '@chartType',
+        type: 'column',
         zoomType: 'x'
     },
     title:
@@ -120,7 +131,13 @@ Highcharts.chart('@containerId',
         xDateFormat: '%d. %m. %Y %H:%M',
         shared: true
     },
-
+    plotOptions: {
+       series: {
+         groupPadding: 0,
+         pointPadding: 0,
+         borderWidth: 0
+       }
+     },
   annotations: [{
       useHTML: true,
       labelOptions: {
