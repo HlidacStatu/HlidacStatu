@@ -452,7 +452,8 @@ namespace HlidacStatu.Lib.Data
                         hlavni += $" a {this.Prijemce.Count() - 1} dalšími.";
                     hlavni += (this.CalculatedPriceWithVATinCZK == 0
                         ? " Hodnota smlouvy je utajena."
-                        : " Hodnota smlouvy je " + HlidacStatu.Util.RenderData.ShortNicePrice(this.CalculatedPriceWithVATinCZK, html: true));
+                        : " Hodnota smlouvy je " + HlidacStatu.Util.RenderData
+                        .ShortNicePrice(this.CalculatedPriceWithVATinCZK, html: true, showDecimal: RenderData.ShowDecimalVal.Show ));
 
                     f.Add(new InfoFact(hlavni, InfoFact.ImportanceLevel.Summary));
 
