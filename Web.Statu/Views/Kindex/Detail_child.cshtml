@@ -658,7 +658,7 @@ else
         {
             var prevLabelForCurrentYear = prevKindex.KIndex.ForYear(selectedYear).KIndexLabel;
             <li>
-                <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy"))</a>
+                <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy")) - @(prevKindex.Comment)</a>
             </li>
         }
     </ul>
