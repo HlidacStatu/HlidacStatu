@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Data;
+using Nest;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -210,6 +212,66 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
+        public IOrderedEnumerable<Backup> GetPreviousVersions()
+        {
+            ElasticClient _esClient = ES.Manager.GetESClient_KIndexBackup();
+
+            ISearchResponse<Backup> searchResults = null;
+            try
+            {
+                searchResults = _esClient.Search<Backup>(s =>
+                        s.Query(q => q.Term(f => f.KIndex.Ico, this.Ico)));
+
+                if (searchResults.IsValid && searchResults.Hits.Count > 0)
+                {
+                    var hits = searchResults.Hits.Select(h => h.Source).OrderByDescending(s => s.Created);
+                    return hits;
+                }
+            }
+            catch (Exception e)
+            {
+                string origQuery = $"ico:{this.Ico};";
+                Audit.Add(Audit.Operations.Search, "", "", "KindexFeedback", "error", origQuery, null);
+                if (searchResults != null && searchResults.ServerError != null)
+                {
+                    ES.Manager.LogQueryError<Backup>(searchResults,
+                        $"Exception for {origQuery}",
+                        ex: e);
+                }
+                else
+                {
+                    Util.Consts.Logger.Error(origQuery, e);
+                }
+            }
+
+            return Enumerable.Empty<Backup>().OrderBy(x => 1);
+
+        }
+
+        public static Backup GetPreviousVersion(string id)
+        {
+
+            ElasticClient _esClient = ES.Manager.GetESClient_KIndexBackup();
+
+            GetResponse<Backup> searchResult = null;
+            try
+            {
+                searchResult = _esClient.Get<Backup>(id);
+
+                if (searchResult.IsValid)
+                {
+                    return searchResult.Source;
+                }
+            }
+            catch (Exception e)
+            {
+                string origQuery = $"id:{id};";
+                Audit.Add(Audit.Operations.Search, "", "", "KindexFeedback", "error", origQuery, null);
+                Util.Consts.Logger.Error(origQuery, e);
+            }
+
+            return null;
+        }
 
     }
 }

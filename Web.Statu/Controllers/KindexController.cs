@@ -69,6 +69,25 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
+        public ActionResult Backup(string id, int? rok = null)
+        {
+            if (!Framework.HtmlExtensions.ShowKIndex(this.User)
+                || string.IsNullOrWhiteSpace(id))
+            {
+                return Redirect("/");
+            }
+
+            Backup backup = KIndexData.GetPreviousVersion(id);
+
+            rok = Consts.FixKindexYear(rok);
+            ViewBag.SelectedYear = rok;
+            ViewBag.BackupCreated = backup.Created.ToString("dd.MM.yyyy");
+            ViewBag.BackupComment = backup.Comment;
+
+            return View(backup.KIndex);
+
+        }
+
         public ActionResult Porovnat(string id, int? rok = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User))

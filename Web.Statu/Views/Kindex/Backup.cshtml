@@ -7,11 +7,6 @@
 
 
 @{
-    Layout = null;
-
-    string ukazatTxt = "ukázat detail";
-    string schovatTxt = "schovat detail";
-
     int selectedYear = ViewBag.SelectedYear;
 
     int[] availableKindexYears = Model.roky
@@ -65,16 +60,27 @@
 
 
 
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/kindex">K–Index</a></li>
+        <li>Podrobně</li>
+        <li>@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
+        <li class="active">@(ViewBag.BackupCreated)</li>
+    </ol>
+}
+
+
 <div class="row">
     <div class="col-xs-12">
         <h1 class="new-title text-left">
-            @if (Model as HlidacStatu.Lib.Data.Bookmark.IBookmarkable == null) //ViewBag.ShowBookmarkUrl == true)
-            {
-                @WebUtil.AddBookmarkUrl(this.User, ViewBag.Title + " " + ViewBag.SubTitle, Request.Url.AbsoluteUri, "font-size:24px;vertical-align:top;") }
-            else
-            {
-                @WebUtil.AddBookmark(this.User, Model)}
-            @ViewBag.Title
+            @ViewBag.Title ze dne @ViewBag.BackupCreated
+            <small>
+                Důvod pro přepočítání K-Indexu: @ViewBag.BackupComment
+            </small>
         </h1>
     </div>
 </div>
@@ -187,15 +193,6 @@ else
          "/kindex/recalculateFeedback",
          mustAuth: true,
          addData: Model.Ico)
-    </div>
-}
-
-@if (this.User?.IsInRole("canEditData") == true)
-{
-    <div>
-        <a href="/manage/AddKindexFeedback?ico=@Model.Ico&year=@selectedYear" style="font-size:2em">
-            <i class="far fa-axe"></i> Přidat zpětnou vazbu subjektu
-        </a>
     </div>
 }
 
@@ -498,7 +495,7 @@ else
 
                     <tr>
                         <td style="font-size:15px;">
-                            @radek.VelicinaLongName <small><a href="#detail_@((KIndexData.KIndexParts)radek.Velicina)" onclick="showHelp(this,'#detail_@(radek.Velicina)');return false;">@ukazatTxt</a></small>
+                            @radek.VelicinaLongName
                         </td>
                         <td style="text-align:right;font-size: 15px;vertical-align: top; color: @(KIndexData.KIndexLabelColor(KIndexData.DetailInfo.KIndexLabelForPart((KIndexData.KIndexParts)radek.Velicina, radek.Hodnota)))">
                             @Html.KIndexIcon(KIndexData.DetailInfo.KIndexLabelForPart(radek.VelicinaPart, radek.Hodnota), "height:25px")
@@ -553,7 +550,6 @@ else
                 <tr>
                     <td>
                         <span style="font-weight:bold;font-size:130%">Součet bodů = K–Index</span>
-                        <small><a href="#detail_celkem" onclick="showHelp(this,'#detail_celkem');return false;">@ukazatTxt</a></small>
                     </td>
                     <td style="text-align:right">@Html.KIndexIcon(currYear.KIndexLabel, "height:30px")</td>
                     <td style="font-size:130%">
@@ -641,29 +637,6 @@ else
 
     </div>
 </div>
-
-@{ 
-    var previousKindexes = Model.GetPreviousVersions();
-}
-
-@if (previousKindexes.Count() > 0)
-{
-    <hr style="margin-top:50px" />
-    <p>
-        U tohoto subjektu jsme K-Index už @(previousKindexes.Count())x přepočítali. Můžete se podívat i na historické výsledky K-Indexu.
-    </p>
-    
-    <ul>
-        @foreach(var prevKindex in previousKindexes)
-        {
-            var prevLabelForCurrentYear = prevKindex.KIndex.ForYear(selectedYear).KIndexLabel;
-            <li>
-                <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy"))</a>
-            </li>
-        }
-    </ul>
-    //KIndexData
-}
 
 <hr style="margin-top:50px" />
 
