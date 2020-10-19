@@ -41,7 +41,7 @@
 
     DateTime lastDate = umrti.Last().Item1;
     int lastUmr = umrti.Last().Item2;
-    int lastUmr7 = lastUmr - umrti.Where(m => m.Item1 == lastDate.AddDays(-7)).First().Item2;
+    int lastUmr7 = lastUmr - umrti.Where(m => m.Item1 == lastDate.AddDays(-8)).First().Item2;
 
     List<HlidacStatu.Lib.Render.ReportDataTimeValue> data = new List<ReportDataTimeValue>(
         umrti.Select(m => new ReportDataTimeValue() { Date = m.Item1, Value = m.Item2 })
@@ -50,7 +50,7 @@
 <div style="width:700px;text-align:center">
 <h2>Počet úmrtí v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2020:"Zachránili jsme tisíce mrtvých".</p>
-<p class="text-warning" style="font-size:19px">Za <b>163 dní</b> od 22.3. do 31.8.2020 zemřelo <b>@untilSep1 osob</b>.
+<p class="text-warning" style="font-size:19px"><b>V první vlně</b>(22.3. - 31.8.) zemřelo <b>@untilSep1 osob</b>.
 <br/><span class="text-danger"><b>Od 1.9.</b> zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>, za poslední týden <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr7) lidí</b>.</span>
     </p>
 <div style="width:600px">
@@ -88,6 +88,10 @@ foreach (var d in data)
                 else if (i >= count - 8)
                 {
                     return $"{{x:{i},y:{m.Value:#####0}, color: '#ef820d' }}";
+                }
+                else if (m.Value > 427)
+                {
+                    return $"{{x:{i},y:{m.Value:#####0}, color: '#5F9DE7' }}";
                 }
                 else
                 {
@@ -155,7 +159,7 @@ Highcharts.chart('@containerId',
           x: 156,
           y: 421
         },
-        text: '<b>Babiš 24.srpna<b><br/>„Jsem trochu v šoku z toho,<br/>co vypadlo z ministerstva zdravotnictví.<br/>Vůbec se mi to nelíbí“.'
+        text: '<b>Babiš 19.srpna<b><br/>„Jsem trochu v šoku z toho,<br/>co vypadlo z ministerstva zdravotnictví.<br/>Vůbec se mi to nelíbí“.'
       }],
     }
     ,
