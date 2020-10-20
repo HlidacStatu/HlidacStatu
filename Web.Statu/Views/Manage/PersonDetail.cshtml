@@ -41,6 +41,10 @@
             <dd>@(Model.Umrti?.ToString("dd.MM.yyyy") ?? " ??? ")</dd>
             <dt>@Html.DisplayNameFor(model => model.Status)</dt>
             <dd>@(((HlidacStatu.Lib.Data.Osoba.StatusOsobyEnum)Model.Status).ToNiceDisplayName())</dd>
+            <dt>Hlídač ID</dt>
+            <dd>@Model.NameId</dd>
+            <dt>Wiki ID</dt>
+            <dd>@Model.WikiId</dd>
             <dt>Naposledy zkontrolováno</dt>
             <dd>@Model.ManuallyUpdated</dd>
         </dl>

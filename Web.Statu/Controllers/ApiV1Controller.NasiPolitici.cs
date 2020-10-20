@@ -286,6 +286,7 @@ namespace HlidacStatu.Web.Controllers
                     currentParty = o.CurrentPoliticalParty(),
                     contacts = o.GetSocialContact(),
                     connections = vazby,
+                    wikiId = o.WikiId,
                     //sources
                     sourceInsolvency = $"https://www.hlidacstatu.cz/insolvence/hledat?Q=osobaid:{o.NameId}" 
                         + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",

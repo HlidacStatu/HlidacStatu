@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "NasiPoliticiAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Umrti,Status")] Osoba osoba)
+        public ActionResult EditPersonNP(int id, [Bind(Include = "InternalId,TitulPred,Jmeno,Prijmeni,TitulPo,Narozeni,Umrti,Status,WikiId")] Osoba osoba)
         {
             if (id != osoba.InternalId) return RedirectToAction(nameof(FindPerson));
             if (ModelState.IsValid)

@@ -224,6 +224,7 @@
           <Property Name="PuvodniPrijmeniAscii" Type="nvarchar" MaxLength="150" />
           <Property Name="ManuallyUpdated" Type="datetime" />
           <Property Name="ManuallyUpdatedBy" Type="nvarchar" MaxLength="150" />
+          <Property Name="WikiId" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="OsobaEvent">
           <Key>
@@ -751,6 +752,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="PuvodniPrijmeniAscii" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="ManuallyUpdated" Type="DateTime" Precision="3" />
           <Property Name="ManuallyUpdatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="WikiId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OsobaExternalId">
           <Key>
@@ -1146,6 +1148,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySetMapping Name="Osoba">
             <EntityTypeMapping TypeName="FirmyModel.Osoba">
               <MappingFragment StoreEntitySet="Osoba">
+                <ScalarProperty Name="WikiId" ColumnName="WikiId" />
                 <ScalarProperty Name="ManuallyUpdatedBy" ColumnName="ManuallyUpdatedBy" />
                 <ScalarProperty Name="ManuallyUpdated" ColumnName="ManuallyUpdated" />
                 <ScalarProperty Name="PuvodniPrijmeniAscii" ColumnName="PuvodniPrijmeniAscii" />
