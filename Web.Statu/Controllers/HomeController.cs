@@ -324,15 +324,15 @@ namespace HlidacStatu.Web.Controllers
             //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
 
 
-            HlidacStatu.Lib.Data.Firma firma = HlidacStatu.Lib.Data.Firmy.Get(ico);
+            Firma firma = Firmy.Get(ico);
 
-            if (!HlidacStatu.Lib.Data.Firma.IsValid(firma))
+            if (!Firma.IsValid(firma))
             {
                 if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                    return View("Subjekt_zahranicni", new HlidacStatu.Lib.Data.Firma() { ICO = ico, Jmeno = ico });
+                    return View("Subjekt_zahranicni", new Firma() { ICO = ico, Jmeno = ico });
                 else
                 {
-                    if (!HlidacStatu.Util.DataValidators.CheckCZICO(ico))
+                    if (!Util.DataValidators.CheckCZICO(ico))
 
                         return View("Subjekt_err_spatneICO");
                     else
@@ -343,7 +343,7 @@ namespace HlidacStatu.Web.Controllers
                 return View("Subjekt_zahranicni", firma);
 
             //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
-            return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
+            return View(firma);
         }
 
         public ActionResult sendFeedbackMail(string typ, string email, string txt, string url, bool? auth, string data)
