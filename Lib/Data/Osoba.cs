@@ -36,5 +36,6 @@ namespace HlidacStatu.Lib.Data
         public string PuvodniPrijmeniAscii { get; set; }
         public Nullable<System.DateTime> ManuallyUpdated { get; set; }
         public string ManuallyUpdatedBy { get; set; }
+        public string WikiId { get; set; }
     }
 }

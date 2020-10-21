@@ -1067,6 +1067,9 @@ namespace HlidacStatu.Lib.Data
                     osobaToUpdate.PuvodniPrijmeniAscii = Devmasters.TextUtil.RemoveDiacritics(osoba.PuvodniPrijmeni);
                     osobaToUpdate.LastUpdate = DateTime.Now;
 
+                    if (!string.IsNullOrWhiteSpace(osoba.WikiId))
+                        osobaToUpdate.WikiId = osoba.WikiId;
+
                     db.SaveChanges();
                     Audit.Add(Audit.Operations.Update, user, osobaToUpdate, osobaOriginal);
 
