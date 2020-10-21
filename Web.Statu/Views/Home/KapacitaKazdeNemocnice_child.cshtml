@@ -70,10 +70,13 @@
 
 <h2>Rychlá navigace</h2>
 <div class="row">
+<div class="col-xs-12">
     <ul>    
         <li><a href="kapacitanemocnic">Aktuální kapacity pro celé kraje</a></li>
-        <li><a href="kapacitanemocnic#nemocnice">Tabulka aktuálních kapacit jednotlivých nemocnic</a></li>
     </ul>
+</div>
+            <div class="col-xs-12">Seznam nemocnic po krajích:</div>
+
     @foreach (var chk in krajeSort.Chunk(7))
     {
         foreach (var k in chk)
@@ -81,7 +84,7 @@
             <div class="col-xs-12 col-sm-6">
                 <ul>
                     <li>
-                        <b><a href="#@k">@NemocniceData.RegionFull(k)</a></b>
+                        <b>@NemocniceData.RegionFull(k)</b>
                         <ul>
                             @foreach (var h in last.hospitals.Where(m => m.region == k).OrderBy(o => o.name))
                             {
@@ -93,11 +96,13 @@
             </div>
         }
     }
-    <hr />
-        <ul>    
-        <li><a href="kapacitanemocnic">Aktuální kapacity pro celé kraje</a></li>
-        <li><a href="kapacitanemocnic#nemocnice">Tabulka aktuálních kapacit jednotlivých nemocnic</a></li>
-    </ul>
+    <div class="col-xs-12">
+        <hr />
+            <ul>    
+            <li><a href="kapacitanemocnic">Aktuální kapacity pro celé kraje</a></li>
+            <li><a href="kapacitanemocnic#nemocnice">Tabulka aktuálních kapacit jednotlivých nemocnic</a></li>
+        </ul>
+    </div>
 </div>
 
 @foreach (var kraj in krajeSort)
@@ -154,7 +159,7 @@
     NemocniceOnlyData.Hospital h = hdata.First();
 
     <h2 id="@h.nemocniceID">@h.name</h2>
-
+    <p class="text-info">Data v grafu jsou vybraná jednotlivá hlášení nemocnic do systému DIP. Každá nemocnice reportuje v jiný čas a různě často.</p>
 
     <div class="row">
         <div class="col-xs-12 col-sm-6 singlebox">

@@ -86,7 +86,7 @@ Highcharts.chart('@containerId', {
 
 @helper SimpleLineChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
     string title, string valueName,
-    int height, string addStyle ="", int? minY=null)
+    int height, string addStyle ="", int? minY=null, bool showMarker = true)
 {
 string containerId = "chart_" + Guid.NewGuid().ToString("N");
 List<string> sdata = new List<string>();
@@ -129,16 +129,25 @@ Highcharts.chart('@containerId', {
         xDateFormat: '%d. %m. %Y %H:%M',
         shared: true
     },
-
-
-
-    xAxis: {
-        type: 'datetime',
+@if (showMarker)
+    {
+    <text>
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+                    }
+            }
+        },
+    </text>
+    }
+xAxis: {
+    type: 'datetime',
         tickInterval: 24 * 3600 * 1000
     },
 
     legend: {
-        enabled:false
+    enabled:false
     },
     series: [
         @Html.Raw(string.Join(",",sdata))
