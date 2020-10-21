@@ -65,6 +65,11 @@ namespace HlidacStatu.Web.Controllers
             return View(nAll);
         }
 
+        public ActionResult KapacitaKazdeNemocnice()
+        {
+
+            return View();
+        }
 
     }
 }

@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace HlidacStatu.Web.Models
 {
 
-        public class NemocniceOnlyData
+    public class NemocniceOnlyData
     {
         public NemocniceOnlyData() { }
 
@@ -23,7 +23,7 @@ namespace HlidacStatu.Web.Models
 
         public class Hospital
         {
-            
+
             public string regionFull()
             {
                 switch (this.region)
@@ -272,27 +272,32 @@ namespace HlidacStatu.Web.Models
 
             public string regionFull()
             {
-                switch (this.region)
-                {
-                    case "HKK": return "Královéhradecký kraj";
-                    case "JHC": return "Jihočeský kraj";
-                    case "JHM": return "Jihomoravský kraj";
-                    case "KVK": return "Karlovarský kraj";
-                    case "LBK": return "Liberecký kraj";
-                    case "MSK": return "Moravskoslezský kraj";
-                    case "OLK": return "Olomoucký kraj";
-                    case "PAK": return "Pardubický kraj";
-                    case "PHA": return "Praha";
-                    case "PLK": return "Plzeňský kraj";
-                    case "STC": return "Středočeský kraj";
-                    case "ULK": return "Ústecký kraj";
-                    case "VYS": return "Kraj Vysočina";
-                    case "ZLK": return "Zlínský kraj";
-                    case "CR": return "Česká republika";
-                    default:
-                        return "";
+                return RegionFull(this.region);
+            }
+        }
 
-                }
+        public static string RegionFull(string zkratka)
+        {
+            switch (zkratka)
+            {
+                case "HKK": return "Královéhradecký kraj";
+                case "JHC": return "Jihočeský kraj";
+                case "JHM": return "Jihomoravský kraj";
+                case "KVK": return "Karlovarský kraj";
+                case "LBK": return "Liberecký kraj";
+                case "MSK": return "Moravskoslezský kraj";
+                case "OLK": return "Olomoucký kraj";
+                case "PAK": return "Pardubický kraj";
+                case "PHA": return "Praha";
+                case "PLK": return "Plzeňský kraj";
+                case "STC": return "Středočeský kraj";
+                case "ULK": return "Ústecký kraj";
+                case "VYS": return "Kraj Vysočina";
+                case "ZLK": return "Zlínský kraj";
+                case "CR": return "Česká republika";
+                default:
+                    return "";
+
             }
         }
 
@@ -333,7 +338,7 @@ namespace HlidacStatu.Web.Models
             h.IHD_celkem = lh.IHD_celkem - fh.IHD_celkem;
             h.IHD_volna = lh.IHD_volna - fh.IHD_volna;
             h.Lekari_AROJIP_celkem = lh.Lekari_AROJIP_celkem - fh.Lekari_AROJIP_celkem;
-            h.Lekari_AROJIP_dostupni = lh.Lekari_AROJIP_dostupni- fh.Lekari_AROJIP_dostupni;
+            h.Lekari_AROJIP_dostupni = lh.Lekari_AROJIP_dostupni - fh.Lekari_AROJIP_dostupni;
             h.name = lh.name;
             //h.regionId = lh.regionId;
             h.region = lh.region;
@@ -368,12 +373,12 @@ namespace HlidacStatu.Web.Models
             h.IHD_celkem = hospitals.Sum(m => m.IHD_celkem);
             h.IHD_volna = hospitals.Sum(m => m.IHD_volna);
             h.Lekari_AROJIP_celkem = hospitals.Sum(m => m.Lekari_AROJIP_celkem);
-            h.Lekari_AROJIP_dostupni= hospitals.Sum(m => m.Lekari_AROJIP_dostupni);
+            h.Lekari_AROJIP_dostupni = hospitals.Sum(m => m.Lekari_AROJIP_dostupni);
             h.name = "";
             //h.regionId = 0;
             h.region = hospitals.First().region;
             h.Sestry_AROJIP_celkem = hospitals.Sum(m => m.Sestry_AROJIP_celkem);
-            h.Sestry_AROJIP_dostupni= hospitals.Sum(m => m.Sestry_AROJIP_dostupni);
+            h.Sestry_AROJIP_dostupni = hospitals.Sum(m => m.Sestry_AROJIP_dostupni);
             h.Standard_luzka_celkem = hospitals.Sum(m => m.Standard_luzka_celkem);
             h.Standard_luzka_s_kyslikem_celkem = hospitals.Sum(m => m.Standard_luzka_s_kyslikem_celkem);
             h.Standard_luzka_s_kyslikem_covid = hospitals.Sum(m => m.Standard_luzka_s_kyslikem_covid);

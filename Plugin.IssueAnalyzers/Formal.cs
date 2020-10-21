@@ -45,7 +45,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             //datumy
             if (item.datumUzavreni > item.casZverejneni)
             {
-                issues.Add(new Issue(this, (int)IssueType.IssueTypes.Budouc_datum_uzavření, "Budoucí datum uzavření", "Smlouva byla uzavřena až po zveřejnění v rejstříku."));
+                issues.Add(new Issue(this, (int)IssueType.IssueTypes.Budouci_datum_uzavreni, "Budoucí datum uzavření", "Smlouva byla uzavřena až po zveřejnění v rejstříku."));
             }
 
             if (item.datumUzavreni < DateTime.Now.AddYears(-40))
@@ -56,7 +56,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             if (item.spadaPodRS && item.datumUzavreni > DateTime.Now)
             {
                 issues.Add(
-                    new Issue(this, (int)IssueType.IssueTypes.Neplatny_datum_uzavreni_smlouvy, "Neplatný datum uzavření smlouvy", "Údaj o datumu uzavření smlouvy obsahuje budoucí datum. Zápis nesplňuje zákonou podmínku platnosti.")
+                    new Issue(this, (int)IssueType.IssueTypes.Budouci_datum_uzavreni, "Budoucí datum uzavření smlouvy", "Údaj o datumu uzavření smlouvy obsahuje budoucí datum.")
                     { Permanent = true }
                     );
             }

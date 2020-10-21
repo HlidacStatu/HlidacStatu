@@ -9,7 +9,7 @@ namespace HlidacStatu.Lib.Issues
         public enum IssueTypes
         {
             Neuveden_dodavatel = 1,
-            Budouc_datum_uzavření = 2,
+            Budouci_datum_uzavreni = 2,
             Neplatny_datum_uzavreni_smlouvy = 3,
 
             Chybi_ICO = 5,
@@ -63,7 +63,6 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.Zcela_Chybi_identifikace_smluvni_strany:
                         return ImportanceLevel.Fatal;
 
-                    case IssueTypes.Budouc_datum_uzavření:
                     case IssueTypes.Vadne_ICO:
                     case IssueTypes.Stejne_strany_smlouvy:
                     case IssueTypes.Chybne_strany_smlouvy:
@@ -73,6 +72,7 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.NecitelnostSmlouvy:
                         return ImportanceLevel.Major;
 
+                    case IssueTypes.Budouci_datum_uzavreni:
                     case IssueTypes.NeverejnyUdaj:
                     case IssueTypes.Neexistujici_ICO:
                     case IssueTypes.Chybi_identifikace_smluvni_strany:

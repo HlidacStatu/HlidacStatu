@@ -1706,6 +1706,8 @@
     <Content Include="Views\Manage\AddKindexFeedback.cshtml" />
     <Content Include="Views\Kindex\Feedback.cshtml" />
     <Content Include="Views\Kindex\Backup.cshtml" />
+    <Content Include="Views\Home\KapacitaKazdeNemocnice.cshtml" />
+    <Content Include="Views\Home\KapacitaKazdeNemocnice_child.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

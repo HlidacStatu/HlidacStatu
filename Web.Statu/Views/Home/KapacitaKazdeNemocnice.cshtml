@@ -1,0 +1,39 @@
+﻿
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using HlidacStatu.Web.Models
+@using HlidacStatu.Web.Framework
+
+@{ ViewBag.Title = "Změny kapacit jednotlivých nemocnic za poslední dny";
+
+
+    }
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@section scripts
+    {
+    <script src="/scripts/highcharts-6/highcharts.js"></script>
+    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
+    <script src="/scripts/highcharts-6/modules/data.js"></script>
+   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+      <style>
+        h4 {
+            color: #31708f
+        }
+          .singlebox {
+              border-right: 1px #d0d0d0 solid;
+              border-top: 2px #d0d0d0 double;
+          }
+    </style>
+}
+
+@Html.CachedAction(HtmlExtensions.CachedActionLength.Cache2H,"KapacitaKazdeNemocnice_child", null, "")
