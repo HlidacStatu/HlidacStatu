@@ -78,12 +78,12 @@
                     <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
                     <br />
                     @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-                    "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-                    "Důvod pro přepočítání",
-                    "Přepočítat K-Index",
-                    "/kindex/recalculateFeedback",
-                    mustAuth: true,
-                    addData: Model.ICO)
+                         "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+                         "Důvod pro přepočítání",
+                         "Přepočítat K-Index",
+                         "/kindex/recalculateFeedback",
+                         mustAuth: true,
+                         addData: Model.ICO)
                 </div>
                 <hr />
             }
@@ -92,84 +92,228 @@
 
         @* ----- Registr smluv ----- *@
 
-    <div>
-        <h4>Registr smluv</h4>
+        <div>
+            <h4>Registr smluv</h4>
 
-        @{
-            var currentYear = DateTime.Now.Year;
-            var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-            var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-        }
-        @if (numFatalIssue.Value > 0)
-        {
-            <p>
-                Zásadní nedostatky za letošní rok v rozporu se zákonem jsme zjistili u
-                <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
-                    @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
-                    {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
-                    else
-                    {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
-                    }
-                    Tyto smlouvy jsou velmi pravděpodobně neplatné.
-                </a>
-            </p>
-        }
-        @if (numVazneIssue.Value > 0)
-        {
-            <p>
-                @if (numFatalIssue.Value == 0)
-                {
-                    <span>Vážné nedostatky za letošní rok jsme zjistili u</span>
-                }
-                else
-                {
-                    <span>Zároveň vážné nedostatky za letošní rok jsme zjistili u</span>
-                }
-
-                <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
-                    @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
-                    {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
-                    else
-                    {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
-                    }
-                </a>
-            </p>
-        }
-
-        @{ 
-            var seasonStat = Model.Statistic().LatestSeasonStatistics();
-        }
-        
-        <p>V roce @(seasonStat?.Rok) uzavřel úřad 
-            <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.Pocet)</strong> smluv</a>
-            za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat?.CelkemCena, html: true, shortFormat: true)))</strong>
-            @if(seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi.HasValue ?? false)
-            {
-                @($"({seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi?.ToString("N2")} % rozpočtu za {seasonStat?.Rok - 1})")
+            @{
+                var currentYear = DateTime.Now.Year;
+                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
             }
-        </p>
+            @if (numFatalIssue.Value > 0)
+            {
+                <p>
+                    Zásadní nedostatky za letošní rok v rozporu se zákonem jsme zjistili u
+                    <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                        @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                        {
+                            @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
+                        else
+                        {
+                            @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
+                        }
+                        Tyto smlouvy jsou velmi pravděpodobně neplatné.
+                    </a>
+                </p>
+            }
+            @if (numVazneIssue.Value > 0)
+            {
+                <p>
+                    @if (numFatalIssue.Value == 0)
+                    {
+                        <span>Vážné nedostatky za letošní rok jsme zjistili u</span>
+                    }
+                    else
+                    {
+                        <span>Zároveň vážné nedostatky za letošní rok jsme zjistili u</span>
+                    }
 
-        <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
-        <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
-    </div>
+                    <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                        @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                        {
+                            @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
+                        else
+                        {
+                            @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
+                        }
+                    </a>
+                </p>
+            }
+
+            @{
+                var seasonStat = Model.Statistic().LatestSeasonStatistics();
+            }
+
+            <p>
+                V roce @(seasonStat?.Rok) uzavřel úřad
+                <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.Pocet)</strong> smluv</a>
+                za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat?.CelkemCena, html: true, shortFormat: true)))</strong>
+                @if (seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi.HasValue ?? false)
+                {
+                    @($"({seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi?.ToString("N2")} % rozpočtu za {seasonStat?.Rok - 1})")
+                }
+            </p>
+
+            <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
+            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        </div>
         <hr />
 
         @* ----- Veřejné zakázky -----*@
 
         <div>
             <h4>Veřejné zakázky</h4>
+            @{
+                var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, "1");
+                var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, "1");
+                Dictionary<string, long> vzakaz = new Dictionary<string, long>();
+                vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
+                vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
+
+                foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
+                {
+                    var text = kv.Key.Split('|');
+                    string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO);
+
+                    <p>
+                        @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[1]} nenašli",
+                                             $" se vyskytuje v <a href='{surl}'><b>jedné</b> veřejné zakázce</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkách</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkach</a> jako {text[1]}")).
+                    </p>
+                }
+            }
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
+
+        @* ----- Dotace -----*@
+
         <div>
             <h4>Dotace</h4>
+
+            @{ 
+                var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
+
+                string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
+                var dotaceStat = dotaceService.GetStatisticsForIco(Model.ICO);
+
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceStat.Sum, html: true) + "</b>."; }
+            
+                @if (Model.JsemOVM())
+                {
+                    <p>
+                        Úřad @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                    " nedostal žádnou dotaci.",
+                                                    " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                    " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                    " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                    </p> 
+                }
+                else
+                {
+                    <p>
+                        Firma @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                    " nedostala žádnou dotaci.",
+                                                    " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                    " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                    " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                    </p>
+                }
+
+                @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+                {
+                    var dotaceHoldingStat = dotaceService.GetStatisticsForHolding(Model.ICO);
+
+
+                    decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
+                    int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
+
+                    if (totalCountDotaceHolding - dotaceStat.Count > 0)
+                    {
+                        var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceStat.Sum, html: true) + "</b>.";
+                        var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
+                        string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
+                        if (Model.JsemOVM())
+                        {
+                            <p>
+                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                                (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                                úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                            "dostala",
+                                                            "dostaly",
+                                                            "dostalo")
+                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                        " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                        " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                        " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                            </p>
+                            <p>
+                                Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
+                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                        " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                        " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                        " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                            </p> }
+                        else
+                        {
+                            <p>
+                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                                firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                            "dostala",
+                                                            "dostaly",
+                                                            "dostalo")
+                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                        " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                        " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                        " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                            </p>
+                            <p>
+                                Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
+                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                        " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                        " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                        " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                            </p> }
+                    }
+                    else
+                    {
+                        if (Model.JsemOVM())
+                        {
+                            <p>
+                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                                úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                            </p> }
+                        else
+                        {
+                            <p>
+                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                            </p>}
+                    }
+                }
+                
+         
+
+
+
+
+
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
+
+
+
+
+
+
         <div>
             <h4>Insolvenční rejstřík</h4>
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>

@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using com.sun.tools.@internal.ws.processor.model;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,5 +89,48 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         }
 
+        public (decimal Sum, int Count) GetStatisticsForIco(string ico)
+        {
+            var dotaceAggs = new AggregationContainerDescriptor<Dotace>()
+                .Sum("souhrn", s => s
+                    .Field(f => f.DotaceCelkem)
+                );
+
+            var dotaceSearch = this.SimpleSearch($"ico:{ico}", 1, 1,
+                Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                dotaceAggs, exactNumOfResults: true);
+
+            decimal sum = (decimal)dotaceSearch.ElasticResults.Aggregations.Sum("souhrn").Value;
+            int count = (int)dotaceSearch.Total;
+
+            return (sum, count);
+        }
+
+        public Dictionary<string, (decimal Sum, int Count)> GetStatisticsForHolding(string ico)
+        {
+            var dotaceAggsH = new AggregationContainerDescriptor<Dotace>()
+                .Terms("icos", s => s
+                    .Field(f => f.Prijemce.Ico)
+                    .Size(5000)
+                    .Aggregations(a => a
+                        .Sum("sum", ss => ss.Field(ff => ff.DotaceCelkem))
+                    )
+                );
+            var dotaceSearchH = new DotaceService().SimpleSearch($"holding:{ico}", 1, 1,
+                Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
+                dotaceAggsH, exactNumOfResults: true);
+
+            var items = ((BucketAggregate)dotaceSearchH.ElasticResults.Aggregations["icos"]).Items;
+
+            Dictionary<string, (decimal Sum, int Count)> dict = items.ToDictionary(
+                i => ((KeyedBucket<object>)i).Key.ToString(),
+                i => ((decimal)((KeyedBucket<object>)i).Sum("sum").Value,
+                    (int)((KeyedBucket<object>)i).DocCount)
+                );
+
+            return dict;
+        }
+
     }
+
 }
