@@ -545,6 +545,10 @@ namespace HlidacStatu.Lib.Data
         {
             return JsemOVM() || JsemStatniFirma();
         }
+        /// <summary>
+        /// Orgán veřejné moci
+        /// </summary>
+        /// <returns></returns>
         public bool JsemOVM()
         {
             return StaticData.Urady_OVM.Contains(this.ICO);

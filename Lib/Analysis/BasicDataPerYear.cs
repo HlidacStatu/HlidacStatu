@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Analysis
 
         public void Add(BasicDataPerYear oth)
         {
-            Dictionary<int, BasicData> data = new Dictionary<int, BasicData>();
+            //Dictionary<int, BasicData> data = new Dictionary<int, BasicData>();
             foreach (var kv in oth.Data)
             {
                 if (this.Data.Keys.Contains(kv.Key))
