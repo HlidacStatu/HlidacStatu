@@ -1,4 +1,4 @@
-﻿
+﻿@model int?
 @using System
 @using System.Collections.Generic
 @using System.Linq
@@ -68,7 +68,25 @@
     </p>
 </div>
 
-<h2>Rychlá navigace</h2>
+
+@if (Model.HasValue == false)
+{
+    <div class="row">
+       <div class="col-xs-12">
+           <h3>Vyberte si v seznamu nemocnici, pro kterou chcete znát aktuální kapacitu</h3>
+        </div>
+    </div>
+}
+else 
+{ 
+<div class="row">
+   <div class="col-xs-12">
+         @RenderH(nemocnice.Select(m=>m.hospitals.FirstOrDefault(hh=>hh.nemocniceID == Model.Value)).Where(n=>n!=null).ToArray())
+    </div>
+</div>
+<hr/>
+}
+<h4>Rychlá navigace</h4>
 <div class="row">
 <div class="col-xs-12">
     <ul>    
@@ -88,7 +106,7 @@
                         <ul>
                             @foreach (var h in last.hospitals.Where(m => m.region == k).OrderBy(o => o.name))
                             {
-                                <li><a href="#@h.nemocniceID">@h.name</a></li>
+                                <li><a href="/KapacitaKazdeNemocnice/@h.nemocniceID">@h.name</a></li>
                             }
                         </ul>
                     </li>
@@ -105,20 +123,6 @@
     </div>
 </div>
 
-@foreach (var kraj in krajeSort)
-{
-    
-    <h2 id="@kraj">@NemocniceData.RegionFull(kraj)</h2>
-
-    <div class="row">
-        @foreach (var h in last.hospitals.Where(m => m.region == kraj).OrderBy(o => o.name))
-        {
-            @RenderH(nemocnice.Select(m=>m.hospitals.FirstOrDefault(hh=>hh.nemocniceID == h.nemocniceID)).Where(n=>n!=null).ToArray())
-        }
-
-    </div>
-
-}
 
 
 <h2 id="opendata">Open Data</h2>
@@ -156,7 +160,7 @@
         });
     NemocniceOnlyData.Hospital first = chartdata.First().data;
 
-    NemocniceOnlyData.Hospital h = hdata.First();
+    NemocniceOnlyData.Hospital h = hdata.Last();
 
     <h2 id="@h.nemocniceID">@h.name</h2>
     <p class="text-info">Data v grafu jsou vybraná jednotlivá hlášení nemocnic do systému DIP. Každá nemocnice reportuje v jiný čas a různě často.</p>

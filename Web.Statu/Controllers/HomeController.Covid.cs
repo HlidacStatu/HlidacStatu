@@ -65,10 +65,10 @@ namespace HlidacStatu.Web.Controllers
             return View(nAll);
         }
 
-        public ActionResult KapacitaKazdeNemocnice()
+        public ActionResult KapacitaKazdeNemocnice(string id)
         {
 
-            return View();
+            return View(HlidacStatu.Util.ParseTools.ToInt(id));
         }
 
     }

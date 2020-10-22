@@ -1,4 +1,4 @@
-﻿
+﻿@model int?
 @using System
 @using System.Collections.Generic
 @using System.Linq
@@ -36,4 +36,4 @@
     </style>
 }
 
-@Html.CachedAction(HtmlExtensions.CachedActionLength.Cache2H,"KapacitaKazdeNemocnice_child", null, "")
+@Html.CachedAction(HtmlExtensions.CachedActionLength.Cache2H,"KapacitaKazdeNemocnice_child", Model, Model?.ToString() ?? "")
