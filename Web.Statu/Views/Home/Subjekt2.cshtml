@@ -51,7 +51,7 @@
 </style>
 
 <div class="head">
-    <h3>@Model.ObecneJmeno()</h3>
+    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno</h3>
     <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
 </div>
 <hr />
@@ -191,152 +191,164 @@
         <div>
             <h4>Dotace</h4>
 
-            @{ 
+            @{
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
 
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.ICO;
                 var dotaceStat = dotaceService.GetStatisticsForIco(Model.ICO);
 
                 var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceStat.Sum, html: true) + "</b>."; }
-            
-                @if (Model.JsemOVM())
+
+            @if (Model.JsemOVM())
+            {
+                <p>
+                    Úřad @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                " nedostal žádnou dotaci.",
+                                                " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                </p>
+            }
+            else
+            {
+                <p>
+                    Firma @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                " nedostala žádnou dotaci.",
+                                                " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                </p>
+            }
+
+            @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+            {
+                var dotaceHoldingStat = dotaceService.GetStatisticsForHolding(Model.ICO);
+
+
+                decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
+                int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
+
+                if (totalCountDotaceHolding - dotaceStat.Count > 0)
                 {
-                    <p>
-                        Úřad @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
-                                                    " nedostal žádnou dotaci.",
-                                                    " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
-                                                    " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
-                                                    " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
-                    </p> 
+                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceStat.Sum, html: true) + "</b>.";
+                    var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
+                    string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
+                    if (Model.JsemOVM())
+                    {
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                            úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                        "dostala",
+                                                        "dostaly",
+                                                        "dostalo")
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                    " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                    " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                    " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                        </p>
+                        <p>
+                            Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                    " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                        </p> }
+                    else
+                    {
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                            firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+
+                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                        "dostala",
+                                                        "dostaly",
+                                                        "dostalo")
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                    " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                    " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                    " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                        </p>
+                        <p>
+                            Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                    " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                        </p> }
                 }
                 else
                 {
-                    <p>
-                        Firma @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
-                                                    " nedostala žádnou dotaci.",
-                                                    " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
-                                                    " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
-                                                    " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
-                    </p>
-                }
-
-                @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
-                {
-                    var dotaceHoldingStat = dotaceService.GetStatisticsForHolding(Model.ICO);
-
-
-                    decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
-                    int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
-
-                    if (totalCountDotaceHolding - dotaceStat.Count > 0)
+                    if (Model.JsemOVM())
                     {
-                        var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceStat.Sum, html: true) + "</b>.";
-                        var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
-                        string durlH = "/dotace/hledat?Q=holding%3A+" + Model.ICO;
-                        if (Model.JsemOVM())
-                        {
-                            <p>
-                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
-                                (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-                                úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
-
-                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
-                                                            "dostala",
-                                                            "dostaly",
-                                                            "dostalo")
-                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
-                                                                                        " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
-                                                                                        " další <b>{0} dotace</b>" + sdotaceHDiffKc,
-                                                                                        " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
-                            </p>
-                            <p>
-                                Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
-                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
-                                                        " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                                        " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                                        " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
-                            </p> }
-                        else
-                        {
-                            <p>
-                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
-                                (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
-                                firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
-
-                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
-                                                            "dostala",
-                                                            "dostaly",
-                                                            "dostalo")
-                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
-                                                                                        " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
-                                                                                        " další <b>{0} dotace</b>" + sdotaceHDiffKc,
-                                                                                        " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
-                            </p>
-                            <p>
-                                Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
-                                @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
-                                                        " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
-                                                        " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
-                                                        " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
-                            </p> }
-                    }
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                            úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                        </p> }
                     else
                     {
-                        if (Model.JsemOVM())
-                        {
-                            <p>
-                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
-                                úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                            </p> }
-                        else
-                        {
-                            <p>
-                                <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
-                                firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                            </p>}
-                    }
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
+                        </p>}
                 }
-                
-         
-
-
-
-
+            }
 
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
 
-
-
-
-
+        @* ----- Insolvence -----*@
 
         <div>
             <h4>Insolvenční rejstřík</h4>
+
+            @{ var insDluznik = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icodluznik:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
+                var insVeritel = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icoveritel:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
+                var insSpravce = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("icospravce:" + Model.ICO, 1, 1, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.FastestForScroll, false, HlidacStatu.Web.Framework.InsolvenceLimitedView.IsLimited(this.User));
+
+                Dictionary<string, long> insolv = new Dictionary<string, long>();
+                insolv.Add("dluznik|dlužník|dlužníka|dlužníkem", insDluznik.Total);
+                insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
+                insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total); }
+            @foreach (var kv in insolv.OrderByDescending(m => m.Value))
+            {
+                var text = kv.Key.Split('|');
+                string surl = WebUtil.GetSearchUrl("/insolvence/hledat", $"ico{text[0]}:" + Model.ICO);
+
+                <p>
+                    @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value,
+                        " není v insolvečním rejstříku", " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
+
+                    </p>
+                }
+
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
+
+        @* ----- Odkazy na další -----*@
+
         <div>
-            <h4>Obchody úřadu s firmami navázanými na politiky</h4>
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <h4><a>Obchody úřadu s firmami navázanými na politiky</a></h4>
         </div>
         <hr />
         <div>
-            <h4>Statistika dodavatelů úřadu</h4>
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <h4><a>Statistika dodavatelů úřadu</a></h4>
         </div>
         <hr />
         <div>
-            <h4>Statistiky odběratelů úřadu</h4>
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <h4><a>Statistiky odběratelů úřadu</a></h4>
         </div>
         <hr />
         <div>
-            <h4>Úřad v dalších databázích</h4>
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <h4><a>Úřad v dalších databázích</a></h4>
         </div>
     </div>
     @* Prázdný sloupec *@
