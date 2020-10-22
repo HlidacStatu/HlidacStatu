@@ -36,7 +36,12 @@
 
 
 
-
+<script>
+    var hs = parseInt(window.location.hash.replace("#",""));
+    if (Number.isInteger(hs)) {
+        window.location.replace("/kapacitaKazdeNemocnice/"+hs);
+    }
+</script>
 
 
 <div class="jumbotron">
