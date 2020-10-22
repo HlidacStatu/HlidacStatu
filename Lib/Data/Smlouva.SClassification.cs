@@ -1,9 +1,4 @@
-﻿using com.sun.org.apache.bcel.@internal.generic;
-
-using Devmasters;
-using Devmasters.Enums;
-
-using Elastic.Apm.Api;
+﻿using Devmasters.Enums;
 
 using HlidacStatu.Util.Cache;
 
@@ -14,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace HlidacStatu.Lib.Data
 {
