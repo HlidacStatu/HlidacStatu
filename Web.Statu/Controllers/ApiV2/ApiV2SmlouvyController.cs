@@ -104,7 +104,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Smlouva nenalezena"));
             }
-            var s = Lib.Data.Smlouva.Export(smlouva, this.User.IsInRole("Admin") || this.User.IsInRole("KomercniLicence"), this.User.IsInRole("Admin") || this.User.IsInRole("KomercniLicence"));
+            var s = Lib.Data.Smlouva.Export(smlouva, this.ApiAuth.ApiCall.UserRoles.Contains("Admin") || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence"), this.ApiAuth.ApiCall.UserRoles.Contains("Admin") || this.ApiAuth.ApiCall.UserRoles.Contains("KomercniLicence"));
 
             return s;
         }
