@@ -1706,3 +1706,23 @@ img.kindex {
                 color: red;
             }
     }
+
+
+pre.formatted {
+    white-space: pre-wrap !important;
+    background: none;
+    line-height: 1.6em;
+    word-break: break-word;
+    overflow-x: auto;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+pre.formatted.bigger {
+    font-size:115%;
+}
+    pre.formatted.smaller {
+        font-size: 90%;
+    }
