@@ -141,26 +141,19 @@
         }
 
         @{ 
-            int rsLastYear = Model.Statistic().BasicStatPerYear.LastYear;
-            var rsLatestData = Model.Statistic().BasicStatPerYear.Data[rsLastYear];
-            int rsRatingLastYear = Model.Statistic().RatingPerYear.LastYear;
-            var rsLatestRating = Model.Statistic().RatingPerYear.Data[rsRatingLastYear];
-
-            int rsPreviousYear = rsLastYear - 1;
-            decimal? rsPercentageVolumeIncrease = null;
-            if(Model.Statistic().BasicStatPerYear.Data.TryGetValue(rsPreviousYear, out var rsPenultimateData))
-            {
-                rsPercentageVolumeIncrease = rsLatestData.CelkemCena / rsPenultimateData.CelkemCena * 100;
-            }
+            var seasonStat = Model.Statistic().LatestSeasonStatistics();
         }
         
-        <p>V roce @rsLastYear uzavřel úřad 
-            <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(rsLastYear)-01-01 TO @(rsLastYear + 1)-01-01}"><strong>@rsLatestData.Pocet</strong> smluv</a>
-            za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(rsLatestData.CelkemCena, html: true, shortFormat: true)))</strong>
-            @( rsPercentageVolumeIncrease.HasValue ? $"({rsPercentageVolumeIncrease?.ToString("N2")} % rozpočtu za {rsPreviousYear})" :"" ) 
+        <p>V roce @(seasonStat?.Rok) uzavřel úřad 
+            <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.Pocet)</strong> smluv</a>
+            za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat?.CelkemCena, html: true, shortFormat: true)))</strong>
+            @if(seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi.HasValue ?? false)
+            {
+                @($"({seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi?.ToString("N2")} % rozpočtu za {seasonStat?.Rok - 1})")
+            }
         </p>
 
-        <p>V @rsRatingLastYear utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(rsRatingLastYear)-01-01 TO @(rsRatingLastYear + 1)-01-01}"><strong>@rsLatestRating.NumBezCeny</strong> smluv</a>, což je celkem @rsLatestRating.PercentBezCeny.ToString("N2") % ze všech.</p>
+        <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
         <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
         <hr />
