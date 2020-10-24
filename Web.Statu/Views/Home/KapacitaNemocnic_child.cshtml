@@ -60,7 +60,7 @@
 <p>
     Rychlá navigace:
     <ul>
-            <li><a href="KapacitaKazdeNemocnice">Grafy změn kapacit jednotlivých nemocnic za poslední dny</a> <span class="exclusive">Nové</span></li>
+            <li><a href="/KapacitaKazdeNemocnice">Grafy změn kapacit jednotlivých nemocnic za poslední dny</a> <span class="exclusive">Nové</span></li>
 
         <li><a href="#CR">Celá ČR</a></li>
         @foreach (var h in lastKraje.regions.OrderBy(o => krajeSort.IndexOf(o.region)).ToArray())
@@ -68,7 +68,7 @@
             <li><a href="#@h.region">@h.regionFull()</a></li>
         }
         <hr/>
-        <li><a href="KapacitaKazdeNemocnice">Grafy změn kapacit jednotlivých nemocnic za poslední dny</a> <span class="exclusive">Nové</span></li>
+        <li><a href="/KapacitaKazdeNemocnice">Grafy změn kapacit jednotlivých nemocnic za poslední dny</a> <span class="exclusive">Nové</span></li>
         <li><a href="#nemocnice">Tabulka kapacit jednotlivých nemocnic</a></li>
         <li><a href="#opendata">Open data</a></li>
     </ul>
@@ -120,7 +120,7 @@ tbl_nem_o = $('#nem_o').DataTable({
 
 <p class="text-warning">Data o nemocnicích jsou aktualizována jindy, než souhrny krajů. V součtech proto může dojít k malým nepřesnostem.</p>
 
-<p><a href="KapacitaKazdeNemocnice">Grafy průběhu kapacit jednotlivých nemocnic</a> <span class="exclusive">Nové</span></p>
+<p><a href="/KapacitaKazdeNemocnice">Grafy průběhu kapacit jednotlivých nemocnic</a> <span class="exclusive">Nové</span></p>
 
 
 <p style="font-weight:bold">Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
@@ -152,7 +152,7 @@ tbl_nem_o = $('#nem_o').DataTable({
             var dh = NemocniceOnlyData.Diff(diffNem, h);
             <tr>
                 <td>@h.name
-                <br/><a href="kapacitaKazdeNemocnice/@(h.nemocniceID)" style="font-weight:bold">Změny v čase <i class="far fa-chart-line-down"></i></a>
+                <br/><a href="/kapacitaKazdeNemocnice/@(h.nemocniceID)" style="font-weight:bold">Změny v čase <i class="far fa-chart-line-down"></i></a>
                 <br />(změna od @startNem.lastUpdated.ToString("dd.MM.") do @h.lastModified.ToString("dd.MM."))
                 </td>
                 <td>@h.regionFull()</td>
