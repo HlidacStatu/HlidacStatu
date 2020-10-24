@@ -15,6 +15,7 @@ namespace HlidacStatu.Lib.OCR.Api
             IEnumerable<string> files = null;
             ProgressInterval pi = null;
 
+            public string ParentTaskId { get; set; } = null;
             public int Priority { get; protected set; }
             public string Client { get; protected set; }
             public MiningIntensity Intensity { get; protected set; }
@@ -53,13 +54,17 @@ namespace HlidacStatu.Lib.OCR.Api
             public async Task<HlidacStatu.Lib.OCR.Api.Result[]> Go()
             {
                 List<Task<HlidacStatu.Lib.OCR.Api.Result>> tas = new List<Task<HlidacStatu.Lib.OCR.Api.Result>>();
+                
+                logger.Debug($"MultipleFiles starting for {this.files.Count()} files for parentTaskId:{this.ParentTaskId ?? ""}");
 
                 foreach (var fn in this.files)
                 {
                     tas.Add(OneCall(Apikey, fn));
                 }
 
+                logger.Debug($"MultipleFiles waiting for {this.files.Count()} files for parentTaskId:{this.ParentTaskId ?? ""}");
                 var res = await Task.WhenAll(tas);
+                logger.Debug($"MultipleFiles done for {this.files.Count()} files for parentTaskId:{this.ParentTaskId ?? ""}");
                 return res;
             }
 
@@ -80,10 +85,12 @@ namespace HlidacStatu.Lib.OCR.Api
                     AddProgress(
                         pi.SetProgressInPercent(1).Progress
                         , fn);
+                    logger.Debug($"Starting Api.Client.TextFromFileAsync for {fn}  parentTaskId:{this.ParentTaskId ?? ""}");
                     res = await HlidacStatu.Lib.OCR.Api.Client.TextFromFileAsync(apikey, fn, this.Client,
                             this.Priority, this.Intensity,
                             System.IO.Path.GetFileName(fn), this.MaxWaitingTimeOfOneFile,
                             this.RestartTaskIn);
+                    logger.Debug($"Done Api.Client.TextFromFileAsync resultOK:{res.IsValid} fromOCR:{res.Server}  for {fn}  parentTaskId:{this.ParentTaskId ?? ""}");
                     AddProgress(
                         pi.SetProgressInPercent(100).Progress
                         , fn);
@@ -92,12 +99,12 @@ namespace HlidacStatu.Lib.OCR.Api
                 }
                 catch (ApiException e)
                 {
-                    logger.Error("TextFromFileAsync error", e);
+                    logger.Error($"TextFromFileAsync error for {fn}  parentTaskId:{this.ParentTaskId ?? ""}", e);
                     return new Result() { Id=res?.Id,  IsValid = Result.ResultStatus.Invalid, Error = e.ToString() };
                 }
                 catch (Exception e)
                 {
-                    logger.Error("TextFromFileAsync error", e);
+                    logger.Error($"TextFromFileAsync error for {fn}  parentTaskId:{this.ParentTaskId ?? ""}", e);
                     return new Result() { Id = res?.Id, IsValid = Result.ResultStatus.Invalid, Error = e.ToString() };
 
                     //throw;

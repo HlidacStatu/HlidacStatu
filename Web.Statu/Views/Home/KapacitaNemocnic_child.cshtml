@@ -152,7 +152,7 @@ tbl_nem_o = $('#nem_o').DataTable({
             var dh = NemocniceOnlyData.Diff(diffNem, h);
             <tr>
                 <td>@h.name
-                <br/><a href="kapacitaKazdeNemocnice#@(h.nemocniceID)" style="font-weight:bold">Změny v čase <i class="far fa-chart-line-down"></i></a>
+                <br/><a href="kapacitaKazdeNemocnice/@(h.nemocniceID)" style="font-weight:bold">Změny v čase <i class="far fa-chart-line-down"></i></a>
                 <br />(změna od @startNem.lastUpdated.ToString("dd.MM.") do @h.lastModified.ToString("dd.MM."))
                 </td>
                 <td>@h.regionFull()</td>

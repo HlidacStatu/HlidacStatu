@@ -74,7 +74,7 @@ namespace HlidacStatu.Lib.OCR.Api
             return _mergedDocument;
         }
 
-        public string Server { get; set; }
+        public string Server { get; set; } = System.Environment.MachineName;
         public DateTime Started { get; set; } = DateTime.Now;
         public DateTime Ends { get; set; }
  
