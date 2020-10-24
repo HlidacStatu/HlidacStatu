@@ -18,7 +18,7 @@ namespace HlidacStatu.Plugin.Enhancers
         bool forceAlreadyMined = false;
         int priority = 5;
         private bool forceOCR;
-
+        int? lengthLess = null;
         public enum OCREngines
         {
             IrisOnly,
@@ -33,7 +33,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 pathToOcr += "\\";
         }
 
-        public TextMiner(bool skipOCR, bool forceAlreadyMined, bool asyncOCR = false, int priority = 5, bool forceOCR = false)
+        public TextMiner(bool skipOCR, bool forceAlreadyMined, bool asyncOCR = false, int priority = 5, bool forceOCR = false, int? lengthLess = null)
             : this()
         {
             this.skipOCR = skipOCR;
@@ -41,6 +41,7 @@ namespace HlidacStatu.Plugin.Enhancers
             this.asyncOCR = asyncOCR;
             this.priority = priority;
             this.forceOCR = forceOCR;
+            this.lengthLess = lengthLess;
         }
         public void SetInstanceData(object data)
         {
@@ -84,6 +85,9 @@ namespace HlidacStatu.Plugin.Enhancers
                         //att.LastUpdate = DateTime.Now.AddDays(-7);
                         continue;
                     }
+                    if (this.lengthLess.HasValue && att.Lenght > this.lengthLess)
+                        continue;
+
                     Base.Logger.Debug($"Getting priloha {att.nazevSouboru} for smlouva {item.Id}");
                     string downloadedFile = Lib.Data.Smlouva.Priloha.GetFileFromPrilohaRepository(att, item);
                     Base.Logger.Debug($"Getdone priloha {att.nazevSouboru} for smlouva {item.Id} done.");
