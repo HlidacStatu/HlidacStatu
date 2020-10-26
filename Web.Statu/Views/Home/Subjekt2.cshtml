@@ -375,15 +375,15 @@
             <table>
                 <tr>
                     <td class="text-nowrap text-muted col-sm-5">Založeno</td>
-                    <td class="col-sm-7">21.4.1988</td>
+                    <td class="col-sm-7">@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap text-muted col-sm-5">IČO</td>
-                    <td class="col-sm-7">00007064</td>
+                    <td class="col-sm-7">@Model.ICO</td>
                 </tr>
                 <tr>
                     <td class="text-nowrap text-muted col-sm-5">Datová schránka</td>
-                    <td class="col-sm-5">meiq7wd, xzeaauv</td>
+                    <td class="col-sm-5">@string.Join(", ", Model.DatovaSchranka)</td>
                 </tr>
             </table>
         </div>
@@ -391,24 +391,27 @@
         <div class="watcher">
             <h4>Chci hlídat</h4>
             <div>
-                <a href="#" class="btn btn-warning btn-xs">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                    <span class="btn-emphasized">Všechny změny o ministerstvo financí</span>
-                </a>
+                @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
+                                     "Všechny změny o " + Devmasters.TextUtil.ShortenText(Model.Jmeno, 30),
+                                     prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
             </div>
             <div>
-                <a href="#" class="btn btn-warning btn-xs">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                    <span class="btn-emphasized">Změny i v 45 dceřiných společnostech</span>
-                </a>
+                @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+                {
+                    @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                                     $"Změny i "
+                                     + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v jedné dceřinné společnosti", "ve {0} dceřinných společnostech", "v {0} dceřinných společnostech")
+                                     + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                }
             </div>
         </div>
         <hr />
         <div>
             <span class="text-muted">Chci sdílet s ostatními</span>
             <div>
-                <a href="#" class="ssk ssk-text ssk-facebook ssk-xs" target="_blank" data-ssk-ready="true">na Facebook</a>
-                <a href="#" class="ssk ssk-text ssk-twitter ssk-xs" target="_blank" data-ssk-ready="true">na Twitter</a>
+                @WebUtil.ShareFacebook(Model.GetUrl(false))
+                @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                @WebUtil.ShareWidget(Model.GetUrl(false))
             </div>
         </div>
     </div>
