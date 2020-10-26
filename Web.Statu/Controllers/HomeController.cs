@@ -1486,6 +1486,7 @@ text zpravy: {txt}
                     + "&img=" + System.Net.WebUtility.UrlEncode(img)
                     + "&color=" + col
                     + "&ratio=" + rat;
+                v = Devmasters.Crypto.Hash.ComputeHashToHex(url);
             }
             else if (id?.ToLower() == "kindex")
             {
