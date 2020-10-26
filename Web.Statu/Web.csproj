@@ -548,6 +548,7 @@
     <Compile Include="Controllers\HomeController.Covid.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
+    <Compile Include="Controllers\HomeController.Subjekt.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\KindexController.cs" />
     <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
@@ -1708,6 +1709,8 @@
     <Content Include="Views\Kindex\Backup.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice_child.cshtml" />
+    <Content Include="Views\Home\Subjekt2_dotace.cshtml" />
+    <Content Include="Views\Home\Subjekt2_RightColumn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
