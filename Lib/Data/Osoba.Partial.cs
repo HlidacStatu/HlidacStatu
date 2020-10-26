@@ -474,6 +474,9 @@ namespace HlidacStatu.Lib.Data
                 && this.Status < duplicated.Status)
                 this.Status = duplicated.Status;
 
+            if (string.IsNullOrWhiteSpace(this.WikiId)
+                && !string.IsNullOrWhiteSpace(duplicated.WikiId))
+                this.WikiId = duplicated.WikiId;
 
             //obrazek
             if (this.HasPhoto() == false && duplicated.HasPhoto())
