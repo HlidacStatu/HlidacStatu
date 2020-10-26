@@ -297,23 +297,36 @@ namespace HlidacStatu.Web.Controllers
 
                     try
                     {
-                        string connectionString = Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString");
-                        if (string.IsNullOrWhiteSpace(connectionString))
-                            throw new Exception("Missing RabbitMqConnectionString");
+                        //string connectionString = Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString");
+                        //if (string.IsNullOrWhiteSpace(connectionString))
+                        //    throw new Exception("Missing RabbitMqConnectionString");
 
-                        var message = new Q.Messages.RecalculateKindex()
-                        {
-                            Comment = txt,
-                            Created = DateTime.Now,
-                            Ico = f.ICO,
-                            User = this.User.Identity.Name
-                        };
+                        //var message = new Q.Messages.RecalculateKindex()
+                        //{
+                        //    Comment = txt,
+                        //    Created = DateTime.Now,
+                        //    Ico = f.ICO,
+                        //    User = this.User.Identity.Name
+                        //};
 
-                        Q.Publisher.QuickPublisher.Publish(message, connectionString);
+                        //Q.Publisher.QuickPublisher.Publish(message, connectionString);
+                        
+                        string body = $@"
+Žádost o rekalkulaci K-Indexu z hlidacstatu.cz.
+
+Pro firmu:{f.ICO}
+Od uzivatele:{email} [{this.User.Identity.Name}] (Emaily by se zde měli shodovat)
+ke stránce:{url}
+
+text zpravy: {txt}";
+                        Util.SMTPTools.SendSimpleMailToPodpora("Žádost o rekalkulaci K-indexu", body, email);
+
+                       
+
                     }
                     catch (Exception ex)
                     {
-                        Util.Consts.Logger.Fatal($"Problem sending data to RecalculateKindex queue. Message={ex}");
+                        Util.Consts.Logger.Fatal($"Problem with SMTP. Message={ex}");
                     }
                 }
             });
