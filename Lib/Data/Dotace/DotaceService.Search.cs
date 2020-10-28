@@ -51,11 +51,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         {
             var query = searchdata.Q;
 
-            string modifiedQ = query; // Search.Tools.FixInvalidQuery(query, queryShorcuts, queryOperators) ?? "";
-                                      //check invalid query ( tag: missing value)
-
-            //var qc  = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Smlouva>(query,rules);;
-            var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Dotace.Dotace>(query, irules);
+            var qc = SimpleQueryCreator.GetSimpleQuery<Dotace>(query, irules);
 
             return qc;
 

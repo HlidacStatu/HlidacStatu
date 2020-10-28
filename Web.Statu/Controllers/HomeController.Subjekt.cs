@@ -60,8 +60,6 @@ namespace HlidacStatu.Web.Controllers
             if (string.IsNullOrEmpty(ico))
                 return RedirectToAction("Report", new { id = "1" });
 
-            //if (!Devmasters.TextUtil.IsNumeric(ico))
-            //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
 
             Firma firma = Firmy.Get(ico);
 
@@ -81,7 +79,6 @@ namespace HlidacStatu.Web.Controllers
             if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
                 return View("Subjekt_zahranicni", firma);
 
-            //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
             return View(firma);
         }
         
