@@ -43,8 +43,8 @@
             IEnumerable<(int Rok, decimal Castka)> cerpani = subsidy.Rozhodnuti
                 .SelectMany(r => r.Cerpani, (roz, cer) =>
                 (
-                    cer.Rok ?? roz.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
-                    cer.CastkaSpotrebovana ?? 0
+                    cer?.Rok ?? roz.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
+                    cer?.CastkaSpotrebovana ?? 0
                 )
             ).ToArray();
 

@@ -49,8 +49,17 @@ namespace HlidacStatu.Web.Controllers
             //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
             return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
         }
-
         public ActionResult Subjekt2(string id)
+        {
+            return _Subjekt2Data(id);
+        }
+        public ActionResult Subjekt2_dotace(string id)
+        {
+            return _Subjekt2Data(id);
+        }
+
+        [NonAction()]
+        private ActionResult _Subjekt2Data(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Index");
