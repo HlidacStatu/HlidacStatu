@@ -26,7 +26,9 @@
 
 @helper SimpleColumnChart(IEnumerable<(string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)> data,
     string title, string valueName,
-    int height, string addStyle ="", string chartType = "column")
+    int height, string addStyle ="", string chartType = "column",
+    int? tickInterval = null //tickInterval: 24 * 3600 * 1000
+    )
 {
 string containerId = "chart_" + Guid.NewGuid().ToString("N");
 List<string> sdata = new List<string>();
@@ -68,8 +70,13 @@ Highcharts.chart('@containerId', {
 
 
     xAxis: {
-        type: 'datetime',
-        tickInterval: 24 * 3600 * 1000
+        type: 'datetime'
+        @if (tickInterval.HasValue)
+        {
+            <text>
+                tickInterval:@(tickInterval.Value.ToString("D"))
+            </text>
+        }
     },
 
     legend: {
