@@ -8,124 +8,65 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-@section breadcrumb
-{
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li>Úřady a firmy</li>
-        <li class="active">@ViewBag.Title : Dotace</li>
-    </ol>
+@{ 
+    Layout = null;
 }
 
 
-<style>
-    .my-0 {
-        margin-top: 0px;
-        margin-bottom: 0px;
+<div>
+    <h4>Dotace graf</h4>
+
+    @{
+        var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
+        var subsidies = dotaceService.GetDotaceForIco(Model.ICO);
     }
 
-    .py-0 {
-        padding-top: 0px;
-        padding-bottom: 0px;
+    @* Přidat sem sloupcový graf souhrnů dotací za jednotlivé roky  *@
+
+    @{
+        ReportDataSource reportData = new ReportDataSource(new ReportDataSource.Column[]
+        {
+
+            new ReportDataSource.Column()
+            {
+                Name = "Rok"
+            },
+            new ReportDataSource.Column()
+            {
+                Name = "Celkový objem dotace"
+            },
+        });
+
+        List<(int Rok, decimal Castka)> subsidiesYearly = new List<(int Rok, decimal Castka)>();
+        foreach(var subsidy in subsidies)
+        {
+            IEnumerable<(int Rok, decimal Castka)> cerpani = subsidy.Rozhodnuti
+                .SelectMany(r => r.Cerpani, (roz, cer) =>
+                (
+                    cer.Rok ?? roz.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
+                    cer.CastkaSpotrebovana ?? 0
+                )
+            );
+
+            subsidiesYearly.AddRange(cerpani);
+        }
+
+        var data = subsidiesYearly
+            .GroupBy(s => s.Rok)
+            .Select(g => new ReportDataTimeValue()
+            {
+                Date = new DateTime(g.Key, 1, 1),
+                Value = g.Sum(x => x.Castka)
+            });
+
+
+        @UtilChart.SimpleColumnChart((name: "Přehled dotací", values: data),
+        "Přehled inkasovaných dotací", "Přehled dotací", 500);
+
     }
 
-    .boxes h4 {
-        font-size: 24px;
-        font-weight: bold;
-    }
 
-    .head h3 {
-        font-size: 40px;
-        font-weight: bold;
-    }
 
-    p {
-        font-size: 16px;
-    }
-
-    .watcher .btn {
-        background-color: rgb(231,102,5);
-        padding: 7px 15px;
-        margin: 5px 0px;
-        text-transform: none;
-        font-size: 14px;
-    }
-</style>
-
-<div class="head">
-    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno: Dotace</h3>
-    <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
+    <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
 </div>
-<hr />
 
-<div class="row boxes">
-    @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model, Model.ICO,
-        this.User.Identity.IsAuthenticated)
-
-    @* Prázdný sloupec *@
-    <div class="col-sm-1">
-    </div>
-    @* První sloupec *@
-    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
-        @* ----- Dotace -----*@
-
-        <div>
-            <h4>Dotace</h4>
-
-            @{
-                var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-                var subsidies = dotaceService.GetDotaceForIco(Model.ICO);
-            }
-
-            @* Přidat sem sloupcový graf souhrnů dotací za jednotlivé roky  *@
-
-            @{
-                ReportDataSource reportData = new ReportDataSource(new ReportDataSource.Column[]
-                {
-
-                    new ReportDataSource.Column()
-                    {
-                        Name = "Rok"
-                    },
-                    new ReportDataSource.Column()
-                    {
-                        Name = "Celkový objem dotace"
-                    },
-                });
-
-                List<(int Rok, decimal Castka)> subsidiesYearly = new List<(int Rok, decimal Castka)>();
-                foreach(var subsidy in subsidies)
-                {
-                    IEnumerable<(int Rok, decimal Castka)> cerpani = subsidy.Rozhodnuti
-                        .SelectMany(r => r.Cerpani, (roz, cer) =>
-                        (
-                            cer.Rok ?? roz.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
-                            cer.CastkaSpotrebovana ?? 0
-                        )
-                    );
-
-                    subsidiesYearly.AddRange(cerpani);
-                }
-
-                var data = subsidiesYearly
-                    .GroupBy(s => s.Rok)
-                    .Select(g => new ReportDataTimeValue()
-                    {
-                        Date = new DateTime(g.Key, 1, 1),
-                        Value = g.Sum(x => x.Castka)
-                    });
-
-
-                @UtilChart.SimpleColumnChart((name: "Přehled dotací", values: data),
-                "Přehled inkasovaných dotací", "Přehled dotací", 500);
-
-            }
-
-
-
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
-        </div>
-
-    </div>
-</div>
