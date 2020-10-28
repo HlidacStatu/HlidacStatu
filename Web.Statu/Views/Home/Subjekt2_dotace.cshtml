@@ -46,7 +46,7 @@
                     cer.Rok ?? roz.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
                     cer.CastkaSpotrebovana ?? 0
                 )
-            );
+            ).ToArray();
 
             subsidiesYearly.AddRange(cerpani);
         }
@@ -60,10 +60,11 @@
             });
 
 
-        @UtilChart.SimpleColumnChart((name: "Přehled dotací", values: data),
+        @UtilChart.SimpleColumnChart(
+           new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: data) },
         "Přehled inkasovaných dotací", "Přehled dotací", 500);
 
-    }
+        }
 
 
 

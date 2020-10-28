@@ -1,0 +1,128 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+
+@using Nest;
+@using HlidacStatu.Lib.Render;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+
+<style>
+    .my-0 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .py-0 {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .boxes h4 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .head h3 {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .watcher .btn {
+        background-color: rgb(231,102,5);
+        padding: 7px 15px;
+        margin: 5px 0px;
+        text-transform: none;
+        font-size: 14px;
+    }
+</style>
+
+<div class="head">
+    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno</h3>
+    <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
+</div>
+<hr />
+
+<div class="row boxes">
+    @* Pravý sloupec *@
+    <div class="col-sm-4 col-sm-push-8 col-xs-12 col-xs-push-0">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="person-profile-thumb">
+                    <div class="photo">
+                        <div class="profile-picture" style="background-image: url('https://www.hlidacstatu.cz/Photo/alena-schillerova')"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <p class="py-0 my-0 text-muted">Aktuální ministr</p>
+                <p class="py-0 my-0 lead">JUDr. Alena Schillerová, Ph.D</p>
+                <p class="py-0 my-0">od 13. 12. 2017</p>
+            </div>
+        </div>
+        <hr />
+        <div>
+            <table>
+                <tr>
+                    <td class="text-nowrap text-muted col-sm-5">Založeno</td>
+                    <td class="col-sm-7">@(Model.Datum_Zapisu_OR.Value.ToString("dd.MM.yyyy"))</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap text-muted col-sm-5">IČO</td>
+                    <td class="col-sm-7">@Model.ICO</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap text-muted col-sm-5">Datová schránka</td>
+                    <td class="col-sm-5">@string.Join(", ", Model.DatovaSchranka)</td>
+                </tr>
+            </table>
+        </div>
+        <hr />
+        <div class="watcher">
+            <h4>Chci hlídat</h4>
+            <div>
+                @WebUtil.AddWatchDog(this.User, "ico:" + Model.ICO, null,
+                                     "Všechny změny o " + Devmasters.TextUtil.ShortenText(Model.Jmeno, 30),
+                                     prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+            </div>
+            <div>
+                @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+                {
+                    @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                                     $"Změny i "
+                                     + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v jedné dceřinné společnosti", "ve {0} dceřinných společnostech", "v {0} dceřinných společnostech")
+                                     + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                }
+            </div>
+        </div>
+        <hr />
+        <div>
+            <span class="text-muted">Chci sdílet s ostatními</span>
+            <div>
+                @WebUtil.ShareFacebook(Model.GetUrl(false))
+                @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.Jmeno} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+                @WebUtil.ShareWidget(Model.GetUrl(false))
+            </div>
+        </div>
+    </div>
+    @* Prázdný sloupec *@
+    <div class="col-sm-1">
+    </div>
+    @* První sloupec *@
+    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+   
+    </div>
+</div>
