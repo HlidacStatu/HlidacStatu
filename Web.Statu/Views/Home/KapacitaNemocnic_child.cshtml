@@ -249,15 +249,15 @@ var chartdata = timedata.Select(m => new
 <div class="row">
 
      <div class="col-xs-12 col-sm-6 singlebox">
-        <h4>Počet aktuálně hospitalizovaných každý den <span class="exclusive">Nové</span></h4>
+        <h4>Počet aktuálně COVID hospitalizovaných každý den <span class="exclusive">Nové</span></h4>
         <p>
-            Počet <b>v daný konkrétní den</b> hospitalizovaných pacientů podle závažnosti stavu.
+            Počet <b>v daný konkrétní den</b> hospitalizovaných pacientů s COVID podle závažnosti stavu.
         </p>
         <p>
             @{ 
                 var currDate = chartdata.Where(m => m.data.PacientiCelkem() > 0).Max(m => m.date);
             }
-            Aktuální počet hospitalizovaných k <b>@(currDate.ToString("dd.MM.yyyy"))</b>:
+            Aktuální počet COVID hospitalizovaných k <b>@(currDate.ToString("dd.MM.yyyy"))</b>:
             Celkem <b style="color:red;">@(chartdata.First(m=>m.date == currDate).data.PacientiCelkem())</b>,
             bez příznaků <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>,
             v lehkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_lehky)</b>,
@@ -286,7 +286,7 @@ var chartdata = timedata.Select(m => new
     <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Počet zemřelých během hospitalizace daný den <span class="exclusive">Nové</span></h4>
         <p>
-            Počet hospitalizovaných pacientů, kteří <b>v daný konkrétní den</b> během hospitalizace zemřeli.
+            Počet hospitalizovaných COVID pacientů, kteří <b>v daný konkrétní den</b> během hospitalizace zemřeli.
         </p>
         <p>&nbsp;<br/>&nbsp;</p>
         <p>
