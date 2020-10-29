@@ -247,6 +247,61 @@ var chartdata = timedata.Select(m => new
 
 
 <div class="row">
+
+     <div class="col-xs-12 col-sm-6 singlebox">
+        <h4>Počet aktuálně hospitalizovaných každý den <span class="exclusive">Nové</span></h4>
+        <p>
+            Počet <b>v daný konkrétní den</b> hospitalizovaných pacientů podle závažnosti stavu.
+        </p>
+        <p>
+            @{ 
+                var currDate = chartdata.Where(m => m.data.PacientiCelkem() > 0).Max(m => m.date);
+            }
+            Aktuální počet hospitalizovaných k <b>@(currDate.ToString("dd.MM.yyyy"))</b>:
+            Celkem <b style="color:red;">@(chartdata.First(m=>m.date == currDate).data.PacientiCelkem())</b>,
+            bez příznaků <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>,
+            v lehkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_lehky)</b>,
+            ve středně těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_stredni)</b>,
+            v těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>.
+        </p>        <p>
+            @UtilChart.SimpleStackedChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
+                    (name:"Těžký stav",
+                        values:chartdata.Where(m=>m.data.Pacienti_tezky>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_tezky } )
+                    ),
+                    (name:"Středně těžký stav",
+                        values:chartdata.Where(m=>m.data.Pacienti_stredni>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_stredni} )
+                    ),
+                    (name:"Lehký stav",
+                        values:chartdata.Where(m=>m.data.Pacienti_lehky>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_lehky} )
+                    ),
+                    (name:"Bezpříznakový",
+                        values:chartdata.Where(m=>m.data.Pacienti_bezpriznaku>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_bezpriznaku} )
+                    )
+       },
+         "", "počet", 200, minY: 0, chartType:"area")
+        </p>
+    </div>
+    <div class="clearfix hidden-md hidden-lg"></div>
+
+    <div class="col-xs-12 col-sm-6 singlebox">
+        <h4>Počet zemřelých během hospitalizace daný den <span class="exclusive">Nové</span></h4>
+        <p>
+            Počet hospitalizovaných pacientů, kteří <b>v daný konkrétní den</b> během hospitalizace zemřeli.
+        </p>
+        <p>&nbsp;<br/>&nbsp;</p>
+        <p>
+            @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
+                    (name:"volná neCOVID lůžka s kyslíkem", 
+                        values:chartdata.Where(m=>m.data.Pacienti_zemreli>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_zemreli} )
+                    )
+                },
+                "","počet",200, minY:0 )
+        </p>
+    </div>
+    <div class="clearfix "></div>
+
+    <h3>@h.regionFull()</h3>
+
     <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Lůžka (ARO+JIP dospělí)</h4>
         <p>
@@ -276,9 +331,9 @@ var chartdata = timedata.Select(m => new
     <div class="col-xs-12 col-sm-6 singlebox">
         <h4>Lůžka (standardní s kyslíkem)</h4>
         <p>
-            Celkem @h.Standard_luzka_s_kyslikem_celkem, volných @(h.Standard_luzka_s_kyslikem_covid + h.Standard_luzka_s_kyslikem_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc()))
+            Lůžek celkem k dispozici: @h.Standard_luzka_s_kyslikem_celkem, aktuálně volných je @(h.Standard_luzka_s_kyslikem_covid + h.Standard_luzka_s_kyslikem_necovid) (@HlidacStatu.Util.RenderData.NicePercent(h.Standard_luzka_s_kyslikem_perc()))
             <br />
-            Volná lůžka: COVID <span style="font-size:125%;font-weight:bold">@h.Standard_luzka_s_kyslikem_covid</span> / neCOVID <span style="font-size:125%">@h.Standard_luzka_s_kyslikem_necovid</span>
+            Volná lůžka pro COVID pacienty: <span style="font-size:125%;font-weight:bold">@h.Standard_luzka_s_kyslikem_covid</span>, pro ne COVID pacienty: <span style="font-size:125%">@h.Standard_luzka_s_kyslikem_necovid</span>
             <br />
             Změna volných od @first.lastUpdated.ToString("dd.MM."): <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_covid)">@(diffH.Standard_luzka_s_kyslikem_covid.ToString("+#;-#;0"))</span> / <span style="font-weight:normal;color:@TColor(diffH.Standard_luzka_s_kyslikem_necovid)">@(diffH.Standard_luzka_s_kyslikem_necovid.ToString("+#;-#;0"))</span>
         </p>
@@ -298,59 +353,6 @@ var chartdata = timedata.Select(m => new
     </div>
     <div class="clearfix "></div>
 
-    <h3>@h.regionFull()</h3>
-
-
-     <div class="col-xs-12 col-sm-6 singlebox">
-        <h4>Počet aktuálně hospitalizovaných každý den <span class="exclusive">Nové</span></h4>
-        <p>
-            Počet <b>v daný konkrétní den</b> hospitalizovaných pacientů podle závažnosti stavu.
-        </p>
-        <p>
-            @{ 
-                var currDate = chartdata.Where(m => m.data.PacientiCelkem() > 0).Max(m => m.date);
-            }
-            Aktuální počet hospitalizovaných k <b>@(currDate.ToString("dd.MM.yyyy"))</b>: 
-            bez příznaků <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>,
-            v lehkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_lehky)</b>,
-            ve středně těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_stredni)</b>,
-            v těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>.
-        </p>        <p>
-            @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
-                    (name:"Bezpříznakový",
-                        values:chartdata.Where(m=>m.data.Pacienti_bezpriznaku>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_bezpriznaku} )
-                    ),
-                    (name:"Lehký stav",
-                        values:chartdata.Where(m=>m.data.Pacienti_lehky>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_lehky} )
-                    ),
-                    (name:"Středně těžký stav",
-                        values:chartdata.Where(m=>m.data.Pacienti_stredni>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_stredni} )
-                    ),
-                    (name:"Těžký stav",
-                        values:chartdata.Where(m=>m.data.Pacienti_tezky>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_tezky } )
-                    )
-                },
-         "", "počet", 200, minY: 0)
-        </p>
-    </div>
-    <div class="clearfix hidden-md hidden-lg"></div>
-
-    <div class="col-xs-12 col-sm-6 singlebox">
-        <h4>Počet zemřelých během hospitalizace daný den <span class="exclusive">Nové</span></h4>
-        <p>
-            Počet hospitalizovaných pacientů, kteří <b>v daný konkrétní den</b> během hospitalizace zemřeli.
-        </p>
-        <p>&nbsp;<br/>&nbsp;</p>
-        <p>
-            @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
-                    (name:"volná neCOVID lůžka s kyslíkem", 
-                        values:chartdata.Where(m=>m.data.Pacienti_zemreli>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_zemreli} )
-                    )
-                },
-                "","počet",200, minY:0 )
-        </p>
-    </div>
-    <div class="clearfix "></div>
 
 
         <h3>@h.regionFull()</h3>
