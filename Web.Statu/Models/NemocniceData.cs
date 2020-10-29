@@ -270,6 +270,14 @@ namespace HlidacStatu.Web.Models
             public int Standard_luzka_celkem { get; set; }
             public int Standard_luzka_s_monitor_celkem { get; set; }
 
+            public int Pacienti_bezpriznaku { get; set; } = 0;
+            public int Pacienti_lehky { get; set; } = 0;
+            public int Pacienti_stredni { get; set; } = 0;
+            public int Pacienti_tezky { get; set; } = 0;
+            public int Pacienti_zemreli { get; set; } = 0;
+
+            public int PacientiCelkem() {  return Pacienti_bezpriznaku + Pacienti_lehky + Pacienti_stredni + Pacienti_tezky; }
+
             public string regionFull()
             {
                 return RegionFull(this.region);
@@ -353,6 +361,13 @@ namespace HlidacStatu.Web.Models
             h.UPV_volna = lh.UPV_volna - fh.UPV_volna;
             h.Ventilatory_operacnisal_celkem = lh.Ventilatory_operacnisal_celkem - fh.Ventilatory_operacnisal_celkem;
             h.Ventilatory_prenosne_celkem = lh.Ventilatory_prenosne_celkem - fh.Ventilatory_prenosne_celkem;
+
+            h.Pacienti_bezpriznaku = lh.Pacienti_bezpriznaku - fh.Pacienti_bezpriznaku;
+            h.Pacienti_lehky = lh.Pacienti_lehky - fh.Pacienti_lehky;
+            h.Pacienti_stredni= lh.Pacienti_stredni - fh.Pacienti_stredni;
+            h.Pacienti_tezky= lh.Pacienti_tezky - fh.Pacienti_tezky;
+            h.Pacienti_zemreli= lh.Pacienti_zemreli - fh.Pacienti_zemreli;
+
             return h;
         }
 
@@ -389,6 +404,11 @@ namespace HlidacStatu.Web.Models
             h.Ventilatory_operacnisal_celkem = hospitals.Sum(m => m.Ventilatory_operacnisal_celkem);
             h.Ventilatory_prenosne_celkem = hospitals.Sum(m => m.Ventilatory_prenosne_celkem);
 
+            h.Pacienti_bezpriznaku = hospitals.Sum(m => m.Pacienti_bezpriznaku);
+            h.Pacienti_lehky = hospitals.Sum(m => m.Pacienti_lehky);
+            h.Pacienti_stredni = hospitals.Sum(m => m.Pacienti_stredni);
+            h.Pacienti_tezky = hospitals.Sum(m => m.Pacienti_tezky);
+            h.Pacienti_zemreli = hospitals.Sum(m => m.Pacienti_zemreli);
             return h;
         }
 
