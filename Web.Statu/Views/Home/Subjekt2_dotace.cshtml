@@ -26,6 +26,25 @@
     <script src="/scripts/highcharts-6/highcharts-more.js"></script>
     <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
     <script src="/scripts/highcharts-6/modules/treemap.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                "language": {
+                    "info": "Zobrazuji _START_. - _END_. z celkového počtz _TOTAL_ záznamů.",
+                    "search": "Hledat:",
+                    "lengthMenu": "Zobraz _MENU_ záznamů",
+                    "thousands": " ",
+                    "paginate": {
+                        "first": "První",
+                        "last": "Poslední",
+                        "next": "Další",
+                        "previous": "Předchozí"
+                    },
+                }
+            });
+        });
+
+    </script>
 
 }
 
@@ -95,7 +114,7 @@
                     {
                         Name = "Celkový objem dotace"
                     },
-            });
+        });
 
 
                 var dataFirma = Model.Cerpani.Where(c => c.Ico == Model.Firma.ICO)
@@ -113,27 +132,40 @@
 
 
                 var dataHolding = Model.Cerpani
-                    .GroupBy(c => c.Ico)
-                    .Select(g =>
-                        (
-                            name: g.Key,
-                            values: g.GroupBy(sg => sg.Rok)
-                                .Select(sg => new ReportDataTimeValue()
-                                {
-                                    Date = new DateTime(sg.Key, 1, 1),
-                                    Value = sg.Sum(c => c.Cerpano)
-                                })
-                                .Where(v => v.Value > 0) //this is important to remove empty values
-                        ))
-                    .Where(g => g.values.Count() > 0); // this is important to remove empty values
+                    .GroupBy(c => c.Rok)
+                    .Select(g => new ReportDataTimeValue()
+                    {
+                        Date = new DateTime(g.Key, 1, 1),
+                        Value = g.Sum(c => c.Cerpano)
+                    });
 
                 @UtilChart.SimpleColumnChart(
-                   dataHolding,
+                   new[] { (name: "Dotace po letech", values: dataHolding) },
                 "Přehled inkasovaných dotací za celý holding", "Přehled dotací holdingu", 500);
 
 
-            }
 
+                var dataTable = Model.Cerpani
+                    .GroupBy(c => new { Ico = c.Ico, Rok = c.Rok })
+                    .Select(g => (Ico: g.Key.Ico, Rok: g.Key.Rok, CerpanoCelkem: g.Sum(c => c.Cerpano)))
+                    .Where(x => x.CerpanoCelkem > 0);
+
+            }
+            <table id="datatable" class="table table-striped table-bordered table-sm">
+                <thead>
+                    <tr><th>Ico</th><th>Rok</th><th>Čerpáno</th></tr>
+
+                </thead>
+                @foreach (var data in dataTable)
+                {
+                    <tr>
+                        <td>@data.Ico</td>
+                        <td>@data.Rok</td>
+                        <td>@data.CerpanoCelkem.ToString("N0")</td>
+                    </tr>
+                }
+
+            </table>
 
 
             <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
