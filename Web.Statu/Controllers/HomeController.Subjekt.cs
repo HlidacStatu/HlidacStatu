@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
@@ -51,45 +52,77 @@ namespace HlidacStatu.Web.Controllers
         }
         public ActionResult Subjekt2(string id)
         {
-            return _Subjekt2Data(id);
+            TryGetCompany(id, out var firma, out var result);
+            return result;
         }
         public ActionResult Subjekt2_dotace(string id)
         {
-            return _Subjekt2Data(id);
+            if(TryGetCompany(id, out var firma, out var result))
+            {
+                var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
+                var holdingSubsidies = dotaceService.GetDotaceForHolding(firma.ICO).ToList();
+
+                var cerp = holdingSubsidies
+                    .SelectMany(s => s.Rozhodnuti
+                        .SelectMany(r => r.Cerpani
+                            .Select(c => 
+                            (
+                                Ico: s.Prijemce.Ico,
+                                Rok: c.Rok ?? r.Rok ?? s.DatumPodpisu?.Year ?? 0,
+                                Cerpano: c.CastkaSpotrebovana ?? 0
+                            ))
+                        )
+                    ).ToList();
+
+                return View((Firma: firma, Cerpani: cerp));
+            }
+
+            return result;
         }
 
         [NonAction()]
-        private ActionResult _Subjekt2Data(string id)
+        private bool TryGetCompany(string id, out Firma firma, out ActionResult actionResult)
         {
+            firma = null;
+            
             if (string.IsNullOrWhiteSpace(id))
-                return RedirectToAction("Index");
-
+            {
+                actionResult = RedirectToAction("Index");
+                return false;
+            }
+                
             string ico = Util.ParseTools.NormalizeIco(id);
 
             if (string.IsNullOrEmpty(ico))
-                return RedirectToAction("Report", new { id = "1" });
+            {
+                actionResult = RedirectToAction("Report", new { id = "1" }); ;
+                return false;
+            }
 
-
-            Firma firma = Firmy.Get(ico);
+            firma = Firmy.Get(ico);
 
             if (!Firma.IsValid(firma))
             {
                 if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                    return View("Subjekt_zahranicni", new Firma() { ICO = ico, Jmeno = ico });
+                    actionResult = View("Subjekt_zahranicni", new Firma() { ICO = ico, Jmeno = ico });
                 else
                 {
                     if (!Util.DataValidators.CheckCZICO(ico))
-
-                        return View("Subjekt_err_spatneICO");
+                        actionResult = View("Subjekt_err_spatneICO");
                     else
-                        return View("Subjekt_err_nezname");
+                        actionResult = View("Subjekt_err_nezname");
                 }
+                return false;
             }
             if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                return View("Subjekt_zahranicni", firma);
+            {
+                actionResult = View("Subjekt_zahranicni", firma);
+                return false;
+            }
 
-            return View(firma);
+            actionResult = View(firma);
+            return true;
         }
-        
+
     }
 }

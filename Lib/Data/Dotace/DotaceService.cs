@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using HlidacStatu.Lib.Searching;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,6 +109,16 @@ namespace HlidacStatu.Lib.Data.Dotace
             return YieldAll(qc);
         }
 
+        public IEnumerable<Dotace> GetDotaceForHolding(string holdingIco)
+        {
+            string query = Lib.Searching.Tools.FixInvalidQuery($"holding:{holdingIco}", queryShorcuts(), queryOperators);
+            var qc = SimpleQueryCreator.GetSimpleQuery<Dotace>(query, irules);
+
+            //QueryContainer qc = new QueryContainerDescriptor<Dotace>()
+            //    .Term(f => f.Prijemce.Ico, holdingIco);
+
+            return YieldAll(qc);
+        }
 
         private IEnumerable<Dotace> YieldAll(QueryContainer query, 
             string scrollTimeout = "2m", 

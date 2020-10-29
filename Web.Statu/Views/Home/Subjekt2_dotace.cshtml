@@ -1,4 +1,4 @@
-﻿@model HlidacStatu.Lib.Data.Firma
+﻿@model (HlidacStatu.Lib.Data.Firma Firma, List<(string Ico, int Rok, decimal Cerpano)> Cerpani)
 
 @using Nest;
 @using HlidacStatu.Web.Framework;
@@ -64,14 +64,14 @@
 </style>
 
 <div class="head">
-    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno</h3>
+    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Dotace</h3>
     <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
 </div>
 <hr />
 
 <div class="row boxes">
     @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model, Model.ICO,
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model.Firma, Model.Firma.ICO,
         this.User.Identity.IsAuthenticated)
 
     @* Prázdný sloupec *@
@@ -84,60 +84,53 @@
 
             @{
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-                var subsidies = dotaceService.GetDotaceForIco(Model.ICO);
-            }
 
-            @* Přidat sem sloupcový graf souhrnů dotací za jednotlivé roky  *@
-
-            @{
                 ReportDataSource reportData = new ReportDataSource(new ReportDataSource.Column[]
                 {
-
-                new ReportDataSource.Column()
-                {
-                    Name = "Rok"
-                },
-                new ReportDataSource.Column()
-                {
-                    Name = "Celkový objem dotace"
-                },
+                    new ReportDataSource.Column()
+                    {
+                        Name = "Rok"
+                    },
+                    new ReportDataSource.Column()
+                    {
+                        Name = "Celkový objem dotace"
+                    },
             });
 
-                List<(int Rok, decimal Castka)> subsidiesYearly = new List<(int Rok, decimal Castka)>();
-                foreach (var subsidy in subsidies)
-                {
-                    foreach (var rozhodnuti in subsidy.Rozhodnuti)
-                    {
-                        //todo: předělat rozhodnutí/čerpání, aby vraceli empty array, pokud jsou prázdné
-                        if (rozhodnuti.Cerpani is null || rozhodnuti.Cerpani.Count == 0)
-                        {
-                            continue;
-                        }
 
-                        foreach (var cerpani in rozhodnuti.Cerpani)
-                        {
-                            subsidiesYearly.Add(
-                                (
-                                cerpani.Rok ?? rozhodnuti.Rok ?? subsidy.DatumPodpisu?.Year ?? 0,
-                                cerpani.CastkaSpotrebovana ?? 0
-                                ));
-                        }
-                    }
-
-                }
-
-                var data = subsidiesYearly
+                var dataFirma = Model.Cerpani.Where(c => c.Ico == Model.Firma.ICO)
                     .GroupBy(s => s.Rok)
                     .Select(g => new ReportDataTimeValue()
                     {
                         Date = new DateTime(g.Key, 1, 1),
-                        Value = g.Sum(x => x.Castka)
+                        Value = g.Sum(x => x.Cerpano)
                     });
 
 
                 @UtilChart.SimpleColumnChart(
-                   new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: data) },
+                   new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: dataFirma) },
                 "Přehled inkasovaných dotací", "Přehled dotací", 500);
+
+
+                var dataHolding = Model.Cerpani
+                    .GroupBy(c => c.Ico)
+                    .Select(g =>
+                        (
+                            name: g.Key,
+                            values: g.GroupBy(sg => sg.Rok)
+                                .Select(sg => new ReportDataTimeValue()
+                                {
+                                    Date = new DateTime(sg.Key, 1, 1),
+                                    Value = sg.Sum(c => c.Cerpano)
+                                })
+                                .Where(v => v.Value > 0) //this is important to remove empty values
+                        ))
+                    .Where(g => g.values.Count() > 0); // this is important to remove empty values
+
+                @UtilChart.SimpleColumnChart(
+                   dataHolding,
+                "Přehled inkasovaných dotací za celý holding", "Přehled dotací holdingu", 500);
+
 
             }
 

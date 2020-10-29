@@ -39,7 +39,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         // Například to může být hodnota, která odpovídá nákladům na realizování dotovaného projektu společnosti, 
         // kde dotace samotná může dosahovat třeba jen 40 % z rozhodnuté částky
         [Nest.Object]
-        public List<Rozhodnuti> Rozhodnuti { get; set; }
+        public List<Rozhodnuti> Rozhodnuti { get; set; } = new List<Rozhodnuti>();
         [Nest.Keyword]
         public string Duplicita { get; set; }
 

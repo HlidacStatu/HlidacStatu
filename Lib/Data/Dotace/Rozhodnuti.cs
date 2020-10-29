@@ -22,7 +22,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         [Nest.Keyword]
         public string ZdrojFinanci { get; set; }
         [Nest.Object]
-        public List<Cerpani> Cerpani { get; set; }
+        public List<Cerpani> Cerpani { get; set; } = new List<Cerpani>();
 
         public void RecalculateCerpano()
         {
