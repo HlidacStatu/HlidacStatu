@@ -1,0 +1,258 @@
+﻿@model (HlidacStatu.Lib.Data.Firma Firma, List<int> Data)
+
+@using Nest;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
+    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
+    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                "language": {
+                    "info": "Zobrazuji _START_. - _END_. z celkového počtz _TOTAL_ záznamů.",
+                    "search": "Hledat:",
+                    "lengthMenu": "Zobraz _MENU_ záznamů",
+                    "thousands": " ",
+                    "paginate": {
+                        "first": "První",
+                        "last": "Poslední",
+                        "next": "Další",
+                        "previous": "Předchozí"
+                    },
+                }
+            });
+        });
+
+    </script>
+
+}
+
+<style>
+    .my-0 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .py-0 {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .boxes h4 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .head h3 {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .watcher .btn {
+        background-color: rgb(231,102,5);
+        padding: 7px 15px;
+        margin: 5px 0px;
+        text-transform: none;
+        font-size: 14px;
+    }
+</style>
+
+<div class="head">
+    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Registr smluv</h3>
+    <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
+</div>
+<hr />
+
+<div class="row boxes">
+    @* Pravý sloupec *@
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model.Firma, Model.Firma.ICO,
+        this.User.Identity.IsAuthenticated)
+
+    @* Prázdný sloupec *@
+    <div class="col-sm-1">
+    </div>
+    @* První sloupec *@
+    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+        <div>
+            <h4>Závažné nedostatky</h4>
+            <div>
+                @{
+                    var currentYear = DateTime.Now.Year;
+                    var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.Firma.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                    var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.Firma.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                }
+                @if (numFatalIssue.Value > 0)
+                {
+                    <p>
+                        Zásadní nedostatky za letošní rok v rozporu se zákonem jsme zjistili u
+                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.Firma.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                            @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                            {
+                                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
+                            else
+                            {
+                                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
+                            }
+                            Tyto smlouvy jsou velmi pravděpodobně neplatné.
+                        </a>
+                    </p>
+                }
+                @if (numVazneIssue.Value > 0)
+                {
+                    <p>
+                        @if (numFatalIssue.Value == 0)
+                        {
+                            <span>Vážné nedostatky za letošní rok jsme zjistili u</span>
+                        }
+                        else
+                        {
+                            <span>Zároveň vážné nedostatky za letošní rok jsme zjistili u</span>
+                        }
+
+                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.Firma.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                            @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
+                            {
+                                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
+                            else
+                            {
+                                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
+                            }
+                        </a>
+                    </p>
+                }
+
+                @{
+                    var seasonStat = Model.Firma.Statistic().LatestSeasonStatistics();
+                }
+
+                <p>
+                    V roce @(seasonStat?.Rok) uzavřel úřad
+                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.Pocet)</strong> smluv</a>
+                    za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat?.CelkemCena, html: true, shortFormat: true)))</strong>
+                    @if (seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi.HasValue ?? false)
+                    {
+                        @($"({seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi?.ToString("N2")} % rozpočtu za {seasonStat?.Rok - 1})")
+                    }
+                </p>
+
+                <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
+            </div>
+
+            <hr />
+
+            @* GRAFY *@
+            <h4>Souhrnné statistiky pro @Model.Firma.Jmeno</h4>
+            @{ 
+                var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model.Firma);
+                int chartMinDate = 2016;
+                int chartMaxDate = DateTime.Now.Year;
+            }
+
+            <div class="row">
+
+                @* Levý sloupec *@
+                <div class="col-md-6">
+                    <div>
+                        @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                                               statistics.BasicStatPerYear.Data
+                                                               .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                               .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkemCena)
+                                                               );
+
+                            @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
+                                               true, true, 150, "rdsSumPerY",
+                                                "", "",
+                                               rdsSumPerY, "Kč", xValueFormat: "{value:%Y}")
+                                       ) }
+                    </div>
+
+                    <div>
+                        @{ ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
+                                                                   statistics.BasicStatPerYear.Data
+                                                                       .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                       .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.Pocet)
+                                                                   );
+
+                            @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
+                                              true, true, 150, "rdsCountPerY",
+                                              "", "",
+                                              rdsCountPerY, "", xValueFormat: "{value:%Y}")
+                                      ) }
+                    </div>
+
+                    <div>
+                        @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                                                   statistics.RatingPerYear.Data
+                                                                       .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                       .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentBezCeny * 100)
+                                                                   );
+
+                            @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
+                                                  true, true, 150, "rdsbezCenyPerY",
+                                                  "", "%",
+                                                  rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
+                                          ) }
+                    </div>
+                </div>
+
+                @* Pravý sloupec *@
+            <div class="col-md-6">
+                @if (Model.Firma.PatrimStatu() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
+                {
+                    <div>
+                        @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
+                                                               statistics.RatingPerYear.Data
+                                                               .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                               .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSPolitiky)
+                                                               );
+
+                            @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                                               true, true, 150, "rdsPolitikPerYKc",
+                                                "", "Kč",
+                                               rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
+                                       ) }
+                    </div>
+                    <div>
+                        @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
+                                                               statistics.RatingPerYear.Data
+                                                               .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                               .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSPolitiky * 100)
+                                                               );
+
+                            @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
+                                                       true, true, 150, "rdsPolitikPerY",
+                                                        "", "%",
+                                                       rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
+                                               ) }
+                    </div>}
+            </div>
+            </div>
+        </div>
+
+    </div>
+</div>

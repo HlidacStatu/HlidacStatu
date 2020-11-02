@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -55,7 +56,8 @@ namespace HlidacStatu.Web.Controllers
             TryGetCompany(id, out var firma, out var result);
             return result;
         }
-        public ActionResult Subjekt2_dotace(string id)
+        
+        public ActionResult Subjekt2_Dotace(string id)
         {
             if(TryGetCompany(id, out var firma, out var result))
             {
@@ -75,6 +77,16 @@ namespace HlidacStatu.Web.Controllers
                     ).ToList();
 
                 return View((Firma: firma, Cerpani: cerp));
+            }
+
+            return result;
+        }
+
+        public ActionResult Subjekt2_RegistrSmluv(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View((Firma: firma, Data: new List<int>() ));
             }
 
             return result;
