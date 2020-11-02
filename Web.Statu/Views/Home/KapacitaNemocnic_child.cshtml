@@ -262,7 +262,7 @@ var chartdata = timedata.Select(m => new
             bez příznaků <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>,
             v lehkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_lehky)</b>,
             ve středně těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_stredni)</b>,
-            v těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_bezpriznaku)</b>.
+            v těžkém stavu <b>@(chartdata.First(m=>m.date == currDate).data.Pacienti_tezky)</b>.
         </p>        <p>
             @UtilChart.SimpleStackedChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
                     (name:"Těžký stav",
@@ -291,7 +291,7 @@ var chartdata = timedata.Select(m => new
         <p>&nbsp;<br/>&nbsp;</p>
         <p>
             @UtilChart.SimpleLineChart(new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] {
-                    (name:"volná neCOVID lůžka s kyslíkem", 
+                    (name:"Počet úmrtí COVID pacientů tento den", 
                         values:chartdata.Where(m=>m.data.Pacienti_zemreli>0).Select(m=>new HlidacStatu.Lib.Render.ReportDataTimeValue(){ Date = m.date, Value = m.data.Pacienti_zemreli} )
                     )
                 },
