@@ -1713,6 +1713,7 @@
     <Content Include="Views\Home\Subjekt2_RightColumn.cshtml" />
     <Content Include="Views\Home\Subjekt2_RegistrSmluv.cshtml" />
     <Content Include="Views\Home\Subjekt2_VerejneZakazky.cshtml" />
+    <Content Include="Views\Home\Subjekt2_InsolvencniRejstrik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
