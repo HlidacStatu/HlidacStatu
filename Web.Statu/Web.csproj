@@ -1709,8 +1709,10 @@
     <Content Include="Views\Kindex\Backup.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice_child.cshtml" />
-    <Content Include="Views\Home\Subjekt2_dotace.cshtml" />
+    <Content Include="Views\Home\Subjekt2_Dotace.cshtml" />
     <Content Include="Views\Home\Subjekt2_RightColumn.cshtml" />
+    <Content Include="Views\Home\Subjekt2_RegistrSmluv.cshtml" />
+    <Content Include="Views\Home\Subjekt2_VerejneZakazky.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
