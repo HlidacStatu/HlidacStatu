@@ -57,7 +57,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             {
                 issues.Add(
                     new Issue(this, (int)IssueType.IssueTypes.Budouci_datum_uzavreni, "Budoucí datum uzavření smlouvy", "Údaj o datumu uzavření smlouvy obsahuje budoucí datum.")
-                    { Permanent = true }
+                    { Permanent = false }
                     );
             }
 
