@@ -92,6 +92,26 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
+        public ActionResult Subjekt2_VerejneZakazky(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View((Firma: firma, Data: new List<int>()));
+            }
+
+            return result;
+        }
+
+        public ActionResult Subjekt2_InsolvencniRejstrik(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View((Firma: firma, Data: new List<int>()));
+            }
+
+            return result;
+        }
+
         [NonAction()]
         private bool TryGetCompany(string id, out Firma firma, out ActionResult actionResult)
         {
