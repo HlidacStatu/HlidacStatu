@@ -162,7 +162,7 @@
         </p>
 
         <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
-        <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2_RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -189,7 +189,7 @@
                 </p>
             }
         }
-        <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2_VerejneZakazky/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -306,7 +306,7 @@
             }
         }
 
-        <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2_Dotace/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -336,7 +336,7 @@
                 </p>
             }
 
-        <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2_InsolvencniRejstrik/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
