@@ -52,21 +52,8 @@
 
 <div class="head">
     <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno</h3>
-    <p>Úřad - orgán veřejné moci. 
-    @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count()>0) 
-    {
-        <span>
-            Řídí <a href="/subjektVazby/@Model.ICO">@Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count(),"1 podřízenou organizaci","{0} podřízené organizace","podřízených organizací").</a>
-        </span>
-    }
-    @if (Model.KategorieOVM().Count() > 0)
-    {
-        <span>
-        Je součástí <a href="">@Devmasters.Lang.Plural.Get( .... )14 kategorií orgánu veřejné moci.</a>
-        </span>
-    }
-    </p>
- </div>
+    @WebUtil.CompanySummary(Model)
+</div>
     <hr />
     
 

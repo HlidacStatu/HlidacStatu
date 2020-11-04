@@ -6,12 +6,13 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Render
 {
-
-
-    public class ReportDataSource<T> //: IReportDataSource<T>
-                                     //where T : class
+    public class ReportDataSource<T>
     {
         public static System.Func<T, string> NoRender = (s) => { return string.Empty; };
+
+        /// <summary>
+        /// Obsahuje metada o tom, jak se má který sloupec vykreslit.
+        /// </summary>
         public class Column //: IColumn<T>
         {
             public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -22,9 +23,12 @@ namespace HlidacStatu.Lib.Render
             public System.Func<T, object> ValueRender { get; set; } = (s) => { return s; };
             public System.Func<T, string> OrderValueRender { get; set; } = (s) => { return null; };
         }
+
+        /// <summary>
+        /// Obsahuje hodnoty s referencí na sloupec
+        /// </summary>
         public class DataValue
         {
-
             public T Value { get; set; }
             public Column Column { get; set; }
         }
@@ -40,9 +44,10 @@ namespace HlidacStatu.Lib.Render
         {
             return Clone(newData, ColumnsNamesToIndexes(copyColumnNames.ToArray()), numRowsToCopy, newTitle);
         }
-            public ReportDataSource<T> Clone(
-            IEnumerable<T> newData,
-            IEnumerable<int> copyColumnIndexess, int numRowsToCopy = int.MaxValue, string newTitle = null)
+
+        public ReportDataSource<T> Clone(
+        IEnumerable<T> newData,
+        IEnumerable<int> copyColumnIndexess, int numRowsToCopy = int.MaxValue, string newTitle = null)
         {
             ReportDataSource<T> inst = new ReportDataSource<T>(new string[] { });
             inst.Title = newTitle ?? this.Title;
@@ -66,9 +71,12 @@ namespace HlidacStatu.Lib.Render
 
         public ReportDataSource<T> Filter(IEnumerable<int> copyColumnIndexes, int numRowsToCopy, string newTitle = null)
         {
-            ReportDataSource<T> newrds = new ReportDataSource<T>();
-            newrds.Title = newTitle ?? this.Title;
-            newrds.Columns = new List<ReportDataSource<T>.Column>();
+            ReportDataSource<T> newrds = new ReportDataSource<T>
+            {
+                Title = newTitle ?? this.Title,
+                Columns = new List<ReportDataSource<T>.Column>()
+            };
+
             foreach (var c in copyColumnIndexes)
                 newrds.Columns.Add(this.Columns[c]);
 
@@ -129,6 +137,11 @@ namespace HlidacStatu.Lib.Render
             Data.Clear();
         }
 
+
+        /// <summary>
+        /// Každý sloupec má referenci na stejná data.
+        /// </summary>
+        /// <param name="value"></param>
         public virtual void AddRow(T value)
         {
             if (value == null)
@@ -141,7 +154,6 @@ namespace HlidacStatu.Lib.Render
             Data.Add(vals.ToArray());
         }
 
-
         public IEnumerable<int> ColumnsNamesToIndexes(params string[] columnNames)
         {
             var idxs = new List<int>();
@@ -153,15 +165,11 @@ namespace HlidacStatu.Lib.Render
             }
             return idxs;
         }
-
     }
-
 
 
     public class ReportDataSource : ReportDataSource<object>
     {
-
-
         public ReportDataSource(System.Data.DataTable dt) : base(dt)
         { }
 
@@ -208,9 +216,7 @@ namespace HlidacStatu.Lib.Render
         )
             {
                 rds.AddRow(new DateTime(val.Date.Ticks, DateTimeKind.Utc).ToLocalTime(), val.DocCount);
-
             }
-
         }
 
 
@@ -233,8 +239,6 @@ namespace HlidacStatu.Lib.Render
 
         }
 
-
-
         public static ReportDataSource SimpleReportDataForDateChart(string xAxisName, string yAxisName, Dictionary<DateTime,decimal> data)
         {
             ReportDataSource rds = new ReportDataSource(new ReportDataSource.Column[]
@@ -254,10 +258,7 @@ namespace HlidacStatu.Lib.Render
 
             return rds;
         }
-
-
     }
-
 
     public class ReportDataTimeValue {
         public DateTime Date { get; set; }

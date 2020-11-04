@@ -310,9 +310,21 @@ namespace HlidacStatu.Web.Framework
         }
 
 
-        public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, string title, HlidacStatu.Lib.Render.ReportDataSource<T> rds,
-    string tableId = "", string dataTableOptions = "", string customTableHeader = null)
+        public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, 
+            string title, 
+            HlidacStatu.Lib.Render.ReportDataSource<T> rds,
+            string tableId = "", 
+            string dataTableOptions = @"{
+                         'language': {
+                            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+                        },
+                        'order': [],
+                        'lengthChange': false,
+                        'info': false,
+                        }", 
+            string customTableHeader = null)
         {
+
             System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
             string _tableId = tableId;
             if (string.IsNullOrEmpty(tableId))

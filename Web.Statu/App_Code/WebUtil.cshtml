@@ -216,7 +216,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     {
         @Html.Raw(ifEmpty) }
     else
-         if (hasValue.GetType() == typeof(string))
+            if (hasValue.GetType() == typeof(string))
     {
         @IfExists(!string.IsNullOrEmpty(hasValue.ToString()), exists, ifEmpty) }
     else
@@ -1053,7 +1053,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
     System.Security.Principal.IPrincipal user = CurrPage.User;
     string style = "btn btn-primary btn-sm";
     string idPrefix = System.Guid.NewGuid().ToString("N");
-    
+
 
     if (mustAuth == false || (mustAuth && user?.Identity?.IsAuthenticated == true))
     {<!-- Button trigger modal -->
@@ -1080,17 +1080,17 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                         <div class="modal-body">
 
                             <input type="hidden" name="@(idPrefix)fbUrl" id="@(idPrefix)fbUrl" value="@Request.Url.AbsoluteUri" />
-                            
-                            @if(!string.IsNullOrWhiteSpace(noteLabel))
+
+                            @if (!string.IsNullOrWhiteSpace(noteLabel))
                             {
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"
                                            for="@(idPrefix)fbInputTxt">@noteLabel</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="@(idPrefix)fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="@(idPrefix)fbInputTxt" cols="60" rows="5" placeholder="Text zprávy"></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"
                                        for="@(idPrefix)fbInputEmail">Váš email</label>
@@ -1123,7 +1123,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
             var email = $(prf + "fbInputEmail").val();
             var text = $(prf + "fbInputTxt").val();
             var url = $(prf + "fbUrl").val();
-            
+
             $.get("@url", { email: email, txt: text, url: url, data: "@addData", auth: @mustAuth.ToString().ToLower() })
               .always(function () {
                   alert("Děkujeme za zaslání zprávy.");
@@ -1290,6 +1290,48 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
     </div>
 }
 
+@helper CompanySummary(HlidacStatu.Lib.Data.Firma firma)
+{
+    <p>
+        @if (firma.JsemOVM())
+        {
+            <span>Úřad - orgán veřejné moci.</span>
+        }
+        else if (firma.JsemStatniFirma())
+        {
+            <span>Firma (spolu)vlastněná státem či samosprávou.</span>
+        }
+        else
+        {
+            <span>Soukromá firma.</span>
+        }
+        @if (!string.IsNullOrWhiteSpace(firma.StatusFull()))
+        {
+            <span class="text-muted">@firma.StatusFull().</span>
+        }
+        @if (firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+        {
+            if (firma.PatrimStatu())
+            {
+                <span>
+                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
+                </span>
+            }
+            else
+            {
+                <span>
+                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
+                </span>
+            }
+        }
+        @if (firma.KategorieOVM().Count() > 0)
+        {
+            <span>
+                Je součástí <a href="">@Devmasters.Lang.Plural.Get(firma.KategorieOVM().Count(), "jedné kategorie", "{0} kategorií", "{0} kategorií") orgánu veřejné moci.</a>
+            </span>
+        }
+    </p>
+}
 
 
 @helper HorizontalTabs(IEnumerable<string> tabnames, IEnumerable<string> contents,

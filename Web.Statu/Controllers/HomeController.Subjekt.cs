@@ -70,7 +70,7 @@ namespace HlidacStatu.Web.Controllers
                             .Select(c => 
                             (
                                 Ico: s.Prijemce.Ico,
-                                Rok: c.Rok ?? r.Rok ?? s.DatumPodpisu?.Year ?? 0,
+                                Rok: c.GuessedYear ?? 0,
                                 Cerpano: c.CastkaSpotrebovana ?? 0
                             ))
                         )
@@ -96,6 +96,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
+                //var verejneZakazky = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch($"holding:{firma.ICO}");
+
                 return View((Firma: firma, Data: new List<int>()));
             }
 

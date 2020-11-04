@@ -84,7 +84,7 @@
 
 <div class="head">
     <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Veřejné zakázky</h3>
-    <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
+    @WebUtil.CompanySummary(Model.Firma)
 </div>
 <hr />
 

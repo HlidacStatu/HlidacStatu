@@ -8,7 +8,6 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-
 @section breadcrumb
 {
     <ol class="breadcrumb">
@@ -28,7 +27,7 @@
     <script src="/scripts/highcharts-6/modules/treemap.js"></script>
     <script>
         $(document).ready(function () {
-            $('#datatable').DataTable({
+            $('.datatable').DataTable({
                 "language": {
                     "info": "Zobrazuji _START_. - _END_. z celkového počtz _TOTAL_ záznamů.",
                     "search": "Hledat:",
@@ -44,6 +43,15 @@
             });
         });
 
+    </script>
+
+    <script>
+        $(function () {
+            $('.toggle.btn').click(function () {
+                $('.toggle').toggle();
+            });
+
+        });
     </script>
 
 }
@@ -84,7 +92,8 @@
 
 <div class="head">
     <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Dotace</h3>
-    <p>Úřad - orgán veřejné moci. Řídí <a>45 podřízených organizací.</a> Je součástí <a>14 kategorií orgánu veřejné moci.</a></p>
+    <div><a class="btn btn-primary" href="/subjekt2/@Model.Firma.ICO">Zpět na přehled</a></div>
+    @WebUtil.CompanySummary(Model.Firma)
 </div>
 <hr />
 
@@ -99,24 +108,122 @@
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
         <div>
-            <h4>Dotace graf</h4>
-
+            <h4>Souhrn</h4>
             @{
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
 
-                ReportDataSource reportData = new ReportDataSource(new ReportDataSource.Column[]
+                string durl = "/dotace/hledat?Q=ico%3A+" + Model.Firma.ICO;
+                var dotaceStat = dotaceService.GetStatisticsForIco(Model.Firma.ICO);
+
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceStat.Sum, html: true) + "</b>."; }
+
+            @if (Model.Firma.JsemOVM())
+            {
+                <p>
+                    Úřad @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                " nedostal žádnou dotaci.",
+                                                " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                </p>
+            }
+            else
+            {
+                <p>
+                    Firma @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                                                " nedostala žádnou dotaci.",
+                                                " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                                                " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                                                " dostala <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                </p>
+            }
+
+            @if (Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+            {
+                var dotaceHoldingStat = dotaceService.GetStatisticsForHolding(Model.Firma.ICO);
+
+
+                decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
+                int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
+
+                if (totalCountDotaceHolding - dotaceStat.Count > 0)
                 {
-                    new ReportDataSource.Column()
+                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceStat.Sum, html: true) + "</b>.";
+                    var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
+                    string durlH = "/dotace/hledat?Q=holding%3A+" + Model.Firma.ICO;
+                    if (Model.Firma.JsemOVM())
                     {
-                        Name = "Rok"
-                    },
-                    new ReportDataSource.Column()
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                            úřadu @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
+
+                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                        "dostala",
+                                                        "dostaly",
+                                                        "dostalo")
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                    " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                    " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                    " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                        </p>
+                        <p>
+                            Úřad <b>@(Model.Firma.Jmeno)</b> včetně podřízených organizací dostal celkem
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                    " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                        </p> }
+                    else
                     {
-                        Name = "Celkový objem dotace"
-                    },
-        });
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
+                            firmy @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
 
+                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                                        "dostala",
+                                                        "dostaly",
+                                                        "dostalo")
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                                                                                    " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
+                                                                                    " další <b>{0} dotace</b>" + sdotaceHDiffKc,
+                                                                                    " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
+                        </p>
+                        <p>
+                            Celý holding včetně <b>@(Model.Firma.Jmeno)</b> dostal celkem
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding,
+                                                    " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                                                    " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+                        </p> }
+                }
+                else
+                {
+                    if (Model.Firma.JsemOVM())
+                    {
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                            úřadu @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35) nedostaly žádné dotace.
+                        </p> }
+                    else
+                    {
+                        <p>
+                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            firmy @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35) nedostaly žádné dotace.
+                        </p>}
+                }
+            }
+            <hr />
 
+            <h4>Přehled subjektu</h4>
+
+            <div class="btn btn-default toggle">Graf/<small>Data</small></div>
+            <div class="btn btn-default toggle" style="display:none;"><small>Graf</small>/Data</div>
+            <div class="toggle">
+            @{
                 var dataFirma = Model.Cerpani.Where(c => c.Ico == Model.Firma.ICO)
                     .GroupBy(s => s.Rok)
                     .Select(g => new ReportDataTimeValue()
@@ -129,15 +236,75 @@
                 @UtilChart.SimpleColumnChart(
                    new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: dataFirma) },
                 "Přehled inkasovaných dotací", "Přehled dotací", 500);
+            }
+            </div>
+            <div class="toggle" style="display:none;">
+                @{
+                    var companyDotace = Model.Cerpani
+                        .Where(c => c.Ico == Model.Firma.ICO)
+                        .GroupBy(c => c.Rok)
+                        .Select(g => (Rok: g.Key, CerpanoCelkem: g.Sum(c => c.Cerpano)))
+                        .Where(x => x.CerpanoCelkem > 0);
 
+                    var reportData = new ReportDataSource<(int Rok, decimal CerpanoCelkem)>(
+                        new ReportDataSource<(int Rok, decimal CerpanoCelkem)>.Column[]
+                        {
+                            new ReportDataSource<(int Rok, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Rok",
+                                CssClass = "number",
+                                HtmlRender = (x) => x.Rok.ToString(),
+                                TextRender = (x) => x.Rok.ToString()
 
-                var dataHolding = Model.Cerpani
-                    .GroupBy(c => c.Rok)
-                    .Select(g => new ReportDataTimeValue()
+                            },
+                            new ReportDataSource<(int Rok, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Čerpáno",
+                                TextRender = (x) => $"{x.CerpanoCelkem.ToString("N0")} Kč",
+                                HtmlRender = (x) => $"{x.CerpanoCelkem.ToString("N0")}&nbsp;Kč",
+                                CssClass = "number"
+                            },
+                            new ReportDataSource<(int Rok, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Detaily",
+                                HtmlRender = (x) =>
+                                $"<a href=\"/dotace/hledat?Q=ico:{Model.Firma.ICO} AND rozhodnuti.cerpani.guessedYear:{x.Rok}\">Dotace za rok {x.Rok}</a>"
+                            }
+                }
+                    );
+
+                    foreach (var dot in companyDotace)
                     {
-                        Date = new DateTime(g.Key, 1, 1),
-                        Value = g.Sum(c => c.Cerpano)
-                    });
+                        reportData.AddRow(dot);
+                    }
+
+                }
+
+                @Html.DataToHTMLTable("Přehled čerpání dotací společnosti",reportData)
+            </div>
+
+
+
+
+            <hr />
+            <hr />
+
+            @if (Model.Firma.JsemOVM())
+            {
+                <h4>Informace o podřízených organizacích</h4>
+            }
+            else
+            {
+                <h4>Informace o holdingu</h4>
+            }
+            @{ 
+                var dataHolding = Model.Cerpani
+                        .GroupBy(c => c.Rok)
+                        .Select(g => new ReportDataTimeValue()
+                        {
+                            Date = new DateTime(g.Key, 1, 1),
+                            Value = g.Sum(c => c.Cerpano)
+                        });
 
                 @UtilChart.SimpleColumnChart(
                    new[] { (name: "Dotace po letech", values: dataHolding) },
@@ -151,7 +318,7 @@
                     .Where(x => x.CerpanoCelkem > 0);
 
             }
-            <table id="datatable" class="table table-striped table-bordered table-sm">
+            <table class="datatable table table-striped table-bordered table-sm">
                 <thead>
                     <tr><th>Ico</th><th>Rok</th><th>Čerpáno</th></tr>
 
@@ -168,7 +335,6 @@
             </table>
 
 
-            <a class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
 
     </div>
