@@ -40,6 +40,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             {
                 // fill in sums
                 d.CalculateTotals();
+                d.CalculateCerpaniYears();
             }
 
             var result = _esClient.IndexMany<Dotace>(dotace);

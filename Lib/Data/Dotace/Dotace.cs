@@ -47,11 +47,7 @@ namespace HlidacStatu.Lib.Data.Dotace
         public List<string> Chyba { get; set; }
 
 
-
-        public string BookmarkName()
-        {
-            return this.NazevProjektu;
-        }
+        public string BookmarkName() => GetNazevDotace();
 
         public string GetNazevDotace()
         {
@@ -67,10 +63,7 @@ namespace HlidacStatu.Lib.Data.Dotace
             return "";
         }
 
-        public string GetUrl(bool local = true)
-        {
-            return GetUrl(local, string.Empty);
-        }
+        public string GetUrl(bool local = true) => GetUrl(local, string.Empty);
 
         public string GetUrl(bool local, string foundWithQuery)
         {
@@ -88,6 +81,9 @@ namespace HlidacStatu.Lib.Data.Dotace
         {
             //calculate fields before saving
             CalculateTotals();
+            // doplnit odhadované roky čerpání
+            CalculateCerpaniYears();
+
             var res = ES.Manager.GetESClient_Dotace().Index<Dotace>(this, o => o.Id(this.IdDotace)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
@@ -95,21 +91,12 @@ namespace HlidacStatu.Lib.Data.Dotace
             }
         }
 
-        public string ToAuditJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
 
-        public string ToAuditObjectId()
-        {
-            return this.IdDotace;
-        }
+        public string ToAuditJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this);
 
-        public string ToAuditObjectTypeName()
-        {
-            return "Dotace";
-        }
+        public string ToAuditObjectId() => this.IdDotace;
 
+        public string ToAuditObjectTypeName() => "Dotace";
 
         public void CalculateTotals()
         {
@@ -127,6 +114,17 @@ namespace HlidacStatu.Lib.Data.Dotace
                 PujckaCelkem = Rozhodnuti.Where(r => r.JePujcka.HasValue && r.JePujcka.Value).Sum(r => r.CerpanoCelkem ?? 0);
             }
          
+        }
+
+        public void CalculateCerpaniYears()
+        {
+            foreach(var rozhodnuti in Rozhodnuti)
+            {
+                foreach(var cerpani in rozhodnuti.Cerpani)
+                {
+                    cerpani.GuessedYear = cerpani.Rok ?? rozhodnuti.Rok ?? DatumPodpisu?.Year;
+                }
+            }
         }
 
         public ExpandoObject FlatExport()
