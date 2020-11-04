@@ -134,19 +134,19 @@ namespace HlidacStatu.Web.Framework
             }
             return htmlHelper.Raw("");
         }
-        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label, 
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
             int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false)
         {
             return htmlHelper.KIndexIcon(label, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone);
         }
 
-        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label, 
-            string style, bool showNone = false, string title="")
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
+            string style, bool showNone = false, string title = "")
         {
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                return htmlHelper.Raw(Lib.Analysis.KorupcniRiziko.KIndexData.KindexImageIcon(label,style,showNone,title));
+                return htmlHelper.Raw(Lib.Analysis.KorupcniRiziko.KIndexData.KindexImageIcon(label, style, showNone, title));
             }
             else
                 return htmlHelper.Raw("");
@@ -154,7 +154,7 @@ namespace HlidacStatu.Web.Framework
 
 
         public static IHtmlString KIndexLabelLink(this HtmlHelper htmlHelper, string ico,
-            int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false, 
+            int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false,
             int? rok = null, bool linkToKindex = false)
         {
             return htmlHelper.KIndexLabelLink(ico, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone, rok, linkToKindex);
@@ -191,7 +191,7 @@ namespace HlidacStatu.Web.Framework
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))
             {
-                if(linkToKindex)
+                if (linkToKindex)
                 {
                     if (label != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None || showNone)
                     {
@@ -284,15 +284,16 @@ namespace HlidacStatu.Web.Framework
             Cache48H,
             debug
         }
-        public static MvcHtmlString CachedAction(this HtmlHelper self, CachedActionLength length, string viewName, object model, 
-            string primaryKey, bool? auth=null, 
-            object param1 =null, object param2 = null, object param3 = null, object param4 = null, 
+        public static MvcHtmlString CachedAction(this HtmlHelper self, CachedActionLength length, string viewName, object model,
+            string primaryKey, bool? auth = null,
+            object param1 = null, object param2 = null, object param3 = null, object param4 = null,
             object param5 = null, object param6 = null, object param7 = null, object param8 = null)
         {
             string cacheLength = length.ToString().Replace("Cache", "");
-            return self.Action("CachedAction_Child_" + cacheLength, new { 
-                model = model, 
-                NameOfView = viewName, 
+            return self.Action("CachedAction_Child_" + cacheLength, new
+            {
+                model = model,
+                NameOfView = viewName,
                 auth = auth ?? self.ViewContext.RequestContext.HttpContext.User?.Identity?.IsAuthenticated,
                 key = primaryKey,
                 param1,
@@ -307,6 +308,63 @@ namespace HlidacStatu.Web.Framework
 
             );
         }
+
+
+        public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, string title, HlidacStatu.Lib.Render.ReportDataSource<T> rds,
+    string tableId = "", string dataTableOptions = "", string customTableHeader = null)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+            string _tableId = tableId;
+            if (string.IsNullOrEmpty(tableId))
+            {
+                _tableId = Devmasters.TextUtil.GenRandomString("abcdefghijklmnopqrstuvwxyz", 10);
+            }
+
+            sb.AppendLine(@"<script>
+var tbl_" + _tableId + @";
+$(document).ready(function () {
+tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions + @");
+});
+</script>");
+
+            sb.AppendFormat("<h3>{0}</h3>", rds?.Title ?? "");
+            sb.AppendFormat("<table id=\"{0}\" class=\"table-sorted table table-bordered table-striped\">", _tableId);
+            if (customTableHeader == null)
+            {
+                sb.Append("<thead><tr>");
+                foreach (var column in rds.Columns)
+                {
+                    sb.AppendFormat("<th>{0}</th>", column.Name);
+                }
+                sb.Append("</tr></thead>");
+            }
+            else
+            {
+                sb.AppendFormat(customTableHeader, _tableId);
+            }
+            sb.Append("<tbody class=\"list\">");
+            foreach (var row in rds.Data)
+            {
+                sb.Append("<tr>");
+                foreach (var d in row)
+                {
+                    sb.AppendFormat("<td {2} class=\"{0}\">{1}</td>",
+                        d.Column.CssClass,
+                        d.Column.HtmlRender(d.Value),
+                        string.IsNullOrEmpty(d.Column.OrderValueRender(d.Value))
+                                ? string.Empty : string.Format("data-order=\"{0}\"", d.Column.OrderValueRender(d.Value))
+                        );
+
+                }
+                sb.Append("</tr>");
+            }
+            sb.Append("</table>");
+            return htmlHelper.Raw(sb.ToString());
+        }
+
+
+
+
     }
 
 
