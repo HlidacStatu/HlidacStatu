@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using HlidacStatu.Lib.Data.VZ;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -96,9 +97,9 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                //var verejneZakazky = Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch($"holding:{firma.ICO}");
+                var verejneZakazky = VerejnaZakazka.Searching.GetVZForHolding(firma.ICO);
 
-                return View((Firma: firma, Data: new List<int>()));
+                return View((Firma: firma, Data: verejneZakazky));
             }
 
             return result;

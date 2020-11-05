@@ -11,7 +11,6 @@ namespace HlidacStatu.Lib.Data.VZ
 {
     public partial class VerejnaZakazka
     {
-        //https://hooks.slack.com/services/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
         public static class Searching
         {
             private static string regex = "[^/]*\r\n/(?<regex>[^/]*)/\r\n[^/]*\r\n";

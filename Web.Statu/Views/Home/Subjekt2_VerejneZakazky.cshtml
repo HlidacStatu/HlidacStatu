@@ -1,4 +1,4 @@
-﻿@model (HlidacStatu.Lib.Data.Firma Firma, List<int> Data)
+﻿@model (HlidacStatu.Lib.Data.Firma Firma, IEnumerable<VerejnaZakazka> Data)
 
 @using Nest;
 @using HlidacStatu.Web.Framework;
@@ -7,7 +7,7 @@
 @using System;
 @using System.Data;
 @using HlidacStatu.Lib.Render;
-
+@using HlidacStatu.Lib.Data.VZ;
 
 @section breadcrumb
 {
@@ -84,6 +84,7 @@
 
 <div class="head">
     <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Veřejné zakázky</h3>
+    <div><a class="btn btn-primary" href="/subjekt2/@Model.Firma.ICO">Zpět na přehled</a></div>
     @WebUtil.CompanySummary(Model.Firma)
 </div>
 <hr />
@@ -101,8 +102,8 @@
         <div>
             <h4>Veřejné zakázky</h4>
             @{
-                var resVZdodav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.Firma.ICO, null, 1, 0, "1");
-                var resVZzadav = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.Firma.ICO, null, 1, 0, "1");
+                var resVZdodav = VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.Firma.ICO, null, 1, 0, "1");
+                var resVZzadav = VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.Firma.ICO, null, 1, 0, "1");
                 Dictionary<string, long> vzakaz = new Dictionary<string, long>();
                 vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
                 vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
@@ -119,6 +120,18 @@
                     </p>
                 }
             }
+
+            <hr />
+            <h4>Data</h4>
+            @*@{ 
+                var x = Model.Data
+                    .Where(d => d.Zadavatel.ICO == Model.Firma.ICO)
+                    .Select(vz => new { 
+                        vz.DatumUverejneni,
+                        vz.hod
+                    
+                    })
+            }*@
 
         </div>
 
