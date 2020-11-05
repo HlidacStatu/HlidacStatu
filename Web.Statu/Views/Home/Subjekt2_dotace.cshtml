@@ -223,20 +223,20 @@
             <div class="btn btn-default toggle">Graf/<small>Data</small></div>
             <div class="btn btn-default toggle" style="display:none;"><small>Graf</small>/Data</div>
             <div class="toggle">
-            @{
-                var dataFirma = Model.Cerpani.Where(c => c.Ico == Model.Firma.ICO)
-                    .GroupBy(s => s.Rok)
-                    .Select(g => new ReportDataTimeValue()
-                    {
-                        Date = new DateTime(g.Key, 1, 1),
-                        Value = g.Sum(x => x.Cerpano)
-                    });
+                @{
+                    var dataFirma = Model.Cerpani.Where(c => c.Ico == Model.Firma.ICO)
+                        .GroupBy(s => s.Rok)
+                        .Select(g => new ReportDataTimeValue()
+                        {
+                            Date = new DateTime(g.Key, 1, 1),
+                            Value = g.Sum(x => x.Cerpano)
+                        });
 
 
-                @UtilChart.SimpleColumnChart(
-                   new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: dataFirma) },
-                "Přehled inkasovaných dotací", "Přehled dotací", 500);
-            }
+                    @UtilChart.SimpleColumnChart(
+                       new (string name, IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Dotace po letech", values: dataFirma) },
+                    "Přehled inkasovaných dotací", "Přehled dotací", 500);
+                }
             </div>
             <div class="toggle" style="display:none;">
                 @{
@@ -262,6 +262,7 @@
                                 Name = "Čerpáno",
                                 TextRender = (x) => $"{x.CerpanoCelkem.ToString("N0")} Kč",
                                 HtmlRender = (x) => $"{x.CerpanoCelkem.ToString("N0")}&nbsp;Kč",
+                                OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.CerpanoCelkem),
                                 CssClass = "number"
                             },
                             new ReportDataSource<(int Rok, decimal CerpanoCelkem)>.Column()
@@ -270,20 +271,18 @@
                                 HtmlRender = (x) =>
                                 $"<a href=\"/dotace/hledat?Q=ico:{Model.Firma.ICO} AND rozhodnuti.cerpani.guessedYear:{x.Rok}\">Dotace za rok {x.Rok}</a>"
                             }
-                }
+        }
                     );
 
                     foreach (var dot in companyDotace)
                     {
                         reportData.AddRow(dot);
                     }
-
+                    reportData.Title = "Přehled čerpání dotací společnosti";
                 }
 
-                @Html.DataToHTMLTable("Přehled čerpání dotací společnosti",reportData)
+                @Html.DataToHTMLTable(reportData)
             </div>
-
-
 
 
             <hr />
@@ -297,8 +296,11 @@
             {
                 <h4>Informace o holdingu</h4>
             }
-            @{ 
-                var dataHolding = Model.Cerpani
+            <div class="btn btn-default toggle">Graf/<small>Data</small></div>
+            <div class="btn btn-default toggle" style="display:none;"><small>Graf</small>/Data</div>
+            <div class="toggle">
+                @{
+                    var dataHolding = Model.Cerpani
                         .GroupBy(c => c.Rok)
                         .Select(g => new ReportDataTimeValue()
                         {
@@ -306,35 +308,54 @@
                             Value = g.Sum(c => c.Cerpano)
                         });
 
-                @UtilChart.SimpleColumnChart(
-                   new[] { (name: "Dotace po letech", values: dataHolding) },
-                "Přehled inkasovaných dotací za celý holding", "Přehled dotací holdingu", 500);
+                    @UtilChart.SimpleColumnChart(
+                       new[] { (name: "Dotace po letech", values: dataHolding) },
+                    "Přehled inkasovaných dotací za celý holding", "Přehled dotací holdingu", 500);
+
+                    var holdingDotace = Model.Cerpani
+                        .GroupBy(c => c.Ico)
+                        .Select(g => (Ico: g.Key,
+                            Nazev: HlidacStatu.Lib.Data.Firmy.GetJmeno(g.Key),
+                            CerpanoCelkem: g.Sum(c => c.Cerpano)))
+                        .Where(x => x.CerpanoCelkem > 0);
 
 
+                    var holdingReportData = new ReportDataSource<(string Ico, string Nazev, decimal CerpanoCelkem)>(
+                        new ReportDataSource<(string Ico, string Nazev, decimal CerpanoCelkem)>.Column[]
+                        {
+                            new ReportDataSource<(string Ico, string Nazev, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Subjekt",
+                                TextRender = (x) => x.Nazev,
+                                HtmlRender = (x) => x.Nazev,
+                            },
+                            new ReportDataSource<(string Ico, string Nazev, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Suma",
+                                TextRender = (x) => $"{x.CerpanoCelkem.ToString("N0")} Kč",
+                                HtmlRender = (x) => $"{x.CerpanoCelkem.ToString("N0")}&nbsp;Kč",
+                                OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.CerpanoCelkem),
+                                CssClass = "number"
+                            },
+                            new ReportDataSource<(string Ico, string Nazev, decimal CerpanoCelkem)>.Column()
+                            {
+                                Name = "Detaily",
+                                HtmlRender = (x) =>
+                                $"<a href=\"/dotace/hledat?Q=ico:{x.Ico}\">Dotace pro {x.Nazev}</a>"
+                            }
+        }
+                    );
+                    foreach(var dot in holdingDotace)
+                    {
+                        holdingReportData.AddRow(dot);
+                    }
+                    holdingReportData.Title = "Přehled čerpání dotací holdingu";
 
-                var dataTable = Model.Cerpani
-                    .GroupBy(c => new { Ico = c.Ico, Rok = c.Rok })
-                    .Select(g => (Ico: g.Key.Ico, Rok: g.Key.Rok, CerpanoCelkem: g.Sum(c => c.Cerpano)))
-                    .Where(x => x.CerpanoCelkem > 0);
-
-            }
-            <table class="datatable table table-striped table-bordered table-sm">
-                <thead>
-                    <tr><th>Ico</th><th>Rok</th><th>Čerpáno</th></tr>
-
-                </thead>
-                @foreach (var data in dataTable)
-                {
-                    <tr>
-                        <td>@data.Ico</td>
-                        <td>@data.Rok</td>
-                        <td>@data.CerpanoCelkem.ToString("N0")</td>
-                    </tr>
                 }
-
-            </table>
-
-
+            </div>
+            <div class="toggle" style="display:none;">
+                @Html.DataToHTMLTable(holdingReportData)
+            </div>
         </div>
 
     </div>

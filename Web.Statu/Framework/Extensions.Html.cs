@@ -311,7 +311,6 @@ namespace HlidacStatu.Web.Framework
 
 
         public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, 
-            string title, 
             HlidacStatu.Lib.Render.ReportDataSource<T> rds,
             string tableId = "", 
             string dataTableOptions = @"{
