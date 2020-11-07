@@ -783,6 +783,15 @@ hr.morespace {
     margin-bottom: 40px;
 }
 
+hr.middle {
+    width:50%;
+}
+
+hr.dark {
+    border-top: 1px solid #777;
+}
+
+
 td a.nostyle {
     text-decoration: none;
     display: block;

@@ -27,7 +27,7 @@
             <div>Autorizační token: <code>@ViewBag.Token</code> <b>(toto není token pro OCR Minion. viz níže)</b></div>
             <div>
                 Příklad k použití:<br />
-                <code>curl -X GET https://www.hlidacstatu.cz/Api/v1/Detail/204737 -H 'Authorization: Token @ViewBag.Token'</code><br />
+                <code>curl -X GET https://www.hlidacstatu.cz/Api/v2/smlouvy/204737 -H 'Authorization: Token @ViewBag.Token'</code><br />
             </div>
         </div>
 
@@ -36,7 +36,13 @@
                 <table class="table table-hover">
                     <tr>
                         <td>Kompletní dokumentace</td>
-                        <td><a style="font-size:130%" href="https://hlidacstatu.docs.apiary.io/">https://hlidacstatu.docs.apiary.io/</a></td>
+
+                        <td>
+                            <ul>
+                            <li><a style="font-size:100%" href="https://www.hlidacstatu.cz/api/v2/swagger/index">Dokumentace API v2</a></li>
+                            <li><a style="font-size:100%" href="https://www.hlidacstatu.cz/api/v2/swagger/">Swagger file API v2</a></li>
+                            </ul>
+                        </td>
                     </tr>
                     @if (!string.IsNullOrEmpty(ViewBag.OcrToken))
                     {
@@ -58,12 +64,13 @@
                                 Klient pro dolování (OCR) textů z obrázkových dokumentů pro Hlídač státu. Pro použití je potřeba speciální API key pro OCR Minion
                                 <br /><br />
                                 <a href="ocrstat"><i class="fas fa-list-ol"></i> Statistiky a žebříček spuštěných OCR Minion</a>.
+                                <br />
+                                <a href="https://github.com/HlidacStatu/OcrMinion">HlidacStatu OCR Minion na GitHubu</a>
                                 <br /><br />
                                 <a href="/api/v1/index?getocr=1" class="btn btn-warning" target="_blank">
                                     Získat svůj OCR Minion API key
                                 </a>
                                 <br />
-                                <a href="https://github.com/HlidacStatu/OcrMinion">HlidacStatu OCR Minion na GitHubu</a>
                             </td>
                         </tr>
                     }
@@ -74,11 +81,9 @@
                     </tr>
 
                     <tr>
-                        <td>Api v2 beta</td>
+                        <td>Dokumentace ke starému API V1</td>
                         <td>
-                            Můžete začít s testováním našeho nového API (zatím beta). V případě jakýchkoliv chyb jsme vám k dispozici. <br />
-                            <a style="font-size:130%" href="https://www.hlidacstatu.cz/api/v2/swagger/index">Dokumentace API v2</a> <br />
-                            <a style="font-size:130%" href="https://www.hlidacstatu.cz/api/v2/swagger/">Swagger file API v2</a>
+                            <a style="font-size:130%" href="https://hlidacstatu.docs.apiary.io/">https://hlidacstatu.docs.apiary.io/</a>
                         </td>
                     </tr>
                 </table>

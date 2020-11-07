@@ -1,0 +1,335 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = "Dokumentace API V2";
+    ViewBag.SubTitle = "REST API V2 Hlídače státu";
+
+}
+@section scripts
+{
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/api">API V2</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+<p>Svůj API token najdeš <a href="https://www.hlidacstatu.cz/api">https://www.hlidacstatu.cz/api</a>.</p>
+<pre><code>curl -X GET https://www.hlidacstatu.cz/Api/v2/Smlouvy/204737 -H 'Authorization: Token docela1dlouhy2token3pro4tohle5api'
+</code></pre>
+<p>Autorizace je prováděna pomocí autentifikačního tokenu, který je Vám přidělen. Autorizační token je nutno odesílat v hlavičce každého požadavku na API.
+Autorizační token: <code>docela1dlouhy2token3pro4tohleHS5api</code>
+Příklad k použití:</p>
+<h2>Autorizace</h2>
+<blockquote>
+<p>Všechna volání API jsou monitorována a ukládána.</p>
+</blockquote>
+
+<hr class="morespace middle dark" />
+<h2>API a Swagger</h2>
+<p style="font-weight:bold">
+    Dokumentaci jednotlivých API funkcí najdete na <a style="font-size:100%" href="https://www.hlidacstatu.cz/api/v2/swagger/index">https://www.hlidacstatu.cz/api/v2/swagger/index</a>. 
+    Swagger file je na <a style="font-size:100%" href="https://www.hlidacstatu.cz/api/v2/swagger/">https://www.hlidacstatu.cz/api/v2/swagger/</a> 
+</p>
+<p>
+    Na této stránce najdete podrobnější dokumentaci k datasetům - uživatelskýcm databázím Hlídače státu.
+</p>
+<hr class="morespace middle dark" />
+
+
+<h2>Licence volná</h2>
+<p>Data můžete zdarma stahovat, zpracovávat a dále publikovat pouze v souladu s
+licencí CC BY 3.0. Licence je jednoduchá a její pravidla také. <b>Některá API a některá data nejsou v rámci volné licence dostupné</b></p>
+<p>Nejdůležitější, nikoliv jediná pravidla licence:</p>
+<ol>
+<li>
+<p>Dílo a obsah smíte stáhnout, sdílet a libovolně upravit.</p>
+</li>
+<li>
+<p>Musíte vždy a bezpodmínečně uvést původ dat a autorství zdrojových dat (na internetu plný, funkční internetový odkaz na Hlídač státu)</p>
+</li>
+<li>
+<p>Nesmíte přidat žádná další technická či právní omezení nad rámec této licence.</p>
+</li>
+<li>
+<p>Pokud vám tato licence nevyhovuje, napište na api@hlidacstatu.cz</p>
+</li>
+</ol>
+<p><a href="https://www.hlidacstatu.cz/texty/licence/">Přečtěte si ji prosím</a>.</p>
+
+<h3>Licence komerční</h3>
+<p>Data můžete stahovat, zpracovávat a dále publikovat zcela volně, uvádět zdroj dat nemusíte. Všechna API a všechna data jsou dostupná v plném rozsahu.</p>
+<p>Pro více informací o komerční licenci pište na <a href="mailto:api@hlidacstatu.cz">api@hlidacstatu.cz</a></p>
+
+
+<hr class="morespace middle dark" />
+
+<h2>Datasety  </h2>
+
+<h4 class="actionName">Parametry nové datové sady</h4>
+<p>Registraci nové datové sady je potřeba udělat před prvním vkládáním dat do systému.
+Vrácený identifikátor datové sady se používá v dalších API</p>
+<p>Povinnou součástí registrace je JSON schema jednoho zaznamu (objektu).
+Očekáváme datové schéma ve formátu JSON Schema Draft 7. Každý vkládaný object je proti tomuto schématu validován
+a nevalidní záznam není uložen.</p>
+<blockquote>
+<p><strong>POZOR</strong> - po registraci není možné provést změnu JSON Schematu <code>jsonSchema</code>. Pokud potřebujete změnit JSON schema datové sady,
+musíte datovou sadu smazat, a zaregistrovat znovu. Smazáním datové sady se smažou i všechna data z datové sady.</p>
+</blockquote>
+<blockquote>
+<p><strong>POZOR</strong> - po registraci není možné provést změnu <code>datasetId</code>. Pokud ho potřebujete ,
+musíte datovou sadu smazat, a zaregistrovat znovu. Smazáním datové sady se smažou i všechna data z datové sady.</p>
+</blockquote>
+<h4>Popis struktury registrace datové sady</h4>
+<p>Ukázka datové struktury zde: <a href="https://github.com/HlidacStatu/API/blob/master/register.sample.json">https://github.com/HlidacStatu/API/blob/master/register.sample.json</a></p>
+<pre><code>{
+   "id": "rozhodnuti-uohs",
+   "name": "Rozhodnutí UOHS",
+   "datasetId": "rozhodnuti-uohs",
+   "origUrl": "http://www.uohs.cz/cs/verejne-zakazky/sbirky-rozhodnuti/",
+   "sourcecodeUrl": null,
+   "description": "Sbírka rozhodnutí Úřadu pro ochranu hospodářské soutěže od roku 1999 v oblastech hospodářská soutěž, veřejné zakázky, veřejná podpora a významná tržní síla.",
+   "jsonSchema": ".... JSON Schema, viz ukázka na odkazu výše ",
+   "createdBy": "michal@michalblaha.cz",
+   "created": "2018-09-22T10:44:38.7784317+02:00",
+   "betaversion": false,
+   "allowWriteAccess": false,
+   "hidden": false,
+   "searchResultTemplate": {
+      "body": "&lt;!-- scriban {{ date.now }} --&gt; .... scriban/liquid template",
+      "properties": null
+   },
+   "detailTemplate": {
+      "body": "&lt;!-- scriban {{ date.now }} --&gt; .... scriban/liquid template",
+      "properties": null
+   },
+   "orderList": [["Nabytí právní moci", "PravniMoc"], ["Účastníci", "Ucastnici.Jmeno.keyword"]]
+}
+</code></pre>
+<ul>
+<li>
+<p><code>datasetId</code> - unikátní jméno datové sady. Má pouze několik omezení</p>
+<ol>
+<li>musí být alespoň 5 znaků a max. 125 znaků dlouhé</li>
+<li>nesmí obsahovat znaky <code>#</code>, <code>\</code>, <code>/</code>, <code>*</code>, <code>?</code>, <code>"</code>, <code>&lt;</code>, <code>&gt;</code>, <code>|</code>, <code>[</code>, <code>]</code></li>
+<li>pokud některé z těchto pravidel nedodrží, je automaticky upraveno při registraci</li>
+<li>vrácené <code>datasetId</code> při registraci se může lišit od požadované hodnoty</li>
+<li>pokud není uvedeno, je odvozeno z <code>name</code></li>
+</ol>
+</li>
+<li>
+<p><code>name</code> - je povinné</p>
+</li>
+<li>
+<p><code>betaversion</code> - pokud je true, pak se nezobrazuje v seznamu datových zdrojů na <a href="https://www.hlidacstatu.cz/data">https://www.hlidacstatu.cz/data</a>.</p>
+<blockquote>
+<p>pokud zavoláš s parametrem <a href="https://www.hlidacstatu.cz/data">https://www.hlidacstatu.cz/data</a>?<strong>beta=1</strong>, pak se seznam zobrazí.</p>
+</blockquote>
+</li>
+<li>
+<p><code>allowWriteAccess</code> : pokud je <code>true</code>, pak data v datasetu může kdokoliv přepsat nebo smazat. Stejně tak údaje v registraci.
+Pokud je <code>false</code>, pak kdokoliv může data přidat, ale nemůže je přepsat či smazat. Nemůže také měnit parametry registrace datasetu.</p>
+</li>
+<li>
+<p><code>jsonSchema</code> - je povinné. Struktura vkládaných dat (a popsaná tímto JSON schéma) musí splňovat pár pravidel:</p>
+<ol>
+<li>vlastnost <code>Id</code> v rootu objektu - unikátní identifikátor objektu. <strong>Musí být</strong> součástí JSON Schematu i vkládaného objektu, ve formátu <code>string</code>.</li>
+<li>rezervované názvy vlastností, nepoužívejte je v jsonSchema ani objektech:
+<ul>
+<li><code>DbCreated</code>:  obsahuje datum vložení objektu do db.</li>
+<li><code>DbCreatedBy</code>:  obsahuje info o uživateli, který objekt do db vložil. Tento údaj není poskytován veřejně.</li>
+</ul>
+</li>
+<li>vlastnost <code>ICO</code> kdekoliv (i ve vložených objektech) - pokud je typu <code>string</code>, pak Hlídač státu předpokládá, že se jedná IČ subjektu a propojí záznam s firmami v Hlídači státu.</li>
+<li>vlastnost <code>OsobaId</code> kdekoliv (i ve vložených objektech) - pokud jde o string, pak Hlídač Státu předpokládá, že se jedná o identifikátor osoby z databáze Hlídače státu. Pro nalezení použijte endpoint <code>FindOsobaId</code></li>
+<li>vlastnost <code>Url</code> v rootu objektu - pokud dává smysl, měl by odkazovat na zdrojový záznam.</li>
+<li>vlastnost <code>HsProcessType</code> kdekoliv, v kombinaci s dalšími atributy (viz dále), zajistí následné zpracování záznamu na serveru a doplnění údajů na straně Hlídače.</li>
+</ol>
+</li>
+<li>
+<p><code>searchResultTemplate</code> - HTML template či seznam vlastností objektu, které se mají zobrazovat ve výsledku hledání. Podrobnější popis o kousek dál.</p>
+</li>
+<li>
+<p><code>detailTemplate</code> - HTML template či seznam vlastností objektu, které se mají zobrazovat na stránce s detailem objektu. Podrobnější popis o kousek dál.</p>
+</li>
+</ul>
+<h5>HsProcessType - doplnění objektu o další údaje ze strany Hlídače</h5>
+<p>Pokud libovolný objekt (v rootu, v poli či ve vložených objektech) obsahuje vlastnost <code>HsProcessType</code>
+s některou z definovaných hodnot, je takový objekt následně a asynchronně zpracován a doplněn o další údaje na straně Hlídače.</p>
+<ul>
+<li>
+<p><code>"HsProcessType": "person"</code> - definuje, že se jedná o objekt obsahující údaje o osobě, kterou chcete provázat s databází osob Hlídače.
+Tento typ předpokládá, že je uveden u objektu obsahující tyto atributy:</p>
+<ul>
+<li><code>Jmeno</code> nebo <code>Name</code> (string)</li>
+<li><code>Prijmeni</code> nebo <code>Surname</code> (string)
+<ul>
+<li>anebo namísto <code>Jmeno</code> a <code>Prijmeni</code> pouze jeden atribut <code>CeleJmeno</code> nebo <code>Fullname</code></li>
+</ul>
+</li>
+<li><code>Narozeni</code> nebo <code>Birthdate</code> (date)</li>
+<li><code>OsobaId</code> (string)</li>
+</ul>
+<p>Hodnota <code>OsobaId</code> nemusí a neměla by být vyplněna. Při vložení záznamu do Datasetu Hlídač automaticky doplní <code>OsobaId</code> a prováže tak záznam s databází osob Hlídače.
+<strong>Všechny uvedené atributy včetně <code>OsobaId</code> musí být uvedeny v JSONSchema datasetu.</strong></p>
+</li>
+<li>
+<p><code>"HsProcessType": "document"</code> - definuje, že se jedná o objekt obsahující odkaz na dokument, který je potřeba stáhnout a umožnit jeho fulltextové prohledávání.
+Tento typ předpokládá, že je uveden u objektu obsahující tyto atributy: <code>DocumentUrl</code>(string) a <code>DocumentPlainText</code> (string).
+Hodnota <code>DocumentPlainText</code> nemusí a neměla by být vyplněna. Po vložení záznamu do Datasetu Hlídač automaticky dokument stáhne, vydoluje data a doplní <code>DocumentPlainText</code>. Tato operace se provede asynchronně během několika minut až hodin.
+<strong>Všechny uvedené atributy včetně <code>DocumentPlainText</code> musí být uvedeny v JSONSchema datasetu.</strong></p>
+</li>
+</ul>
+
+<hr class="morespace middle dark" />
+
+<h2 class="resourceGroupName">HTML Template pro datasety - syntaxe a speciální funkce    </h2>
+<h3>HTML template pro searchResultTemplate a detailTemplate</h3>
+<p>Template je možné definovat dvěma způsoby:</p>
+<ol>
+<li>
+<p>pomocí seznamu vlastností - v takovém případě do <code>properties</code> dáš textové pole, které obsahuje seznam vlastností, které se mají vypsat.
+O vhodný způsob zobrazení se postará Hlídač státu. To je snadná a jednoduchá cesta pro rychlý výpis údajů. Je to vhodné pro testování.
+Doporučujeme v takovém případě nastavit v registraci datového zdroje <code>betaversion = true</code>.
+Hodnota <code>body</code>  musí být <code>null</code>.</p>
+<pre><code>{
+    "body": null,
+    "properties": ["Id","Cj","Rok","Vec"]
+}
+</code></pre>
+</li>
+<li>
+<p>velmi detailně pomocí HTML. K tomu slouží vlastnost <code>body</code>. Je to volný template</p>
+</li>
+</ol>
+<pre><code>    {
+        "body": "&lt;table&gt;&lt;tr&gt;&lt;td&gt;Čj&lt;/td&gt;&lt;td&gt;{{item.Cj}}&lt;/td&gt;&lt;tr&gt;.....&lt;table&gt;",
+        "properties": null
+    }
+</code></pre>
+<p>Pokud jsou nastaveny jak <code>body</code>, tak <code>properties</code> nastaveny, <code>properties</code> se ignorují.
+Pokud jsou obě <code>null</code>, zobrazí se chyba při renderování stránky.</p>
+<h3>Syntaxe HTML Template - Scriban</h3>
+<p>Jedná se o template engine kompatibilní s <code>liquid</code>.</p>
+<p>Stručny přehled najdete zde <a href="https://github.com/lunet-io/scriban">https://github.com/lunet-io/scriban</a>, přehlednou dokumentaci na <a href="https://github.com/lunet-io/scriban/tree/master/doc">https://github.com/lunet-io/scriban/tree/master/doc</a></p>
+<p>Hlídač státu zajiští, že se do templatu vloží vždy odpovídající datová struktura</p>
+<h4>Vyhledávání</h4>
+<p>Do template pro vyhledávání se vkládá .NET datová struktura obdobná dále uvedené struktuře.
+Pro přehlednost je zde uvedena v JSON formě. V <code>Result</code> je pole nalezených zaznamů v jejich struktuře</p>
+<pre><code>{
+    "model" : {
+        "Total": 10,
+        "Page": 1,
+        "Q": "hledaný výraz"
+        "Result" : [{ "Id" = "id zaznamu" },{"nazev":"Pojmenování"}{"atribut2":"hodnota2"}] 
+}
+</code></pre>
+<p>Typický <code>searchResultTemplate</code> pro vyhledávání vypadá takto:</p>
+<pre><code>&lt;table class="table table-hover"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;ID&lt;/th&gt;
+            &lt;th&gt;Název&lt;/th&gt;
+            &lt;th&gt;Další pole&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+                        
+{{ for item in model.Result }}
+           &lt;tr&gt;
+                &lt;td style="white-space: nowrap;"&gt;
+                    &lt;a href="{{fn_DatasetItemUrl item.Id}}"&gt;{{item.Id}}&lt;/a&gt;
+                &lt;/td&gt;
+                &lt;td style="white-space: nowrap;"&gt;
+                    {{item.Nazev}}
+                &lt;/td&gt;
+                &lt;td&gt;
+                    {{fn_FormatDate item.atribut2  "dd.MM.yyyy"}}
+                &lt;/td&gt;
+                &lt;td&gt;
+                    {{fn_ShortenText item.Vec 200}}
+                &lt;/td&gt;
+            &lt;/tr&gt;
+{{end }}
+&lt;/tbody&gt;&lt;/table&gt;
+</code></pre>
+<h4>Detail záznamu</h4>
+<p>Do template pro vyhledávání se vkládá .NET datová struktura obdobná dále uvedené struktuře.
+V <code>model</code> obsahuje jeden záznam v jejo originál struktuře odpovídající JSON schema.
+Pro přehlednost je zde uvedena v JSON formě.</p>
+<pre><code>{
+    "model" : {
+        { "Id" = "id zaznamu" },
+        {"Nazev":"Pojmenování"}, 
+        {"atribut2":"hodnota2"}
+    }
+}
+</code></pre>
+<p>Typický <code>detailTemplate</code> pro vyhledávání vypadá takto:</p>
+<pre><code>{{this.item = model #nepovinne, pouze sjednocení pojmenování záznamu s templatem pro jeden zaznam. Bez tohoto řádku by jste namísto 'item' psali 'model' }}
+&lt;table class="table table-hover"&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Id&lt;/td&gt;
+                &lt;td&gt;{{item.Id}}&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Pojmenování&lt;/td&gt;
+                &lt;td&gt;{{item.Nazev}}&lt;/td&gt;
+            &lt;/tr&gt;
+            {{ if item.atribut2}}
+                &lt;tr&gt;
+                    &lt;td&gt;Další pole&lt;/td&gt;
+                    &lt;td&gt;{{fn_FormatDate item.atribut2  "dd.MM.yyyy"}}&lt;/td&gt;
+                &lt;/tr&gt;
+            {{end}}
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+</code></pre>
+<blockquote>
+<p>Pozor! Rozlišují se velká a malá písmena.</p>
+</blockquote>
+<h3>Dostupné funkce pro formátování výstupu</h3>
+<p>V kódu je možné volat speciální funkce pro formátování hodnot.
+V <code>Scriban</code> se funkce volají <strong>s parametry oddělenými mezerou</strong></p>
+<p><code>string {{fn_ShortenText "text" 50}}</code> - zkrácení textu na max. 50 znaků, funkce vrací string</p>
+<p>Dále uvádíme seznam dostupných funkcí nad rámec <a href="https://github.com/lunet-io/scriban/blob/master/doc/builtins.md">build-in funkcí Scribanu</a>.</p>
+<p><code>string fn_ShortenText(string value, int length)</code> - zkrácení textu na maximální délku <code>length</code> znaků.
+ke zkrácení dojde na nejbližším konci slova, odstavce či věty.</p>
+<p><code>string fn_FixPlainText(string plaintext)</code> - funkce, která upraví čistý text pro lepší čitelnost. Vhodné zejména pro delší texty či obsahy dokumentů.
+V praxi se odstraní nadbytečné a příliš se opakující řádky a další speciální znaky. Ná</p>
+<p><code>string fn_NormalizeText(dynamic text)</code> - vymaže všechny HTML znáčky a přebytečné neviditelné znaky.</p>
+<p><code>boolean fn_IsNullOrEmpty(object obj)</code> - otestuje, zda je object null anebo retezec prazdny. Vhodne pro otestovani existence pole apod.</p>
+<p><code>string fn_RenderPersonWithLink(string osobaId, string jmeno, string prijmeni, string rokNarozeni = "")</code> - vyrendruje jméno, příjmení a rok narození osoby s odkazem na její profil</p>
+<p><code>string fn_RenderPersonStatistic(string osobaId, bool twoLines = false, string prefix = "", string postfix = "")</code> - pro existující osobu vrací základní statistiku vztahů na osobu navázaných firem se státem. Jinak prázdný řetezec.</p>
+<p><code>string fn_RenderPersonWithLink2(string osobaId)</code> -  vrací jméno, příjmení a rok narození osoby s odkazem na její profil. Pokud osoba neexistuje, vrací prázdný string</p>
+<p>`string fn_RenderPersonNoLink(string osobaId, string jmeno="", string prijmeni="", string rokNarozeni ="") - vrací jméno osoby podle osobaId. Pokud není nalezena, vrátí osobu v dalších parametrech nebo prázdný string</p>
+<p><code>string fn_RenderCompanyWithLink(string ico)</code> - pro existující firmu vrací její název a odkaz na její profil. Jinak vrátí pouze IČO.</p>
+<p><code>string fn_RenderCompanyStatistic(string ico, bool twoLines = false, string prefix = "", string postfix = "")</code> - pro existující firmu vrací základní statistiku vztahů firmy se státem. Pro neexistující IČO prázdný řetezec.</p>
+<p><code>string fn_FormatDate(datetime value, string format)</code> - zobrazení data podle určeného formátu.
+Pokud není <code>format</code> určen, je null nebo prázdný, použije se formát <code>d.M.yyyy</code>. Pro formátování použijte syntaxi <a href="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings">.NET c# custom date and time format</a>.</p>
+<p><code>string fn_FormatNumber(dynamic value, string format = null)</code> - naformátuje číslo. Formát může mít hodnoty "cs" nebo "en". Podle toho je zvolen formát čísla.</p>
+<p><code>string fn_FormatPrice(dynamic value, string mena = "Kč")</code> - naformátuje číslo jako cenu s měnou Kč</p>
+<p><code>string fn_Pluralize(dynamic pocet, string zeroText, string oneText, string twoText, string moreText)</code> - slova/věty v závislosti podle počtu. příklad: <code>fn_Pluralize total "žádné nové zakázky" "jednu novou zakázku" "{0} nové zakázky" "{0} nových zakázek"</code></p>
+
+
+
+<p>Dostupné a zpřístupněné datasety (tzn. ty co nejsou v betaverzi) jsou k nalezení na
+<a href="https://www.hlidacstatu.cz/data">https://www.hlidacstatu.cz/data</a></p>
+<h3>Zobrazení dat na webu</h3>
+<p>Konkrétní příklad použití včetně registrace Datasetu, nastavení templatů, parsování obsahu a uložení dat najdeš na <a href="https://github.com/HlidacStatu/Datasety/tree/master/Dataset-RozhodnutiUOHS-ukazka">https://github.com/HlidacStatu/Datasety/tree/master/Dataset-RozhodnutiUOHS-ukazka</a>.
+Ukázka je v C#, ale snadno čitelná.</p>
+<p>Vytvoření a správa datových sad je zdarma, volně dostupné a prakticky neomezené.
+Preferujeme vytváření datových sad s daty státu, samosprávy, státních úřadů a firem, které mají či mohou mít informační hodnotu pro širší veřejnost
+anebo vhodně doplňují informace poskytované Hlídačem státu.</p>
+<ul>
+<li>a pokud je to možné - provázaná s dalšími datovými sadami Hlídače státu.</li>
+</ul>
+<p>Datová sada (dataset) je strukturovaná sada záznamů, která je dostupná</p>
+

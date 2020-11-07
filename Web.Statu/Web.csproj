@@ -1716,6 +1716,7 @@
     <Content Include="Views\Home\Subjekt2_RegistrSmluv.cshtml" />
     <Content Include="Views\Home\Subjekt2_VerejneZakazky.cshtml" />
     <Content Include="Views\Home\Subjekt2_InsolvencniRejstrik.cshtml" />
+    <Content Include="Views\ApiV1\Doc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

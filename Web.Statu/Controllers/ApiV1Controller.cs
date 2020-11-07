@@ -27,6 +27,13 @@ namespace HlidacStatu.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Doc()
+        {
+            return View();
+        }
+
+
         public ActionResult OcrStat()
         {
             return View();
