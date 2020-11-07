@@ -248,48 +248,20 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class narizeni_stav : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class ArrayOfSubjekt_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string kodField;
-        
-        private double limitField;
-        
-        private double cerpanoField;
+        private subjekt_type[] subjektField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string kod {
+        [System.Xml.Serialization.XmlElementAttribute("subjekt", Order=0)]
+        public subjekt_type[] subjekt {
             get {
-                return this.kodField;
+                return this.subjektField;
             }
             set {
-                this.kodField = value;
-                this.RaisePropertyChanged("kod");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public double limit {
-            get {
-                return this.limitField;
-            }
-            set {
-                this.limitField = value;
-                this.RaisePropertyChanged("limit");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public double cerpano {
-            get {
-                return this.cerpanoField;
-            }
-            set {
-                this.cerpanoField = value;
-                this.RaisePropertyChanged("cerpano");
+                this.subjektField = value;
+                this.RaisePropertyChanged("subjekt");
             }
         }
         
@@ -308,17 +280,546 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class priznak : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class subjekt_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private int kodField;
+        private long subjektidField;
         
-        private string popisField;
+        private string obchodni_jmenoField;
         
-        private string nazevField;
+        private string titul_predField;
+        
+        private string jmenoField;
+        
+        private string prijmeniField;
+        
+        private string titul_zaField;
+        
+        private int rok_narozField;
+        
+        private bool rok_narozFieldSpecified;
+        
+        private identifikator_type[] seznam_identifikatoruField;
+        
+        private adresa_type adresaField;
+        
+        private oblast_stav_type[] limity_stavField;
+        
+        private narizeni_stav_type[] limity_stav_narizeniField;
+        
+        private podpora_type[] seznam_podporField;
+        
+        private System.DateTime datum_zahajeni_cinnostiField;
+        
+        private bool datum_zahajeni_cinnostiFieldSpecified;
+        
+        private ucetni_obdobi[] seznam_uoField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public long subjektid {
+            get {
+                return this.subjektidField;
+            }
+            set {
+                this.subjektidField = value;
+                this.RaisePropertyChanged("subjektid");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string obchodni_jmeno {
+            get {
+                return this.obchodni_jmenoField;
+            }
+            set {
+                this.obchodni_jmenoField = value;
+                this.RaisePropertyChanged("obchodni_jmeno");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string titul_pred {
+            get {
+                return this.titul_predField;
+            }
+            set {
+                this.titul_predField = value;
+                this.RaisePropertyChanged("titul_pred");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string jmeno {
+            get {
+                return this.jmenoField;
+            }
+            set {
+                this.jmenoField = value;
+                this.RaisePropertyChanged("jmeno");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string prijmeni {
+            get {
+                return this.prijmeniField;
+            }
+            set {
+                this.prijmeniField = value;
+                this.RaisePropertyChanged("prijmeni");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string titul_za {
+            get {
+                return this.titul_zaField;
+            }
+            set {
+                this.titul_zaField = value;
+                this.RaisePropertyChanged("titul_za");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public int rok_naroz {
+            get {
+                return this.rok_narozField;
+            }
+            set {
+                this.rok_narozField = value;
+                this.RaisePropertyChanged("rok_naroz");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool rok_narozSpecified {
+            get {
+                return this.rok_narozFieldSpecified;
+            }
+            set {
+                this.rok_narozFieldSpecified = value;
+                this.RaisePropertyChanged("rok_narozSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=7)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("identifikator", IsNullable=false)]
+        public identifikator_type[] seznam_identifikatoru {
+            get {
+                return this.seznam_identifikatoruField;
+            }
+            set {
+                this.seznam_identifikatoruField = value;
+                this.RaisePropertyChanged("seznam_identifikatoru");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public adresa_type adresa {
+            get {
+                return this.adresaField;
+            }
+            set {
+                this.adresaField = value;
+                this.RaisePropertyChanged("adresa");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=9)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("oblast_stav", IsNullable=false)]
+        public oblast_stav_type[] limity_stav {
+            get {
+                return this.limity_stavField;
+            }
+            set {
+                this.limity_stavField = value;
+                this.RaisePropertyChanged("limity_stav");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=10)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("narizeni_stav", IsNullable=false)]
+        public narizeni_stav_type[] limity_stav_narizeni {
+            get {
+                return this.limity_stav_narizeniField;
+            }
+            set {
+                this.limity_stav_narizeniField = value;
+                this.RaisePropertyChanged("limity_stav_narizeni");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=11)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("podpora", IsNullable=false)]
+        public podpora_type[] seznam_podpor {
+            get {
+                return this.seznam_podporField;
+            }
+            set {
+                this.seznam_podporField = value;
+                this.RaisePropertyChanged("seznam_podpor");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=12)]
+        public System.DateTime datum_zahajeni_cinnosti {
+            get {
+                return this.datum_zahajeni_cinnostiField;
+            }
+            set {
+                this.datum_zahajeni_cinnostiField = value;
+                this.RaisePropertyChanged("datum_zahajeni_cinnosti");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool datum_zahajeni_cinnostiSpecified {
+            get {
+                return this.datum_zahajeni_cinnostiFieldSpecified;
+            }
+            set {
+                this.datum_zahajeni_cinnostiFieldSpecified = value;
+                this.RaisePropertyChanged("datum_zahajeni_cinnostiSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=13)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public ucetni_obdobi[] seznam_uo {
+            get {
+                return this.seznam_uoField;
+            }
+            set {
+                this.seznam_uoField = value;
+                this.RaisePropertyChanged("seznam_uo");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class identifikator_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private System.DateTime platnost_doField;
+        
+        private bool platnost_doFieldSpecified;
+        
+        private System.DateTime platnost_odField;
+        
+        private bool platnost_odFieldSpecified;
+        
+        private string typField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="date")]
+        public System.DateTime platnost_do {
+            get {
+                return this.platnost_doField;
+            }
+            set {
+                this.platnost_doField = value;
+                this.RaisePropertyChanged("platnost_do");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool platnost_doSpecified {
+            get {
+                return this.platnost_doFieldSpecified;
+            }
+            set {
+                this.platnost_doFieldSpecified = value;
+                this.RaisePropertyChanged("platnost_doSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="date")]
+        public System.DateTime platnost_od {
+            get {
+                return this.platnost_odField;
+            }
+            set {
+                this.platnost_odField = value;
+                this.RaisePropertyChanged("platnost_od");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool platnost_odSpecified {
+            get {
+                return this.platnost_odFieldSpecified;
+            }
+            set {
+                this.platnost_odFieldSpecified = value;
+                this.RaisePropertyChanged("platnost_odSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string typ {
+            get {
+                return this.typField;
+            }
+            set {
+                this.typField = value;
+                this.RaisePropertyChanged("typ");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class adresa_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string ulicenazField;
+        
+        private string cisdomhodField;
+        
+        private string cisorhodField;
+        
+        private string cisorpisField;
+        
+        private string cobcenazField;
+        
+        private string mcastnazField;
+        
+        private string obecnazField;
+        
+        private string pscField;
+        
+        private string adrline1Field;
+        
+        private string adrline2Field;
+        
+        private string adrline3Field;
+        
+        private string adrline4Field;
+        
+        private string adrpostcodeField;
+        
+        private int kodField;
+        
+        private bool kodFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string ulicenaz {
+            get {
+                return this.ulicenazField;
+            }
+            set {
+                this.ulicenazField = value;
+                this.RaisePropertyChanged("ulicenaz");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string cisdomhod {
+            get {
+                return this.cisdomhodField;
+            }
+            set {
+                this.cisdomhodField = value;
+                this.RaisePropertyChanged("cisdomhod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string cisorhod {
+            get {
+                return this.cisorhodField;
+            }
+            set {
+                this.cisorhodField = value;
+                this.RaisePropertyChanged("cisorhod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string cisorpis {
+            get {
+                return this.cisorpisField;
+            }
+            set {
+                this.cisorpisField = value;
+                this.RaisePropertyChanged("cisorpis");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string cobcenaz {
+            get {
+                return this.cobcenazField;
+            }
+            set {
+                this.cobcenazField = value;
+                this.RaisePropertyChanged("cobcenaz");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string mcastnaz {
+            get {
+                return this.mcastnazField;
+            }
+            set {
+                this.mcastnazField = value;
+                this.RaisePropertyChanged("mcastnaz");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string obecnaz {
+            get {
+                return this.obecnazField;
+            }
+            set {
+                this.obecnazField = value;
+                this.RaisePropertyChanged("obecnaz");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string psc {
+            get {
+                return this.pscField;
+            }
+            set {
+                this.pscField = value;
+                this.RaisePropertyChanged("psc");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string adrline1 {
+            get {
+                return this.adrline1Field;
+            }
+            set {
+                this.adrline1Field = value;
+                this.RaisePropertyChanged("adrline1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string adrline2 {
+            get {
+                return this.adrline2Field;
+            }
+            set {
+                this.adrline2Field = value;
+                this.RaisePropertyChanged("adrline2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string adrline3 {
+            get {
+                return this.adrline3Field;
+            }
+            set {
+                this.adrline3Field = value;
+                this.RaisePropertyChanged("adrline3");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string adrline4 {
+            get {
+                return this.adrline4Field;
+            }
+            set {
+                this.adrline4Field = value;
+                this.RaisePropertyChanged("adrline4");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string adrpostcode {
+            get {
+                return this.adrpostcodeField;
+            }
+            set {
+                this.adrpostcodeField = value;
+                this.RaisePropertyChanged("adrpostcode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
         public int kod {
             get {
                 return this.kodField;
@@ -330,26 +831,14 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string popis {
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool kodSpecified {
             get {
-                return this.popisField;
+                return this.kodFieldSpecified;
             }
             set {
-                this.popisField = value;
-                this.RaisePropertyChanged("popis");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string nazev {
-            get {
-                return this.nazevField;
-            }
-            set {
-                this.nazevField = value;
-                this.RaisePropertyChanged("nazev");
+                this.kodFieldSpecified = value;
+                this.RaisePropertyChanged("kodSpecified");
             }
         }
         
@@ -368,32 +857,116 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class rezim_podpory : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class oblast_stav_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private bool adhocField;
+        private System.DateTime platnostField;
+        
+        private string oblast_kodField;
+        
+        private double limitField;
+        
+        private double cerpanoField;
+        
+        private bool cerpanoFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=0)]
+        public System.DateTime platnost {
+            get {
+                return this.platnostField;
+            }
+            set {
+                this.platnostField = value;
+                this.RaisePropertyChanged("platnost");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string oblast_kod {
+            get {
+                return this.oblast_kodField;
+            }
+            set {
+                this.oblast_kodField = value;
+                this.RaisePropertyChanged("oblast_kod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public double limit {
+            get {
+                return this.limitField;
+            }
+            set {
+                this.limitField = value;
+                this.RaisePropertyChanged("limit");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public double cerpano {
+            get {
+                return this.cerpanoField;
+            }
+            set {
+                this.cerpanoField = value;
+                this.RaisePropertyChanged("cerpano");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool cerpanoSpecified {
+            get {
+                return this.cerpanoFieldSpecified;
+            }
+            set {
+                this.cerpanoFieldSpecified = value;
+                this.RaisePropertyChanged("cerpanoSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class narizeni_stav_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private System.DateTime platnostField;
         
         private string kodField;
         
-        private string nazevField;
+        private double limitField;
         
-        private System.DateTime datum_odField;
+        private double cerpanoField;
         
-        private bool datum_odFieldSpecified;
-        
-        private System.DateTime datum_doField;
-        
-        private bool datum_doFieldSpecified;
+        private bool cerpanoFieldSpecified;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public bool adhoc {
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=0)]
+        public System.DateTime platnost {
             get {
-                return this.adhocField;
+                return this.platnostField;
             }
             set {
-                this.adhocField = value;
-                this.RaisePropertyChanged("adhoc");
+                this.platnostField = value;
+                this.RaisePropertyChanged("platnost");
             }
         }
         
@@ -411,61 +984,37 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string nazev {
+        public double limit {
             get {
-                return this.nazevField;
+                return this.limitField;
             }
             set {
-                this.nazevField = value;
-                this.RaisePropertyChanged("nazev");
+                this.limitField = value;
+                this.RaisePropertyChanged("limit");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=3)]
-        public System.DateTime datum_od {
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public double cerpano {
             get {
-                return this.datum_odField;
+                return this.cerpanoField;
             }
             set {
-                this.datum_odField = value;
-                this.RaisePropertyChanged("datum_od");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool datum_odSpecified {
-            get {
-                return this.datum_odFieldSpecified;
-            }
-            set {
-                this.datum_odFieldSpecified = value;
-                this.RaisePropertyChanged("datum_odSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=4)]
-        public System.DateTime datum_do {
-            get {
-                return this.datum_doField;
-            }
-            set {
-                this.datum_doField = value;
-                this.RaisePropertyChanged("datum_do");
+                this.cerpanoField = value;
+                this.RaisePropertyChanged("cerpano");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool datum_doSpecified {
+        public bool cerpanoSpecified {
             get {
-                return this.datum_doFieldSpecified;
+                return this.cerpanoFieldSpecified;
             }
             set {
-                this.datum_doFieldSpecified = value;
-                this.RaisePropertyChanged("datum_doSpecified");
+                this.cerpanoFieldSpecified = value;
+                this.RaisePropertyChanged("cerpanoSpecified");
             }
         }
         
@@ -480,15 +1029,14 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(podpora))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public abstract partial class podpora_base : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class podpora_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private podpora_oblast oblastField;
+        private podpora_oblast_enum oblastField;
         
         private System.DateTime datum_prideleniField;
         
@@ -502,7 +1050,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         
         private bool castka_euroFieldSpecified;
         
-        private short forma_podporyField;
+        private int forma_podporyField;
         
         private string ucel_podporyField;
         
@@ -512,11 +1060,29 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         
         private string cj_prijemceField;
         
-        private rezim_podpory rezim_podporyField;
+        private rezim_podpory_type rezim_podporyField;
+        
+        private int id_podporyField;
+        
+        private long poskytovatel_idField;
+        
+        private string poskytovatel_ojmField;
+        
+        private string poskytovatel_icField;
+        
+        private int stavField;
+        
+        private priznak[] seznam_priznakyField;
+        
+        private System.DateTime insdatField;
+        
+        private System.DateTime edidatField;
+        
+        private bool edidatFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public podpora_oblast oblast {
+        public podpora_oblast_enum oblast {
             get {
                 return this.oblastField;
             }
@@ -600,7 +1166,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public short forma_podpory {
+        public int forma_podpory {
             get {
                 return this.forma_podporyField;
             }
@@ -660,7 +1226,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public rezim_podpory rezim_podpory {
+        public rezim_podpory_type rezim_podpory {
             get {
                 return this.rezim_podporyField;
             }
@@ -670,79 +1236,8 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
             }
         }
         
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public enum podpora_oblast {
-        
         /// <remarks/>
-        ZP,
-        
-        /// <remarks/>
-        RY,
-        
-        /// <remarks/>
-        DO,
-        
-        /// <remarks/>
-        OS,
-        
-        /// <remarks/>
-        SL,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public enum mena_enum {
-        
-        /// <remarks/>
-        CZK,
-        
-        /// <remarks/>
-        EUR,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class podpora : podpora_base {
-        
-        private int id_podporyField;
-        
-        private long poskytovatel_idField;
-        
-        private string poskytovatel_ojmField;
-        
-        private string dn_uzivateleField;
-        
-        private int stavField;
-        
-        private priznak[] seznam_priznakyField;
-        
-        private System.DateTime insdatField;
-        
-        private System.DateTime edidatField;
-        
-        private bool edidatFieldSpecified;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
         public int id_podpory {
             get {
                 return this.id_podporyField;
@@ -754,7 +1249,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
         public long poskytovatel_id {
             get {
                 return this.poskytovatel_idField;
@@ -766,7 +1261,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
         public string poskytovatel_ojm {
             get {
                 return this.poskytovatel_ojmField;
@@ -778,19 +1273,19 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string dn_uzivatele {
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public string poskytovatel_ic {
             get {
-                return this.dn_uzivateleField;
+                return this.poskytovatel_icField;
             }
             set {
-                this.dn_uzivateleField = value;
-                this.RaisePropertyChanged("dn_uzivatele");
+                this.poskytovatel_icField = value;
+                this.RaisePropertyChanged("poskytovatel_ic");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
         public int stav {
             get {
                 return this.stavField;
@@ -802,7 +1297,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=5)]
+        [System.Xml.Serialization.XmlArrayAttribute(Order=16)]
         [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
         public priznak[] seznam_priznaky {
             get {
@@ -815,7 +1310,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=17)]
         public System.DateTime insdat {
             get {
                 return this.insdatField;
@@ -827,7 +1322,7 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=18)]
         public System.DateTime edidat {
             get {
                 return this.edidatField;
@@ -849,6 +1344,50 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
                 this.RaisePropertyChanged("edidatSpecified");
             }
         }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public enum podpora_oblast_enum {
+        
+        /// <remarks/>
+        ZP,
+        
+        /// <remarks/>
+        RY,
+        
+        /// <remarks/>
+        DO,
+        
+        /// <remarks/>
+        OS,
+        
+        /// <remarks/>
+        SL,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public enum mena_enum {
+        
+        /// <remarks/>
+        CZK,
+        
+        /// <remarks/>
+        EUR,
     }
     
     /// <remarks/>
@@ -856,76 +1395,150 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class oblast_stav : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class rezim_podpory_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string oblastField;
+        private bool adhocField;
         
-        private double limitField;
+        private string nazevField;
         
-        private double cerpanoField;
+        private System.DateTime datum_odField;
         
-        private bool dopravaField;
+        private bool datum_odFieldSpecified;
         
-        private bool dopravaFieldSpecified;
+        private System.DateTime datum_doField;
+        
+        private bool datum_doFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string oblast {
+        public bool adhoc {
             get {
-                return this.oblastField;
+                return this.adhocField;
             }
             set {
-                this.oblastField = value;
-                this.RaisePropertyChanged("oblast");
+                this.adhocField = value;
+                this.RaisePropertyChanged("adhoc");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public double limit {
+        public string nazev {
             get {
-                return this.limitField;
+                return this.nazevField;
             }
             set {
-                this.limitField = value;
-                this.RaisePropertyChanged("limit");
+                this.nazevField = value;
+                this.RaisePropertyChanged("nazev");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=2)]
+        public System.DateTime datum_od {
+            get {
+                return this.datum_odField;
+            }
+            set {
+                this.datum_odField = value;
+                this.RaisePropertyChanged("datum_od");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool datum_odSpecified {
+            get {
+                return this.datum_odFieldSpecified;
+            }
+            set {
+                this.datum_odFieldSpecified = value;
+                this.RaisePropertyChanged("datum_odSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=3)]
+        public System.DateTime datum_do {
+            get {
+                return this.datum_doField;
+            }
+            set {
+                this.datum_doField = value;
+                this.RaisePropertyChanged("datum_do");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool datum_doSpecified {
+            get {
+                return this.datum_doFieldSpecified;
+            }
+            set {
+                this.datum_doFieldSpecified = value;
+                this.RaisePropertyChanged("datum_doSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class priznak : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int kodField;
+        
+        private string nazevField;
+        
+        private string popisField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int kod {
+            get {
+                return this.kodField;
+            }
+            set {
+                this.kodField = value;
+                this.RaisePropertyChanged("kod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string nazev {
+            get {
+                return this.nazevField;
+            }
+            set {
+                this.nazevField = value;
+                this.RaisePropertyChanged("nazev");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public double cerpano {
+        public string popis {
             get {
-                return this.cerpanoField;
+                return this.popisField;
             }
             set {
-                this.cerpanoField = value;
-                this.RaisePropertyChanged("cerpano");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool doprava {
-            get {
-                return this.dopravaField;
-            }
-            set {
-                this.dopravaField = value;
-                this.RaisePropertyChanged("doprava");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dopravaSpecified {
-            get {
-                return this.dopravaFieldSpecified;
-            }
-            set {
-                this.dopravaFieldSpecified = value;
-                this.RaisePropertyChanged("dopravaSpecified");
+                this.popisField = value;
+                this.RaisePropertyChanged("popis");
             }
         }
         
@@ -944,107 +1557,43 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class exid : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private System.DateTime platnost_odField;
-        
-        private System.DateTime platnost_doField;
-        
-        private bool platnost_doFieldSpecified;
-        
-        private string exidkodField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public System.DateTime platnost_od {
-            get {
-                return this.platnost_odField;
-            }
-            set {
-                this.platnost_odField = value;
-                this.RaisePropertyChanged("platnost_od");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public System.DateTime platnost_do {
-            get {
-                return this.platnost_doField;
-            }
-            set {
-                this.platnost_doField = value;
-                this.RaisePropertyChanged("platnost_do");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool platnost_doSpecified {
-            get {
-                return this.platnost_doFieldSpecified;
-            }
-            set {
-                this.platnost_doFieldSpecified = value;
-                this.RaisePropertyChanged("platnost_doSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string exidkod {
-            get {
-                return this.exidkodField;
-            }
-            set {
-                this.exidkodField = value;
-                this.RaisePropertyChanged("exidkod");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
     public partial class ucetni_obdobi : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private System.DateTime datum_doField;
+        
+        private System.DateTime datum_odField;
         
         private int id_uoField;
         
         private bool id_uoFieldSpecified;
         
-        private System.DateTime datum_odField;
-        
-        private System.DateTime datum_doField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=0)]
+        public System.DateTime datum_do {
+            get {
+                return this.datum_doField;
+            }
+            set {
+                this.datum_doField = value;
+                this.RaisePropertyChanged("datum_do");
+            }
+        }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=1)]
+        public System.DateTime datum_od {
+            get {
+                return this.datum_odField;
+            }
+            set {
+                this.datum_odField = value;
+                this.RaisePropertyChanged("datum_od");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public int id_uo {
             get {
                 return this.id_uoField;
@@ -1067,30 +1616,6 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
             }
         }
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=1)]
-        public System.DateTime datum_od {
-            get {
-                return this.datum_odField;
-            }
-            set {
-                this.datum_odField = value;
-                this.RaisePropertyChanged("datum_od");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=2)]
-        public System.DateTime datum_do {
-            get {
-                return this.datum_doField;
-            }
-            set {
-                this.datum_doField = value;
-                this.RaisePropertyChanged("datum_do");
-            }
-        }
-        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -1106,235 +1631,14 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class subjekt_type : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class ArrayOfSubjektId_type : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string obchodni_jmenoField;
-        
-        private string jmenoField;
-        
-        private string prijmeniField;
-        
-        private string titul_predField;
-        
-        private string titul_zaField;
-        
-        private ucetni_obdobi[] seznam_uoField;
-        
-        private exid[] exidsField;
-        
-        private oblast_stav[] limity_stavField;
-        
-        private podpora[] seznam_podporField;
-        
-        private System.DateTime datum_zahajeni_cinnostiField;
-        
-        private bool datum_zahajeni_cinnostiFieldSpecified;
-        
-        private System.DateTime datum_narozeniField;
-        
-        private bool datum_narozeniFieldSpecified;
-        
-        private narizeni_stav[] limity_stav_narizeniField;
+        private long[] subjektidField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string obchodni_jmeno {
-            get {
-                return this.obchodni_jmenoField;
-            }
-            set {
-                this.obchodni_jmenoField = value;
-                this.RaisePropertyChanged("obchodni_jmeno");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string jmeno {
-            get {
-                return this.jmenoField;
-            }
-            set {
-                this.jmenoField = value;
-                this.RaisePropertyChanged("jmeno");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string prijmeni {
-            get {
-                return this.prijmeniField;
-            }
-            set {
-                this.prijmeniField = value;
-                this.RaisePropertyChanged("prijmeni");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string titul_pred {
-            get {
-                return this.titul_predField;
-            }
-            set {
-                this.titul_predField = value;
-                this.RaisePropertyChanged("titul_pred");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string titul_za {
-            get {
-                return this.titul_zaField;
-            }
-            set {
-                this.titul_zaField = value;
-                this.RaisePropertyChanged("titul_za");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=5)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public ucetni_obdobi[] seznam_uo {
-            get {
-                return this.seznam_uoField;
-            }
-            set {
-                this.seznam_uoField = value;
-                this.RaisePropertyChanged("seznam_uo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=6)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public exid[] exids {
-            get {
-                return this.exidsField;
-            }
-            set {
-                this.exidsField = value;
-                this.RaisePropertyChanged("exids");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=7)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public oblast_stav[] limity_stav {
-            get {
-                return this.limity_stavField;
-            }
-            set {
-                this.limity_stavField = value;
-                this.RaisePropertyChanged("limity_stav");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=8)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public podpora[] seznam_podpor {
-            get {
-                return this.seznam_podporField;
-            }
-            set {
-                this.seznam_podporField = value;
-                this.RaisePropertyChanged("seznam_podpor");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=9)]
-        public System.DateTime datum_zahajeni_cinnosti {
-            get {
-                return this.datum_zahajeni_cinnostiField;
-            }
-            set {
-                this.datum_zahajeni_cinnostiField = value;
-                this.RaisePropertyChanged("datum_zahajeni_cinnosti");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool datum_zahajeni_cinnostiSpecified {
-            get {
-                return this.datum_zahajeni_cinnostiFieldSpecified;
-            }
-            set {
-                this.datum_zahajeni_cinnostiFieldSpecified = value;
-                this.RaisePropertyChanged("datum_zahajeni_cinnostiSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=10)]
-        public System.DateTime datum_narozeni {
-            get {
-                return this.datum_narozeniField;
-            }
-            set {
-                this.datum_narozeniField = value;
-                this.RaisePropertyChanged("datum_narozeni");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool datum_narozeniSpecified {
-            get {
-                return this.datum_narozeniFieldSpecified;
-            }
-            set {
-                this.datum_narozeniFieldSpecified = value;
-                this.RaisePropertyChanged("datum_narozeniSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=11)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public narizeni_stav[] limity_stav_narizeni {
-            get {
-                return this.limity_stav_narizeniField;
-            }
-            set {
-                this.limity_stav_narizeniField = value;
-                this.RaisePropertyChanged("limity_stav_narizeni");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class RDM_INF_Response : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private long subjektidField;
-        
-        private subjekt_type subjektField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public long subjektid {
+        [System.Xml.Serialization.XmlElementAttribute("subjektid", Order=0)]
+        public long[] subjektid {
             get {
                 return this.subjektidField;
             }
@@ -1344,15 +1648,36 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
             }
         }
         
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(RDM_PUB_Response))]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class RDM_PUB_Response_base_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int pocetField;
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public subjekt_type subjekt {
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int pocet {
             get {
-                return this.subjektField;
+                return this.pocetField;
             }
             set {
-                this.subjektField = value;
-                this.RaisePropertyChanged("subjekt");
+                this.pocetField = value;
+                this.RaisePropertyChanged("pocet");
             }
         }
         
@@ -1362,6 +1687,30 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
             System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
             if ((propertyChanged != null)) {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class RDM_PUB_Response : RDM_PUB_Response_base_type {
+        
+        private object itemField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("seznam_subjektid", typeof(ArrayOfSubjektId_type), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("seznam_subjektu", typeof(ArrayOfSubjekt_type), Order=0)]
+        public object Item {
+            get {
+                return this.itemField;
+            }
+            set {
+                this.itemField = value;
+                this.RaisePropertyChanged("Item");
             }
         }
     }
@@ -1567,11 +1916,11 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.pds.eu/vOKO/v0200")]
     public partial class ResponseResponseContent : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private RDM_INF_Response itemField;
+        private RDM_PUB_Response itemField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Response", Namespace="http://www.pds.eu/RDM_INF01B", Order=0)]
-        public RDM_INF_Response Item {
+        [System.Xml.Serialization.XmlElementAttribute("Response", Namespace="http://www.pds.eu/RDM_PUB01B", Order=0)]
+        public RDM_PUB_Response Item {
             get {
                 return this.itemField;
             }
@@ -1596,8 +1945,110 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_INF01B")]
-    public partial class RDM_INF_Request : object, System.ComponentModel.INotifyPropertyChanged {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_zmeny_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private long subjektidField;
+        
+        private bool subjektidFieldSpecified;
+        
+        private string poskytovatelField;
+        
+        private System.DateTime zmeny_odField;
+        
+        private System.DateTime zmeny_doField;
+        
+        private bool zmeny_doFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public long subjektid {
+            get {
+                return this.subjektidField;
+            }
+            set {
+                this.subjektidField = value;
+                this.RaisePropertyChanged("subjektid");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool subjektidSpecified {
+            get {
+                return this.subjektidFieldSpecified;
+            }
+            set {
+                this.subjektidFieldSpecified = value;
+                this.RaisePropertyChanged("subjektidSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string poskytovatel {
+            get {
+                return this.poskytovatelField;
+            }
+            set {
+                this.poskytovatelField = value;
+                this.RaisePropertyChanged("poskytovatel");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=2)]
+        public System.DateTime zmeny_od {
+            get {
+                return this.zmeny_odField;
+            }
+            set {
+                this.zmeny_odField = value;
+                this.RaisePropertyChanged("zmeny_od");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=3)]
+        public System.DateTime zmeny_do {
+            get {
+                return this.zmeny_doField;
+            }
+            set {
+                this.zmeny_doField = value;
+                this.RaisePropertyChanged("zmeny_do");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool zmeny_doSpecified {
+            get {
+                return this.zmeny_doFieldSpecified;
+            }
+            set {
+                this.zmeny_doFieldSpecified = value;
+                this.RaisePropertyChanged("zmeny_doSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_subjektid_type : object, System.ComponentModel.INotifyPropertyChanged {
         
         private long subjektidField;
         
@@ -1610,6 +2061,200 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
             set {
                 this.subjektidField = value;
                 this.RaisePropertyChanged("subjektid");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(dotaz_psc_type))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(dotaz_obec_type))]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_jmeno_prijmeni_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string jmenoField;
+        
+        private string prijmeniField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string jmeno {
+            get {
+                return this.jmenoField;
+            }
+            set {
+                this.jmenoField = value;
+                this.RaisePropertyChanged("jmeno");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string prijmeni {
+            get {
+                return this.prijmeniField;
+            }
+            set {
+                this.prijmeniField = value;
+                this.RaisePropertyChanged("prijmeni");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_psc_type : dotaz_jmeno_prijmeni_type {
+        
+        private string pscField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string psc {
+            get {
+                return this.pscField;
+            }
+            set {
+                this.pscField = value;
+                this.RaisePropertyChanged("psc");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_obec_type : dotaz_jmeno_prijmeni_type {
+        
+        private string obecnazField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string obecnaz {
+            get {
+                return this.obecnazField;
+            }
+            set {
+                this.obecnazField = value;
+                this.RaisePropertyChanged("obecnaz");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_ic_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string icField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string ic {
+            get {
+                return this.icField;
+            }
+            set {
+                this.icField = value;
+                this.RaisePropertyChanged("ic");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class dotaz_detail_choice_type : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private object itemField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_ic", typeof(dotaz_ic_type), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_obec_type", typeof(dotaz_obec_type), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_psc", typeof(dotaz_psc_type), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_subjektid", typeof(dotaz_subjektid_type), Order=0)]
+        public object Item {
+            get {
+                return this.itemField;
+            }
+            set {
+                this.itemField = value;
+                this.RaisePropertyChanged("Item");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.pds.eu/RDM_PUB01B")]
+    public partial class RDM_PUB_Request : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private object itemField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_detail", typeof(dotaz_detail_choice_type), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("dotaz_zmeny", typeof(dotaz_zmeny_type), Order=0)]
+        public object Item {
+            get {
+                return this.itemField;
+            }
+            set {
+                this.itemField = value;
+                this.RaisePropertyChanged("Item");
             }
         }
         
@@ -2079,11 +2724,11 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.pds.eu/vOKO/v0200")]
     public partial class RequestRequestContent : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private RDM_INF_Request itemField;
+        private RDM_PUB_Request itemField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Request", Namespace="http://www.pds.eu/RDM_INF01B", Order=0)]
-        public RDM_INF_Request Item {
+        [System.Xml.Serialization.XmlElementAttribute("Request", Namespace="http://www.pds.eu/RDM_PUB01B", Order=0)]
+        public RDM_PUB_Request Item {
             get {
                 return this.itemField;
             }
@@ -2104,14 +2749,15 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://www.pds.eu/vOKO/v0200", ConfigurationName="eAgri.DeMinimis.WS.RDM_INF01B")]
-    public interface RDM_INF01B {
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://www.pds.eu/vOKO/v0200", ConfigurationName="eAgri.DeMinimis.WS.RDM_PUB01B")]
+    public interface RDM_PUB01B {
         
         // CODEGEN: Generating message contract since the operation process is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="process", ReplyAction="*")]
         [System.ServiceModel.FaultContractAttribute(typeof(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.Error), Action="process", Name="Error")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(podpora_base))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RDM_PUB_Response_base_type))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(dotaz_jmeno_prijmeni_type))]
         HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse process(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="process", ReplyAction="*")]
@@ -2153,53 +2799,53 @@ namespace HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface RDM_INF01BChannel : HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B, System.ServiceModel.IClientChannel {
+    public interface RDM_PUB01BChannel : HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class RDM_INF01BClient : System.ServiceModel.ClientBase<HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B>, HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B {
+    public partial class RDM_PUB01BClient : System.ServiceModel.ClientBase<HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B>, HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B {
         
-        public RDM_INF01BClient() {
+        public RDM_PUB01BClient() {
         }
         
-        public RDM_INF01BClient(string endpointConfigurationName) : 
+        public RDM_PUB01BClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public RDM_INF01BClient(string endpointConfigurationName, string remoteAddress) : 
+        public RDM_PUB01BClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public RDM_INF01BClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public RDM_PUB01BClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public RDM_INF01BClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public RDM_PUB01BClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B.process(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest request) {
+        HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B.process(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest request) {
             return base.Channel.process(request);
         }
         
         public HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.Response process(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.Request Request) {
             HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest inValue = new HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest();
             inValue.Request = Request;
-            HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse retVal = ((HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B)(this)).process(inValue);
+            HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse retVal = ((HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B)(this)).process(inValue);
             return retVal.Response;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse> HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B.processAsync(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest request) {
+        System.Threading.Tasks.Task<HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse> HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B.processAsync(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest request) {
             return base.Channel.processAsync(request);
         }
         
         public System.Threading.Tasks.Task<HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processResponse> processAsync(HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.Request Request) {
             HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest inValue = new HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.processRequest();
             inValue.Request = Request;
-            return ((HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_INF01B)(this)).processAsync(inValue);
+            return ((HlidacStatu.Lib.Data.External.eAgri.DeMinimis.WS.RDM_PUB01B)(this)).processAsync(inValue);
         }
     }
 }

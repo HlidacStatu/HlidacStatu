@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="8AczuqC+ULnhE6J2jCwe2HdLhMHtx/gkri8Ct4G7/RE=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="L/Xuh9cIwu1+zwa3fxq8uaaLL8pp9Xt/dMVn9v+0c9Q=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="RDM_INF01BBinding">
+    <bindingConfiguration bindingType="basicHttpBinding" name="RDM_PUB01BBinding">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>RDM_INF01BBinding</serializedValue>
+          <serializedValue>RDM_PUB01BBinding</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="basicHttpBinding" name="RDM_INF01BBinding1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="RDM_PUB01BBinding1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>RDM_INF01BBinding1</serializedValue>
+          <serializedValue>RDM_PUB01BBinding1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="RDM_INF01BPort" contract="eAgri.DeMinimis.WS.RDM_INF01B" bindingType="basicHttpBinding" address="https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx" bindingConfiguration="RDM_INF01BBinding">
+    <endpoint name="RDM_PUB01BPort" contract="eAgri.DeMinimis.WS.RDM_PUB01B" bindingType="basicHttpBinding" address="https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx" bindingConfiguration="RDM_PUB01BBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx</serializedValue>
@@ -233,10 +233,10 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>RDM_INF01BBinding</serializedValue>
+          <serializedValue>RDM_PUB01BBinding</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>eAgri.DeMinimis.WS.RDM_INF01B</serializedValue>
+          <serializedValue>eAgri.DeMinimis.WS.RDM_PUB01B</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -296,7 +296,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>RDM_INF01BPort</serializedValue>
+          <serializedValue>RDM_PUB01BPort</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

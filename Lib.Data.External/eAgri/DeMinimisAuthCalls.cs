@@ -1,60 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
-using System.Web;
+using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace HlidacStatu.Lib.Data.External.eAgri
 {
-    public static class DeMinimisCalls
+  public static class DeMinimisAuthCalls
     {
-        
+        static string enveloReq = @"<SOAP:Envelope xmlns:SOAP=""http://schemas.xmlsoap.org/soap/envelope/"">
+  <SOAP:Header>
+    <vOKO-wss:Token type=""A01"" xmlns:vOKO-wss=""http://www.pds.eu/vOKO/v0200/wss"">#TOKEN#</vOKO-wss:Token>
+  </SOAP:Header>
+  #BODY#
+</SOAP:Envelope>";
 
         //dn=""cn=PDS_RDM_All,cn=PDS,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF""
-        static string icoSubReq = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v02=""http://www.pds.eu/vOKO/v0200"" xmlns:rdm=""http://www.pds.eu/RDM_PUB01B"" xmlns:ns=""http://www.mze.cz/ESBServer/1.0"">
-<soapenv:Header/>
-<soapenv:Body>
-<v02:Request vOKOid=""RDM_PUB01B"">
-<v02:RequestContent>
-<rdm:Request>
-<rdm:dotaz_detail>
-    <rdm:dotaz_ic>
-        <rdm:ic>#ICO#</rdm:ic>
-    </rdm:dotaz_ic>
-</rdm:dotaz_detail>
-</rdm:Request>
-</v02:RequestContent>
-</v02:Request>
-</soapenv:Body>
-</soapenv:Envelope>
+        static string searchSubReq = @"<SOAP:Body>
+    <vOKO:Request vOKOid=""RDM_SUS01A"" xmlns:vOKO=""http://www.pds.eu/vOKO/v0200"">
+      <vOKO:UIDkey userID=""99michalblaha"" dn=""cn=99michalblaha,cn=Farmar,cn=Users,o=mze,c=cz"" certificateSN=""#NEDEF"" addressAD=""default"" certificateOwner=""#NEDEF"" />
+      <vOKO:TimeStamp type=""base"">#TIME#+01:00</vOKO:TimeStamp>
+      <vOKO:AppInfo>
+        <vOKO:AppModule id=""hlidacstatu"" version=""1"" />
+      </vOKO:AppInfo>
+      <vOKO:RequestHeader>
+        <vOKO:RequestID>STRNAD-test/2010/RDM_SUS01A</vOKO:RequestID>
+        <vOKO:Subject subjectID=""1011816014"" />
+        <vOKO:RequestType code="""">
+        </vOKO:RequestType>
+      </vOKO:RequestHeader>
+      <vOKO:RequestContent>
+        <rdm:Request xmlns:rdm=""http://www.pds.eu/RdmServices/RDM_SUS01A"">
+     			<rdm:dotaz>
+						<rdm:ic>#IC#</rdm:ic>
+					</rdm:dotaz>
+        </rdm:Request>
+      </vOKO:RequestContent>
+    </vOKO:Request>
+  </SOAP:Body>
 ";
         public static void SearchSubj(string ico)
         {
 
             string url = "https://eagri.cz/ssl/nosso-app/EPO/WS/v2Online/vOKOsrv.ashx";
-            string req = icoSubReq.Replace("#ICO#",ico);
+            string req = enveloReq.Replace("#BODY#",
+                    searchSubReq.Replace("#TIME#", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")).Replace("#IC#", ico)
+                    );
+            string token = _sign("2ahKpoxgvuQRgFVsPUCX", req);
+            req = req.Replace("#TOKEN#", token);
 
             Soap net = new Soap();
-            string resp = net.UploadString(url, req);
-
-            XElement xdoc = XElement.Parse(resp);
-            var res = xdoc.DescendantNodes()
-                .Select(m=>m as XElement)
-                .Where(m=>m!=null && m.HasAttributes)
-                .Where(m => m.Attributes()
-                        .Any(a => a.Name == "xmlns" && a.Value == "http://www.pds.eu/RDM_PUB01B") == true
-                    )
-                    .ToArray();
-                    var serializer = new XmlSerializer(typeof(eAgri.DeMinimis.Response),"http://www.pds.eu/RDM_PUB01B");
-        var xxx=  (DeMinimis.Response)serializer.Deserialize(res.First().CreateReader());
-
+            var resp = net.UploadString(url, req);
         }
 
 

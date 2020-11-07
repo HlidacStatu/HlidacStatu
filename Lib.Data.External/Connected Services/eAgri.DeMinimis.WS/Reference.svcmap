@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://eagri.cz/ssl/nosso-app/EPO/WS/Online/vOKOsrv.aspx?SERVICEID=RDM_INF01B" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://eagri.cz/ssl/nosso-app/EPO/WS/Online/vOKOsrv.aspx?SERVICEID=RDM_PUB01B" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="RDM_INF01B.wsdl" MetadataType="Wsdl" ID="9416ea25-cd3e-4034-89bd-90daca7d06c4" SourceId="1" SourceUrl="https://eagri.cz/ssl/nosso-app/EPO/WS/Online/vOKOsrv.aspx?SERVICEID=RDM_INF01B" />
+    <MetadataFile FileName="RDM_PUB01B.wsdl" MetadataType="Wsdl" ID="c1579965-dc6f-43c7-a51a-77c98d300579" SourceId="1" SourceUrl="https://eagri.cz/ssl/nosso-app/EPO/WS/Online/vOKOsrv.aspx?SERVICEID=RDM_PUB01B" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
