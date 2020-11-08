@@ -1,0 +1,143 @@
+﻿@model (HlidacStatu.Lib.Data.Firma Firma, IEnumerable<VerejnaZakazka> Data)
+
+@using Nest;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
+@using HlidacStatu.Lib.Data.VZ;
+
+@{ 
+    ViewBag.Title = "Veřejné zakázky " + Model.Firma.Jmeno + "";
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        <li><a href="/subjekt2/@Model.Firma.ICO">@Model.Firma.Jmeno</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
+    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
+    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                "language": {
+                    "info": "Zobrazuji _START_. - _END_. z celkového počtu _TOTAL_ záznamů.",
+                    "search": "Hledat:",
+                    "lengthMenu": "Zobraz _MENU_ záznamů",
+                    "thousands": " ",
+                    "paginate": {
+                        "first": "První",
+                        "last": "Poslední",
+                        "next": "Další",
+                        "previous": "Předchozí"
+                    },
+                }
+            });
+        });
+
+    </script>
+
+}
+
+<style>
+    .my-0 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .py-0 {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .boxes h4 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .head h3 {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .watcher .btn {
+        background-color: rgb(231,102,5);
+        padding: 7px 15px;
+        margin: 5px 0px;
+        text-transform: none;
+        font-size: 14px;
+    }
+</style>
+
+<div class="head">
+    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Veřejné zakázky</h3>
+    <div><a class="btn btn-primary" href="/subjekt2/@Model.Firma.ICO">Zpět na přehled</a></div>
+    @WebUtil.CompanySummary(Model.Firma)
+</div>
+<hr />
+
+<div class="row boxes">
+    @* Pravý sloupec *@
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.Firma, Model.Firma.ICO,
+        this.User.Identity.IsAuthenticated)
+
+    @* Prázdný sloupec *@
+    <div class="col-sm-1">
+    </div>
+    @* První sloupec *@
+    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+        <div>
+            <h4>Veřejné zakázky</h4>
+            @{
+                var resVZdodav = VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.Firma.ICO, null, 1, 0, "1");
+                var resVZzadav = VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.Firma.ICO, null, 1, 0, "1");
+                Dictionary<string, long> vzakaz = new Dictionary<string, long>();
+                vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
+                vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
+
+                foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
+                {
+                    var text = kv.Key.Split('|');
+                    string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.Firma.ICO);
+
+                    <p>
+                        @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[2]} nenašli",
+                                             $" se vyskytuje v <a href='{surl}'><b>jedné</b> veřejné zakázce</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkách</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkach</a> jako {text[1]}")).
+                    </p>
+                }
+            }
+
+            <hr />
+            <h4>Data</h4>
+            @*@{ 
+                var x = Model.Data
+                    .Where(d => d.Zadavatel.ICO == Model.Firma.ICO)
+                    .Select(vz => new { 
+                        vz.DatumUverejneni,
+                        vz.hod
+                    
+                    })
+            }*@
+
+        </div>
+
+    </div>
+</div>

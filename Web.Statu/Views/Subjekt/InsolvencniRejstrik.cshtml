@@ -8,15 +8,19 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-
+@{ 
+    ViewBag.Title = "Insolvenční rejstřík " + Model.Firma.Jmeno;
+}
 @section breadcrumb
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li>Úřady a firmy</li>
+        <li><a href="/subjekt2/@Model.Firma.ICO">@Model.Firma.Jmeno</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
+
 
 @section scripts
 {
@@ -30,7 +34,7 @@
         $(document).ready(function () {
             $('#datatable').DataTable({
                 "language": {
-                    "info": "Zobrazuji _START_. - _END_. z celkového počtz _TOTAL_ záznamů.",
+                    "info": "Zobrazuji _START_. - _END_. z celkového počtu _TOTAL_ záznamů.",
                     "search": "Hledat:",
                     "lengthMenu": "Zobraz _MENU_ záznamů",
                     "thousands": " ",
@@ -90,7 +94,7 @@
 
 <div class="row boxes">
     @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model.Firma, Model.Firma.ICO,
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.Firma, Model.Firma.ICO,
         this.User.Identity.IsAuthenticated)
 
     @* Prázdný sloupec *@

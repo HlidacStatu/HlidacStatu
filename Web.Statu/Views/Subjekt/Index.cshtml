@@ -6,6 +6,10 @@
 @using System.Collections.Generic;
 @using System.Linq;
 
+@{ 
+    ViewBag.Title = Model.Jmeno;
+}
+
 @section breadcrumb
 {
     <ol class="breadcrumb">
@@ -59,7 +63,7 @@
 
     <div class="row boxes">
     @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "Subjekt2_RightColumn", Model, Model.ICO,
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model, Model.ICO,
         this.User.Identity.IsAuthenticated)
 
     @* Prázdný sloupec *@
@@ -163,7 +167,7 @@
         </p>
 
         <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
-        <a href="/subjekt2_RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2/RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -190,7 +194,7 @@
                 </p>
             }
         }
-        <a href="/subjekt2_VerejneZakazky/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2/VerejneZakazky/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -307,7 +311,7 @@
             }
         }
 
-        <a href="/subjekt2_Dotace/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2/Dotace/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
@@ -337,26 +341,26 @@
                 </p>
             }
 
-        <a href="/subjekt2_InsolvencniRejstrik/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/subjekt2/InsolvencniRejstrik/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
     <hr />
 
     @* ----- Odkazy na další -----*@
 
     <div>
-        <h4><a>Obchody úřadu s firmami navázanými na politiky</a></h4>
+        <h4><a href="/subjekt2/smlouvySeSponzory/@Model.ICO">Obchody úřadu s firmami navázanými na politiky</a></h4>
     </div>
     <hr />
     <div>
-        <h4><a>Statistika dodavatelů úřadu</a></h4>
+        <h4><a href="/subjekt2/dodavatele/@Model.ICO">Statistika dodavatelů úřadu</a></h4>
     </div>
     <hr />
     <div>
-        <h4><a>Statistiky odběratelů úřadu</a></h4>
+        <h4><a href="/subjekt2/dodavatele/@Model.ICO">Statistiky odběratelů úřadu</a></h4>
     </div>
     <hr />
     <div>
-        <h4><a>Úřad v dalších databázích</a></h4>
+        <h4><a href="/subjekt2/DalsiDatabaze/@Model.ICO">Úřad v dalších databázích</a></h4>
     </div>
 
 </div>

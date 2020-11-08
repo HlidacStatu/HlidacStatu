@@ -92,6 +92,12 @@ namespace HlidacStatu.Web
                 url: "Kindex/{action}/{id}",
                 defaults: new { controller = "Kindex", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "SubjektController",
+                url: "Subjekt2/{action}/{id}",
+                defaults: new { controller = "Subjekt", action = "Index", id = UrlParameter.Optional }
+            );
+
 
             routes.MapRoute(
                 name: "Default",

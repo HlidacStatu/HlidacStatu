@@ -6,59 +6,22 @@ using HlidacStatu.Lib.Data.VZ;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public partial class HomeController : GenericAuthController
+    public partial class SubjektController : GenericAuthController
     {
-#if (!DEBUG)
-        [OutputCache(VaryByParam = "id;embed;nameofview", Duration = 60 * 60 * 1)]
-#endif
 
-        [ChildActionOnly()]
-        public ActionResult Subjekt_child(string id, string NameOfView, Firma firma)
-        {
-            return View(NameOfView, firma);
-        }
-
-        public ActionResult Subjekt(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return RedirectToAction("Index");
-
-            string ico = Util.ParseTools.NormalizeIco(id);
-
-            if (string.IsNullOrEmpty(ico))
-                return RedirectToAction("Report", new { id = "1" });
-
-            //if (!Devmasters.TextUtil.IsNumeric(ico))
-            //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
-
-            Firma firma = Firmy.Get(ico);
-
-            if (!Firma.IsValid(firma))
-            {
-                if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                    return View("Subjekt_zahranicni", new Firma() { ICO = ico, Jmeno = ico });
-                else
-                {
-                    if (!Util.DataValidators.CheckCZICO(ico))
-
-                        return View("Subjekt_err_spatneICO");
-                    else
-                        return View("Subjekt_err_nezname");
-                }
-            }
-            if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                return View("Subjekt_zahranicni", firma);
-
-            //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
-            return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
-        }
-        public ActionResult Subjekt2(string id)
+        public ActionResult Index(string id)
         {
             TryGetCompany(id, out var firma, out var result);
             return result;
         }
-        
-        public ActionResult Subjekt2_Dotace(string id)
+
+        protected override void HandleUnknownAction(string actionName)
+        {
+            TryGetCompany(actionName, out var firma, out var result);
+
+            result.ExecuteResult(this.ControllerContext);
+        }
+        public ActionResult Dotace(string id)
         {
             if(TryGetCompany(id, out var firma, out var result))
             {
@@ -82,8 +45,26 @@ namespace HlidacStatu.Web.Controllers
 
             return result;
         }
+        public ActionResult ObchodySeSponzory(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
 
-        public ActionResult Subjekt2_RegistrSmluv(string id)
+            return result;
+        }
+        public ActionResult DalsiDatabaze(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
+
+            return result;
+        }
+
+        public ActionResult RegistrSmluv(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
@@ -93,7 +74,7 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        public ActionResult Subjekt2_VerejneZakazky(string id)
+        public ActionResult VerejneZakazky(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
@@ -105,7 +86,28 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        public ActionResult Subjekt2_InsolvencniRejstrik(string id)
+        public ActionResult Odberatele(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
+
+            return result;
+        }
+        
+        public ActionResult Dodavatele(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
+
+            return result;
+        }
+
+
+        public ActionResult InsolvencniRejstrik(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
@@ -155,7 +157,7 @@ namespace HlidacStatu.Web.Controllers
                 return false;
             }
 
-            actionResult = View(firma);
+            actionResult = View("Index",firma);
             return true;
         }
 

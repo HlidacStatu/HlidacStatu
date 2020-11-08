@@ -551,7 +551,7 @@
     <Compile Include="Controllers\HomeController.Covid.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
-    <Compile Include="Controllers\HomeController.Subjekt.cs" />
+    <Compile Include="Controllers\SubjektController.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\KindexController.cs" />
     <Compile Include="Controllers\ManageController.NasiPolitici.cs" />
@@ -1696,9 +1696,9 @@
     <Content Include="Views\Kindex\Zebricek.Skokani.cshtml" />
     <Content Include="Views\Kindex\Zebricek_child.cshtml" />
     <Content Include="Views\Kindex\Detail_child.cshtml" />
-    <Content Include="Views\Home\Subjekt2.cshtml" />
-    <Content Include="Views\Home\Subjekt2_Profile.cshtml" />
-    <Content Include="Views\Home\Subjekt2_EmptyProfile.cshtml" />
+    <Content Include="Views\Subjekt\Index.cshtml" />
+    <Content Include="Views\Subjekt\Profile.cshtml" />
+    <Content Include="Views\Subjekt\EmptyProfile.cshtml" />
     <Content Include="Views\Kindex\_SearchForm.cshtml" />
     <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />
     <Content Include="Views\Home\KapacitaNemocnic.cshtml" />
@@ -1711,12 +1711,20 @@
     <Content Include="Views\Kindex\Backup.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice.cshtml" />
     <Content Include="Views\Home\KapacitaKazdeNemocnice_child.cshtml" />
-    <Content Include="Views\Home\Subjekt2_Dotace.cshtml" />
-    <Content Include="Views\Home\Subjekt2_RightColumn.cshtml" />
-    <Content Include="Views\Home\Subjekt2_RegistrSmluv.cshtml" />
-    <Content Include="Views\Home\Subjekt2_VerejneZakazky.cshtml" />
-    <Content Include="Views\Home\Subjekt2_InsolvencniRejstrik.cshtml" />
+    <Content Include="Views\Subjekt\Dotace.cshtml" />
+    <Content Include="Views\Subjekt\RightColumn.cshtml" />
+    <Content Include="Views\Subjekt\RegistrSmluv.cshtml" />
+    <Content Include="Views\Subjekt\VerejneZakazky.cshtml" />
+    <Content Include="Views\Subjekt\InsolvencniRejstrik.cshtml" />
     <Content Include="Views\ApiV1\Doc.cshtml" />
+    <Content Include="Views\Subjekt\Dodavatele.cshtml" />
+    <Content Include="Views\Subjekt\!vzor.cshtml" />
+    <Content Include="Views\Subjekt\Odberatele.cshtml" />
+    <Content Include="Views\Subjekt\Subjekt_Zahranicni.cshtml" />
+    <Content Include="Views\Subjekt\Subjekt_err_nezname.cshtml" />
+    <Content Include="Views\Subjekt\Subjekt_err_spatneICO.cshtml" />
+    <Content Include="Views\Subjekt\ObchodySeSponzory.cshtml" />
+    <Content Include="Views\Subjekt\DalsiDatabaze.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
