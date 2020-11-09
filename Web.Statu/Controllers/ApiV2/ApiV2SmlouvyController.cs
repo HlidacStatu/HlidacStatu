@@ -109,6 +109,20 @@ namespace HlidacStatu.Web.Controllers
             return s;
         }
 
+        
+        /// <summary>
+        /// všechna ID platných verzí smluv
+        /// </summary>
+        /// <param name="id">id smlouvy</param>
+        /// <returns>detail smlouvy</returns>
+        [HttpGet, Route("{id?}")]
+        [AuthorizeAndAudit(Roles = "Admin,KomercniLicence")]
+        public string[] VsechnaPlatnaID()
+        {
+            return Lib.Data.Smlouva.AllIdsFromDB(false).ToArray();
+        }
+
+
         [HttpGet, Route("text/{id?}")]
         [AuthorizeAndAudit]
         public IEnumerable<string> Text(string id = null)
