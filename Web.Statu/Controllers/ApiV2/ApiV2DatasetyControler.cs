@@ -19,7 +19,7 @@ namespace HlidacStatu.Web.Controllers
         /// <summary>
         /// Načte seznam datasetů
         /// </summary>
-        /// <returns>Seznam datastů</returns>
+        /// <returns>Seznam datasetů</returns>
         [AuthorizeAndAudit]
         [HttpGet, Route()]
         public SearchResultDTO<Registration> GetAll()
