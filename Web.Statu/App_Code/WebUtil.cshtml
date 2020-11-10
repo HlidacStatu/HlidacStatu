@@ -1228,8 +1228,8 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 
 @helper ExportButton(System.Security.Principal.IPrincipal user, string typ, string q,
-                                                                                                                                                                                                                                                                                        string order = "0", string title = "Export výsledků hledání",
-                                                                                                                                                                                                                                                                                        string style = "", string moreParams = "", string gaPageEventId = null)
+    string order = "0", string title = "Export výsledků hledání",
+    string style = "", string moreParams = "", string gaPageEventId = null)
 {if (gaPageEventId == null)
     {
         gaPageEventId = CurrPageUrlPath;
@@ -1246,7 +1246,7 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                 </div>
                 <div class="modal-body">
                     <p>
-                        Export výsledků hledání. Export obsahuje obvykle prvních 1000 záznamů od první stránky v aktuálním třídění.
+                        Export výsledků hledání. Export obsahuje obvykle prvních @(user.IsInRole("Admin")||user.IsInRole("novinar") ? "10000" : (q=="*" ? "100" : "1000")) záznamů od první stránky v aktuálním třídění.
                         Více záznamů není možné vyexportovat, pokud k tomu nemáte speciální oprávnění.
                     </p>
                     <p class="small text-muted">

@@ -84,6 +84,9 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
 
             if (res.Total > 0)
+            {
+                var expConverter = new Newtonsoft.Json.Converters.ExpandoObjectConverter();
+
                 return new DataSearchResult()
                 {
                     ElapsedTime = sw.Elapsed,
@@ -92,13 +95,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     Total = res.Total,
                     Result = res.Hits
                             .Select(m => Newtonsoft.Json.JsonConvert.SerializeObject(m.Source))
-                            .Select(s => (dynamic)Newtonsoft.Json.Linq.JObject.Parse(s)),
+                            .Select(s => (dynamic)Newtonsoft.Json.JsonConvert.DeserializeObject<System.Dynamic.ExpandoObject>(s,expConverter)),
 
                     Page = page,
                     PageSize = pageSize,
                     DataSet = ds,
                     ElasticResultsRaw = res,
                 };
+            }
             else
                 return new DataSearchResult()
                 {

@@ -97,6 +97,7 @@
 
             var html = Model.DataSet.Registration().searchResultTemplate.Render(Model.DataSet, model, model.Q);
             @Html.Raw(html)
+
         }
         else
         {
@@ -121,7 +122,9 @@
 }
 
 
-@SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, null, null)
+@SearchResults.Pagination(Url.RequestContext.HttpContext.Request, Model, null, null,
+    showExport:Model.DataSet.IsFlatStructure(), exportType: "dataset", user: this.User, exportMoreParams:"ds="+Model.DataSet.Registration().datasetId
+    )
 
 
 

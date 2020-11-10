@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data;
+using HlidacStatu.Lib.Data.External.DataSets;
 using HlidacStatu.Lib.Data.VZ;
 
 using Microsoft.AspNet.Identity;
@@ -52,7 +53,7 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int? num = null)
+        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int? num = null, string ds =null )
         {
             var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
@@ -68,12 +69,12 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            int numOfRecords = 1000;
+            int numOfRecords = num ?? 1000;
             if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
                 numOfRecords = 100;
             if (this.User.IsInRole("Admin") || this.User.IsInRole("novinar"))
             {
-                num = 10000;
+                numOfRecords = 10000;
             }
 
 
@@ -90,7 +91,7 @@ namespace HlidacStatu.Web.Controllers
                 filename = "chyba.txt";
                 return File(rawData, contentType, filename);
             }
-            else if (HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h) == false)
+            else if (HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h) == false) //TODO salt in config
             {
                 rawData = System.Text.Encoding.UTF8.GetBytes("nespravný požadavek");
                 contentType = "text/plain";
@@ -131,6 +132,49 @@ namespace HlidacStatu.Web.Controllers
                 {
                     foreach (var s in sres.Results)
                         data.Add(s.FlatExport());
+                }
+            }
+            else if (id == "dataset")
+            {
+                if (string.IsNullOrEmpty(ds))
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                    contentType = "text/plain";
+                    filename = "chyba.txt";
+                    return File(rawData, contentType, filename);
+                }
+
+                DataSet datasource = DataSet.CachedDatasets.Get(ds);
+                if (datasource==null)
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                    contentType = "text/plain";
+                    filename = "chyba.txt";
+                    return File(rawData, contentType, filename);
+                }
+                if (datasource.IsFlatStructure()==false)
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("Tato databáze nemá jednoduchou, plochou strukturu. Proto nemůže být exportována. Použijte API z hlidacstatu.cz/api");
+                    contentType = "text/plain";
+                    filename = "chyba.txt";
+                    return File(rawData, contentType, filename);
+                }
+
+                var sres = datasource.SearchData(q, 1, numOfRecords, (Util.ParseTools.ToInt(o) ?? 0).ToString());
+
+                if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    contentType = "text/plain";
+                    filename = "export.txt";
+                    return File(rawData, contentType, filename);
+                }
+                else
+                {
+                    foreach (var s in sres.Result)
+                    {
+                        data.Add(datasource.ExportFlatObject(s));
+                    }
                 }
             }
             else if (id == "dotace" )

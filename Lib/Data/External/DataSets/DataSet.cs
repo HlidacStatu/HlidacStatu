@@ -1,11 +1,15 @@
 ﻿using Elasticsearch.Net;
+
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
+
 using Nest;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -67,7 +71,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 }
             }
 
-            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); 
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex);
             if (ret.Exists)
             {
                 throw new DataSetException(reg.datasetId, ApiResponseStatus.DatasetRegistered);
@@ -183,7 +187,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             this.client = Lib.ES.Manager.GetESClient(datasetId, idxType: ES.Manager.IndexType.DataSource);
 
 
-            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex); 
+            var ret = client.Indices.Exists(client.ConnectionSettings.DefaultIndex);
             if (ret.Exists == false)
             {
                 if (fireException)
@@ -200,7 +204,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         {
             if (_mapping == null)
             {
-                var getIndexResponse = this.client.Indices.Get(this.client.ConnectionSettings.DefaultIndex); 
+                var getIndexResponse = this.client.Indices.Get(this.client.ConnectionSettings.DefaultIndex);
                 IIndexState remote = getIndexResponse.Indices[this.client.ConnectionSettings.DefaultIndex];
                 var dataMapping = remote?.Mappings?.Properties;
                 if (dataMapping == null)
@@ -273,7 +277,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return isDt;
         }
         public bool IsMappedPropertyDatetime(string mappedProperty)
-        { 
+        {
             return GetDatetimeMappingList().Contains(mappedProperty);
         }
 
@@ -301,6 +305,26 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
             return _props;
         }
+
+        public ExpandoObject ExportFlatObject(string serializedObj)
+        {
+            return ExportFlatObject(JsonConvert.DeserializeObject<ExpandoObject>(serializedObj, new ExpandoObjectConverter()));
+        }
+        public ExpandoObject ExportFlatObject(ExpandoObject obj)
+        {
+            if (IsFlatStructure() == false)
+                return null;
+
+            IDictionary<String, Object> eo = (IDictionary<String, Object>)obj;
+            var props = GetPropertyNamesFromSchema();
+            var toremove = eo.Keys.Where(m => props.Contains(m) == false).ToArray();
+            for (int i = 0; i < toremove.Count(); i++)
+            {
+                ((IDictionary<String, Object>)obj).Remove(toremove[i]);
+            }
+            return obj;
+        }
+
 
         public bool IsFlatStructure()
         {
@@ -580,7 +604,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             string updatedData = Newtonsoft.Json.JsonConvert.SerializeObject(objDyn);
             PostData pd = PostData.String(updatedData);
 
-            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd); 
+            var tres = client.LowLevel.Index<StringResponse>(client.ConnectionSettings.DefaultIndex, id, pd);
 
             if (tres.Success)
             {
@@ -605,7 +629,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 {
                     status.error.errorDetail = servererr.Error.ToString();
                 }
-                HlidacStatu.Util.Consts.Logger.Error("AddData id:" + id + "\n"+tres.DebugInformation +"\n"+servererr?.Error?.ToString());
+                HlidacStatu.Util.Consts.Logger.Error("AddData id:" + id + "\n" + tres.DebugInformation + "\n" + servererr?.Error?.ToString());
 
                 throw new DataSetException(this.datasetId, status);
             }
@@ -738,7 +762,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// <param name="finalId"></param>
         private void SubscribeToOCR(JContainer[] jpathObjs, string finalId)
         {
-            
+
             foreach (var jo in jpathObjs)
             {
                 if (OCRCommands.Contains(jo["HsProcessType"].Value<string>()))
@@ -910,7 +934,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool ItemExists(string Id)
         {
             //GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.DocumentExists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, Id); 
+            var res = this.client.LowLevel.DocumentExists<ExistsResponse>(client.ConnectionSettings.DefaultIndex, Id);
             return res.Exists;
         }
         public dynamic GetDataObj(string Id)
@@ -977,7 +1001,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 .Select(m => Newtonsoft.Json.JsonConvert.SerializeObject(m))
                 .Select(j => Newtonsoft.Json.JsonConvert.DeserializeObject<T>(j))
                 .Cast<T>();
-                ;
+            ;
 
             return data;
 
@@ -989,13 +1013,13 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             GetRequest req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
             var res = this.client.Get<object>(req);
             if (res.Found)
-                return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); 
+                return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source);
             else
             {
                 req = new GetRequest(client.ConnectionSettings.DefaultIndex, Id);
                 res = this.client.Get<object>(req);
                 if (res.Found)
-                    return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source); 
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(res.Source);
                 else
                     return (string)null;
             }
@@ -1004,7 +1028,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         public bool DeleteData(string Id)
         {
             //DeleteRequest req = new DeleteRequest(client.ConnectionSettings.DefaultIndex, "data", Id);
-            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, Id); 
+            var res = this.client.LowLevel.Delete<StringResponse>(client.ConnectionSettings.DefaultIndex, Id);
             return res.Success;
         }
 
@@ -1073,7 +1097,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         public string SocialInfoBody()
         {
-            return HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 2, true, html:true);
+            return HlidacStatu.Util.InfoFact.RenderInfoFacts(this.InfoFacts(), 2, true, html: true);
         }
 
         public string SocialInfoFooter()
@@ -1087,10 +1111,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
 
         public bool NotInterestingToShow() { return false; }
-        
 
-            //var last = this.SearchData("*", 1, 1, "DbCreated desc");
-            long _numberOfRecords = -1;
+
+        //var last = this.SearchData("*", 1, 1, "DbCreated desc");
+        long _numberOfRecords = -1;
         public long NumberOfRecords()
         {
             if (_numberOfRecords == -1)
@@ -1136,8 +1160,8 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     var itemLastDate = (DateTime)last.Result.First().DbCreated;
 
                     dbCreated = new DateTime(Math.Min(dbCreated.Ticks, itemFirstDate.Ticks));
-                    var sCreated = $"Databáze byla založena {Devmasters.DT.Util.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()}. "; 
-                    string minMax ="";
+                    var sCreated = $"Databáze byla založena {Devmasters.DT.Util.Ago(dbCreated, HlidacStatu.Util.Consts.csCulture).ToLower()}. ";
+                    string minMax = "";
                     if (total == 0)
                     {
                         minMax += "Neobsahuje žádný záznam";
@@ -1158,5 +1182,6 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
             return _infofacts;
         }
+
     }
 }

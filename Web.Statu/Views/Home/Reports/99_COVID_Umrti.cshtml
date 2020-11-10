@@ -41,7 +41,7 @@
 
     DateTime lastDate = umrti.Last().Item1;
     int lastUmr = umrti.Last().Item2;
-    int lastUmr7 = lastUmr - umrti.Where(m => m.Item1 == lastDate.AddDays(-8)).First().Item2;
+    int lastUmr7 = lastUmr - umrti.Where(m => m.Item1 == lastDate.AddDays(-15)).First().Item2;
 
     List<HlidacStatu.Lib.Render.ReportDataTimeValue> data = new List<ReportDataTimeValue>(
         umrti.Select(m => new ReportDataTimeValue() { Date = m.Item1, Value = m.Item2 })
@@ -51,7 +51,7 @@
 <h2>Počet úmrtí v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2020:"Zachránili jsme tisíce mrtvých".</p>
 <p class="text-warning" style="font-size:19px"><b>V první vlně</b>(22.3. - 31.8.) zemřelo <b>@untilSep1 osob</b>.
-<br/><span class="text-danger"><b>Od 1.9.</b> zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>, za poslední týden <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr7) lidí</b>.</span>
+<br/><span class="text-danger"><b>Od 1.9.</b> zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>, za poslední 2 týdny <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr7) lidí</b>.</span>
     </p>
 <div style="width:600px">
     @SimpleColumnChart(new (string name, 
@@ -85,7 +85,7 @@ foreach (var d in data)
                 { 
                     return $"{{x:{i},y:{m.Value:#####0}, color: '#ff0000', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
                 }
-                else if (i >= count - 8)
+                else if (i >= count - 15)
                 {
                     return $"{{x:{i},y:{m.Value:#####0}, color: '#ef820d' }}";
                 }
