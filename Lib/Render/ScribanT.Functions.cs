@@ -124,7 +124,7 @@ namespace HlidacStatu.Lib.Render
                 return string.Empty;
             }
 
-            public static string fn_RenderCompanyWithLink(string ico)
+            public static string fn_RenderCompanyWithLink(string ico, string missingCompanyName = "")
             {
                 if (!string.IsNullOrEmpty(ico))
                 {
@@ -145,7 +145,7 @@ namespace HlidacStatu.Lib.Render
                             + $"<a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
                     }
                     else
-                        return $"<span>{ico}</span>";
+                        return $"<span>{(string.IsNullOrEmpty(missingCompanyName)? ico : missingCompanyName)}</span>";
                 }
                 return string.Empty;
             }
