@@ -954,9 +954,31 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                         var f = Firma.FromDS(urad.idDS);
                         if (f is null || !f.Valid)
                         {
-                            //log error about missing ICO
-                            // I tak musíme do struktury přidat
-                            continue;
+                            if (string.IsNullOrEmpty(urad.idNadrizene))
+                            {
+                                //11000004 => 11000006 => FÚs
+                                // ministerstvo financí to zase posralo
+                                // zamyslet se nad strukturou
+                                //log error about missing ico
+                                continue;
+                            }
+
+                            var nadrizeny = ossu.UradSluzebniSeznam.SluzebniUrady
+                                .Where(u => u.id == urad.idNadrizene)
+                                .FirstOrDefault();
+
+                            if (nadrizeny is null)
+                            {
+                                //log error about missing ico
+                                continue;
+                            }
+
+                            f = Firma.FromDS(nadrizeny.idDS);
+                            if (f is null || !f.Valid)
+                            {
+                                //log error about missing ico
+                                continue;
+                            }
                         }
 
                         var sluzebniUrad = ossu.OrganizacniStruktura.Where(os => os.id == urad.id)
@@ -965,7 +987,8 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
 
                         if (sluzebniUrad is null)
                         {
-                            //log error
+                            // log error
+                            // nemá žádnou substrukturu - hierarchii
                             continue;
                         }
                         
