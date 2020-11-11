@@ -1725,6 +1725,7 @@
     <Content Include="Views\Subjekt\Subjekt_err_spatneICO.cshtml" />
     <Content Include="Views\Subjekt\ObchodySeSponzory.cshtml" />
     <Content Include="Views\Subjekt\DalsiDatabaze.cshtml" />
+    <Content Include="Views\Data\Napoveda.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

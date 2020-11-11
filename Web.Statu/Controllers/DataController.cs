@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data.External.DataSets;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +13,18 @@ namespace HlidacStatu.Web.Controllers
 
         static Devmasters.Cache.LocalMemory.LocalMemoryCache<Models.DatasetIndexStat[]> datasetIndexStatCache =
             new Devmasters.Cache.LocalMemory.LocalMemoryCache<Models.DatasetIndexStat[]>(TimeSpan.FromMinutes(15),
-                (o)=>
+                (o) =>
                 {
-                    List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>() ;
+                    List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>();
                     var datasets = DataSetDB.Instance.SearchDataRaw("*", 1, 200)
                         .Result
                         .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s.Item2));
 
                     foreach (var ds in datasets)
                     {
-                        var rec = new Models.DatasetIndexStat(){Ds = ds };
+                        var rec = new Models.DatasetIndexStat() { Ds = ds };
                         var dsContent = HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get(ds.id.ToString());
-                        var allrec = dsContent.SearchData("", 1, 1,sort:"DbCreated desc", exactNumOfResults: true);
+                        var allrec = dsContent.SearchData("", 1, 1, sort: "DbCreated desc", exactNumOfResults: true);
                         rec.RecordNum = allrec.Total;
                         if (rec.RecordNum > 0)
                         {
@@ -35,18 +36,18 @@ namespace HlidacStatu.Web.Controllers
                         //string order = string.IsNullOrWhiteSpace(ds.defaultOrderBy) ? "DbCreated desc" : ds.defaultOrderBy;
                         //var data = dsContent.SearchDataRaw("*", 1, 1, order);
 
-                        ret.Add(rec) ;
+                        ret.Add(rec);
                     }
                     return ret.ToArray();
                 }
                 );
-            
-           
+
+
 
 
         public ActionResult Index(string id)
         {
-            if (Request.QueryString["refresh"]=="1")
+            if (Request.QueryString["refresh"] == "1")
                 datasetIndexStatCache.Invalidate();
 
             if (string.IsNullOrEmpty(id))
@@ -54,7 +55,7 @@ namespace HlidacStatu.Web.Controllers
 
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
-                return RedirectToAction("index","Data",new {id="" });
+                return RedirectToAction("index", "Data", new { id = "" });
 
             return View("DatasetHomepage", ds);
         }
@@ -92,7 +93,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/data");
 
             if (ds.HasAdminAccess(email) == false)
-               return View("NoAccess");
+                return View("NoAccess");
 
             string[] neverDelete = new string[] { "veklep", "rozhodnuti-uohs", "centralniregistroznameni", "datasourcesdb" };
             if (neverDelete.Contains(ds.DatasetId.ToLower()))
@@ -131,7 +132,7 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        
+
 
         public ActionResult Edit(string id)
         {
@@ -157,7 +158,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (string.IsNullOrEmpty(id))
                 return RedirectToAction("Index");
-            
+
             datasetIndexStatCache.Invalidate();
 
             var ds = DataSet.CachedDatasets.Get(id);
@@ -226,7 +227,7 @@ namespace HlidacStatu.Web.Controllers
                     var oo = orderlines[i].Split('|');
                     if (oo.Length == 2)
                     {
-                        orderList[i, 0] = oo[0].Replace("\r","").Replace("\n","").Replace("\t", "").Trim();
+                        orderList[i, 0] = oo[0].Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
                         orderList[i, 1] = oo[1].Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
                     }
                 }
@@ -253,7 +254,19 @@ namespace HlidacStatu.Web.Controllers
             return View("DatasetTextJson", ds);
         }
 
+        public ActionResult Napoveda(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction("index");
 
+
+            DataSet datasource = null;
+            datasource = DataSet.CachedDatasets.Get(id);
+            if (datasource == null)
+                return RedirectToAction("index", new { id = id });
+
+            return View(datasource);
+        }
         public ActionResult Hledat(string id, DataSearchRawResult model)
         {
             if (string.IsNullOrEmpty(id))

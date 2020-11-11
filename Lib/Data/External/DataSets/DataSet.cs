@@ -334,7 +334,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         }
         public string[] GetPropertyNameFromSchema(string name)
         {
-            Dictionary<string, Type> names = new Dictionary<string, Type>();
+            Dictionary<string, Property> names = new Dictionary<string, Property>();
             var sch = this.Schema;
             getPropertyNameTypeFromSchemaInternal(new JSchema[] { sch }, "", name, ref names);
             return names.Keys.ToArray();
@@ -344,14 +344,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             return GetPropertyNameFromSchema("");
         }
 
-        public static Dictionary<string, Type> DefaultDatasetProperties = new Dictionary<string, Type>()
+        public static Dictionary<string, Property> DefaultDatasetProperties = new Dictionary<string, Property>()
         {
-            { "hidden", typeof(bool) },
-            { "DbCreated", typeof(DateTime) },
-            { "DbCreatedBy", typeof(string) }
+            { "hidden", new Property() { Name= "hidden", Type= typeof(bool), Description="" } },
+            {"DbCreated", new Property() { Name= "DbCreated", Type=typeof(DateTime), Description="Datum vytvoření záznamu" } },
+            {"DbCreatedBy", new Property() { Name= "DbCreatedBy", Type= typeof(string), Description="Uživatel, který záznam vytvořil" } },
         };
 
-        public Dictionary<string, Type> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
+        public Dictionary<string, Property> GetPropertyNamesTypesFromSchema(bool addDefaultDatasetProperties = false)
         {
             var properties = GetPropertyNameTypeFromSchema("");
             if (addDefaultDatasetProperties)
@@ -362,14 +362,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             }
             return properties;
         }
-        public Dictionary<string, Type> GetPropertyNameTypeFromSchema(string name)
+        public Dictionary<string, Property> GetPropertyNameTypeFromSchema(string name)
         {
-            Dictionary<string, Type> names = new Dictionary<string, Type>();
+            Dictionary<string, Property> names = new Dictionary<string, Property>();
             var sch = this.Schema;
             getPropertyNameTypeFromSchemaInternal(new JSchema[] { sch }, "", name, ref names);
             return names;
         }
-        private void getPropertyNameTypeFromSchemaInternal(IEnumerable<JSchema> subschema, string prefix, string name, ref Dictionary<string, Type> names)
+        private void getPropertyNameTypeFromSchemaInternal(IEnumerable<JSchema> subschema, string prefix, string name, ref Dictionary<string, Property> names)
         {
             foreach (var ss in subschema)
             {
@@ -394,11 +394,14 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         }
 
-        private Type JSchemaType2Type(JSchema schema)
+        private Property JSchemaType2Type(JSchema schema)
         {
             if (schema?.Type == null)
                 return null;
 
+            Property ret = new Property();
+            //ret.Name = schema.
+            ret.Description = schema.Description;
             JSchemaType s = schema.Type.Value;
 
             if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Null))
@@ -407,54 +410,54 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                 if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.String))
                 {
                     if (schema.Format == "date-time")
-                        return typeof(Nullable<DateTime>);
+                        ret.Type= typeof(Nullable<DateTime>);
                     else if (schema.Format == "date")
-                        return typeof(Nullable<Devmasters.DT.Date>);
+                        ret.Type= typeof(Nullable<Devmasters.DT.Date>);
                     else
-                        return typeof(string);
+                        ret.Type=  typeof(string);
                 }
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Number))
-                    return typeof(Nullable<decimal>);
+                    ret.Type=  typeof(Nullable<decimal>);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Integer))
-                    return typeof(Nullable<long>);
+                    ret.Type=  typeof(Nullable<long>);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Boolean))
-                    return typeof(Nullable<bool>);
+                    ret.Type=  typeof(Nullable<bool>);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Object))
-                    return typeof(object);
+                    ret.Type=  typeof(object);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Array))
-                    return typeof(object[]);
+                    ret.Type=  typeof(object[]);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.None))
-                    return null;
+                    ret.Type=  null;
                 else
-                    return null;
+                    ret.Type=  null;
             }
             else
             {
                 if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.String))
                 {
                     if (schema.Format == "date" || schema.Format == "date-time")
-                        return typeof(DateTime);
+                        ret.Type=  typeof(DateTime);
                     else if (schema.Format == "date")
-                        return typeof(Devmasters.DT.Date);
+                        ret.Type=  typeof(Devmasters.DT.Date);
                     else
-                        return typeof(string);
+                        ret.Type=  typeof(string);
                 }
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Number))
-                    return typeof(decimal);
+                    ret.Type=  typeof(decimal);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Integer))
-                    return typeof(long);
+                    ret.Type=  typeof(long);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Boolean))
-                    return typeof(bool);
+                    ret.Type=  typeof(bool);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Object))
-                    return typeof(object);
+                    ret.Type=  typeof(object);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.Array))
-                    return typeof(object[]);
+                    ret.Type=  typeof(object[]);
                 else if (HlidacStatu.Lib.Helper.IsSet(s, JSchemaType.None))
-                    return null;
+                    ret.Type=  null;
                 else
-                    return null;
+                    ret.Type=  null;
             }
-
+            return ret;
         }
 
         public void SendErrorMsgToAuthor(string url, string errMsg)

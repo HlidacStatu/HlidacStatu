@@ -60,7 +60,17 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                     //use everything from newReg, instead of jsonSchema, datasetId
                     //update object
-                    dataset.jsonSchema = oldReg.jsonSchema;
+                    if (!string.IsNullOrWhiteSpace(dataset.jsonSchema)
+                        && dataset.jsonSchema != oldReg.jsonSchema
+                        && SuperUsers.Contains(updatedBy)
+                        )
+                    {
+                        //update jsonSchema
+                    }
+                    else
+                        dataset.jsonSchema = oldReg.jsonSchema;
+
+
                     dataset.datasetId = oldReg.datasetId;
                     dataset.created = DateTime.Now;
                     bool skipallowWriteAccess = SuperUsers.Contains(updatedBy);

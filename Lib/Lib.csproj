@@ -593,6 +593,7 @@
     </Compile>
     <Compile Include="Data\External\DataSets\ApiResonseStatus.cs" />
     <Compile Include="Data\External\DataSets\DataSet.Item.SavedFile.cs" />
+    <Compile Include="Data\External\DataSets\Dataset.Property.cs" />
     <Compile Include="Data\External\DataSets\DataSet.WatchdogProcessor.cs" />
     <Compile Include="Data\External\DataSets\RuntimeClassBuilder.cs" />
     <Compile Include="Data\External\DataSets\DataSearchResult.cs" />

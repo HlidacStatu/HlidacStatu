@@ -268,14 +268,27 @@
                     "kvalifikovanidodavatele",
                     "rejstrik-trestu-pravnickych-osob",
                     "seznam-politickych-stran",
+                    "de-minimis"
                 });
             }
             <div class="block-col ">
                 <ul class="block-list">
                     <li>
                         <span style="white-space:nowrap">
-                            <a href="/data/Index/rejstrik-trestu-pravnickych-osob" class="tag">Rejstřík trestů právnických osob</a>
+                            <a href="/data/Index/de-minimis" class="tag">Registr podpor de minimis
+                            </a> <span class="exclusive small">exkluzivně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Seznam de minimis podpor pro malé a střední firmy od EU na základě pravidel EU. 
+                            <br/>
+                            Registr obsahuje také <a href="/data/Hledat/de-minimis?Q=PoskytovatelIco%3A44848943%20AND%20PodporaDatum%3A%5B2020-04-01%20TO%20%2A%5D&order=PodporaCzk%20desc">záruky bankovních úvěrů a dalších podpor v rámci vládních programů COVID-I a COVID-II</a> a i jiné formy podpor od státní organizací. 
 
+                            Evidujeme @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("de-minimis")?.NumberOfRecords() ?? 0) záznamů od roku 2006.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/rejstrik-trestu-pravnickych-osob" class="tag">Rejstřík trestů právnických osob</a>
                         </span>
                         <div class="small" style="padding-left:1em;">
                             Seznam firem, které byly pravomocně odsouzeny podle zákona o trestní odpovědnosti právnických osob

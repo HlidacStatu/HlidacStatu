@@ -1,0 +1,120 @@
+﻿@model HlidacStatu.Lib.Data.External.DataSets.DataSet
+@using System.Linq;
+@using Devmasters;
+@using HlidacStatu.Lib
+@using HlidacStatu.Web.Framework;
+@using Devmasters.Collections;
+
+@{
+    var reg = Model.Registration();
+    ViewBag.Title = $"Nápověda k hledání pro ďatabázi {reg.name}";
+
+
+}
+
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li><a href="/data">Další databáze</a></li>
+        <li><a href="@Model.DatasetUrl()">@reg.name</a></li>
+        <li class="active">Nápověda k hledání</li>
+        <li class="active pull-right"><a href="/data/manage" class="btn btn-primary btn-sm" style="color:whitesmoke;text-decoration:none">Snadné přidání nového datasetu</a></li>
+    </ol>
+}
+
+
+@Html.Partial("_SearchForm", new HlidacStatu.Lib.Data.External.DataSets.DataSearchRawResult() { DataSet = Model, Q = Request.QueryString["qs"] })
+
+<p>
+    <h2>Textové hledání</h2>
+    <dl>
+        <dt>Hledat všechna slova v různých tvarech</dt>
+        <dd>
+            @Try("Česká republika", true)
+            <br />Hledá smlouvy obsahující všechna uvedená slova v různých mluvnických tvarech
+        </dd>
+        <dt>Hledat přesně slovo nebo sousloví</dt>
+        <dd>
+            @Try("\"premiér Babiš\"")
+            <br />Hledá záznamy obsahující uvedená slova či sousloví v přesném tvaru jako je v uvozovkách
+        </dd>
+        <dt>Kterékoliv z těchto slov</dt>
+        <dd>
+            mezi všechna požadovaná slova vložte operátor OR:<br />
+            @Try("premiér OR ministr")
+            <br />Hledá záznamy obsahující alespoň jedno z uvedených slov
+        </dd>
+        <dt>Toto slovo tam být nesmí </dt>
+        <dd>
+            Před slova, která nechcete, zadejte znaménko mínus:<br />
+            @Try("premiér -Sobotka").
+            Tento dotaz najde záznamy se slovem premiér, kde není zmíněn Sobotka.
+            Možno použít i pro sousloví @Try("-\"Andrej Babiš\"") (výsledky bez Andreje Babiše)
+        </dd>
+        <dt>Kombinace výrazů</dt>
+        <dd>
+            Všechny výše i níže uvedené výrazy hledání je možné kombinovat logickými operátory <kbd>AND</kbd>
+            a <kbd>OR</kbd> (velká písmena jsou nutná).
+            Pokud jsou výrazy odděleny mezerou, je to stejné jako použití operátora <kbd>AND</kbd>.
+        </dd>
+        <dt>Logické a rozšiřující operátory</dt>
+        <dd>
+            Mezi jednotnotlivými částmi dotazu můžete používat operátory <kbd>AND</kbd> a <kbd>OR</kbd>.<br />
+            Můžete používat zástupné znaky (wildcards) <kbd>?</kbd> - zastupuje 1 znak, nebo <kbd>*</kbd>zastupující více znaků. Příklad:<kbd>Ministerstvo z*</kbd><br />
+            Příklad: @Try("ico:27295567 AND smlouva.predmet:\"Kupní smlouva\"")
+        </dd>
+
+    </dl>
+    <h2>Specifické hledání podle konkrétních položek v databázích</h2>
+
+    <dl>
+        <dt>Jak prohledávat specifické položky v databázích?</dt>
+        <dd>
+            napište prefix s ":" bez mezery následovaný hledanou hodnotou<br />@Try("ico:00007064")
+            hledá smlouvy kde je v záznamech Ministerstvo vnitra (ICO 00007064).
+            <br /><br />
+            Pokud hledaná hodnota obsahuje mezery, musí být v uvozovkách <kbd>jmeno:"Hlídač státu"</kbd>
+        </dd>
+    </dl>
+    <table class="table table-dotted table-striped">
+        <thead>
+            <tr>
+                <th>Parametr do hledaní</th>
+                <th>Typ</th>
+                <th>Popis</th>
+                <th>Příklad použití</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prop in Model.GetPropertyNamesTypesFromSchema())
+            {
+                <tr>
+                    <td><code>@prop.Key</code></td>
+                    <td>@prop.Value.TypePlainly()</td>
+                    <td> @prop.Value.Description</td>
+                    <td>
+                        @if (prop.Value.TypeSamples()?.Count > 0)
+                        {
+                            <ul style="line-height: 1.4em;">
+                            @foreach (var s in prop.Value.TypeSamples())
+                            {
+                                <li>@Try($"{prop.Key}:{s.q}") <i>@s.desc</i></li>
+                            }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</p>
+
+@Html.Partial("_new")
+
+@helper Try(string q, bool showT = false)
+{
+    <kbd>@q</kbd><a style="padding-left:5px"  class="small" href="@("/data/hledat/"+ Model.Registration().datasetId + "?q=" + System.Net.WebUtility.UrlEncode(q))" target="_blank">@WebUtil.IfExists(showT, "Zkusit ")<i class="fas fa-external-link-alt" title="Vyzkoušet" alt="Vyzkoušet"></i></a>
+}

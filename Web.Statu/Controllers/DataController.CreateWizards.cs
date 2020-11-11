@@ -571,7 +571,7 @@ namespace HlidacStatu.Web.Controllers
             if (!System.IO.File.Exists(path))
                 return RedirectToAction("ImportData", new { id = ds.DatasetId });
 
-            RuntimeClassBuilder rcb = new RuntimeClassBuilder(ds.GetPropertyNamesTypesFromSchema());
+            RuntimeClassBuilder rcb = new RuntimeClassBuilder(ds.GetPropertyNamesTypesFromSchema().ToDictionary(m=>m.Key,v=>v.Value.Type));
 
             string[] formsHeaders = form["sheaders"].Split('|');
             List<MappingCSV> mappingProps = new List<MappingCSV>();
@@ -621,7 +621,7 @@ namespace HlidacStatu.Web.Controllers
                         var newObj = rcb.CreateObject();
                         for (int m = 0; m < mappingProps.Count; m++)
                         {
-                            Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].TargetJSON).FirstOrDefault().Value;
+                            Type destType = ds.GetPropertyNameTypeFromSchema(mappingProps[m].TargetJSON).FirstOrDefault().Value.Type;
                             object value = null;
 
                             string[] specialValues = new string[] { "-skip-", "-gen-", "--" };
