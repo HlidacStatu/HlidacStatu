@@ -59,9 +59,9 @@ namespace HlidacStatu.Util
             if (taken.Count< number)
             {
                 if (shuffle && taken.Count() > 1)
-                    taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Shuffle().Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Shuffle().Take(number - (takeSummary ? 1 : 0)));
                 else
-                    taken.AddRange(infof.Skip(takeSummary ? 1 : 0).Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Take(number - (takeSummary ? 1 : 0)));
             }
 
             bool useStringF = lineFormat.Contains("{0}");
