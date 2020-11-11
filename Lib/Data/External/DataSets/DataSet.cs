@@ -396,10 +396,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
         private Property JSchemaType2Type(JSchema schema)
         {
-            if (schema?.Type == null)
-                return null;
-
             Property ret = new Property();
+            if (schema?.Type == null)
+                return ret;
+
             //ret.Name = schema.
             ret.Description = schema.Description;
             JSchemaType s = schema.Type.Value;

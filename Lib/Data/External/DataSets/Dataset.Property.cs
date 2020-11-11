@@ -48,7 +48,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     )
                     return "pole hodnot";
 
-                return "neznámí";
+                return "neznámý";
             }
 
             public List<(string q, string desc)> TypeSamples()
