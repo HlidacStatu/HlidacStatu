@@ -1,4 +1,5 @@
 ﻿using HlidacStatu.Lib.Data;
+using HlidacStatu.Lib.Data.OrgStrukturyStatu;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace HlidacStatu.Lib
 {
@@ -41,6 +44,8 @@ namespace HlidacStatu.Lib
         public static HashSet<string> TopPrijmeni = new HashSet<string>();
 
         public static HashSet<string> Urady_OVM = new HashSet<string>();
+
+        public static Dictionary<string, List<JednotkaOrganizacni>> OrganizaniStrukturyUradu { get; } = new Dictionary<string, List<JednotkaOrganizacni>>();
 
 
         public static Devmasters.Cache.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>> FirmyNazvyOnlyAscii = null;
@@ -929,6 +934,61 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                     UrlTemplate = "/HledatSmlouvy?Q={0}"
                 });
 
+                // hierarchie uradu
+                try
+                {
+                    string path = $"{App_Data_Path}\\ISoSS_Opendata_OSYS_OSSS.xml";
+
+                    var ser = new XmlSerializer(typeof(organizacni_struktura_sluzebnich_uradu));
+                    organizacni_struktura_sluzebnich_uradu ossu;
+                    using (var streamReader = new StreamReader(path))
+                    {
+                        using (var reader = XmlReader.Create(streamReader))
+                        {
+                            ossu = (organizacni_struktura_sluzebnich_uradu)ser.Deserialize(reader);
+                        }
+                    }
+
+                    foreach (var urad in ossu.UradSluzebniSeznam.SluzebniUrady)
+                    {
+                        var f = Firma.FromDS(urad.idDS);
+                        if (f is null || !f.Valid)
+                        {
+                            //log error about missing ICO
+                            // I tak musíme do struktury přidat
+                            continue;
+                        }
+
+                        var sluzebniUrad = ossu.OrganizacniStruktura.Where(os => os.id == urad.id)
+                            .FirstOrDefault()
+                            ?.StrukturaOrganizacni?.HlavniOrganizacniJednotka;
+
+                        if (sluzebniUrad is null)
+                        {
+                            //log error
+                            continue;
+                        }
+                        
+                        if (OrganizaniStrukturyUradu.TryGetValue(f.ICO, out var sluzebniUrady ))
+                        {
+                            sluzebniUrady.Add(sluzebniUrad);
+                        }
+                        else
+                        {
+                            OrganizaniStrukturyUradu.Add(f.ICO, new List<JednotkaOrganizacni>()
+                            {
+                                sluzebniUrad
+                            });
+                        }
+
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("fuck");
+                }
 
                 initialized = true;
             } //lock

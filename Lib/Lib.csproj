@@ -652,6 +652,7 @@
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\ItemToOcrQueue.Partial.cs" />
+    <Compile Include="Data\OrgStrukturyStatu.cs" />
     <Compile Include="Data\Osoba.Searching.cs" />
     <Compile Include="Data\Osoba.Searching.Politici.cs" />
     <Compile Include="Data\OsobyES\OsobaES.cs" />

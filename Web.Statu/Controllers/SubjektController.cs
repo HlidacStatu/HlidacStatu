@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using HlidacStatu.Lib.Data.VZ;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
+using System.Xml;
+using HlidacStatu.Lib.Data.OrgStrukturyStatu;
+using HlidacStatu.Lib;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -104,6 +110,26 @@ namespace HlidacStatu.Web.Controllers
             }
 
             return result;
+        }
+
+        public ActionResult OrganizacniStruktura(string id)
+        {
+            //ico => id translation!
+            if (!StaticData.OrganizaniStrukturyUradu.TryGetValue(id, out var ossu))
+            {
+                return RedirectToAction("Index");
+            }
+            
+            if(ossu.Count > 1)
+            {
+                //show list from user can choose
+                return RedirectToAction("Index");
+            }
+
+
+            var dataHierarchy = ossu.First().GenerateD3DataHierarchy();
+            
+            return View(dataHierarchy);
         }
 
 

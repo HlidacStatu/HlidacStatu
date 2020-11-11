@@ -1726,6 +1726,7 @@
     <Content Include="Views\Subjekt\ObchodySeSponzory.cshtml" />
     <Content Include="Views\Subjekt\DalsiDatabaze.cshtml" />
     <Content Include="Views\Data\Napoveda.cshtml" />
+    <Content Include="Views\Subjekt\OrganizacniStruktura.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
