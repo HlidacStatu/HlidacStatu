@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using HlidacStatu.Lib.Data.VZ;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
+using System.Xml;
+using HlidacStatu.Lib.Data.OrgStrukturyStatu;
+using HlidacStatu.Lib;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -97,6 +103,38 @@ namespace HlidacStatu.Web.Controllers
         }
         
         public ActionResult Dodavatele(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
+
+            return result;
+        }
+
+        public ActionResult OrganizacniStruktura(string id, string orgId)
+        {
+            //ico => id translation!
+            if (!StaticData.OrganizaniStrukturyUradu.TryGetValue(id, out var ossu))
+            {
+                return RedirectToAction("Index");
+            }
+
+            D3GraphHierarchy dataHierarchy;
+
+            if (ossu.Count > 1)
+            {
+                dataHierarchy = ossu.Where(o => o.id == orgId).FirstOrDefault()?.GenerateD3DataHierarchy();
+            }
+            else
+            {
+                dataHierarchy = ossu.FirstOrDefault().GenerateD3DataHierarchy();
+            }
+
+            return dataHierarchy is null ? RedirectToAction("Index") : (ActionResult)View(dataHierarchy);
+        }
+
+        public ActionResult DalsiInformace(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
