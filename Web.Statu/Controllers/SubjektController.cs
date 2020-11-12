@@ -112,24 +112,36 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        public ActionResult OrganizacniStruktura(string id)
+        public ActionResult OrganizacniStruktura(string id, string orgId)
         {
             //ico => id translation!
             if (!StaticData.OrganizaniStrukturyUradu.TryGetValue(id, out var ossu))
             {
                 return RedirectToAction("Index");
             }
-            
-            if(ossu.Count > 1)
+
+            D3GraphHierarchy dataHierarchy;
+
+            if (ossu.Count > 1)
             {
-                //show list from user can choose
-                return RedirectToAction("Index");
+                dataHierarchy = ossu.Where(o => o.id == orgId).FirstOrDefault()?.GenerateD3DataHierarchy();
+            }
+            else
+            {
+                dataHierarchy = ossu.FirstOrDefault().GenerateD3DataHierarchy();
             }
 
+            return dataHierarchy is null ? RedirectToAction("Index") : (ActionResult)View(dataHierarchy);
+        }
 
-            var dataHierarchy = ossu.First().GenerateD3DataHierarchy();
-            
-            return View(dataHierarchy);
+        public ActionResult DalsiInformace(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                return View(firma);
+            }
+
+            return result;
         }
 
 

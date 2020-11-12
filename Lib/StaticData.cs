@@ -956,10 +956,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                         {
                             if (string.IsNullOrEmpty(urad.idNadrizene))
                             {
-                                //11000004 => 11000006 => FÚs
-                                // ministerstvo financí to zase posralo
-                                // zamyslet se nad strukturou
-                                //log error about missing ico
+                                HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
                                 continue;
                             }
 
@@ -969,14 +966,14 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
 
                             if (nadrizeny is null)
                             {
-                                //log error about missing ico
+                                HlidacStatu.Util.Consts.Logger.Error($"Nenalezen nadřízený úřad, ani datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
                                 continue;
                             }
 
                             f = Firma.FromDS(nadrizeny.idDS);
                             if (f is null || !f.Valid)
                             {
-                                //log error about missing ico
+                                HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{nadrizeny.idDS}] nadřízeného úřadu [{nadrizeny.oznaceni}]");
                                 continue;
                             }
                         }
@@ -987,8 +984,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
 
                         if (sluzebniUrad is null)
                         {
-                            // log error
-                            // nemá žádnou substrukturu - hierarchii
+                            HlidacStatu.Util.Consts.Logger.Info($"Služební úřad [{urad.oznaceni}] nemá podřízené organizace.");
                             continue;
                         }
                         
@@ -1010,7 +1006,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("fuck");
+                    HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
                 }
 
                 initialized = true;
