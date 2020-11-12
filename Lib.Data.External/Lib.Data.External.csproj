@@ -587,6 +587,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="DatoveSchranky\descriptor.Designer.cs" />
+    <Compile Include="DatoveSchranky\DSList.cs" />
     <Compile Include="DatoveSchranky\ISDS.cs" />
     <Compile Include="Discourse.cs" />
     <Compile Include="eAgri\DeMinimis.Search.cs" />

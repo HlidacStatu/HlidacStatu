@@ -132,7 +132,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIndexGenerator", "..\Priva
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullTextSearch", "FullTextSearch\FullTextSearch.csproj", "{02124506-2C1C-49D6-B70C-0173A2977C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphTest", "Tests\GraphTest\GraphTest.csproj", "{C1854417-72FD-4042-AC26-1951CD15A87A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTest", "Tests\GraphTest\GraphTest.csproj", "{C1854417-72FD-4042-AC26-1951CD15A87A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Analytics", "Lib.Analytics\Lib.Analytics.csproj", "{E4FA65D3-95F2-487F-9D95-017D6409FF06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1168,6 +1170,30 @@ Global
 		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x64.Build.0 = Release|Any CPU
 		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x86.ActiveCfg = Release|Any CPU
 		{C1854417-72FD-4042-AC26-1951CD15A87A}.x86Only|x86.Build.0 = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|x64.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Debug|x86.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|x64.ActiveCfg = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|x64.Build.0 = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|x86.ActiveCfg = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Release|x86.Build.0 = Release|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|Any CPU.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|x64.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|x64.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|x86.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.Stage|x86.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|Any CPU.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|x64.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|x64.Build.0 = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|x86.ActiveCfg = Debug|Any CPU
+		{E4FA65D3-95F2-487F-9D95-017D6409FF06}.x86Only|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1201,8 +1227,8 @@ Global
 		{C1854417-72FD-4042-AC26-1951CD15A87A} = {F0B0A6EA-FAB7-4F57-9C96-C13E4B1F3812}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
