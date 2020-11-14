@@ -68,7 +68,9 @@ namespace HlidacStatu.Lib.Render
             }
             catch (Exception e)
             {
-                HlidacStatu.Util.Consts.Logger.Error($"ScribanT render error\nTemplate {this.template}", e);
+                HlidacStatu.Util.Consts.Logger.Error($"ScribanT render error\nTemplate {this.template}\n\n"
+                   + Newtonsoft.Json.JsonConvert.SerializeObject(dmodel)
+                    , e);
                 throw;
             }
 
