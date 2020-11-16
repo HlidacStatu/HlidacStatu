@@ -7,33 +7,85 @@ using System.Threading.Tasks;
 namespace HlidacStatu.Lib.Analytics
 {
     public class PerYear<T>
-        where T : BaseData<T>
     {
 
-        public Dictionary<int, BaseData<T>> years { get; set; }  = new Dictionary<int, BaseData<T>>();
+        public string ICO { get; set; }
 
-        public decimal AllYearsSum()
+        public PerYear() { }
+
+        public PerYear(string ico, Func<T,int> yearSelector, IEnumerable<T> data) 
         {
-            if (years.Count == 0)
-                return 0;
-            return years.Sum(m => m.Value.TheValue);
+            if (yearSelector == null)
+                throw new ArgumentNullException("yearSelector");
+            if (data == null)
+                throw new ArgumentNullException("data");
+            this.ICO = ico;
+            foreach (var item in data)
+            {
+                years.Add(yearSelector(item), item);
+            }
+        }
+        public PerYear(string ico, Dictionary<int,T> data) 
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            this.ICO = ico;
+            years = data;
         }
 
-        public decimal RegistrSmluvYearsSum()
+        public Dictionary<int, T> years { get; set; }  = new Dictionary<int, T>();
+
+
+
+        public decimal Sum(Func<T, int> selector)
         {
-            if (years.Count == 0)
-                return 0;
-            return years.Where(m=>m.Key>=2016).Sum(m => m.Value.TheValue);
+            return years.Select(v=>v.Value).Sum(selector);
+        }
+        public decimal Sum(Func<T, decimal> selector)
+        {
+            return years.Select(v=>v.Value).Sum(selector);
         }
 
+        public decimal Sum(int[] foryears, Func<T, int> selector)
+        {
+            return years
+                .Where(y=>foryears.Contains(y.Key))
+                .Select(v=>v.Value)
+                .Sum(selector);
+        }
+        public decimal Sum(int[] foryears, Func<T, decimal> selector)
+        {
+            return years
+                .Where(y=>foryears.Contains(y.Key))
+                .Select(v=>v.Value)
+                .Sum(selector);
 
-        int _currYear = 0;
+        }
+
+        public List<T> RegistrSmluvYears()
+        {
+            List<T> ret = new List<T>();
+            foreach (var y in Consts.RegistrSmluvYearsList)
+            {
+                ret.Add(years[y]);
+            }
+            return ret;
+        }
+
+        int _delayedCurrYear = 0;
+        public virtual int DelayedCurrentYear()
+        {
+            if (_delayedCurrYear == 0)
+                _delayedCurrYear = DateTime.Now.Month > 6 ? DateTime.Now.Year : DateTime.Now.Year - 1;
+
+            return _delayedCurrYear;
+        }
+
         public virtual int CurrentYear()
         {
-            if (_currYear == 0)
-                _currYear = DateTime.Now.Month > 6 ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            return  DateTime.Now.Year;
 
-            return _currYear;
         }
 
     }

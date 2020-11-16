@@ -90,7 +90,7 @@
                     <span>, </span>
                 }
                 <span>
-                    <a href="/data/Hledat/vyjadreni-politiku?q=server%3A@(kv.Key)"><b>@(kv.Key)</b></a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
+                    <a href="/data/Hledat/vyjadreni-politiku?q=server%3A@(kv.Key)&order=datum%20desc"><b>@(kv.Key)</b></a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;příspěvek, " + cas + ")", "&nbsp;({0}&nbsp;příspěvky, " + cas + ")", "&nbsp;({0:### ###}&nbsp;příspěvků, " + cas + ")"))
                 </span>
             }
         </h4>

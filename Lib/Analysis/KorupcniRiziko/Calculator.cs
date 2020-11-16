@@ -76,13 +76,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             kindex.UcetniJednotka = KIndexData.UcetniJednotkaInfo.Load(urad.ICO);
 
 
-            _calc_SeZasadnimNedostatkem = AdvancedQuery.PerYear($"ico:{this.Ico} and chyby:zasadni");
+            _calc_SeZasadnimNedostatkem = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} and chyby:zasadni", Consts.CalculationYears);
 
-            _calc_UzavrenoOVikendu = AdvancedQuery.PerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)");
+            _calc_UzavrenoOVikendu = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)", Consts.CalculationYears);
 
-            _calc_ULimitu = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )");
+            _calc_ULimitu = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )", Consts.CalculationYears);
 
-            _calc_NovaFirmaDodavatel = AdvancedQuery.PerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )");
+            _calc_NovaFirmaDodavatel = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )", Consts.CalculationYears);
 
         }
 

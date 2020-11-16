@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public abstract class BaseData<T>
+    public static class Consts
     {
-        public T Data { get; set; }
-
-        public abstract decimal TheValue { get; }
-
-
-
-
+                public static int[] RegistrSmluvYearsList =  Enumerable.Range(2016, DateTime.Now.Year - 2016+1).ToArray();
 
     }
 }

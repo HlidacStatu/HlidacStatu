@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using HlidacStatu.Lib.Analysis;
 using HlidacStatu.Lib.Searching;
+
 using Nest;
 
-namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
+namespace HlidacStatu.Lib.ES
 {
-    public class AdvancedQuery
+    public class QueryGrouped
     {
 
-        public static Dictionary<int, BasicData> PerYear(string query, int[] yearsInterval = null)
+        public static Dictionary<int, BasicData> SmlouvyPerYear(string query, int[] interestedInYearsOnly)
         {
-            yearsInterval = yearsInterval ?? Consts.CalculationYears;
 
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggY =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
@@ -39,18 +40,31 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
             Dictionary<int, BasicData> result = new Dictionary<int, BasicData>();
-            foreach (int year in yearsInterval)
+            if (interestedInYearsOnly != null)
             {
-                result.Add(year, BasicData.Empty());
-            }
-
-            foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
-            {
-                if (result.ContainsKey(val.Date.Year))
+                foreach (int year in interestedInYearsOnly)
                 {
+                    result.Add(year, BasicData.Empty());
+                }
+
+                foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
+                {
+                    if (result.ContainsKey(val.Date.Year))
+                    {
+                        result[val.Date.Year].Pocet = val.DocCount ?? 0;
+                        result[val.Date.Year].CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
+                {
+                    result.Add(val.Date.Year, BasicData.Empty());
                     result[val.Date.Year].Pocet = val.DocCount ?? 0;
                     result[val.Date.Year].CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0);
                 }
+
             }
 
             return result;

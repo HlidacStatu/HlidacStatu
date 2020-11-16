@@ -275,8 +275,8 @@
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
-    <Reference Include="Scriban, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scriban.2.1.3\lib\net45\Scriban.dll</HintPath>
+    <Reference Include="Scriban, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scriban.2.1.4\lib\net45\Scriban.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -536,7 +536,7 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\ContractsStatisticData.cs" />
-    <Compile Include="Analysis\KorupcniRiziko\AdvancedQuery.cs" />
+    <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
     <Compile Include="Analysis\KorupcniRiziko\KIndex.cs" />
@@ -621,6 +621,7 @@
       <DependentUpon>Response.xsd</DependentUpon>
     </Compile>
     <Compile Include="Data\Firma.Hint.cs" />
+    <Compile Include="Data\Firma.StatistickeUdaje.cs" />
     <Compile Include="Data\Firma.Zatrideni.cs" />
     <Compile Include="Data\Firma.Lazy.cs" />
     <Compile Include="Data\Firma.Search.cs" />
@@ -957,6 +958,7 @@
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Html.cshtml" />
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.cshtml" />
     <Compile Include="Data\OsobyES\OsobyEsService.cs" />
+    <Compile Include="Data\Firma.Statistics.cs" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="xsd\dump_index.xsd">
@@ -1001,6 +1003,10 @@
     <ProjectReference Include="..\Lang\Lang.csproj">
       <Project>{d787acca-0e9d-45e7-a98b-87acfe7af249}</Project>
       <Name>Lang</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib.Analytics\Lib.Analytics.csproj">
+      <Project>{e4fa65d3-95f2-487f-9d95-017d6409ff06}</Project>
+      <Name>Lib.Analytics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>
