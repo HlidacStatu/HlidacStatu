@@ -38,6 +38,20 @@ namespace HlidacStatu.Lib.Analytics
                     return res + 1;
             }
 
+            public decimal Average()
+            {
+                return Items.Average(i => i.Value);
+            }
+            public decimal Minimum()
+            {
+                return Items.Min(i => i.Value);
+            }
+            public decimal Maximum()
+            {
+                return Items.Max(i => i.Value);
+            }
+
+
         }
 
 
