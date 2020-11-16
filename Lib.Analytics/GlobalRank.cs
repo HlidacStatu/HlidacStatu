@@ -7,13 +7,14 @@ namespace HlidacStatu.Lib.Analytics
     public partial class GlobalRankPerYear<T>
         where T:new()
     {
-        protected GlobalRankPerYear() { }
+        [Obsolete("dont use it. Only for serialization")]
+        public GlobalRankPerYear() { }
 
         private readonly Dictionary<string, Func<T, decimal>> scalesDefD = new Dictionary<string, Func<T, decimal>>();
         private readonly Dictionary<string, Func<T, long>> scalesDefL = new Dictionary<string, Func<T, long>>();
 
         private readonly Dictionary<string, OrderedList> scalesD = new Dictionary<string, OrderedList>();
-        private readonly Dictionary<int, List<(string ico, T value)>> dataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
+        public  Dictionary<int, List<(string ico, T value)>> DataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
 
         public int[] CalculatedYears = null;
 
@@ -22,7 +23,7 @@ namespace HlidacStatu.Lib.Analytics
             this.CalculatedYears = calculatedYears;
             foreach (var y in calculatedYears)
             {
-                dataPerIcoYear.Add(y, new List<(string ico, T value)>());
+                DataPerIcoYear.Add(y, new List<(string ico, T value)>());
             }
             foreach (var d in dataForAllIcos)
             {
@@ -30,14 +31,14 @@ namespace HlidacStatu.Lib.Analytics
                 {
                     if (d.Years.ContainsKey(y))
                     {
-                        dataPerIcoYear[y].Add((d.ICO,d.Years[y]));
+                        DataPerIcoYear[y].Add((d.ICO,d.Years[y]));
                     }
                 }
             }
         }
 
         private object _getScaleLock = new object();
-        public virtual OrderedList GetScale(int year, string propertyName, Func<T, decimal> propertySelector)
+        public virtual OrderedList GetRank(int year, string propertyName, Func<T, decimal> propertySelector)
         {
             lock (_getScaleLock)
             {
@@ -45,19 +46,19 @@ namespace HlidacStatu.Lib.Analytics
                     scalesDefD.Add(propertyName, propertySelector);
             }
 
-            return GetScaleInternal(year, propertyName);
+            return GetRankInternal(year, propertyName);
         }
-        public virtual OrderedList GetScale(int year, string propertyName, Func<T, long> propertySelector)
+        public virtual OrderedList GetRank(int year, string propertyName, Func<T, long> propertySelector)
         {
             lock (_getScaleLock)
             {
                 if (!scalesDefD.ContainsKey(propertyName) && !scalesDefL.ContainsKey(propertyName))
                     scalesDefL.Add(propertyName, propertySelector);
             }        
-            return GetScaleInternal(year, propertyName);
+            return GetRankInternal(year, propertyName);
         }
 
-        protected virtual OrderedList GetScaleInternal(int year, string propertyName)
+        protected virtual OrderedList GetRankInternal(int year, string propertyName)
         {
             string scaleName = $"{propertyName}_{year}";
             if (!scalesD.ContainsKey(scaleName))
@@ -76,7 +77,7 @@ namespace HlidacStatu.Lib.Analytics
 
         private OrderedList CalculateOrderList(int year, string name)
         {
-            var data = dataPerIcoYear[year];
+            var data = DataPerIcoYear[year];
 
             var orderedList = new OrderedList(
                 data.Select(m=> new OrderedList.Item() {

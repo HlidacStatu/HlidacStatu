@@ -10,21 +10,37 @@ namespace HlidacStatu.Lib.Data
     {
         public class SmlouvyStatistics : HlidacStatu.Lib.Analytics.PerYear<StatistickeUdaje.Smlouvy>
         {
+            static SmlouvyStatistics nullObj = new SmlouvyStatistics() { ICO = "--------" };
+
+            private static Util.Cache.CouchbaseCacheManager<SmlouvyStatistics, string> instanceByIco
+                = Util.Cache.CouchbaseCacheManager<SmlouvyStatistics, string>.GetSafeInstance("Firma_SmlouvyStatistics", Create, TimeSpan.FromHours(1));
+
             public SmlouvyStatistics() : base() { }
 
             public SmlouvyStatistics(string ico, Dictionary<int, StatistickeUdaje.Smlouvy> data)
                 : base(ico, data)
-            { 
-            
-            }
+            {
 
+            }
+            public static SmlouvyStatistics Get(string ico)
+            {
+                                return instanceByIco.Get(ico);
+
+            }
             public static SmlouvyStatistics Get(Firma f)
             {
                 //add cache logic
 
-                return Create(f);
+                return instanceByIco.Get(f.ICO);
             }
-
+            private static SmlouvyStatistics Create(string ico)
+            {
+                Firma f = Firmy.Get(ico);
+                if (f.Valid == false)
+                    return nullObj;
+                else
+                    return Create(f);
+            }
             private static SmlouvyStatistics Create(Firma f)
             {
 

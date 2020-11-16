@@ -55,6 +55,7 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
 
+        public static Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalRankPerYear<Lib.Data.Firma.StatistickeUdaje.Smlouvy>> FirmySmlouvyGlobal = null;
 
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
@@ -1008,6 +1009,30 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                 {
                     HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
                 }
+
+                FirmySmlouvyGlobal = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy>>(
+                    Devmasters.Config.GetWebConfigValue("ESConnection").Split(';'),"DevmastersCache", TimeSpan.Zero, "FirmySmlouvyGlobal",
+                    o => {
+                        var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
+                        object lockObj = new object();
+                        List<Firma.SmlouvyStatistics> data = new List<Firma.SmlouvyStatistics>();
+                        Devmasters.Batch.Manager.DoActionForAll<string>(icos,
+                            ico =>
+                            {
+                                var stat = Firma.SmlouvyStatistics.Get(ico);
+                                if (stat != null)
+                                    lock (lockObj)
+                                    {
+                                        data.Add(stat);
+                                    }
+                                return new Devmasters.Batch.ActionOutputData();
+                            }, true);
+
+                        return new Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy>(Analytics.Consts.RegistrSmluvYearsList, data);
+
+                    }, providerId:"HlidacStatu.Lib"
+                    );
+
 
                 initialized = true;
             } //lock

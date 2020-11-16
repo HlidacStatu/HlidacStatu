@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Batch, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Batch.2.1.0\lib\net48\Devmasters.Batch.dll</HintPath>
+    <Reference Include="Devmasters.Batch, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Batch.2.1.1\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net48\Devmasters.Collections.dll</HintPath>

@@ -14,6 +14,8 @@ namespace HlidacStatu.Lib.Data
 {
     public class AnalysisCalculation
     {
+
+
         public class VazbyFiremNaPolitiky
         {
             public Dictionary<string, List<int>> SoukromeFirmy = null;
@@ -70,6 +72,28 @@ namespace HlidacStatu.Lib.Data
                     _days = null;
 
             }
+        }
+
+        public static Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
+        {
+            var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
+            object lockObj = new object();
+            List<Firma.SmlouvyStatistics> data = new List<Firma.SmlouvyStatistics>();
+            Devmasters.Batch.Manager.DoActionForAll<string>(icos,
+                ico =>
+                {
+                    var stat = Firma.SmlouvyStatistics.Get(ico);
+                    if (stat != null)
+                        lock (lockObj)
+                        {
+                            data.Add(stat);
+                        }
+                    return new Devmasters.Batch.ActionOutputData();
+                },logOutputFunc, progressOutputFunc, true);
+
+            return new Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy>(Analytics.Consts.RegistrSmluvYearsList, data);
+
+
         }
 
 
