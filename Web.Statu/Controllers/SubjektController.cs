@@ -51,7 +51,7 @@ namespace HlidacStatu.Web.Controllers
 
             return result;
         }
-        public ActionResult SmlouvySeSponzory(string id)
+        public ActionResult ObchodySeSponzory(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
