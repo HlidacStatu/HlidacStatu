@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public partial class GlobalScalePerYear<T>
+    public partial class GlobalRankPerYear<T>
     {
         public class OrderedList
         {

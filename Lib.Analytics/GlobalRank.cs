@@ -6,24 +6,25 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public partial class GlobalScalePerYear<T>
+    public partial class GlobalRankPerYear<T>
+        where T:new()
     {
 
 
-        protected GlobalScalePerYear() { }
+        protected GlobalRankPerYear() { }
 
         Dictionary<string, Func<T, decimal>> scalesDefD = new System.Collections.Generic.Dictionary<string, Func<T, decimal>>();
-        Dictionary<string, Func<T, int>> scalesDefI = new System.Collections.Generic.Dictionary<string, Func<T, int>>();
+        Dictionary<string, Func<T, long>> scalesDefL = new System.Collections.Generic.Dictionary<string, Func<T, long>>();
 
         Dictionary<string, OrderedList> scalesD = new Dictionary<string, OrderedList>();
 
-        int[] calculatedYears = null;
+        public int[] CalculatedYears = null;
 
         Dictionary<int, List<(string ico, T value)>> dataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
 
-        public GlobalScalePerYear(int[] calculatedYears, IEnumerable<PerYear<T>> dataForAllIcos)
+        public GlobalRankPerYear(int[] calculatedYears, IEnumerable<PerYear<T>> dataForAllIcos)
         {
-            this.calculatedYears = calculatedYears;
+            this.CalculatedYears = calculatedYears;
             foreach (var y in calculatedYears)
             {
                 dataPerIcoYear.Add(y, new List<(string ico, T value)>());
@@ -41,16 +42,36 @@ namespace HlidacStatu.Lib.Analytics
         }
 
         object _getScaleLock = new object();
-        public virtual OrderedList GetScale(int year, string name)
+        public virtual OrderedList GetScale(int year, string propertyName, Func<T, decimal> propertySelector)
         {
-            string scaleName = $"{name}_{year}";
+            lock (_getScaleLock)
+            {
+                if (!scalesDefD.ContainsKey(propertyName) && !scalesDefL.ContainsKey(propertyName))
+                    scalesDefD.Add(propertyName, propertySelector);
+            }
+
+            return GetScaleInternal(year, propertyName);
+        }
+        public virtual OrderedList GetScale(int year, string propertyName, Func<T, long> propertySelector)
+        {
+            lock (_getScaleLock)
+            {
+                if (!scalesDefD.ContainsKey(propertyName) && !scalesDefL.ContainsKey(propertyName))
+                    scalesDefL.Add(propertyName, propertySelector);
+            }        
+            return GetScaleInternal(year, propertyName);
+        }
+
+        protected virtual OrderedList GetScaleInternal(int year, string propertyName)
+        {
+            string scaleName = $"{propertyName}_{year}";
             if (!scalesD.ContainsKey(scaleName))
             {
                 lock (_getScaleLock)
                 {
                     if (!scalesD.ContainsKey(scaleName))
                     {
-                        scalesD[scaleName] = CalculateOrderList(year,name);
+                        scalesD[scaleName] = CalculateOrderList(year,propertyName);
                     }                
                 }
             
@@ -73,25 +94,12 @@ namespace HlidacStatu.Lib.Analytics
             if (scalesDefD.ContainsKey(name))
                 return scalesDefD[name](value);
 
-            if (scalesDefI.ContainsKey(name))
-                return (decimal)scalesDefI[name](value);
+            if (scalesDefL.ContainsKey(name))
+                return (decimal)scalesDefL[name](value);
 
             throw new ArgumentOutOfRangeException("name",$"{name} selector doesn't exists");
         }
 
-        public virtual void AddScale(string scaleName, Func<T, decimal> selector)
-        {
-            if (!scalesDefD.ContainsKey(scaleName) && !scalesDefI.ContainsKey(scaleName))
-                scalesDefD.Add(scaleName, selector);
-        }
-
-        public virtual void AddScale(string scaleName, Func<T, int> selector)
-        {
-            if (!scalesDefD.ContainsKey(scaleName) && !scalesDefI.ContainsKey(scaleName))
-            {
-                scalesDefI.Add(scaleName, selector);
-            }
-        }
 
 
     }

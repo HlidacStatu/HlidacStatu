@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Analytics
 {
+    //group data per year
     public class PerYear<T>
+        where T: new()
     {
 
         public string ICO { get; set; }
+        public Dictionary<int, T> years { get; set; }  = new Dictionary<int, T>();
+
 
         public PerYear() { }
 
@@ -34,8 +38,6 @@ namespace HlidacStatu.Lib.Analytics
             years = data;
         }
 
-        public Dictionary<int, T> years { get; set; }  = new Dictionary<int, T>();
-
 
 
         public decimal Sum(Func<T, int> selector)
@@ -44,6 +46,7 @@ namespace HlidacStatu.Lib.Analytics
         }
         public decimal Sum(Func<T, decimal> selector)
         {
+            
             return years.Select(v=>v.Value).Sum(selector);
         }
 

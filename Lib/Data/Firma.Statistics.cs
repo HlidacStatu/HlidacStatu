@@ -18,7 +18,14 @@ namespace HlidacStatu.Lib.Data
             
             }
 
-            public static SmlouvyStatistics Create(Firma f)
+            public static SmlouvyStatistics Get(Firma f)
+            {
+                //add cache logic
+
+                return Create(f);
+            }
+
+            private static SmlouvyStatistics Create(Firma f)
             {
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} and chyby:zasadni", Lib.Analytics.Consts.RegistrSmluvYearsList);
