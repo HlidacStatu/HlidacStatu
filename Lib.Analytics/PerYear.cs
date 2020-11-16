@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Analytics
 {
@@ -12,8 +10,7 @@ namespace HlidacStatu.Lib.Analytics
     {
 
         public string ICO { get; set; }
-        public Dictionary<int, T> years { get; set; }  = new Dictionary<int, T>();
-
+        public Dictionary<int, T> Years { get; set; }  = new Dictionary<int, T>();
 
         public PerYear() { }
 
@@ -26,40 +23,36 @@ namespace HlidacStatu.Lib.Analytics
             this.ICO = ico;
             foreach (var item in data)
             {
-                years.Add(yearSelector(item), item);
+                Years.Add(yearSelector(item), item);
             }
         }
         public PerYear(string ico, Dictionary<int,T> data) 
         {
-            if (data == null)
-                throw new ArgumentNullException("data");
-
             this.ICO = ico;
-            years = data;
+            Years = data ?? throw new ArgumentNullException("data");
         }
-
 
 
         public decimal Sum(Func<T, int> selector)
         {
-            return years.Select(v=>v.Value).Sum(selector);
+            return Years.Select(v=>v.Value).Sum(selector);
         }
         public decimal Sum(Func<T, decimal> selector)
         {
             
-            return years.Select(v=>v.Value).Sum(selector);
+            return Years.Select(v=>v.Value).Sum(selector);
         }
 
         public decimal Sum(int[] foryears, Func<T, int> selector)
         {
-            return years
+            return Years
                 .Where(y=>foryears.Contains(y.Key))
                 .Select(v=>v.Value)
                 .Sum(selector);
         }
         public decimal Sum(int[] foryears, Func<T, decimal> selector)
         {
-            return years
+            return Years
                 .Where(y=>foryears.Contains(y.Key))
                 .Select(v=>v.Value)
                 .Sum(selector);
@@ -68,12 +61,12 @@ namespace HlidacStatu.Lib.Analytics
 
         public List<T> RegistrSmluvYears()
         {
-            List<T> ret = new List<T>();
+            var returnValue = new List<T>();
             foreach (var y in Consts.RegistrSmluvYearsList)
             {
-                ret.Add(years[y]);
+                returnValue.Add(Years[y]);
             }
-            return ret;
+            return returnValue;
         }
 
         int _delayedCurrYear = 0;
@@ -88,7 +81,6 @@ namespace HlidacStatu.Lib.Analytics
         public virtual int CurrentYear()
         {
             return  DateTime.Now.Year;
-
         }
 
     }
