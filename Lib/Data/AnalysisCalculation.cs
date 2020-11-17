@@ -74,7 +74,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
+        public static Analytics.GlobalStatisticsPerYear<Firma.StatistickeUdaje.Smlouvy> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
         {
             var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
             object lockObj = new object();
@@ -91,7 +91,7 @@ namespace HlidacStatu.Lib.Data
                     return new Devmasters.Batch.ActionOutputData();
                 },logOutputFunc, progressOutputFunc, true);
 
-            return new Analytics.GlobalRankPerYear<Firma.StatistickeUdaje.Smlouvy>(Analytics.Consts.RegistrSmluvYearsList, data);
+            return new Analytics.GlobalStatisticsPerYear<Firma.StatistickeUdaje.Smlouvy>(Analytics.Consts.RegistrSmluvYearsList, data);
 
 
         }

@@ -8,7 +8,7 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class Firma
     {
-        public class SmlouvyStatistics : HlidacStatu.Lib.Analytics.PerYear<StatistickeUdaje.Smlouvy>
+        public class SmlouvyStatistics : HlidacStatu.Lib.Analytics.SubjectStatisticsPerYear<StatistickeUdaje.Smlouvy>
         {
             static SmlouvyStatistics nullObj = new SmlouvyStatistics() { ICO = "--------" };
 

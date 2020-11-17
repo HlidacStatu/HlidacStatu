@@ -133,10 +133,10 @@
                 (key, val) => (Rok: key.rok, Ico:key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0) ))
                 .ToList();
 
-            var sponzoringData = new ReportDataSource<(int Rok, string Ico, Decimal Dar)>(
-                new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column[]
+            var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
+                new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column[]
                 {
-                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
                     {
                         Name = "Rok",
                         CssClass = "number",
@@ -144,13 +144,13 @@
                         TextRender = (x) => x.Rok.ToString()
 
                     },
-                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
                     {
                         Name = "Politická strana",
                         HtmlRender = (x) =>
                         $"<a href=\"/subjekt2/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
                     },
-                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
                     {
                         Name = "Celkem darovali",
                         TextRender = (x) => $"{x.Dar.ToString("N0")} Kč",

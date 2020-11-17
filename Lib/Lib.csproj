@@ -539,6 +539,8 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\ContractsStatisticData.cs" />
+    <Compile Include="Data\Dotace\StatisticData.cs" />
+    <Compile Include="Data\Dotace\Statistics.cs" />
     <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
