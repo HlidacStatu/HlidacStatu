@@ -7,8 +7,9 @@
 @using System;
 @using System.Data;
 @using HlidacStatu.Lib.Render;
+@using HlidacStatu.Lib.Data;
 
-@{ 
+@{
     ViewBag.Title = "Další informace " + Model.Jmeno;
 }
 @section breadcrumb
@@ -112,15 +113,66 @@
     </div>
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
-        <div>
-            <h4>Organizační struktura</h4>
-            <ul>
-                @foreach (var org in HlidacStatu.Lib.StaticData.OrganizaniStrukturyUradu[Model.ICO])
+        @if (HlidacStatu.Lib.StaticData.OrganizaniStrukturyUradu.TryGetValue(Model.ICO, out var podrizeneOrg))
+        {
+            <div>
+                <h4>Organizační struktura</h4>
+                <ul>
+                    @foreach (var org in podrizeneOrg)
+                    {
+                        <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
+                    }
+                </ul>
+            </div>
+            <hr />
+        }
+
+        @{
+            var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
+                .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description ),
+                (key, val) => (Rok: key.rok, Ico:key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0) ))
+                .ToList();
+
+            var sponzoringData = new ReportDataSource<(int Rok, string Ico, Decimal Dar)>(
+                new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column[]
                 {
-                    <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
-                }
-            </ul>
-        </div>
+                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    {
+                        Name = "Rok",
+                        CssClass = "number",
+                        HtmlRender = (x) => x.Rok.ToString(),
+                        TextRender = (x) => x.Rok.ToString()
+
+                    },
+                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    {
+                        Name = "Politická strana",
+                        HtmlRender = (x) =>
+                        $"<a href=\"/subjekt2/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
+                    },
+                    new ReportDataSource<(int Rok, string Ico, Decimal Dar)>.Column()
+                    {
+                        Name = "Celkem darovali",
+                        TextRender = (x) => $"{x.Dar.ToString("N0")} Kč",
+                        HtmlRender = (x) => $"{x.Dar.ToString("N0")}&nbsp;Kč",
+                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.Dar),
+                        CssClass = "number"
+                    },
+
+                });
+            foreach (var dar in sponzoring)
+            {
+                sponzoringData.AddRow(dar);
+            }
+            sponzoringData.Title = "Přehled darů politickým stranám";
+        }
+        @if (sponzoring.Count > 0)
+        {
+            <div>
+                <h4>Sponzorství politických stran</h4>
+                @Html.DataToHTMLTable(sponzoringData)
+            </div>
+        }
 
     </div>
 </div>
