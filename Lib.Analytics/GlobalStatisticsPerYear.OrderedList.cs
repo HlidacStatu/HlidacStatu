@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public partial class GlobalRankPerYear<T>
+    public partial class GlobalStatisticsPerYear<T>
     {
         public class OrderedList
         {
@@ -12,6 +12,9 @@ namespace HlidacStatu.Lib.Analytics
                 public string ICO { get; set; }
                 public decimal Value { get; set; }
             }
+
+            public List<Item> Items { get; set; } // asi zbytečné držet všechny hodnoty. Stačí nám jen výsledek.
+            public Dictionary<int, decimal> PercentilesValue { get; set; } = new Dictionary<int, decimal>();
 
             static int[] percentiles = new int[] { 1, 5, 10, 25, 33, 50, 66, 75, 90, 95, 99 };
 
@@ -26,8 +29,6 @@ namespace HlidacStatu.Lib.Analytics
                 }
             }
 
-            public List<Item> Items { get; set; }
-            public Dictionary<int, decimal> PercentilesValue { get; set; } = new Dictionary<int, decimal>();
 
             public int? Rank(string ico)
             {

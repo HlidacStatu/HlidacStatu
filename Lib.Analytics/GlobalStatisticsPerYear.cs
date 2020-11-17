@@ -4,21 +4,32 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public partial class GlobalRankPerYear<T>
+    public partial class GlobalStatisticsPerYear<T>
         where T:new()
     {
         [Obsolete("dont use it. Only for serialization")]
-        public GlobalRankPerYear() { }
+        public GlobalStatisticsPerYear() { }
 
         private readonly Dictionary<string, Func<T, decimal>> scalesDefD = new Dictionary<string, Func<T, decimal>>();
         private readonly Dictionary<string, Func<T, long>> scalesDefL = new Dictionary<string, Func<T, long>>();
 
+
         private readonly Dictionary<string, OrderedList> scalesD = new Dictionary<string, OrderedList>();
-        public  Dictionary<int, List<(string ico, T value)>> DataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
+
+        //hodnoty jsou uložené tady
+        public Dictionary<int, List<(string ico, T value)>> DataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
 
         public int[] CalculatedYears = null;
 
-        public GlobalRankPerYear(int[] calculatedYears, IEnumerable<PerYear<T>> dataForAllIcos)
+        // ------------ Pokus -----------
+        // Takhle by měla vypadat struktura
+        // Ordered List by neměl být asi úplně ordered list
+        public List<(string property, int year, OrderedList Data)> StatisticData { get; private set; } =
+            new List<(string property, int year, OrderedList Data)>();
+
+        // ------------ Konec pokusu -----------
+
+        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<SubjectStatisticsPerYear<T>> dataForAllIcos)
         {
             this.CalculatedYears = calculatedYears;
             foreach (var y in calculatedYears)
