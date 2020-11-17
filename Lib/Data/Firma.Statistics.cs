@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data
             static SmlouvyStatistics nullObj = new SmlouvyStatistics() { ICO = "--------" };
 
             private static Util.Cache.CouchbaseCacheManager<SmlouvyStatistics, string> instanceByIco
-                = Util.Cache.CouchbaseCacheManager<SmlouvyStatistics, string>.GetSafeInstance("Firma_SmlouvyStatistics", Create, TimeSpan.FromHours(1));
+                = Util.Cache.CouchbaseCacheManager<SmlouvyStatistics, string>.GetSafeInstance("Firma_SmlouvyStatistics", Create, TimeSpan.FromHours(12));
 
             public SmlouvyStatistics() : base() { }
 
