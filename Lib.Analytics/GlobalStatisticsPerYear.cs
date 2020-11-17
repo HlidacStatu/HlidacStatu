@@ -1,115 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace HlidacStatu.Lib.Analytics
 {
     public partial class GlobalStatisticsPerYear<T>
-        where T:new()
+        where T:new() // tohle asi není třeba
     {
-        [Obsolete("dont use it. Only for serialization")]
-        public GlobalStatisticsPerYear() { }
-
-        private readonly Dictionary<string, Func<T, decimal>> scalesDefD = new Dictionary<string, Func<T, decimal>>();
-        private readonly Dictionary<string, Func<T, long>> scalesDefL = new Dictionary<string, Func<T, long>>();
-
-
-        private readonly Dictionary<string, OrderedList> scalesD = new Dictionary<string, OrderedList>();
-
-        //hodnoty jsou uložené tady
-        public Dictionary<int, List<(string ico, T value)>> DataPerIcoYear = new Dictionary<int, List<(string ico, T value)>>();
-
         public int[] CalculatedYears = null;
-
-        // ------------ Pokus -----------
-        // Takhle by měla vypadat struktura
+        
         // Ordered List by neměl být asi úplně ordered list
         public List<(string property, int year, OrderedList Data)> StatisticData { get; private set; } =
             new List<(string property, int year, OrderedList Data)>();
 
-        // ------------ Konec pokusu -----------
-
+        
         public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<SubjectStatisticsPerYear<T>> dataForAllIcos)
         {
             this.CalculatedYears = calculatedYears;
-            foreach (var y in calculatedYears)
+
+            // kdyby nás někoho náhodou napadlo dát do statistik string, tak tohle by to mělo pohlídat
+            var numericProperties = typeof(T).GetProperties().Where(p => IsNumericType(p.PropertyType));
+
+            //todo: asi by se dalo zrychlit, kdyby se nejelo po jednotlivých property, ale všechny property najednou
+            // dneska na to už ale mentálně nemam :)
+            // případně by se dalo paralelizovat do threadů (udělat paralel foreach a jet každý rok v samostatném threadu)
+            // musel by se jen zamykat zápis do statistic data (třeba v setteru)
+            foreach(var year in CalculatedYears)
             {
-                DataPerIcoYear.Add(y, new List<(string ico, T value)>());
-            }
-            foreach (var d in dataForAllIcos)
-            {
-                foreach (var y in calculatedYears)
+                foreach(var property in numericProperties)
                 {
-                    if (d.Years.ContainsKey(y))
-                    {
-                        DataPerIcoYear[y].Add((d.ICO,d.Years[y]));
-                    }
+                    var globalData = dataForAllIcos.Select(d => 
+                        GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)));
+
+                    StatisticData.Add((property.Name, year, new OrderedList(globalData)));
                 }
             }
+
         }
 
-        private object _getScaleLock = new object();
-        public virtual OrderedList GetRank(int year, string propertyName, Func<T, decimal> propertySelector)
+        public virtual OrderedList GetRank(int year, string propertyName)
         {
-            lock (_getScaleLock)
-            {
-                if (!scalesDefD.ContainsKey(propertyName) && !scalesDefL.ContainsKey(propertyName))
-                    scalesDefD.Add(propertyName, propertySelector);
-            }
-
-            return GetRankInternal(year, propertyName);
+            return StatisticData.Where(sd => sd.year == year && sd.property == propertyName)
+                .Select(sd => sd.Data)
+                .FirstOrDefault();
         }
-        public virtual OrderedList GetRank(int year, string propertyName, Func<T, long> propertySelector)
+
+        #region helper funcions
+        private static HashSet<Type> NumericTypes = new HashSet<Type>
         {
-            lock (_getScaleLock)
-            {
-                if (!scalesDefD.ContainsKey(propertyName) && !scalesDefL.ContainsKey(propertyName))
-                    scalesDefL.Add(propertyName, propertySelector);
-            }        
-            return GetRankInternal(year, propertyName);
-        }
+            typeof(short),
+            typeof(int),
+            typeof(long),
+            typeof(uint),
+            typeof(float),
+            typeof(double),
+            typeof(decimal)
+        };
 
-        protected virtual OrderedList GetRankInternal(int year, string propertyName)
+        private static bool IsNumericType(Type type)
         {
-            string scaleName = $"{propertyName}_{year}";
-            if (!scalesD.ContainsKey(scaleName))
-            {
-                lock (_getScaleLock)
-                {
-                    if (!scalesD.ContainsKey(scaleName))
-                    {
-                        scalesD[scaleName] = CalculateOrderList(year,propertyName);
-                    }                
-                }
-            
-            }
-            return scalesD[scaleName];
+            return NumericTypes.Contains(type) ||
+                   NumericTypes.Contains(Nullable.GetUnderlyingType(type));
         }
 
-        private OrderedList CalculateOrderList(int year, string name)
+        private static decimal GetDecimalValueOfNumericProperty(PropertyInfo property, T obj)
         {
-            var data = DataPerIcoYear[year];
-
-            var orderedList = new OrderedList(
-                data.Select(m=> new OrderedList.Item() {
-                    ICO = m.ico, 
-                    Value = GetValuePerName(name, m.value) })
-                );
-            return orderedList;
+            return Convert.ToDecimal(property.GetValue(obj, null));
         }
-
-        private decimal GetValuePerName(string name, T value)
-        {
-            if (scalesDefD.ContainsKey(name))
-                return scalesDefD[name](value);
-
-            if (scalesDefL.ContainsKey(name))
-                return (decimal)scalesDefL[name](value);
-
-            throw new ArgumentOutOfRangeException("name",$"{name} selector doesn't exists");
-        }
-
-
-
+        #endregion
     }
 }

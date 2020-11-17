@@ -7,27 +7,20 @@ namespace HlidacStatu.Lib.Analytics
     {
         public class OrderedList
         {
-            public class Item
+            public OrderedList(IEnumerable<decimal> data)
             {
-                public string ICO { get; set; }
-                public decimal Value { get; set; }
+                foreach (var perc in percentiles)
+                {
+                    PercentilesValue.Add(perc,
+                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, data)
+                        );
+                }
             }
 
-            public List<Item> Items { get; set; } // asi zbytečné držet všechny hodnoty. Stačí nám jen výsledek.
             public Dictionary<int, decimal> PercentilesValue { get; set; } = new Dictionary<int, decimal>();
 
             static int[] percentiles = new int[] { 1, 5, 10, 25, 33, 50, 66, 75, 90, 95, 99 };
 
-            public OrderedList(IEnumerable<Item> data)
-            {
-                Items = data.OrderBy(o=>o.Value).ToList();
-                foreach (var perc in percentiles)
-                {
-                    PercentilesValue.Add(perc,
-                        HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, data.Select(m => m.Value))
-                        );
-                }
-            }
 
 
             public int? Rank(string ico)
@@ -39,18 +32,18 @@ namespace HlidacStatu.Lib.Analytics
                     return res + 1;
             }
 
-            public decimal Average()
-            {
-                return Items.Average(i => i.Value);
-            }
-            public decimal Minimum()
-            {
-                return Items.Min(i => i.Value);
-            }
-            public decimal Maximum()
-            {
-                return Items.Max(i => i.Value);
-            }
+            //public decimal Average()
+            //{
+            //    return Items.Average(i => i.Value);
+            //}
+            //public decimal Minimum()
+            //{
+            //    return Items.Min(i => i.Value);
+            //}
+            //public decimal Maximum()
+            //{
+            //    return Items.Max(i => i.Value);
+            //}
 
 
         }
