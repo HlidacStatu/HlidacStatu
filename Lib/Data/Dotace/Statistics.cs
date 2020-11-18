@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Data.Dotace
 {
-    public class Statistics : Analytics.SubjectStatisticsPerYear<StatisticData>
+    public class Statistics : Analytics.StatisticsSubjectPerYear<StatisticData>
     {
     }
 }

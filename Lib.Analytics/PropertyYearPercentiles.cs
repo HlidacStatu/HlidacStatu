@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    public class CalculatedProperty
+    public class PropertyYearPercentiles
     {
         public static int[] Percentiles { get; } = new int[] { 0, 1, 5, 10, 25, 33, 50, 66, 75, 90, 95, 99, 100 };
         public string PropertyName { get; set; }
@@ -13,8 +13,8 @@ namespace HlidacStatu.Lib.Analytics
 
 
         [Obsolete()]
-        public CalculatedProperty() { }
-        public CalculatedProperty(string propertyName, int year, IEnumerable<decimal> data)
+        public PropertyYearPercentiles() { }
+        public PropertyYearPercentiles(string propertyName, int year, IEnumerable<decimal> data)
         {
             this.PropertyName = propertyName;
             this.Year = year;

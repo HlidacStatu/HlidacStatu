@@ -5,7 +5,7 @@ using System.Linq;
 namespace HlidacStatu.Lib.Analytics
 {
     //group data per year
-    public class SubjectStatisticsPerYear<T>
+    public class StatisticsSubjectPerYear<T>
         where T : new()
     {
         public string ICO { get; set; }
@@ -17,9 +17,9 @@ namespace HlidacStatu.Lib.Analytics
         /// </summary>
         public int NewSeasonStartMonth { get; protected set;} = 6;
         
-        public SubjectStatisticsPerYear() { }
+        public StatisticsSubjectPerYear() { }
 
-        public SubjectStatisticsPerYear(string ico, Func<T,int> yearSelector, IEnumerable<T> data) 
+        public StatisticsSubjectPerYear(string ico, Func<T,int> yearSelector, IEnumerable<T> data) 
         {
             if (yearSelector == null)
                 throw new ArgumentNullException("yearSelector");
@@ -31,7 +31,7 @@ namespace HlidacStatu.Lib.Analytics
                 Years.Add(yearSelector(item), item);
             }
         }
-        public SubjectStatisticsPerYear(string ico, Dictionary<int,T> data) 
+        public StatisticsSubjectPerYear(string ico, Dictionary<int,T> data) 
         {
             this.ICO = ico;
             Years = data ?? throw new ArgumentNullException("data");

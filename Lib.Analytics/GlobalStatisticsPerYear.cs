@@ -11,13 +11,13 @@ namespace HlidacStatu.Lib.Analytics
         public int[] CalculatedYears = null;
         
         // Ordered List by neměl být asi úplně ordered list
-        public List<CalculatedProperty> StatisticData { get; set; } =
-            new List<CalculatedProperty>();
+        public List<PropertyYearPercentiles> StatisticData { get; set; } =
+            new List<PropertyYearPercentiles>();
 
         [Obsolete("Only for JSON deserialization")]
         public GlobalStatisticsPerYear() { }
 
-        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<SubjectStatisticsPerYear<T>> dataForAllIcos)
+        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<StatisticsSubjectPerYear<T>> dataForAllIcos)
         {
             this.CalculatedYears = calculatedYears;
 
@@ -35,14 +35,14 @@ namespace HlidacStatu.Lib.Analytics
                     IEnumerable<decimal> globalData = dataForAllIcos.Select(d => 
                         GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)));
 
-                    var val = new CalculatedProperty(property.Name, year, globalData);
+                    var val = new PropertyYearPercentiles(property.Name, year, globalData);
                     StatisticData.Add(val);
                 }
             }
 
         }
 
-        public virtual CalculatedProperty GetRank(int year, string propertyName)
+        public virtual PropertyYearPercentiles GetRank(int year, string propertyName)
         {
             return StatisticData.Where(sd => sd.Year == year && sd.PropertyName == propertyName)
                 .FirstOrDefault();
