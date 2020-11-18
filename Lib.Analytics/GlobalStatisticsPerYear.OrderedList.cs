@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
@@ -7,6 +8,8 @@ namespace HlidacStatu.Lib.Analytics
     {
         public class OrderedList
         {
+            [Obsolete()]
+            public OrderedList() { }
             public OrderedList(IEnumerable<decimal> data)
             {
                 foreach (var perc in percentiles)
@@ -19,17 +22,18 @@ namespace HlidacStatu.Lib.Analytics
 
             public Dictionary<int, decimal> PercentilesValue { get; set; } = new Dictionary<int, decimal>();
 
-            static int[] percentiles = new int[] { 1, 5, 10, 25, 33, 50, 66, 75, 90, 95, 99 };
+            static int[] percentiles = new int[] {0, 1, 5, 10, 25, 33, 50, 66, 75, 90, 95, 99,100 };
 
 
 
-            public int? Rank(string ico)
+            public int Rank(decimal value)
             {
-                var res = this.Items.FindIndex(m => m.ICO == ico);
-                if (res == -1)
-                    return null;
-                else
-                    return res + 1;
+                foreach (var perc in percentiles)
+                {
+                    if (value <= this.PercentilesValue[perc])
+                        return perc;
+                }
+                return percentiles.Max();
             }
 
             //public decimal Average()

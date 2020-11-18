@@ -95,7 +95,7 @@ namespace HlidacStatu.Util
             if (index + 1 < elements.Length)
                 return elements[index] * (1 - frac) + elements[index + 1] * frac;
             else
-                return elements[index];
+                return elements[elements.Length-1];
         }
     }
 }

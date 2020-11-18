@@ -6,9 +6,6 @@
         {
             public class Smlouvy
             {
-                public string ICO { get; set; }
-                public int Year { get; set; }
-
                 public long PocetSmluv { get; set; } = 0;
                 public decimal CelkovaHodnotaSmluv { get; set; } = 0;
                 public long PocetSmluvSeSoukromymSubj { get; set; }

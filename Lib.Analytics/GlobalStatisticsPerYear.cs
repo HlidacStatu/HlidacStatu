@@ -8,13 +8,28 @@ namespace HlidacStatu.Lib.Analytics
     public partial class GlobalStatisticsPerYear<T>
         where T:new() // tohle asi není třeba
     {
+        public class PropertyOrderedList : OrderedList
+        {
+            public PropertyOrderedList() : base() { }
+           
+            public PropertyOrderedList(string propertyName, int year, IEnumerable<decimal> data) : base(data) {
+                this.PropertyName = propertyName;
+                this.Year = year;
+            }
+
+            public int Year { get; set; }
+            public string PropertyName { get; set; }
+        }
+
         public int[] CalculatedYears = null;
         
         // Ordered List by neměl být asi úplně ordered list
-        public List<(string property, int year, OrderedList Data)> StatisticData { get; private set; } =
-            new List<(string property, int year, OrderedList Data)>();
+        public List<PropertyOrderedList> StatisticData { get; set; } =
+            new List<PropertyOrderedList>();
 
-        
+        [Obsolete("Only for JSON deserialization")]
+        public GlobalStatisticsPerYear() { }
+
         public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<SubjectStatisticsPerYear<T>> dataForAllIcos)
         {
             this.CalculatedYears = calculatedYears;
@@ -30,19 +45,19 @@ namespace HlidacStatu.Lib.Analytics
             {
                 foreach(var property in numericProperties)
                 {
-                    var globalData = dataForAllIcos.Select(d => 
+                    IEnumerable<decimal> globalData = dataForAllIcos.Select(d => 
                         GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)));
 
-                    StatisticData.Add((property.Name, year, new OrderedList(globalData)));
+                    var val = new PropertyOrderedList(property.Name, year, globalData);
+                    StatisticData.Add(val);
                 }
             }
 
         }
 
-        public virtual OrderedList GetRank(int year, string propertyName)
+        public virtual PropertyOrderedList GetRank(int year, string propertyName)
         {
-            return StatisticData.Where(sd => sd.year == year && sd.property == propertyName)
-                .Select(sd => sd.Data)
+            return StatisticData.Where(sd => sd.Year == year && sd.PropertyName == propertyName)
                 .FirstOrDefault();
         }
 

@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Data
             }
             public static SmlouvyStatistics Get(string ico)
             {
-                                return instanceByIco.Get(ico);
+                return instanceByIco.Get(ico);
 
             }
             public static SmlouvyStatistics Get(Firma f)
