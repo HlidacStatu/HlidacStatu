@@ -626,7 +626,7 @@
       <DependentUpon>Response.xsd</DependentUpon>
     </Compile>
     <Compile Include="Data\Firma.Hint.cs" />
-    <Compile Include="Data\Firma.StatistickeUdaje.cs" />
+    <Compile Include="Data\Firma.Statistics.RegistrSmluv.Data.cs" />
     <Compile Include="Data\Firma.Zatrideni.cs" />
     <Compile Include="Data\Firma.Lazy.cs" />
     <Compile Include="Data\Firma.Search.cs" />
@@ -963,7 +963,7 @@
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.Html.cshtml" />
     <EmbeddedResource Include="Emails\Templates\FoundInsolvence.cshtml" />
     <Compile Include="Data\OsobyES\OsobyEsService.cs" />
-    <Compile Include="Data\Firma.Statistics.cs" />
+    <Compile Include="Data\Firma.Statistics.RegistrSmluv.cs" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="xsd\dump_index.xsd">

@@ -55,7 +55,7 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
 
-        public static Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Firma.StatistickeUdaje.Smlouvy>> FirmySmlouvyGlobal = null;
+        public static Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Firma.Statistics.RegistrSmluv.Data>> FirmySmlouvyGlobal = null;
 
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
@@ -1010,16 +1010,16 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                     HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
                 }
 
-                FirmySmlouvyGlobal = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Firma.StatistickeUdaje.Smlouvy>>(
+                FirmySmlouvyGlobal = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv.Data>>(
                     Devmasters.Config.GetWebConfigValue("ESConnection").Split(';'),"DevmastersCache", TimeSpan.Zero, "FirmySmlouvyGlobal",
                     o => {
                         var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
                         object lockObj = new object();
-                        List<Firma.SmlouvyStatistics> data = new List<Firma.SmlouvyStatistics>();
+                        List<Firma.Statistics.RegistrSmluv> data = new List<Firma.Statistics.RegistrSmluv>();
                         Devmasters.Batch.Manager.DoActionForAll<string>(icos,
                             ico =>
                             {
-                                var stat = Firma.SmlouvyStatistics.Get(ico);
+                                var stat = Firma.Statistics.RegistrSmluv.Get(ico);
                                 if (stat != null)
                                     lock (lockObj)
                                     {
@@ -1028,7 +1028,7 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                                 return new Devmasters.Batch.ActionOutputData();
                             }, true);
 
-                        return new Analytics.GlobalStatisticsPerYear<Firma.StatistickeUdaje.Smlouvy>(Analytics.Consts.RegistrSmluvYearsList, data);
+                        return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv.Data>(Analytics.Consts.RegistrSmluvYearsList, data);
 
                     }, providerId:"HlidacStatu.Lib"
                     );
