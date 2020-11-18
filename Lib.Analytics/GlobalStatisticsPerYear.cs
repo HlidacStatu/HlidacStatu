@@ -6,26 +6,13 @@ using System.Reflection;
 namespace HlidacStatu.Lib.Analytics
 {
     public partial class GlobalStatisticsPerYear<T>
-        where T:new() // tohle asi není třeba
+        where T : new() 
     {
-        public class PropertyOrderedList : OrderedList
-        {
-            public PropertyOrderedList() : base() { }
-           
-            public PropertyOrderedList(string propertyName, int year, IEnumerable<decimal> data) : base(data) {
-                this.PropertyName = propertyName;
-                this.Year = year;
-            }
-
-            public int Year { get; set; }
-            public string PropertyName { get; set; }
-        }
-
         public int[] CalculatedYears = null;
         
         // Ordered List by neměl být asi úplně ordered list
-        public List<PropertyOrderedList> StatisticData { get; set; } =
-            new List<PropertyOrderedList>();
+        public List<CalculatedProperty> StatisticData { get; set; } =
+            new List<CalculatedProperty>();
 
         [Obsolete("Only for JSON deserialization")]
         public GlobalStatisticsPerYear() { }
@@ -48,14 +35,14 @@ namespace HlidacStatu.Lib.Analytics
                     IEnumerable<decimal> globalData = dataForAllIcos.Select(d => 
                         GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)));
 
-                    var val = new PropertyOrderedList(property.Name, year, globalData);
+                    var val = new CalculatedProperty(property.Name, year, globalData);
                     StatisticData.Add(val);
                 }
             }
 
         }
 
-        public virtual PropertyOrderedList GetRank(int year, string propertyName)
+        public virtual CalculatedProperty GetRank(int year, string propertyName)
         {
             return StatisticData.Where(sd => sd.Year == year && sd.PropertyName == propertyName)
                 .FirstOrDefault();
