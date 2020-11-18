@@ -628,7 +628,11 @@ namespace HlidacStatu.Web.Controllers
                             if (specialValues.Contains(mappingProps[m].sourceCSV))
                             {
                                 if (mappingProps[m].sourceCSV == "-gen-")
+                                {
                                     value = Guid.NewGuid().ToString("N");
+                                    rcb.SetPropertyValue(newObj, mappingProps[m].TargetJSON, value);
+
+                                }
                                 else
                                     continue; // -skip- skip 
                             }

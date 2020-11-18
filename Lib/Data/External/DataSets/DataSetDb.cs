@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             else
                 Audit.Add<Registration>(Audit.Operations.Update, user, reg, oldReg);
 
-            var addDataResult = base.AddData(reg, reg.datasetId, reg.createdBy, skipallowWriteAccess:skipallowWriteAccess);
+            var addDataResult = base.AddData(reg, reg.datasetId, reg.createdBy, validateSchema:false, skipallowWriteAccess: true);
             DataSet.CachedDatasets.Delete(reg.datasetId);
 
             //check orderList
