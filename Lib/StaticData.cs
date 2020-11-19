@@ -55,7 +55,6 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
 
-        public static Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Firma.Statistics.RegistrSmluv>> FirmySmlouvyGlobal = null;
 
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
@@ -1010,13 +1009,6 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                     HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
                 }
 
-                FirmySmlouvyGlobal = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>>(
-                    Devmasters.Config.GetWebConfigValue("ESConnection").Split(';'),"DevmastersCache", TimeSpan.Zero, "FirmySmlouvyGlobal",
-                    o => {
-                        //fill from Lib.Data.AnalysisCalculation.CalculateGlobalRankPerYearFirmaSmlouvy && Tasks.UpdateWebCache
-                        return null;
-                    }, providerId:"HlidacStatu.Lib"
-                    );
 
 
                 initialized = true;

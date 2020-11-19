@@ -15,7 +15,11 @@ namespace HlidacStatu.Lib.Data
                 static VZ nullObj = new VZ() { ICO = "--------" };
 
                 private static Util.Cache.CouchbaseCacheManager<VZ, string> instanceByIco
-                    = Util.Cache.CouchbaseCacheManager<VZ, string>.GetSafeInstance("Firma_SmlouvyStatistics", Create, TimeSpan.FromHours(12));
+                    = Util.Cache.CouchbaseCacheManager<VZ, string>.GetSafeInstance("Firma_SmlouvyStatistics", Create, TimeSpan.FromHours(12),
+                        System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
                 public VZ() : base() { }
 

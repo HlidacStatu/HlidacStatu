@@ -37,7 +37,12 @@ namespace HlidacStatu.Lib.Analysis
         private static CouchbaseCacheManager<RatingDataPerYear, string> basicRatingForQuery
             = CouchbaseCacheManager<RatingDataPerYear, string>.GetSafeInstance("BasicRatingForQuery",
                 q => getRatingForSimpleQuery(q),
-                ACoreExpiration);
+                ACoreExpiration,
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]
+                );
 
 
         public static BasicDataPerYear GetBasicStatisticForSimpleQuery(string query)
@@ -49,7 +54,11 @@ namespace HlidacStatu.Lib.Analysis
         private static CouchbaseCacheManager<BasicDataPerYear, string> basicStatForQuery
             = CouchbaseCacheManager<BasicDataPerYear, string>.GetSafeInstance("BasicStatisticForQuery",
                 q => getBasicStatisticForSimpleQuery(q),
-                ACoreExpiration);
+                ACoreExpiration,
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
 
         private static BasicDataPerYear getBasicStatisticForSimpleQuery(string query)
@@ -101,7 +110,11 @@ namespace HlidacStatu.Lib.Analysis
         private static CouchbaseCacheManager<RatingDataPerYear, string> ratingForIco
     = CouchbaseCacheManager<RatingDataPerYear, string>.GetSafeInstance("RatingForIco",
         ico => getRatingForICO(ico),
-        ACoreExpiration);
+        ACoreExpiration,
+        System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         private static RatingDataPerYear getRatingForICO(string ico)
         {

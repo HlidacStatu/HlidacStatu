@@ -161,7 +161,11 @@ namespace HlidacStatu.Lib.Analysis
         private static CouchbaseCacheManager<Tuple<Dictionary<string, SubjectStatistic>, Dictionary<string, SubjectStatistic>>, OsobaStatisticQuery>
             osobaStatcache = CouchbaseCacheManager<Tuple<Dictionary<string, SubjectStatistic>, Dictionary<string, SubjectStatistic>>, OsobaStatisticQuery>.GetSafeInstance("OsobaStatistic2",
                q => OsobaStatistic.getStatisticForOsoba(q.NameId, q.Aktualnost),
-               ACore.ACoreExpiration);
+               ACore.ACoreExpiration,
+               System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         private class OsobaStatisticQuery
         {

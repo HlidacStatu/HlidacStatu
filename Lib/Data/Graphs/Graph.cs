@@ -36,7 +36,11 @@ namespace HlidacStatu.Lib.Data
         private static CouchbaseCacheManager<List<Edge>, string> vazbyIcoCache
 = CouchbaseCacheManager<List<Edge>, string>.GetSafeInstance("VsechnyDcerineVazby",
 ico => vsechnyDcerineVazbyInternal(ico, 0, true, null),
-TimeSpan.FromDays(3));
+TimeSpan.FromDays(3),
+System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         private static CouchbaseCacheManager<List<Edge>, string> vazbyOsobaNameIdCache
             = CouchbaseCacheManager<List<Edge>, string>.GetSafeInstance("VsechnyDcerineVazbyOsoba",
@@ -47,7 +51,10 @@ TimeSpan.FromDays(3));
                 Osoba o = Osoby.GetByNameId.Get(osobaNameId);
                 return vsechnyDcerineVazbyInternal(o, 0, true, null);
             },
-            TimeSpan.FromDays(3));
+            TimeSpan.FromDays(3), System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         public static List<Edge> VsechnyDcerineVazby(string ico, bool refresh = false)
         {

@@ -74,7 +74,10 @@ namespace HlidacStatu.Lib.Data
         static Osoba nullObj = new Osoba() { NameId="____NOTHING____" };
         private class OsobyMCMById : CouchbaseCacheManager<Osoba, int>
         {
-            public OsobyMCMById() : base("PersonById",getById, TimeSpan.FromMinutes(10))
+            public OsobyMCMById() : base("PersonById",getById, TimeSpan.FromMinutes(10), System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"])
             { }
 
             public override Osoba Get(int key)
@@ -117,7 +120,10 @@ namespace HlidacStatu.Lib.Data
 
         private class OsobyMCMByNameId : CouchbaseCacheManager<Osoba, string>
         {
-            public OsobyMCMByNameId() : base("PersonByNameId", getByNameId, TimeSpan.FromMinutes(10))
+            public OsobyMCMByNameId() : base("PersonByNameId", getByNameId, TimeSpan.FromMinutes(10), System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"])
             { }
 
             public override Osoba Get(string key)

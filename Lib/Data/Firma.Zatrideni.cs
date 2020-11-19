@@ -27,7 +27,11 @@ namespace HlidacStatu.Lib.Data
 
             private static CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor> instanceByZatrideni
            = CouchbaseCacheManager<Zatrideni.Item[], StatniOrganizaceObor>.GetSafeInstance("oboryByObor", GetSubjektyDirect,
-                TimeSpan.FromDays(5)
+                TimeSpan.FromDays(5),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]
            );
 
             [Groupable]

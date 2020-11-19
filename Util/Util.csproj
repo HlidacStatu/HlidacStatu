@@ -48,14 +48,17 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Couchbase.NetClient, Version=2.7.18.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\CouchbaseNetClient.2.7.18\lib\net452\Couchbase.NetClient.dll</HintPath>
+    <Reference Include="Couchbase.NetClient, Version=2.7.22.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\CouchbaseNetClient.2.7.22\lib\net452\Couchbase.NetClient.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Batch, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Batch.2.1.1\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Cache, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.2.1.2\lib\net472\Devmasters.Cache.dll</HintPath>
+    </Reference>
+    <Reference Include="Devmasters.Cache.Couchbase, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.Couchbase.2.0.1\lib\net48\Devmasters.Cache.Couchbase.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net472\Devmasters.Collections.dll</HintPath>
@@ -218,14 +221,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CZ-Nuts.cs" />
-    <Compile Include="Cache\AutoUpdateCouchbaseCache.cs" />
     <Compile Include="Cache\AutoUpdateCouchbaseCacheManager.cs" />
-    <Compile Include="Cache\CouchbaseCacheProvider.cs" />
     <Compile Include="ConnectionProviders\CouchbaseManager.cs" />
     <Compile Include="DataValidators.cs" />
     <Compile Include="FirstCaseLowercaseContractResolver.cs" />
     <Compile Include="Cache\Core.cs" />
-    <Compile Include="Cache\CouchbaseCache.cs" />
     <Compile Include="Cache\CouchbaseCacheManager.cs" />
     <Compile Include="Cache\FileCacheManager.cs" />
     <Compile Include="Consts.cs" />

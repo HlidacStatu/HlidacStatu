@@ -27,7 +27,12 @@ namespace HlidacStatu.Lib.Data
                                 Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>, Firma>
                                 .GetSafeInstance("Firma_SmlouvyStatistics_" + obor.Value.ToString(),
                                     (firma) => RegistrSmluv.Create(firma, null),
-                                    TimeSpan.FromHours(12), f => f.ICO)
+                                    TimeSpan.FromHours(12),
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"],
+                                    f => f.ICO)
                                 );
                         }
                     }
@@ -77,22 +82,22 @@ namespace HlidacStatu.Lib.Data
                 public static Analytics.StatisticsSubjectPerYear<RegistrSmluv> Create(Firma f, int? obor)
                 {
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} and chyby:zasadni", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND (hint.denUzavreni:>0)", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( hint.smlouvaULimitu:>0 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_smlouvy = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_smlouvy =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
-                    Dictionary<int, Lib.Analysis.BasicData> _calc_bezCeny = 
+                    Dictionary<int, Lib.Analysis.BasicData> _calc_bezCeny =
                         Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( issues.issueTypeId:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_bezSmlStran =
@@ -104,7 +109,6 @@ namespace HlidacStatu.Lib.Data
                     Dictionary<int, RegistrSmluv> data = new Dictionary<int, RegistrSmluv>();
                     foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
                     {
-                        var stat = f.Statistic().RatingPerYear[year];
                         data.Add(year, new RegistrSmluv()
                         {
                             PocetSmluv = _calc_smlouvy[year].Pocet,

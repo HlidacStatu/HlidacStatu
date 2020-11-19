@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Data
 {
-    public static class Firmy
+    public static partial class Firmy
     {
 
         static Firma nullObj = new Firma();
@@ -33,13 +33,25 @@ namespace HlidacStatu.Lib.Data
         }
 
         public static CouchbaseCacheManager<Firma, string> instanceByIco
-            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByICO", getByIco, TimeSpan.FromHours(4));
+            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByICO", getByIco, TimeSpan.FromHours(4),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         public static CouchbaseCacheManager<Firma, string> instanceByDS
-            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByDS", getByDS, TimeSpan.FromHours(4));
+            = CouchbaseCacheManager<Firma, string>.GetSafeInstance("firmyByDS", getByDS, TimeSpan.FromHours(4),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         public static CouchbaseCacheManager<string, string> instanceNameOnlyByIco
-            = CouchbaseCacheManager<string, string>.GetSafeInstance("firmaNameOnlyByICO", getNameByIco, TimeSpan.FromHours(12));
+            = CouchbaseCacheManager<string, string>.GetSafeInstance("firmaNameOnlyByICO", getNameByIco, TimeSpan.FromHours(12),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
 
         public static string GetJmeno(int ICO)
         {
