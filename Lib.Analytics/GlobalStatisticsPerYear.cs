@@ -6,10 +6,10 @@ using System.Reflection;
 namespace HlidacStatu.Lib.Analytics
 {
     public partial class GlobalStatisticsPerYear<T>
-        where T : new() 
+        where T : new()
     {
         public int[] CalculatedYears = null;
-        
+
         // Ordered List by neměl být asi úplně ordered list
         public List<PropertyYearPercentiles> StatisticData { get; set; } =
             new List<PropertyYearPercentiles>();
@@ -28,19 +28,26 @@ namespace HlidacStatu.Lib.Analytics
             // dneska na to už ale mentálně nemam :)
             // případně by se dalo paralelizovat do threadů (udělat paralel foreach a jet každý rok v samostatném threadu)
             // musel by se jen zamykat zápis do statistic data (třeba v setteru)
-            foreach(var year in CalculatedYears)
-            {
-                foreach(var property in numericProperties)
-                {
-                    IEnumerable<decimal> globalData = dataForAllIcos.Select(d => 
-                        GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)))
-                        .Where(d=>d.HasValue)
-                        .Select(d=>d.Value);
+            Util.Consts.Logger.Debug($"Starting calculation of all properties for {string.Join(",", this.CalculatedYears)}");
 
-                    var val = new PropertyYearPercentiles(property.Name, year, globalData);
-                    StatisticData.Add(val);
-                }
+            foreach (var year in CalculatedYears)
+            {
+                Devmasters.Batch.Manager.DoActionForAll<PropertyInfo>(numericProperties,
+                    property => {
+                        Util.Consts.Logger.Debug($"Starting property {property} for {year}");
+                        IEnumerable<decimal> globalData = dataForAllIcos.Select(d =>
+                            GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)))
+                            .Where(d => d.HasValue)
+                            .Select(d => d.Value);
+                        Util.Consts.Logger.Debug($"calc percentiles for property {property} for {year}");
+                        var val = new PropertyYearPercentiles(property.Name, year, globalData);
+                        StatisticData.Add(val);
+                        Util.Consts.Logger.Debug($"Done property {property} for {year}");
+
+                        return new Devmasters.Batch.ActionOutputData();
+                    }, true);
             }
+            Util.Consts.Logger.Debug($"Done calculation of all properties for {string.Join(",", this.CalculatedYears)}");
 
         }
 

@@ -74,26 +74,26 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv.Data> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
+        public static Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
         {
             var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
             object lockObj = new object();
-            List<Firma.Statistics.RegistrSmluv> data = new List<Firma.Statistics.RegistrSmluv>();
+            List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>> data = 
+                new List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>>();
             Devmasters.Batch.Manager.DoActionForAll<string>(icos,
+                (Func<string, ActionOutputData>)(
                 ico =>
                 {
-                    var stat = Firma.Statistics.RegistrSmluv.Get(ico);
+                    var stat = Firmy.Get(ico)?.Statistika();
                     if (stat != null)
                         lock (lockObj)
                         {
                             data.Add(stat);
                         }
                     return new Devmasters.Batch.ActionOutputData();
-                },logOutputFunc, progressOutputFunc, true);
+                }), logOutputFunc, progressOutputFunc, true);
 
-            return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv.Data>(Analytics.Consts.RegistrSmluvYearsList, data);
-
-
+            return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>(Analytics.Consts.RegistrSmluvYearsList, data);
         }
 
 

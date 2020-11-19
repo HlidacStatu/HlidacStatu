@@ -628,7 +628,6 @@
       <DependentUpon>Response.xsd</DependentUpon>
     </Compile>
     <Compile Include="Data\Firma.Hint.cs" />
-    <Compile Include="Data\Firma.Statistics.RegistrSmluv.Data.cs" />
     <Compile Include="Data\Firma.Zatrideni.cs" />
     <Compile Include="Data\Firma.Lazy.cs" />
     <Compile Include="Data\Firma.Search.cs" />

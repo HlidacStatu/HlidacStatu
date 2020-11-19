@@ -11,18 +11,20 @@ namespace HlidacStatu.Util.Cache
         where T : class
     {
         string bucketName = null;
-        public CouchbaseCacheManager(string keyPrefix, System.Func<Key, T> func, TimeSpan expiration, string bucketName = null)
+        Func<Key, string> keyValueSelector = null;
+        public CouchbaseCacheManager(string keyPrefix, System.Func<Key, T> func, TimeSpan expiration, string bucketName = null, Func<Key, string> keyValueSelector = null)
             : base(keyPrefix, func,expiration)
         {
             this.bucketName = bucketName;
+            this.keyValueSelector = keyValueSelector ??  new Func<Key, string>(k=>k.ToString());
         }
         protected override CouchbaseCache<T> getTCacheInstance(Key key, TimeSpan expiration, Func<Key, T> contentFunc)
         {
-            return new CouchbaseCache<T>(expiration, this.keyPrefix + key.ToString(), (o) => contentFunc.Invoke(key),bucketName);
+            return new CouchbaseCache<T>(expiration, this.keyPrefix + this.keyValueSelector(key), (o) => contentFunc.Invoke(key),bucketName);
         }
 
-
-        public static CouchbaseCacheManager<T, Key> GetSafeInstance(string instanceName, System.Func<Key, T> func, TimeSpan expiration)
+        public static CouchbaseCacheManager<T, Key> GetSafeInstance(string instanceName, System.Func<Key, T> func, TimeSpan expiration, 
+            Func<Key,string> keyValueSelector = null)
         {
             lock (instancesLock)
             {
@@ -30,7 +32,8 @@ namespace HlidacStatu.Util.Cache
 
                 if (!instances.ContainsKey(instanceFullName))
                 {
-                    instances[instanceFullName] = new CouchbaseCacheManager<T, Key>(instanceName, func, expiration);
+                    instances[instanceFullName] = new CouchbaseCacheManager<T, Key>(instanceName, func, expiration, 
+                        keyValueSelector: keyValueSelector);
                 }
                 return (CouchbaseCacheManager<T, Key>)instances[instanceFullName];
             }

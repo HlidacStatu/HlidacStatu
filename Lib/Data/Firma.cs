@@ -240,6 +240,11 @@ namespace HlidacStatu.Lib.Data
             return _kategorieOVM;
         }
 
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika()
+        {
+            return Statistics.RegistrSmluvCache(null).Get(this);
+        }
+
         public bool MaVazbyNaPolitiky()
         {
             return HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(this.ICO);
