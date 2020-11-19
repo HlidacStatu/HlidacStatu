@@ -31,6 +31,12 @@ namespace HlidacStatu.Lib.Analytics
                 Years.Add(yearSelector(item), item);
             }
         }
+
+        /// <summary>
+        /// Creates new statistics
+        /// </summary>
+        /// <param name="ico">Subject Ico</param>
+        /// <param name="data">Dictionary where key = Year, value = T</param>
         public StatisticsSubjectPerYear(string ico, Dictionary<int,T> data) 
         {
             this.ICO = ico;
