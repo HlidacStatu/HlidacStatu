@@ -33,7 +33,9 @@ namespace HlidacStatu.Lib.Analytics
                 foreach(var property in numericProperties)
                 {
                     IEnumerable<decimal> globalData = dataForAllIcos.Select(d => 
-                        GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)));
+                        GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)))
+                        .Where(d=>d.HasValue)
+                        .Select(d=>d.Value);
 
                     var val = new PropertyYearPercentiles(property.Name, year, globalData);
                     StatisticData.Add(val);
@@ -66,8 +68,10 @@ namespace HlidacStatu.Lib.Analytics
                    NumericTypes.Contains(Nullable.GetUnderlyingType(type));
         }
 
-        private static decimal GetDecimalValueOfNumericProperty(PropertyInfo property, T obj)
+        private static decimal? GetDecimalValueOfNumericProperty(PropertyInfo property, T obj)
         {
+            if (obj == null)
+                return null;
             return Convert.ToDecimal(property.GetValue(obj, null));
         }
         #endregion

@@ -541,6 +541,8 @@
     <Compile Include="Analysis\ContractsStatisticData.cs" />
     <Compile Include="Data\Dotace\StatisticData.cs" />
     <Compile Include="Data\Dotace\Statistics.cs" />
+    <Compile Include="Data\Firma.Statistics.VZ.cs" />
+    <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
     <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />

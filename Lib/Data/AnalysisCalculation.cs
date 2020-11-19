@@ -76,7 +76,7 @@ namespace HlidacStatu.Lib.Data
 
         public static Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv.Data> CalculateGlobalRankPerYearFirmaSmlouvy(Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null)
         {
-            var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
+            var icos = DirectDB.GetList<string>("select top 100 ico from firma where isInRs = 1");
             object lockObj = new object();
             List<Firma.Statistics.RegistrSmluv> data = new List<Firma.Statistics.RegistrSmluv>();
             Devmasters.Batch.Manager.DoActionForAll<string>(icos,
