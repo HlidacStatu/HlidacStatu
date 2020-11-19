@@ -27,5 +27,7 @@ namespace HlidacStatu.Lib.Data
         public string Zdroj { get; set; }
         public string Organizace { get; set; }
         public Nullable<int> Status { get; set; }
+        public string Ico { get; set; }
+        public Nullable<int> CEO { get; set; }
     }
 }

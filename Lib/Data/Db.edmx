@@ -243,6 +243,8 @@
           <Property Name="Zdroj" Type="nvarchar(max)" />
           <Property Name="Organizace" Type="nvarchar(max)" />
           <Property Name="Status" Type="int" />
+          <Property Name="Ico" Type="nvarchar" MaxLength="20" />
+          <Property Name="CEO" Type="int" />
         </EntityType>
         <EntityType Name="OsobaExternalId">
           <Key>
@@ -946,6 +948,8 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Organizace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" />
+          <Property Name="Ico" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CEO" Type="Int32" />
         </EntityType>
         <EntityType Name="FirmaHint">
           <Key>
@@ -1353,6 +1357,8 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySetMapping Name="OsobaEvent">
             <EntityTypeMapping TypeName="FirmyModel.OsobaEvent">
               <MappingFragment StoreEntitySet="OsobaEvent">
+                <ScalarProperty Name="CEO" ColumnName="CEO" />
+                <ScalarProperty Name="Ico" ColumnName="Ico" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Organizace" ColumnName="Organizace" />
                 <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />

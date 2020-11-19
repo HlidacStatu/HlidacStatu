@@ -71,6 +71,8 @@
                 data-typ=""
                 data-zdroj=""
                 data-status=""
+                data-ico=""
+                data-ceo=""
                 data-action="create">
             Přidat událost
         </button>
@@ -125,6 +127,24 @@
                 </a>
             </th>
             <th class="text-nowrap">
+                Ico
+                <a href="?columnOrdering=ico">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=ico&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
+                CEO
+                <a href="?columnOrdering=ceo">
+                    <i class="fas fa-long-arrow-up"></i>
+                </a>
+                <a href="?columnOrdering=ceo&descending=1">
+                    <i class="fas fa-long-arrow-down"></i>
+                </a>
+            </th>
+            <th class="text-nowrap">
                 Role
                 <a href="?columnOrdering=role">
                     <i class="fas fa-long-arrow-up"></i>
@@ -157,128 +177,144 @@
     <tbody>
         @{ var co = Request.Params["columnOrdering"];
 
-                            Func<OsobaEvent, object> sortExpression;
-                            switch (co)
-                            {
-                                case "datumdo":
-                                    sortExpression = (x => x.DatumDo);
-                                    break;
-                                case "titulek":
-                                    sortExpression = (x => x.Title);
-                                    break;
-                                case "typ":
-                                    sortExpression = (x => x.TypeName);
-                                    break;
-                                case "organizace":
-                                    sortExpression = (x => x.Organizace);
-                                    break;
-                                case "role":
-                                    sortExpression = (x => x.AddInfo);
-                                    break;
-                                case "zdroj":
-                                    sortExpression = (x => x.Zdroj);
-                                    break;
-                                case "stav":
-                                    sortExpression = (x => x.Status);
-                                    break;
-                                case "datumod":
-                                default:
-                                    sortExpression = (x => x.DatumOd);
-                                    break;
-                            }
+            Func<OsobaEvent, object> sortExpression;
+            switch (co)
+            {
+                case "datumdo":
+                    sortExpression = (x => x.DatumDo);
+                    break;
+                case "titulek":
+                    sortExpression = (x => x.Title);
+                    break;
+                case "typ":
+                    sortExpression = (x => x.TypeName);
+                    break;
+                case "organizace":
+                    sortExpression = (x => x.Organizace);
+                    break;
+                case "role":
+                    sortExpression = (x => x.AddInfo);
+                    break;
+                case "zdroj":
+                    sortExpression = (x => x.Zdroj);
+                    break;
+                case "stav":
+                    sortExpression = (x => x.Status);
+                    break;
+                case "ico":
+                    sortExpression = (x => x.Ico);
+                    break;
+                case "ceo":
+                    sortExpression = (x => x.CEO);
+                    break;
+                case "datumod":
+                default:
+                    sortExpression = (x => x.DatumOd);
+                    break;
+            }
 
-                            int desc;
-                            IEnumerable<OsobaEvent> udalosti;
-                            if (int.TryParse(Request.Params["descending"], out desc) && desc == 1)
-                            {
-                                udalosti = Model.Events().OrderByDescending(sortExpression);
-                            }
-                            else
-                            {
-                                udalosti = Model.Events().OrderBy(sortExpression);
-                            } }
+            int desc;
+            IEnumerable<OsobaEvent> udalosti;
+            if (int.TryParse(Request.Params["descending"], out desc) && desc == 1)
+            {
+                udalosti = Model.Events().OrderByDescending(sortExpression);
+            }
+            else
+            {
+                udalosti = Model.Events().OrderBy(sortExpression);
+            } }
 
         @foreach (var udalost in udalosti)
         {
-<tr>
-    <td>
-        @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
-    </td>
-    <td>
-        @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => udalost.Title)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => udalost.TypeName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => udalost.Organizace)
-    </td>
-    <td>
-        @if (castkuZobrazitPro.Contains(udalost.Type))
-        {
-@Html.DisplayFor(modelItem => udalost.AddInfoNum) }
-                    else
+        <tr>
+            <td>
+                @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
+            </td>
+            <td>
+                @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => udalost.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => udalost.TypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => udalost.Organizace)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => udalost.Ico)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => udalost.CEO)
+            </td>
+            <td>
+                @if (castkuZobrazitPro.Contains(udalost.Type))
+                {
+                    @Html.DisplayFor(modelItem => udalost.AddInfoNum) }
+                else
+                {
+                    @Html.DisplayFor(modelItem => udalost.AddInfo)}
+            </td>
+            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                @Html.DisplayFor(modelItem => udalost.Zdroj)
+            </td>
+            <td>
+                @{ if (udalost.Status.HasValue)
                     {
-@Html.DisplayFor(modelItem => udalost.AddInfo)}
-    </td>
-    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-        @Html.DisplayFor(modelItem => udalost.Zdroj)
-    </td>
-    <td>
-        @{ if (udalost.Status.HasValue)
-                                {
-                                    var flags = udalost.Status.Value
-                                        .ConvertToEnum<OsobaEvent.Statuses>()
-                                        .GetUniqueFlags<OsobaEvent.Statuses>();
+                        var flags = udalost.Status.Value
+                            .ConvertToEnum<OsobaEvent.Statuses>()
+                            .GetUniqueFlags<OsobaEvent.Statuses>();
 
-                                    foreach (var flag in flags)
-                                    {
-            <p>@flag.ToNiceDisplayName()</p> }
-                                } }
+                        foreach (var flag in flags)
+                        {
+                            <p>@flag.ToNiceDisplayName()</p> }
+                    } }
 
-    </td>
-    <td>
-        <button type="button"
-                class="btn btn-primary btn-sm"
-                data-toggle="modal"
-                data-target="#eventModal"
-                data-personid="@Model.InternalId"
-                data-eventid="@udalost.pk"
-                data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
-                data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
-                data-titulek="@udalost.Title"
-                data-organizace="@udalost.Organizace"
-                data-castka="@(udalost.AddInfoNum?.ToString("0"))"
-                data-addinfo="@udalost.AddInfo"
-                data-typ="@udalost.Type"
-                data-zdroj="@udalost.Zdroj"
-                data-status="@udalost.Status"
-                data-action="edit">
-            Editovat
-        </button>
-        <button type="button"
-                class="btn btn-danger btn-sm"
-                data-toggle="modal"
-                data-target="#eventModal"
-                data-personid="@Model.InternalId"
-                data-eventid="@udalost.pk"
-                data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
-                data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
-                data-titulek="@udalost.Title"
-                data-organizace="@udalost.Organizace"
-                data-castka="@(udalost.AddInfoNum?.ToString("0"))"
-                data-addinfo="@udalost.AddInfo"
-                data-typ="@udalost.Type"
-                data-zdroj="@udalost.Zdroj"
-                data-status="@udalost.Status"
-                data-action="delete">
-            Smazat
-        </button>
-    </td>
-</tr>}
+            </td>
+            <td>
+                <button type="button"
+                        class="btn btn-primary btn-sm"
+                        data-toggle="modal"
+                        data-target="#eventModal"
+                        data-personid="@Model.InternalId"
+                        data-eventid="@udalost.pk"
+                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                        data-titulek="@udalost.Title"
+                        data-organizace="@udalost.Organizace"
+                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                        data-addinfo="@udalost.AddInfo"
+                        data-typ="@udalost.Type"
+                        data-zdroj="@udalost.Zdroj"
+                        data-status="@udalost.Status"
+                        data-ico="@udalost.Ico"
+                        data-ceo="@udalost.CEO"
+                        data-action="edit">
+                    Editovat
+                </button>
+                <button type="button"
+                        class="btn btn-danger btn-sm"
+                        data-toggle="modal"
+                        data-target="#eventModal"
+                        data-personid="@Model.InternalId"
+                        data-eventid="@udalost.pk"
+                        data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                        data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                        data-titulek="@udalost.Title"
+                        data-organizace="@udalost.Organizace"
+                        data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                        data-addinfo="@udalost.AddInfo"
+                        data-typ="@udalost.Type"
+                        data-zdroj="@udalost.Zdroj"
+                        data-status="@udalost.Status"
+                        data-ico="@udalost.Ico"
+                        data-ceo="@udalost.CEO"
+                        data-action="delete">
+                    Smazat
+                </button>
+            </td>
+        </tr>}
     </tbody>
 </table>}
     </div>
@@ -325,7 +361,8 @@
                             <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
                                 @for (int i = 0; i < typeList.Count; i++)
                                 {
-                    <option value="@typeList[i].Value">@typeList[i].Text</option>}
+                                    <option value="@typeList[i].Value">@typeList[i].Text</option>
+                                }
                             </select>
                             <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
                         </div>
@@ -334,6 +371,16 @@
                             <label for="organizace" class="col-form-label">Organizace:</label>
                             <input type="text" class="form-control orgahead input-lg" id="organizace">
                             <span class="field-validation-valid text-danger" data-valmsg-for="Organizace" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ico" class="col-form-label">Ico:</label>
+                            <input type="text" class="form-control orgahead input-lg" id="ico">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Ico" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ceo" class="col-form-label">CEO:</label>
+                            <input type="text" class="form-control orgahead input-lg" id="ceo">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="CEO" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group" id="castka_toggle">
                             <label for="castka" class="col-form-label">Částka:</label>
@@ -349,13 +396,13 @@
                             <label for="status" class="col-form-label">Stavy:</label><br />
                             @foreach (Enum value in Enum.GetValues(typeof(OsobaEvent.Statuses)))
                             {
-                <div class="form-inline">
-                    <input type="checkbox"
-                           class="form-control statusbox"
-                           value="@value.ToString("D")"
-                           name="@value.ToString("G")">
-                    <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
-                </div>}
+                                <div class="form-inline">
+                                    <input type="checkbox"
+                                           class="form-control statusbox"
+                                           value="@value.ToString("D")"
+                                           name="@value.ToString("G")">
+                                    <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
+                                </div>}
                             <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
                         </div>
                         <div class="form-group">
@@ -390,6 +437,8 @@
         var datumDo = button.data('datumdo')
         var titulek = button.data('titulek')
         var organizace = button.data('organizace')
+        var ico = button.data('ico')
+        var ceo = button.data('ceo')
         var castka = button.data('castka')
         var addinfo = button.data('addinfo')
         var typ = button.data('typ')
@@ -446,6 +495,8 @@
         modal.find('#datumDo').val(datumDo)
         modal.find('#titulek').val(titulek)
         modal.find('#organizace').val(organizace)
+        modal.find('#ico').val(ico)
+        modal.find('#ceo').val(ceo)
         modal.find('#typ').val(typ)
         drawSubtype(typ)
         modal.find('#castka').val(castka)
@@ -478,6 +529,8 @@
             "pk": $("#eventId").val(),
             "Title": $("#titulek").val(),
             "Organizace": $("#organizace").val(),
+            "Ico": $("#ico").val(),
+            "CEO": $("#ceo").val(),
             "AddInfoNum": $("#castka").val(),
             "AddInfo": $("#addInfo").val(),
             "DatumOd": $("#datumOd").val(),
