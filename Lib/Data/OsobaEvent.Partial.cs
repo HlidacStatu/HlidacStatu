@@ -201,6 +201,8 @@ namespace HlidacStatu.Lib.Data
                         eventToUpdate.Type = osobaEvent.Type;
                         eventToUpdate.Zdroj = osobaEvent.Zdroj;
                         eventToUpdate.Status = osobaEvent.Status;
+                        eventToUpdate.Ico = osobaEvent.Ico;
+                        eventToUpdate.CEO = osobaEvent.CEO;
 
                         eventToUpdate.Created = DateTime.Now;
 
