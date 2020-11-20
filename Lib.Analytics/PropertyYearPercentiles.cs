@@ -14,15 +14,18 @@ namespace HlidacStatu.Lib.Analytics
 
         [Obsolete()]
         public PropertyYearPercentiles() { }
-        public PropertyYearPercentiles(string propertyName, int year, IEnumerable<decimal> data)
+        public PropertyYearPercentiles(string propertyName, int year, IEnumerable<decimal> data, bool skipZeros = true)
         {
             this.PropertyName = propertyName;
             this.Year = year;
 
+            var fdata = data;
+            if (skipZeros)
+                fdata = data.Where(m => m != 0);
             foreach (var perc in Percentiles)
             {
                 PercentilesValue.Add(perc,
-                    HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, data)
+                    HlidacStatu.Util.MathTools.PercentileCont(perc / 100m, fdata)
                     );
             }
         }
