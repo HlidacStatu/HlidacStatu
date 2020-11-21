@@ -135,7 +135,7 @@ namespace HlidacStatu.Lib.ES
             return GetESClient(defaultIndexName_Logs, timeOut, connectionLimit, IndexType.Logs
                 );
         }
-        public static ElasticClient GetESClient_Audit(int timeOut = 60000, int connectionLimit = 80)
+        public static ElasticClient GetESClient_Audit(int timeOut = 1000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_Audit, timeOut, connectionLimit, IndexType.Audit
                 );
