@@ -96,7 +96,11 @@ namespace HlidacStatu.Lib.Data
                     return new Devmasters.Batch.ActionOutputData();
                 }), logOutputFunc, progressOutputFunc, true, maxDegreeOfParallelism:threads);
 
-            return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>(Analytics.Consts.RegistrSmluvYearsList, data);
+            return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>(
+                Analytics.Consts.RegistrSmluvYearsList, 
+                data,
+                 m => m.PocetSmluv >= 10
+                 );
         }
 
 

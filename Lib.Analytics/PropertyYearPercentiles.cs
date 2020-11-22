@@ -11,6 +11,7 @@ namespace HlidacStatu.Lib.Analytics
         public int Year { get; set; }
         public Dictionary<int, decimal> PercentilesValue { get; set; } = new Dictionary<int, decimal>();
 
+        public int NumberOfItems { get; set; }
 
         [Obsolete()]
         public PropertyYearPercentiles() { }
@@ -22,6 +23,7 @@ namespace HlidacStatu.Lib.Analytics
             var fdata = data;
             if (skipZeros)
                 fdata = data.Where(m => m != 0);
+            this.NumberOfItems = fdata.Count();
             foreach (var perc in Percentiles)
             {
                 PercentilesValue.Add(perc,

@@ -68,8 +68,8 @@
     <Reference Include="Devmasters.Cache.Couchbase, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.Couchbase.2.0.1\lib\net48\Devmasters.Cache.Couchbase.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache.Elastic, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.Elastic.2.0.3\lib\net48\Devmasters.Cache.Elastic.dll</HintPath>
+    <Reference Include="Devmasters.Cache.Elastic, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.Elastic.2.0.4\lib\net48\Devmasters.Cache.Elastic.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net48\Devmasters.Collections.dll</HintPath>

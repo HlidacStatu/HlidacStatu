@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HlidacStatu.Lib.Analytics
@@ -17,9 +18,12 @@ namespace HlidacStatu.Lib.Analytics
         [Obsolete("Only for JSON deserialization")]
         public GlobalStatisticsPerYear() { }
 
-        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<StatisticsSubjectPerYear<T>> dataForAllIcos)
+        static Func<T, bool> alwaysTrue = c => true;
+
+        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<StatisticsSubjectPerYear<T>> dataForAllIcos, Func<T,bool> allowedItems = null)
         {
             this.CalculatedYears = calculatedYears;
+            allowedItems = allowedItems ?? alwaysTrue;
 
             // kdyby nás někoho náhodou napadlo dát do statistik string, tak tohle by to mělo pohlídat
             var numericProperties = typeof(T).GetProperties().Where(p => IsNumericType(p.PropertyType));
@@ -35,10 +39,13 @@ namespace HlidacStatu.Lib.Analytics
                 Devmasters.Batch.Manager.DoActionForAll<PropertyInfo>(numericProperties,
                     property => {
                         Util.Consts.Logger.Debug($"Starting property {property} for {year}");
-                        IEnumerable<decimal> globalData = dataForAllIcos.Select(d =>
-                            GetDecimalValueOfNumericProperty(property, d.StatisticsForYear(year)))
-                            .Where(d => d.HasValue)
-                            .Select(d => d.Value);
+                        IEnumerable<decimal> globalData = dataForAllIcos
+                            .Select(d=> d.StatisticsForYear(year))
+                            .Where(allowedItems)
+                            .Select(d =>
+                                GetDecimalValueOfNumericProperty(property, d))
+                                .Where(d => d.HasValue)
+                                .Select(d => d.Value);
                         Util.Consts.Logger.Debug($"calc percentiles for property {property} for {year}");
                         var val = new PropertyYearPercentiles(property.Name, year, globalData);
                         StatisticData.Add(val);
@@ -51,7 +58,7 @@ namespace HlidacStatu.Lib.Analytics
 
         }
 
-        public virtual PropertyYearPercentiles GetRank(int year, string propertyName)
+        public virtual PropertyYearPercentiles GetPropertyPercentiles(int year, string propertyName)
         {
             return StatisticData.Where(sd => sd.Year == year && sd.PropertyName == propertyName)
                 .FirstOrDefault();
