@@ -244,6 +244,14 @@ namespace HlidacStatu.Lib.Data
         {
             return Statistics.RegistrSmluvCache(null).Get(this);
         }
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika(Smlouva.SClassification.ClassificationsTypes classif)
+        {
+            return Statistics.RegistrSmluvCache((int)classif).Get(this);
+        }
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika(int iclassif)
+        {
+            return Statistics.RegistrSmluvCache(iclassif).Get(this);
+        }
 
         public bool MaVazbyNaPolitiky()
         {

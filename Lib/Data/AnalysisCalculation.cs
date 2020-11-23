@@ -74,35 +74,7 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public static Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv> CalculateGlobalRankPerYearFirmaSmlouvy(
-            int? threads = null,
-            Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null
-            )
-        {
-            var icos = DirectDB.GetList<string>("select ico from firma where isInRs = 1");
-            object lockObj = new object();
-            List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>> data = 
-                new List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>>();
-            Devmasters.Batch.Manager.DoActionForAll<string>(icos,
-                (Func<string, ActionOutputData>)(
-                ico =>
-                {
-                    var stat = Firmy.Get(ico)?.Statistika();
-                    if (stat != null)
-                        lock (lockObj)
-                        {
-                            data.Add(stat);
-                        }
-                    return new Devmasters.Batch.ActionOutputData();
-                }), logOutputFunc, progressOutputFunc, true, maxDegreeOfParallelism:threads);
-
-            return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>(
-                Analytics.Consts.RegistrSmluvYearsList, 
-                data,
-                 m => m.PocetSmluv >= 10
-                 );
-        }
-
+     
 
         private static List<Lib.Data.Smlouva> SimpleSmlouvyForIco(string ico, DateTime? from, DateTime? to)
         {
