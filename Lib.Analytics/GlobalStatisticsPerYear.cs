@@ -20,7 +20,8 @@ namespace HlidacStatu.Lib.Analytics
 
         static Func<T, bool> alwaysTrue = c => true;
 
-        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<StatisticsSubjectPerYear<T>> dataForAllIcos, Func<T,bool> allowedItems = null)
+        public GlobalStatisticsPerYear(int[] calculatedYears, IEnumerable<StatisticsSubjectPerYear<T>> dataForAllIcos, 
+            Func<T,bool> allowedItems = null)
         {
             this.CalculatedYears = calculatedYears;
             allowedItems = allowedItems ?? alwaysTrue;
