@@ -41,16 +41,6 @@ namespace HlidacStatu.Lib.Data
                 return registrSmluvCaches[obor.Value];
             }
 
-            public static decimal PercentOf(long number, long total) => PercentOf((decimal)number, (decimal)total);
-            public static decimal PercentOf(double number, double total) => PercentOf((decimal)number, (decimal)total);
-
-            public static decimal PercentOf(decimal number, decimal total)
-            {
-                if (total == 0)
-                    return 0;
-                return number / total;
-            }
-
             public partial class RegistrSmluv : IAddable<RegistrSmluv>
             {
 
@@ -62,22 +52,37 @@ namespace HlidacStatu.Lib.Data
                 public decimal PrumernaHodnotaSmluvSeSoukrSubj { get; set; }
 
                 public long PocetSmluvBezCeny { get; set; } = 0;
-                public decimal PercentSmluvBezCeny { get; set; } = 0;
                 public long PocetSmluvBezSmluvniStrany { get; set; } = 0;
                 public decimal SumKcSmluvBezSmluvniStrany { get; set; } = 0;
-                public decimal PercentSmluvBezSmluvniStrany { get; set; } = 0;
-                public decimal PercentKcBezSmluvniStrany { get; set; } = 0;
 
                 public long PocetSmluvPolitiky { get; set; } = 0;
-                public decimal PercentSmluvPolitiky { get; set; } = 0;
                 public decimal SumKcSmluvPolitiky { get; set; } = 0;
-                public decimal PercentKcSmluvPolitiky { get; set; } = 0;
 
                 public long PocetSmluvSeZasadnimNedostatkem { get; set; }
                 public long PocetSmluvULimitu { get; set; }
                 public long PocetSmluvOVikendu { get; set; }
                 public long PocetSmluvNovaFirma { get; set; }
 
+                public decimal PercentSmluvBezCeny()
+                {
+                    return PocetSmluvBezCeny / PocetSmluv;
+                }
+                public decimal PercentSmluvBezSmluvniStrany()
+                {
+                    return PocetSmluvBezSmluvniStrany / PocetSmluv;
+                }
+                public decimal PercentKcBezSmluvniStrany()
+                {
+                    return SumKcSmluvBezSmluvniStrany / CelkovaHodnotaSmluv;
+                }
+                public decimal PercentSmluvPolitiky()
+                {
+                    return PocetSmluvPolitiky / PocetSmluv;
+                }
+                public decimal PercentKcSmluvPolitiky()
+                {
+                    return SumKcSmluvPolitiky / CelkovaHodnotaSmluv;
+                }
 
 
                 public static Analytics.StatisticsSubjectPerYear<RegistrSmluv> Create(Firma f, int? obor)
@@ -117,19 +122,12 @@ namespace HlidacStatu.Lib.Data
                             PocetSmluvBezCeny = _calc_bezCeny[year].Pocet,
                             PocetSmluvBezSmluvniStrany = _calc_bezSmlStran[year].Pocet,
                             PocetSmluvPolitiky = _calc_sVazbouNaPolitikyNedavne[year].Pocet,
-                            SumKcSmluvBezSmluvniStrany = _calc_bezSmlStran[year].Pocet,
+                            SumKcSmluvBezSmluvniStrany = _calc_bezSmlStran[year].CelkemCena,
                             SumKcSmluvPolitiky = _calc_sVazbouNaPolitikyNedavne[year].CelkemCena,
                             PocetSmluvULimitu = _calc_ULimitu[year].Pocet,
                             PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
                             PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
                             PocetSmluvNovaFirma = _calc_NovaFirmaDodavatel[year].Pocet,
-
-                            PercentSmluvBezCeny = PercentOf(_calc_bezCeny[year].Pocet, _calc_smlouvy[year].Pocet),
-                            PercentSmluvBezSmluvniStrany = PercentOf(_calc_bezSmlStran[year].Pocet, _calc_smlouvy[year].Pocet),
-                            PercentKcBezSmluvniStrany = PercentOf(_calc_bezCeny[year].CelkemCena, _calc_smlouvy[year].CelkemCena),
-                            PercentKcSmluvPolitiky = PercentOf(_calc_sVazbouNaPolitikyNedavne[year].CelkemCena, _calc_smlouvy[year].CelkemCena),
-                            PercentSmluvPolitiky = PercentOf(_calc_sVazbouNaPolitikyNedavne[year].Pocet, _calc_smlouvy[year].Pocet),
-
                         }
                         );
                     }
@@ -139,7 +137,25 @@ namespace HlidacStatu.Lib.Data
 
                 public RegistrSmluv Add(RegistrSmluv other)
                 {
-                    throw new NotImplementedException();
+                    return new RegistrSmluv()
+                    {
+                        PocetSmluv = PocetSmluv + (other?.PocetSmluv ?? 0),
+                        CelkovaHodnotaSmluv = CelkovaHodnotaSmluv + (other?.CelkovaHodnotaSmluv ?? 0),
+                        PocetSmluvSeSoukromymSubj = PocetSmluvSeSoukromymSubj + (other?.PocetSmluvSeSoukromymSubj ?? 0),
+                        CelkovaHodnotaSmluvSeSoukrSubj = CelkovaHodnotaSmluvSeSoukrSubj + (other?.CelkovaHodnotaSmluvSeSoukrSubj ?? 0),
+                        PocetSmluvBezCenySeSoukrSubj = PocetSmluvBezCenySeSoukrSubj + (other?.PocetSmluvBezCenySeSoukrSubj ?? 0),
+                        PrumernaHodnotaSmluvSeSoukrSubj = PrumernaHodnotaSmluvSeSoukrSubj + (other?.PrumernaHodnotaSmluvSeSoukrSubj ?? 0),
+                        PocetSmluvBezCeny = PocetSmluvBezCeny + (other?.PocetSmluvBezCeny ?? 0),
+                        PocetSmluvBezSmluvniStrany = PocetSmluvBezSmluvniStrany + (other?.PocetSmluvBezSmluvniStrany ?? 0),
+                        SumKcSmluvBezSmluvniStrany = SumKcSmluvBezSmluvniStrany + (other?.SumKcSmluvBezSmluvniStrany ?? 0),
+                        PocetSmluvPolitiky = PocetSmluvPolitiky + (other?.PocetSmluvPolitiky ?? 0),
+                        SumKcSmluvPolitiky = SumKcSmluvPolitiky + (other?.SumKcSmluvPolitiky ?? 0),
+                        PocetSmluvSeZasadnimNedostatkem = PocetSmluvSeZasadnimNedostatkem + (other?.PocetSmluvSeZasadnimNedostatkem ?? 0),
+                        PocetSmluvULimitu = PocetSmluvULimitu + (other?.PocetSmluvULimitu ?? 0),
+                        PocetSmluvOVikendu = PocetSmluvOVikendu + (other?.PocetSmluvOVikendu ?? 0),
+                        PocetSmluvNovaFirma = PocetSmluvNovaFirma + (other?.PocetSmluvNovaFirma ?? 0),
+                        
+                    };
                 }
             }
         }
