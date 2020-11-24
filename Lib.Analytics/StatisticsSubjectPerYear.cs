@@ -15,11 +15,11 @@ namespace HlidacStatu.Lib.Analytics
         /// Tenhle měsíc určuje, za který rok se AKTUÁLNÍ data mají zobrazovat.
         /// Pokud chceme pro nějakou datovou sadu nastavit sezónu jinak, je potřeba ho změnit
         /// </summary>
-        public int NewSeasonStartMonth { get; protected set;} = 6;
-        
+        public int NewSeasonStartMonth { get; protected set; } = 6;
+
         public StatisticsSubjectPerYear() { }
 
-        public StatisticsSubjectPerYear(string ico, Func<T,int> yearSelector, IEnumerable<T> data) 
+        public StatisticsSubjectPerYear(string ico, Func<T, int> yearSelector, IEnumerable<T> data)
         {
             if (yearSelector == null)
                 throw new ArgumentNullException("yearSelector");
@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Analytics
         /// </summary>
         /// <param name="ico">Subject Ico</param>
         /// <param name="data">Dictionary where key = Year, value = T</param>
-        public StatisticsSubjectPerYear(string ico, Dictionary<int,T> data) 
+        public StatisticsSubjectPerYear(string ico, Dictionary<int, T> data)
         {
             this.ICO = ico;
             Years = data ?? throw new ArgumentNullException("data");
@@ -55,15 +55,15 @@ namespace HlidacStatu.Lib.Analytics
         public decimal Sum(int[] forYears, Func<T, int> selector)
         {
             return Years
-                .Where(y=>forYears.Contains(y.Key))
-                .Select(v=>v.Value)
+                .Where(y => forYears.Contains(y.Key))
+                .Select(v => v.Value)
                 .Sum(selector);
         }
         public decimal Sum(int[] forYears, Func<T, decimal> selector)
         {
             return Years
-                .Where(y=>forYears.Contains(y.Key))
-                .Select(v=>v.Value)
+                .Where(y => forYears.Contains(y.Key))
+                .Select(v => v.Value)
                 .Sum(selector);
         }
 
@@ -77,6 +77,35 @@ namespace HlidacStatu.Lib.Analytics
         //    }
         //    return returnValue;
         //}
+
+        public (decimal change, decimal percentage) ChangeBetweenYears(int firstYear, 
+            int lastYear, 
+            Func<T, decimal> selector)
+        {
+            var firstStat = StatisticsForYear(firstYear);
+            var lastStat = StatisticsForYear(lastYear);
+
+            if (firstStat == null && lastStat == null)
+                return (0, 0); // možná vrátit chybu? protože neexistuje ani jeden
+
+            if(firstStat == null)
+            {
+                return (selector(lastStat), 100);  // není hodnota v minulosti => nárůst 100 %
+            }
+
+            if(lastStat == null)
+            {
+                return (-selector(firstStat), -100); // není hodnota v současnosti => pokles 100 %
+            }
+
+            var firstValue = selector(firstStat);
+            var lastValue = selector(lastStat);
+
+            decimal change = lastValue - firstValue;
+            decimal percentage = change / firstValue;
+
+            return (change, percentage);
+        }
 
         public virtual int CurrentSeasonYear()
         {
@@ -116,7 +145,7 @@ namespace HlidacStatu.Lib.Analytics
             
             foreach (var year in years)
             {
-                var statsForYear = statistics.Select(s => s.StatisticsForYear(year)).ToList();
+                var statsForYear = statistics.Select(s => s.StatisticsForYear(year));
                 var val = statsForYear.Aggregate(new T(), (acc, s) => acc.Add(s));
 
                 aggregatedStatistics.Years.Add(year, val);
