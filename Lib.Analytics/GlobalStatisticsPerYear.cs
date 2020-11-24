@@ -7,7 +7,7 @@ using System.Reflection;
 namespace HlidacStatu.Lib.Analytics
 {
     public partial class GlobalStatisticsPerYear<T>
-        where T : new()
+        where T : IAddable<T>, new()
     {
         public int[] CalculatedYears = null;
 

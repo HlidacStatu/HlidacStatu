@@ -6,7 +6,7 @@ namespace HlidacStatu.Lib.Analytics
 {
     //group data per year
     public class StatisticsSubjectPerYear<T>
-        where T : new()
+        where T : IAddable<T>, new()
     {
         public string ICO { get; set; }
         public Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
@@ -104,5 +104,25 @@ namespace HlidacStatu.Lib.Analytics
             return default; //should we throw exception instead?
         }
 
+
+        public static StatisticsSubjectPerYear<T> Aggregate(IEnumerable<StatisticsSubjectPerYear<T>> statistics)
+        {
+            var aggregatedStatistics = new StatisticsSubjectPerYear<T>()
+            {
+                ICO = $"aggregated for {statistics.FirstOrDefault().ICO}"
+            };
+
+            var years = statistics.SelectMany(x => x.Years.Keys.Select(k => k)).Distinct();
+            
+            foreach (var year in years)
+            {
+                var statsForYear = statistics.Select(s => s.StatisticsForYear(year)).ToList();
+                var val = statsForYear.Aggregate(new T(), (acc, s) => acc.Add(s));
+
+                aggregatedStatistics.Years.Add(year, val);
+            }
+
+            return aggregatedStatistics;
+        }
     }
 }

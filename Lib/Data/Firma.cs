@@ -474,6 +474,25 @@ namespace HlidacStatu.Lib.Data
                 .Select(m => m.Id);
         }
 
+        public IEnumerable<Firma> Holding(Relation.AktualnostType aktualnost)
+        {
+            var icos = IcosInHolding(aktualnost);
+
+            return icos.Select(ico => Firma.FromIco(ico));
+        }
+
+        public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> HoldingStatisticsDotace(Relation.AktualnostType aktualnost)
+        {
+            var firmy = Holding(aktualnost);
+            
+            var statistiky = firmy.Select(f => f.StatistikaDotaci());
+
+            var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.Dotace>.Aggregate(statistiky);
+
+            return aggregate;
+        }
+
+
         public Analysis.BasicDataPerYear StatisticForHolding(Data.Relation.AktualnostType aktualnost)
         {
             Analysis.BasicDataPerYear myStat = Analysis.ACore.GetBasicStatisticForICO(this.ICO);

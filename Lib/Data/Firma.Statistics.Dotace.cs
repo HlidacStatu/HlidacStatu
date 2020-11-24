@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Analytics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,9 +28,8 @@ namespace HlidacStatu.Lib.Data
                 return cache;
             }
 
-            public partial class Dotace
+            public partial class Dotace : IAddable<Dotace>
             {
-
                 public int PocetDotaci { get; set; } = 0;
                 public int PocetCerpani { get; set; } = 0;
                 public decimal CelkemCerpano { get; set; } = 0;
@@ -60,6 +60,16 @@ namespace HlidacStatu.Lib.Data
                     }
 
                     return new Analytics.StatisticsSubjectPerYear<Statistics.Dotace>(f.ICO, dataYearly);
+                }
+
+                public Dotace Add(Dotace other)
+                {
+                    return new Dotace()
+                    {
+                        CelkemCerpano = CelkemCerpano + (other?.CelkemCerpano ?? 0),
+                        PocetCerpani = PocetCerpani + (other?.PocetCerpani ?? 0),
+                        PocetDotaci = PocetDotaci + (other?.PocetDotaci ?? 0)
+                    };
                 }
             }
         }

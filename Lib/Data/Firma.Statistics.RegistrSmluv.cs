@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Analytics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,7 @@ namespace HlidacStatu.Lib.Data
                 return number / total;
             }
 
-            public partial class RegistrSmluv
+            public partial class RegistrSmluv : IAddable<RegistrSmluv>
             {
 
                 public long PocetSmluv { get; set; } = 0;
@@ -134,6 +135,11 @@ namespace HlidacStatu.Lib.Data
                     }
                     return new Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>(f.ICO, data);
 
+                }
+
+                public RegistrSmluv Add(RegistrSmluv other)
+                {
+                    throw new NotImplementedException();
                 }
             }
         }
