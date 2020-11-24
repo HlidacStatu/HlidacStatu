@@ -116,17 +116,19 @@
             <h4>Souhrn</h4>
             @{
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-
+                
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.Firma.ICO;
-                var dotaceStat = dotaceService.GetStatisticsForIco(Model.Firma.ICO);
+                var dotaceSuma = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.CelkemCerpano);
+                var dotacePocet = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.PocetDotaci);
 
-                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceStat.Sum, html: true) + "</b>."; }
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceSuma, html: true) + "</b>."; 
+            }
 
             @if (Model.Firma.JsemOVM())
             {
                 <p>
                     Úřad @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
-                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotacePocet,
                                                 " nedostal žádnou dotaci.",
                                                 " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
                                                 " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
@@ -137,7 +139,7 @@
             {
                 <p>
                     Firma @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
-                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
+                    @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotacePocet,
                                                 " nedostala žádnou dotaci.",
                                                 " dostala <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
                                                 " dostala <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
@@ -153,9 +155,9 @@
                 decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
                 int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
 
-                if (totalCountDotaceHolding - dotaceStat.Count > 0)
+                if (totalCountDotaceHolding - dotacePocet > 0)
                 {
-                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceStat.Sum, html: true) + "</b>.";
+                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotacePocet, html: true) + "</b>.";
                     var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
                     string durlH = "/dotace/hledat?Q=holding%3A+" + Model.Firma.ICO;
                     if (Model.Firma.JsemOVM())
@@ -169,7 +171,7 @@
                                                         "dostala",
                                                         "dostaly",
                                                         "dostalo")
-                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotacePocet,
                                                                                     " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                     " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                     " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
@@ -192,7 +194,7 @@
                                                         "dostala",
                                                         "dostaly",
                                                         "dostalo")
-                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotaceStat.Count,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(totalCountDotaceHolding - dotacePocet,
                                                                                     " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                     " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                     " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
@@ -276,7 +278,7 @@
                                 HtmlRender = (x) =>
                                 $"<a href=\"/dotace/hledat?Q=ico:{Model.Firma.ICO} AND rozhodnuti.cerpani.guessedYear:{x.Rok}\">Dotace za rok {x.Rok}</a>"
                             }
-        }
+}
                     );
 
                     foreach (var dot in companyDotace)
@@ -348,9 +350,9 @@
                                 HtmlRender = (x) =>
                                 $"<a href=\"/dotace/hledat?Q=ico:{x.Ico}\">Dotace pro {x.Nazev}</a>"
                             }
-        }
+}
                     );
-                    foreach(var dot in holdingDotace)
+                    foreach (var dot in holdingDotace)
                     {
                         holdingReportData.AddRow(dot);
                     }

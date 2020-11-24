@@ -556,8 +556,6 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\ContractsStatisticData.cs" />
-    <Compile Include="Data\Dotace\StatisticData.cs" />
-    <Compile Include="Data\Dotace\Statistics.cs" />
     <Compile Include="Data\Firma.Statistics.Dotace.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
