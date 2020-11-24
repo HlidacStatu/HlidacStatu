@@ -10,8 +10,6 @@ namespace HlidacStatu.Lib.Data
         public partial class Statistics
         {
 
-            private static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Statistics.Dotace>, Firma> _dotaceCache;
-
             internal static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Statistics.Dotace>, Firma> DotaceCache()
             {
 

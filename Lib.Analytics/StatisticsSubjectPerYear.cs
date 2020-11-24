@@ -78,6 +78,8 @@ namespace HlidacStatu.Lib.Analytics
         //    return returnValue;
         //}
 
+
+        //todo: promyslet výsledky
         public (decimal change, decimal percentage) ChangeBetweenYears(int firstYear, 
             int lastYear, 
             Func<T, decimal> selector)
