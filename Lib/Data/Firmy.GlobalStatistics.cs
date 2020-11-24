@@ -215,7 +215,7 @@ namespace HlidacStatu.Lib.Data
                     (Func<string, ActionOutputData>)(
                     ico =>
                     {
-                        var stat = Firmy.Get(ico)?.Statistika(obor.Value);
+                        var stat = Firmy.Get(ico)?.StatistikaRegistruSmluv(obor.Value);
                         if (stat != null)
                             lock (lockObj)
                             {

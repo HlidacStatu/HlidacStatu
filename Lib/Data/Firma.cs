@@ -240,17 +240,21 @@ namespace HlidacStatu.Lib.Data
             return _kategorieOVM;
         }
 
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika()
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv()
         {
             return Statistics.RegistrSmluvCache(null).Get(this);
         }
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika(Smlouva.SClassification.ClassificationsTypes classif)
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes classif)
         {
             return Statistics.RegistrSmluvCache((int)classif).Get(this);
         }
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> Statistika(int iclassif)
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv(int iclassif)
         {
             return Statistics.RegistrSmluvCache(iclassif).Get(this);
+        }
+        public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> StatistikaDotaci()
+        {
+            return Statistics.DotaceCache().Get(this);
         }
 
         public bool MaVazbyNaPolitiky()

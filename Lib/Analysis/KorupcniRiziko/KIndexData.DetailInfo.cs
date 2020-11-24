@@ -162,7 +162,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             case KIndexLabelValues.E:
                             case KIndexLabelValues.F:
                                 return $"{Devmasters.Lang.Plural.Get((int)this.AnnualData.Statistika.PocetSmluvULimitu, "{0} smlouva má;{0} smlouvy mají;{0} smluv má")} hodnotu blízkou limitům veřejných zakázek, což může naznačovat snahu se vyhnout řádné veřejné soutěži.";
-                            //return $"Zásadní nedostatky evidujeme u {Devmasters.Lang.Plural.Get((int)data.Statistika.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")} z {data.Statistika.PocetSmluv}";
+                            //return $"Zásadní nedostatky evidujeme u {Devmasters.Lang.Plural.Get((int)data.StatistikaRegistruSmluv.PocetSmluvSeZasadnimNedostatkem, "{0} smlouva;{0} smlouvy;{0} smluv")} z {data.StatistikaRegistruSmluv.PocetSmluv}";
                             default:
                                 return "";
                         }
