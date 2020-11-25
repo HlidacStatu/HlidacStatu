@@ -183,5 +183,6 @@ namespace HlidacStatu.Lib.Analytics
 
             return aggregatedStatistics;
         }
+        
     }
 }

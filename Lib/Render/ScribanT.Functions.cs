@@ -154,11 +154,19 @@ namespace HlidacStatu.Lib.Render
             {
                 if (!string.IsNullOrEmpty(ico))
                 {
-                    HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
-                    if (o.Valid)
+                    var firma = Data.Firmy.instanceByIco.Get(ico);
+                    if (firma.Valid)
                     {
-                        var stat = o.Statistic();
-                        return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=ico:" + o.ICO, twoLines: twoLines)}{postfix}</span>";
+                        var stat = firma.StatistikaRegistruSmluv();
+                        var pocet = stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv);
+                        var celkem = stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv); 
+
+                        string niceString = $"<a href='/hledatSmlouvy?q=ico:{firma.ICO}'>" +
+                            Devmasters.Lang.Plural.Get((int)pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                            "</a>" + (twoLines ? "<br />" : " za ") +
+                            "celkem " + Data.Smlouva.NicePrice(celkem, html: true, shortFormat: true);
+
+                        return $"<span>{prefix}{niceString}{postfix}</span>";
                     }
                     else
                         return $"";

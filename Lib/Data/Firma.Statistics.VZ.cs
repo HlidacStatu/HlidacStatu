@@ -62,7 +62,7 @@ namespace HlidacStatu.Lib.Data
                     Dictionary<int, VZ.Data> data = new Dictionary<int, VZ.Data>();
                     foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
                     {
-                        var stat = f.Statistic().RatingPerYear[year];
+                        //var stat = f.Statistic().RatingPerYear[year];
                         data.Add(year, new VZ.Data()
                         {
                         }

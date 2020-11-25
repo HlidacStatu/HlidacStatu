@@ -229,8 +229,9 @@ else if (item.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny
         <td>@(rec.Datum_Zapisu_OR?.ToString("d.M.yyyy"))</td>
         @if (small == false)
         {
-<td>@HlidacStatu.Util.RenderData.NiceNumber(rec.Statistic().BasicStatPerYear.SummaryAfter2016().Pocet)</td>
-                    <td>@HlidacStatu.Util.RenderData.NicePrice(rec.Statistic().BasicStatPerYear.SummaryAfter2016().CelkemCena)</td>
+            var stat = rec.StatistikaRegistruSmluv();
+<td>@HlidacStatu.Util.RenderData.NiceNumber(stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv))</td>
+                    <td>@HlidacStatu.Util.RenderData.NicePrice(stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv))</td>
 }
 
     </tr>

@@ -53,9 +53,6 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<IEnumerable<AnalysisCalculation.IcoSmlouvaMinMax>> FirmyCasovePodezreleZalozene = null;
         public static Devmasters.Cache.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>> UradyObchodujiciSCasovePodezrelymiFirmami = null;
 
-        public static Devmasters.Cache.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
-
-
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
@@ -522,53 +519,6 @@ namespace HlidacStatu.Lib
                 }
                 //dalsi vyjimky
                 Urady_OVM.Add("00832227");//Euroregion Neisse - Nisa - Nysa
-
-
-HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
-                SponzorisVazbouNaStat = new Devmasters.Cache.File.FileCache<List<KeyValuePair<Osoba, Analysis.BasicData<string>>>>(
-                    StaticData.App_Data_Path, TimeSpan.Zero, "Sponzori_s_vazbouNaStat",
-                    (o) =>
-                    {
-                        try
-                        {
-
-                            var vazbyNaPolitiky = StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get();
-                            var allSponsors = HlidacStatu.Lib.Data.Sponsors.GetAllSponsors();
-                            Dictionary<int, Analysis.BasicData<string>> sponzoriTmpCalc = new Dictionary<int, Analysis.BasicData<string>>();
-                            foreach (var kvFirma in vazbyNaPolitiky.SoukromeFirmy)
-                            {
-                                var politiciVeFirme = kvFirma.Value;
-                                if (politiciVeFirme.Any(p => allSponsors.ContainsKey(p)))
-                                {
-                                    var statForFirma = new Analysis.SubjectStatistic(kvFirma.Key);
-                                    foreach (var p in politiciVeFirme.Distinct())
-                                    {
-                                        if (allSponsors.ContainsKey(p))
-                                        {
-                                            if (sponzoriTmpCalc.ContainsKey(p))
-                                            {
-                                                sponzoriTmpCalc[p].CelkemCena += statForFirma.BasicStatPerYear.Summary.CelkemCena;
-                                                sponzoriTmpCalc[p].Pocet += statForFirma.BasicStatPerYear.Summary.Pocet;
-                                            }
-                                            else
-                                            {
-                                                sponzoriTmpCalc.Add(p, statForFirma.ToBasicData());
-                                            }
-                                        }
-
-                                    }
-                                }
-
-                            }
-                            return sponzoriTmpCalc.Select(m => new KeyValuePair<Osoba, Analysis.BasicData<string>>(allSponsors[m.Key], m.Value)).ToList();
-                        }
-                        catch (Exception e)
-                        {
-                            HlidacStatu.Util.Consts.Logger.Error("SponzorisVazbouNaStat", e);
-                            throw;
-                        }
-                    }
-                    );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Mestske_Firmy ");
                 VsechnyStatniMestskeFirmy = System.IO.File
