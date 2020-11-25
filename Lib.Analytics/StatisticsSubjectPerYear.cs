@@ -47,12 +47,23 @@ namespace HlidacStatu.Lib.Analytics
         {
             return Years.Values.Sum(selector);
         }
+        public decimal Sum(Func<T, long> selector)
+        {
+            return Years.Values.Sum(selector);
+        }
         public decimal Sum(Func<T, decimal> selector)
         {
             return Years.Values.Sum(selector);
         }
 
         public decimal Sum(int[] forYears, Func<T, int> selector)
+        {
+            return Years
+                .Where(y => forYears.Contains(y.Key))
+                .Select(v => v.Value)
+                .Sum(selector);
+        }
+        public decimal Sum(int[] forYears, Func<T, long> selector)
         {
             return Years
                 .Where(y => forYears.Contains(y.Key))
