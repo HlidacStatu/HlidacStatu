@@ -138,8 +138,8 @@ namespace HlidacStatu.Lib.Data
                         }
                         );
                     }
-                    return new Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>(f.ICO, data);
-
+                    //return new Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>(f.ICO, data);
+                    return null;
                 }
 
                 public RegistrSmluv Add(RegistrSmluv other)
