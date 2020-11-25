@@ -61,23 +61,23 @@ namespace HlidacStatu.Lib.Data
 
                 public decimal PercentSmluvBezCeny()
                 {
-                    return PocetSmluvBezCeny / PocetSmluv;
+                    return (decimal)PocetSmluvBezCeny / PocetSmluv;
                 }
                 public decimal PercentSmluvBezSmluvniStrany()
                 {
-                    return PocetSmluvBezSmluvniStrany / PocetSmluv;
+                    return (decimal)PocetSmluvBezSmluvniStrany / PocetSmluv;
                 }
                 public decimal PercentKcBezSmluvniStrany()
                 {
-                    return SumKcSmluvBezSmluvniStrany / CelkovaHodnotaSmluv;
+                    return (decimal)SumKcSmluvBezSmluvniStrany / CelkovaHodnotaSmluv;
                 }
                 public decimal PercentSmluvPolitiky()
                 {
-                    return PocetSmluvPolitiky / PocetSmluv;
+                    return (decimal)PocetSmluvPolitiky / PocetSmluv;
                 }
                 public decimal PercentKcSmluvPolitiky()
                 {
-                    return SumKcSmluvPolitiky / CelkovaHodnotaSmluv;
+                    return (decimal)SumKcSmluvPolitiky / CelkovaHodnotaSmluv;
                 }
 
                 public static Analytics.StatisticsSubjectPerYear<RegistrSmluv> Create(Firma f, int? obor)

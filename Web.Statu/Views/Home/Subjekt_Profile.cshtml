@@ -46,8 +46,8 @@
     }
 
 
-
-    var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model);
+    //var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model); => tohle zkusit prohledat napříč projektem
+    var statistics = Model.StatistikaRegistruSmluv();
 
     int chartMinDate = 2016;
     int chartMaxDate = DateTime.Now.Year;
@@ -317,12 +317,12 @@ else
                 <th>Souhrnné statistiky<br />pro @Model.Jmeno<br />od 2016</th>
                 <td>
                     @Html.Raw(Model.Statistic().BasicStatPerYear.SummaryAfter2016().ToNiceString(Model, true, twoLines: false, customUrl: "/hledat?q=ico:" + Model.ICO))<br />
-                    @(Model.Statistic().RatingPerYear.Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
-                    @(Model.Statistic().RatingPerYear.Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                    @(Model.StatistikaRegistruSmluv().Summary().PercentSmluvBezCeny().ToString("P1")) smluv se skrytou cenou<br />
+                    @(Model.StatistikaRegistruSmluv().Summary().PercentSmluvBezSmluvniStrany().ToString("P1")) smluv se skrytou smluvní stranou<br />
                     @if (Model.PatrimStatu())
                     {
                         <text>
-                            @(Model.Statistic().RatingPerYear.Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                            @(Model.StatistikaRegistruSmluv().Summary().PercentSmluvPolitiky().ToString("P1"))smluv s firmami navázanými na politiky
                         </text>}
                 </td>
                 <td>

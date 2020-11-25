@@ -1792,6 +1792,10 @@
       <Project>{9bd61768-3817-4bc5-93be-df3977193a2c}</Project>
       <Name>HlidacStatu.Q</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lib.Analytics\Lib.Analytics.csproj">
+      <Project>{e4fa65d3-95f2-487f-9d95-017d6409ff06}</Project>
+      <Name>Lib.Analytics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>
       <Name>Lib.Data.External</Name>

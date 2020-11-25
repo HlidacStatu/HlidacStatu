@@ -4,7 +4,9 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analytics
 {
-    //group data per year
+    // !!!!! Michale, za žádnou cenu sem nedávej ToNiceString !!!! 
+    // Nebo začne bůh topit koťátka, dokud ti to nesmažu! :-D
+
     public class StatisticsSubjectPerYear<T>
         where T : IAddable<T>, new()
     {
@@ -95,18 +97,7 @@ namespace HlidacStatu.Lib.Analytics
                 .ToArray();
         }
 
-        // tohle má být obecná třída - tohle by tu nemělo co dělat
-        //public List<T> RegistrSmluvYears()
-        //{
-        //    var returnValue = new List<T>();
-        //    foreach (var y in Consts.RegistrSmluvYearsList)
-        //    {
-        //        returnValue.Add(Years[y]);
-        //    }
-        //    return returnValue;
-        //}
-
-
+        
         //todo: promyslet výsledky
         public (decimal change, decimal percentage) ChangeBetweenYears(int firstYear, 
             int lastYear, 
@@ -183,6 +174,34 @@ namespace HlidacStatu.Lib.Analytics
 
             return aggregatedStatistics;
         }
-        
+
+        /// <summary>
+        /// Summarize all selected years to one - Good if you need global percentage stats.
+        /// </summary>
+        /// <param name="years"></param>
+        /// <returns></returns>
+        public T Summary(int[] years)
+        {
+
+            var val = Years.Where(y => years.Contains(y.Key))
+                .Select(y => y.Value)
+                .Aggregate(new T(), (acc, s) => acc.Add(s));
+
+            return val;
+        }
+
+        /// <summary>
+        /// Summarize all years to one - Good if you need global percentage stats.
+        /// </summary>
+        /// <returns></returns>
+        public T Summary()
+        {
+            var val = Years
+                .Select(y => y.Value)
+                .Aggregate(new T(), (acc, s) => acc.Add(s));
+
+            return val;
+        }
+
     }
 }
