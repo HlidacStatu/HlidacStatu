@@ -1,5 +1,5 @@
 ﻿using Devmasters;
-
+using HlidacStatu.Lib.Analytics;
 using HlidacStatu.Util;
 
 using System;
@@ -492,7 +492,37 @@ namespace HlidacStatu.Lib.Data
             return aggregate;
         }
 
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> HoldingStatisticsRegistrSmluv(
+            Relation.AktualnostType aktualnost,
+            Smlouva.SClassification.ClassificationsTypes classification)
+        {
+            var firmy = Holding(aktualnost);
 
+            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv(classification));
+
+            var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>.Aggregate(statistiky);
+
+            return aggregate;
+        }
+
+        // šlo by to udělat obecně, ale na použití je to hodně upsané. použití by bylo:
+        // f.HoldingStatistics<Firma.Statistics.RegistrSmluv>(Relation.AktualnostType.Nedavny,
+        //   s => s.StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes.agro_zahrada));
+        //
+        //public Analytics.StatisticsSubjectPerYear<T> HoldingStatistics<T>(Relation.AktualnostType aktualnost,
+        //    Func<Firma, StatisticsSubjectPerYear<T>> selector) where T : IAddable<T>, new() 
+        //{
+        //    var firmy = Holding(aktualnost);
+
+        //    var statistiky = firmy.Select(selector);
+
+        //    var aggregate = Analytics.StatisticsSubjectPerYear<T>.Aggregate(statistiky);
+
+        //    return aggregate;
+        //}
+
+
+        [Obsolete("Use HoldingStatisticsRegistrSmluv")]
         public Analysis.BasicDataPerYear StatisticForHolding(Data.Relation.AktualnostType aktualnost)
         {
             Analysis.BasicDataPerYear myStat = Analysis.ACore.GetBasicStatisticForICO(this.ICO);
