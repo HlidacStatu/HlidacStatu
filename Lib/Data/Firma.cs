@@ -493,6 +493,18 @@ namespace HlidacStatu.Lib.Data
         }
 
         public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> HoldingStatisticsRegistrSmluv(
+            Relation.AktualnostType aktualnost)
+        {
+            var firmy = Holding(aktualnost);
+
+            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv());
+
+            var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>.Aggregate(statistiky);
+
+            return aggregate;
+        }
+
+        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> HoldingStatisticsRegistrSmluvProObor(
             Relation.AktualnostType aktualnost,
             Smlouva.SClassification.ClassificationsTypes classification)
         {
@@ -522,21 +534,21 @@ namespace HlidacStatu.Lib.Data
         //}
 
 
-        [Obsolete("Use HoldingStatisticsRegistrSmluv")]
-        public Analysis.BasicDataPerYear StatisticForHolding(Data.Relation.AktualnostType aktualnost)
-        {
-            Analysis.BasicDataPerYear myStat = Analysis.ACore.GetBasicStatisticForICO(this.ICO);
+        //[Obsolete("Use HoldingStatisticsRegistrSmluv")]
+        //public Analysis.BasicDataPerYear StatisticForHolding(Data.Relation.AktualnostType aktualnost)
+        //{
+        //    Analysis.BasicDataPerYear myStat = Analysis.ACore.GetBasicStatisticForICO(this.ICO);
 
-            Dictionary<string, Analysis.BasicDataPerYear> PerIcoStat =
-                IcosInHolding(aktualnost)
-                .Select(ico => new { ico = ico, ss = Analysis.ACore.GetBasicStatisticForICO(ico) })
-                .ToDictionary(k => k.ico, v => v.ss);
+        //    Dictionary<string, Analysis.BasicDataPerYear> PerIcoStat =
+        //        IcosInHolding(aktualnost)
+        //        .Select(ico => new { ico = ico, ss = Analysis.ACore.GetBasicStatisticForICO(ico) })
+        //        .ToDictionary(k => k.ico, v => v.ss);
 
-            foreach (var kv in PerIcoStat)
-                myStat.Add(kv.Value);
+        //    foreach (var kv in PerIcoStat)
+        //        myStat.Add(kv.Value);
 
-            return myStat;
-        }
+        //    return myStat;
+        //}
 
 
         public Analysis.RatingDataPerYear RatingPerYearForHolding(Data.Relation.AktualnostType aktualnost)
@@ -1170,20 +1182,32 @@ namespace HlidacStatu.Lib.Data
 
                     if (this.PatrimStatu() == false && this.IcosInHolding(Relation.AktualnostType.Aktualni).Count() > 2)
                     {
-                        var statHolding = this.StatisticForHolding(Relation.AktualnostType.Aktualni);
-                        if (statHolding.Summary.Pocet > 3)
+                        var statHolding = this.HoldingStatisticsRegistrSmluv(Relation.AktualnostType.Aktualni);
+                        if (statHolding.Sum( x => x.PocetSmluv) > 3)
                         {
                             f.Add(new InfoFact($"V roce <b>{rok}</b> uzavřel celý holding " +
-                                Devmasters.Lang.Plural.Get((int)statHolding.Data[rok].Pocet, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
-                                + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(statHolding.Data[rok].CelkemCena, html: true)}</b>. "
+                                Devmasters.Lang.Plural.Get((int)statHolding.StatisticsForYear(rok).PocetSmluv, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
+                                + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(statHolding.StatisticsForYear(rok).CelkovaHodnotaSmluv, html: true)}</b>. "
                                 , InfoFact.ImportanceLevel.Low)
                                 );
 
-                            f.Add(new InfoFact($"Mezi lety <b>{rok - 1}-{rok - 2000}</b> "
-                                + stat.BasicStatPerYear.YearChange(rok).RenderChangeWord(false, stat.BasicStatPerYear.YearChange(rok).CenaChangePerc,
-                                "celému holdingu poklesla hodnota smluv o&nbsp;<b>{0:P2}</b>. ", " nedošlo pro celý holding ke změně hodnoty smluv. ", "celému holdingu narostla hodnota smluv o&nbsp;<b>{0:P2}</b>. ")
-                                , InfoFact.ImportanceLevel.Low)
-                                );
+                            string text = $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> ";
+                            (decimal zmena, decimal procentniZmena) = statHolding.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
+
+                            switch (zmena)
+                            {
+                                case decimal n when n > 0:
+                                    text += $"celému holdingu narostla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
+                                    break;
+                                case decimal n when n < 0:
+                                    text += $"celému holdingu poklesla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
+                                    break;
+                                default:
+                                    text += "nedošlo pro celý holding ke změně hodnoty smluv. ";
+                                    break;
+                            }
+
+                            f.Add(new InfoFact(text, InfoFact.ImportanceLevel.Low));
                         }
                     }
 
