@@ -12,18 +12,14 @@
 
 @{
     ViewBag.HideTitle = true;
-    string pojmenovani = "firma";
     string pojmenovani_o = "firmě";
     if (Model.firma.JsemOVM())
     {
-        pojmenovani = "úřad";
         pojmenovani_o = "úřadu";
     }
     else if (Model.firma.JsemStatniFirma())
     {
-        pojmenovani = "státní firma";
         pojmenovani_o = "státní firmě";
-
     }
 
 

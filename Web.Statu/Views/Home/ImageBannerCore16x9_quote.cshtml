@@ -182,14 +182,9 @@
         </div>
     }
 
-    @{
-        int footer_left = 290;
-        int footer_width = 1050;
-    }
+    
     @if (!string.IsNullOrEmpty(Model.img))
     {
-        footer_left = 330;
-        footer_width = 1000;
         <span class="picture" style="position:absolute;top:850px;left:360px;background-image: url('@Model.img');width:100px;height:100px;"></span>
     }
     <div class="jtextfill" style="position:absolute;top: 850px;left:490px;width:1000px;height:100px;

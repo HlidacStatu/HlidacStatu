@@ -23,7 +23,6 @@
         .OrderBy(m => m.Prijmeni)
         .ThenBy(m => m.Jmeno)
         .ToList();
-    bool Search = true;
 
     ReportDataSource poslanciTable = new ReportDataSource(new ReportDataSource.Column[]
    {
