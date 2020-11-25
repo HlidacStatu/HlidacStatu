@@ -68,8 +68,6 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         private void InitData()
         {
-
-
             kindex = new KIndexData();
             kindex.Ico = urad.ICO;
             kindex.Jmeno = urad.Jmeno;
@@ -88,41 +86,44 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
         static object _koncetraceDodavateluOboryLock = new object();
+
+        //todo: dalo by se ještě refaktorovat, aby se vše bralo ze statistiky
         private KIndexData.Annual CalculateForYear(int year, bool forceCalculateAllYears)
         {
-            decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[year].Pocet;
+            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv().StatisticsForYear(year).PocetSmluv;
 
             KIndexData.Annual ret = new KIndexData.Annual(year);
             var fc = new FinanceDataCalculator(this.Ico, year);
             ret.FinancniUdaje = fc.GetData();
 
-
+            //tohle by se dalo brát ze statistiky komplet...
             ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.Statistic().RatingPerYear[year].PercentSPolitiky;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky();
 
             ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_NovaFirmaDodavatel[year].Pocet / smlouvyZaRok;
             ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
             ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
 
-            var stat = this.urad.Statistic().RatingPerYear[year];
-            ret.Statistika = new KIndexData.StatistickeUdaje()
+            var stat = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year);
+            //todo: tenhle objekt by mohl vycházet ze stávajícího nového objektu statistiky
+            ret.Statistika = new KIndexData.StatistickeUdaje() 
             {
-                PocetSmluv = this.urad.Statistic().BasicStatPerYear[year].Pocet,
-                CelkovaHodnotaSmluv = this.urad.Statistic().BasicStatPerYear[year].CelkemCena,
-                PocetSmluvBezCeny = stat.NumBezCeny,
-                PocetSmluvBezSmluvniStrany = stat.NumBezSmluvniStrany,
-                PocetSmluvPolitiky = stat.NumSPolitiky,
-                PercentSmluvBezCeny = stat.PercentBezCeny,
-                PercentSmluvBezSmluvniStrany = stat.PercentBezSmluvniStrany,
-                PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany,
-                PercentKcSmluvPolitiky = stat.PercentKcSPolitiky,
-                PercentSmluvPolitiky = stat.PercentSPolitiky,
-                SumKcSmluvBezSmluvniStrany = stat.SumKcBezSmluvniStrany,
-                SumKcSmluvPolitiky = stat.SumKcSPolitiky,
-                PocetSmluvULimitu = _calc_ULimitu[year].Pocet,
-                PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
-                PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
-                PocetSmluvNovaFirma = _calc_NovaFirmaDodavatel[year].Pocet,
+                PocetSmluv = stat.PocetSmluv,
+                CelkovaHodnotaSmluv = stat.CelkovaHodnotaSmluv,
+                PocetSmluvBezCeny = stat.PocetSmluvBezCeny,
+                PocetSmluvBezSmluvniStrany = stat.PocetSmluvBezSmluvniStrany,
+                PocetSmluvPolitiky = stat.PocetSmluvPolitiky,
+                PercentSmluvBezCeny = stat.PercentSmluvBezCeny(),
+                PercentSmluvBezSmluvniStrany = stat.PercentSmluvBezSmluvniStrany(),
+                PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany(),
+                PercentKcSmluvPolitiky = stat.PercentKcSmluvPolitiky(),
+                PercentSmluvPolitiky = stat.PercentSmluvPolitiky(),
+                SumKcSmluvBezSmluvniStrany = stat.SumKcSmluvBezSmluvniStrany,
+                SumKcSmluvPolitiky = stat.SumKcSmluvPolitiky,
+                PocetSmluvULimitu = stat.PocetSmluvULimitu,
+                PocetSmluvOVikendu = stat.PocetSmluvOVikendu,
+                PocetSmluvSeZasadnimNedostatkem = stat.PocetSmluvSeZasadnimNedostatkem,
+                PocetSmluvNovaFirma = stat.PocetSmluvNovaFirma,
             };
 
 
@@ -241,7 +242,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret, bool forceCalculateAllYears)
         {
-            decimal smlouvyZaRok = (decimal)urad.Statistic().BasicStatPerYear[ret.Rok].Pocet;
+            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv().StatisticsForYear(ret.Rok).PocetSmluv;
 
             CalculateKIndex(ret);
 

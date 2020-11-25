@@ -273,11 +273,11 @@ namespace HlidacStatu.Lib.Data
                     .ToArray();
         }
 
-        public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
-        {
-            return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy
-                .FirstOrDefault(f => f.Ico == this.ICO);
-        }
+        //public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
+        //{
+        //    return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy
+        //        .FirstOrDefault(f => f.Ico == this.ICO);
+        //}
 
         public bool IsNespolehlivyPlatceDPH()
         {
@@ -453,16 +453,16 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        Analysis.SubjectStatistic _statistic = null;
-        public Analysis.SubjectStatistic Statistic()
-        {
-            if (_statistic == null)
-            {
-                _statistic = new Analysis.SubjectStatistic(this);
+        //Analysis.SubjectStatistic _statistic = null;
+        //public Analysis.SubjectStatistic Statistic()
+        //{
+        //    if (_statistic == null)
+        //    {
+        //        _statistic = new Analysis.SubjectStatistic(this);
 
-            }
-            return _statistic;
-        }
+        //    }
+        //    return _statistic;
+        //}
 
         public IEnumerable<string> IcosInHolding(Data.Relation.AktualnostType aktualnost)
         {
