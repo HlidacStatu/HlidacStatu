@@ -1031,12 +1031,7 @@ namespace HlidacStatu.Lib.Data
                     if (DateTime.Now.Month < 2)
                         rok = rok - 1;
 
-                    var yearsAfter2016 = stat.Years
-                        .Select(y => y.Key)
-                        .Where(y => y >= 2016)
-                        .ToArray();
-
-                    if (stat.Sum(yearsAfter2016, s => s.PocetSmluv) == 0)
+                    if (stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv) == 0)
                     {
                         f.Add(new InfoFact($"{sName} nemá žádné smluvní vztahy evidované v&nbsp;registru smluv. ", InfoFact.ImportanceLevel.Medium));
                         f.Add(new InfoFact($"{(sMuzsky ? "Byl založen" : "Byla založena")} <b>{this.Datum_Zapisu_OR?.ToString("d. M. yyyy")}</b>. ", InfoFact.ImportanceLevel.Medium));
@@ -1188,8 +1183,8 @@ namespace HlidacStatu.Lib.Data
                         }
 
                         f.Add(new InfoFact($"Od roku <b>2016</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                            Devmasters.Lang.Plural.Get((int)stat.Sum(yearsAfter2016, s => s.PocetSmluv), "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
-                            + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.Sum(yearsAfter2016, s => s.CelkovaHodnotaSmluv), html: true)}</b>. "
+                            Devmasters.Lang.Plural.Get((int)stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv), "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
+                            + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv), html: true)}</b>. "
                             , InfoFact.ImportanceLevel.Low)
                             );
 

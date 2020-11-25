@@ -43,11 +43,11 @@ namespace HlidacStatu.Lib.Analytics
             Years = data ?? throw new ArgumentNullException("data");
         }
 
-        public decimal Sum(Func<T, int> selector)
+        public int Sum(Func<T, int> selector)
         {
             return Years.Values.Sum(selector);
         }
-        public decimal Sum(Func<T, long> selector)
+        public long Sum(Func<T, long> selector)
         {
             return Years.Values.Sum(selector);
         }
@@ -56,14 +56,14 @@ namespace HlidacStatu.Lib.Analytics
             return Years.Values.Sum(selector);
         }
 
-        public decimal Sum(int[] forYears, Func<T, int> selector)
+        public int Sum(int[] forYears, Func<T, int> selector)
         {
             return Years
                 .Where(y => forYears.Contains(y.Key))
                 .Select(v => v.Value)
                 .Sum(selector);
         }
-        public decimal Sum(int[] forYears, Func<T, long> selector)
+        public long Sum(int[] forYears, Func<T, long> selector)
         {
             return Years
                 .Where(y => forYears.Contains(y.Key))
@@ -76,6 +76,23 @@ namespace HlidacStatu.Lib.Analytics
                 .Where(y => forYears.Contains(y.Key))
                 .Select(v => v.Value)
                 .Sum(selector);
+        }
+
+
+        public int[] YearsAfter2016()
+        {
+            return Years
+                .Select(y => y.Key)
+                .Where(y => y >= 2016)
+                .ToArray();
+        }
+
+        public int[] YearsBefore2016()
+        {
+            return Years
+                .Select(y => y.Key)
+                .Where(y => y < 2016)
+                .ToArray();
         }
 
         // tohle má být obecná třída - tohle by tu nemělo co dělat
