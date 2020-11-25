@@ -200,7 +200,10 @@ namespace HlidacStatu.Lib.Data.External.DataSets
 
                 try
                 {
-                    return JSchema.Parse(data);
+                    var jsch = JSchema.Parse(data);
+
+                    jsch.AllowAdditionalProperties = false;
+                    return jsch;
                 }
                 catch (Exception e)
                 {

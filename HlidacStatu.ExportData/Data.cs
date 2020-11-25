@@ -36,9 +36,22 @@ namespace HlidacStatu.ExportData
                 {
                     foreach (var col in this.Columns.Where(m=>m.ValueType == null))
                     {
-                        if (vals[col.Name] != null)
+                        if (vals.ContainsKey(col.Name) && vals[col.Name] != null)
                             col.ValueType = vals[col.Name].GetType();
                     }
+                }
+                //add missing column
+                foreach (var col in vals)
+                {
+                    if (this.Columns.Any(c => c.Name == col.Key) == false)
+                    {
+                        this.Columns.Add(new Column()
+                        {
+                            Name = col.Key,
+                            ValueType = col.Value == null ? null : col.Value.GetType()
+                        });
+                    }
+
                 }
 
                 Row r = new Row();
