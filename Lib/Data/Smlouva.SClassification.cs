@@ -166,6 +166,11 @@ namespace HlidacStatu.Lib.Data
                         val = val.Replace("_obecne", "");
                     return val;
                 }
+                public static string ClassifSearchQuery(int it)
+                {
+                    var val = ((ClassificationsTypes)it);
+                    return ClassifSearchQuery(val);
+                }
 
                 public static string GetSearchUrl(ClassificationsTypes t, bool local = true)
                 {
