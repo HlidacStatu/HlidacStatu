@@ -84,33 +84,40 @@ namespace HlidacStatu.Lib.Data
                     return SumKcSmluvPolitiky / CelkovaHodnotaSmluv;
                 }
 
-
                 public static Analytics.StatisticsSubjectPerYear<RegistrSmluv> Create(Firma f, int? obor)
+                {
+                    if (obor.HasValue)
+                        return Create($"ico:{f.ICO} AND oblast:{Smlouva.SClassification.Classification.ClassifSearchQuery(obor.Value)}");
+                    else
+                        return Create($"ico:{f.ICO}");
+                }
+
+                public static Analytics.StatisticsSubjectPerYear<RegistrSmluv> Create(string query)
                 {
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} and chyby:zasadni", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND chyby:zasadni", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND (hint.denUzavreni:>0)", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND (hint.denUzavreni:>0)", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( hint.smlouvaULimitu:>0 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND ( hint.smlouvaULimitu:>0 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_smlouvy =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_bezCeny =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( issues.issueTypeId:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND ( issues.issueTypeId:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_bezSmlStran =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( issues.issueTypeId:18 OR issues.issueTypeId:12 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND ( issues.issueTypeId:18 OR issues.issueTypeId:12 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, Lib.Analysis.BasicData> _calc_sVazbouNaPolitikyNedavne =
-                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{f.ICO} AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                        Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:({query}) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                     Dictionary<int, RegistrSmluv> data = new Dictionary<int, RegistrSmluv>();
                     foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
