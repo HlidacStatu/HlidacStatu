@@ -273,11 +273,11 @@ namespace HlidacStatu.Lib.Data
                     .ToArray();
         }
 
-        //public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
-        //{
-        //    return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy
-        //        .FirstOrDefault(f => f.Ico == this.ICO);
-        //}
+        public Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>> NespolehlivyPlatceDPH_obchodSuradyStat()
+        {
+            return Lib.StaticData.NespolehlivyPlatciDPH_obchodySurady_Cache.Get().SoukromeFirmy
+                .FirstOrDefault(f => f.Ico == this.ICO);
+        }
 
         public bool IsNespolehlivyPlatceDPH()
         {
