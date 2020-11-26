@@ -441,8 +441,7 @@ else
             @if (Model.PatrimStatu() 
                 && summarryAfter2016.PocetSmluvPolitiky > 0)
             {
-                double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.ICO).Summary.Pocet;
-                numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
+                
                 <tr>
                     <th>Smlouvy s vazbou na politiky</th>
                     <td id="_smlouvy_s_politiky">

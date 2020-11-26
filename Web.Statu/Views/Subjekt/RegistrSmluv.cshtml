@@ -8,8 +8,27 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-@{ 
+@{
     ViewBag.Title = "" + Model.Firma.Jmeno + " v registru smluv.";
+
+    var statistics = Model.Firma.StatistikaRegistruSmluv();
+    int chartMinDate = 2016;
+    int chartMaxDate = DateTime.Now.Year;
+    var summarryAfter2016 = statistics.Summary(statistics.YearsAfter2016());
+    var statHoldingAktual = Model.Firma.HoldingStatisticsRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni);
+    var holdingSummaryAfter2016 = statHoldingAktual.Summary(statHoldingAktual.YearsAfter2016());
+    string NiceString(string url, int pocetSmluv, decimal cenaCelkem)
+    {
+        return $"<a href='{url}'>" +
+            Devmasters.Lang.Plural.Get(pocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
+            "</a> za celkem " +
+            HlidacStatu.Lib.Data.Smlouva.NicePrice(cenaCelkem, html: true, shortFormat: true);
+    }
+
+    var seasonStat = statistics.CurrentSeasonStatistics();
+    var currentSeasonYear = statistics.CurrentSeasonYear();
+    var zmenaObjemuSmluv = statistics.ChangeBetweenYears(currentSeasonYear - 1, currentSeasonYear, s => s.CelkovaHodnotaSmluv);
+
 }
 @section breadcrumb
 {
@@ -150,32 +169,32 @@
                     </p>
                 }
 
-                @{
-                    var seasonStat = Model.Firma.Statistic().LatestSeasonStatistics();
-                }
 
                 <p>
-                    V roce @(seasonStat?.Rok) uzavřel úřad
-                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.Pocet)</strong> smluv</a>
-                    za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat?.CelkemCena, html: true, shortFormat: true)))</strong>
-                    @if (seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi.HasValue ?? false)
-                    {
-                        @($"({seasonStat?.ProcentObjemCenyOprotiPredchozimuObdobi?.ToString("N2")} % rozpočtu za {seasonStat?.Rok - 1})")
-                    }
+                    V roce @(currentSeasonYear) uzavřel úřad
+                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                        <strong>@(seasonStat.PocetSmluv)</strong> smluv
+                    </a>
+                    za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
+
+                    @($"({(1 - zmenaObjemuSmluv.percentage).ToString("P2")} % rozpočtu za {currentSeasonYear - 1})")
+
                 </p>
 
-                <p>V @(seasonStat?.Rok) utajil hodnotu kontraktu u <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(seasonStat?.Rok)-01-01 TO @(seasonStat?.Rok + 1)-01-01}"><strong>@(seasonStat?.PocetBezCeny)</strong> smluv</a>, což je celkem @(seasonStat?.ProcentBezCeny.ToString("N2")) % ze všech.</p>
+                <p>
+                    V @(currentSeasonYear) utajil hodnotu kontraktu u
+                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                        <strong>@(seasonStat.PocetSmluvBezCeny)</strong>
+                        smluv
+                    </a>, což je celkem @(seasonStat.PercentSmluvBezCeny().ToString("P2")) % ze všech.
+                </p>
             </div>
 
             <hr />
 
             @* GRAFY *@
             <h4>Souhrnné statistiky pro @Model.Firma.Jmeno</h4>
-            @{
-                var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model.Firma);
-                int chartMinDate = 2016;
-                int chartMaxDate = DateTime.Now.Year;
-            }
+
 
             <div class="row">
 
@@ -183,10 +202,10 @@
                 <div class="col-md-6">
                     <div>
                         @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                                                statistics.BasicStatPerYear.Data
-                                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkemCena)
-                                                                );
+                                                        statistics.Years
+                                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkovaHodnotaSmluv)
+                                                        );
 
                             @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
                                                true, true, 150, "rdsSumPerY",
@@ -197,10 +216,10 @@
 
                     <div>
                         @{ ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                                                    statistics.BasicStatPerYear.Data
-                                                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.Pocet)
-                                                                    );
+                                                            statistics.Years
+                                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PocetSmluv)
+                                                            );
 
                             @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
                                               true, true, 150, "rdsCountPerY",
@@ -211,10 +230,10 @@
 
                     <div>
                         @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                                                    statistics.RatingPerYear.Data
-                                                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentBezCeny * 100)
-                                                                    );
+                                                            statistics.Years
+                                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny() * 100)
+                                                            );
 
                             @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
                                                   true, true, 150, "rdsbezCenyPerY",
@@ -226,14 +245,15 @@
 
                 @* Pravý sub-sloupec *@
                 <div class="col-md-6">
-                    @if (Model.Firma.PatrimStatu() && statistics.RatingPerYear.RegistrSmluvTime.Sum(m => m.Value.NumSPolitiky) > 0)
+                    @if (Model.Firma.PatrimStatu()
+                        && summarryAfter2016.PocetSmluvPolitiky > 0)
                     {
                         <div>
                             @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
-                                                                    statistics.RatingPerYear.Data
-                                                                    .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                    .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSPolitiky)
-                                                                    );
+                                                                      statistics.Years
+                                                                      .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSmluvPolitiky)
+                                                                      );
 
                                 @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
                                                    true, true, 150, "rdsPolitikPerYKc",
@@ -243,10 +263,10 @@
                         </div>
                         <div>
                             @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                                                    statistics.RatingPerYear.Data
-                                                                    .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                    .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSPolitiky * 100)
-                                                                    );
+                                                                      statistics.Years
+                                                                      .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky() * 100)
+                                                                      );
 
                                 @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
                                                            true, true, 150, "rdsPolitikPerY",
@@ -261,19 +281,19 @@
 
             @if (
                 Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
-                && Model.Firma.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().Pocet > 0
+                && holdingSummaryAfter2016.PocetSmluv > 0
                 )
             {
                 <div>
                     <h4>Statistiky pro subjekt a všechny dceřinné společnosti od 2016</h4>
                     <div>
-                        @Html.Raw(Model.Firma.StatisticForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).SummaryAfter2016().ToNiceString(Model.Firma, true, twoLines: false, customUrl: "/hledat?q=holding:" + Model.Firma.ICO))<br />
-                        @(Model.Firma.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezCeny.ToString("P1")) smluv se skrytou cenou<br />
-                        @(Model.Firma.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
+                        @(holdingSummaryAfter2016.PercentSmluvBezCeny().ToString("P1")) smluv se skrytou cenou<br />
+                        @(holdingSummaryAfter2016.PercentSmluvBezSmluvniStrany().ToString("P1")) smluv se skrytou smluvní stranou<br />
                         @if (Model.Firma.PatrimStatu())
                         {
                             <text>
-                                @(Model.Firma.RatingPerYearForHolding(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni).Summary.PercentSPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                                @(holdingSummaryAfter2016.PercentSmluvPolitiky().ToString("P1"))smluv s firmami navázanými na politiky
                             </text>}
                     </div>
                 </div>
@@ -281,10 +301,8 @@
 
             <hr />
 
-            @if (Model.Firma.PatrimStatu() && statistics.RatingPerYear.Summary.NumSPolitiky > 0)
+            @if (Model.Firma.PatrimStatu() && summarryAfter2016.PocetSmluvPolitiky > 0)
             {
-                double numOfSmluv = (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(Model.Firma.ICO).Summary.Pocet;
-                numOfSmluv = numOfSmluv == 0 ? 1 : numOfSmluv;
                 <div>
                     <h4>Smlouvy s vazbou na politiky</h4>
                     <div id="_smlouvy_s_politiky">
@@ -301,24 +319,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var bs in statistics.RatingPerYear.RegistrSmluvTime)
+                                @foreach (var bs in statistics.Years
+                                    .Where(y => statistics.YearsAfter2016().Contains(y.Key))
+                                    .OrderBy(y => y.Key))
                                 {
                                     <tr>
                                         <td>@bs.Key</td>
-                                        <td class="number">@bs.Value.NumSPolitiky</td>
-                                        <td class="number">@bs.Value.PercentSPolitiky.ToString("P2")</td>
-                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSPolitiky, html: true))</td>
-                                        <td class="number">@bs.Value.PercentKcSPolitiky.ToString("P2")</td>
+                                        <td class="number">@bs.Value.PocetSmluvPolitiky</td>
+                                        <td class="number">@bs.Value.PercentSmluvPolitiky().ToString("P2")</td>
+                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSmluvPolitiky, html: true))</td>
+                                        <td class="number">@bs.Value.PercentKcSmluvPolitiky().ToString("P2")</td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Celkem</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.NumSPolitiky</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
-                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(statistics.RatingPerYear.Summary.SumKcSPolitiky, html: true))</th>
-                                    <th class="number">@statistics.RatingPerYear.Summary.PercentKcSPolitiky.ToString("P2")</th>
+                                    <th class="number">@summarryAfter2016.PocetSmluvPolitiky</th>
+                                    <th class="number">@summarryAfter2016.PercentSmluvPolitiky().ToString("P2")</th>
+                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summarryAfter2016.SumKcSmluvPolitiky, html: true))</th>
+                                    <th class="number">@summarryAfter2016.PercentKcSmluvPolitiky().ToString("P2")</th>
                                 </tr>
                             </tfoot>
                         </table>
