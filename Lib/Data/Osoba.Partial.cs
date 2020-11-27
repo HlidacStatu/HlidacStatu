@@ -1098,16 +1098,16 @@ namespace HlidacStatu.Lib.Data
 
         public static string NormalizeJmeno(string s)
         {
-            return Capitalize(s);
+            return Capitalize(s?.Trim());
         }
         public static string NormalizePrijmeni(string s)
         {
-            return Capitalize(s);
+            return Capitalize(s?.Trim());
         }
 
         public static string NormalizeTitul(string s, bool pred)
         {
-            return s;
+            return s?.Trim();
         }
 
 
