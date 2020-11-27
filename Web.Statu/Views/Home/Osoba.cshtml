@@ -7,7 +7,11 @@
 @using HlidacStatu.Web.Framework;
 
 @{ 
-    ViewBag.SocialShareTitle = "Politik " + Model.FullName() + " na hlidacstatu.cz";
+
+    //TODO better analysis based on records in other dbs
+bool noReasonToShow = Model.NotInterestingToShow();
+
+ViewBag.SocialShareTitle = "" + Model.FullName() + " na hlidacstatu.cz";
 ViewBag.SocialShareText = Model.FullName() + ": " + Model.InfoFacts().RenderInfoFacts(2, true, true);
 ViewBag.SocialImage = $"https://www.hlidacstatu.cz/socialbanner/osoba?d={DateTime.Now.ToString("d.M.yy")}&v=" + Model.NameId;
 ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n"
@@ -23,8 +27,7 @@ ViewBag.HideTitle = true;
 
 bool noIndex = HlidacStatu.Web.Controllers.HomeController.DontIndexOsoby.Contains(Model.NameId.ToLower());
 
-//TODO better analysis based on records in other dbs
-bool noReasonToShow = Model.NotInterestingToShow();
+
 
 
 ViewBag.Title = (noReasonToShow ? Model.FullName() : Model.FullNameWithYear()); 

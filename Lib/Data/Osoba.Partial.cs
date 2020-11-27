@@ -1165,7 +1165,12 @@ namespace HlidacStatu.Lib.Data
                     var kdoje = this.Description(false,
                            m => types.Contains(m.Type),
                            2, itemDelimeter: ", ");
-                    var descr = $"<b>{this.FullNameWithYear()}</b>";
+
+                    var descr = "";
+                    if (this.NotInterestingToShow())
+                        descr = $"<b>{this.FullName()}</b>";
+                    else
+                        descr = $"<b>{this.FullNameWithYear()}</b>";
                     if (!string.IsNullOrEmpty(kdoje))
                         descr += ", " + kdoje + (kdoje.EndsWith(". ") ? "" : ". ");
                     f.Add(new InfoFact(descr, InfoFact.ImportanceLevel.Summary));
