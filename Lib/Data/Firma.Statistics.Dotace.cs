@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Data
                 return cache;
             }
 
-            public partial class Dotace : IAddable<Dotace>
+            public partial class Dotace : CoreStat, IAddable<Dotace>
             {
                 public int PocetDotaci { get; set; } = 0;
                 public int PocetCerpani { get; set; } = 0;
@@ -68,6 +68,16 @@ namespace HlidacStatu.Lib.Data
                         PocetCerpani = PocetCerpani + (other?.PocetCerpani ?? 0),
                         PocetDotaci = PocetDotaci + (other?.PocetDotaci ?? 0)
                     };
+                }
+
+                public override int NewSeasonStartMonth()
+                {
+                    return 1;
+                }
+
+                public override int UsualFirstYear()
+                {
+                    return 2000;
                 }
             }
         }

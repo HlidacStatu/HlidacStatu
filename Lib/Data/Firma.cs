@@ -240,17 +240,20 @@ namespace HlidacStatu.Lib.Data
             return _kategorieOVM;
         }
 
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv()
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv()
         {
             return Statistics.RegistrSmluvCache(null).Get(this);
         }
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes classif)
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes classif)
         {
             return Statistics.RegistrSmluvCache((int)classif).Get(this);
         }
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> StatistikaRegistruSmluv(int iclassif)
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(int? iclassif)
         {
-            return Statistics.RegistrSmluvCache(iclassif).Get(this);
+            if (iclassif.HasValue)
+               return Statistics.RegistrSmluvCache(iclassif).Get(this);
+            else
+                return Statistics.RegistrSmluvCache(null).Get(this);
         }
         public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> StatistikaDotaci()
         {
@@ -492,19 +495,19 @@ namespace HlidacStatu.Lib.Data
             return aggregate;
         }
 
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> HoldingStatisticsRegistrSmluv(
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> HoldingStatisticsRegistrSmluv(
             Relation.AktualnostType aktualnost)
         {
             var firmy = Holding(aktualnost);
 
             var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv());
 
-            var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>.Aggregate(statistiky);
+            var aggregate = Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>.Aggregate(statistiky);
 
             return aggregate;
         }
 
-        public Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv> HoldingStatisticsRegistrSmluvProObor(
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> HoldingStatisticsRegistrSmluvProObor(
             Relation.AktualnostType aktualnost,
             Smlouva.SClassification.ClassificationsTypes classification)
         {
@@ -512,13 +515,13 @@ namespace HlidacStatu.Lib.Data
 
             var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv(classification));
 
-            var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.RegistrSmluv>.Aggregate(statistiky);
+            var aggregate = Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>.Aggregate(statistiky);
 
             return aggregate;
         }
 
         // šlo by to udělat obecně, ale na použití je to hodně upsané. použití by bylo:
-        // f.HoldingStatistics<Firma.Statistics.RegistrSmluv>(Relation.AktualnostType.Nedavny,
+        // f.HoldingStatistics<Firma.Smlouva.Statistics.Data>(Relation.AktualnostType.Nedavny,
         //   s => s.StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes.agro_zahrada));
         //
         //public Analytics.StatisticsSubjectPerYear<T> HoldingStatistics<T>(Relation.AktualnostType aktualnost,

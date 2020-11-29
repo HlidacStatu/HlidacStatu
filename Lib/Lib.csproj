@@ -95,8 +95,8 @@
     <Reference Include="Devmasters.IO, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.IO.2.1.2\lib\net48\Devmasters.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Lang, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Lang.2.1.0\lib\net48\Devmasters.Lang.dll</HintPath>
+    <Reference Include="Devmasters.Lang, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Lang.2.1.1\lib\net48\Devmasters.Lang.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Logging, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Logging.2.1.1\lib\net48\Devmasters.Logging.dll</HintPath>
@@ -556,10 +556,14 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\ACore.cs" />
     <Compile Include="Analysis\ContractsStatisticData.cs" />
+    <Compile Include="Data\Bookmark.IBookmarkable.cs" />
     <Compile Include="Data\Firma.Statistics.Dotace.cs" />
+    <Compile Include="Data\Osoba.Statistics.RegistrSmluv.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
     <Compile Include="Data\Firmy.GlobalStatistics.cs" />
+    <Compile Include="Data\Smlouva.Statistics.cs" />
+    <Compile Include="Data\Smlouva.Statistics.RegistrSmluv.cs" />
     <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
@@ -584,7 +588,6 @@
     <Compile Include="Analysis\KorupcniRiziko\Statistics.Calc.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Statistics.cs" />
     <Compile Include="Analysis\KorupcniRiziko\SubjectWithKIndex.cs" />
-    <Compile Include="Analysis\OsobaStatistic.cs" />
     <Compile Include="Analysis\ComplexStatistic.cs" />
     <Compile Include="Analysis\RatingData.cs" />
     <Compile Include="Analysis\RatingDataPerYear.cs" />

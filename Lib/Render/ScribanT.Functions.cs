@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HlidacStatu.Lib.Analytics;
+
+using Newtonsoft.Json.Linq;
 
 using Scriban.Runtime;
 
@@ -107,7 +109,13 @@ namespace HlidacStatu.Lib.Render
                     if (o != null)
                     {
                         var stat = o.Statistic(Data.Relation.AktualnostType.Nedavny);
-                        return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
+                        //return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
+                        var s = stat.SoukromeFirmy.Values
+                                        .AggregateStats()
+                                        .Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilSeassonYear)
+                                        .ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines);
+
+                        return $"<span>{prefix}{s}{postfix}</span>";
                     }
                 }
                 return string.Empty;

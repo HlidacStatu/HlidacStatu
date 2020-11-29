@@ -57,7 +57,7 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
 
-        public static Devmasters.Cache.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
+        public static Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
 
         //public static Devmasters.Cache.File.FileCache<string[]> SmlouvySPolitiky_nedavne_Cache = null;
         //public static Devmasters.Cache.File.FileCache<string[]> SmlouvySPolitiky_aktualni_Cache = null;
@@ -305,10 +305,10 @@ namespace HlidacStatu.Lib
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
-                Insolvence_firem_politiku_Cache = new Devmasters.Cache.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]>(
+                Insolvence_firem_politiku_Cache = new Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]>(
                                 StaticData.App_Data_Path, TimeSpan.Zero, "Insolvence_firem_politiku", (obj) =>
                                  {
-                                     var ret = new List<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>>();
+                                     var ret = new List<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>>();
                                      var lockObj = new object();
                                      Devmasters.Batch.Manager.DoActionForAll<Osoba>(PolitickyAktivni.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik).Distinct(),
                                          (o) =>
@@ -353,9 +353,9 @@ namespace HlidacStatu.Lib
                                                      {
                                                          lock (lockObj)
                                                          {
-                                                             HlidacStatu.Lib.Analysis.OsobaStatistic stat = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
+                                                             Osoba.Statistics.RegistrSmluv stat = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
-                                                             ret.Add(new Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>(
+                                                             ret.Add(new Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>(
                                                                                  stat, insolvenceIntoList
                                                                                          .Select(m => new Data.Insolvence.RizeniStatistic(m, icos))
                                                                                          .ToArray()

@@ -7,6 +7,7 @@
 @using System.Web.Mvc
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
+@using HlidacStatu.Lib.Analytics;
 
 @using Devmasters
 @using System.Data
@@ -45,7 +46,7 @@
 
 
 
-    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> platci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+    Dictionary<string, HlidacStatu.Lib.Analytics.SimpleStat> platci = new Dictionary<string, SimpleStat>();
 
     int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
     int maxDateYear = DateTime.Now.Year;
@@ -69,16 +70,16 @@
     }
 
 
-    var coreData = new Dictionary<string, HlidacStatu.Lib.Analysis.QueryStatistic>();
+    var coreData = new Dictionary<string, StatisticsPerYear<Smlouva.Statistics.RegistrSmluv>>();
     //TODO parallel
     foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
+        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.Create(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
     }
 
     if (platci.Count > 50)
     {
-        foreach (var item in platci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
+        foreach (var item in platci.OrderByDescending(o => o.Value.Data[new StatisticsPerYear().CurrentSeasonYear()].CelkemCena).Skip(50))
         {
             var stat = new HlidacStatu.Lib.Analysis.QueryStatistic();
             stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}");

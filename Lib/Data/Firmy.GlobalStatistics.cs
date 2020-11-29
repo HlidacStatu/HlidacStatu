@@ -154,18 +154,18 @@ namespace HlidacStatu.Lib.Data
 
             private static
                 Dictionary<int,
-                Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Firma.Statistics.RegistrSmluv>>>
+                Devmasters.Cache.Elastic.ElasticCache<Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Smlouva.Statistics.Data>>>
                 _uradySmlouvyGlobal =
-                    new Dictionary<int, Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>>>();
+                    new Dictionary<int, Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Smlouva.Statistics.Data>>>();
 
 
-            public static Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Firma.Statistics.RegistrSmluv> UradySmlouvyGlobal(int? obor = null,
-                Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv> newData = null)
+            public static Lib.Analytics.GlobalStatisticsPerYear<Lib.Data.Smlouva.Statistics.Data> UradySmlouvyGlobal(int? obor = null,
+                Analytics.GlobalStatisticsPerYear<Smlouva.Statistics.Data> newData = null)
             {
                 obor = obor ?? 0;
 
                 if (!_uradySmlouvyGlobal.ContainsKey(obor.Value))
-                    _uradySmlouvyGlobal[obor.Value] = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>>(
+                    _uradySmlouvyGlobal[obor.Value] = new Devmasters.Cache.Elastic.ElasticCache<Analytics.GlobalStatisticsPerYear<Smlouva.Statistics.Data>>(
                             Devmasters.Config.GetWebConfigValue("ESConnection").Split(';'),
                             "DevmastersCache",
                             TimeSpan.Zero, $"UradySmlouvyGlobal_{obor.Value}",
@@ -200,7 +200,7 @@ namespace HlidacStatu.Lib.Data
                 }
             }
 
-            private static Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv> CalculateGlobalRankPerYear_UradySmlouvy(
+            private static Analytics.GlobalStatisticsPerYear<Smlouva.Statistics.Data> CalculateGlobalRankPerYear_UradySmlouvy(
                  int? obor = null,
                  int? threads = null,
                  Action<string> logOutputFunc = null, Action<ActionProgressData> progressOutputFunc = null
@@ -209,8 +209,8 @@ namespace HlidacStatu.Lib.Data
                 obor = obor ?? 0;
                 var icos = Firmy.GlobalStatistics.VsechnyUrady(logOutputFunc,progressOutputFunc);
                 object lockObj = new object();
-                List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>> data =
-                    new List<Analytics.StatisticsSubjectPerYear<Firma.Statistics.RegistrSmluv>>();
+                List<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>> data =
+                    new List<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>>();
                 Devmasters.Batch.Manager.DoActionForAll<string>(icos,
                     (Func<string, ActionOutputData>)(
                     ico =>
@@ -224,7 +224,7 @@ namespace HlidacStatu.Lib.Data
                         return new Devmasters.Batch.ActionOutputData();
                     }), logOutputFunc, progressOutputFunc, true, maxDegreeOfParallelism: threads, prefix: $"CalculateGlobalRankPerYear_UradySmlouvy_{obor.Value} ");
 
-                return new Analytics.GlobalStatisticsPerYear<Firma.Statistics.RegistrSmluv>(
+                return new Analytics.GlobalStatisticsPerYear<Smlouva.Statistics.Data>(
                     Analytics.Consts.RegistrSmluvYearsList,
                     data,
                      m => m.PocetSmluv >= 10
