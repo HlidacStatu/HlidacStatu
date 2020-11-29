@@ -240,20 +240,14 @@ namespace HlidacStatu.Lib.Data
             return _kategorieOVM;
         }
 
-        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv()
-        {
-            return Statistics.RegistrSmluvCache(null).Get(this);
-        }
         public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes classif)
         {
-            return Statistics.RegistrSmluvCache((int)classif).Get(this);
+            return StatistikaRegistruSmluv((int)classif);
         }
-        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(int? iclassif)
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(int? iclassif =null)
         {
-            if (iclassif.HasValue)
-               return Statistics.RegistrSmluvCache(iclassif).Get(this);
-            else
-                return Statistics.RegistrSmluvCache(null).Get(this);
+
+                return Statistics.CachedStatistics(this, iclassif);
         }
         public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> StatistikaDotaci()
         {
@@ -500,7 +494,7 @@ namespace HlidacStatu.Lib.Data
         {
             var firmy = Holding(aktualnost);
 
-            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv());
+            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv()).Append(this.StatistikaRegistruSmluv());
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>.Aggregate(statistiky);
 

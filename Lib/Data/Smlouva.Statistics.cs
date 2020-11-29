@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Data
             static object _cachesLock = new object();
 
 
-            public static Analytics.StatisticsPerYear<Smlouva.Statistics.Data> CachedStatisticsFroQuery(string query)
+            public static Analytics.StatisticsPerYear<Smlouva.Statistics.Data> CachedStatisticsForQuery(string query)
             {
                 return _cache.Get(query); 
             }

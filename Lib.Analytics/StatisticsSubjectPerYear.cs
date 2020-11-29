@@ -20,7 +20,7 @@ namespace HlidacStatu.Lib.Analytics
         public StatisticsSubjectPerYear(string ico, StatisticsPerYear<T> baseObj)        
         {
             this.ICO = ico;
-            this.Years = base.Years;
+            this.Years = baseObj.Years;
         }
 
         public StatisticsSubjectPerYear(string ico, Func<T, int> yearSelector, IEnumerable<T> data)

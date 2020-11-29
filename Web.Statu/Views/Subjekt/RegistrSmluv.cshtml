@@ -14,7 +14,7 @@
     var statistics = Model.Firma.StatistikaRegistruSmluv();
     int chartMinDate = 2016;
     int chartMaxDate = DateTime.Now.Year;
-    var summarryAfter2016 = statistics.Summary(statistics.YearsAfter2016());
+    var summaryAfter2016 = statistics.Summary(statistics.YearsAfter2016());
     var statHoldingAktual = Model.Firma.HoldingStatisticsRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni);
     var holdingSummaryAfter2016 = statHoldingAktual.Summary(statHoldingAktual.YearsAfter2016());
     string NiceString(string url, int pocetSmluv, decimal cenaCelkem)
@@ -203,8 +203,8 @@
                     <div>
                         @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
                                                         statistics.Years
-                                                        .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                        .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.CelkovaHodnotaSmluv)
+                                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
+                                                            .ToDictionary(k => new DateTime(k.Key, 1, 1,0,0,0, DateTimeKind.Utc), v => (decimal)v.Value.CelkovaHodnotaSmluv)
                                                         );
 
                             @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
@@ -246,7 +246,7 @@
                 @* Pravý sub-sloupec *@
                 <div class="col-md-6">
                     @if (Model.Firma.PatrimStatu()
-                        && summarryAfter2016.PocetSmluvPolitiky > 0)
+                        && summaryAfter2016.PocetSmluvPolitiky > 0)
                     {
                         <div>
                             @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
@@ -279,6 +279,20 @@
             </div>
             <hr />
 
+                            <div>
+                    <h4>Statistiky registru smluv pro subjekt  od 2016</h4>
+                    <div>
+                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)summaryAfter2016.PocetSmluv, summaryAfter2016.CelkovaHodnotaSmluv))<br />
+                        @(summaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                        @(summaryAfter2016.PercentSmluvBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
+                        @if (Model.Firma.PatrimStatu())
+                        {
+                            <text>
+                                @(summaryAfter2016.PercentSmluvPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                            </text>}
+                    </div>
+                </div>
+
             @if (
                 Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
                 && holdingSummaryAfter2016.PocetSmluv > 0
@@ -301,7 +315,7 @@
 
             <hr />
 
-            @if (Model.Firma.PatrimStatu() && summarryAfter2016.PocetSmluvPolitiky > 0)
+            @if (Model.Firma.PatrimStatu() && summaryAfter2016.PocetSmluvPolitiky > 0)
             {
                 <div>
                     <h4>Smlouvy s vazbou na politiky</h4>
@@ -335,10 +349,10 @@
                             <tfoot>
                                 <tr>
                                     <th>Celkem</th>
-                                    <th class="number">@summarryAfter2016.PocetSmluvPolitiky</th>
-                                    <th class="number">@summarryAfter2016.PercentSmluvPolitiky.ToString("P2")</th>
-                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summarryAfter2016.SumKcSmluvPolitiky, html: true))</th>
-                                    <th class="number">@summarryAfter2016.PercentKcSmluvPolitiky.ToString("P2")</th>
+                                    <th class="number">@summaryAfter2016.PocetSmluvPolitiky</th>
+                                    <th class="number">@summaryAfter2016.PercentSmluvPolitiky.ToString("P2")</th>
+                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summaryAfter2016.SumKcSmluvPolitiky, html: true))</th>
+                                    <th class="number">@summaryAfter2016.PercentKcSmluvPolitiky.ToString("P2")</th>
                                 </tr>
                             </tfoot>
                         </table>

@@ -32,7 +32,7 @@ namespace HlidacStatu.Lib.Analysis
         public string Text { get; set; }
         public string Description { get; set; }
         public string NameOfView { get; set; }
-        public Lib.Analytics.StatisticsPerYear<Data.Smlouva.Statistics.Data> Data { get { return Lib.Data.Smlouva.Statistics.CachedStatisticsFroQuery(this.Query); } }
+        public Lib.Analytics.StatisticsPerYear<Data.Smlouva.Statistics.Data> Data { get { return Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(this.Query); } }
 
     }
 

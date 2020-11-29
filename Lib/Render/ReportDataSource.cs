@@ -245,7 +245,12 @@ namespace HlidacStatu.Lib.Render
             {
                 new  ReportDataSource.Column() {
                     Name =xAxisName,
-                    ValueRender = (s) => {return ((DateTime)s); }
+                    ValueRender = (s) => {
+                        DateTime dt = (DateTime)s;
+                        if (dt.Kind != DateTimeKind.Utc)
+                            dt = new DateTime(dt.Ticks, DateTimeKind.Utc);
+                        return Devmasters.DT.Util.ToEpochTimeFromUTC( dt)*1000;
+                    }
                 },
                 new  ReportDataSource.Column() { Name=yAxisName},
             }

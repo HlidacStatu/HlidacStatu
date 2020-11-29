@@ -9,35 +9,23 @@ namespace HlidacStatu.Lib.Data
         public partial class Statistics
         {
 
-            static Dictionary<int, Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, Firma>> registrSmluvCaches
-                = new Dictionary<int, Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, Firma>>();
-            static object _registrSmluvCachesLock = new object();
-
-            internal static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, Firma> RegistrSmluvCache(int? obor)
-            {
-                obor = obor ?? 0;
-                if (registrSmluvCaches.ContainsKey(obor.Value) == false)
-                {
-                    lock (_registrSmluvCachesLock)
-                    {
-                        if (registrSmluvCaches.ContainsKey(obor.Value) == false)
-                        {
-                            registrSmluvCaches.Add(obor.Value,
-                                Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, Firma>
-                                .GetSafeInstance("Firma_SmlouvyStatistics_" + obor.Value.ToString(),
-                                    (firma) => CalculateStats(firma, obor),
+            static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, (Firma firma, int? obor)> _cache
+                = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, (Firma firma, int? obor)>
+                                .GetSafeInstance("Firma_SmlouvyStatistics_",
+                                    (obj) => CalculateStats(obj.firma, obj.obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"],
-                                    f => f.ICO)
-                                );
-                        }
-                    }
-                }
-                return registrSmluvCaches[obor.Value];
+                                    obj => obj.firma.ICO + "-"+(obj.obor??0));
+
+
+            public static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> CachedStatistics(Firma firma, int? obor)
+            {
+                return _cache.Get( (firma, obor) );
             }
+
 
             internal static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> CalculateStats(Firma f, int? obor)
             {

@@ -164,7 +164,7 @@
             </a>
             za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
 
-            @($"({(1 - zmenaObjemuSmluv.percentage).ToString("P2")} % rozpočtu za {currentSeasonYear - 1})")
+            @($"({(1 + zmenaObjemuSmluv.percentage).ToString("P2")} objemu smluv za {currentSeasonYear - 1})")
         </p>
 
         <p>
