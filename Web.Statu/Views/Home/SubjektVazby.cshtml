@@ -73,10 +73,10 @@
                 {
                     ICO = ico,
                     FirmaName = v.First().To.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-                VazbyPerIco = Model.VazbyProICO(ico),
-                    stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+                    VazbyPerIco = Model.VazbyProICO(ico),
+                    stat = HlidacStatu.Lib.Data.Firmy.Get(ico).StatistikaRegistruSmluv()
                 })
-                .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO);
+                .OrderByDescending(m => m.stat.Summary().CelkovaHodnotaSmluv).ThenBy(m => m.ICO);
 
 
 }

@@ -57,8 +57,8 @@
         new Tuple<string, string>
             (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
             val.DocCount,
-            HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet,
-            (double)val.DocCount / (double)HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO((string)val.Key).Summary.Pocet
+            HlidacStatu.Lib.Data.Firmy.Get((string)val.Key).StatistikaRegistruSmluv().Summary().PocetSmluv,
+            (double)val.DocCount / (double)HlidacStatu.Lib.Data.Firmy.Get((string)val.Key).StatistikaRegistruSmluv().Summary().PocetSmluv
             );
     }
 

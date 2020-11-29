@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Devmasters.Collections;
 
+using HlidacStatu.Lib.Analytics;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Util;
 
@@ -19,10 +20,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         const int minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu = 1;
 
         private Firma urad = null;
-        Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem = null;
-        Dictionary<int, Lib.Analysis.BasicData> _calc_UzavrenoOVikendu = null;
-        Dictionary<int, Lib.Analysis.BasicData> _calc_ULimitu = null;
-        Dictionary<int, Lib.Analysis.BasicData> _calc_NovaFirmaDodavatel = null;
+        StatisticsSubjectPerYear<Smlouva.Statistics.Data> _calc_Stat = null;
 
         public string Ico { get; private set; }
 
@@ -73,15 +71,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             kindex.Jmeno = urad.Jmeno;
             kindex.UcetniJednotka = KIndexData.UcetniJednotkaInfo.Load(urad.ICO);
 
-
-            _calc_SeZasadnimNedostatkem = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} and chyby:zasadni", Consts.CalculationYears);
-
-            _calc_UzavrenoOVikendu = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND (hint.denUzavreni:>0)", Consts.CalculationYears);
-
-            _calc_ULimitu = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND ( hint.smlouvaULimitu:>0 )", Consts.CalculationYears);
-
-            _calc_NovaFirmaDodavatel = Lib.ES.QueryGrouped.SmlouvyPerYear($"ico:{this.Ico} AND ( hint.pocetDniOdZalozeniFirmy:>-50 AND hint.pocetDniOdZalozeniFirmy:<30 )", Consts.CalculationYears);
-
+            _calc_Stat = urad.StatistikaRegistruSmluv();
         }
 
 
@@ -97,12 +87,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.FinancniUdaje = fc.GetData();
 
             //tohle by se dalo brát ze statistiky komplet...
-            ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_SeZasadnimNedostatkem[year].Pocet / smlouvyZaRok;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky();
+            ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvSeZasadnimNedostatkem / smlouvyZaRok;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat.Years[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky;
 
-            ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_NovaFirmaDodavatel[year].Pocet / smlouvyZaRok;
-            ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_ULimitu[year].Pocet / smlouvyZaRok;
-            ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_UzavrenoOVikendu[year].Pocet / smlouvyZaRok;
+            ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvNovaFirma / smlouvyZaRok;
+            ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvULimitu / smlouvyZaRok;
+            ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvOVikendu / smlouvyZaRok;
 
             var stat = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year);
             //todo: tenhle objekt by mohl vycházet ze stávajícího nového objektu statistiky
@@ -113,11 +103,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 PocetSmluvBezCeny = stat.PocetSmluvBezCeny,
                 PocetSmluvBezSmluvniStrany = stat.PocetSmluvBezSmluvniStrany,
                 PocetSmluvPolitiky = stat.PocetSmluvPolitiky,
-                PercentSmluvBezCeny = stat.PercentSmluvBezCeny(),
-                PercentSmluvBezSmluvniStrany = stat.PercentSmluvBezSmluvniStrany(),
-                PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany(),
-                PercentKcSmluvPolitiky = stat.PercentKcSmluvPolitiky(),
-                PercentSmluvPolitiky = stat.PercentSmluvPolitiky(),
+                PercentSmluvBezCeny = stat.PercentSmluvBezCeny,
+                PercentSmluvBezSmluvniStrany = stat.PercentSmluvBezSmluvniStrany,
+                PercentKcBezSmluvniStrany = stat.PercentKcBezSmluvniStrany,
+                PercentKcSmluvPolitiky = stat.PercentKcSmluvPolitiky,
+                PercentSmluvPolitiky = stat.PercentSmluvPolitiky,
                 SumKcSmluvBezSmluvniStrany = stat.SumKcSmluvBezSmluvniStrany,
                 SumKcSmluvPolitiky = stat.SumKcSmluvPolitiky,
                 PocetSmluvULimitu = stat.PocetSmluvULimitu,

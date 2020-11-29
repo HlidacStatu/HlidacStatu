@@ -16,14 +16,14 @@ namespace HlidacStatu.Lib
             if (html)
             {
                 var s = "<a href='" + (customUrl ?? (item?.GetUrl(false) ?? "")) + "'>" +
-                            Devmasters.Lang.Plural.Get((int)stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                            Devmasters.Lang.Plural.Get(stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
                         "</a>" + (twoLines ? "<br />" : " za ") +
                         "celkem " +
                         HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.CelkovaHodnotaSmluv, html: true, shortFormat: true);
                 return s;
             }
             else
-                return Devmasters.Lang.Plural.Get((int)stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                return Devmasters.Lang.Plural.Get(stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
                     " za celkem " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.CelkovaHodnotaSmluv, html: false, shortFormat: true);
 
         }

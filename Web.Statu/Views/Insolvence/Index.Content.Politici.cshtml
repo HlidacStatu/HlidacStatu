@@ -7,6 +7,7 @@
 @using HlidacStatu.Web.Models;
 @using HlidacStatu.Lib.Data.Insolvence;
 @using HlidacStatu.Lib.Render;
+@using HlidacStatu.Lib.Analytics;
 
 @model HlidacStatu.Web.Models.InsolvenceIndexViewModel
 
@@ -74,7 +75,7 @@
                             <div class="box-stats__content">
                                 @{
                                     var insolvenceFiremPolitiku = HlidacStatu.Lib.StaticData.Insolvence_firem_politiku_Cache.Get()
-                                                        .OrderByDescending(o=>o.Item1.ToBasicData().CelkemCena);
+                                                        .OrderByDescending(o=>o.Item1.SoukromeFirmy.Values.AggregateStats().Summary().CelkovaHodnotaSmluv);
 
                                     var firmyPolitikuVInsolvenci = HlidacStatu.Lib.StaticData.Insolvence_firem_politiku_Cache.Get()
                                                         .Select(m => m.Item2.Select(d => d.VybraniDluznici))
@@ -93,7 +94,7 @@
                                     @foreach (var p in insolvenceFiremPolitiku.Take(20).Shuffle())
                                         {
                                             var pd = new Devmasters.Lang.PluralDef() { Values = new string[] { " a ještě jedna", "{0} další","{0} dalších" } };
-                                            var o = p.Item1.Osoba();
+                                            var o =HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(p.Item1.OsobaNameId);
                                             sb.AppendLine($"<b>{o.FullNameWithYear()}</b><br/>");
                                             sb.AppendLine($"<div class='text-muted small-link' style='padding-left:2em;'>");
 

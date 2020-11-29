@@ -284,35 +284,35 @@
     {
         if (Model.HasVZ)
         {
-            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1)), Devmasters.Lang.Plural.Get((int)Model.VZ.Total, "<b>jednu veřejnou zakázku</b>", "<b>{0} veřejné zakázky</b>", "<b>{0} veřejných zakázek</b>")));
+            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "VZ", Model.VZ.ToRouteValues(1)), Devmasters.Lang.Plural.Get(Model.VZ.Total, "<b>jednu veřejnou zakázku</b>", "<b>{0} veřejné zakázky</b>", "<b>{0} veřejných zakázek</b>")));
         }
     }
     else if (part == Model.Dotace.GetType().Name)
     {
         if (Model.HasDotace)
         {
-            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1)), Devmasters.Lang.Plural.Get((int)Model.Dotace.Total, "<b>jednu dotaci</b>", "<b>{0} dotace</b>", "<b>{0} dotací</b>")));
+            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Dotace", Model.Dotace.ToRouteValues(1)), Devmasters.Lang.Plural.Get(Model.Dotace.Total, "<b>jednu dotaci</b>", "<b>{0} dotace</b>", "<b>{0} dotací</b>")));
         }
     }
     else if (part == Model.Insolvence.GetType().Name)
     {
         if (Model.HasInsolvence)
         {
-            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Insolvence", Model.Dotace.ToRouteValues(1)), Devmasters.Lang.Plural.Get((int)Model.Insolvence.Total, "<b>jednu insolvenci</b>", "<b>{0} insolvence</b>", "<b>{0} insolvencí</b>")));
+            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Insolvence", Model.Dotace.ToRouteValues(1)), Devmasters.Lang.Plural.Get(Model.Insolvence.Total, "<b>jednu insolvenci</b>", "<b>{0} insolvence</b>", "<b>{0} insolvencí</b>")));
         }
     }
     else if (part == Model.Osoby.GetType().Name)
     {
         if (Model.HasOsoby)
         {
-            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Osoby", Model.Osoby.ToRouteValues(1)), Devmasters.Lang.Plural.Get((int)Model.Osoby.Total, "<b>jednu osobu</b>", "<b>{0} osoby</b>", "<b>{0} osob</b>")));
+            htmlLinks.Add(new Tuple<string, string>(Url.Action("Hledat", "Osoby", Model.Osoby.ToRouteValues(1)), Devmasters.Lang.Plural.Get(Model.Osoby.Total, "<b>jednu osobu</b>", "<b>{0} osoby</b>", "<b>{0} osob</b>")));
         }
     }
     else if (part == Model.Firmy.GetType().Name)
     {
         if (Model.HasFirmy)
         {
-            htmlLinks.Add(new Tuple<string, string>(Url.Action("HledatFirmy", "Home", new { q = Model.Firmy.Query }), Devmasters.Lang.Plural.Get((int)Model.Firmy.Total, "<b>jednu firmu</b>", "<b>{0} firmy</b>", "<b>{0} firem</b>")));
+            htmlLinks.Add(new Tuple<string, string>(Url.Action("HledatFirmy", "Home", new { q = Model.Firmy.Query }), Devmasters.Lang.Plural.Get(Model.Firmy.Total, "<b>jednu firmu</b>", "<b>{0} firmy</b>", "<b>{0} firem</b>")));
         }
     }
     else if (part == Model.Datasets.GetType().Name)
@@ -501,15 +501,15 @@
                                         ICO = ico,
                             //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
                             //VazbyPerIco = osoba.VazbyProICO(ico),
-                            stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
+                            stat = Firmy.Get(ico).StatistikaRegistruSmluv()
                                     })
-                                    .OrderByDescending(m => m.stat.Summary.CelkemCena).ThenBy(m => m.ICO)
+                                    .OrderByDescending(m => m.stat.Summary().CelkovaHodnotaSmluv).ThenBy(m => m.ICO)
                                     .ToArray();
 
-                    var osobaStatDescTotalKc = HlidacStatu.Lib.Data.Smlouva.NicePrice(data.Sum(d => d.stat.Summary.CelkemCena), html: true, shortFormat: true);
+                    var osobaStatDescTotalKc = HlidacStatu.Lib.Data.Smlouva.NicePrice(data.Sum(d => d.stat.Summary().CelkovaHodnotaSmluv), html: true, shortFormat: true);
                     osobaStatDescription = string.Format("{0}{1}",
                         Devmasters.Lang.Plural.GetWithZero((int)alldata.Count(), "Žádná vazba na firmy", "Celkem vazba na <b>{0} firmu</b>", "Celkem vazba na <b>{0} firmy</b>", "Celkem vazba na <b>{0} firem</b>"),
-                        Devmasters.Lang.Plural.GetWithZero((int)data.Sum(d => d.stat.Summary.Pocet), "."
+                        Devmasters.Lang.Plural.GetWithZero((int)data.Sum(d => d.stat.Summary().PocetSmluv), "."
                             , ", <b>{0} smlouva</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
                             , ";, <b>{0} smlouvy</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
                             , ";, <b>{0} smluv</b> v registru smluv za <b>" + osobaStatDescTotalKc) + "</b>"
@@ -586,30 +586,7 @@
                                             <div class="new-p">
                                                 @Html.Raw(osobaStatDescription)
                                             </div>
-                                            @if (false && osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count > 0)
-                                            {
-                            <div class="search-result-label">
-                                Vazby
-                            </div>
-                                                <div class="new-p table-new table-new--dotted">
-                                                    <table>
-                                                        <tbody>
-                                                            @foreach (var v in osoba1.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(3))
-                                                            {
-                                        <tr>
-                                            <td>@Html.KIndexLabelLink(v.Value.Subject().ICO)<a href="/subjekt/@v.Value.Subject().ICO">@(v.Value.Subject().Jmeno)</a></td>
-                                            <td class="cell-gray">@Html.Raw(v.Value.BasicStatPerYear.Summary.ToNiceString(v.Value.Subject(), true))</td>
-                                        </tr>}
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                    <div class="pull-right new-p"><a class="link" href="@osoba1.GetUrl(true)">další vazby @osoba1.FullName()</a></div>
-                                                                </td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                </div>}
+                                            
                                         </div>
                                     </div> if (Model.Osoby.Total > 1)
                                                     {
@@ -639,7 +616,7 @@
                                                             <div class="row">
                                                                 <div class="col-xs-12">
                                                                     <a href="/Osoby/hledat?Q=@Url.Encode(Model.Query)&ftx=@Model.OsobaFtx.ToString()" style="font-size:18px">
-                                                                        @Devmasters.Lang.Plural.Get((int)Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob") ukázat&nbsp;<i class="far fa-angle-double-right"></i>
+                                                                        @Devmasters.Lang.Plural.Get(Model.Osoby.Total, "", "Ukázat všechny {0} nalezené osoby", "Ukázat všech {0} nalezených osob") ukázat&nbsp;<i class="far fa-angle-double-right"></i>
                                                                     </a>
                                                                 </div>
                                                             </div> }
@@ -653,7 +630,7 @@
     <hr />
                         <h4>
                             Našli jsme
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.VZ.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.VZ.Total,
                                          "ještě <b>jednu veřejnou zakázku</b>",
                                          "celkem <b>{0} veřejné zakázky</b>",
                                          "celkem <b>{0} veřejných zakázek</b>"))
@@ -700,7 +677,7 @@
     <hr />
                         <h4>
                             Našli jsme
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.Dotace.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.Dotace.Total,
                                   "ještě <b>jednu dotaci</b>",
                                   "celkem <b>{0} dotace</b>",
                                   "celkem <b>{0} dotací</b>"))
@@ -725,7 +702,7 @@
     <hr />
                         <h4>
                             Našli jsme
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.Insolvence.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.Insolvence.Total,
                                          "ještě <b>jednu insolvenci</b>",
                                          "celkem <b>{0} insolvence</b>",
                                          "celkem <b>{0} insolvencí</b>"))
@@ -751,7 +728,7 @@
     <hr />
                         <h4>
                             V dalších databázích jsme našli
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.Datasets.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.Datasets.Total,
                                          "ještě <b>jeden výsledek</b>",
                                          "celkem <b>{0} výsledky</b>",
                                          "celkem <b>{0} výsledků</b>"))
@@ -804,7 +781,7 @@
     <hr />
                         <h4>
                             Našli jsme
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.Firmy.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.Firmy.Total,
                                          "ještě <b>jednu firmu</b>",
                                          "celkem <b>{0} firmy</b>",
                                          "celkem <b>{0} firem</b>"))
@@ -852,7 +829,7 @@
     <hr />
                         <h4>
                             Našli jsme
-                            @Html.Raw(Devmasters.Lang.Plural.Get((int)Model.Smlouvy.Total,
+                            @Html.Raw(Devmasters.Lang.Plural.Get(Model.Smlouvy.Total,
                                          "ještě <b>jednu smlouvu</b>",
                                          "celkem <b>{0} smlouvy</b>",
                                          "celkem <b>{0} smluv</b>"))

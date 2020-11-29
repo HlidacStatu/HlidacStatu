@@ -25,7 +25,7 @@ namespace HlidacStatu.Lib.Data
                             registrSmluvCaches.Add(obor.Value,
                                 Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, Firma>
                                 .GetSafeInstance("Firma_SmlouvyStatistics_" + obor.Value.ToString(),
-                                    (firma) => Create(firma, obor),
+                                    (firma) => CalculateStats(firma, obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
@@ -39,18 +39,18 @@ namespace HlidacStatu.Lib.Data
                 return registrSmluvCaches[obor.Value];
             }
 
-            public static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> Create(Firma f, int? obor)
+            internal static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> CalculateStats(Firma f, int? obor)
             {
                 StatisticsSubjectPerYear<Smlouva.Statistics.Data> res = null;
                 if (obor.HasValue && obor != 0)
                     res = new StatisticsSubjectPerYear<Smlouva.Statistics.Data>(
                         f.ICO,
-                        Smlouva.Statistics.Create($"ico:{f.ICO} AND oblast:{Smlouva.SClassification.Classification.ClassifSearchQuery(obor.Value)}")
+                        Smlouva.Statistics.Calculate($"ico:{f.ICO} AND oblast:{Smlouva.SClassification.Classification.ClassifSearchQuery(obor.Value)}")
                         );
                 else
                     res = new StatisticsSubjectPerYear<Smlouva.Statistics.Data>(
                          f.ICO,
-                         Smlouva.Statistics.Create($"ico:{f.ICO}")
+                         Smlouva.Statistics.Calculate($"ico:{f.ICO}")
                         );
 
                 return res;

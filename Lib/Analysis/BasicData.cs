@@ -30,14 +30,14 @@
             if (html)
             {
                 var s = "<a href='" + (customUrl ?? (item?.GetUrl(false) ?? "")) + "'>" +
-                            Devmasters.Lang.Plural.Get((int)this.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                            Devmasters.Lang.Plural.Get(this.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
                         "</a>" + (twoLines ? "<br />" : " za ") +
                         "celkem " +
                         HlidacStatu.Lib.Data.Smlouva.NicePrice(this.CelkemCena, html: true, shortFormat: true);
                 return s;
             }
             else
-                return Devmasters.Lang.Plural.Get((int)this.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                return Devmasters.Lang.Plural.Get(this.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
                     " za celkem " + HlidacStatu.Lib.Data.Smlouva.NicePrice(this.CelkemCena, html: false, shortFormat: true);
 
         }

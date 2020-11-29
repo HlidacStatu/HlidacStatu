@@ -1042,7 +1042,7 @@ namespace HlidacStatu.Lib.Data
                     else
                     {
                         f.Add(new InfoFact($"V roce <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                            Devmasters.Lang.Plural.Get((int)stat.StatisticsForYear(rok).PocetSmluv, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
+                            Devmasters.Lang.Plural.Get(stat.StatisticsForYear(rok).PocetSmluv, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
                             + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.StatisticsForYear(rok).CelkovaHodnotaSmluv, html: true)}</b>. "
                             , InfoFact.ImportanceLevel.Summary)
                             );
@@ -1067,8 +1067,8 @@ namespace HlidacStatu.Lib.Data
                         {
                             f.Add(new InfoFact(
                                 $"V <b>{rok} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktu " +
-                                Devmasters.Lang.Plural.Get((int)stat.StatisticsForYear(rok).PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
-                                + $", což je celkem <b>{stat.StatisticsForYear(rok).PercentSmluvBezCeny().ToString("P2")}</b> ze všech. ",
+                                Devmasters.Lang.Plural.Get(stat.StatisticsForYear(rok).PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
+                                + $", což je celkem <b>{stat.StatisticsForYear(rok).PercentSmluvBezCeny.ToString("P2")}</b> ze všech. ",
                                  InfoFact.ImportanceLevel.Medium)
                                 );
                         }
@@ -1076,8 +1076,8 @@ namespace HlidacStatu.Lib.Data
                         {
                             f.Add(new InfoFact(
                                 $"V <b>{rok - 1} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktů " +
-                                Devmasters.Lang.Plural.Get((int)stat.StatisticsForYear(rok - 1).PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
-                                + $", což je celkem <b>{stat.StatisticsForYear(rok - 1).PercentSmluvBezCeny().ToString("P2")}</b> ze všech. "
+                                Devmasters.Lang.Plural.Get(stat.StatisticsForYear(rok - 1).PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
+                                + $", což je celkem <b>{stat.StatisticsForYear(rok - 1).PercentSmluvBezCeny.ToString("P2")}</b> ze všech. "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
@@ -1169,24 +1169,24 @@ namespace HlidacStatu.Lib.Data
                         if (PatrimStatu() && stat.StatisticsForYear(rok).PocetSmluvPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Lang.Plural.Get((int)stat.StatisticsForYear(rok).PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                Devmasters.Lang.Plural.Get(stat.StatisticsForYear(rok).PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
                                 + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.StatisticsForYear(rok).SumKcSmluvPolitiky, html: true)}</b> "
-                                + $" (tj. {stat.StatisticsForYear(rok).PercentKcSmluvPolitiky().ToString("P2")}). "
+                                + $" (tj. {stat.StatisticsForYear(rok).PercentKcSmluvPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
                         else if (PatrimStatu() && stat.StatisticsForYear(rok - 1).PocetSmluvPolitiky > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok - 1}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Lang.Plural.Get((int)stat.StatisticsForYear(rok - 1).PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                Devmasters.Lang.Plural.Get(stat.StatisticsForYear(rok - 1).PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
                                 + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.StatisticsForYear(rok - 1).SumKcSmluvPolitiky, html: true)}</b> "
-                                + $" (tj. {stat.StatisticsForYear(rok).PercentKcSmluvPolitiky().ToString("P2")}). "
+                                + $" (tj. {stat.StatisticsForYear(rok).PercentKcSmluvPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
 
                         f.Add(new InfoFact($"Od roku <b>2016</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                            Devmasters.Lang.Plural.Get((int)stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv), "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
+                            Devmasters.Lang.Plural.Get(stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv), "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbsp;registru smluv")
                             + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv), html: true)}</b>. "
                             , InfoFact.ImportanceLevel.Low)
                             );
@@ -1199,7 +1199,7 @@ namespace HlidacStatu.Lib.Data
                         if (statHolding.StatisticsForYear(rok).PocetSmluv > 3)
                         {
                             f.Add(new InfoFact($"V roce <b>{rok}</b> uzavřel celý holding " +
-                                Devmasters.Lang.Plural.Get((int)statHolding.StatisticsForYear(rok).PocetSmluv, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
+                                Devmasters.Lang.Plural.Get(statHolding.StatisticsForYear(rok).PocetSmluv, "jednu smlouvu v&nbsp;registru smluv", "{0} smlouvy v&nbsp;registru smluv", "celkem {0} smluv v&nbspregistru smluv")
                                 + $" za <b>{HlidacStatu.Util.RenderData.ShortNicePrice(statHolding.StatisticsForYear(rok).CelkovaHodnotaSmluv, html: true)}</b>. "
                                 , InfoFact.ImportanceLevel.Low)
                                 );

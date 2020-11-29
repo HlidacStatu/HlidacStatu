@@ -11,6 +11,7 @@ namespace HlidacStatu.Lib.Data
         {
             public class RegistrSmluv
             {
+                public string OsobaNameId { get; set; }
                 public Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> StatniFirmy { get; set; }
                 public Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> SoukromeFirmy { get; set; }
 
@@ -46,7 +47,7 @@ namespace HlidacStatu.Lib.Data
                             registrSmluvCaches.Add(obor.Value,
                                 Util.Cache.CouchbaseCacheManager<RegistrSmluv, Osoba>
                                 .GetSafeInstance($"Osoba_{aktualnost}_SmlouvyStatistics_{obor.Value.ToString()}",
-                                    (osoba) => Create(osoba, aktualnost, obor),
+                                    (osoba) => Calculate(osoba, aktualnost, obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
@@ -60,9 +61,10 @@ namespace HlidacStatu.Lib.Data
                 return registrSmluvCaches[obor.Value];
             }
 
-            public static RegistrSmluv Create(Osoba o, Data.Relation.AktualnostType aktualnost, int? obor)
+            public static RegistrSmluv Calculate(Osoba o, Data.Relation.AktualnostType aktualnost, int? obor)
             {
-                RegistrSmluv res = null;
+                RegistrSmluv res = new RegistrSmluv();
+                res.OsobaNameId = o.NameId;
 
                 Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> statni = new Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>>();
                 Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> soukr = new Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>>();

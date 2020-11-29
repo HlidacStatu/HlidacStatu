@@ -11,7 +11,26 @@ namespace HlidacStatu.Lib.Data
         public partial class Statistics
         {
 
-            public static Analytics.StatisticsPerYear<Data> Create(string query)
+            static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string> _cache
+                = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string>
+                                .GetSafeInstance("SmlouvyStatistics_Query",
+                                    (query) => Calculate(query),
+                                    TimeSpan.FromHours(12),
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
+                                    System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"]);
+                                
+            static object _cachesLock = new object();
+
+
+            public static Analytics.StatisticsPerYear<Smlouva.Statistics.Data> CachedStatisticsFroQuery(string query)
+            {
+                return _cache.Get(query); 
+            }
+
+
+            public static Analytics.StatisticsPerYear<Data> Calculate(string query)
             {
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_SeZasadnimNedostatkem =
@@ -57,7 +76,7 @@ namespace HlidacStatu.Lib.Data
                     }
                     );
                 }
-                return new Analytics.StatisticsPerYear<Statistics.Data>(query, data);
+                return new Analytics.StatisticsPerYear<Statistics.Data>(data);
 
             }
         }

@@ -72,17 +72,17 @@
 
                 if (o.Vazby() != null)
                 {
-                    foreach (var v in o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(2))
+                    foreach (var v in o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(2))
                     {
-                        sout = sout + v.Value.ToNiceString(true) + "<br/>";
+                        sout = sout + v.Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true) + "<br/>";
                     }
-                    if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() == 3)
+                    if (o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() == 3)
                     {
-                        sout = sout + o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy
+                        sout = sout + o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy
                         .Skip(2).First()
-                        .Value.ToNiceString(true);
+                        .Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true);
                     }
-                    else if (o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
+                    else if (o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
                     {
                         sout = sout + "<a href='" + o.GetUrl() + "'>" + Devmasters.Lang.Plural.Get(o.Vazby().Length - 2, "+další vazba;+ další {0} vazby;+ dalších {0} vazeb") + "</a>";
                     }

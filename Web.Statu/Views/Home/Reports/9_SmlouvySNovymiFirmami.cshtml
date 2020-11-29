@@ -59,18 +59,21 @@
             Name ="Smluvní aktivita",
             HtmlRender = (s) => {
                 AnalysisCalculation.IcoSmlouvaMinMax data = (AnalysisCalculation.IcoSmlouvaMinMax)s;
-                var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(data.ico);
+                var stat = Firmy.Get(data.ico).StatistikaRegistruSmluv();
 
                 return "<a href=\"/hledatsmlouvy?Q=ico:" + data.ico + "\">" +
-                    Devmasters.Lang.Plural.Get((int)stat.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                    Devmasters.Lang.Plural.Get(stat.Summary().PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
                 "</a>" +
                 "<br />celkem " +
-                HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.Summary.CelkemCena, html: true, shortFormat: true)
+                HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.Summary().CelkovaHodnotaSmluv, html: true, shortFormat: true)
 
                 ;
             },
             OrderValueRender = (s) => {
-                return HlidacStatu.Util.RenderData.OrderValueFormat(HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(((AnalysisCalculation.IcoSmlouvaMinMax)s).ico).Summary.CelkemCena);
+                var ico = ((AnalysisCalculation.IcoSmlouvaMinMax)s).ico;
+                var stat = Firmy.Get(ico).StatistikaRegistruSmluv();
+
+                return HlidacStatu.Util.RenderData.OrderValueFormat(stat.Summary().CelkovaHodnotaSmluv );
             }
         },
             };

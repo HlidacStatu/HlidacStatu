@@ -7,6 +7,7 @@
 @using System.Web.Mvc
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib
+@using HlidacStatu.Lib.Analytics
 
 @using Devmasters
 @using System.Data
@@ -22,7 +23,6 @@
 
 @{
     var basicStat = Model.Data;
-    var ratingStat = Model.Rating;
 
     Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsPerIco =
         new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
@@ -43,60 +43,57 @@
 
     var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
 
-    Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear> prijemci = new Dictionary<string, HlidacStatu.Lib.Analysis.BasicDataPerYear>();
+    Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>> prijemci = new Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>>();
 
-    int minDateYear = HlidacStatu.Lib.Analysis.BasicDataPerYear.UsualFirstYear;
-    int maxDateYear = DateTime.Now.Year;
+    int minDateYear = new Smlouva.Statistics.Data().UsualFirstYear();
+    int maxDateYear = new HlidacStatu.Lib.Analytics.StatisticsPerYear<Smlouva.Statistics.Data>().CurrentSeasonYear();
 
     foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.ElasticResults.Aggregations["perIco"]).Items)
     {
         var ico = (string)icoVal.Key;
 
-        Dictionary<int, HlidacStatu.Lib.Analysis.BasicData> perY = new Dictionary<int, HlidacStatu.Lib.Analysis.BasicData>();
+        Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat> perY = new Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat>();
         foreach (Nest.DateHistogramBucket val in ((BucketAggregate)(icoVal.Values.First())).Items)
         {
-            var bdata = new HlidacStatu.Lib.Analysis.BasicData()
+            var bdata = new HlidacStatu.Lib.Analytics.SimpleStat()
             {
                 Pocet = val.DocCount ?? 0,
                 CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0)
             };
             perY.Add(val.Date.Year, bdata);
         }
-        prijemci.Add(ico, new HlidacStatu.Lib.Analysis.BasicDataPerYear(perY));
+        prijemci.Add(ico, new HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>(perY));
 
     }
 
 
-    var coreData = new Dictionary<string, HlidacStatu.Lib.Analysis.QueryStatistic>();
+    var coreData = new Dictionary<string, StatisticsPerYear<Smlouva.Statistics.Data>>();
     //TODO parallel
-    foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Take(50))
+    foreach (var item in prijemci.OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, new HlidacStatu.Lib.Analysis.QueryStatistic(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
+        coreData.Add(item.Key, Smlouva.Statistics.CachedStatisticsFroQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
     }
 
     if (prijemci.Count > 50)
     {
-        foreach (var item in prijemci.OrderByDescending(o => o.Value.Data[2018].CelkemCena).Skip(50))
+        foreach (var item in prijemci.OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
         {
-            var stat = new HlidacStatu.Lib.Analysis.QueryStatistic();
-            stat.Item = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}");
-            stat.BasicStatPerYear = item.Value;
-            stat.RatingPerYear = HlidacStatu.Lib.Analysis.RatingDataPerYear.Empty();
-            coreData.Add(item.Key, stat);
+
+            coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsFroQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
         }
     }
 
 
     var topF = prijemci
-        .OrderByDescending(o => o.Value.Data[2018].CelkemCena)
+        .OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena)
         //.ThenByDescending(o => o.Value.Summary.Pocet)
         .ToArray();
 
     var scale = HlidacStatu.Util.RenderData.GetBestScale(
         topF
-            .Select(m => m.Value.Data[2017].CelkemCena)
-            .Union(topF.Select(m => m.Value.Data[2018].CelkemCena))
-            .Union(topF.Select(m => m.Value.Data[2019].CelkemCena))
+            .Select(m => m.Value.Years[m.Value.CurrentSeasonYear()-2].CelkemCena)
+            .Union(topF.Select(m => m.Value.Years[m.Value.CurrentSeasonYear()-1].CelkemCena))
+            .Union(topF.Select(m => m.Value.Years[m.Value.CurrentSeasonYear()].CelkemCena))
         ); //calculate it
 
     scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
@@ -104,7 +101,7 @@
 
     var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
     coreColumns.Add(
-    new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>.Column()
+        new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>>.Column()
     {
         Id = "detail",
         Name = "Detaily",
@@ -117,11 +114,11 @@
     });
 
 
-    var coreRDS = new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>(coreColumns);
+    var coreRDS = new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data> >>(coreColumns);
     foreach (var i in coreData)
     {
         coreRDS.AddRow(
-            new KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>(i.Key, i.Value)
+            new KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>(i.Key, i.Value)
             );
     }
 
@@ -227,7 +224,7 @@
 <h3>Všechny nalezení příjemci</h3>
 
 @Html.Raw(
-    UtilChart.RenderReportTableT<KeyValuePair<string, HlidacStatu.Lib.Analysis.ComplexStatistic<string>>>("",
+    UtilChart.RenderReportTableT<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data> >>("",
         coreRDS.Filter(
             new string[] {
                 "Title",
@@ -279,7 +276,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="@Url.Action("HledatSmlouvy", globalSearch.Smlouvy.ToRouteValues(1))">
-                            @Devmasters.Lang.Plural.Get((int)globalSearch.Smlouvy.Total, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
+                            @Devmasters.Lang.Plural.Get(globalSearch.Smlouvy.Total, "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                         </a>
                     </div>
                 }
@@ -287,7 +284,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="/Osoby?Q=@Url.Encode(globalSearch.Query)&ftx=@globalSearch.OsobaFtx.ToString()">
-                            @Devmasters.Lang.Plural.Get((int)globalSearch.Osoby.Total, "jednoho politika", "{0} politiky", "{0} politiků")
+                            @Devmasters.Lang.Plural.Get(globalSearch.Osoby.Total, "jednoho politika", "{0} politiky", "{0} politiků")
                         </a>
                     </div>
                 }
@@ -295,7 +292,7 @@
                 {
                     <div class="searching__counter">
                         <a class="link--blue link--big" href="@Url.Action("Hledat", "VZ", globalSearch.VZ.ToRouteValues(1))">
-                            @Devmasters.Lang.Plural.Get((int)globalSearch.VZ.Total, "jednu veřejnou zakázku", "{0} veřejné zakázky", "{0} veřejných zakázek")
+                            @Devmasters.Lang.Plural.Get(globalSearch.VZ.Total, "jednu veřejnou zakázku", "{0} veřejné zakázky", "{0} veřejných zakázek")
                         </a>
                     </div>
                 }

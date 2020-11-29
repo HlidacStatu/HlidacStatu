@@ -118,14 +118,14 @@
 {
     var numPercent = "0";
     var sumPercent = "0";
-    var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(uradSVazbami.Ico);
-    if (stat.Summary.Pocet > 0)
+    var stat = HlidacStatu.Lib.Data.Firmy.Get(uradSVazbami.Ico).StatistikaRegistruSmluv();
+    if (stat.Summary().PocetSmluv > 0)
     {
-        numPercent = ((double)uradSVazbami.Pocet / (double)stat.Summary.Pocet).ToString("P2");
+        numPercent = ((double)uradSVazbami.Pocet / (double)stat.Summary().PocetSmluv).ToString("P2");
     }
-    if (stat.Summary.CelkemCena > 0)
+    if (stat.Summary().CelkovaHodnotaSmluv > 0)
     {
-        sumPercent = (uradSVazbami.CelkemCena / stat.Summary.CelkemCena).ToString("P1");
+        sumPercent = (uradSVazbami.CelkemCena / stat.Summary().CelkovaHodnotaSmluv).ToString("P1");
     }
 
 
@@ -135,7 +135,7 @@
             <tr>
                 <th>Počet smluv</th>
                 <td>
-                    @Model.Jmeno uzavřel <b>@Devmasters.Lang.Plural.Get((int)uradSVazbami.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv")</b> takových smluv, což je
+                    @Model.Jmeno uzavřel <b>@Devmasters.Lang.Plural.Get(uradSVazbami.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv")</b> takových smluv, což je
                     <b>@numPercent</b> všech uzavřených smluv.
                 </td>
             </tr>

@@ -62,22 +62,23 @@
 
 @functions {
 
-	HtmlString statisticsForIco(string ico)
-	{
-		var stat = HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico);
-		var pocetSmluv = Devmasters.Lang.Plural.Get((int)stat.Summary.Pocet, "{0} smlouvu;{0} smlouvy;{0} smluv");
-		var smlouvyText = $" - Nalezeli jsme {pocetSmluv} v Registru smluv o celkové hodnotě <strong>{HlidacStatu.Util.RenderData.NicePrice(stat.Summary.CelkemCena, mena: "Kč")}</strong>.";
+    HtmlString statisticsForIco(string ico)
+    {
+        var f = HlidacStatu.Lib.Data.Firmy.Get(ico);
+        var stat = f.StatistikaRegistruSmluv();
+        var pocetSmluv = Devmasters.Lang.Plural.Get(stat.Summary().PocetSmluv, "{0} smlouvu;{0} smlouvy;{0} smluv");
+        var smlouvyText = $" - Nalezeli jsme {pocetSmluv} v Registru smluv o celkové hodnotě <strong>{HlidacStatu.Util.RenderData.NicePrice(stat.Summary().CelkovaHodnotaSmluv, mena: "Kč")}</strong>.";
 
-		var sponzori = StaticData.SponzorujiciFirmy_Vsechny.Get().Where(s => s.ICO == ico).Select(s => s.Title);
-		var sponzoriText = sponzori.Any() ? $"<br /> - {string.Join(". ", sponzori)}" : "";
+        var sponzori = StaticData.SponzorujiciFirmy_Vsechny.Get().Where(s => s.ICO == ico).Select(s => s.Title);
+        var sponzoriText = sponzori.Any() ? $"<br /> - {string.Join(". ", sponzori)}" : "";
 
-		var vazby = new List<int>();
-		StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.TryGetValue(ico, out vazby);
-		var politici = vazby == null ? new List<G.Osoba>() : StaticData.PolitickyAktivni.Get()?.Where(p => vazby.Contains(p.InternalId)) ?? new List<G.Osoba>();
-		var maji = Devmasters.Lang.Plural.Get(politici.Count(), "má;mají;mají");
-		var provazaniPolitici = politici.Any() ? $"<br /> - {string.Join(", ", politici.Select(p => $"<a href='/osoba/{p.NameId}'>{p.FullName()}</a>"))} {maji} vazby na tuto firmu." : "";
+        var vazby = new List<int>();
+        StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.TryGetValue(ico, out vazby);
+        var politici = vazby == null ? new List<G.Osoba>() : StaticData.PolitickyAktivni.Get()?.Where(p => vazby.Contains(p.InternalId)) ?? new List<G.Osoba>();
+        var maji = Devmasters.Lang.Plural.Get(politici.Count(), "má;mají;mají");
+        var provazaniPolitici = politici.Any() ? $"<br /> - {string.Join(", ", politici.Select(p => $"<a href='/osoba/{p.NameId}'>{p.FullName()}</a>"))} {maji} vazby na tuto firmu." : "";
 
-		return new HtmlString($"{smlouvyText}{sponzoriText}{provazaniPolitici}");
-	}
+        return new HtmlString($"{smlouvyText}{sponzoriText}{provazaniPolitici}");
+    }
 
 }

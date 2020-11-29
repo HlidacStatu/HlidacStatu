@@ -10,7 +10,6 @@ namespace HlidacStatu.Lib.Analytics
     public class StatisticsPerYear<T>
         where T : CoreStat, IAddable<T>, new()
     {
-        public string Key { get; set; }
         public Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
 
         /// <summary>
@@ -20,13 +19,12 @@ namespace HlidacStatu.Lib.Analytics
 
         public StatisticsPerYear() { }
 
-        public StatisticsPerYear(string key, Func<T, int> yearSelector, IEnumerable<T> data)
+        public StatisticsPerYear(Func<T, int> yearSelector, IEnumerable<T> data)
         {
             if (yearSelector == null)
                 throw new ArgumentNullException("yearSelector");
             if (data == null)
                 throw new ArgumentNullException("data");
-            this.Key = key;
             foreach (var item in data)
             {
                 Years.Add(yearSelector(item), item);
@@ -38,10 +36,26 @@ namespace HlidacStatu.Lib.Analytics
         /// </summary>
         /// <param name="ico">Subject Ico</param>
         /// <param name="data">Dictionary where key = Year, value = T</param>
-        public StatisticsPerYear(string key, Dictionary<int, T> data)
+        public StatisticsPerYear(Dictionary<int, T> data)
         {
-            this.Key = key;
             Years = data ?? throw new ArgumentNullException("data");
+        }
+
+        public int FirstYear()
+        {
+            if (this.Years == null)
+                return 0;
+            if (this.Years.Count == 0)
+                return 0;
+            return this.Years.Keys.Min();
+        }
+        public int LastYear()
+        {
+            if (this.Years == null)
+                return 0;
+            if (this.Years.Count == 0)
+                return 0;
+            return this.Years.Keys.Max();
         }
 
         public int Sum(Func<T, int> selector)
@@ -96,11 +110,16 @@ namespace HlidacStatu.Lib.Analytics
                 .ToArray();
         }
 
+        public (decimal change, decimal percentage) ChangeBetweenYears(int forYear,
+            Func<T, decimal> selector)
+        {
+            return ChangeBetweenYears(forYear - 1, forYear, selector);
+        }
 
         //todo: promyslet výsledky
         public (decimal change, decimal percentage) ChangeBetweenYears(int firstYear,
-            int lastYear,
-            Func<T, decimal> selector)
+        int lastYear,
+        Func<T, decimal> selector)
         {
             var firstStat = StatisticsForYear(firstYear);
             var lastStat = StatisticsForYear(lastYear);
@@ -157,10 +176,7 @@ namespace HlidacStatu.Lib.Analytics
 
         public static StatisticsPerYear<T> AggregateStats(IEnumerable<StatisticsPerYear<T>> statistics, int[] onlyYears = null)
         {
-            var aggregatedStatistics = new StatisticsPerYear<T>()
-            {
-                Key = $"aggregated for {statistics.FirstOrDefault().Key}"
-            };
+            var aggregatedStatistics = new StatisticsPerYear<T>();
 
             var years = statistics.SelectMany(x => x.Years.Keys.Select(k => k)).Distinct();
             if (onlyYears != null && onlyYears.Count() > 0)
@@ -208,7 +224,7 @@ namespace HlidacStatu.Lib.Analytics
         /// Summarize all years to one - Good if you need global percentage stats.
         /// </summary>
         /// <returns></returns>
-        public T Summary()
+        public virtual T Summary()
         {
             var val = Years
                 .Select(y => y.Value)

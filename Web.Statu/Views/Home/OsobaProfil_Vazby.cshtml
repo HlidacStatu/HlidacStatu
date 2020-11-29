@@ -1,6 +1,7 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
 @using Devmasters
 @using HlidacStatu.Lib
+@using HlidacStatu.Lib.Analytics
 @using System.Linq
 
 @{
@@ -12,11 +13,12 @@
         typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.param1
         );
 
-    var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, aktualnost);
+    var ostatAll = Model.StatistikaRegistrSmluv(aktualnost);
+    var ostat = ostatAll.SoukromeFirmy.Values.AggregateStats().Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow);
     var statDescription = string.Format("Celkem {0} v reg.smluv od 2016 za celkem {1}, {2}",
-        Devmasters.Lang.Plural.Get((int)ostat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
-        HlidacStatu.Lib.Data.Smlouva.NicePrice(ostat.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true),
-        Devmasters.Lang.Plural.Get(ostat.SoukromeFirmy.Count, "angažován(a) v 1 firmě;angažován(a) v {0} firmách;angažován(a) v {0} firmách")
+        Devmasters.Lang.Plural.Get(ostat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv"),
+        HlidacStatu.Lib.Data.Smlouva.NicePrice(ostat.CelkovaHodnotaSmluv, html: true, shortFormat: true),
+        Devmasters.Lang.Plural.Get(ostatAll.SoukromeFirmy.Count, "angažován(a) v 1 firmě;angažován(a) v {0} firmách;angažován(a) v {0} firmách")
         );
 }
 
@@ -44,27 +46,28 @@
                 </tr>
             </thead>
 
-            @foreach (var vPerIco in (ostat.SoukromeFirmy.Union(ostat.StatniFirmy))
-    .OrderByDescending(o => o.Value.BasicStatPerYear.Summary.CelkemCena)
-    .ThenByDescending(o => o.Value.BasicStatPerYear.Summary.Pocet)
-    .Where(o => o.Value.BasicStatPerYear.Summary.Pocet > 0)
+            @foreach (var vPerIco in (ostatAll.SoukromeFirmy.Union(ostatAll.StatniFirmy))
+    .OrderByDescending(o => o.Value.Summary().CelkovaHodnotaSmluv)
+    .ThenByDescending(o => o.Value.Summary().PocetSmluv)
+    .Where(o => o.Value.Summary().PocetSmluv > 0)
     )
             {
-                string ico = vPerIco.Value.Subject().ICO;
+                string ico = vPerIco.Value.ICO;
+                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(ico);
                 <tr>
                     <td>
-                        <a href="@(vPerIco.Value.Subject().GetUrl(true))">@vPerIco.Value.Subject().Jmeno</a>
+                        <a href="@(f.GetUrl(true))">@f.Jmeno</a>
                         @WebUtil.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(ico), " - soukromá firma")
                         @WebUtil.IfExists(HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().StatniFirmy.ContainsKey(ico), " - firma (spolu)vlastněná státem či samosprávou")
                     </td>
                     <td>
-                        @if (vPerIco.Value.BasicStatPerYear.Summary.Pocet > 0)
+                        @if (vPerIco.Value.Summary().PocetSmluv > 0)
                         {
                             <span>
                                 <a href="@Url.Action("Hledat", new { Q = "ico:" + ico })">
-                                    @Devmasters.Lang.Plural.Get((int)vPerIco.Value.BasicStatPerYear.SummaryAfter2016().Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")
+                                    @Devmasters.Lang.Plural.Get(vPerIco.Value.Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow ).PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv")
                                 </a>
-                                <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.BasicStatPerYear.SummaryAfter2016().CelkemCena, html: true, shortFormat: true))
+                                <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow ).CelkovaHodnotaSmluv, html: true, shortFormat: true))
                             </span>
                         }
                         else
@@ -81,8 +84,8 @@
             }
         </table>
 
-        @{ int numBezSmluv = ostat.SoukromeFirmy
-                .Count(o => o.Value.BasicStatPerYear.Summary.Pocet == 0);
+        @{ int numBezSmluv = ostatAll.SoukromeFirmy
+                .Count(o => o.Value.Summary().PocetSmluv == 0);
         }
         @if (numBezSmluv > 0)
         {

@@ -551,11 +551,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\BasicData.cs" />
-    <Compile Include="Analysis\BasicDataChange.cs" />
     <Compile Include="Analysis\BasicDataPerYear.cs" />
     <Compile Include="Analysis\DataPerYear.cs" />
-    <Compile Include="Analysis\ACore.cs" />
-    <Compile Include="Analysis\ContractsStatisticData.cs" />
+    <Compile Include="Analysis\RatingData.cs" />
+    <Compile Include="Analysis\RatingDataPerYear.cs" />
     <Compile Include="Data\Bookmark.IBookmarkable.cs" />
     <Compile Include="Data\Firma.Statistics.Dotace.cs" />
     <Compile Include="Data\Osoba.Statistics.RegistrSmluv.cs" />
@@ -588,12 +587,7 @@
     <Compile Include="Analysis\KorupcniRiziko\Statistics.Calc.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Statistics.cs" />
     <Compile Include="Analysis\KorupcniRiziko\SubjectWithKIndex.cs" />
-    <Compile Include="Analysis\ComplexStatistic.cs" />
-    <Compile Include="Analysis\RatingData.cs" />
-    <Compile Include="Analysis\RatingDataPerYear.cs" />
-    <Compile Include="Analysis\QueryStatistic.cs" />
     <Compile Include="Analysis\ReportUtil.cs" />
-    <Compile Include="Analysis\SubjectWithSubjectStatistic.cs" />
     <Compile Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -879,7 +873,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Analysis\TemplatedQueryStatistic.cs" />
     <Compile Include="Data\Smlouva.cs" />
-    <Compile Include="Analysis\SubjectStatistic.cs" />
     <Compile Include="Render\ReportDataSource.cs" />
     <Compile Include="Render\ReportModel.cs" />
     <Compile Include="Validators.cs" />

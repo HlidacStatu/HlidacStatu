@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Analytics
         : StatisticsPerYear<T>
         where T : CoreStat, IAddable<T>,new()
     {
-        public string ICO { get { return Key; } set { this.Key = value; } }
+        public string ICO { get; set; }
 
 
         public StatisticsSubjectPerYear()
@@ -24,8 +24,9 @@ namespace HlidacStatu.Lib.Analytics
         }
 
         public StatisticsSubjectPerYear(string ico, Func<T, int> yearSelector, IEnumerable<T> data)
-            : base(ico,yearSelector,data)
+            : base(yearSelector,data)
         {
+            this.ICO = ico;
         }
 
         /// <summary>
@@ -34,8 +35,9 @@ namespace HlidacStatu.Lib.Analytics
         /// <param name="ico">Subject Ico</param>
         /// <param name="data">Dictionary where key = Year, value = T</param>
         public StatisticsSubjectPerYear(string ico, Dictionary<int, T> data)
-            :base(ico,data)
+            :base(data)
         {
+            this.ICO = ico;
         }
 
 
@@ -43,7 +45,7 @@ namespace HlidacStatu.Lib.Analytics
         {
             var aggregatedStatistics = new StatisticsSubjectPerYear<T>()
             {
-                Key = $"aggregated for {statistics.FirstOrDefault().ICO}"
+                ICO = $"aggregated for {statistics.FirstOrDefault().ICO}"
             };
             aggregatedStatistics.Years = StatisticsPerYear<T>.AggregateStats(statistics).Years;
 

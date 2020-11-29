@@ -583,7 +583,7 @@ namespace HlidacStatu.Lib.Data
             return _vazby;
         }
 
-        public Osoba.Statistics.RegistrSmluv Statistic(Relation.AktualnostType minAktualnost, int? obor=null)
+        public Osoba.Statistics.RegistrSmluv StatistikaRegistrSmluv(Relation.AktualnostType minAktualnost, int? obor=null)
         {
             return Osoba.Statistics.RegistrSmluvCache(minAktualnost,obor).Get(this);
         }
@@ -1152,7 +1152,7 @@ namespace HlidacStatu.Lib.Data
                 if (_infofacts == null)
                 {
                     List<InfoFact> f = new List<InfoFact>();
-                    var stat = this.Statistic(Relation.AktualnostType.Nedavny);
+                    var stat = this.StatistikaRegistrSmluv(Relation.AktualnostType.Nedavny);
                     StatisticsPerYear<Smlouva.Statistics.Data> soukrStat = stat.SoukromeFirmy.Values.AggregateStats(); //StatisticsSubjectPerYear<Smlouva.Statistics.Data>.
 
                     int rok = DateTime.Now.Year;
@@ -1190,7 +1190,7 @@ namespace HlidacStatu.Lib.Data
 
 
                         statDesc += $". Tyto subjekty mají se státem od 2016 celkem "
-                            + Devmasters.Lang.Plural.Get((int)soukrStat.Sum(m=>m.PocetSmluv), "jednu smlouvu", "{0} smlouvy", "{0} smluv")
+                            + Devmasters.Lang.Plural.Get(soukrStat.Sum(m=>m.PocetSmluv), "jednu smlouvu", "{0} smlouvy", "{0} smluv")
                             + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(soukrStat.Sum(m => m.CelkovaHodnotaSmluv), html: true, shortFormat: true)
                             + ". ";
                     }

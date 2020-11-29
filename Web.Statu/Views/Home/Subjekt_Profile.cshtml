@@ -328,12 +328,12 @@ else
                 <th>Souhrnné statistiky<br />pro @Model.Jmeno<br />od 2016</th>
                 <td>
                     @Html.Raw(NiceString($"/hledat?q=ico:{Model.ICO}", (int)summarryAfter2016.PocetSmluv, summarryAfter2016.CelkovaHodnotaSmluv))<br />
-                    @(summarryAfter2016.PercentSmluvBezCeny().ToString("P1")) smluv se skrytou cenou<br />
-                    @(summarryAfter2016.PercentSmluvBezSmluvniStrany().ToString("P1")) smluv se skrytou smluvní stranou<br />
+                    @(summarryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                    @(summarryAfter2016.PercentSmluvBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
                     @if (Model.PatrimStatu())
                     {
                         <text>
-                            @(summarryAfter2016.PercentSmluvPolitiky().ToString("P1"))smluv s firmami navázanými na politiky
+                            @(summarryAfter2016.PercentSmluvPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
                         </text>}
                 </td>
                 <td>
@@ -378,7 +378,7 @@ else
                             @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
                                                                   statistics.Years
                                                                       .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny() * 100)
+                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny * 100)
                                                                   );
 
                                 @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
@@ -406,7 +406,7 @@ else
                                 @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
                                                                       statistics.Years
                                                                       .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky() * 100)
+                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky * 100)
                                                                       );
 
                                     @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
@@ -427,12 +427,12 @@ else
                     <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
                     <td>
                         @Html.Raw(NiceString($"/hledat?q=holding:{Model.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
-                        @(holdingSummaryAfter2016.PercentSmluvBezCeny().ToString("P1")) smluv se skrytou cenou<br />
-                        @(holdingSummaryAfter2016.PercentSmluvBezSmluvniStrany().ToString("P1")) smluv se skrytou smluvní stranou<br />
+                        @(holdingSummaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
+                        @(holdingSummaryAfter2016.PercentSmluvBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
                         @if (Model.PatrimStatu())
                         {
                             <text>
-                                @(holdingSummaryAfter2016.PercentSmluvPolitiky().ToString("P1"))smluv s firmami navázanými na politiky
+                                @(holdingSummaryAfter2016.PercentSmluvPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
                             </text>}
                     </td>
                 </tr>
@@ -465,9 +465,9 @@ else
                                     <tr>
                                         <td>@bs.Key</td>
                                         <td class="number">@bs.Value.PocetSmluvPolitiky</td>
-                                        <td class="number">@bs.Value.PercentSmluvPolitiky().ToString("P2")</td>
+                                        <td class="number">@bs.Value.PercentSmluvPolitiky.ToString("P2")</td>
                                         <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSmluvPolitiky, html: true))</td>
-                                        <td class="number">@bs.Value.PercentKcSmluvPolitiky().ToString("P2")</td>
+                                        <td class="number">@bs.Value.PercentKcSmluvPolitiky.ToString("P2")</td>
                                     </tr>
                                 }
                             </tbody>
@@ -475,9 +475,9 @@ else
                                 <tr>
                                     <th>Celkem</th>
                                     <th class="number">@summarryAfter2016.PocetSmluvPolitiky</th>
-                                    <th class="number">@summarryAfter2016.PercentSmluvPolitiky().ToString("P2")</th>
+                                    <th class="number">@summarryAfter2016.PercentSmluvPolitiky.ToString("P2")</th>
                                     <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summarryAfter2016.SumKcSmluvPolitiky, html: true))</th>
-                                    <th class="number">@summarryAfter2016.PercentKcSmluvPolitiky().ToString("P2")</th>
+                                    <th class="number">@summarryAfter2016.PercentKcSmluvPolitiky.ToString("P2")</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -638,14 +638,14 @@ else
                                                               "dostala",
                                                               "dostaly",
                                                               "dostalo")
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total - dotaceSearch.Total),
                                                                                           " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                           " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                           " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
                                 </p>
                                 <p>
                                     Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total),
                                                            " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
@@ -661,14 +661,14 @@ else
                                                               "dostala",
                                                               "dostaly",
                                                               "dostalo")
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total - dotaceSearch.Total),
                                                                                           " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                           " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                           " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
                                 </p>
                                 <p>
                                     Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total),
                                                            " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))

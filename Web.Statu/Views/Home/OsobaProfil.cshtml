@@ -12,7 +12,7 @@
                     typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.param1
                     );
 
-                var ostat = new HlidacStatu.Lib.Analysis.OsobaStatistic(Model.NameId, HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, true);
+                //var ostat = Model.StatistikaRegistrSmluv( aktualnost,);
 
                 var statDescription =
                     Model.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Text

@@ -108,7 +108,7 @@ namespace HlidacStatu.Lib.Render
                     HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(osobaId);
                     if (o != null)
                     {
-                        var stat = o.Statistic(Data.Relation.AktualnostType.Nedavny);
+                        var stat = o.StatistikaRegistrSmluv(Data.Relation.AktualnostType.Nedavny);
                         //return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
                         var s = stat.SoukromeFirmy.Values
                                         .AggregateStats()
@@ -170,7 +170,7 @@ namespace HlidacStatu.Lib.Render
                         var celkem = stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv); 
 
                         string niceString = $"<a href='/hledatSmlouvy?q=ico:{firma.ICO}'>" +
-                            Devmasters.Lang.Plural.Get((int)pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                            Devmasters.Lang.Plural.Get(pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
                             "</a>" + (twoLines ? "<br />" : " za ") +
                             "celkem " + Data.Smlouva.NicePrice(celkem, html: true, shortFormat: true);
 

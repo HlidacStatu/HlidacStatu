@@ -100,12 +100,6 @@ namespace HlidacStatu.Lib.Analysis
         }
 
 
-        public BasicDataChange YearChange(int currYear)
-        {
-            var curr = this.Data.ContainsKey(currYear) ? this.Data[currYear] : BasicData.Empty();
-            var prev = this.Data.ContainsKey(currYear - 1) ? this.Data[currYear - 1] : BasicData.Empty();
-            return new BasicDataChange(prev, curr);
-        }
 
         BasicData _summaryBefore2016 = null;
         public BasicData SummaryBefore2016()

@@ -33,27 +33,15 @@ namespace HlidacStatu.Lib.Data
                 public long PocetSmluvOVikendu { get; set; }
                 public long PocetSmluvNovaFirma { get; set; }
 
-                public decimal PercentSmluvBezCeny()
-                {
-                    return (decimal)PocetSmluvBezCeny / PocetSmluv;
-                }
-                public decimal PercentSmluvBezSmluvniStrany()
-                {
-                    return (decimal)PocetSmluvBezSmluvniStrany / PocetSmluv;
-                }
-                public decimal PercentKcBezSmluvniStrany()
-                {
-                    return (decimal)SumKcSmluvBezSmluvniStrany / CelkovaHodnotaSmluv;
-                }
-                public decimal PercentSmluvPolitiky()
-                {
-                    return (decimal)PocetSmluvPolitiky / PocetSmluv;
-                }
-                public decimal PercentKcSmluvPolitiky()
-                {
-                    return (decimal)SumKcSmluvPolitiky / CelkovaHodnotaSmluv;
-                }
+                public decimal PercentSmluvBezCeny => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvBezCeny / (decimal)PocetSmluv);
 
+                public decimal PercentSmluvBezSmluvniStrany => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvBezSmluvniStrany / (decimal)PocetSmluv);
+
+                public decimal PercentKcBezSmluvniStrany => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvBezSmluvniStrany / (decimal)CelkovaHodnotaSmluv);
+
+                public decimal PercentSmluvPolitiky => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvPolitiky / (decimal)PocetSmluv);
+
+                public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvPolitiky / (decimal)CelkovaHodnotaSmluv);
 
                 public Data Add(Data other)
                 {

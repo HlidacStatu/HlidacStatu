@@ -78,8 +78,8 @@ namespace HlidacStatu.Lib.Data
                             var f = Firmy.Get(ico);
                             if (f.PatrimStatu())
                             {
-                                if (HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
-                                       .Data.Any(m => m.Value.Pocet > Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYear)
+                                if (f.StatistikaRegistruSmluv().Years.Any(m=>
+                                        m.Value.PocetSmluv >= Analysis.KorupcniRiziko.Consts.MinSmluvPerYear)
                                    )
                                     icos.Add(ico);
                             }
@@ -106,8 +106,8 @@ namespace HlidacStatu.Lib.Data
                             var f = Firmy.Get(ico);
                             if (f.PatrimStatu())
                             {
-                                if (HlidacStatu.Lib.Analysis.ACore.GetBasicStatisticForICO(ico)
-                                   .Data.Any(m => m.Value.Pocet > Lib.Analysis.KorupcniRiziko.Consts.MinSmluvPerYear)
+                                if (f.StatistikaRegistruSmluv().Years.Any(m =>
+                                        m.Value.PocetSmluv >= Analysis.KorupcniRiziko.Consts.MinSmluvPerYear)
                                )
                                     icos.Add(ico);
                             }

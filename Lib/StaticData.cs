@@ -51,7 +51,7 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>> FirmyNazvyOnlyAscii = null;
 
         public static Devmasters.Cache.File.FileCache<IEnumerable<AnalysisCalculation.IcoSmlouvaMinMax>> FirmyCasovePodezreleZalozene = null;
-        public static Devmasters.Cache.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>> UradyObchodujiciSCasovePodezrelymiFirmami = null;
+
 
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
@@ -353,7 +353,7 @@ namespace HlidacStatu.Lib
                                                      {
                                                          lock (lockObj)
                                                          {
-                                                             Osoba.Statistics.RegistrSmluv stat = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
+                                                             Osoba.Statistics.RegistrSmluv stat = o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
                                                              ret.Add(new Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>(
                                                                                  stat, insolvenceIntoList
@@ -564,13 +564,6 @@ namespace HlidacStatu.Lib
                    (o) =>
                    {
                        return Lib.Data.AnalysisCalculation.GetFirmyCasovePodezreleZalozene();
-                   });
-
-                UradyObchodujiciSCasovePodezrelymiFirmami = new Devmasters.Cache.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>>
-                   (StaticData.App_Data_Path, TimeSpan.Zero, "UradyObchodujiciSCasovePodezrelymiFirmami",
-                   (o) =>
-                   {
-                       return Lib.Data.AnalysisCalculation.GetUradyObchodujiciSCasovePodezrelymiFirmami();
                    });
 
 
