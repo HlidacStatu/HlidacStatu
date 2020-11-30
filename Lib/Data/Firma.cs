@@ -444,22 +444,37 @@ namespace HlidacStatu.Lib.Data
 
 
         }
+
+        /// <summary>
+        /// Find last known CEO
+        /// </summary>
+        /// <returns></returns>
+        public (Osoba Osoba, DateTime? From) Ceo()
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                var ceoEvent = db.OsobaEvent
+                    .Where(oe => oe.CEO == 1 && oe.Ico == this.ICO)
+                    .Where(oe => oe.DatumDo == null || oe.DatumDo >= DateTime.Now)
+                    .Where(oe => oe.DatumOd != null && oe.DatumOd <= DateTime.Now)
+                    .OrderByDescending(oe => oe.DatumOd)
+                    .FirstOrDefault();
+
+                if (ceoEvent is null)
+                    return (null, null);
+
+                var lastCeo = Osoba.GetByInternalId(ceoEvent.OsobaId);
+                if( lastCeo is null || !lastCeo.IsValid())
+                    return (null, null);
+
+                return (lastCeo, ceoEvent.DatumOd);
+            }
+        }
+
         public void RefreshDS()
         {
             this.DatovaSchranka = External.DatoveSchranky.ISDS.GetDatoveSchrankyForIco(this.ICO);
         }
-
-
-        //Analysis.SubjectStatistic _statistic = null;
-        //public Analysis.SubjectStatistic Statistic()
-        //{
-        //    if (_statistic == null)
-        //    {
-        //        _statistic = new Analysis.SubjectStatistic(this);
-
-        //    }
-        //    return _statistic;
-        //}
 
         public IEnumerable<string> IcosInHolding(Data.Relation.AktualnostType aktualnost)
         {
@@ -536,58 +551,10 @@ namespace HlidacStatu.Lib.Data
         //}
 
 
-        //[Obsolete("Use HoldingStatisticsRegistrSmluv")]
-        //public Analysis.BasicDataPerYear StatisticForHolding(Data.Relation.AktualnostType aktualnost)
-        //{
-        //    Analysis.BasicDataPerYear myStat = Analysis.ACore.GetBasicStatisticForICO(this.ICO);
-
-        //    Dictionary<string, Analysis.BasicDataPerYear> PerIcoStat =
-        //        IcosInHolding(aktualnost)
-        //        .Select(ico => new { ico = ico, ss = Analysis.ACore.GetBasicStatisticForICO(ico) })
-        //        .ToDictionary(k => k.ico, v => v.ss);
-
-        //    foreach (var kv in PerIcoStat)
-        //        myStat.Add(kv.Value);
-
-        //    return myStat;
-        //}
-
-
-        //public Analysis.RatingDataPerYear RatingPerYearForHolding(Data.Relation.AktualnostType aktualnost)
-        //{
-        //    Analysis.RatingDataPerYear myStat = Analysis.ACore.GetRatingForICO(this.ICO);
-
-        //    Dictionary<string, Analysis.RatingDataPerYear> PerIcoStat =
-        //        IcosInHolding(aktualnost)
-        //        .Select(ico => new { ico = ico, ss = Analysis.ACore.GetRatingForICO(ico) })
-        //        .ToDictionary(k => k.ico, v => v.ss);
-
-        //    foreach (var icodata in PerIcoStat)
-        //    {
-        //        foreach (var kv in icodata.Value.Data)
-        //        {
-        //            if (myStat.Data.Keys.Contains(kv.Key))
-        //            {
-        //                myStat.Data[kv.Key].NumBezCeny += kv.Value.NumBezCeny;
-        //                myStat.Data[kv.Key].NumBezSmluvniStrany += kv.Value.NumBezSmluvniStrany;
-        //                myStat.Data[kv.Key].NumSPolitiky += kv.Value.NumSPolitiky;
-        //                myStat.Data[kv.Key].SumKcBezSmluvniStrany += kv.Value.SumKcBezSmluvniStrany;
-        //                myStat.Data[kv.Key].SumKcSPolitiky += kv.Value.SumKcSPolitiky;
-
-        //            }
-        //            else
-        //                myStat.Data.Add(kv.Key, kv.Value);
-        //        }
-        //    }
-
-        //    return new Analysis.RatingDataPerYear(new Analysis.RatingDataPerYear[] { myStat }, StatisticForHolding(aktualnost));
-        //}
-
         public bool JsemSoukromaFirma()
         {
             return JsemOVM() == false && JsemStatniFirma() == false;
         }
-
 
         static int[] Neziskovky_KOD_PF = new int[] { 116, 117, 118, 141, 161, 422, 423, 671, 701, 706, 736 };
         public bool JsemNeziskovka()
@@ -625,6 +592,7 @@ namespace HlidacStatu.Lib.Data
         {
             return JsemOVM() || JsemStatniFirma();
         }
+
         /// <summary>
         /// Orgán veřejné moci
         /// </summary>
@@ -648,7 +616,6 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-
         public bool IsSponzorBefore(DateTime date)
         {
             if (this.JsemOVM())
@@ -661,16 +628,19 @@ namespace HlidacStatu.Lib.Data
                 .Any();
 
         }
+
         public bool IsSponzor()
         {
             return this.Events(m =>
                 m.Type == (int)FirmaEvent.Types.Sponzor
             ).Any();
         }
+
         public IEnumerable<FirmaEvent> Events()
         {
             return Events(m => true);
         }
+
         public IEnumerable<FirmaEvent> Events(Expression<Func<FirmaEvent, bool>> predicate)
         {
             using (DbEntities db = new DbEntities())
@@ -687,8 +657,6 @@ namespace HlidacStatu.Lib.Data
         {
             return Firma.JmenoBezKoncovky(this.Jmeno);
         }
-
-
 
         public string KoncovkaFirmy()
         {

@@ -8,6 +8,8 @@
 
 @{
     Layout = null;
+
+    var ceo = Model.Ceo();
 }
 
 @* Pravý sloupec *@
@@ -20,11 +22,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-8">
-            <p class="py-0 my-0 text-muted">Aktuální ministr</p>
-            <p class="py-0 my-0 lead">JUDr. Alena Schillerová, Ph.D</p>
-            <p class="py-0 my-0">od 13. 12. 2017</p>
-        </div>
+        @if(ceo.Osoba != null && ceo.Osoba.IsValid())
+        {
+            <div class="col-sm-8">
+                <p class="py-0 my-0 text-muted">Aktuální ředitel</p>
+                <p class="py-0 my-0 lead">@ceo.Osoba.FullName()</p>
+                <p class="py-0 my-0">od @ceo.From</p>
+            </div>
+        }
     </div>
     <hr />
     <div>
