@@ -13,7 +13,6 @@ namespace HlidacStatu.Lib.Analytics
     {
         protected Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
 
-
         /// <summary>
         /// Tenhle měsíc určuje, za který rok se AKTUÁLNÍ data mají zobrazovat.
         /// Pokud chceme pro nějakou datovou sadu nastavit sezónu jinak, je potřeba ho změnit
@@ -265,5 +264,27 @@ namespace HlidacStatu.Lib.Analytics
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+
+        public string Serialize()
+        {
+            var sd = new Dictionary<string, object>
+            {
+                [nameof(Years)] = Years 
+            };
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(sd);
+        }
+
+        public StatisticsPerYear<T> Deserialize(string json)
+        {
+            Dictionary<string, object> dd = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(json);
+
+            Years = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, T>>(dd[nameof(Years)].ToString());
+            return this;
+        }
+
+        
     }
 }

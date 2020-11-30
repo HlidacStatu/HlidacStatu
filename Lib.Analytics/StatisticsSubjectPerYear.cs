@@ -7,8 +7,7 @@ namespace HlidacStatu.Lib.Analytics
     // !!!!! Michale, za žádnou cenu sem nedávej ToNiceString !!!! 
     // Nebo začne bůh topit koťátka, dokud ti to nesmažu! :-D
 
-    public class StatisticsSubjectPerYear<T>
-        : StatisticsPerYear<T>
+    public class StatisticsSubjectPerYear<T> : StatisticsPerYear<T>
         where T : CoreStat, IAddable<T>,new()
     {
         public string ICO { get; set; }
@@ -51,5 +50,26 @@ namespace HlidacStatu.Lib.Analytics
             return aggregatedStatistics;
         }
 
+        public new string Serialize()
+        {
+            var sd = new Dictionary<string, object>
+            {
+                [nameof(Years)] = Years,
+                [nameof(ICO)] = ICO
+            };
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(sd);
+        }
+
+        public new StatisticsSubjectPerYear<T> Deserialize(string json)
+        {
+            Dictionary<string, object> dd = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(json);
+
+            Years = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, T>>(dd[nameof(Years)].ToString());
+            
+            ICO = (string)dd[nameof(ICO)];
+            return this;
+        }
     }
 }
