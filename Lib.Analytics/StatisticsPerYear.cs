@@ -57,6 +57,10 @@ namespace HlidacStatu.Lib.Analytics
             {
                 return Years.TryGetValue(year, out var value) ? value : default;
             }
+            set
+            {
+                Years[year] = value;
+            }
         }
 
         public int FirstYear()

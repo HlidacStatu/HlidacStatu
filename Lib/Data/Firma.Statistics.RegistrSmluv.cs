@@ -27,7 +27,7 @@ namespace HlidacStatu.Lib.Data
             }
 
 
-            internal static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> CalculateStats(Firma f, int? obor)
+            public static Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> CalculateStats(Firma f, int? obor)
             {
                 StatisticsSubjectPerYear<Smlouva.Statistics.Data> res = null;
                 if (obor.HasValue && obor != 0)
