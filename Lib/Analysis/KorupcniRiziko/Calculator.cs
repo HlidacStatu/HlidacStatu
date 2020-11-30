@@ -87,12 +87,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             ret.FinancniUdaje = fc.GetData();
 
             //tohle by se dalo brát ze statistiky komplet...
-            ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvSeZasadnimNedostatkem / smlouvyZaRok;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat.Years[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky;
+            ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvSeZasadnimNedostatkem / smlouvyZaRok;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky;
 
-            ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvNovaFirma / smlouvyZaRok;
-            ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvULimitu / smlouvyZaRok;
-            ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat.Years[year].PocetSmluvOVikendu / smlouvyZaRok;
+            ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvNovaFirma / smlouvyZaRok;
+            ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvULimitu / smlouvyZaRok;
+            ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvOVikendu / smlouvyZaRok;
 
             var stat = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year);
             //todo: tenhle objekt by mohl vycházet ze stávajícího nového objektu statistiky

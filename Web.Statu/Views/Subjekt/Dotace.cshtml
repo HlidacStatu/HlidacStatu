@@ -127,8 +127,8 @@
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
 
                 string durl = "/dotace/hledat?Q=ico%3A+" + Model.Firma.ICO;
-                var dotaceSuma = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.CelkemCerpano);
-                var dotacePocet = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.PocetDotaci);
+                var dotaceSuma = Model.Firma.StatistikaDotaci().Sum(s => s.CelkemCerpano);
+                var dotacePocet = Model.Firma.StatistikaDotaci().Sum(v => v.PocetDotaci);
 
                 var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceSuma, html: true) + "</b>.";
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,11 +8,10 @@ namespace HlidacStatu.Lib.Analytics
     // !!!!! Michale, za žádnou cenu sem nedávej ToNiceString !!!! 
     // Nebo začne bůh topit koťátka, dokud ti to nesmažu! :-D
 
-    public class StatisticsPerYear<T>
+    public class StatisticsPerYear<T> : IEnumerable<(int Year, T Value)>
         where T : CoreStat, IAddable<T>, new()
     {
-        public Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
-
+        protected Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
 
 
         /// <summary>
@@ -40,6 +40,23 @@ namespace HlidacStatu.Lib.Analytics
         public StatisticsPerYear(Dictionary<int, T> data)
         {
             Years = data ?? throw new ArgumentNullException("data");
+        }
+
+        /// <summary>
+        /// Copy constructor to create children objects
+        /// </summary>
+        public StatisticsPerYear(StatisticsPerYear<T> other)
+        {
+            this.Years = other.Years;
+        }
+
+
+        public T this[int year]
+        {
+            get
+            {
+                return Years.TryGetValue(year, out var value) ? value : default;
+            }
         }
 
         public int FirstYear()
@@ -234,5 +251,15 @@ namespace HlidacStatu.Lib.Analytics
             return val;
         }
 
+        public IEnumerator<(int Year, T Value)> GetEnumerator()
+        {
+            foreach (var element in Years)
+            {
+                yield return (element.Key, element.Value);
+            }
+            
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

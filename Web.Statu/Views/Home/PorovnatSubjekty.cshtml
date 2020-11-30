@@ -290,10 +290,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Počet všech smluv {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].PocetSmluv.ToString(); },
-                TextRender = (s) => { return s.Years[iYear].PocetSmluv.ToString(); },
-                ValueRender = (s) => { return s.Years[iYear].PocetSmluv.ToString(); },
-                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Years[iYear].PocetSmluv); }
+                HtmlRender = (s) => { return s[iYear].PocetSmluv.ToString(); },
+                TextRender = (s) => { return s[iYear].PocetSmluv.ToString(); },
+                ValueRender = (s) => { return s[iYear].PocetSmluv.ToString(); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s[iYear].PocetSmluv); }
             };
         }
         public static tblDataSource.Column SumSmluvKc(int? year)
@@ -303,10 +303,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Hodnota smluv {sYear}",
-                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Years[iYear].CelkovaHodnotaSmluv, html: true); },
-                TextRender = (s) => { return s.Years[iYear].CelkovaHodnotaSmluv.ToString(); },
-                ValueRender = (s) => { return s.Years[iYear].CelkovaHodnotaSmluv.ToString(); },
-                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Years[iYear].CelkovaHodnotaSmluv); }
+                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s[iYear].CelkovaHodnotaSmluv, html: true); },
+                TextRender = (s) => { return s[iYear].CelkovaHodnotaSmluv.ToString(); },
+                ValueRender = (s) => { return s[iYear].CelkovaHodnotaSmluv.ToString(); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s[iYear].CelkovaHodnotaSmluv); }
             };
         }
 
@@ -319,10 +319,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Počet smluv bez uvedené ceny {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].PocetSmluvBezCeny.ToString(); },
-                TextRender = (s) => { return s.Years[iYear].PocetSmluvBezCeny.ToString(); },
-                ValueRender = (s) => { return s.Years[iYear].PocetSmluvBezCeny.ToString(); },
-                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Years[iYear].PocetSmluvBezCeny); }
+                HtmlRender = (s) => { return s[iYear].PocetSmluvBezCeny.ToString(); },
+                TextRender = (s) => { return s[iYear].PocetSmluvBezCeny.ToString(); },
+                ValueRender = (s) => { return s[iYear].PocetSmluvBezCeny.ToString(); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s[iYear].PocetSmluvBezCeny); }
             };
 
         }
@@ -334,10 +334,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"% smluv bez cen {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].PercentSmluvBezCeny.ToString("P1"); },
-                TextRender = (s) => { return (s.Years[iYear].PercentSmluvBezCeny * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].PercentSmluvBezCeny * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Years[iYear].PercentSmluvBezCeny); }
+                HtmlRender = (s) => { return s[iYear].PercentSmluvBezCeny.ToString("P1"); },
+                TextRender = (s) => { return (s[iYear].PercentSmluvBezCeny * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PercentSmluvBezCeny * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s[iYear].PercentSmluvBezCeny); }
             };
 
         }
@@ -354,13 +354,13 @@ else
                 {
                     return
                     "<a href='/Hledat?Q=(issues.issueTypeId:18+OR+issues.issueTypeId:12)+ico:" + s.ICO + "'>"
-                    + s.Years[iYear].PocetSmluvBezSmluvniStrany.ToString()
+                    + s[iYear].PocetSmluvBezSmluvniStrany.ToString()
                     + "</a>"
                     ;
                 },
-                TextRender = (s) => { return (s.Years[iYear].PocetSmluvBezSmluvniStrany).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].PocetSmluvBezSmluvniStrany).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return s.Years[iYear].PocetSmluvBezSmluvniStrany.ToString(); }
+                TextRender = (s) => { return (s[iYear].PocetSmluvBezSmluvniStrany).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PocetSmluvBezSmluvniStrany).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return s[iYear].PocetSmluvBezSmluvniStrany.ToString(); }
             };
 
         }
@@ -372,10 +372,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"% smluv bez smluvní strany {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].PercentSmluvBezSmluvniStrany.ToString("P1"); },
-                OrderValueRender = (s) => { return (s.Years[iYear].PercentSmluvBezSmluvniStrany * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                TextRender = (s) => { return (s.Years[iYear].PercentSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].PercentSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                HtmlRender = (s) => { return s[iYear].PercentSmluvBezSmluvniStrany.ToString("P1"); },
+                OrderValueRender = (s) => { return (s[iYear].PercentSmluvBezSmluvniStrany * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                TextRender = (s) => { return (s[iYear].PercentSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PercentSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
             };
 
 
@@ -388,10 +388,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"% smluv bez smluvní strany {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].SumKcSmluvBezSmluvniStrany.ToString("P1"); },
-                OrderValueRender = (s) => { return (s.Years[iYear].SumKcSmluvBezSmluvniStrany * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                TextRender = (s) => { return (s.Years[iYear].SumKcSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].SumKcSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                HtmlRender = (s) => { return s[iYear].SumKcSmluvBezSmluvniStrany.ToString("P1"); },
+                OrderValueRender = (s) => { return (s[iYear].SumKcSmluvBezSmluvniStrany * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                TextRender = (s) => { return (s[iYear].SumKcSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].SumKcSmluvBezSmluvniStrany * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
             };
 
         }
@@ -404,10 +404,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Počet smluv s firmami s vazbou na politiky {sYear}",
-                HtmlRender = (s) => { return "<a href='/subjekt/" + s.ICO + "#vazbyNaPolitik'>" + s.Years[iYear].PocetSmluvPolitiky.ToString() + "</a>"; },
-                TextRender = (s) => { return (s.Years[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return s.Years[iYear].PocetSmluvPolitiky.ToString(); }
+                HtmlRender = (s) => { return "<a href='/subjekt/" + s.ICO + "#vazbyNaPolitik'>" + s[iYear].PocetSmluvPolitiky.ToString() + "</a>"; },
+                TextRender = (s) => { return (s[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return s[iYear].PocetSmluvPolitiky.ToString(); }
             };
 
 
@@ -420,10 +420,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"% smluv s firmami s vazbou na politiky {sYear}",
-                HtmlRender = (s) => { return s.Years[iYear].PercentSmluvPolitiky.ToString("P1"); },
-                TextRender = (s) => { return (s.Years[iYear].PercentSmluvPolitiky * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].PercentSmluvPolitiky * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return (s.Years[iYear].PercentSmluvPolitiky * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); }
+                HtmlRender = (s) => { return s[iYear].PercentSmluvPolitiky.ToString("P1"); },
+                TextRender = (s) => { return (s[iYear].PercentSmluvPolitiky * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PercentSmluvPolitiky * 100).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return (s[iYear].PercentSmluvPolitiky * 100000).ToString("G", HlidacStatu.Util.Consts.enCulture); }
             };
         }
         public static tblDataSource.Column SumKcSmluvBezPolitik(int? year)
@@ -435,10 +435,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Hodnota smluv s firmami s vazbou na politiky {sYear}",
-                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Years[iYear].SumKcSmluvPolitiky, html: true); },
-                TextRender = (s) => { return (s.Years[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s.Years[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return s.Years[iYear].SumKcSmluvPolitiky.ToString("G", HlidacStatu.Util.Consts.enCulture); }
+                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s[iYear].SumKcSmluvPolitiky, html: true); },
+                TextRender = (s) => { return (s[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return s[iYear].SumKcSmluvPolitiky.ToString("G", HlidacStatu.Util.Consts.enCulture); }
             };
 
         }

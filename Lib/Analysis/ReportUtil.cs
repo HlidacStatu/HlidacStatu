@@ -48,10 +48,10 @@ namespace HlidacStatu.Lib.Analysis
                     {
                         Id = "Cena_Y_" + year,
                         Name = $"Smlouvy {year} v {scale.ToNiceDisplayName()} Kč",
-                        HtmlRender = (s) => HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year].CelkovaHodnotaSmluv, mena: "", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, exactScale: scale, hideSuffix: true),
-                        OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].CelkovaHodnotaSmluv),
-                        TextRender = (s) => HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year].CelkovaHodnotaSmluv, mena: "", html: false, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, exactScale: scale, hideSuffix: true),
-                        ValueRender = (s) => s.Value.Years[year].CelkovaHodnotaSmluv,
+                        HtmlRender = (s) => HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year].CelkovaHodnotaSmluv, mena: "", html: true, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, exactScale: scale, hideSuffix: true),
+                        OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].CelkovaHodnotaSmluv),
+                        TextRender = (s) => HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year].CelkovaHodnotaSmluv, mena: "", html: false, showDecimal: HlidacStatu.Util.RenderData.ShowDecimalVal.Show, exactScale: scale, hideSuffix: true),
+                        ValueRender = (s) => s.Value[year].CelkovaHodnotaSmluv,
                         CssClass = "number"
                     }
                     );
@@ -60,10 +60,10 @@ namespace HlidacStatu.Lib.Analysis
                     {
                         Id = "Pocet_Y_" + year,
                         Name = $"Počet smluv v {year} ",
-                        HtmlRender = (s) => HlidacStatu.Util.RenderData.NiceNumber(s.Value.Years[year].PocetSmluv, html: true),
-                        OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].PocetSmluv),
-                        TextRender = (s) => HlidacStatu.Util.RenderData.NiceNumber(s.Value.Years[year].PocetSmluv, html: false),
-                        ValueRender = (s) => s.Value.Years[year].PocetSmluv,
+                        HtmlRender = (s) => HlidacStatu.Util.RenderData.NiceNumber(s.Value[year].PocetSmluv, html: true),
+                        OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].PocetSmluv),
+                        TextRender = (s) => HlidacStatu.Util.RenderData.NiceNumber(s.Value[year].PocetSmluv, html: false),
+                        ValueRender = (s) => s.Value[year].PocetSmluv,
                         CssClass = "number"
                     }
                     );
@@ -72,10 +72,10 @@ namespace HlidacStatu.Lib.Analysis
                         {
                             Id = "PercentBezCeny_Y_" + year,
                             Name = $"Smluv bez ceny za {year} v %",
-                            HtmlRender = (s) => s.Value.Years[year].PercentSmluvBezCeny.ToString("P2"),
-                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].PercentSmluvBezCeny),
-                            ValueRender = (s) => (s.Value.Years[year].PercentSmluvBezCeny * 100).ToString(HlidacStatu.Util.Consts.enCulture),
-                            TextRender = (s) => s.Value.Years[year].PercentSmluvBezCeny.ToString("P2"),
+                            HtmlRender = (s) => s.Value[year].PercentSmluvBezCeny.ToString("P2"),
+                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].PercentSmluvBezCeny),
+                            ValueRender = (s) => (s.Value[year].PercentSmluvBezCeny * 100).ToString(HlidacStatu.Util.Consts.enCulture),
+                            TextRender = (s) => s.Value[year].PercentSmluvBezCeny.ToString("P2"),
                             CssClass = "number"
                         });
                 coreColumns.Add(
@@ -83,10 +83,10 @@ namespace HlidacStatu.Lib.Analysis
                         {
                             Id = "PercentSPolitiky_Y_" + year,
                             Name = $"% smluv s politiky v {year} ",
-                            HtmlRender = (s) => s.Value.Years[year].PercentSmluvPolitiky.ToString("P2"),
-                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].PercentSmluvPolitiky),
-                            ValueRender = (s) => (s.Value.Years[year].PercentSmluvPolitiky * 100).ToString(HlidacStatu.Util.Consts.enCulture),
-                            TextRender = (s) => s.Value.Years[year].PercentSmluvPolitiky.ToString("P2"),
+                            HtmlRender = (s) => s.Value[year].PercentSmluvPolitiky.ToString("P2"),
+                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].PercentSmluvPolitiky),
+                            ValueRender = (s) => (s.Value[year].PercentSmluvPolitiky * 100).ToString(HlidacStatu.Util.Consts.enCulture),
+                            TextRender = (s) => s.Value[year].PercentSmluvPolitiky.ToString("P2"),
                             CssClass = "number"
                         });
                 coreColumns.Add(
@@ -94,10 +94,10 @@ namespace HlidacStatu.Lib.Analysis
                         {
                             Id = "SumKcSPolitiky_Y_" + year,
                             Name = $"Hodnota smluv s politiky za {year}",
-                            HtmlRender = (s) => s.Value.Years[year].SumKcSmluvPolitiky.ToString("P2"),
-                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].SumKcSmluvPolitiky),
-                            ValueRender = (s) => (s.Value.Years[year].SumKcSmluvPolitiky * 100).ToString(HlidacStatu.Util.Consts.enCulture),
-                            TextRender = (s) => s.Value.Years[year].SumKcSmluvPolitiky.ToString("P2"),
+                            HtmlRender = (s) => s.Value[year].SumKcSmluvPolitiky.ToString("P2"),
+                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].SumKcSmluvPolitiky),
+                            ValueRender = (s) => (s.Value[year].SumKcSmluvPolitiky * 100).ToString(HlidacStatu.Util.Consts.enCulture),
+                            TextRender = (s) => s.Value[year].SumKcSmluvPolitiky.ToString("P2"),
                             CssClass = "number"
                         });
 

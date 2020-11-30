@@ -90,7 +90,7 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
                 {
                     for (int y = item.Data.FirstYear(); y <= item.Data.LastYear(); y++)
                     {
-                        var iy = item.Data.Years[y];
+                        var iy = item.Data[y];
                         if (iy.PocetSmluv > 0)
                         {
                             <div>

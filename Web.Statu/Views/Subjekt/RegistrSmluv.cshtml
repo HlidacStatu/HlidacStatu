@@ -202,10 +202,10 @@
                 <div class="col-md-6">
                     <div>
                         @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                                        statistics.Years
-                                                            .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                            .ToDictionary(k => new DateTime(k.Key, 1, 1,0,0,0, DateTimeKind.Utc), v => (decimal)v.Value.CelkovaHodnotaSmluv)
-                                                        );
+                            statistics
+                                .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                .ToDictionary(k => new DateTime(k.Year, 1, 1,0,0,0, DateTimeKind.Utc), v => (decimal)v.Value.CelkovaHodnotaSmluv)
+                            );
 
                             @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
                                                true, true, 150, "rdsSumPerY",
@@ -216,10 +216,10 @@
 
                     <div>
                         @{ ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                                            statistics.Years
-                                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PocetSmluv)
-                                                            );
+                                statistics
+                                    .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PocetSmluv)
+                                );
 
                             @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
                                               true, true, 150, "rdsCountPerY",
@@ -230,16 +230,16 @@
 
                     <div>
                         @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                                            statistics.Years
-                                                                .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny * 100)
-                                                            );
+                                statistics
+                                    .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny * 100)
+                                );
 
                             @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
-                                                  true, true, 150, "rdsbezCenyPerY",
-                                                  "", "%",
-                                                  rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
-                                          ) }
+                                            true, true, 150, "rdsbezCenyPerY",
+                                            "", "%",
+                                            rdsbezCenyPerY, "%", xValueFormat: "{value:%Y}")
+                                    ) }
                     </div>
                 </div>
 
@@ -250,29 +250,29 @@
                     {
                         <div>
                             @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
-                                                                      statistics.Years
-                                                                      .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.SumKcSmluvPolitiky)
-                                                                      );
+                                    statistics
+                                    .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.SumKcSmluvPolitiky)
+                                    );
 
                                 @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
-                                                   true, true, 150, "rdsPolitikPerYKc",
-                                                    "", "Kč",
-                                                   rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
-                                           ) }
+                                            true, true, 150, "rdsPolitikPerYKc",
+                                            "", "Kč",
+                                            rdsPolitikPerYKc, "Kč", xValueFormat: "{value:%Y}")
+                                    ) }
                         </div>
                         <div>
                             @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                                                      statistics.Years
-                                                                      .Where(k => k.Key >= chartMinDate && k.Key <= chartMaxDate)
-                                                                      .ToDictionary(k => new DateTime(k.Key, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky * 100)
-                                                                      );
+                                    statistics
+                                    .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky * 100)
+                                    );
 
                                 @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
-                                                           true, true, 150, "rdsPolitikPerY",
-                                                            "", "%",
-                                                           rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
-                                                   ) }
+                                            true, true, 150, "rdsPolitikPerY",
+                                            "", "%",
+                                            rdsPolitikPerY, "%", xValueFormat: "{value:%Y}")
+                                    ) }
                         </div>
                     }
                 </div>
@@ -333,12 +333,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var bs in statistics.Years
-                                    .Where(y => statistics.YearsAfter2016().Contains(y.Key))
-                                    .OrderBy(y => y.Key))
+                                @foreach (var bs in statistics
+                                    .Where(y => statistics.YearsAfter2016().Contains(y.Year))
+                                    .OrderBy(y => y.Year))
                                 {
                                     <tr>
-                                        <td>@bs.Key</td>
+                                        <td>@bs.Year</td>
                                         <td class="number">@bs.Value.PocetSmluvPolitiky</td>
                                         <td class="number">@bs.Value.PercentSmluvPolitiky.ToString("P2")</td>
                                         <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSmluvPolitiky, html: true))</td>

@@ -471,6 +471,11 @@ namespace HlidacStatu.Lib.Data
                 .Select(m => m.Id);
         }
 
+        /// <summary>
+        /// Vrací firmy z holdingu ! KROMĚ mateřské firmy!
+        /// </summary>
+        /// <param name="aktualnost"></param>
+        /// <returns></returns>
         public IEnumerable<Firma> Holding(Relation.AktualnostType aktualnost)
         {
             var icos = IcosInHolding(aktualnost);

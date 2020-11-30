@@ -57,7 +57,7 @@
     topPartnersIcos = allPartnersIcos
             .OrderBy(o => o.Value)
             .Take(25)
-            .ToDictionary(k => k.Key, v => HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsFroQuery($"icoPlatce:{v.Key} AND icoPrijemce:{ico}"));
+            .ToDictionary(k => k.Key, v => HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery($"icoPlatce:{v.Key} AND icoPrijemce:{ico}"));
                 //.Firmy.Get(ico) new HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>(v.Key, ico));
 
 
@@ -79,67 +79,67 @@
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Počet smluv v {year - 2}",
-            HtmlRender = (s) => { return s.Value.Years[year - 2].PocetSmluv.ToString(); },
-            TextRender = (s) => { return s.Value.Years[year - 2].ToNiceString(null, false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 2].PocetSmluv); }
+            HtmlRender = (s) => { return s.Value[year - 2].PocetSmluv.ToString(); },
+            TextRender = (s) => { return s.Value[year - 2].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 2].PocetSmluv); }
         },
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Počet smluv v {year - 1}",
-            HtmlRender = (s) => { return s.Value.Years[year - 1].PocetSmluv.ToString(); },
-            TextRender = (s) => { return s.Value.Years[year - 1].ToNiceString(null, false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 1].PocetSmluv); }
+            HtmlRender = (s) => { return s.Value[year - 1].PocetSmluv.ToString(); },
+            TextRender = (s) => { return s.Value[year - 1].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 1].PocetSmluv); }
         }
                 ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Počet smluv v {year}",
-            HtmlRender = (s) => { return s.Value.Years[year].PocetSmluv.ToString(); },
-            TextRender = (s) => { return s.Value.Years[year].ToNiceString(null, false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].PocetSmluv); }
+            HtmlRender = (s) => { return s.Value[year].PocetSmluv.ToString(); },
+            TextRender = (s) => { return s.Value[year].ToNiceString(null, false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].PocetSmluv); }
         }
 
         ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Hodnota smluv v {year - 2}",
-            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year - 2].CelkovaHodnotaSmluv, html: true); },
-            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year - 2].CelkovaHodnotaSmluv, html: false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 2].CelkovaHodnotaSmluv); }
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year - 2].CelkovaHodnotaSmluv, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year - 2].CelkovaHodnotaSmluv, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 2].CelkovaHodnotaSmluv); }
         }
         ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Hodnota smluv v {year - 1}",
-            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year - 1].CelkovaHodnotaSmluv, html: true); },
-            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year - 1].CelkovaHodnotaSmluv, html: false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 1].CelkovaHodnotaSmluv); }
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year - 1].CelkovaHodnotaSmluv, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year - 1].CelkovaHodnotaSmluv, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 1].CelkovaHodnotaSmluv); }
         }
                 ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"Hodnota smluv v {year}",
-            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year].CelkovaHodnotaSmluv, html: true); },
-            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value.Years[year].CelkovaHodnotaSmluv, html: false); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].CelkovaHodnotaSmluv); }
+            HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year].CelkovaHodnotaSmluv, html: true); },
+            TextRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s.Value[year].CelkovaHodnotaSmluv, html: false); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].CelkovaHodnotaSmluv); }
         }
 
         ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"% se skrytou cenou v {year - 2}",
-            HtmlRender = (s) => { return s.Value.Years[year - 2].PercentSmluvBezCeny.ToString("P2"); },
-            TextRender = (s) => { return s.Value.Years[year - 2].PercentSmluvBezCeny.ToString("P2"); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 2].PercentSmluvBezCeny); }
+            HtmlRender = (s) => { return s.Value[year - 2].PercentSmluvBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value[year - 2].PercentSmluvBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 2].PercentSmluvBezCeny); }
         }
 
         ,
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"% se skrytou cenou v {year - 1}",
-            HtmlRender = (s) => { return s.Value.Years[year - 1].PercentSmluvBezCeny.ToString("P2"); },
-            TextRender = (s) => { return s.Value.Years[year - 1].PercentSmluvBezCeny.ToString("P2"); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year - 1].PercentSmluvBezCeny); }
+            HtmlRender = (s) => { return s.Value[year - 1].PercentSmluvBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value[year - 1].PercentSmluvBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year - 1].PercentSmluvBezCeny); }
         }
 
 
@@ -147,9 +147,9 @@
         new ReportDataSource<KeyValuePair<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data>>>.Column()
         {
             Name = $"% se skrytou cenou v {year}",
-            HtmlRender = (s) => { return s.Value.Years[year].PercentSmluvBezCeny.ToString("P2"); },
-            TextRender = (s) => { return s.Value.Years[year].PercentSmluvBezCeny.ToString("P2"); },
-            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.Years[year].PercentSmluvBezCeny); }
+            HtmlRender = (s) => { return s.Value[year].PercentSmluvBezCeny.ToString("P2"); },
+            TextRender = (s) => { return s.Value[year].PercentSmluvBezCeny.ToString("P2"); },
+            OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].PercentSmluvBezCeny); }
         }
 
 

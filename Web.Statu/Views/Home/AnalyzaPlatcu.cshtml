@@ -71,31 +71,31 @@
 
     var coreData = new Dictionary<string, StatisticsPerYear<Smlouva.Statistics.Data>>();
     //TODO parallel
-    foreach (var item in platci.OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
+    foreach (var item in platci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsFroQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
+        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
     }
 
     if (platci.Count > 50)
     {
-        foreach (var item in platci.OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
+        foreach (var item in platci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
         {
-            var stat = HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsFroQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}"));// new HlidacStatu.Lib.Analysis.QueryStatistic();
+            var stat = HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}"));// new HlidacStatu.Lib.Analysis.QueryStatistic();
             coreData.Add(item.Key, stat);
         }
     }
 
 
     var topF = platci
-        .OrderByDescending(o => o.Value.Years[o.Value.CurrentSeasonYear()].CelkemCena)
+        .OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena)
         //.ThenByDescending(o => o.Value.Summary.Pocet)
         .ToArray();
 
     var scale = HlidacStatu.Util.RenderData.GetBestScale(
         topF
-            .Select(m => m.Value.Years[m.Value.CurrentSeasonYear()-2].CelkemCena)
-            .Union(topF.Select(m => m.Value.Years[m.Value.CurrentSeasonYear()-1].CelkemCena))
-            .Union(topF.Select(m => m.Value.Years[m.Value.CurrentSeasonYear()].CelkemCena))
+            .Select(m => m.Value[m.Value.CurrentSeasonYear()-2].CelkemCena)
+            .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()-1].CelkemCena))
+            .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()].CelkemCena))
         ); //calculate it
 
     scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings

@@ -17,14 +17,15 @@ namespace HlidacStatu.Lib.Analytics
         public StatisticsSubjectPerYear()
         : base()
         { }
-        public StatisticsSubjectPerYear(string ico, StatisticsPerYear<T> baseObj)        
+
+        public StatisticsSubjectPerYear(string ico, StatisticsPerYear<T> baseObj)
+            :base(baseObj)
         {
             this.ICO = ico;
-            this.Years = baseObj.Years;
         }
 
         public StatisticsSubjectPerYear(string ico, Func<T, int> yearSelector, IEnumerable<T> data)
-            : base(yearSelector,data)
+            : base(yearSelector, data)
         {
             this.ICO = ico;
         }
@@ -43,12 +44,10 @@ namespace HlidacStatu.Lib.Analytics
 
         public static StatisticsSubjectPerYear<T> Aggregate(IEnumerable<StatisticsSubjectPerYear<T>> statistics)
         {
-            var aggregatedStatistics = new StatisticsSubjectPerYear<T>()
-            {
-                ICO = $"aggregated for {statistics.FirstOrDefault().ICO}"
-            };
-            aggregatedStatistics.Years = StatisticsPerYear<T>.AggregateStats(statistics).Years;
-
+            var aggregatedStatistics = new StatisticsSubjectPerYear<T>(
+                $"aggregated for {statistics.FirstOrDefault().ICO}",
+                StatisticsPerYear<T>.AggregateStats(statistics));
+            
             return aggregatedStatistics;
         }
 
