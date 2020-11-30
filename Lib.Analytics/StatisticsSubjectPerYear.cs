@@ -50,26 +50,5 @@ namespace HlidacStatu.Lib.Analytics
             return aggregatedStatistics;
         }
 
-        public new string Serialize()
-        {
-            var sd = new Dictionary<string, object>
-            {
-                [nameof(Years)] = Years,
-                [nameof(ICO)] = ICO
-            };
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(sd);
-        }
-
-        public new StatisticsSubjectPerYear<T> Deserialize(string json)
-        {
-            Dictionary<string, object> dd = Newtonsoft.Json.JsonConvert
-                .DeserializeObject<Dictionary<string, object>>(json);
-
-            Years = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, T>>(dd[nameof(Years)].ToString());
-            
-            ICO = (string)dd[nameof(ICO)];
-            return this;
-        }
     }
 }

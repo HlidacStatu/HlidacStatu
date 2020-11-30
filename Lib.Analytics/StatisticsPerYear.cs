@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +10,15 @@ namespace HlidacStatu.Lib.Analytics
     // !!!!! Michale, za žádnou cenu sem nedávej ToNiceString !!!! 
     // Nebo začne bůh topit koťátka, dokud ti to nesmažu! :-D
 
+
+    [JsonObject]
     public class StatisticsPerYear<T> : IEnumerable<(int Year, T Value)>
         where T : CoreStat, IAddable<T>, new()
     {
+        [JsonProperty("Years")]
         protected Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
+
+         
 
         /// <summary>
         /// Tenhle měsíc určuje, za který rok se AKTUÁLNÍ data mají zobrazovat.
@@ -266,24 +273,6 @@ namespace HlidacStatu.Lib.Analytics
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
-        public string Serialize()
-        {
-            var sd = new Dictionary<string, object>
-            {
-                [nameof(Years)] = Years 
-            };
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(sd);
-        }
-
-        public StatisticsPerYear<T> Deserialize(string json)
-        {
-            Dictionary<string, object> dd = Newtonsoft.Json.JsonConvert
-                .DeserializeObject<Dictionary<string, object>>(json);
-
-            Years = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, T>>(dd[nameof(Years)].ToString());
-            return this;
-        }
 
         
     }
