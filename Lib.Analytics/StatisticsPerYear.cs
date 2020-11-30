@@ -12,11 +12,12 @@ namespace HlidacStatu.Lib.Analytics
     {
         public Dictionary<int, T> Years { get; set; } = new Dictionary<int, T>();
 
+
+
         /// <summary>
         /// Tenhle měsíc určuje, za který rok se AKTUÁLNÍ data mají zobrazovat.
         /// Pokud chceme pro nějakou datovou sadu nastavit sezónu jinak, je potřeba ho změnit
         /// </summary>
-
         public StatisticsPerYear() { }
 
         public StatisticsPerYear(Func<T, int> yearSelector, IEnumerable<T> data)
