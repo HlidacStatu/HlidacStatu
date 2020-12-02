@@ -585,7 +585,7 @@ namespace HlidacStatu.Lib.Data
 
         public Osoba.Statistics.RegistrSmluv StatistikaRegistrSmluv(Relation.AktualnostType minAktualnost, int? obor=null)
         {
-            return Osoba.Statistics.RegistrSmluvCache(minAktualnost,obor).Get(this);
+            return Osoba.Statistics.CachedStatistics(this,minAktualnost,obor);
         }
 
         public Osoba Vazby(Graph.Edge[] vazby)

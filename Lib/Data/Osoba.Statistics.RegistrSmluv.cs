@@ -29,37 +29,23 @@ namespace HlidacStatu.Lib.Data
                 }
 
             }
-
-            static Dictionary<int, Util.Cache.CouchbaseCacheManager<RegistrSmluv,Osoba>> registrSmluvCaches
-                = new Dictionary<int, Util.Cache.CouchbaseCacheManager<RegistrSmluv, Osoba>>();
-
-            static object _registrSmluvCachesLock = new object();
-
-            internal static Util.Cache.CouchbaseCacheManager<RegistrSmluv, Osoba> RegistrSmluvCache(Data.Relation.AktualnostType aktualnost, int? obor)
-            {
-                obor = obor ?? 0;
-                if (registrSmluvCaches.ContainsKey(obor.Value) == false)
-                {
-                    lock (_registrSmluvCachesLock)
-                    {
-                        if (registrSmluvCaches.ContainsKey(obor.Value) == false)
-                        {
-                            registrSmluvCaches.Add(obor.Value,
-                                Util.Cache.CouchbaseCacheManager<RegistrSmluv, Osoba>
-                                .GetSafeInstance($"Osoba_{aktualnost}_SmlouvyStatistics_{obor.Value.ToString()}",
-                                    (osoba) => Calculate(osoba, aktualnost, obor),
+            static Util.Cache.CouchbaseCacheManager<RegistrSmluv, (Osoba os, int aktualnost, int? obor)> _cache
+                = Util.Cache.CouchbaseCacheManager<RegistrSmluv, (Osoba os, int aktualnost, int? obor)>
+                                .GetSafeInstance("Osoba_SmlouvyStatistics_",
+                                    (obj) => Calculate(obj.os, (Relation.AktualnostType)obj.aktualnost, obj.obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseBucket"],
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseUsername"],
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbasePassword"],
-                                    o => o.InternalId.ToString())
-                                );
-                        }
-                    }
-                }
-                return registrSmluvCaches[obor.Value];
+                                    obj => $"{obj.os.NameId}/{obj.aktualnost}/{(obj.obor ?? 0)}");
+
+
+            public static RegistrSmluv CachedStatistics(Osoba os, Relation.AktualnostType aktualnost, int? obor)
+            {
+                return _cache.Get((os, (int)aktualnost, obor));
             }
+
 
             public static RegistrSmluv Calculate(Osoba o, Data.Relation.AktualnostType aktualnost, int? obor)
             {
@@ -86,6 +72,8 @@ namespace HlidacStatu.Lib.Data
                     else
                         soukr.Add(it.f.ICO, it.ss);
                 }
+                res.StatniFirmy = statni;
+                res.SoukromeFirmy = soukr;
 
                 return res;
             }
