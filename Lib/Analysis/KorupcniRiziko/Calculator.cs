@@ -80,7 +80,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         //todo: dalo by se ještě refaktorovat, aby se vše bralo ze statistiky
         private KIndexData.Annual CalculateForYear(int year, bool forceCalculateAllYears)
         {
-            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv().StatisticsForYear(year).PocetSmluv;
+            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv()[year].PocetSmluv;
 
             KIndexData.Annual ret = new KIndexData.Annual(year);
             var fc = new FinanceDataCalculator(this.Ico, year);
@@ -88,13 +88,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //tohle by se dalo brát ze statistiky komplet...
             ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvSeZasadnimNedostatkem / smlouvyZaRok;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv().StatisticsForYear(year).PercentSmluvPolitiky;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv()[year].PercentSmluvPolitiky;
 
             ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvNovaFirma / smlouvyZaRok;
             ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvULimitu / smlouvyZaRok;
             ret.PercUzavrenoOVikendu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvOVikendu / smlouvyZaRok;
 
-            var stat = this.urad.StatistikaRegistruSmluv().StatisticsForYear(year);
+            var stat = this.urad.StatistikaRegistruSmluv()[year];
             //todo: tenhle objekt by mohl vycházet ze stávajícího nového objektu statistiky
             ret.Statistika = new KIndexData.StatistickeUdaje() 
             {
@@ -232,7 +232,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public KIndexData.Annual FinalCalculationKIdx(KIndexData.Annual ret, bool forceCalculateAllYears)
         {
-            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv().StatisticsForYear(ret.Rok).PocetSmluv;
+            decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv()[ret.Rok].PocetSmluv;
 
             CalculateKIndex(ret);
 

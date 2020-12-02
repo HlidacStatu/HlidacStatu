@@ -196,7 +196,7 @@ namespace HlidacStatu.Lib.Analytics
                 years = years.Where(y => onlyYears.Contains(y));
             foreach (var year in years)
             {
-                var statsForYear = statistics.Select(s => s.StatisticsForYear(year));
+                var statsForYear = statistics.Select(s => s[year]);
                 var val = statsForYear.Aggregate(new T(), (acc, s) => acc.Add(s));
 
                 aggregatedStatistics.Years.Add(year, val);

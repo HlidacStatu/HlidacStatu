@@ -41,7 +41,7 @@ namespace HlidacStatu.Lib.Analytics
                     property => {
                         Util.Consts.Logger.Debug($"Starting property {property} for {year}");
                         IEnumerable<decimal> globalData = dataForAllIcos
-                            .Select(d=> d.StatisticsForYear(year))
+                            .Select(d=> d[year])
                             .Where(allowedItems)
                             .Select(d =>
                                 GetDecimalValueOfNumericProperty(property, d))
