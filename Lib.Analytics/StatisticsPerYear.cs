@@ -61,7 +61,7 @@ namespace HlidacStatu.Lib.Analytics
         {
             get
             {
-                return Years.TryGetValue(year, out var value) ? value : default;
+                return Years.TryGetValue(year, out var value) ? value : new T ();
             }
             set
             {
@@ -149,27 +149,17 @@ namespace HlidacStatu.Lib.Analytics
         int lastYear,
         Func<T, decimal> selector)
         {
-            var firstStat = StatisticsForYear(firstYear);
-            var lastStat = StatisticsForYear(lastYear);
-
-            if (firstStat == null && lastStat == null)
-                return (0, 0); // možná vrátit chybu? protože neexistuje ani jeden
-
-            if (firstStat == null)
-            {
-                return (selector(lastStat), 100);  // není hodnota v minulosti => nárůst 100 %
-            }
-
-            if (lastStat == null)
-            {
-                return (-selector(firstStat), -100); // není hodnota v současnosti => pokles 100 %
-            }
+            var firstStat = this[firstYear];
+            var lastStat = this[lastYear];
 
             var firstValue = selector(firstStat);
             var lastValue = selector(lastStat);
 
+            if (firstValue == 0 && lastValue == 0)
+                return (0, 0);
+
             decimal change = lastValue - firstValue;
-            decimal percentage = change / firstValue;
+            decimal percentage = (firstValue == 0)? 1 : change / firstValue;
 
             return (change, percentage);
         }
@@ -189,17 +179,12 @@ namespace HlidacStatu.Lib.Analytics
 
         public T CurrentSeasonStatistics()
         {
-            return StatisticsForYear(CurrentSeasonYear());
+            return this[CurrentSeasonYear()];
         }
 
         public T StatisticsForYear(int year)
         {
-            if (Years.TryGetValue(year, out var statistics))
-            {
-                return statistics;
-            }
-
-            return default; //should we throw exception instead?
+            return this[year];
         }
 
         public static StatisticsPerYear<T> AggregateStats(IEnumerable<StatisticsPerYear<T>> statistics, int[] onlyYears = null)
