@@ -171,8 +171,7 @@
             V @(currentSeasonYear) utajil hodnotu kontraktu u
             <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
                 <strong>@(seasonStat.PocetSmluvBezCeny)</strong>
-                smluv
-            </a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) % ze všech.
+                smluv</a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
         </p>
         <a href="/subjekt2/RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>

@@ -177,7 +177,7 @@
                     </a>
                     za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
 
-                    @($"({(1 - zmenaObjemuSmluv.percentage).ToString("P2")} % rozpočtu za {currentSeasonYear - 1})")
+                    @($"({(1 + zmenaObjemuSmluv.percentage).ToString("P2")} objemu smluv za {currentSeasonYear - 1})")
 
                 </p>
 
@@ -185,8 +185,7 @@
                     V @(currentSeasonYear) utajil hodnotu kontraktu u
                     <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
                         <strong>@(seasonStat.PocetSmluvBezCeny)</strong>
-                        smluv
-                    </a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) % ze všech.
+                        smluv</a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
                 </p>
             </div>
 
@@ -288,7 +287,7 @@
                         @if (Model.Firma.PatrimStatu())
                         {
                             <text>
-                                @(summaryAfter2016.PercentSmluvPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                                @(summaryAfter2016.PercentSmluvPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
                             </text>}
                     </div>
                 </div>
@@ -307,7 +306,7 @@
                         @if (Model.Firma.PatrimStatu())
                         {
                             <text>
-                                @(holdingSummaryAfter2016.PercentSmluvPolitiky.ToString("P1"))smluv s firmami navázanými na politiky
+                                @(holdingSummaryAfter2016.PercentSmluvPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
                             </text>}
                     </div>
                 </div>
