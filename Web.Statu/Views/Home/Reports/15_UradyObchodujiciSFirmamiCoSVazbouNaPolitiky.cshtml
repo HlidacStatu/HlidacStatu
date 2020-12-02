@@ -33,9 +33,11 @@
 {
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() { Name="Úřad",
 HtmlRender = (s) => {
+            var f = Firmy.Get(s.Ico);
             return string.Format("<a href='/subjekt/{0}'>{1}</a> <br/> {2}", s.Ico,
-                Firmy.GetJmeno(s.Ico),
-                ACore.GetBasicStatisticForICO(s.Ico).Summary.ToNiceString(null,true,"/subjekt/"+s.Ico));
+                f.Jmeno,
+                f.StatistikaRegistruSmluv().Summary().ToNiceString(null,true,"/subjekt/"+s.Ico)
+                );
         },
 OrderValueRender = (s) => {
             return Firmy.GetJmeno(s.Ico);
@@ -53,17 +55,17 @@ OrderValueRender = (s) => {
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
 Name ="% všech smluv",
 HtmlRender = (s) => {
-            var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            if (stat.Summary.Pocet > 0)
+            var stat = Firmy.Get(s.Ico).StatistikaRegistruSmluv();
+            if (stat.Summary().PocetSmluv > 0)
             {
-                return ((double)s.Pocet/(double)stat.Summary.Pocet).ToString("P2");
+                return ((double)s.Pocet/(double)stat.Summary().PocetSmluv).ToString("P2");
             }
             else
                 return "0";
         },
 OrderValueRender = (s) => {
-            var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            return HlidacStatu.Util.RenderData.OrderValueFormat(stat.Summary.Pocet);
+            var stat = Firmy.Get(s.Ico).StatistikaRegistruSmluv();
+            return HlidacStatu.Util.RenderData.OrderValueFormat(stat.Summary().PocetSmluv);
     }
 },
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
@@ -78,17 +80,17 @@ OrderValueRender = (s) => {
 new  ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>.Column() {
     Name ="% hodnoty všech smluv",
     HtmlRender = (s) => {
-            var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            if (stat.Summary.CelkemCena > 0)
+            var stat = Firmy.Get(s.Ico).StatistikaRegistruSmluv();
+            if (stat.Summary().CelkovaHodnotaSmluv > 0)
             {
-                return (s.CelkemCena/stat.Summary.CelkemCena).ToString("P1");
+                return (s.CelkemCena/stat.Summary().CelkovaHodnotaSmluv).ToString("P1");
             }
             else
                 return "0";
         },
 OrderValueRender = (s) => {
-            var stat = ACore.GetBasicStatisticForICO(s.Ico);
-            return HlidacStatu.Util.RenderData.OrderValueFormat((stat.Summary.CelkemCena));
+            var stat = Firmy.Get(s.Ico).StatistikaRegistruSmluv();
+            return HlidacStatu.Util.RenderData.OrderValueFormat((stat.Summary().CelkovaHodnotaSmluv));
     }
 },
 

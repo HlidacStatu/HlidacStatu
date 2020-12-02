@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Data
                 return cache;
             }
 
-            public partial class Dotace : IAddable<Dotace>
+            public partial class Dotace : CoreStat, IAddable<Dotace>
             {
                 public int PocetDotaci { get; set; } = 0;
                 public int PocetCerpani { get; set; } = 0;
@@ -37,6 +37,15 @@ namespace HlidacStatu.Lib.Data
                     var dotaceService = new Data.Dotace.DotaceService();
                     var dotaceFirmy = dotaceService.GetDotaceForIco(f.ICO);
 
+                    // doplnit počty dotací
+                    var statistiky = dotaceFirmy.GroupBy(d => d.DatumPodpisu?.Year)
+                        .ToDictionary(g => g.Key ?? 0,
+                            g => new Statistics.Dotace()
+                            {
+                                PocetDotaci = g.Count()
+                            }
+                        );
+
                     var cerpani = dotaceFirmy
                         .SelectMany(d => d.Rozhodnuti)
                         .SelectMany(r => r.Cerpani);
@@ -44,20 +53,24 @@ namespace HlidacStatu.Lib.Data
                     var dataYearly = cerpani
                         .GroupBy(c => c.GuessedYear)
                         .ToDictionary(g => g.Key ?? 0,
-                            g => new Statistics.Dotace()
-                            {
-                                CelkemCerpano = g.Sum(c => c.CastkaSpotrebovana ?? 0),
-                                PocetCerpani = g.Count(c => c.CastkaSpotrebovana.HasValue)
-                            });
+                            g => (CelkemCerpano: g.Sum(c => c.CastkaSpotrebovana ?? 0),
+                                PocetCerpani: g.Count(c => c.CastkaSpotrebovana.HasValue))
+                            );
 
-                    // doplnit počty dotací
-                    foreach(int year in dataYearly.Keys)
+                    foreach(var dy in dataYearly)
                     {
-                        int pocetDotaci = dotaceFirmy.Count(d => (d.DatumPodpisu?.Year ?? 0) == year);
-                        dataYearly[year].PocetDotaci = pocetDotaci;
+                        if (!statistiky.TryGetValue(dy.Key, out var yearstat))
+                        {
+                            yearstat = new Statistics.Dotace();
+                            statistiky.Add(dy.Key, yearstat);
+                        }
+
+                        yearstat.CelkemCerpano = dy.Value.CelkemCerpano;
+                        yearstat.PocetCerpani = dy.Value.PocetCerpani;
                     }
 
-                    return new Analytics.StatisticsSubjectPerYear<Statistics.Dotace>(f.ICO, dataYearly);
+
+                    return new Analytics.StatisticsSubjectPerYear<Statistics.Dotace>(f.ICO, statistiky);
                 }
 
                 public Dotace Add(Dotace other)
@@ -68,6 +81,16 @@ namespace HlidacStatu.Lib.Data
                         PocetCerpani = PocetCerpani + (other?.PocetCerpani ?? 0),
                         PocetDotaci = PocetDotaci + (other?.PocetDotaci ?? 0)
                     };
+                }
+
+                public override int NewSeasonStartMonth()
+                {
+                    return 1;
+                }
+
+                public override int UsualFirstYear()
+                {
+                    return 2000;
                 }
             }
         }

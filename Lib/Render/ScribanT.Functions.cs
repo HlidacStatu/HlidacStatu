@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HlidacStatu.Lib.Analytics;
+
+using Newtonsoft.Json.Linq;
 
 using Scriban.Runtime;
 
@@ -106,8 +108,14 @@ namespace HlidacStatu.Lib.Render
                     HlidacStatu.Lib.Data.Osoba o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(osobaId);
                     if (o != null)
                     {
-                        var stat = o.Statistic(Data.Relation.AktualnostType.Nedavny);
-                        return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
+                        var stat = o.StatistikaRegistrSmluv(Data.Relation.AktualnostType.Nedavny);
+                        //return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines)}{postfix}</span>";
+                        var s = stat.SoukromeFirmy.Values
+                                        .AggregateStats()
+                                        .Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilSeassonYear)
+                                        .ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=osobaId:" + o.NameId, twoLines: twoLines);
+
+                        return $"<span>{prefix}{s}{postfix}</span>";
                     }
                 }
                 return string.Empty;
@@ -154,11 +162,19 @@ namespace HlidacStatu.Lib.Render
             {
                 if (!string.IsNullOrEmpty(ico))
                 {
-                    HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
-                    if (o.Valid)
+                    var firma = Data.Firmy.instanceByIco.Get(ico);
+                    if (firma.Valid)
                     {
-                        var stat = o.Statistic();
-                        return $"<span>{prefix}{stat.BasicStatPerYear.SummaryAfter2016().ToNiceString(o, true, customUrl: "/hledatSmlouvy?q=ico:" + o.ICO, twoLines: twoLines)}{postfix}</span>";
+                        var stat = firma.StatistikaRegistruSmluv();
+                        var pocet = stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv);
+                        var celkem = stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv); 
+
+                        string niceString = $"<a href='/hledatSmlouvy?q=ico:{firma.ICO}'>" +
+                            Devmasters.Lang.Plural.Get(pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                            "</a>" + (twoLines ? "<br />" : " za ") +
+                            "celkem " + Data.Smlouva.NicePrice(celkem, html: true, shortFormat: true);
+
+                        return $"<span>{prefix}{niceString}{postfix}</span>";
                     }
                     else
                         return $"";

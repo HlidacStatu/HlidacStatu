@@ -8,23 +8,28 @@
 
 @{
     Layout = null;
+
+    var ceo = Model.Ceo();
 }
 
 @* Pravý sloupec *@
 <div class="col-sm-4 col-sm-push-8 col-xs-12 col-xs-push-0">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="person-profile-thumb">
-                <div class="photo">
-                    <div class="profile-picture" style="background-image: url('https://www.hlidacstatu.cz/Photo/alena-schillerova')"></div>
+        @if(ceo.Osoba != null && ceo.Osoba.IsValid())
+        {
+            <div class="col-sm-4">
+                <div class="person-profile-thumb">
+                    <div class="photo">
+                        <div class="profile-picture" style="background-image: url('@ceo.Osoba.GetPhotoUrl(local: true)')"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-8">
-            <p class="py-0 my-0 text-muted">Aktuální ministr</p>
-            <p class="py-0 my-0 lead">JUDr. Alena Schillerová, Ph.D</p>
-            <p class="py-0 my-0">od 13. 12. 2017</p>
-        </div>
+            <div class="col-sm-8">
+                <p class="py-0 my-0 text-muted">Aktuální ředitel</p>
+                <p class="py-0 my-0 lead">@ceo.Osoba.FullName()</p>
+                <p class="py-0 my-0">od @(ceo.From?.ToString("dd.MM.yyyy"))</p>
+            </div>
+        }
     </div>
     <hr />
     <div>

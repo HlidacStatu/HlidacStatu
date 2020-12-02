@@ -98,8 +98,8 @@
     <Reference Include="Devmasters.IO, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.IO.2.1.2\lib\net48\Devmasters.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Lang, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Lang.2.1.0\lib\net48\Devmasters.Lang.dll</HintPath>
+    <Reference Include="Devmasters.Lang, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Lang.2.1.1\lib\net48\Devmasters.Lang.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Logging, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Logging.2.1.1\lib\net48\Devmasters.Logging.dll</HintPath>
@@ -1612,7 +1612,6 @@
     <Content Include="Views\Home\Reports\23_TopSubjektyStat.cshtml" />
     <Content Include="Views\Home\Reports\24_TopOsobyStat.cshtml" />
     <Content Include="Views\Home\AnalyzaPlatcu.cshtml" />
-    <Content Include="Views\Home\Subjekt_Stat2.cshtml" />
     <Content Include="Views\Home\ImageBannerCore1x1_social.cshtml" />
     <Content Include="Views\Home\ImageBannerCore16x9_social.cshtml" />
     <Content Include="Views\Home\ImageBannerCore16x9_quote.cshtml" />
@@ -1791,6 +1790,10 @@
     <ProjectReference Include="..\HlidacStatu.Q\HlidacStatu.Q.csproj">
       <Project>{9bd61768-3817-4bc5-93be-df3977193a2c}</Project>
       <Name>HlidacStatu.Q</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib.Analytics\Lib.Analytics.csproj">
+      <Project>{e4fa65d3-95f2-487f-9d95-017d6409ff06}</Project>
+      <Name>Lib.Analytics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib.Data.External\Lib.Data.External.csproj">
       <Project>{becfa974-d320-433a-af91-84548d48e35f}</Project>

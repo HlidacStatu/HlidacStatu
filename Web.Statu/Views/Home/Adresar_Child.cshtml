@@ -245,31 +245,31 @@
 
 @helper SubjectStatistic(HlidacStatu.Lib.Data.Firma firma)
 {
-    HlidacStatu.Lib.Analysis.SubjectStatistic item = new HlidacStatu.Lib.Analysis.SubjectStatistic(firma);
+    HlidacStatu.Lib.Analytics.StatisticsSubjectPerYear<HlidacStatu.Lib.Data.Smlouva.Statistics.Data> item = firma.StatistikaRegistruSmluv();
 
     string icon = string.Empty;
     string sclass = "ok";
 
-    if (item.BasicStatPerYear.Summary.Pocet == 0)
+    if (item.Summary().PocetSmluv == 0)
     {
         icon = @"&nbsp;<span class='text-danger glyphicon glyphicon-exclamation-sign' style='font-size:90%;' aria-hidden='true'></span>";
         sclass = "invalid";
     }
-    else if (item.BasicStatPerYear.Summary.CelkemCena < 50000)
+    else if (item.Summary().CelkovaHodnotaSmluv < 50000)
     {
         icon = @"&nbsp;<span class='text-warning glyphicon glyphicon-exclamation-sign' style='font-size:90%;' aria-hidden='true' ></span>";
         sclass = "invalid";
     }
 <li class="@sclass">
-    @Html.KIndexLabelLink(item.Subject().ICO)<a href="/subjekt/@item.Subject().ICO">@(item.Subject().Jmeno)</a> (
-    @Devmasters.Lang.Plural.Get((int)item.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv");
-    celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true))
+    @Html.KIndexLabelLink(firma.ICO)<a href="/subjekt/@firma.ICO">@(firma.Jmeno)</a> (
+    @Devmasters.Lang.Plural.Get(item.Summary().PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv");
+    celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(item.Summary().CelkovaHodnotaSmluv, html: true, shortFormat: true))
 
     @Html.Raw(
-                  item.Subject()?.ICO == "66003008" ?
-                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} smluv skrývá cenu</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                  firma.ICO == "66003008" ?
+                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} smluv skrývá cenu</abbr>", item.Summary().PercentSmluvBezCeny)
                   :
-                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} bez ceny</abbr>", item.RatingPerYear.Summary.PercentBezCeny)
+                  string.Format(", <abbr title='{0:P2} smluv bez cen'>{0:P2} bez ceny</abbr>", item.Summary().PercentSmluvBezCeny)
                  )
     )@Html.Raw(icon)
 </li>

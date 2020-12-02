@@ -74,12 +74,12 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
 
     @helper QueryStatistics(HlidacStatu.Lib.Analysis.TemplatedQuery item)
     {
-        <div class="bs-callout @(WebUtil.IfExists(item.Data.Summary.Pocet==0,"bs-callout-success","bs-callout-danger"))">
+        <div class="bs-callout @(WebUtil.IfExists(item.Data.Summary().PocetSmluv==0,"bs-callout-success","bs-callout-danger"))">
             <h4>
                 <a href="@item.Url()">@Html.Raw(item.Text)</a>
             </h4>
             <p>
-                @if (item.Data.Summary.Pocet == 0)
+                @if (item.Data.Summary().PocetSmluv == 0)
                 {
                     <strong>
                         Zatím žádné smlouvy
@@ -88,18 +88,18 @@ Query ="ico:62620177 OR ico:49357778", UrlTemplate = "/HledatSmlouvy?Q={0}"},
                 }
                 else
                 {
-                    for (int y = item.Data.FirstYear; y <= item.Data.LastYear; y++)
+                    for (int y = item.Data.FirstYear(); y <= item.Data.LastYear(); y++)
                     {
                         var iy = item.Data[y];
-                        if (iy.Pocet > 0)
+                        if (iy.PocetSmluv > 0)
                         {
                             <div>
                                 V roce @y  
                                 <strong>
-                                    <a href="@item.Url()">@Devmasters.Lang.Plural.Get((int)iy.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
+                                    <a href="@item.Url()">@Devmasters.Lang.Plural.Get(iy.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv")</a>
                                 </strong>
 
-                                za celkem <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(iy.CelkemCena, html: true, shortFormat: true))</strong>.
+                                za celkem <strong>@Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(iy.CelkovaHodnotaSmluv, html: true, shortFormat: true))</strong>.
                             </div>
                         }
                     }

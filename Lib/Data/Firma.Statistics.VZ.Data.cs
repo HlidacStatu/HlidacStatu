@@ -8,7 +8,7 @@ namespace HlidacStatu.Lib.Data
         {
             public partial class VZ
             {
-                public class Data : IAddable<Data>
+                public class Data : CoreStat, IAddable<Data>
                 {
                     public long PocetVypsanychVZ { get; set; } = 0;
                     public decimal PocetUcastiVeVZ { get; set; } = 0;
@@ -19,6 +19,16 @@ namespace HlidacStatu.Lib.Data
                     public Data Add(Data other)
                     {
                         throw new System.NotImplementedException();
+                    }
+
+                    public override int NewSeasonStartMonth()
+                    {
+                        return 4;
+                    }
+
+                    public override int UsualFirstYear()
+                    {
+                        return 2010;
                     }
                 }
             }

@@ -92,7 +92,7 @@ namespace HlidacStatu.Lib.Analysis
             // Pokud není nic menšího, tak vrátíme první nalezný rok (většinou ten nejvyšší)
             int displayYear = commonYears
                 .Aggregate((aggregate, current) =>
-                    (current <= bestYearToDisplay 
+                    (current <= bestYearToDisplay
                     && (current > aggregate || aggregate > bestYearToDisplay)
                     ) ? current : aggregate
                 );

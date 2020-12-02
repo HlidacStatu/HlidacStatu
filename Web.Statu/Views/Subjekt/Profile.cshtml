@@ -47,7 +47,7 @@
 
 
 
-    var statistics = new HlidacStatu.Lib.Analysis.SubjectStatistic(Model);
+    var statistics = Model.StatistikaRegistruSmluv();
 
     int chartMinDate = 2016;
     int chartMaxDate = DateTime.Now.Year;
@@ -309,14 +309,14 @@
                                                               "dostala",
                                                               "dostaly",
                                                               "dostalo")
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total - dotaceSearch.Total),
                                                                                           " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                           " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                           " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
                                 </p>
                                 <p>
                                     Úřad <b>@(Model.Jmeno)</b> včetně podřízených organizací dostal celkem
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total),
                                                            " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
@@ -332,14 +332,14 @@
                                                               "dostala",
                                                               "dostaly",
                                                               "dostalo")
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total - dotaceSearch.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total - dotaceSearch.Total),
                                                                                           " ještě <b>jednu dotaci</b>" + sdotaceHDiffKc,
                                                                                           " další <b>{0} dotace</b>" + sdotaceHDiffKc,
                                                                                           " dalších <b>{0} dotací</b>" + sdotaceHDiffKc))
                                 </p>
                                 <p>
                                     Celý holding včetně <b>@(Model.Jmeno)</b> dostal celkem
-                                    @Html.Raw(Devmasters.Lang.Plural.Get((int)(dotaceSearchH.Total),
+                                    @Html.Raw(Devmasters.Lang.Plural.Get((dotaceSearchH.Total),
                                                            " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
                                                            " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))

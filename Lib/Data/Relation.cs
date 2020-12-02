@@ -328,9 +328,10 @@ namespace HlidacStatu.Lib.Data
                     continue;
 
                 var last = i == (rels.Count() - 1);
-                Analysis.SubjectStatistic stat = null;
+                Analytics.StatisticsSubjectPerYear<Data.Smlouva.Statistics.Data>  stat = null;
                 if (withStats && rel.To.Type == Graph.Node.NodeType.Company)
-                    stat = new Analysis.SubjectStatistic(rel.To.Id);
+                    stat = Firmy.Get(rel.To.Id).StatistikaRegistruSmluv(); //new Analysis.SubjectStatistic(rel.To.Id);
+
                 string subjId = rel.To.Type == Graph.Node.NodeType.Company ? rel.To.Id : "Osoba";
                 string subjName = rel.To.PrintName();
                 renderedIds.Add(rel.To.UniqId);
@@ -363,8 +364,8 @@ namespace HlidacStatu.Lib.Data
                                 subjName,
                                 PrintFlatRelations(rel, level + 1, relations, typ,renderedIds, withStats),
                                 last ? "" : "connect",
-                                Devmasters.Lang.Plural.Get((int)stat.BasicStatPerYear.Summary.Pocet, "{0} smlouva;{0} smlouvy;{0} smluv"),
-                                Smlouva.NicePrice(stat.BasicStatPerYear.Summary.CelkemCena, html: true, shortFormat: true),
+                                Devmasters.Lang.Plural.Get(stat.Summary().PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv"),
+                                Smlouva.NicePrice(stat.Summary().CelkovaHodnotaSmluv, html: true, shortFormat: true),
                                 "aktualnost" + ((int)rel.Aktualnost).ToString(),
                                 (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba("/{0}/") : string.Empty
                             );

@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Devmasters.Batch, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -94,8 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consts.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="IAddable.cs" />
     <Compile Include="PropertyYearPercentiles.cs" />
+    <Compile Include="CoreStat.cs" />
+    <Compile Include="SimpleStat.cs" />
+    <Compile Include="StatisticsPerYear.cs" />
     <Compile Include="StatisticsSubjectPerYear.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalStatisticsPerYear.cs" />

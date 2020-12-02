@@ -9,6 +9,27 @@ namespace HlidacStatu.Lib
 {
     public static class Extensions
     {
+
+        public static string ToNiceString(this Lib.Data.Smlouva.Statistics.Data stat, Data.Bookmark.IBookmarkable item, bool html = true, string customUrl = null, bool twoLines = false)
+        {
+
+            if (html)
+            {
+                var s = "<a href='" + (customUrl ?? (item?.GetUrl(false) ?? "")) + "'>" +
+                            Devmasters.Lang.Plural.Get(stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                        "</a>" + (twoLines ? "<br />" : " za ") +
+                        "celkem " +
+                        HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.CelkovaHodnotaSmluv, html: true, shortFormat: true);
+                return s;
+            }
+            else
+                return Devmasters.Lang.Plural.Get(stat.PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv") +
+                    " za celkem " + HlidacStatu.Lib.Data.Smlouva.NicePrice(stat.CelkovaHodnotaSmluv, html: false, shortFormat: true);
+
+        }
+
+
+
         public static IOrderedEnumerable<Osoba> OrderPoliticiByImportance(this IEnumerable<Osoba> source)
         {
             return source.OrderBy(o =>

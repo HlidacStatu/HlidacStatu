@@ -113,15 +113,24 @@
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
         <div>
+            <p>
+                2017 = @(Model.Firma.HoldingStatisticsDotace(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).StatisticsForYear(2017)?.CelkemCerpano)
+            </p>
+            <p>
+                2018 = @(Model.Firma.HoldingStatisticsDotace(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).StatisticsForYear(2018)?.CelkemCerpano)
+            </p>
+            <p>
+                2019 = @(Model.Firma.HoldingStatisticsDotace(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).StatisticsForYear(2019)?.CelkemCerpano)
+            </p>
             <h4>Souhrn</h4>
             @{
                 var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-                
-                string durl = "/dotace/hledat?Q=ico%3A+" + Model.Firma.ICO;
-                var dotaceSuma = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.CelkemCerpano);
-                var dotacePocet = Model.Firma.StatistikaDotaci().Years.Values.Sum(v => v.PocetDotaci);
 
-                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceSuma, html: true) + "</b>."; 
+                string durl = "/dotace/hledat?Q=ico%3A+" + Model.Firma.ICO;
+                var dotaceSuma = Model.Firma.StatistikaDotaci().Sum(s => s.CelkemCerpano);
+                var dotacePocet = Model.Firma.StatistikaDotaci().Sum(v => v.PocetDotaci);
+
+                var sdotaceKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(dotaceSuma, html: true) + "</b>.";
             }
 
             @if (Model.Firma.JsemOVM())
@@ -157,7 +166,7 @@
 
                 if (totalCountDotaceHolding - dotacePocet > 0)
                 {
-                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotacePocet, html: true) + "</b>.";
+                    var sdotaceHDiffKc = " v hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding - dotaceSuma, html: true) + "</b>.";
                     var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(totalSumDotaceHolding, html: true) + "</b>.";
                     string durlH = "/dotace/hledat?Q=holding%3A+" + Model.Firma.ICO;
                     if (Model.Firma.JsemOVM())

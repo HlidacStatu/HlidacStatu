@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Analysis
         public int FirstYear = UsualFirstYear;
         public int LastYear = System.DateTime.Now.Year;
 
-        
+
     }
 
 

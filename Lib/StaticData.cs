@@ -51,16 +51,13 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>> FirmyNazvyOnlyAscii = null;
 
         public static Devmasters.Cache.File.FileCache<IEnumerable<AnalysisCalculation.IcoSmlouvaMinMax>> FirmyCasovePodezreleZalozene = null;
-        public static Devmasters.Cache.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>> UradyObchodujiciSCasovePodezrelymiFirmami = null;
-
-        public static Devmasters.Cache.File.FileCache<List<KeyValuePair<HlidacStatu.Lib.Data.Osoba, Analysis.BasicData<string>>>> SponzorisVazbouNaStat = null;
 
 
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_aktualni_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
 
-        public static Devmasters.Cache.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
+        public static Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
 
         //public static Devmasters.Cache.File.FileCache<string[]> SmlouvySPolitiky_nedavne_Cache = null;
         //public static Devmasters.Cache.File.FileCache<string[]> SmlouvySPolitiky_aktualni_Cache = null;
@@ -308,10 +305,10 @@ namespace HlidacStatu.Lib
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Insolvence_firem_politiku ");
-                Insolvence_firem_politiku_Cache = new Devmasters.Cache.File.FileCache<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>[]>(
+                Insolvence_firem_politiku_Cache = new Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]>(
                                 StaticData.App_Data_Path, TimeSpan.Zero, "Insolvence_firem_politiku", (obj) =>
                                  {
-                                     var ret = new List<Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>>();
+                                     var ret = new List<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>>();
                                      var lockObj = new object();
                                      Devmasters.Batch.Manager.DoActionForAll<Osoba>(PolitickyAktivni.Get().Where(m => m.StatusOsoby() == Osoba.StatusOsobyEnum.Politik).Distinct(),
                                          (o) =>
@@ -356,9 +353,9 @@ namespace HlidacStatu.Lib
                                                      {
                                                          lock (lockObj)
                                                          {
-                                                             HlidacStatu.Lib.Analysis.OsobaStatistic stat = o.Statistic(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
+                                                             Osoba.Statistics.RegistrSmluv stat = o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
-                                                             ret.Add(new Tuple<Analysis.OsobaStatistic, Data.Insolvence.RizeniStatistic[]>(
+                                                             ret.Add(new Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>(
                                                                                  stat, insolvenceIntoList
                                                                                          .Select(m => new Data.Insolvence.RizeniStatistic(m, icos))
                                                                                          .ToArray()
@@ -523,53 +520,6 @@ namespace HlidacStatu.Lib
                 //dalsi vyjimky
                 Urady_OVM.Add("00832227");//Euroregion Neisse - Nisa - Nysa
 
-
-HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
-                SponzorisVazbouNaStat = new Devmasters.Cache.File.FileCache<List<KeyValuePair<Osoba, Analysis.BasicData<string>>>>(
-                    StaticData.App_Data_Path, TimeSpan.Zero, "Sponzori_s_vazbouNaStat",
-                    (o) =>
-                    {
-                        try
-                        {
-
-                            var vazbyNaPolitiky = StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get();
-                            var allSponsors = HlidacStatu.Lib.Data.Sponsors.GetAllSponsors();
-                            Dictionary<int, Analysis.BasicData<string>> sponzoriTmpCalc = new Dictionary<int, Analysis.BasicData<string>>();
-                            foreach (var kvFirma in vazbyNaPolitiky.SoukromeFirmy)
-                            {
-                                var politiciVeFirme = kvFirma.Value;
-                                if (politiciVeFirme.Any(p => allSponsors.ContainsKey(p)))
-                                {
-                                    var statForFirma = new Analysis.SubjectStatistic(kvFirma.Key);
-                                    foreach (var p in politiciVeFirme.Distinct())
-                                    {
-                                        if (allSponsors.ContainsKey(p))
-                                        {
-                                            if (sponzoriTmpCalc.ContainsKey(p))
-                                            {
-                                                sponzoriTmpCalc[p].CelkemCena += statForFirma.BasicStatPerYear.Summary.CelkemCena;
-                                                sponzoriTmpCalc[p].Pocet += statForFirma.BasicStatPerYear.Summary.Pocet;
-                                            }
-                                            else
-                                            {
-                                                sponzoriTmpCalc.Add(p, statForFirma.ToBasicData());
-                                            }
-                                        }
-
-                                    }
-                                }
-
-                            }
-                            return sponzoriTmpCalc.Select(m => new KeyValuePair<Osoba, Analysis.BasicData<string>>(allSponsors[m.Key], m.Value)).ToList();
-                        }
-                        catch (Exception e)
-                        {
-                            HlidacStatu.Util.Consts.Logger.Error("SponzorisVazbouNaStat", e);
-                            throw;
-                        }
-                    }
-                    );
-
                 HlidacStatu.Util.Consts.Logger.Info("Static data - Mestske_Firmy ");
                 VsechnyStatniMestskeFirmy = System.IO.File
                     .ReadAllLines(StaticData.App_Data_Path + "mistni_firmy_ico.txt")
@@ -614,13 +564,6 @@ HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorisVazbouNaStat ");
                    (o) =>
                    {
                        return Lib.Data.AnalysisCalculation.GetFirmyCasovePodezreleZalozene();
-                   });
-
-                UradyObchodujiciSCasovePodezrelymiFirmami = new Devmasters.Cache.File.FileCache<Dictionary<string, Analysis.BasicDataForSubject<List<Analysis.BasicData<string>>>>>
-                   (StaticData.App_Data_Path, TimeSpan.Zero, "UradyObchodujiciSCasovePodezrelymiFirmami",
-                   (o) =>
-                   {
-                       return Lib.Data.AnalysisCalculation.GetUradyObchodujiciSCasovePodezrelymiFirmami();
                    });
 
 
