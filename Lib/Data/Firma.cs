@@ -1014,21 +1014,24 @@ namespace HlidacStatu.Lib.Data
                             , InfoFact.ImportanceLevel.Summary)
                             );
 
-                        (decimal zmena, decimal procentniZmena) = stat.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
-                        string text = $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> ";
-                        switch (zmena)
+                        (decimal zmena, decimal? procentniZmena) = stat.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
+                        if (procentniZmena.HasValue)
                         {
-                            case decimal n when n > 0:
-                                text += $"došlo k <b>nárůstu zakázek o&nbsp;{procentniZmena:P2}</b> v&nbsp;Kč. ";
-                                break;
-                            case decimal n when n < 0:
-                                text += $"došlo k <b>poklesu zakázek o&nbsp;{procentniZmena:P2}</b> v&nbsp;Kč . ";
-                                break;
-                            default:
-                                text += " nedošlo ke změně objemu zakázek. ";
-                                break;
+                            string text = $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> ";
+                            switch (zmena)
+                            {
+                                case decimal n when n > 0:
+                                    text += $"došlo k <b>nárůstu zakázek o&nbsp;{procentniZmena:P2}</b> v&nbsp;Kč. ";
+                                    break;
+                                case decimal n when n < 0:
+                                    text += $"došlo k <b>poklesu zakázek o&nbsp;{procentniZmena:P2}</b> v&nbsp;Kč . ";
+                                    break;
+                                default:
+                                    text += " nedošlo ke změně objemu zakázek. ";
+                                    break;
+                            }
+                            f.Add(new InfoFact(text, InfoFact.ImportanceLevel.Medium));
                         }
-                        f.Add(new InfoFact(text, InfoFact.ImportanceLevel.Medium));
 
                         if (stat[rok].PocetSmluvBezCeny > 0)
                         {
@@ -1172,22 +1175,25 @@ namespace HlidacStatu.Lib.Data
                                 );
 
                             string text = $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> ";
-                            (decimal zmena, decimal procentniZmena) = statHolding.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
-
-                            switch (zmena)
+                            (decimal zmena, decimal? procentniZmena) = statHolding.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
+                            
+                            if(procentniZmena.HasValue)
                             {
-                                case decimal n when n > 0:
-                                    text += $"celému holdingu narostla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
-                                    break;
-                                case decimal n when n < 0:
-                                    text += $"celému holdingu poklesla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
-                                    break;
-                                default:
-                                    text += "nedošlo pro celý holding ke změně hodnoty smluv. ";
-                                    break;
-                            }
+                                switch (zmena)
+                                {
+                                    case decimal n when n > 0:
+                                        text += $"celému holdingu narostla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
+                                        break;
+                                    case decimal n when n < 0:
+                                        text += $"celému holdingu poklesla hodnota smluv o&nbsp;<b>{procentniZmena:P2}</b>. ";
+                                        break;
+                                    default:
+                                        text += "nedošlo pro celý holding ke změně hodnoty smluv. ";
+                                        break;
+                                }
 
-                            f.Add(new InfoFact(text, InfoFact.ImportanceLevel.Low));
+                                f.Add(new InfoFact(text, InfoFact.ImportanceLevel.Low));
+                            }
                         }
                     }
 

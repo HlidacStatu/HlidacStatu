@@ -138,14 +138,13 @@ namespace HlidacStatu.Lib.Analytics
                 .ToArray();
         }
 
-        public (decimal change, decimal percentage) ChangeBetweenYears(int forYear,
+        public (decimal change, decimal? percentage) ChangeBetweenYears(int forYear,
             Func<T, decimal> selector)
         {
             return ChangeBetweenYears(forYear - 1, forYear, selector);
         }
 
-        //todo: promyslet výsledky
-        public (decimal change, decimal percentage) ChangeBetweenYears(int firstYear,
+        public (decimal change, decimal? percentage) ChangeBetweenYears(int firstYear,
         int lastYear,
         Func<T, decimal> selector)
         {
@@ -155,11 +154,11 @@ namespace HlidacStatu.Lib.Analytics
             var firstValue = selector(firstStat);
             var lastValue = selector(lastStat);
 
-            if (firstValue == 0 && lastValue == 0)
-                return (0, 0);
+            if (firstValue == 0)
+                return (0, null);
 
             decimal change = lastValue - firstValue;
-            decimal percentage = (firstValue == 0)? 1 : change / firstValue;
+            decimal percentage = change / firstValue;
 
             return (change, percentage);
         }
