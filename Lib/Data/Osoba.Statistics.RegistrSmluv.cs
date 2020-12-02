@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HlidacStatu.Lib.Analytics;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -11,27 +12,69 @@ namespace HlidacStatu.Lib.Data
         {
             public class RegistrSmluv
             {
+
                 public string OsobaNameId { get; set; }
+                public Relation.AktualnostType Aktualnost { get; set; }
+                public Smlouva.SClassification.ClassificationsTypes? Obor { get; set; } = null;
+
                 public Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> StatniFirmy { get; set; }
                 public Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> SoukromeFirmy { get; set; }
 
-                int _neziskovkyCount = -1;
-                public int NeziskovkyCount()
+                string[] _neziskovkyIcos = null;
+                public string[] Neziskovky()
                 {
-                    if (_neziskovkyCount < 0)
-                        _neziskovkyCount = this.SoukromeFirmy.Select(m => Data.Firmy.Get(m.Key)).Where(ff => ff.JsemNeziskovka()).Count();
-                    return _neziskovkyCount;
+                    if (_neziskovkyIcos == null)
+                    {
+                        _neziskovkyIcos = this.SoukromeFirmy
+                            .Select(m => Data.Firmy.Get(m.Key))
+                            .Where(ff => ff.JsemNeziskovka())
+                            .Select(s => s.ICO)
+                            .ToArray();
+                    }
+                    return _neziskovkyIcos;
                 }
+
+                public int NeziskovkyCount() => Neziskovky().Count();
 
                 public int KomercniFirmyCount()
                 {
                     return this.SoukromeFirmy.Count - NeziskovkyCount();
                 }
 
+                StatisticsPerYear<Smlouva.Statistics.Data> _soukromeFirmySummary = null;
+                public StatisticsPerYear<Smlouva.Statistics.Data> SoukromeFirmySummary()
+                {
+                    if (_soukromeFirmySummary == null)
+                        _soukromeFirmySummary = this.SoukromeFirmy.Values.AggregateStats();
+
+                    return _soukromeFirmySummary;
+                }
+
+                StatisticsPerYear<Smlouva.Statistics.Data> _statniFirmySummary = null;
+                public StatisticsPerYear<Smlouva.Statistics.Data> StatniFirmySummary()
+                {
+                    if (_statniFirmySummary == null)
+                        _statniFirmySummary = this.StatniFirmy.Values.AggregateStats();
+
+                    return _statniFirmySummary;
+                }
+
+                StatisticsPerYear<Smlouva.Statistics.Data> _neziskovkySummary = null;
+                public StatisticsPerYear<Smlouva.Statistics.Data> NeziskovkySummary()
+                {
+                    if (_neziskovkySummary == null)
+                        _neziskovkySummary = this.StatniFirmy
+                            .Where(k => Neziskovky().Contains(k.Key))
+                            .Select(m => m.Value)
+                            .AggregateStats();
+
+                    return _neziskovkySummary;
+                }
+
             }
             static Util.Cache.CouchbaseCacheManager<RegistrSmluv, (Osoba os, int aktualnost, int? obor)> _cache
                 = Util.Cache.CouchbaseCacheManager<RegistrSmluv, (Osoba os, int aktualnost, int? obor)>
-                                .GetSafeInstance("Osoba_SmlouvyStatistics_",
+                                .GetSafeInstance("Osoba_SmlouvyStatistics_v1_",
                                     (obj) => Calculate(obj.os, (Relation.AktualnostType)obj.aktualnost, obj.obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
@@ -51,6 +94,8 @@ namespace HlidacStatu.Lib.Data
             {
                 RegistrSmluv res = new RegistrSmluv();
                 res.OsobaNameId = o.NameId;
+                res.Aktualnost = aktualnost;
+                res.Obor = (Smlouva.SClassification.ClassificationsTypes?)obor;
 
                 Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> statni = new Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>>();
                 Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>> soukr = new Dictionary<string, StatisticsSubjectPerYear<Smlouva.Statistics.Data>>();
@@ -60,8 +105,8 @@ namespace HlidacStatu.Lib.Data
                                 && v.To.Type == HlidacStatu.Lib.Data.Graph.Node.NodeType.Company)
                     .Select(v => v.To)
                     .Distinct(new HlidacStatu.Lib.Data.Graph.NodeComparer())
-                    .Select(f => Firmy.Get(f.Id) )
-                    .Where(f=>f.Valid == true)
+                    .Select(f => Firmy.Get(f.Id))
+                    .Where(f => f.Valid == true)
                     .Select(f => new { f = f, ss = f.StatistikaRegistruSmluv(obor) });
 
 
