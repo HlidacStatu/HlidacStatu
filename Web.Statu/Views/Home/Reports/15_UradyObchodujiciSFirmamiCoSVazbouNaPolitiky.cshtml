@@ -23,7 +23,7 @@
                     .Union(StaticData.PrahaManualCache.Get())
                     .Union(StaticData.OrganizacniSlozkyStatuCache.Get())
                     .Select(m => m.ICO)
-                    .Where(i=>i != null)
+                    .Where(i => i != null)
                     ;
 
 
@@ -138,7 +138,7 @@ return sb.ToString();
 },
 }
 
-};
+        };
 
 
 
@@ -148,7 +148,7 @@ return sb.ToString();
     ReportDataSource<BasicDataForSubject<List<BasicData<string>>>> rds1 =
         new ReportDataSource<BasicDataForSubject<List<BasicData<string>>>>(tableSloupce);
     //foreach (var bf in data.SoukromeFirmy.Where(o => o.StatForIco.CelkemCena > 500000))
-    foreach (var bf in data.SoukromeFirmy.Where(o => o.Pocet > 7).OrderByDescending(o=>o.CelkemCena).Take(500))
+    foreach (var bf in data.SoukromeFirmy.Where(o => o.Pocet > 7).OrderByDescending(o => o.CelkemCena).Take(500))
     {
         rds1.AddRow(bf);
     }
