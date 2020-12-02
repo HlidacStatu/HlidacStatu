@@ -108,10 +108,16 @@ namespace HlidacStatu.Lib.Analysis
                             {
                                 Id = "CenaChangePercent_Y_" + year,
                                 Name = $"Změna hodnoty smlouvy {year - 1}-{year}",
-                                HtmlRender = (s) => Util.RenderData.ChangeValueSymbol(s.Value.ChangeBetweenYears(year,m=>m.CelkovaHodnotaSmluv).percentage,true),
-                                OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage),
-                                ValueRender = (s) => (s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage * 100).ToString(HlidacStatu.Util.Consts.enCulture),
-                                TextRender = (s) => (s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage).ToString("P2"),
+                                HtmlRender = (s) => s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage.HasValue?
+                                    Util.RenderData.ChangeValueSymbol(s.Value.ChangeBetweenYears(year,m=>m.CelkovaHodnotaSmluv).percentage.Value, true) :
+                                    "",
+                                OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage ?? 0),
+                                ValueRender = (s) => s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage.HasValue ?
+                                    (s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage.Value * 100).ToString(HlidacStatu.Util.Consts.enCulture) :
+                                    "",
+                                TextRender = (s) => s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage.HasValue ?
+                                    (s.Value.ChangeBetweenYears(year, m => m.CelkovaHodnotaSmluv).percentage.Value).ToString("P2") :
+                                    "",
                                 CssClass = "number"
                             }
                         );
