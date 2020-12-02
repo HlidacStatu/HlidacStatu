@@ -1092,16 +1092,16 @@ namespace HlidacStatu.Lib.Data
 
         public static string NormalizeJmeno(string s)
         {
-            return Capitalize(s);
+            return Capitalize(s?.Trim());
         }
         public static string NormalizePrijmeni(string s)
         {
-            return Capitalize(s);
+            return Capitalize(s?.Trim());
         }
 
         public static string NormalizeTitul(string s, bool pred)
         {
-            return s;
+            return s?.Trim();
         }
 
 
@@ -1161,7 +1161,12 @@ namespace HlidacStatu.Lib.Data
                     var kdoje = this.Description(false,
                            m => types.Contains(m.Type),
                            2, itemDelimeter: ", ");
-                    var descr = $"<b>{this.FullNameWithYear()}</b>";
+
+                    var descr = "";
+                    if (this.NotInterestingToShow())
+                        descr = $"<b>{this.FullName()}</b>";
+                    else
+                        descr = $"<b>{this.FullNameWithYear()}</b>";
                     if (!string.IsNullOrEmpty(kdoje))
                         descr += ", " + kdoje + (kdoje.EndsWith(". ") ? "" : ". ");
                     f.Add(new InfoFact(descr, InfoFact.ImportanceLevel.Summary));
