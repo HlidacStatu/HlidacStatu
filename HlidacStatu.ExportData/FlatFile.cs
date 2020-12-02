@@ -40,6 +40,9 @@ namespace HlidacStatu.ExportData
                             for (int c = 0; c < data.Columns.Count; c++)
                             {
                                 var col = data.Columns[c];
+                                if (data.Rows[r].Values.Count - 1 < c)
+                                    continue; //skip nonexistent column
+
                                 if (!string.IsNullOrWhiteSpace(col.FormatString))
                                 {
                                     csv.WriteField(string.Format("{0:" + col.FormatString + "}", data.Rows[r].Values[c]));
