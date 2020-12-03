@@ -14,15 +14,21 @@
 @using HlidacStatu.Lib.Render
 
 @{
-
-    var allNames = StaticData.HejtmaniOd2020;
-
-    List<HlidacStatu.Lib.Data.Osoba> showList = null;
-    showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
-        .Where(p => allNames.Contains(p.NameId))
-        .OrderBy(m => m.Prijmeni)
-        .ThenBy(m => m.Jmeno)
+    var showList = Osoba.GetByEvent(e =>
+            e.Type == (int)OsobaEvent.Types.PolitickaPracovni
+            && e.AddInfo.ToLower() == "hejtman"
+            && (e.DatumDo == null || e.DatumDo >= DateTime.Now ) )
+        .OrderBy(o => o.Prijmeni)
+        .ThenBy(o => o.Jmeno)
         .ToList();
+    //var allNames = StaticData.HejtmaniOd2020;
+
+    //List<HlidacStatu.Lib.Data.Osoba> showList = null;
+    //showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
+    //    .Where(p => allNames.Contains(p.NameId))
+    //    .OrderBy(m => m.Prijmeni)
+    //    .ThenBy(m => m.Jmeno)
+    //    .ToList();
 
     ReportDataSource poslanciTable = new ReportDataSource(new ReportDataSource.Column[]
    {

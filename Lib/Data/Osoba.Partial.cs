@@ -1020,6 +1020,19 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static List<Osoba> GetByEvent(Expression<Func<OsobaEvent,bool>> predicate)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var events = db.OsobaEvent
+                    .Where(predicate);
+
+                var people = db.Osoba.Where(o => events.Any(e => e.OsobaId == o.InternalId));
+
+                return people.Distinct().ToList();
+            }
+        }
+
         public static void SetManualTimeStamp(int osobaId, string author)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
