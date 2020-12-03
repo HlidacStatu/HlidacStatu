@@ -158,9 +158,9 @@
         }
 
         <p>
-            V roce @(currentSeasonYear) uzavřel úřad
+            V roce @(currentSeasonYear) uzavřel @(Model.JsemOVM()? "úřad" : "subjekt")
             <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
-                <strong>@(seasonStat.PocetSmluv)</strong> smluv
+                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluv, "<u><strong>0 </strong>smluv</u>", "<u><strong>jednu </strong>smlouvu</u>", "<u><strong>{0} </strong>smluvy</u>", "<u><strong>{0:### ### ##0} </strong>smluv</u>"))
             </a>
             za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
 
@@ -173,8 +173,8 @@
         <p>
             V @(currentSeasonYear) utajil hodnotu kontraktu u
             <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
-                <strong>@(seasonStat.PocetSmluvBezCeny)</strong>
-                smluv</a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
+                @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluvBezCeny, "<u><strong>0 </strong>smluv</u>,", "<u><strong>jedné </strong>smlouvy</u>,", "<u><strong>{0} </strong>smluv</u>,", "<u><strong>{0:### ### ##0} </strong>smluv</u>,"))
+            </a> což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
         </p>
         <a href="/subjekt2/RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
     </div>
@@ -211,7 +211,6 @@
 
     <div>
         <h4>Dotace</h4>
-
         @{
             var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
 
@@ -223,12 +222,12 @@
         @if (Model.JsemOVM())
         {
             <p>
-                Úřad @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
+                @(Model.JsemOVM()? "Úřad" : "Subjekt") @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
                 @Html.Raw(Devmasters.Lang.Plural.GetWithZero(dotaceStat.Count,
-                                            " nedostal žádnou dotaci.",
-                                            " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
-                                            " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
-                                            " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
+                        " nedostal žádnou dotaci.",
+                        " dostal <a href='" + durl + "'><b>jednu dotaci</b></a>" + sdotaceKc,
+                        " dostal <a href='" + durl + "'><b>{0} dotace</b></a>" + sdotaceKc,
+                        " dostal <a href='" + durl + "'><b>{0} dotací</b></a>" + sdotaceKc))
             </p>
         }
         else

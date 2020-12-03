@@ -294,7 +294,7 @@
                     {
                         reportData.AddRow(dot);
                     }
-                    reportData.Title = "Přehled čerpání dotací společnosti";
+                    reportData.Title = "Přehled čerpání dotací";
                 }
 
                 @Html.DataToHTMLTable(reportData)
@@ -326,7 +326,8 @@
 
                     @UtilChart.SimpleColumnChart(
                        new[] { (name: "Dotace po letech", values: dataHolding) },
-                    "Přehled inkasovaných dotací za celý holding", "Přehled dotací holdingu", 500);
+                    $"Přehled inkasovaných dotací {(Model.Firma.JsemOVM()? "úřadu včetně podřízených organizací" : "celého holdingu")}",
+                    $"Přehled dotací {(Model.Firma.JsemOVM()? "úřadu včetně podřízených organizací" : "holdingu")}", 500);
 
                     var holdingDotace = Model.Cerpani
                         .GroupBy(c => c.Ico)
@@ -365,7 +366,7 @@
                     {
                         holdingReportData.AddRow(dot);
                     }
-                    holdingReportData.Title = "Přehled čerpání dotací holdingu";
+                    holdingReportData.Title = $"Přehled čerpání dotací {(Model.Firma.JsemOVM() ? "úřadu včetně podřízených organizací" : "holdingu")}";
 
                 }
             </div>

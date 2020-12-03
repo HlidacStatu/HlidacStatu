@@ -171,9 +171,9 @@
 
 
                 <p>
-                    V roce @(currentSeasonYear) uzavřel úřad
+                    V roce @(currentSeasonYear) uzavřel @(Model.Firma.JsemOVM()? "úřad" : "subjekt")
                     <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
-                        <strong>@(seasonStat.PocetSmluv)</strong> smluv
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluv, "<u><strong>0 </strong>smluv</u>", "<u><strong>jednu </strong>smlouvu</u>", "<u><strong>{0} </strong>smluvy</u>", "<u><strong>{0:### ### ##0} </strong>smluv</u>"))
                     </a>
                     za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
 
@@ -187,8 +187,8 @@
                 <p>
                     V @(currentSeasonYear) utajil hodnotu kontraktu u
                     <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
-                        <strong>@(seasonStat.PocetSmluvBezCeny)</strong>
-                        smluv</a>, což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluvBezCeny, "<u><strong>0 </strong>smluv</u>,", "<u><strong>jedné </strong>smlouvy</u>,", "<u><strong>{0} </strong>smluv</u>,", "<u><strong>{0:### ### ##0} </strong>smluv</u>,"))
+                    </a>což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
                 </p>
             </div>
 
@@ -282,7 +282,7 @@
             <hr />
 
                             <div>
-                    <h4>Statistiky registru smluv pro subjekt  od 2016</h4>
+                                <h4>Statistiky registru smluv pro @(Model.Firma.JsemOVM()? "úřad" : "subjekt") od 2016</h4>
                     <div>
                         @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)summaryAfter2016.PocetSmluv, summaryAfter2016.CelkovaHodnotaSmluv))<br />
                         @(summaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -301,7 +301,7 @@
                 )
             {
                 <div>
-                    <h4>Statistiky pro subjekt a všechny dceřinné společnosti od 2016</h4>
+                    <h4>Statistiky pro @(Model.Firma.JsemOVM()? "úřad a jeho podřízené organizace" : "subjekt a všechny dceřinné společnosti") od 2016</h4>
                     <div>
                         @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
                         @(holdingSummaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
