@@ -16,7 +16,7 @@
 @{
     var showList = Osoba.GetByEvent(e =>
             e.Type == (int)OsobaEvent.Types.PolitickaPracovni
-            && e.AddInfo.ToLower() == "hejtman"
+            && e.AddInfo.ToLower().StartsWith("hejtman")
             && (e.DatumDo == null || e.DatumDo >= DateTime.Now ) )
         .OrderBy(o => o.Prijmeni)
         .ThenBy(o => o.Jmeno)
