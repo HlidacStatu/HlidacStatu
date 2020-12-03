@@ -43,6 +43,9 @@ namespace HlidacStatu.Lib.Analytics
 
         public static StatisticsSubjectPerYear<T> Aggregate(IEnumerable<StatisticsSubjectPerYear<T>> statistics)
         {
+            if (statistics is null)
+                return new StatisticsSubjectPerYear<T>();
+
             var aggregatedStatistics = new StatisticsSubjectPerYear<T>(
                 $"aggregated for {statistics.FirstOrDefault().ICO}",
                 StatisticsPerYear<T>.AggregateStats(statistics));

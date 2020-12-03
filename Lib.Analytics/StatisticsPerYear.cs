@@ -189,6 +189,8 @@ namespace HlidacStatu.Lib.Analytics
         public static StatisticsPerYear<T> AggregateStats(IEnumerable<StatisticsPerYear<T>> statistics, int[] onlyYears = null)
         {
             var aggregatedStatistics = new StatisticsPerYear<T>();
+            if (statistics is null)
+                return aggregatedStatistics;
 
             var years = statistics.SelectMany(x => x.Years.Keys.Select(k => k)).Distinct();
             if (onlyYears != null && onlyYears.Count() > 0)

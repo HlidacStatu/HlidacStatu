@@ -502,7 +502,7 @@ namespace HlidacStatu.Lib.Data
         {
             var firmy = Holding(aktualnost);
             
-            var statistiky = firmy.Select(f => f.StatistikaDotaci());
+            var statistiky = firmy.Select(f => f.StatistikaDotaci()).Append(this.StatistikaDotaci());
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.Dotace>.Aggregate(statistiky);
 
