@@ -555,6 +555,11 @@
     <Compile Include="Analysis\DataPerYear.cs" />
     <Compile Include="Analysis\RatingData.cs" />
     <Compile Include="Analysis\RatingDataPerYear.cs" />
+    <Compile Include="Connected Services\Data.External.NespolehlivyPlatceDPH\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Data\Bookmark.IBookmarkable.cs" />
     <Compile Include="Data\Firma.Statistics.Dotace.cs" />
     <Compile Include="Data\Osoba.Statistics.RegistrSmluv.cs" />
@@ -588,11 +593,6 @@
     <Compile Include="Analysis\KorupcniRiziko\Statistics.cs" />
     <Compile Include="Analysis\KorupcniRiziko\SubjectWithKIndex.cs" />
     <Compile Include="Analysis\ReportUtil.cs" />
-    <Compile Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Data\Bookmark.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
@@ -907,31 +907,16 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Db.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getSeznamNespolehlivyPlatceResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
+    <None Include="Connected Services\Data.External.NespolehlivyPlatceDPH\configuration91.svcinfo" />
+    <None Include="Connected Services\Data.External.NespolehlivyPlatceDPH\configuration.svcinfo" />
+    <None Include="Connected Services\Data.External.NespolehlivyPlatceDPH\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.getStatusNespolehlivyPlatceRozsirenyResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciRozsireneType1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.InformaceOPlatciType1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\HlidacStatu.Lib.HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.StatusType2.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\rozhraniCRPDPH.wsdl" />
     <Content Include="Czech.3-2-5.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Connected Services\Data.External.NespolehlivyPlatceDPH\rozhraniCRPDPH.wsdl" />
     <None Include="Data\Db.edmx.diagram">
       <DependentUpon>Db.edmx</DependentUpon>
     </None>
@@ -1049,12 +1034,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\configuration91.svcinfo" />
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\configuration.svcinfo" />
-    <None Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="Data\Db.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Db.edmx</DependentUpon>
@@ -1067,9 +1046,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH\" />
+    <WCFMetadataStorage Include="Connected Services\Data.External.NespolehlivyPlatceDPH\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

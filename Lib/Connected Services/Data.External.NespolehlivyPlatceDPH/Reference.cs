@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Data.External.NespolehlivyPlatceDPH {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/", ConfigurationName="HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://adis.mfcr.cz/rozhraniCRPDPH/", ConfigurationName="Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH")]
     public interface rozhraniCRPDPH {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://adis.mfcr.cz/rozhraniCRPDPH/getStatusNespolehlivyPlatce", ReplyAction="*")]

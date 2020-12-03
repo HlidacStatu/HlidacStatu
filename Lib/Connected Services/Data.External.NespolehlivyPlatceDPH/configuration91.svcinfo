@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="6APmIvVJrakmHh6nMHesV/gXTYTKF7K9BbGm6T40tqs=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="6BigMFnhvmhjvhedI+K5IcyuXVfzB/LrHy34C2VazQo=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="rozhraniCRPDPHSOAP">
       <properties>
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="rozhraniCRPDPHSOAP" contract="HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH" bindingType="basicHttpBinding" address="https://adisrws.mfcr.cz/adistc/axis2/services/rozhraniCRPDPH.rozhraniCRPDPHSOAP" bindingConfiguration="rozhraniCRPDPHSOAP">
+    <endpoint name="rozhraniCRPDPHSOAP" contract="Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH" bindingType="basicHttpBinding" address="https://adisrws.mfcr.cz/adistc/axis2/services/rozhraniCRPDPH.rozhraniCRPDPHSOAP" bindingConfiguration="rozhraniCRPDPHSOAP">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://adisrws.mfcr.cz/adistc/axis2/services/rozhraniCRPDPH.rozhraniCRPDPHSOAP</serializedValue>
@@ -236,7 +236,7 @@
           <serializedValue>rozhraniCRPDPHSOAP</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>HlidacSmluv.Lib.Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH</serializedValue>
+          <serializedValue>Data.External.NespolehlivyPlatceDPH.rozhraniCRPDPH</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
