@@ -107,8 +107,8 @@
     <Reference Include="Devmasters.Net, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Net.2.1.4\lib\net48\Devmasters.Net.dll</HintPath>
     </Reference>
-    <Reference Include="EasyNetQ, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyNetQ.5.2.0\lib\net461\EasyNetQ.dll</HintPath>
+    <Reference Include="EasyNetQ, Version=5.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyNetQ.5.6.0\lib\net461\EasyNetQ.dll</HintPath>
     </Reference>
     <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\Elasticsearch.Net.7.8.2\lib\net461\Elasticsearch.Net.dll</HintPath>
@@ -253,7 +253,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RabbitMQ.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\RabbitMQ.Client.6.1.0\lib\net461\RabbitMQ.Client.dll</HintPath>
+      <HintPath>..\packages\RabbitMQ.Client.6.2.1\lib\net461\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
@@ -547,6 +547,7 @@
     <Compile Include="Controllers\ApiV1Controller.NasiPolitici.cs" />
     <Compile Include="Controllers\ApiV1Controller.Modal.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2AuthController.cs" />
+    <Compile Include="Controllers\ApiV2\ApiV2InternalQControler.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2KindexController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2WebyController.cs" />
     <Compile Include="Controllers\ApiV2\ApiV2FirmyControler.cs" />
@@ -1786,6 +1787,10 @@
     <ProjectReference Include="..\HlidacStatu.Q.Messages\HlidacStatu.Q.Messages.csproj">
       <Project>{cb982580-dd8d-414e-af2d-29d73a06a09d}</Project>
       <Name>HlidacStatu.Q.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HlidacStatu.Q.Simple\HlidacStatu.Q.Simple.csproj">
+      <Project>{218bf7b3-d897-4566-b4fb-4ea4335d8565}</Project>
+      <Name>HlidacStatu.Q.Simple</Name>
     </ProjectReference>
     <ProjectReference Include="..\HlidacStatu.Q\HlidacStatu.Q.csproj">
       <Project>{9bd61768-3817-4bc5-93be-df3977193a2c}</Project>

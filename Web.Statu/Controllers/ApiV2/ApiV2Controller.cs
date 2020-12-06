@@ -44,7 +44,7 @@ namespace HlidacStatu.Web.Controllers
             throw new HttpResponseException(new ErrorMessage((System.Net.HttpStatusCode)id, $"error {id}"));
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
+        //[ApiExplorerSettings(IgnoreApi = true)]
         [AuthorizeAndAudit]
         [HttpGet, Route("getmyip")]
         public string GetIp()

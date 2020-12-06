@@ -25,7 +25,7 @@ namespace HlidacStatu.Web
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v2", "HlidacStatu_ApiV2")
+                        c.SingleApiVersion("v2", "HlidacStatu Api V2.1.1")
                          .Description("REST API Hlídače státu")
                          .TermsOfService("https://www.hlidacstatu.cz/texty/provoznipodminky/")
                          .Contact(cc => cc
