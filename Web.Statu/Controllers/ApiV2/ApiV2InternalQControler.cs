@@ -61,7 +61,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NoContent, $"No taks available"));
                 }
-                return $"{task.dataset}/{task.itemid}";
+                return $"{task.dataset} {task.itemid}";
             }
         }
 
