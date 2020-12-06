@@ -11,7 +11,7 @@ namespace HlidacStatu.Q.Simple
     {
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public T Value { get; set; }
-        public ulong? ResponseId { get; set; } = null
+        public ulong? ResponseId { get; set; } = null;
     }
 
     public class Queue<T>
