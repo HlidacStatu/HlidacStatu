@@ -5,17 +5,19 @@
 @using HlidacStatu.Web.Framework;
 @using System.Collections.Generic;
 @using System.Linq;
+@using Devmasters;
 
 @{
     Layout = null;
 
     var ceo = Model.Ceo();
+
 }
 
 @* Pravý sloupec *@
 <div class="col-sm-4 col-sm-push-8 col-xs-12 col-xs-push-0">
     <div class="row">
-        @if(ceo.Osoba != null && ceo.Osoba.IsValid())
+        @if (ceo.Osoba != null && ceo.Osoba.IsValid())
         {
             <div class="col-sm-4">
                 <div class="person-profile-thumb">
@@ -30,6 +32,30 @@
                 <p class="py-0 my-0">od @(ceo.From?.ToString("dd.MM.yyyy"))</p>
             </div>
         }
+        else
+        {
+            var rppReq = HlidacStatu.Lib.ES.Manager.GetESClient_RPP_OVM().Get<HlidacStatu.Lib.Data.External.RPP.OVMFull>( Model.ICO);
+            if (rppReq.Found && rppReq.Source.angazovaneOsoby?.Count() > 0)
+            {
+                var rppOs = rppReq.Source.angazovaneOsoby;
+                <div class="col-sm-4">
+                    <div class="person-profile-thumb">
+                        <div class="photo">
+                            <div class="profile-picture" style="background-image: url('/photo/unknown')"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <p class="py-0 my-0 text-muted">Zastupovaný</p>
+                    @foreach (var os in rppOs)
+                    {
+                        <p class="py-0 my-0 lead">@($"{os.fyzickaOsoba.jmeno.Capitalize()} {os.fyzickaOsoba.prijmeni.Capitalize()}")</p>
+                        <p class="py-0 my-0 text-muted small">změna @(os.fyzickaOsoba.datumPosledniZmeny?.ToString("dd.MM.yyyy"))</p>
+                    }
+                </div>
+            }
+        }
+
     </div>
     <hr />
     <div>
