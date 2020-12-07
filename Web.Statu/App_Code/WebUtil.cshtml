@@ -1314,13 +1314,13 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
             if (firma.PatrimStatu())
             {
                 <span>
-                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
+                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
                 </span>
             }
             else
             {
                 <span>
-                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
+                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
                 </span>
             }
         }
