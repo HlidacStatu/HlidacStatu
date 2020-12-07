@@ -374,9 +374,21 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
         }
 
 
+        public static System.Web.IHtmlString SubjektTypTrojice(this HtmlHelper self, Lib.Data.Firma firma, string htmlProOVM , string htmlProStatniFirmu, string htmlProSoukromou)
+        {
+            if (firma == null)
+                return self.Raw("");
+            if (firma.JsemOVM())
+                return self.Raw(htmlProOVM);
+            else if (firma.JsemStatniFirma())
+                return self.Raw(htmlProStatniFirmu);
+            else
+                return self.Raw(htmlProSoukromou);
+        }
+
 
 
     }
 
 
-}
+    }
