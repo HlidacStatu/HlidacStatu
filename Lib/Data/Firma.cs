@@ -449,7 +449,7 @@ namespace HlidacStatu.Lib.Data
         /// Find last known CEO
         /// </summary>
         /// <returns></returns>
-        public (Osoba Osoba, DateTime? From) Ceo()
+        public (Osoba Osoba, DateTime? From, string Role) Ceo()
         {
             using (DbEntities db = new DbEntities())
             {
@@ -461,13 +461,13 @@ namespace HlidacStatu.Lib.Data
                     .FirstOrDefault();
 
                 if (ceoEvent is null)
-                    return (null, null);
+                    return (null, null, null);
 
                 var lastCeo = Osoba.GetByInternalId(ceoEvent.OsobaId);
                 if( lastCeo is null || !lastCeo.IsValid())
-                    return (null, null);
+                    return (null, null, null);
 
-                return (lastCeo, ceoEvent.DatumOd);
+                return (lastCeo, ceoEvent.DatumOd, ceoEvent.AddInfo);
             }
         }
 
