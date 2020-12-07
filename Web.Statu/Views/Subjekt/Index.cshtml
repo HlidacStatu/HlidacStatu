@@ -28,6 +28,11 @@
 
 
 <style>
+    .part-info {
+        padding-bottom: 10px;
+        font-size: 1em;
+    }
+
     .my-0 {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -89,7 +94,7 @@
         <p class="text-muted">
             Index korupčního rizika - zkráceně K–Index, je ukazatel míry rizikových faktorů. Tyto faktory jsou spojovány s rizikem korupce a nehospodárným nakládáním veřejných peněz.
         </p>
-        <div class="row">
+        <div class="row" style="padding-top:25px;">
             <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(kindex.LastReadyKIndex().KIndex)">
                 <a href="/kindex/detail/@Model.ICO">@Html.KIndexIcon(kindex.LastReadyKIndex().KIndexLabel, "width:100px")</a>
             </div>
@@ -120,8 +125,9 @@
     @* ----- Registr smluv ----- *@
 
     <div>
-        <h4>Registr smluv</h4>
-        <p class="text-muted">Detailní informace o smlouvách, uzavřených @Html.SubjektTypTrojice(Model,"úřadem","státní organizací","soukromou firmou") 
+        <h4>Registr smluv
+        </h4>
+        <p class="text-muted part-info">Detailní informace o smlouvách, uzavřených @Html.SubjektTypTrojice(Model,"úřadem","státní organizací","soukromou firmou") 
             za poslední roky, uvedených v registru smluv. 
         </p>
         @{
@@ -196,7 +202,7 @@
 
     <div>
         <h4>Veřejné zakázky</h4>
-        <p class="text-muted">Podrobné informace o veřejných zakázkých, @Html.SubjektTypTrojice(Model,"které úřad vypsal","které státní organizace vypsala či se jich zúčastnila","kterých se firma zúčastnila"), 
+        <p class="text-muted part-info">Podrobné informace o veřejných zakázkých, @Html.SubjektTypTrojice(Model,"které úřad vypsal","které státní organizace vypsala či se jich zúčastnila","kterých se firma zúčastnila"), 
         jak z věstníku veřejných zakázek, tak z profilů zadavatelů. 
         </p>
         @{
