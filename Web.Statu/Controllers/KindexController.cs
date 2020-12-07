@@ -518,7 +518,7 @@ text zpravy: {txt}";
                 {
                     label = kidx.LastKIndexLabel(out int? y);
                     year = y.Value;
-                    infoFacts = kidx.InfoFacts();
+                    infoFacts = kidx.InfoFacts(year);
                 }
                 else
                 {

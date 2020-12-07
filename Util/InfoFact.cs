@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Devmasters;
 using Devmasters.Collections;
 
@@ -44,24 +45,23 @@ namespace HlidacStatu.Util
             if ((infofacts?.Count() ?? 0) == 0)
                 return string.Empty;
 
-            IEnumerable<InfoFact> infof = infofacts.OrderByDescending(o => o.Level).ToArray();
+            IEnumerable<InfoFact> infof = infofacts
+                .Where(m => m.Level != ImportanceLevel.Summary)
+                .OrderByDescending(o => o.Level).ToArray();
+            InfoFact summaryIf = infofacts.FirstOrDefault(m => m.Level == ImportanceLevel.Summary);
 
             var taken = new List<InfoFact>();
 
-            if (infofacts.Any(m => m.Level == ImportanceLevel.Summary))
-            {
-                if (takeSummary == false)
-                    infof = infof.Where(m => m.Level != ImportanceLevel.Summary);
-                else
-                    taken.Add(infof.First());
-            }
+            if (takeSummary && summaryIf != null)
+                taken.Add(summaryIf);
 
-            if (taken.Count< number)
+
+            if (taken.Count < number)
             {
                 if (shuffle && taken.Count() > 1)
-                    taken.AddRange(infof.Shuffle().Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Shuffle().Take(number - taken.Count));
                 else
-                    taken.AddRange(infof.Take(number - (takeSummary ? 1 : 0)));
+                    taken.AddRange(infof.Take(number - taken.Count));
             }
 
             bool useStringF = lineFormat.Contains("{0}");
