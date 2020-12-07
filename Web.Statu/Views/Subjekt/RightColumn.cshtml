@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="col-sm-8">
-                <p class="py-0 my-0 text-muted">Aktuální ředitel</p>
+                <p class="py-0 my-0 text-muted">@ceo.Role</p>
                 <p class="py-0 my-0 lead">@ceo.Osoba.FullName()</p>
                 <p class="py-0 my-0">od @(ceo.From?.ToString("dd.MM.yyyy"))</p>
             </div>
@@ -59,10 +59,22 @@
         <div>
             @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
             {
-                @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
-                                    $"Změny i "
-                                    + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v jedné dceřinné společnosti", "ve {0} dceřinných společnostech", "v {0} dceřinných společnostech")
-                                    + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                if (Model.JsemOVM())
+                {
+                    @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                        $"Změny i "
+                        + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v jedné podřízené organizaci", "ve {0} podřízených organizacích", "v {0} podřízených organizacích")
+                        + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                }
+                else
+                {
+                    @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
+                        $"Změny i "
+                        + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v jedné dceřinné společnosti", "ve {0} dceřinných společnostech", "v {0} dceřinných společnostech")
+                        + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")
+                }
+
+
             }
         </div>
     </div>

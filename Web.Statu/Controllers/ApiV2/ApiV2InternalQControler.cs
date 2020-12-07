@@ -81,18 +81,19 @@ namespace HlidacStatu.Web.Controllers
         public string Voice2TextDone([FromBody] Voice2text task)
         {
             using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
+                = new Q.Simple.Queue<Voice2text>(Voice2text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            {
+                task.internaltaskid = 0;
+                sq.Send(task);
+            }
+            
+            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
                 = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 sq.AckMessage(task.internaltaskid);
             }
 
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
-                = new Q.Simple.Queue<Voice2text>(Voice2text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
-            {
-                task.internaltaskid = 0;
-                sq.Send(task);
-                return $"OK";
-            }
+            return $"OK";
         }
 
         /// <summary>
