@@ -254,6 +254,11 @@ namespace HlidacStatu.Lib.Data
             return Statistics.DotaceCache().Get(this);
         }
 
+        public Analysis.KorupcniRiziko.KIndexData Kindex()
+        {
+            return Analysis.KorupcniRiziko.KIndex.Get(this.ICO);
+        }
+
         public bool MaVazbyNaPolitiky()
         {
             return HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(this.ICO);

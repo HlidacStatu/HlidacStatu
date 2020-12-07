@@ -13,6 +13,8 @@
     var seasonStat = statistics.CurrentSeasonStatistics();
     var currentSeasonYear = statistics.CurrentSeasonYear();
     var zmenaObjemuSmluv = statistics.ChangeBetweenYears(currentSeasonYear - 1, currentSeasonYear, s => s.CelkovaHodnotaSmluv);
+
+    var lastKindex = Model.Kindex().LastReadyKIndex();
 }
 
 @section breadcrumb
@@ -82,26 +84,35 @@
         HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.ICO);
         if (kidx != null && kidx.LastKIndexLabel() != HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
         {
-            <div>
-                <h4>K-Index</h4>
+    <div>
+        <h4>K-Index</h4>
 
-                <p class="text-muted">
-                    Index korupčního rizika - zkráceně K–Index, je ukazatel míry rizikových faktorů. Tyto faktory jsou spojovány s rizikem korupce a nehospodárným nakládáním veřejných peněz.
-                </p>
-                <a href="/kindex/detail/@Model.ICO">
-                    <img src="/socialbanner/kindex?v=@Model.ICO" style="width:40%;max-width:500px;min-width:150px;height:auto" />
-                </a>
-                <br />
-                <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
-                <br />
-                @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-                     "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-                     "Důvod pro přepočítání",
-                     "Přepočítat K-Index",
-                     "/kindex/recalculateFeedback",
-                     mustAuth: true,
-                     addData: Model.ICO)
+        <p class="text-muted">
+            Index korupčního rizika - zkráceně K–Index, je ukazatel míry rizikových faktorů. Tyto faktory jsou spojovány s rizikem korupce a nehospodárným nakládáním veřejných peněz.
+        </p>
+        <div class="row">
+            <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(lastKindex.KIndex)">
+                <a href="/kindex/detail/@Model.ICO">@Html.KIndexIcon(lastKindex.KIndexLabel, "width:100px")</a>
             </div>
+            <div class="col-sm-10">
+                <div>
+                    @Html.Raw(HlidacStatu.Util.InfoFact.RenderInfoFacts(Model.Kindex().InfoFacts(lastKindex.Rok), 3, true, false, lineFormat: "<p>{0}</p>", html: true))
+                </div>
+            </div>
+        </div>
+        <br />
+        <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
+        <br />
+        @WebUtil.FeedbackUniversal("Přepočítat K-Index",
+             "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+             "Důvod pro přepočítání",
+             "Přepočítat K-Index",
+             "/kindex/recalculateFeedback",
+             mustAuth: true,
+             addData: Model.ICO)
+        <br />
+        <a href="/kindex/detail/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+    </div>
             <hr />
         }
     }
