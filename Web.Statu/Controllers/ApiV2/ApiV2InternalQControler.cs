@@ -57,17 +57,12 @@ namespace HlidacStatu.Web.Controllers
         {
             using (HlidacStatu.Q.Simple.Queue<Voice2text> sq = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
-                var task = sq.Get();
-                if (task == null || task?.ResponseId == null)
+                var task = sq.GetAndAck();
+                if (task == null )
                 {
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NoContent, $"No taks available"));
                 }
-                return new Voice2text()
-                {
-                    dataset = task.Value.dataset,
-                    itemid = task.Value.itemid,
-                    internaltaskid = task.ResponseId.Value
-                };
+                return task;
 
             }
         }
@@ -87,11 +82,6 @@ namespace HlidacStatu.Web.Controllers
                 sq.Send(task);
             }
             
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
-                = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
-            {
-                sq.AckMessage(task.internaltaskid);
-            }
 
             return $"OK";
         }
@@ -107,10 +97,7 @@ namespace HlidacStatu.Web.Controllers
             using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
                 = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
-                if (requeueAsTheLast == false)
-                    sq.RejectMessage(task.internaltaskid);
-                else
-                    sq.RejectMessageOnTheEnd(task.internaltaskid, task);
+                sq.Send(task);
             }
 
             return "OK";

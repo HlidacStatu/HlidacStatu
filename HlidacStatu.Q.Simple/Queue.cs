@@ -51,6 +51,9 @@ namespace HlidacStatu.Q.Simple
         public T GetAndAck()
         {
             var res = Get();
+            if (res == null)
+                return default(T);
+
             if (res.ResponseId.HasValue)
                 AckMessage(res.ResponseId.Value);
 
@@ -62,7 +65,7 @@ namespace HlidacStatu.Q.Simple
             //var body = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(message));
             var res = channel.BasicGet(this.QueueName, false);
             if (res == null)
-                return new Response<T>() { Value = default(T) };
+                return null;
 
             var body = Encoding.UTF8.GetString(res.Body.ToArray());
             return new Response<T>()
