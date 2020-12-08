@@ -28,7 +28,7 @@
 
 
 <style>
-    .part-info {
+    .sub-header-info {
         padding-bottom: 10px;
         font-size: 1em;
         margin-top:-4px;
@@ -128,7 +128,7 @@
     <div>
         <h4>Registr smluv
         </h4>
-        <p class="text-muted part-info">Detailní informace o smlouvách, uzavřených @Html.SubjektTypTrojice(Model,"úřadem","státní organizací","soukromou firmou") 
+        <p class="text-muted sub-header-info">Detailní informace o smlouvách, uzavřených @Html.SubjektTypTrojice(Model,"úřadem","státní organizací","soukromou firmou") 
             za poslední roky, uvedených v registru smluv. 
         </p>
         @{
@@ -203,7 +203,7 @@
 
     <div>
         <h4>Veřejné zakázky</h4>
-        <p class="text-muted part-info">Podrobné informace o veřejných zakázkých, @Html.SubjektTypTrojice(Model,"které úřad vypsal","které státní organizace vypsala či se jich zúčastnila","kterých se firma zúčastnila"), 
+        <p class="text-muted sub-header-info">Podrobné informace o veřejných zakázkých, @Html.SubjektTypTrojice(Model,"které úřad vypsal","které státní organizace vypsala či se jich zúčastnila","kterých se firma zúčastnila"), 
         jak z věstníku veřejných zakázek, tak z profilů zadavatelů. 
         </p>
         @{
@@ -233,7 +233,7 @@
 
     <div>
         <h4>Dotace</h4>
-        <p class="text-muted part-info">Podrobné informace o dotacích, které @Html.SubjektTypTrojice(Model,"úřad dostal","organizace dostala","firma obdržela"),
+        <p class="text-muted sub-header-info">Podrobné informace o dotacích, které @Html.SubjektTypTrojice(Model,"úřad dostal","organizace dostala","firma obdržela"),
         z nejúplnější databáze dotací.
         </p>
         @{
@@ -352,7 +352,7 @@
 
     <div>
         <h4>Insolvenční rejstřík</h4>
-        <p class="text-muted part-info">Informace o insolvenčních řízeních, kterých se @Html.SubjektTypTrojice(Model,"úřad ","organizace ","firma ") 
+        <p class="text-muted sub-header-info">Informace o insolvenčních řízeních, kterých se @Html.SubjektTypTrojice(Model,"úřad ","organizace ","firma ") 
         účastní jako dlužník, věřitel či správce.
         </p>
 
@@ -387,7 +387,7 @@
     {
         <div>
             <h4><a href="/subjekt2/ObchodySeSponzory/@Model.ICO">Obchody úřadu s firmami navázanými na politiky</a></h4>
-            <p class="text-muted part-info">Podrobný přehled smluv, které @Html.SubjektTypTrojice(Model,"úřad ","organizace ","") 
+            <p class="text-muted sub-header-info">Podrobný přehled smluv, které @Html.SubjektTypTrojice(Model,"úřad ","organizace ","") 
             uzavřela s firmou, která sponzorovala politické straný (není jení majitel).
             </p>
         </div>
@@ -395,28 +395,28 @@
     }
         <div>
             <h4><a href="/subjekt2/dodavatele/@Model.ICO">Statistika dodavatelů @(Model.JsemOVM()? "úřadu" : "subjektu" )</a></h4>
-            <p class="text-muted part-info">Přehledná statistika největších dodavatelů pro @Html.SubjektTypTrojice(Model,"úřad","organizaci","firmu") 
+            <p class="text-muted sub-header-info">Přehledná statistika největších dodavatelů pro @Html.SubjektTypTrojice(Model,"úřad","organizaci","firmu") 
             podle smluv v registru smluv. 
             </p>
         </div>
         <hr />
         <div>
             <h4><a href="/subjekt2/odberatele/@Model.ICO">Statistiky odběratelů @(Model.JsemOVM()? "úřadu" : "subjektu" )</a></h4>
-            <p class="text-muted part-info">Přehledná statistika největších odběratelů zboží a služeb od @Html.SubjektTypTrojice(Model,"tohoto úřadu","této organizace ","této firmy") 
+            <p class="text-muted sub-header-info">Přehledná statistika největších odběratelů zboží a služeb od @Html.SubjektTypTrojice(Model,"tohoto úřadu","této organizace ","této firmy") 
             podle smluv v registru smluv. 
             </p>
         </div>
         <hr />
         <div>
             <h4><a href="/subjekt2/DalsiDatabaze/@Model.ICO">@(Model.JsemOVM()? "Úřad" : "Subjekt" ) v dalších databázích</a></h4>
-            <p class="text-muted part-info">Na hlídači máme kromě hlavních databází @(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "") dalších menších databází.
+            <p class="text-muted sub-header-info">Na hlídači máme kromě hlavních databází @(HlidacStatu.Lib.Data.External.DataSets.DataSetDB.AllDataSets.Get()?.Count().ToString() ?? "") dalších menších databází.
             Zde vám podrobně vypíšeme, co v nich @Html.SubjektTypTrojice(Model,"o tomto úřadu","o této organizaci ","této firmě") nalezneme.
             </p>
         </div>
         <hr />
     <div>
         <h4><a href="/subjekt2/DalsiInformace/@Model.ICO">Další informace</a></h4>
-            <p class="text-muted part-info">Další informace a zajímavosti @Html.SubjektTypTrojice(Model,"o tomto úřadu","o této organizaci ","této firmě") ze státních rejstříků.
+            <p class="text-muted sub-header-info">Další informace a zajímavosti @Html.SubjektTypTrojice(Model,"o tomto úřadu","o této organizaci ","této firmě") ze státních rejstříků.
             </p>
     </div>
 

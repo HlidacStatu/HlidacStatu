@@ -113,6 +113,20 @@
     </div>
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+
+        @if (Model.KategorieOVM().Count() > 0)
+        {
+            <div>
+                <h4>Kategorie OVM (orgánů veřejné moci)</h4>
+                <p class="text-muted sub-header-info">Všechny kategorie, ve kterých je úřad veden v RPP (Registr práv a povinností). </p>
+                @foreach (var cat in Model.KategorieOVM())
+                {
+                    <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)&subtitle=@(System.Net.WebUtility.UrlEncode($"Subjekty v kategorii {cat.nazev}"))"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>
+                }
+            </div>
+        }
+
+
         @if (HlidacStatu.Lib.StaticData.OrganizaniStrukturyUradu.TryGetValue(Model.ICO, out var podrizeneOrg))
         {
             <div>
@@ -129,8 +143,8 @@
 
         @{
             var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
-                .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description ),
-                (key, val) => (Rok: key.rok, Ico:key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0) ))
+                .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description),
+                (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0)))
                 .ToList();
 
             var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
