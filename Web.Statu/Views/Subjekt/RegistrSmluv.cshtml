@@ -1,4 +1,4 @@
-﻿@model (HlidacStatu.Lib.Data.Firma Firma, List<int> Data)
+﻿@model HlidacStatu.Lib.Data.Firma
 
 @using Nest;
 @using HlidacStatu.Web.Framework;
@@ -9,6 +9,7 @@
 @using HlidacStatu.Lib.Render;
 
 @{
+    Layout = null;
     //ViewBag.Title = "" + Model.Firma.Jmeno + " v registru smluv.";
 
     var statistics = Model.Firma.StatistikaRegistruSmluv();
@@ -70,55 +71,8 @@
 
 }
 
-<style>
-    .my-0 {
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
 
-    .py-0 {
-        padding-top: 0px;
-        padding-bottom: 0px;
-    }
 
-    .boxes h4 {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .head h3 {
-        font-size: 40px;
-        font-weight: bold;
-    }
-
-    p {
-        font-size: 16px;
-    }
-
-    .watcher .btn {
-        background-color: rgb(231,102,5);
-        padding: 7px 15px;
-        margin: 5px 0px;
-        text-transform: none;
-        font-size: 14px;
-    }
-</style>
-
-<div class="head">
-    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Registr smluv</h3>
-    <div><a class="btn btn-primary" href="/subjekt2/@Model.Firma.ICO">Zpět na přehled</a></div>
-    @WebUtil.CompanySummary(Model.Firma)
-</div>
-<hr />
-
-<div class="row boxes">
-    @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.Firma, Model.Firma.ICO,
-        this.User.Identity.IsAuthenticated)
-
-    @* Prázdný sloupec *@
-    <div class="col-sm-1">
-    </div>
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
         <div>
@@ -381,4 +335,3 @@
         </div>
 
     </div>
-</div>

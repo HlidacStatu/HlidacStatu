@@ -197,7 +197,7 @@ namespace HlidacStatu.Web.Controllers
             return View(nameOfView, model);
         }
 
-        [OutputCache(VaryByParam = "*", Duration = 60 * 60 * 1)]
+        [OutputCache(VaryByParam = "*", Duration = 60 * 1)] //1min
         [ChildActionOnly]
         public ActionResult CachedAction_Child_debug(object model, bool? auth, string nameOfView, string key, string param1, string param2, string param3, string param4, string param5, string param6, string param7, string param8)
         {

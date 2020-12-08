@@ -1,4 +1,4 @@
-﻿@model (HlidacStatu.Lib.Data.Firma Firma, List<int> Data)
+﻿@model HlidacStatu.Lib.Data.Firma
 
 @using Nest;
 @using HlidacStatu.Web.Framework;
@@ -9,97 +9,11 @@
 @using HlidacStatu.Lib.Render;
 
 @{ 
+    Layout = null;
     //ViewBag.Title = "Insolvenční rejstřík " + Model.Firma.Jmeno;
 }
-@section breadcrumb
-{
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li>Úřady a firmy</li>
-        <li><a href="/subjekt2/@Model.Firma.ICO">@Model.Firma.Jmeno</a></li>
-        <li class="active">@ViewBag.Title</li>
-    </ol>
-}
 
 
-@section scripts
-{
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    @Scripts.Render("~/bundles/highcharts")
-    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
-    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
-    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#datatable').DataTable({
-                "language": {
-                    "info": "Zobrazuji _START_. - _END_. z celkového počtu _TOTAL_ záznamů.",
-                    "search": "Hledat:",
-                    "lengthMenu": "Zobraz _MENU_ záznamů",
-                    "thousands": " ",
-                    "paginate": {
-                        "first": "První",
-                        "last": "Poslední",
-                        "next": "Další",
-                        "previous": "Předchozí"
-                    },
-                }
-            });
-        });
-
-    </script>
-
-}
-
-<style>
-    .my-0 {
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
-
-    .py-0 {
-        padding-top: 0px;
-        padding-bottom: 0px;
-    }
-
-    .boxes h4 {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .head h3 {
-        font-size: 40px;
-        font-weight: bold;
-    }
-
-    p {
-        font-size: 16px;
-    }
-
-    .watcher .btn {
-        background-color: rgb(231,102,5);
-        padding: 7px 15px;
-        margin: 5px 0px;
-        text-transform: none;
-        font-size: 14px;
-    }
-</style>
-
-<div class="head">
-    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Insolvenční rejstřík</h3>
-    @WebUtil.CompanySummary(Model.Firma)
-</div>
-<hr />
-
-<div class="row boxes">
-    @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.Firma, Model.Firma.ICO,
-        this.User.Identity.IsAuthenticated)
-
-    @* Prázdný sloupec *@
-    <div class="col-sm-1">
-    </div>
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
         <div>
@@ -129,4 +43,3 @@
         </div>
 
     </div>
-</div>

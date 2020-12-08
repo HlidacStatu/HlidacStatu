@@ -17,38 +17,35 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Index(string id)
         {
-            TryGetCompany(id, out var firma, out var result);
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                (Firma firma, string viewName, string title) model = (firma, "Index", $"Kompletní informace o {firma.Jmeno}");
+                return View("_subjektLayout", model);
+            }
 
-            (Firma firma, string viewName) model = (firma, "index");
-            return View("_subjektLayout",model);
+            return result;
+            
         }
 
         protected override void HandleUnknownAction(string actionName)
         {
-            TryGetCompany(actionName, out var firma, out var result);
+            //TryGetCompany(actionName, out var firma, out var result);
+            if (TryGetCompany(actionName, out var firma, out var result))
+            {
+                (Firma firma, string viewName, string title) model = (firma, "Index", $"Kompletní informace o {firma.Jmeno}");
+                ActionResult res = View("_subjektLayout", model);
+                res.ExecuteResult(this.ControllerContext);
+                return;
+            }
 
             result.ExecuteResult(this.ControllerContext);
         }
         public ActionResult Dotace(string id)
         {
-            if(TryGetCompany(id, out var firma, out var result))
+            if (TryGetCompany(id, out var firma, out var result))
             {
-                var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-                var holdingSubsidies = dotaceService.GetDotaceForHolding(firma.ICO).ToList();
-
-                var cerp = holdingSubsidies
-                    .SelectMany(s => s.Rozhodnuti
-                        .SelectMany(r => r.Cerpani
-                            .Select(c => 
-                            (
-                                Ico: s.Prijemce.Ico,
-                                Rok: c.GuessedYear ?? 0,
-                                Cerpano: c.CastkaSpotrebovana ?? 0
-                            ))
-                        )
-                    ).ToList();
-
-                return View((Firma: firma, Cerpani: cerp));
+                (Firma firma, string viewName, string title) model = (firma, "Dotace", $"{firma.Jmeno}: Dotace");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -57,7 +54,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View(firma);
+                (Firma firma, string viewName, string title) model = (firma, "ObchodySeSponzory", $"{firma.Jmeno}: Smlouvy se sponzory politických stran");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -66,7 +64,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View(firma);
+                (Firma firma, string viewName, string title) model = (firma, "DalsiDatabaze", $"{firma.Jmeno} ve dalších databázích ");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -76,7 +75,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View((Firma: firma, Data: new List<int>() ));
+                (Firma firma, string viewName, string title) model = (firma, "RegistrSmluv", $"{firma.Jmeno}: Registr smluv");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -86,9 +86,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                var verejneZakazky = VerejnaZakazka.Searching.GetVZForHolding(firma.ICO);
-
-                return View((Firma: firma, Data: verejneZakazky));
+                (Firma firma, string viewName, string title) model = (firma, "VerejneZakazky", $"{firma.Jmeno}: Veřejné zakázky");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -98,7 +97,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View(firma);
+                (Firma firma, string viewName, string title) model = (firma, "Odberatele", $"Odběratelé pro {firma.Jmeno}");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -108,7 +108,8 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View(firma);
+                (Firma firma, string viewName, string title) model = (firma, "Dodavatele", $"Dodavatelé pro {firma.Jmeno}");
+                return View("_subjektLayout", model);
             }
 
             return result;
@@ -117,7 +118,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult OrganizacniStruktura(string id, string orgId)
         {
             //ico => id translation!
-            if (!StaticData.OrganizaniStrukturyUradu.TryGetValue(id, out var ossu))
+            if (!StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(id, out var ossu))
             {
                 return RedirectToAction("Index");
             }
@@ -140,7 +141,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName) model = (firma, "DalsiInformace");
+                (Firma firma, string viewName, string title) model = (firma, "DalsiInformace", $"{firma.Jmeno}: Informace s registrů");
                 return View("_subjektLayout", model);
             }
             return result;
@@ -152,7 +153,9 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View((Firma: firma, Data: new List<int>()));
+                (Firma firma, string viewName, string title) model = (firma, "InsolvencniRejstrik", $"{firma.Jmeno}: Insolvenční rejstřík" );
+                return View("_subjektLayout", model);
+                //return View((Firma: firma, Data: new List<int>()));
             }
 
             return result;

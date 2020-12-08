@@ -1713,7 +1713,6 @@
     <Content Include="Views\Kindex\Zebricek_child.cshtml" />
     <Content Include="Views\Kindex\Detail_child.cshtml" />
     <Content Include="Views\Subjekt\Index.cshtml" />
-    <Content Include="Views\Subjekt\Profile.cshtml" />
     <Content Include="Views\Subjekt\EmptyProfile.cshtml" />
     <Content Include="Views\Kindex\_SearchForm.cshtml" />
     <Content Include="Views\Home\Reports\28_Ministerstva.cshtml" />

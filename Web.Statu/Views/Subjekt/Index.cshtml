@@ -7,7 +7,7 @@
 @using System.Linq;
 
 @{ 
-    //ViewBag.Title = Model.Jmeno;
+    Layout = null;
 
     var statistics = Model.StatistikaRegistruSmluv();
     var seasonStat = statistics.CurrentSeasonStatistics();
@@ -17,71 +17,8 @@
     var kindex = Model.Kindex();
 }
 
-@section breadcrumb
-{
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li>Úřady a firmy</li>
-        <li class="active">@ViewBag.Title</li>
-    </ol>
-}
 
 
-<style>
-    .sub-header-info {
-        padding-bottom: 10px;
-        font-size: 1em;
-        margin-top:-4px;
-    }
-
-    .my-0 {
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
-
-    .py-0 {
-        padding-top: 0px;
-        padding-bottom: 0px;
-    }
-
-    .boxes h4 {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .head h3 {
-        font-size: 40px;
-        font-weight: bold;
-    }
-
-    p {
-        font-size: 16px;
-    }
-
-    .watcher .btn {
-        background-color: rgb(231,102,5);
-        padding: 7px 15px;
-        margin: 5px 0px;
-        text-transform: none;
-        font-size: 14px;
-    }
-</style>
-
-<div class="head">
-    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno</h3>
-    @WebUtil.CompanySummary(Model)
-</div>
-    <hr />
-    
-
-    <div class="row boxes">
-    @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model, Model.ICO,
-        this.User.Identity.IsAuthenticated)
-
-    @* Prázdný sloupec *@
-    <div class="col-sm-1">
-    </div>
     @* První sloupec *@
 <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
     @* ----- K-Index ----- *@
@@ -436,5 +373,4 @@
             </p>
     </div>
 
-</div>
 </div>

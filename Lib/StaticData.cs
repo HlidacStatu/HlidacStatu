@@ -1,5 +1,6 @@
 ﻿using HlidacStatu.Lib.Data;
 using HlidacStatu.Lib.Data.OrgStrukturyStatu;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,7 @@ namespace HlidacStatu.Lib
 
         public static HashSet<string> Urady_OVM = new HashSet<string>();
 
-        public static Dictionary<string, List<JednotkaOrganizacni>> OrganizaniStrukturyUradu { get; } = new Dictionary<string, List<JednotkaOrganizacni>>();
+        public static Devmasters.Cache.File.FileCache<Dictionary<string, List<JednotkaOrganizacni>>> OrganizacniStrukturyUradu = null;
 
 
         public static Devmasters.Cache.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>> FirmyNazvyOnlyAscii = null;
@@ -765,7 +766,7 @@ namespace HlidacStatu.Lib
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - FirmyNazvyOnlyAscii");
 
-                FirmyNazvyOnlyAscii = 
+                FirmyNazvyOnlyAscii =
                     new Devmasters.Cache.File.FileCache<System.Collections.Concurrent.ConcurrentDictionary<string, string[]>>
                     (StaticData.App_Data_Path, TimeSpan.Zero, "FirmyNazvyOnlyAscii",
                     (o) =>
@@ -878,80 +879,86 @@ namespace HlidacStatu.Lib
                 });
 
                 // hierarchie uradu
-                try
-                {
-                    string path = $"{App_Data_Path}\\ISoSS_Opendata_OSYS_OSSS.xml";
 
-                    var ser = new XmlSerializer(typeof(organizacni_struktura_sluzebnich_uradu));
-                    organizacni_struktura_sluzebnich_uradu ossu;
-                    using (var streamReader = new StreamReader(path))
+                OrganizacniStrukturyUradu = new Devmasters.Cache.File.FileCache<Dictionary<string, List<JednotkaOrganizacni>>>(
+                    StaticData.App_Data_Path, TimeSpan.FromDays(90), "OrganizacniStrukturyUradu", (obj) =>
                     {
-                        using (var reader = XmlReader.Create(streamReader))
+                        var _organizaniStrukturyUradu = new Dictionary<string, List<JednotkaOrganizacni>>();
+                        try
                         {
-                            ossu = (organizacni_struktura_sluzebnich_uradu)ser.Deserialize(reader);
-                        }
-                    }
+                            string path = $"{App_Data_Path}\\ISoSS_Opendata_OSYS_OSSS.xml";
 
-                    foreach (var urad in ossu.UradSluzebniSeznam.SluzebniUrady)
-                    {
-                        var f = Firma.FromDS(urad.idDS);
-                        if (f is null || !f.Valid)
-                        {
-                            if (string.IsNullOrEmpty(urad.idNadrizene))
+                            var ser = new XmlSerializer(typeof(organizacni_struktura_sluzebnich_uradu));
+                            organizacni_struktura_sluzebnich_uradu ossu;
+                            using (var streamReader = new StreamReader(path))
                             {
-                                HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
-                                continue;
+                                using (var reader = XmlReader.Create(streamReader))
+                                {
+                                    ossu = (organizacni_struktura_sluzebnich_uradu)ser.Deserialize(reader);
+                                }
                             }
 
-                            var nadrizeny = ossu.UradSluzebniSeznam.SluzebniUrady
-                                .Where(u => u.id == urad.idNadrizene)
-                                .FirstOrDefault();
-
-                            if (nadrizeny is null)
+                            foreach (var urad in ossu.UradSluzebniSeznam.SluzebniUrady)
                             {
-                                HlidacStatu.Util.Consts.Logger.Error($"Nenalezen nadřízený úřad, ani datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
-                                continue;
+                                var f = Firma.FromDS(urad.idDS);
+                                if (f is null || !f.Valid)
+                                {
+                                    if (string.IsNullOrEmpty(urad.idNadrizene))
+                                    {
+                                        HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
+                                        continue;
+                                    }
+
+                                    var nadrizeny = ossu.UradSluzebniSeznam.SluzebniUrady
+                                        .Where(u => u.id == urad.idNadrizene)
+                                        .FirstOrDefault();
+
+                                    if (nadrizeny is null)
+                                    {
+                                        HlidacStatu.Util.Consts.Logger.Error($"Nenalezen nadřízený úřad, ani datová schránka [{urad.idDS}] úřadu [{urad.oznaceni}]");
+                                        continue;
+                                    }
+
+                                    f = Firma.FromDS(nadrizeny.idDS);
+                                    if (f is null || !f.Valid)
+                                    {
+                                        HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{nadrizeny.idDS}] nadřízeného úřadu [{nadrizeny.oznaceni}]");
+                                        continue;
+                                    }
+                                }
+
+                                var sluzebniUrad = ossu.OrganizacniStruktura.Where(os => os.id == urad.id)
+                                    .FirstOrDefault()
+                                    ?.StrukturaOrganizacni?.HlavniOrganizacniJednotka;
+
+                                if (sluzebniUrad is null)
+                                {
+                                    HlidacStatu.Util.Consts.Logger.Info($"Služební úřad [{urad.oznaceni}] nemá podřízené organizace.");
+                                    continue;
+                                }
+
+                                if (_organizaniStrukturyUradu.TryGetValue(f.ICO, out var sluzebniUrady))
+                                {
+                                    sluzebniUrady.Add(sluzebniUrad);
+                                }
+                                else
+                                {
+                                    _organizaniStrukturyUradu.Add(f.ICO, new List<JednotkaOrganizacni>()
+                                        {
+                                                sluzebniUrad
+                                        });
+                                }
+
                             }
 
-                            f = Firma.FromDS(nadrizeny.idDS);
-                            if (f is null || !f.Valid)
-                            {
-                                HlidacStatu.Util.Consts.Logger.Error($"Organizační struktura - nenalezena datová schránka [{nadrizeny.idDS}] nadřízeného úřadu [{nadrizeny.oznaceni}]");
-                                continue;
-                            }
+
                         }
-
-                        var sluzebniUrad = ossu.OrganizacniStruktura.Where(os => os.id == urad.id)
-                            .FirstOrDefault()
-                            ?.StrukturaOrganizacni?.HlavniOrganizacniJednotka;
-
-                        if (sluzebniUrad is null)
+                        catch (Exception ex)
                         {
-                            HlidacStatu.Util.Consts.Logger.Info($"Služební úřad [{urad.oznaceni}] nemá podřízené organizace.");
-                            continue;
+                            HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
                         }
-                        
-                        if (OrganizaniStrukturyUradu.TryGetValue(f.ICO, out var sluzebniUrady ))
-                        {
-                            sluzebniUrady.Add(sluzebniUrad);
-                        }
-                        else
-                        {
-                            OrganizaniStrukturyUradu.Add(f.ICO, new List<JednotkaOrganizacni>()
-                            {
-                                sluzebniUrad
-                            });
-                        }
-
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    HlidacStatu.Util.Consts.Logger.Error($"Něco je špatně. Chyba při zpracování struktury úřadů. {ex}");
-                }
-
+                        return _organizaniStrukturyUradu;
+                    }, null);
 
 
                 initialized = true;

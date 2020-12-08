@@ -1,4 +1,4 @@
-﻿@model (HlidacStatu.Lib.Data.Firma Firma, IEnumerable<VerejnaZakazka> Data)
+﻿@model HlidacStatu.Lib.Data.Firma 
 
 @using Nest;
 @using HlidacStatu.Web.Framework;
@@ -10,6 +10,9 @@
 @using HlidacStatu.Lib.Data.VZ;
 
 @{ 
+    Layout = null;
+    var Data = VerejnaZakazka.Searching.GetVZForHolding(Model.ICO);
+
     //ViewBag.Title = "Veřejné zakázky " + Model.Firma.Jmeno + "";
 }
 @section breadcrumb
