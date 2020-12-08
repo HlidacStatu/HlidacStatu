@@ -13,14 +13,14 @@
     Layout = null;
     var Data = VerejnaZakazka.Searching.GetVZForHolding(Model.ICO);
 
-    //ViewBag.Title = "Veřejné zakázky " + Model.Firma.Jmeno + "";
+    //ViewBag.Title = "Veřejné zakázky " + Model.Jmeno + "";
 }
 @section breadcrumb
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li>Úřady a firmy</li>
-        <li><a href="/subjekt2/@Model.Firma.ICO">@Model.Firma.Jmeno</a></li>
+        <li><a href="/subjekt2/@Model.ICO">@Model.Jmeno</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -90,15 +90,15 @@
 </style>
 
 <div class="head">
-    <h3>@Html.KIndexLabelLink(Model.Firma.ICO, 30, linkToKindex: true)@Model.Firma.Jmeno: Veřejné zakázky</h3>
-    <div><a class="btn btn-primary" href="/subjekt2/@Model.Firma.ICO">Zpět na přehled</a></div>
-    @WebUtil.CompanySummary(Model.Firma)
+    <h3>@Html.KIndexLabelLink(Model.ICO, 30, linkToKindex: true)@Model.Jmeno: Veřejné zakázky</h3>
+    <div><a class="btn btn-primary" href="/subjekt2/@Model.ICO">Zpět na přehled</a></div>
+    @WebUtil.CompanySummary(Model)
 </div>
 <hr />
 
 <div class="row boxes">
     @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.Firma, Model.Firma.ICO,
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model, Model.ICO,
         this.User.Identity.IsAuthenticated)
 
     @* Prázdný sloupec *@
@@ -109,8 +109,8 @@
         <div>
             <h4>Veřejné zakázky</h4>
             @{
-                var resVZdodav = VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.Firma.ICO, null, 1, 0, "1");
-                var resVZzadav = VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.Firma.ICO, null, 1, 0, "1");
+                var resVZdodav = VerejnaZakazka.Searching.SimpleSearch("icododavatel:" + Model.ICO, null, 1, 0, "1");
+                var resVZzadav = VerejnaZakazka.Searching.SimpleSearch("icozadavatel:" + Model.ICO, null, 1, 0, "1");
                 Dictionary<string, long> vzakaz = new Dictionary<string, long>();
                 vzakaz.Add("dodavatel|dodavatel|dodavatele|dodavatelem", resVZdodav.Total);
                 vzakaz.Add("zadavatel|zadavatel|zadavatele|zadavatelem", resVZzadav.Total);
@@ -118,10 +118,10 @@
                 foreach (var kv in vzakaz.OrderByDescending(m => m.Value))
                 {
                     var text = kv.Key.Split('|');
-                    string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.Firma.ICO);
+                    string surl = WebUtil.GetSearchUrl("/verejnezakazky/hledat", $"ico{text[0]}:" + Model.ICO);
 
                     <p>
-                        @Devmasters.TextUtil.ShortenText(Model.Firma.Jmeno, 35)
+                        @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
                         @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value, $" jsme ve veřejných zakázkach jako {text[2]} nenašli",
                                              $" se vyskytuje v <a href='{surl}'><b>jedné</b> veřejné zakázce</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkách</a> jako {text[1]}", $" se vyskytuje v <a href='{surl}'><b>{{0}}</b> veřejných zakázkach</a> jako {text[1]}")).
                     </p>
@@ -132,7 +132,7 @@
             <h4>Data</h4>
             @*@{ 
                 var x = Model.Data
-                    .Where(d => d.Zadavatel.ICO == Model.Firma.ICO)
+                    .Where(d => d.Zadavatel.ICO == Model.ICO)
                     .Select(vz => new { 
                         vz.DatumUverejneni,
                         vz.hod

@@ -10,13 +10,13 @@
 
 @{
     Layout = null;
-    //ViewBag.Title = "" + Model.Firma.Jmeno + " v registru smluv.";
+    //ViewBag.Title = "" + Model.Jmeno + " v registru smluv.";
 
-    var statistics = Model.Firma.StatistikaRegistruSmluv();
+    var statistics = Model.StatistikaRegistruSmluv();
     int chartMinDate = 2016;
     int chartMaxDate = DateTime.Now.Year;
     var summaryAfter2016 = statistics.Summary(statistics.YearsAfter2016());
-    var statHoldingAktual = Model.Firma.HoldingStatisticsRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni);
+    var statHoldingAktual = Model.HoldingStatisticsRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni);
     var holdingSummaryAfter2016 = statHoldingAktual.Summary(statHoldingAktual.YearsAfter2016());
     string NiceString(string url, int pocetSmluv, decimal cenaCelkem)
     {
@@ -36,7 +36,7 @@
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
         <li>Úřady a firmy</li>
-        <li><a href="/subjekt2/@Model.Firma.ICO">@Model.Firma.Jmeno</a></li>
+        <li><a href="/subjekt2/@Model.ICO">@Model.Jmeno</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }
@@ -80,14 +80,14 @@
             <div>
                 @{
                     var currentYear = DateTime.Now.Year;
-                    var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.Firma.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-                    var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.Firma.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                    var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                    var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
                 }
                 @if (numFatalIssue.Value > 0)
                 {
                     <p>
                         Zásadní nedostatky za letošní rok v rozporu se zákonem jsme zjistili u
-                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.Firma.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
                             @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                             {
                                 @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
@@ -111,7 +111,7 @@
                             <span>Zároveň vážné nedostatky za letošní rok jsme zjistili u</span>
                         }
 
-                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.Firma.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                        <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
                             @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                             {
                                 @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
@@ -125,8 +125,8 @@
 
 
                 <p>
-                    V roce @(currentSeasonYear) uzavřel @(Model.Firma.JsemOVM()? "úřad" : "subjekt")
-                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                    V roce @(currentSeasonYear) uzavřel @(Model.JsemOVM()? "úřad" : "subjekt")
+                    <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
                         @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluv, "<u><strong>0 </strong>smluv</u>", "<u><strong>jednu </strong>smlouvu</u>", "<u><strong>{0} </strong>smluvy</u>", "<u><strong>{0:### ### ##0} </strong>smluv</u>"))
                     </a>
                     za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
@@ -156,7 +156,7 @@
 
                 <p>
                     V @(currentSeasonYear) utajil hodnotu kontraktu u
-                    <a href="/hledat?q=ico:@(Model.Firma.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                    <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
                         @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluvBezCeny, "<u><strong>0 </strong>smluv</u>,", "<u><strong>jedné </strong>smlouvy</u>,", "<u><strong>{0} </strong>smluv</u>,", "<u><strong>{0:### ### ##0} </strong>smluv</u>,"))
                     </a>což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
                 </p>
@@ -165,7 +165,7 @@
             <hr />
 
             @* GRAFY *@
-            <h4>Souhrnné statistiky pro @Model.Firma.Jmeno</h4>
+            <h4>Souhrnné statistiky pro @Model.Jmeno</h4>
 
 
             <div class="row">
@@ -217,7 +217,7 @@
 
                 @* Pravý sub-sloupec *@
                 <div class="col-md-6">
-                    @if (Model.Firma.PatrimStatu()
+                    @if (Model.PatrimStatu()
                         && summaryAfter2016.PocetSmluvPolitiky > 0)
                     {
                         <div>
@@ -252,12 +252,12 @@
             <hr />
 
                             <div>
-                                <h4>Statistiky registru smluv pro @(Model.Firma.JsemOVM()? "úřad" : "subjekt") od 2016</h4>
+                                <h4>Statistiky registru smluv pro @(Model.JsemOVM()? "úřad" : "subjekt") od 2016</h4>
                     <div>
-                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)summaryAfter2016.PocetSmluv, summaryAfter2016.CelkovaHodnotaSmluv))<br />
+                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.ICO}", (int)summaryAfter2016.PocetSmluv, summaryAfter2016.CelkovaHodnotaSmluv))<br />
                         @(summaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
                         @(summaryAfter2016.PercentSmluvBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                        @if (Model.Firma.PatrimStatu())
+                        @if (Model.PatrimStatu())
                         {
                             <text>
                                 @(summaryAfter2016.PercentSmluvPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
@@ -266,17 +266,17 @@
                 </div>
 
             @if (
-                Model.Firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
+                Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
                 && holdingSummaryAfter2016.PocetSmluv > 0
                 )
             {
                 <div>
-                    <h4>Statistiky pro @(Model.Firma.JsemOVM()? "úřad a jeho podřízené organizace" : "subjekt a všechny dceřinné společnosti") od 2016</h4>
+                    <h4>Statistiky pro @(Model.JsemOVM()? "úřad a jeho podřízené organizace" : "subjekt a všechny dceřinné společnosti") od 2016</h4>
                     <div>
-                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.Firma.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
+                        @Html.Raw(NiceString($"/hledat?q=holding:{Model.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
                         @(holdingSummaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
                         @(holdingSummaryAfter2016.PercentSmluvBezSmluvniStrany.ToString("P1")) smluv se skrytou smluvní stranou<br />
-                        @if (Model.Firma.PatrimStatu())
+                        @if (Model.PatrimStatu())
                         {
                             <text>
                                 @(holdingSummaryAfter2016.PercentSmluvPolitiky.ToString("P1")) smluv s firmami navázanými na politiky
@@ -287,7 +287,7 @@
 
             <hr />
 
-            @if (Model.Firma.PatrimStatu() && summaryAfter2016.PocetSmluvPolitiky > 0)
+            @if (Model.PatrimStatu() && summaryAfter2016.PocetSmluvPolitiky > 0)
             {
                 <div>
                     <h4>Smlouvy s vazbou na politiky</h4>
