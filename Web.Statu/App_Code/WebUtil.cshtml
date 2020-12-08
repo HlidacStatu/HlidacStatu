@@ -216,7 +216,7 @@ smartlook('init', '344e291cbee0b3c87748a78b80faf81d6e8628b1');";
     {
         @Html.Raw(ifEmpty) }
     else
-            if (hasValue.GetType() == typeof(string))
+                  if (hasValue.GetType() == typeof(string))
     {
         @IfExists(!string.IsNullOrEmpty(hasValue.ToString()), exists, ifEmpty) }
     else
@@ -1288,6 +1288,29 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
             </div>
         </div>
     </div>
+}
+
+@helper Toggleable(IHtmlString first, string firstButton, IHtmlString second, string secondButton)
+{
+    string random = Guid.NewGuid().ToString("N");
+
+    <script>
+        $(function () {
+            $('.@(random).btn').click(function () {
+                $('.@(random)').toggle();
+            });
+        });
+    </script>
+
+    <div class="btn btn-default @(random)">@firstButton/<small>@secondButton</small></div>
+    <div class="btn btn-default @(random)" style="display:none;"><small>@firstButton</small>/@secondButton</div>
+    <div class="@(random)">
+        @first
+    </div>
+    <div class="@(random)" style="display:none;">
+        @second
+    </div>
+
 }
 
 @helper CompanySummary(HlidacStatu.Lib.Data.Firma firma)

@@ -309,6 +309,25 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
+        public static IHtmlString Toggleable(this HtmlHelper htmlHelper, 
+            IHtmlString first, string firstButton, 
+            IHtmlString second, string secondButton)
+        {
+            string random = Guid.NewGuid().ToString("N");
+            var sb = new System.Text.StringBuilder();
+
+            sb.Append("<script>");
+            sb.Append("$(function () {");
+            sb.Append($"$('.{random}.btn').click(function () {{");
+            sb.Append($"$('.{random}').toggle();}});}});");
+            sb.Append("</script>");
+            sb.Append($"<div class=\"btn btn-default {random}\">{firstButton}/<small>{secondButton}</small></div>");
+            sb.Append($"<div class=\"btn btn-default {random}\" style=\"display:none;\"><small>{firstButton}</small>/{secondButton}</div>");
+            sb.Append($"<div class=\"{random}\">{first}</div>");
+            sb.Append($"<div class=\"{random}\" style=\"display:none;\">{second}</div>");
+
+            return htmlHelper.Raw(sb.ToString());
+        }
 
         public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, 
             HlidacStatu.Lib.Render.ReportDataSource<T> rds,

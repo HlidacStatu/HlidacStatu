@@ -184,8 +184,24 @@
             za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
 
             @if (zmenaObjemuSmluv.percentage.HasValue)
-            { 
-                @($"({zmenaObjemuSmluv.percentage?.ToString("P2")} objemu smluv za {currentSeasonYear - 1})")
+            {
+                int predchoziRok = currentSeasonYear - 1;
+                string baseText = $"o {zmenaObjemuSmluv.percentage?.ToString("P2")} oproti roku {predchoziRok}";
+                string text;
+                switch (zmenaObjemuSmluv.percentage)
+                {
+                    case decimal n when n > 0:
+                        text = $"(nárůst {baseText})";
+                        break;
+                    case decimal n when n < 0:
+                        text = $"(pokles {baseText})";
+                        break;
+                    default:
+                        text = $"(stejný objem smluv jako v roce {predchoziRok})";
+                        break;
+                }
+
+                <span>@text</span>
             }
         </p>
 
