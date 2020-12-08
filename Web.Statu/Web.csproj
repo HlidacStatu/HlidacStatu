@@ -1744,6 +1744,7 @@
     <Content Include="Views\Data\Napoveda.cshtml" />
     <Content Include="Views\Subjekt\OrganizacniStruktura.cshtml" />
     <Content Include="Views\Subjekt\DalsiInformace.cshtml" />
+    <Content Include="Views\Subjekt\_subjektLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

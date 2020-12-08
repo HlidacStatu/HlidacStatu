@@ -18,7 +18,9 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult Index(string id)
         {
             TryGetCompany(id, out var firma, out var result);
-            return result;
+
+            (Firma firma, string viewName) model = (firma, "index");
+            return View("_subjektLayout",model);
         }
 
         protected override void HandleUnknownAction(string actionName)
@@ -138,10 +140,11 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                return View(firma);
+                (Firma firma, string viewName) model = (firma, "DalsiInformace");
+                return View("_subjektLayout", model);
             }
-
             return result;
+
         }
 
 
