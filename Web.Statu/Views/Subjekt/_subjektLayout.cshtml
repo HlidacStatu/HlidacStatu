@@ -10,6 +10,7 @@
 
 @{ 
     ViewBag.Title = Model.title;
+    ViewBag.HideTitle = true;
 
 }
 @section breadcrumb
@@ -83,7 +84,7 @@
 
 
 <div class="head">
-    <h3>@Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.firma.Jmeno</h3>
+    <h3>@Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.title</h3>
     @WebUtil.CompanySummary(Model.firma)
 </div>
     <hr />
