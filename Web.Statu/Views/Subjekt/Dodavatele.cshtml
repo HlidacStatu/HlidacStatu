@@ -8,44 +8,55 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-@{ 
+@{
     Layout = null;
     //ViewBag.Title = "Dodavatelé " + Model.Jmeno ;
+
+    string dataTableOptions = @"{
+        'language': {
+            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+        },
+        'order': [],
+        'lengthChange': false,
+        'pageLength': 6,
+        'info': false,
+        'filter': false,
+    }";
 }
 
 
-    @* První sloupec *@
-    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
 
 
-        @{
+    @{
 
-    string ico = Model.ICO;
-    int size = 1000;
+        string ico = Model.ICO;
+        int size = 1000;
 
-    AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
+        AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
 
-    aggs
-        .Terms("perIco", m => m
-            .Field("platce.ico")
-            .Size(size)
-        ).Terms("perPrice", m => m
-            .Order(o => o.Descending("sumincome"))
-            .Field("platce.ico")
-            .Size(size)
-            .Aggregations(agg => agg
-               .Sum("sumincome", s => s
-                   .Field(ff => ff.CalculatedPriceWithVATinCZK)
-               )
-            )
-        );
+        aggs
+            .Terms("perIco", m => m
+                .Field("platce.ico")
+                .Size(size)
+            ).Terms("perPrice", m => m
+                .Order(o => o.Descending("sumincome"))
+                .Field("platce.ico")
+                .Size(size)
+                .Aggregations(agg => agg
+                   .Sum("sumincome", s => s
+                       .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                   )
+                )
+            );
 
-    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("icoPrijemce:" + ico, 1, 0,
-        HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll,
-        anyAggregation: aggs, platnyZaznam: true);
+        var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("icoPrijemce:" + ico, 1, 0,
+            HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll,
+            anyAggregation: aggs, platnyZaznam: true);
 
-    ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
-{
+        ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]
+    {
 new  ReportDataSource.Column() { Name="IČO",
     HtmlRender = (s) => {
                             System.Tuple<string,string> data = (System.Tuple<string,string>)s;
@@ -58,11 +69,11 @@ new  ReportDataSource.Column() { Name="IČO",
 new  ReportDataSource.Column() { Name="Počet smluv",
         OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat(Convert.ToInt64( s)); },
 CssClass ="number"},
-}
-);
+        }
+    );
 
-    ReportDataSource rdsPerPrice = new ReportDataSource(new ReportDataSource.Column[]
-   {
+        ReportDataSource rdsPerPrice = new ReportDataSource(new ReportDataSource.Column[]
+       {
 new  ReportDataSource.Column() { Name="IČO",
     HtmlRender = (s) => {
                             System.Tuple<string,string> data = (System.Tuple<string,string>)s;
@@ -74,98 +85,76 @@ new  ReportDataSource.Column() { Name="IČO",
                         },
     TextRender = (s) => { return ((System.Tuple<string,string>)s).Item1.ToString(); }
 },
-new  ReportDataSource.Column() { Name="Součet cen", 
+new  ReportDataSource.Column() { Name="Součet cen",
     HtmlRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:true, shortFormat:true); },
     TextRender = (s) => { return HlidacStatu.Lib.Data.Smlouva.NicePrice((double?)s, html:false, shortFormat:true); },
-    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( ((double?)s) ?? 0 ); }    
+    OrderValueRender = (s) => { return HlidacStatu.Util.RenderData.OrderValueFormat( ((double?)s) ?? 0 ); }
     ,CssClass ="number" }
-       }
-   );
+               }
+       );
 
 
 
-    foreach (Nest.KeyedBucket<object>
-val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)
-    {
-        rdsPerIco.AddRow(
-        new Tuple<string, string>
-            (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
-            val.DocCount.ToString()
-            );
+        foreach (Nest.KeyedBucket<object>
+    val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)
+        {
+            rdsPerIco.AddRow(
+            new Tuple<string, string>
+                (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+                val.DocCount.ToString()
+                );
+        }
+        foreach (Nest.KeyedBucket<object>
+            val in ((BucketAggregate)res.ElasticResults.Aggregations["perPrice"]).Items)
+        {
+            rdsPerPrice.AddRow(
+            new Tuple<string, string>
+                (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
+                val.Sum("sumincome").Value
+                );
+        }
+
+        rdsPerIco.Title = "Nejčastější objednatelé (plátci) podle počtu smluv";
+        rdsPerPrice.Title = "Nejčastější objednatelé (plátci) podle celkové hodnoty smluv";
     }
-    foreach (Nest.KeyedBucket<object>
-        val in ((BucketAggregate)res.ElasticResults.Aggregations["perPrice"]).Items)
+
+    @if (rdsPerIco.Data.Count > 0 || rdsPerPrice.Data.Count > 0)
     {
-        rdsPerPrice.AddRow(
-        new Tuple<string, string>
-            (HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco((string)val.Key, true), (string)val.Key),
-            val.Sum("sumincome").Value
-            );
+        <hr class="morespace" style="width:50%;" />
+
+        <h3 id="_odberatele" style="padding-bottom:20px;">@Model.Jmeno jako dodavatel  (příjemce peněz)</h3>
+
+        <div class="row">
+            <div class="col-xs-12">
+                @Html.Toggleable(
+                    UtilChart.SimpleBarChart(
+                        false, false,
+                        400,
+                        "perIco_d",
+                        "Úřady", "Počet smluv",
+                        rdsPerIco.Filter(10)),
+                    "Graf",
+                    Html.DataToHTMLTable(rdsPerIco, dataTableOptions: dataTableOptions),
+                    "Tabulka"
+                )
+            </div>
+            <div class="col-xs-12">
+                @Html.Toggleable(
+                    UtilChart.SimpleBarChart(
+                        false, false,
+                        400,
+                        "perPrice_d",
+                        "Úřady", "Kč",
+                        rdsPerPrice.Filter(10), "Kč"),
+                    "Graf",
+                    Html.DataToHTMLTable(rdsPerPrice, dataTableOptions: dataTableOptions),
+                    "Tabulka"
+                )
+
+
+            </div>
+        </div>
     }
 
-    //chart
 
-
-    var model = new HlidacStatu.Lib.Render.ReportModel();
-    model.Add("perIcoChart", "Nejčastější objednatelé (plátci) podle počtu smluv",
-    UtilChart.SimpleBarChart(
-    false, false,
-    400,
-    "perIco_d",
-     "Úřady", "Počet smluv",
-    rdsPerIco.Filter(10))
-    );
-    model.Add("perIcoTable", "",rdsPerIco);
-
-    model.Add("perPriceChart", "Nejčastější objednatelé (plátci) podle celkové hodnoty smluv",
-    UtilChart.SimpleBarChart(
-    false, false,
-    400,
-    "perPrice_d",
-     "Úřady", "Kč",
-    rdsPerPrice.Filter(10), "Kč")
-    );
-    model.Add("perPriceTable", "", rdsPerPrice);
-
-                    }
-
-                    @if (rdsPerIco.Data.Count > 0 || rdsPerPrice.Data.Count > 0)
-            {
-                <hr class="morespace" style="width:50%;" />
-
-                <h3 id="_odberatele" style="padding-bottom:20px;">@Model.Jmeno jako dodavatel  (příjemce peněz)</h3>
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        @foreach (var q in model.GetQueue("perPriceChart", "perPriceTable"))
-                        {
-                            @UtilChart.RenderReport(q, @"{
-                             'language': {
-                                'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                            },
-                            'order': [],
-                            'lengthChange': false,
-                            'info': false,
-                            }", q.Key)
-                        }
-                    </div>
-                    <div class="col-xs-12">
-                        @foreach (var q in model.GetQueue("perIcoChart", "perIcoTable"))
-                        {
-                            @UtilChart.RenderReport(q, @"{
-                             'language': {
-                                'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                            },
-                            'order': [],
-                            'lengthChange': false,
-                            'info': false,
-                            }", q.Key)
-                        }
-
-
-                    </div>
-                </div>
-            }
-
-
-    </div>
+</div>
