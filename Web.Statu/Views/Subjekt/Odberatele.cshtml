@@ -14,13 +14,15 @@
     //ViewBag.Title = "Odběratelé " + Model.Jmeno ;
 
     string dataTableOptions = @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [],
-                'lengthChange': false,
-                'info': false,
-                }";
+            'language': {
+            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+        },
+        'order': [],
+        'lengthChange': false,
+        'pageLength': 6,
+        'info': false,
+        'filter': false,
+        }";
 }
 
 
@@ -100,35 +102,9 @@
                     );
             }
 
-            //chart
-            var ichart = UtilChart.SimpleBarChart(
-                false, false,
-                400,
-                "perIco_o",
-                 "Firmy", "Počet smluv",
-                rdsPerIco.Filter(10)
-            );
-
-            var model = new HlidacStatu.Lib.Render.ReportModel();
-            model.Add("perIcoChart", "Nejúspěšnější dodavatelé podle počtu smluv",
-                UtilChart.SimpleBarChart(
-                    false, false,
-                    400,
-                    "perIco_o",
-                     "Firmy", "Počet smluv",
-                    rdsPerIco.Filter(10))
-                );
-            model.Add("perIcoTable_o", "",rdsPerIco);
-
-            model.Add("perPriceChart", "Nejúspěšnější dodavatelé podle celkové hodnoty smluv",
-                UtilChart.SimpleBarChart(
-                    false, false,
-                    400,
-                    "perPrice_o",
-                    "Firmy", "Kč",
-                    rdsPerPrice.Filter(10), "Kč")
-                );
-            model.Add("perPriceTable_o","", rdsPerPrice);
+            rdsPerIco.Title = "Nejúspěšnější dodavatelé podle počtu smluv";
+            
+            rdsPerPrice.Title = "Nejúspěšnější dodavatelé podle celkové hodnoty smluv";
 
 }
 
@@ -142,8 +118,6 @@
     <div class="row">
         <div class="col-xs-12">
 
-            @(ichart)
-
             @Html.Toggleable(
                 UtilChart.SimpleBarChart(
                     false, false,
@@ -156,33 +130,22 @@
             Html.DataToHTMLTable(rdsPerIco, dataTableOptions: dataTableOptions),
             "Tabulka"
             )
-
-            @*@foreach (var q in model.GetQueue().Take(2))
-            {
-                @UtilChart.RenderReport(q, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [],
-                'lengthChange': false,
-                'info': false,
-                }", q.Key)
-            }*@
-
-
+          
         </div>
         <div class="col-xs-12">
-            @foreach (var q in model.GetQueue().Skip(2).Take(2))
-            {
-                @UtilChart.RenderReport(q, @"{
-                 'language': {
-                    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-                },
-                'order': [],
-                'lengthChange': false,
-                'info': false,
-                }", q.Key)
-            }
+
+            @Html.Toggleable(
+                UtilChart.SimpleBarChart(
+                    false, false,
+                    400,
+                    "perPrice_o",
+                    "Firmy", "Kč",
+                    rdsPerPrice.Filter(10), "Kč"
+                ),
+            "Graf",
+            Html.DataToHTMLTable(rdsPerPrice, dataTableOptions: dataTableOptions),
+            "Tabulka"
+            )
         </div>
     </div>
 }
