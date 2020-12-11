@@ -95,7 +95,7 @@ namespace HlidacStatu.Web.Controllers
         public string Voice2TextFailed(bool requeueAsTheLast, [FromBody] Voice2text task)
         {
             using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
-                = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+                = new Q.Simple.Queue<Voice2text>(Voice2text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 sq.Send(task);
             }
