@@ -341,14 +341,14 @@ namespace HlidacStatu.Web.Framework
 
             sb.AppendLine($"<div id='{random}' ></div>");
             sb.AppendLine("<script type='text/javascript'>");
-            sb.AppendLine("var rdsSumPerY;");
+            sb.AppendLine($"var g_{random};");
             sb.AppendLine("$(document).ready(function () {");
-            sb.AppendLine("rdsSumPerY = new Highcharts.Chart(");
+            sb.AppendLine($"g_{random} = new Highcharts.Chart(");
 
-            const string redColor = "#bb0000";
-            const string blueColor = "#0000bb";
-            const string lightBlueColor = "#000099";
-            const string greyColor = "#888888";
+            //const string redColor = "#bb0000";
+            //const string blueColor = "#0000bb";
+            //const string lightBlueColor = "#000099";
+            //const string greyColor = "#888888";
 
             var anon = new
             {
