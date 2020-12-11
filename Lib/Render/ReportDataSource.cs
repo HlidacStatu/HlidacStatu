@@ -1,4 +1,6 @@
 ﻿using Nest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -268,5 +270,37 @@ namespace HlidacStatu.Lib.Render
     public class ReportDataTimeValue {
         public DateTime Date { get; set; }
         public decimal Value { get; set; }
+    }
+
+    public class Series
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("color")]
+        public string Color { get; set; } = "#888888";
+        [JsonProperty("type")]
+        public string Type { get; set; } = "column";
+        [JsonProperty("yAxis")]
+        public int YAxis { get; set; } = 0;
+        [JsonProperty("data")]
+        public SeriesData[] Data { get; set; }
+        [JsonProperty("tooltip")]
+        public SeriesTooltip SeriesTooltip { get; set; }
+    }
+
+    public class SeriesTooltip
+    {
+        [JsonProperty("valuePrefix")]
+        public string ValuePrefix { get; set; }
+        [JsonProperty("valueSuffix")]
+        public string ValueSuffix { get; set; }
+    }
+
+    public class SeriesData
+    {
+        [JsonProperty("x")]
+        public int X { get; set; }
+        [JsonProperty("y")]
+        public decimal Y { get; set; }
     }
 }

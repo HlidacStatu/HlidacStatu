@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Newtonsoft.Json.Linq;
 
 namespace HlidacStatu.Web.Framework
 {
@@ -326,6 +327,124 @@ namespace HlidacStatu.Web.Framework
             sb.Append($"<div class=\"{random}\">{first.ToHtmlString()}</div>");
             sb.Append($"<div class=\"{random}\" style=\"display:none;\">{second.ToHtmlString()}</div>");
 
+            return htmlHelper.Raw(sb.ToString());
+        }
+
+        public static IHtmlString ColumnGraph(this HtmlHelper htmlHelper, 
+            string title, 
+            Lib.Render.Series[] series,
+            int height = 300,
+            string xTooltip = "Rok")
+        {
+            string random = Guid.NewGuid().ToString("N");
+            var sb = new System.Text.StringBuilder();
+
+            sb.AppendLine($"<div id='{random}' ></div>");
+            sb.AppendLine("<script type='text/javascript'>");
+            sb.AppendLine("var rdsSumPerY;");
+            sb.AppendLine("$(document).ready(function () {");
+            sb.AppendLine("rdsSumPerY = new Highcharts.Chart(");
+
+            const string redColor = "#bb0000";
+            const string blueColor = "#0000bb";
+            const string lightBlueColor = "#000099";
+            const string greyColor = "#888888";
+
+            var anon = new
+            {
+                chart = new
+                {
+                    renderTo = random,
+                    height = height,
+                    type = "column",
+                },
+                legend = new
+                {
+                    //enabled = false,
+                    //reversed = true,
+                    symbolHeight = 15,
+                    symbolWidth = 15,
+                    squareSymbol = true
+                },
+                plotOptions = new
+                {
+                    line = new
+                    {
+                        animation = true,
+                        borderWidth = 0,
+                        groupPadding = 0,
+                        shadow = true
+                    },
+                    column = new
+                    {
+                        animation = true,
+                        borderWidth = 0,
+                        grouping = false,
+                        groupPadding = 0,
+                        shadow = true
+                    }
+                },
+                title = new
+                {
+                    useHtml = true,
+                    align = "left",
+                    text = $"<span class=\"chart-title-shared\">{title}</span>",
+                    
+                },
+                tooltip = new
+                {
+                    useHTML = true,
+                    shared = true,
+                    headerFormat = $"<table class=\"chart-tooltip-shared\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
+                    pointFormat = "<tr><td style=\"color:{series.color}\">{series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
+                    footerFormat = "</table>",
+                    
+                },
+                xAxis = new
+                {
+                    labels = new
+                    {
+                        staggerLines = 1
+                    },
+                    title = new
+                    {
+                        text = ""
+                    }
+                },
+                yAxis = new object[]
+                {
+                    new
+                    {
+                        min = 0,
+                        title = new
+                        {
+                            text = "Hodnota (Kč)"
+                        },
+                        type = "linear",
+                    },
+                    new
+                    {
+                        opposite = true,
+                        min = 0,
+                        title = new
+                        {
+                            text = "Počet smluv",
+                        },
+                        type = "linear",
+                        gridLineWidth = 0
+                    },
+                },
+                navigation = new { buttonOptions = new { enabled = false } },
+                series = series
+                
+            };
+
+
+
+            var ser = Newtonsoft.Json.JsonConvert.SerializeObject(anon);
+            sb.Append(ser);
+            sb.Append(");});");
+            sb.AppendLine("</script>");
             return htmlHelper.Raw(sb.ToString());
         }
 
