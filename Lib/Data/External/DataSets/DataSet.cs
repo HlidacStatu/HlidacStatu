@@ -1,5 +1,6 @@
 ﻿using Elasticsearch.Net;
 
+using HlidacStatu.Q.Simple.Tasks;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
 
@@ -742,14 +743,18 @@ namespace HlidacStatu.Lib.Data.External.DataSets
             {
                 if (AUDIOCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
-                    if (jo["DocumentUrl"] != null && string.IsNullOrEmpty(jo["DocumentPlainText"].Value<string>()))
+                    if (jo["AudioUrl"] != null && jo["PrepisAudia"] == null )
                     {
-                        if (Uri.TryCreate(jo["DocumentUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
+                        if (Uri.TryCreate(jo["AudioUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
                         {
-                            Lib.Data.ItemToOcrQueue.AddNewTask(ItemToOcrQueue.ItemToOcrType.Dataset,
-                                                               finalId,
-                                                               this.datasetId,
-                                                               OCR.Api.Client.TaskPriority.Standard);
+                            using (HlidacStatu.Q.Simple.Queue<VoiceDownloadSave> sq = new Q.Simple.Queue<VoiceDownloadSave>(
+                                Voice2Text.QName,
+                                Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
+                                )
+                            {
+                                //TODO - check already done task
+                                //sq.Send(new VoiceDownloadSave() { dataset = datasetId, itemid = finalId, uri= jo["AudioUrl"].Value<string>() });
+                            }
                         }
                     }
                 }

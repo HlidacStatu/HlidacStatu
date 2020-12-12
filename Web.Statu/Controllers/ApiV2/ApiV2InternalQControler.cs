@@ -9,17 +9,11 @@ using System.Collections.Generic;
 using System.Web.Http.Description;
 using Swashbuckle.Swagger.Annotations;
 using HlidacStatu.Web.Framework;
+using HlidacStatu.Q.Simple.Tasks;
 
 namespace HlidacStatu.Web.Controllers
 {
 
-    public class Voice2text
-    {
-        public const string QName = "voice2text";
-        public string dataset { get; set; }
-        public string itemid { get; set; }
-        public ulong internaltaskid { get; set; }
-    }
 
     [SwaggerControllerTag("Voice 2 Text")]
     [RoutePrefix("api/v2/internalq")]
@@ -36,12 +30,12 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost, Route("Voice2TextNewTask/{datasetId}/{itemId}")]
         public string Voice2TextNewTask(string datasetId, string itemId)
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq = new Q.Simple.Queue<Voice2text>(
-                Voice2text.QName,
+            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(
+                Voice2Text.QName,
                 Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
                 )
             {
-                sq.Send(new Voice2text() { dataset = datasetId, itemid = itemId });
+                sq.Send(new Voice2Text() { dataset = datasetId, itemid = itemId });
                 return $"OK";
             }
         }
@@ -53,9 +47,9 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>taskid</returns>
         [AuthorizeAndAudit(Roles = "Admin,internalQ")]
         [HttpGet, Route("Voice2TextGetTask")]
-        public Voice2text Voice2TextGetTask()
+        public Voice2Text Voice2TextGetTask()
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq = new Q.Simple.Queue<Voice2text>(Voice2text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 var task = sq.GetAndAck();
                 if (task == null )
@@ -73,10 +67,10 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>taskid</returns>
         [AuthorizeAndAudit(Roles = "Admin,internalQ")]
         [HttpPost, Route("Voice2TextDone")]
-        public string Voice2TextDone([FromBody] Voice2text task)
+        public string Voice2TextDone([FromBody] Voice2Text task)
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
-                = new Q.Simple.Queue<Voice2text>(Voice2text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq
+                = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 task.internaltaskid = 0;
                 sq.Send(task);
@@ -92,10 +86,10 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>taskid</returns>
         [AuthorizeAndAudit(Roles = "Admin,internalQ")]
         [HttpPost, Route("Voice2TextFailed/{requeueAsTheLast}")]
-        public string Voice2TextFailed(bool requeueAsTheLast, [FromBody] Voice2text task)
+        public string Voice2TextFailed(bool requeueAsTheLast, [FromBody] Voice2Text task)
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2text> sq
-                = new Q.Simple.Queue<Voice2text>(Voice2text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq
+                = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 sq.Send(task);
             }

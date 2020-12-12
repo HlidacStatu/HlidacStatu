@@ -1004,6 +1004,10 @@
       <Project>{18cdeb72-04c2-45f2-9bd4-b1676aa0ca07}</Project>
       <Name>HlidacStatu.Lib.Db.Insolvence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HlidacStatu.Q.Simple\HlidacStatu.Q.Simple.csproj">
+      <Project>{218bf7b3-d897-4566-b4fb-4ea4335d8565}</Project>
+      <Name>HlidacStatu.Q.Simple</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lang\Lang.csproj">
       <Project>{d787acca-0e9d-45e7-a98b-87acfe7af249}</Project>
       <Name>Lang</Name>
