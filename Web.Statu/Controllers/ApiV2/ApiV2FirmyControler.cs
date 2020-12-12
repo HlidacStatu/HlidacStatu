@@ -18,6 +18,47 @@ namespace HlidacStatu.Web.Controllers
     [RoutePrefix("api/v2/firmy")]
     public class ApiV2FirmyController : ApiV2AuthController
     {
+
+        /// <summary>
+        /// Vyhledá firmu v databázi Hlídače státu.
+        /// </summary>
+        /// <param name="ico">ico firmy</param>
+        /// <returns>Ico, jméno a datová schránka</returns>
+        [AuthorizeAndAudit]
+        [HttpGet, Route("ico/{ico}")]
+        public FirmaDTO CompanyPerIco(string ico)
+        {
+            try
+            {
+                var f = Lib.Data.Firmy.Get(ico);
+                if (f.Valid == false)
+                {
+                    throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NotFound, $"Firma {ico} nenalezena."));
+                }
+                else
+                    return new FirmaDTO()
+                    {
+                        ICO = f.ICO,
+                        Jmeno = f.Jmeno,
+                        DatoveSchranky = f.DatovaSchranka
+                    };
+
+            }
+            catch (HttpResponseException)
+            {
+                throw;
+            }
+            catch (DataSetException dse)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"{dse.APIResponse.error.description}"));
+            }
+            catch (Exception ex)
+            {
+                Util.Consts.Logger.Error("Dataset API", ex);
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Obecná chyba - {ex.Message}"));
+            }
+        }
+
         /// <summary>
         /// Vyhledá firmu v databázi Hlídače státu.
         /// </summary>
@@ -43,8 +84,10 @@ namespace HlidacStatu.Web.Controllers
                     }
                     else
                         return new FirmaDTO()
-                        { 
-                            ICO = found.ICO, Jmeno = found.Jmeno, DatoveSchranky = found.DatovaSchranka 
+                        {
+                            ICO = found.ICO,
+                            Jmeno = found.Jmeno,
+                            DatoveSchranky = found.DatovaSchranka
                         };
                 }
             }
