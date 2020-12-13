@@ -68,8 +68,8 @@
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.15.0.5\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Batch, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Batch.2.1.1\lib\net48\Devmasters.Batch.dll</HintPath>
+    <Reference Include="Devmasters.Batch, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Batch.2.1.2\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Cache, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.2.1.2\lib\net48\Devmasters.Cache.dll</HintPath>
@@ -80,8 +80,8 @@
     <Reference Include="Devmasters.Collections, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Collections.2.1.1\lib\net48\Devmasters.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=2.1.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.2.1.6\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.2.1.8\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Crypto, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Crypto.2.1.0\lib\net48\Devmasters.Crypto.dll</HintPath>
