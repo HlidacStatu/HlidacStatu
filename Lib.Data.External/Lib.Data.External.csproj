@@ -502,10 +502,6 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="vOKOsCom, Version=5.2.0.48607, Culture=neutral, PublicKeyToken=31204d55c91e542b, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\vOKO\vOKOsCom.dll</HintPath>
-    </Reference>
     <Reference Include="WeCantSpell.Hunspell, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WeCantSpell.Hunspell.3.0.1\lib\net45\WeCantSpell.Hunspell.dll</HintPath>
     </Reference>
