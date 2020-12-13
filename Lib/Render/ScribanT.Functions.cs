@@ -214,6 +214,24 @@ namespace HlidacStatu.Lib.Render
                 }
             }
 
+            public static string fn_FormatDurationInSec(dynamic value, string format = null)
+            {
+                if (value == null)
+                    return string.Empty;
+
+                int? sec = HlidacStatu.Util.ParseTools.ToInt(value.ToString());
+                if (sec.HasValue)
+                {
+                    TimeSpan ts = TimeSpan.FromSeconds(sec.Value);
+                    format = format ?? "c";
+                    return ts.ToString(format);
+                }
+                else
+                {
+                    return value.ToString();
+                }
+            }
+
             public static string fn_FormatNumber(dynamic value, string format = null)
             {
                 if (value == null)

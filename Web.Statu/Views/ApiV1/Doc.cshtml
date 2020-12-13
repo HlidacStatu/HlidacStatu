@@ -356,6 +356,7 @@
 </p>
 <p><code>string fn_FormatNumber(dynamic value, string format = null)</code> - naformátuje číslo. Formát může mít hodnoty "cs" nebo "en". Podle toho je zvolen formát čísla.</p>
 <p><code>string fn_FormatPrice(dynamic value, string mena = "Kč")</code> - naformátuje číslo jako cenu s měnou Kč</p>
+<p><code>string fn_FormatDurationInSec(dynamic value, string format = null)</code> - naformátuje dobu trvání do formátu [-][d'.']hh':'mm':'ss['.'fffffff]. Formát může mít hodnoty podle <a href="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings">Custom format TimeSpan</a>.</p>
 <p><code>string fn_Pluralize(dynamic pocet, string zeroText, string oneText, string twoText, string moreText)</code> - slova/věty v závislosti podle počtu. příklad: <code>fn_Pluralize total "žádné nové zakázky" "jednu novou zakázku" "{0} nové zakázky" "{0} nových zakázek"</code></p>
 
 
