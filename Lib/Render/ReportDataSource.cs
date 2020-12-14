@@ -1,4 +1,7 @@
 ﻿using Nest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -268,5 +271,74 @@ namespace HlidacStatu.Lib.Render
     public class ReportDataTimeValue {
         public DateTime Date { get; set; }
         public decimal Value { get; set; }
+    }
+
+    public class Series
+    {
+        public enum SeriesType
+        {
+            column, line
+        }
+
+        private int? _yAxis = null;
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("color")]
+        public string Color { get; set; } = "#888888";
+        [JsonProperty("type")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SeriesType Type { get; set; } = SeriesType.column;
+        [JsonProperty("yAxis")]
+        public int YAxis 
+        { 
+            get
+            {
+                if (_yAxis is null)
+                {
+                    switch (Type)
+                    {
+                        case SeriesType.column:
+                            return 0;
+                        case SeriesType.line:
+                            return 1;
+                        default:
+                            return 0;
+                    }
+                }
+                return _yAxis.Value;
+            }
+
+            set
+            {
+                _yAxis = value;
+            } 
+        }
+        [JsonProperty("data")]
+        public SeriesData[] Data { get; set; }
+        [JsonProperty("tooltip")]
+        public SeriesTooltip SeriesTooltip { get; set; }
+    }
+
+    public class SeriesTooltip
+    {
+        [JsonProperty("valuePrefix")]
+        public string ValuePrefix { get; set; }
+        [JsonProperty("valueSuffix")]
+        public string ValueSuffix { get; set; }
+    }
+
+    public class SeriesData
+    {
+        public SeriesData() { }
+        public SeriesData(int x, decimal y)
+        {
+            X = x;
+            Y = y;
+        }
+        [JsonProperty("x")]
+        public int X { get; set; }
+        [JsonProperty("y")]
+        public decimal Y { get; set; }
     }
 }

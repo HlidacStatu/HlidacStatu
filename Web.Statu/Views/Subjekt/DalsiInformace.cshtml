@@ -13,7 +13,30 @@
     Layout = null;
     ViewBag.Title = "Další informace " + Model.Jmeno;
 }
+<style>
+    .chart-tooltip-shared {
+        margin: 5px;
+        border: none;
+    }
 
+    .chart-tooltip-shared td + td {
+        color: #333333;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .chart-tooltip-shared td {
+        padding: 5px;
+    }
+
+    .chart-title-shared {
+        color: #28313B;
+        font-family: Cabin;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+</style>
 
     @* První sloupec *@
     <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
@@ -92,4 +115,114 @@
             </div>
         }
 
+        <hr /><hr />
+
+        @{ 
+            var serie = new HlidacStatu.Lib.Render.Series[]
+            {
+                new HlidacStatu.Lib.Render.Series()
+                {
+                    Color = "#AAAAAA",
+                    Name = "pokustón",
+                    Type = Series.SeriesType.column,
+                    Data = new SeriesData[]
+                    {
+                        new SeriesData()
+                        {
+                            X = 2000,
+                            Y = 10000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2001,
+                            Y = 20000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2002,
+                            Y = 15000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2003,
+                            Y = 30315
+                        }
+                    },
+                    SeriesTooltip = new SeriesTooltip()
+                    {
+                        ValueSuffix = "Kč"
+                    }
+                },
+                new HlidacStatu.Lib.Render.Series()
+                {
+                    Color = "#00AA00",
+                    Name = "bob",
+                    Type = Series.SeriesType.line,
+                    Data = new SeriesData[]
+                    {
+                        new SeriesData()
+                        {
+                            X = 2000,
+                            Y = 50125
+                        },
+                        new SeriesData()
+                        {
+                            X = 2001,
+                            Y = 47854
+                        },
+                        new SeriesData()
+                        {
+                            X = 2002,
+                            Y = 12000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2003,
+                            Y = 315211
+                        }
+                    },
+                    SeriesTooltip = new SeriesTooltip()
+                    {
+                        ValueSuffix = "z klobouku",
+                        ValuePrefix = "Králík"
+
+                    }
+                },
+                new HlidacStatu.Lib.Render.Series()
+                {
+                    Color = "#00AAAA",
+                    Name = "bobek",
+                    YAxis = 0,
+                    Type = Series.SeriesType.column,
+                    Data = new SeriesData[]
+                    {
+                        new SeriesData()
+                        {
+                            X = 2000,
+                            Y = 3000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2001,
+                            Y = 8000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2002,
+                            Y = 7000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2003,
+                            Y = 5000
+                        }
+                    }
+                }
+
+            };
+        }
+
+
+        @Html.ColumnGraph("nazev grafu", serie)
+        <hr /><hr />
     </div>
