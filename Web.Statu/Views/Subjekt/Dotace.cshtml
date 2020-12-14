@@ -240,28 +240,67 @@
                     if (Model.JsemOVM())
                     {
                         <p>
-                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, 
-                                  "Jedna podřízená organizace", 
-                                  "{0} podřízená organizace", 
-                                  "{0} podřízených organizací")
+                            <b>
+                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                   "Jedna podřízená organizace",
+                                   "{0} podřízená organizace",
+                                   "{0} podřízených organizací")
                             </b>
                             úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                        </p> }
+                        </p> 
+                    }
                     else
                     {
                         <p>
-                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, 
-                              "Jedna dceřinná společnost", 
-                              "{0} dceřinné společnosti", 
-                              "{0} dceřinných společností")
+                            <b>
+                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                   "Jedna dceřinná společnost",
+                                   "{0} dceřinné společnosti",
+                                   "{0} dceřinných společností")
                             </b>
                             firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
-                        </p>}
+                        </p>
+                    }
                 }
             }
             <hr />
 
             <h4>Přehled subjektu</h4>
+            <hr />
+            @{
+                var serie = new HlidacStatu.Lib.Render.Series[]
+                {
+                    new HlidacStatu.Lib.Render.Series()
+                    {
+                        Color = "#AAAAAA",
+                        Name = "Celkem Kč",
+                        Type = Series.SeriesType.column,
+                        Data = Model.StatistikaDotaci()
+                            .Where(x => x.Year > 0)
+                            .OrderBy(x => x.Year)
+                            .Select(x => new SeriesData(x.Year, x.Value.CelkemCerpano)).ToArray(),
+                        SeriesTooltip = new SeriesTooltip()
+                        {
+                            ValueSuffix = " Kč"
+                        }
+                    },
+                    new HlidacStatu.Lib.Render.Series()
+                    {
+                        Color = "#770077",
+                        Name = "Počet",
+                        Data = Model.StatistikaDotaci()
+                            .Where(x => x.Year > 0)
+                            .OrderBy(x => x.Year)
+                            .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
+                        Type = Series.SeriesType.line,
+
+                    }
+
+                };
+            }
+            @Html.ColumnGraph("Přehled dotací", serie, yTitleLeft: "Celkem čerpáno", yTitleRight: "Počet udělených dotací")
+
+            <hr />
 
             @Html.Toggleable(
                 UtilChart.SimpleColumnChart(

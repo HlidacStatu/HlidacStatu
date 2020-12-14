@@ -1,5 +1,6 @@
 ﻿using Nest;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -274,14 +275,45 @@ namespace HlidacStatu.Lib.Render
 
     public class Series
     {
+        public enum SeriesType
+        {
+            column, line
+        }
+
+        private int? _yAxis = null;
+
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("color")]
         public string Color { get; set; } = "#888888";
         [JsonProperty("type")]
-        public string Type { get; set; } = "column";
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SeriesType Type { get; set; } = SeriesType.column;
         [JsonProperty("yAxis")]
-        public int YAxis { get; set; } = 0;
+        public int YAxis 
+        { 
+            get
+            {
+                if (_yAxis is null)
+                {
+                    switch (Type)
+                    {
+                        case SeriesType.column:
+                            return 0;
+                        case SeriesType.line:
+                            return 1;
+                        default:
+                            return 0;
+                    }
+                }
+                return _yAxis.Value;
+            }
+
+            set
+            {
+                _yAxis = value;
+            } 
+        }
         [JsonProperty("data")]
         public SeriesData[] Data { get; set; }
         [JsonProperty("tooltip")]
@@ -298,6 +330,12 @@ namespace HlidacStatu.Lib.Render
 
     public class SeriesData
     {
+        public SeriesData() { }
+        public SeriesData(int x, decimal y)
+        {
+            X = x;
+            Y = y;
+        }
         [JsonProperty("x")]
         public int X { get; set; }
         [JsonProperty("y")]

@@ -334,7 +334,9 @@ namespace HlidacStatu.Web.Framework
             string title, 
             Lib.Render.Series[] series,
             int height = 300,
-            string xTooltip = "Rok")
+            string xTooltip = "Rok",
+            string yTitleLeft = "Hodnota (Kč)",
+            string yTitleRight = "Počet smluv")
         {
             string random = Guid.NewGuid().ToString("N");
             var sb = new System.Text.StringBuilder();
@@ -418,7 +420,7 @@ namespace HlidacStatu.Web.Framework
                         min = 0,
                         title = new
                         {
-                            text = "Hodnota (Kč)"
+                            text = yTitleLeft,
                         },
                         type = "linear",
                     },
@@ -428,7 +430,7 @@ namespace HlidacStatu.Web.Framework
                         min = 0,
                         title = new
                         {
-                            text = "Počet smluv",
+                            text = yTitleRight,
                         },
                         type = "linear",
                         gridLineWidth = 0
