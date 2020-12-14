@@ -52,7 +52,7 @@ namespace HlidacStatu.Web.Controllers
             using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 var task = sq.GetAndAck();
-                if (task == null )
+                if (task == null)
                 {
                     throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NoContent, $"No taks available"));
                 }
@@ -69,13 +69,21 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost, Route("Voice2TextDone")]
         public string Voice2TextDone([FromBody] Voice2Text task)
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq
-                = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            using (HlidacStatu.Q.Simple.Queue<TaskResult<Voice2Text>> sq
+                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 task.internaltaskid = 0;
-                sq.Send(task);
+                TaskResult<Voice2Text> result = new TaskResult<Voice2Text>()
+                {
+                    Payload = task,
+                    Created = DateTime.Now,
+                    Result = "done",
+                    User = AuthUser().UserName,
+                    FromIP = this.HostIpAddress
+                };
+                sq.Send(result);
             }
-            
+
 
             return $"OK";
         }
@@ -88,10 +96,18 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost, Route("Voice2TextFailed/{requeueAsTheLast}")]
         public string Voice2TextFailed(bool requeueAsTheLast, [FromBody] Voice2Text task)
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq
-                = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            using (HlidacStatu.Q.Simple.Queue<TaskResult<Voice2Text>> sq
+                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
-                sq.Send(task);
+                TaskResult<Voice2Text> result = new TaskResult<Voice2Text>()
+                {
+                    Payload = task,
+                    Created = DateTime.Now,
+                    Result = "failed",
+                    User = AuthUser().UserName,
+                    FromIP = this.HostIpAddress
+                };
+                sq.Send(result);
             }
 
             return "OK";
