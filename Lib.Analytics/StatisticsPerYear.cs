@@ -69,6 +69,14 @@ namespace HlidacStatu.Lib.Analytics
             }
         }
 
+        public bool HasStatistics 
+        { 
+            get 
+            {
+                return Years.Count != 0;
+            }
+        }
+
         public int FirstYear()
         {
             if (this.Years == null)

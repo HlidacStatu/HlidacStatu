@@ -7,25 +7,11 @@
 @using System;
 @using System.Data;
 @using HlidacStatu.Lib.Render;
+@using HlidacStatu.Lib.Analytics;
+@using HlidacStatu.Lib.Data;
 
 @{
     Layout = null;
-
-    //var dotaceService = new HlidacStatu.Lib.Data.Dotace.DotaceService();
-    //var holdingSubsidies = dotaceService.GetDotaceForHolding(Model.ICO).ToList();
-
-    //List<(string Ico, int Rok, decimal Cerpano)> Cerpani = holdingSubsidies
-    //                .SelectMany(s => s.Rozhodnuti
-    //                    .SelectMany(r => r.Cerpani
-    //                        .Select(c =>
-    //                        (
-    //                            Ico: s.Prijemce.Ico,
-    //                            Rok: c.GuessedYear ?? 0,
-    //                            Cerpano: c.CastkaSpotrebovana ?? 0
-    //                        ))
-    //                    )
-    //                ).ToList();
-
 
     //graph
     var companyGraphData = new HlidacStatu.Lib.Render.Series[]
@@ -44,21 +30,19 @@
                 ValueSuffix = " Kč"
             }
         },
-        new HlidacStatu.Lib.Render.Series()
-        {
-            Color = "#770077",
-            Name = "Počet",
-            Data = Model.StatistikaDotaci()
-                .Where(x => x.Year > 0)
-                .OrderBy(x => x.Year)
-                .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
-            Type = Series.SeriesType.line,
+        //new HlidacStatu.Lib.Render.Series()
+        //{
+        //    Color = "#770077",
+        //    Name = "Počet",
+        //    Data = Model.StatistikaDotaci()
+        //        .Where(x => x.Year > 0)
+        //        .OrderBy(x => x.Year)
+        //        .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
+        //    Type = Series.SeriesType.line,
 
-        }
+        //}
 
     };
-
-
 
     var reportData = new ReportDataSource<(int Rok, HlidacStatu.Lib.Data.Firma.Statistics.Dotace Dotace)> (
         new ReportDataSource<(int Rok, HlidacStatu.Lib.Data.Firma.Statistics.Dotace Dotace)>.Column[]
@@ -81,14 +65,6 @@
             },
             new ReportDataSource<(int Rok, HlidacStatu.Lib.Data.Firma.Statistics.Dotace Dotace)>.Column()
             {
-                Name = "Počet schválených dotací",
-                TextRender = (x) => $"{x.Dotace.PocetDotaci.ToString("N0")}",
-                HtmlRender = (x) => $"{x.Dotace.PocetDotaci.ToString("N0")}",
-                OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.Dotace.PocetDotaci),
-                CssClass = "number"
-            },
-            new ReportDataSource<(int Rok, HlidacStatu.Lib.Data.Firma.Statistics.Dotace Dotace)>.Column()
-            {
                 Name = "Detaily",
                 HtmlRender = (x) =>
                 $"<a href=\"/dotace/hledat?Q=ico:{Model.ICO} AND rozhodnuti.cerpani.guessedYear:{x.Rok}\">Dotace za rok {x.Rok}</a>"
@@ -96,7 +72,7 @@
         }
     );
 
-    foreach (var dot in Model.StatistikaDotaci().OrderBy(d=> d.Year))
+    foreach (var dot in Model.StatistikaDotaci().Where(d => d.Value.CelkemCerpano > 0).OrderBy(d=> d.Year))
     {
         reportData.AddRow(dot);
     }
@@ -105,6 +81,16 @@
 
 
     //holding graf a tabulka
+    var holdingFirmy = Model.Holding(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).ToList();
+    //holdingFirmy.Add(Model);
+
+    var holdingFirmyWithSubsidies = holdingFirmy.Where(c => c.StatistikaDotaci().HasStatistics).Append(Model);
+    int subCompaniesWithSubsidiesCount = holdingFirmyWithSubsidies.Count() - 1;
+
+    var holdingStats = StatisticsSubjectPerYear<Firma.Statistics.Dotace>.Aggregate(
+        holdingFirmyWithSubsidies.Select(f => f.StatistikaDotaci())
+    );
+
     var holdingGraphData = new HlidacStatu.Lib.Render.Series[]
     {
         new HlidacStatu.Lib.Render.Series()
@@ -112,7 +98,7 @@
             Color = "#AAAAAA",
             Name = "Celkem Kč",
             Type = Series.SeriesType.column,
-            Data = Model.HoldingStatisticsDotace(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
+            Data = holdingStats
                 .Where(x => x.Year > 0)
                 .OrderBy(x => x.Year)
                 .Select(x => new SeriesData(x.Year, x.Value.CelkemCerpano)).ToArray(),
@@ -121,25 +107,22 @@
                 ValueSuffix = " Kč"
             }
         },
-        new HlidacStatu.Lib.Render.Series()
-        {
-            Color = "#770077",
-            Name = "Počet",
-            Data = Model.HoldingStatisticsDotace(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
-                .Where(x => x.Year > 0)
-                .OrderBy(x => x.Year)
-                .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
-            Type = Series.SeriesType.line,
+        //new HlidacStatu.Lib.Render.Series()
+        //{
+        //    Color = "#770077",
+        //    Name = "Počet",
+        //    Data = holdingStats
+        //        .Where(x => x.Year > 0)
+        //        .OrderBy(x => x.Year)
+        //        .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
+        //    Type = Series.SeriesType.line,
 
-        }
+        //}
 
     };
     string holdingGraphName = $"Přehled dotací {(Model.JsemOVM() ? "úřadu včetně podřízených organizací" : "holdingu")}";
 
     //tabulka
-    var holdingFirmy = Model.Holding(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).ToList();
-    holdingFirmy.Add(Model);
-
     var holdingReportData = new ReportDataSource<HlidacStatu.Lib.Data.Firma>(
         new ReportDataSource<HlidacStatu.Lib.Data.Firma>.Column[]
         {
@@ -165,7 +148,7 @@
         }
         }
     );
-    foreach (var dot in holdingFirmy)
+    foreach (var dot in holdingFirmyWithSubsidies)
     {
         holdingReportData.AddRow(dot);
     }
@@ -222,12 +205,9 @@
 
             @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
             {
-                holdingFirmy.Where(f => f.StatistikaDotaci() )
-                var dotaceHoldingStat = dotaceService.GetStatisticsForHolding(Model.ICO);
 
-
-                decimal totalSumDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Sum);
-                int totalCountDotaceHolding = dotaceHoldingStat.Sum(item => item.Value.Count);
+                decimal totalSumDotaceHolding = holdingStats.Sum(s => s.CelkemCerpano);
+                int totalCountDotaceHolding = holdingStats.Sum(s => s.PocetDotaci);
 
                 if (totalCountDotaceHolding - dotacePocet > 0)
                 {
@@ -237,11 +217,11 @@
                     if (Model.JsemOVM())
                     {
                         <p>
-                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
+                            <b>@Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount, "Jedna podřízená organizace", "{0} podřízená organizace", "{0} podřízených organizací")</b>
                             (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
                             úřadu @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
 
-                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                            @Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount,
                                 "dostala",
                                 "dostaly",
                                 "dostalo")
@@ -260,11 +240,11 @@
                     else
                     {
                         <p>
-                            <b>@Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            <b>@Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
                             (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
                             firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
 
-                            @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                            @Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount,
                                 "dostala",
                                 "dostaly",
                                 "dostalo")
@@ -287,7 +267,7 @@
                     {
                         <p>
                             <b>
-                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                @Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount,
                                    "Jedna podřízená organizace",
                                    "{0} podřízená organizace",
                                    "{0} podřízených organizací")
@@ -299,7 +279,7 @@
                     {
                         <p>
                             <b>
-                                @Devmasters.Lang.Plural.Get(dotaceHoldingStat.Count,
+                                @Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount,
                                    "Jedna dceřinná společnost",
                                    "{0} dceřinné společnosti",
                                    "{0} dceřinných společností")
@@ -314,7 +294,7 @@
             <h4>Přehled subjektu</h4>
 
             @Html.Toggleable(
-                Html.ColumnGraph("Přehled dotací", companyGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: "Počet udělených dotací"),
+                Html.ColumnGraph("Přehled dotací", companyGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
                 "Graf",
                 Html.DataToHTMLTable(reportData, dataTableOptions: dataTableOptions),
                 "Tabulka"
@@ -332,7 +312,7 @@
             }
 
             @Html.Toggleable(
-                Html.ColumnGraph(holdingGraphName, holdingGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: "Počet udělených dotací"),
+                Html.ColumnGraph(holdingGraphName, holdingGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
                 "Graf",
                 Html.DataToHTMLTable(holdingReportData, dataTableOptions: dataTableOptions),
                 "Tabulka"
