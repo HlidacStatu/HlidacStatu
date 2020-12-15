@@ -15,6 +15,10 @@
     var statistics = Model.StatistikaRegistruSmluv();
     int chartMinDate = 2016;
     int chartMaxDate = DateTime.Now.Year;
+    var statisticsAfter2016 = statistics
+        .Where(s => statistics.YearsAfter2016().Contains(s.Year))
+        .OrderBy(s => s.Year);
+
     var summaryAfter2016 = statistics.Summary(statistics.YearsAfter2016());
     var statHoldingAktual = Model.HoldingStatisticsRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni);
     var holdingSummaryAfter2016 = statHoldingAktual.Summary(statHoldingAktual.YearsAfter2016());
@@ -30,45 +34,96 @@
     var currentSeasonYear = statistics.CurrentSeasonYear();
     var zmenaObjemuSmluv = statistics.ChangeBetweenYears(currentSeasonYear - 1, currentSeasonYear, s => s.CelkovaHodnotaSmluv);
 
-}
-@section breadcrumb
-{
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li>Úřady a firmy</li>
-        <li><a href="/subjekt2/@Model.ICO">@Model.Jmeno</a></li>
-        <li class="active">@ViewBag.Title</li>
-    </ol>
-}
 
-@section scripts
-{
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    @Scripts.Render("~/bundles/highcharts")
-    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
-    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
-    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#datatable').DataTable({
-                "language": {
-                    "info": "Zobrazuji _START_. - _END_. z celkového počtu _TOTAL_ záznamů.",
-                    "search": "Hledat:",
-                    "lengthMenu": "Zobraz _MENU_ záznamů",
-                    "thousands": " ",
-                    "paginate": {
-                        "first": "První",
-                        "last": "Poslední",
-                        "next": "Další",
-                        "previous": "Předchozí"
-                    },
-                }
-            });
-        });
+    //Graf hodnota smluv
+    var hodnotaSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
+    {
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#AAAAAA",
+            Name = "Hodnota smluv",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.CelkovaHodnotaSmluv)).ToArray(),
+            SeriesTooltip = new SeriesTooltip()
+            {
+                ValueSuffix = " Kč"
+            }
+        },
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#333333",
+            Name = "Hodnota smluv se soukromými subjekty",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.CelkovaHodnotaSmluvSeSoukrSubj)).ToArray(),
+            SeriesTooltip = new SeriesTooltip()
+            {
+                ValueSuffix = " Kč"
+            }
+        },
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#770077",
+            Name = "Počet smluv bez ceny",
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.PocetSmluvBezCeny)).ToArray(),
+            Type = Series.SeriesType.line,
 
-    </script>
+        }
+    };
 
+    //Graf počet smluv/počet smluv s utajenou cenou
+    var pocetSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
+    {
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#AAAAAA",
+            Name = "Počet smluv",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.PocetSmluv)).ToArray(),
+        },
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#333333",
+            Name = "Počet smluv s utajenou cenou",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.PocetSmluvBezCeny)).ToArray(),
+
+        },
+    };
+
+    //Graf počet smluv/počet smluv s utajenou cenou
+    var procentaSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
+    {
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#CCCCCC",
+            Name = "s utajenou cenou",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.PercentSmluvBezCeny * 100)).ToArray(),
+            SeriesTooltip = new SeriesTooltip()
+            {
+                ValueSuffix = " %"
+            }
+        },
+        new HlidacStatu.Lib.Render.Series()
+        {
+            Color = "#AAAAAA",
+            Name = "s vazbou na politiky",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.PercentSmluvPolitiky * 100)).ToArray(),
+            SeriesTooltip = new SeriesTooltip()
+            {
+                ValueSuffix = " %"
+            }
+        },
+        
+    };
 }
 
 
@@ -166,7 +221,9 @@
 
             @* GRAFY *@
             <h4>Souhrnné statistiky pro @Model.Jmeno</h4>
-
+            @Html.ColumnGraph("Hodnota smluv", hodnotaSmluvGraphData, yTitleRight: "Počet smluv"),
+            @Html.ColumnGraph("Počet smluv", pocetSmluvGraphData, yTitleLeft: "Počet smluv"),
+            @Html.ColumnGraph("Procenta smluv", procentaSmluvGraphData, yTitleLeft: "% smluv"),
 
             <div class="row">
 

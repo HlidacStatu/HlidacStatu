@@ -336,7 +336,7 @@ namespace HlidacStatu.Web.Framework
             int height = 300,
             string xTooltip = "Rok",
             string yTitleLeft = "Hodnota (Kč)",
-            string yTitleRight = "Počet smluv")
+            string yTitleRight = "")
         {
             string random = Guid.NewGuid().ToString("N");
             var sb = new System.Text.StringBuilder();
@@ -346,11 +346,6 @@ namespace HlidacStatu.Web.Framework
             sb.AppendLine($"var g_{random};");
             sb.AppendLine("$(document).ready(function () {");
             sb.AppendLine($"g_{random} = new Highcharts.Chart(");
-
-            //const string redColor = "#bb0000";
-            //const string blueColor = "#0000bb";
-            //const string lightBlueColor = "#000099";
-            //const string greyColor = "#888888";
 
             var anon = new
             {
