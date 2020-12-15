@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data
 
             static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string> _cache
                 = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string>
-                                .GetSafeInstance("SmlouvyStatistics_Query_V2",
+                                .GetSafeInstance("SmlouvyStatistics_Query_v2_",
                                     (query) => Calculate(query),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
@@ -77,7 +77,7 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvSeSoukromymSubj = _calc_soukrome[year].Pocet,
                         CelkovaHodnotaSmluvSeSoukrSubj = _calc_soukrome[year].CelkemCena,
                         PocetSmluvBezCenySeSoukrSubj = _calc_soukromeBezCeny[year].Pocet,
-
+                        
                         PocetSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].Pocet,
                         PocetSmluvBezCenySponzorujiciFirmy = _calc_sVazbouNaPolitikyBezCenyNedavne[year].Pocet,
                         SumKcSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].CelkemCena,

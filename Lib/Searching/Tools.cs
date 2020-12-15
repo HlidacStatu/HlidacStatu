@@ -471,7 +471,7 @@ namespace HlidacStatu.Lib.Searching
                     s1 = $"( {s1} )";
                 if (!s2.StartsWith("(") && !s2.EndsWith("("))
                     s2 = $"( {s2} )";
-                return string.Format($"(  {s1}  AND  {s2}  )", origQuery, anotherCondition);
+                return $"(  {s1}  AND  {s2}  )";
             }
         }
         public static string ModifyQueryOR(string origQuery, string anotherCondition)

@@ -459,41 +459,55 @@ namespace HlidacStatu.Util
             return $"Date.UTC({m.Date.Year},{ m.Date.Month - 1},{ m.Date.Day})";
         }
 
-        public static string LimitedList(int maxItems, IEnumerable<string> data, string format = "{0}",
-            string itemsDelimiter = "\n",
-            string moreTextPrefix = null, Devmasters.Lang.PluralDef morePluralForm = null,
-            bool moreNumberFormat = true
+        public static string RenderList(IEnumerable<string> data, string format = "{0}",
+            string itemsDelimiter = ", ", string lastItemDelimiter = " a ", string ending = "."
             )
         {
-            return LimitedList(maxItems, data.Select(m => new string[] { m }), format, itemsDelimiter, moreTextPrefix, morePluralForm, moreNumberFormat);
+            return RenderList(
+                data.Select(m => new string[] { m })
+                , format, itemsDelimiter, lastItemDelimiter, ending);
         }
-
-        public static string LimitedList(int maxItems, IEnumerable<string[]> data, string format="{0}", 
-            string itemsDelimiter = "\n", 
+            public static string RenderList(IEnumerable<string[]> data, string format = "{0}",
+            string itemsDelimiter = ", ", string lastItemDelimiter = " a ", string ending = "."
+            )
+        {
+            var aData = data.ToArray();
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(
+                string.Join(itemsDelimiter, aData
+                                .Take(aData.Length-1)
+                                .Select(m => string.Format(format, m))
+                                )
+                );
+            sb.Append(lastItemDelimiter);
+            sb.Append(string.Format(format, aData.Last()));
+            sb.Append(ending);
+            return sb.ToString();
+        }
+        public static string LimitedList(int maxItems, IEnumerable<string> data, string format = "{0}",
+            string itemsDelimiter = "\n", string lastItemDelimiter = "\n",
             string moreTextPrefix = null, Devmasters.Lang.PluralDef morePluralForm = null,
             bool moreNumberFormat = true
             )
         {
-            if (maxItems == 0)
-                return string.Empty;
-            if (data == null)
-                return string.Empty;
-            if (data.Count() == 0)
-                return string.Empty;
-
+            return LimitedList(maxItems, data.Select(m => new string[] { m }), format, itemsDelimiter, lastItemDelimiter, moreTextPrefix, morePluralForm, moreNumberFormat);
+        }
+        public static string LimitedList(int maxItems, IEnumerable<string[]> data, string format = "{0}",
+           string itemsDelimiter = "\n", string lastItemDelimiter = "\n", 
+           string moreTextPrefix = null, Devmasters.Lang.PluralDef morePluralForm = null,
+           bool moreNumberFormat = true
+           )
+        {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append( data.Take(maxItems)
-                .Select(m => string.Format(format, m))
-                .Aggregate((f, s) => f + itemsDelimiter + s)
-                );
-
             string more = "";
             if (data.Count() == maxItems+1)
             {
-                sb.Append(itemsDelimiter);
-                sb.Append(string.Format(format, data.Last()));
+                sb.Append(RenderList(data.Take(maxItems+1),format,itemsDelimiter, lastItemDelimiter,""));
                 maxItems = data.Count();
             }
+            else
+                sb.Append(RenderList(data.Take(maxItems), format, itemsDelimiter, lastItemDelimiter,""));
+
             if (data.Count() > maxItems)
             {
                 int diff = data.Count() - maxItems;
