@@ -322,8 +322,8 @@ namespace HlidacStatu.Web.Framework
             sb.Append($"$('.{random}.btn').click(function () {{");
             sb.Append($"$('.{random}').toggle();}});}});");
             sb.Append("</script>");
-            sb.Append($"<div class=\"btn btn-default {random}\">{firstButton}/<small>{secondButton}</small></div>");
-            sb.Append($"<div class=\"btn btn-default {random}\" style=\"display:none;\"><small>{firstButton}</small>/{secondButton}</div>");
+            sb.Append($"<div class=\"btn btn-default {random}\"><span style=\"color:black;\">{firstButton}/</span><small>{secondButton}</small></div>");
+            sb.Append($"<div class=\"btn btn-default {random}\" style=\"display:none;\"><small>{firstButton}</small><span style=\"color:black;\">/{secondButton}</span></div>");
             sb.Append($"<div class=\"{random}\">{first.ToHtmlString()}</div>");
             sb.Append($"<div class=\"{random}\" style=\"display:none;\">{second.ToHtmlString()}</div>");
 
