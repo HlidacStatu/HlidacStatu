@@ -80,10 +80,10 @@
                 <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
                     @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                     {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>více než {0:### ### ##0} </strong>smluv</u>.")) }
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<strong>0</strong> smluv.", "<strong>jedné</strong> smlouvy.", "<strong>{0} </strong>smluv.", "<strong>více než {0:### ### ##0} </strong>smluv.")) }
                     else
                     {
-                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<u><strong>0 </strong>smluv</u>.", "<u><strong>jedné </strong>smlouvy</u>.", "<u><strong>{0} </strong>smluv</u>.", "<u><strong>{0:### ### ##0} </strong>smluv</u>."))
+                        @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<strong>0</strong> smluv.", "<strong>jedné</strong> smlouvy.", "<strong>{0} </strong>smluv.", "<strong>{0:### ### ##0} </strong>smluv."))
                     }
                     Tyto smlouvy jsou velmi pravděpodobně neplatné.
                 </a>
