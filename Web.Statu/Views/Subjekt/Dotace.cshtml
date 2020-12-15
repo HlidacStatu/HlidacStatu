@@ -14,6 +14,7 @@
     Layout = null;
 
     //graph
+    string companySubsidiesTitle = "Přehled čerpání dotací";
     var companyGraphData = new HlidacStatu.Lib.Render.Series[]
     {
         new HlidacStatu.Lib.Render.Series()
@@ -30,17 +31,7 @@
                 ValueSuffix = " Kč"
             }
         },
-        //new HlidacStatu.Lib.Render.Series()
-        //{
-        //    Color = "#770077",
-        //    Name = "Počet",
-        //    Data = Model.StatistikaDotaci()
-        //        .Where(x => x.Year > 0)
-        //        .OrderBy(x => x.Year)
-        //        .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
-        //    Type = Series.SeriesType.line,
 
-        //}
 
     };
 
@@ -76,11 +67,12 @@
     {
         reportData.AddRow(dot);
     }
-    reportData.Title = "Přehled čerpání dotací";
+    reportData.Title = companySubsidiesTitle;
 
 
 
     //holding graf a tabulka
+    string holdingSubsidiesTitle = $"Přehled čerpání dotací {(Model.JsemOVM() ? "úřadu včetně podřízených organizací" : "holdingu")}";
     var holdingFirmy = Model.Holding(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).ToList();
     //holdingFirmy.Add(Model);
 
@@ -107,21 +99,9 @@
                 ValueSuffix = " Kč"
             }
         },
-        //new HlidacStatu.Lib.Render.Series()
-        //{
-        //    Color = "#770077",
-        //    Name = "Počet",
-        //    Data = holdingStats
-        //        .Where(x => x.Year > 0)
-        //        .OrderBy(x => x.Year)
-        //        .Select(x => new SeriesData(x.Year, x.Value.PocetDotaci)).ToArray(),
-        //    Type = Series.SeriesType.line,
-
-        //}
-
+        
     };
-    string holdingGraphName = $"Přehled dotací {(Model.JsemOVM() ? "úřadu včetně podřízených organizací" : "holdingu")}";
-
+    
     //tabulka
     var holdingReportData = new ReportDataSource<HlidacStatu.Lib.Data.Firma>(
         new ReportDataSource<HlidacStatu.Lib.Data.Firma>.Column[]
@@ -152,7 +132,7 @@
     {
         holdingReportData.AddRow(dot);
     }
-    holdingReportData.Title = $"Přehled čerpání dotací {(Model.JsemOVM() ? "úřadu včetně podřízených organizací" : "holdingu")}";
+    holdingReportData.Title = holdingSubsidiesTitle;
 
     string dataTableOptions = @"{
             'language': {
@@ -294,7 +274,7 @@
             <h4>Přehled subjektu</h4>
 
             @Html.Toggleable(
-                Html.ColumnGraph("Přehled dotací", companyGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
+                Html.ColumnGraph(companySubsidiesTitle, companyGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
                 "Graf",
                 Html.DataToHTMLTable(reportData, dataTableOptions: dataTableOptions),
                 "Tabulka"
@@ -312,7 +292,7 @@
             }
 
             @Html.Toggleable(
-                Html.ColumnGraph(holdingGraphName, holdingGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
+                Html.ColumnGraph(holdingSubsidiesTitle, holdingGraphData, yTitleLeft: "Celkem čerpáno", yTitleRight: ""),
                 "Graf",
                 Html.DataToHTMLTable(holdingReportData, dataTableOptions: dataTableOptions),
                 "Tabulka"
