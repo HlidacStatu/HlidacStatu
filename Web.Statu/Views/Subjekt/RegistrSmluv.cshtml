@@ -52,6 +52,18 @@
         },
         new HlidacStatu.Lib.Render.Series()
         {
+            Color = "#333333",
+            Name = "Hodnota smluv se soukromými subjekty",
+            Type = Series.SeriesType.column,
+            Data = statisticsAfter2016
+                .Select(x => new SeriesData(x.Year, x.Value.CelkovaHodnotaSmluvSeSoukrSubj)).ToArray(),
+            SeriesTooltip = new SeriesTooltip()
+            {
+                ValueSuffix = " Kč"
+            }
+        },
+        new HlidacStatu.Lib.Render.Series()
+        {
             Color = "#770077",
             Name = "Počet smluv bez ceny",
             Data = statisticsAfter2016

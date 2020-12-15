@@ -56,11 +56,13 @@ namespace HlidacStatu.Lib.Data
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_sVazbouNaPolitikyNedavne =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
-
-                Dictionary<int, Lib.Analysis.BasicData> _calc_soukrome =
-                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
                 Dictionary<int, Lib.Analysis.BasicData> _calc_sVazbouNaPolitikyBezCenyNedavne =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+
+                Dictionary<int, Lib.Analysis.BasicData> _calc_soukrome =
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                Dictionary<int, Lib.Analysis.BasicData> _calc_soukromeBezCeny =
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                 Dictionary<int, Data> data = new Dictionary<int, Data>();
                 foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
@@ -72,6 +74,10 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvBezCeny = _calc_bezCeny[year].Pocet,
                         PocetSmluvBezSmluvniStrany = _calc_bezSmlStran[year].Pocet,
                         SumKcSmluvBezSmluvniStrany = _calc_bezSmlStran[year].CelkemCena,
+                        PocetSmluvSeSoukromymSubj = _calc_soukrome[year].Pocet,
+                        CelkovaHodnotaSmluvSeSoukrSubj = _calc_soukrome[year].CelkemCena,
+                        PocetSmluvBezCenySeSoukrSubj = _calc_soukromeBezCeny[year].Pocet,
+
                         PocetSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].Pocet,
                         PocetSmluvBezCenySponzorujiciFirmy = _calc_sVazbouNaPolitikyBezCenyNedavne[year].Pocet,
                         SumKcSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].CelkemCena,
@@ -80,7 +86,7 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
                         PocetSmluvNovaFirma = _calc_NovaFirmaDodavatel[year].Pocet,
                     }
-                    );
+                    ) ;
                 }
                 return new Analytics.StatisticsPerYear<Statistics.Data>(data);
 

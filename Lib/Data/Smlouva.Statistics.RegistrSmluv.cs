@@ -16,8 +16,9 @@ namespace HlidacStatu.Lib.Data
             {
                 public long PocetSmluv { get; set; } = 0;
                 public decimal CelkovaHodnotaSmluv { get; set; } = 0;
+                public long PocetSmluvSeSoukromymSubj { get; set; }
+                public decimal CelkovaHodnotaSmluvSeSoukrSubj { get; set; } = 0;
                 public long PocetSmluvBezCenySeSoukrSubj { get; set; }
-                public decimal PrumernaHodnotaSmluvSeSoukrSubj { get; set; }
 
                 public long PocetSmluvBezCeny { get; set; } = 0;
                 public long PocetSmluvBezSmluvniStrany { get; set; } = 0;
@@ -48,8 +49,9 @@ namespace HlidacStatu.Lib.Data
                     {
                         PocetSmluv = PocetSmluv + (other?.PocetSmluv ?? 0),
                         CelkovaHodnotaSmluv = CelkovaHodnotaSmluv + (other?.CelkovaHodnotaSmluv ?? 0),
+                        PocetSmluvSeSoukromymSubj = PocetSmluvSeSoukromymSubj + (other?.PocetSmluvSeSoukromymSubj ?? 0),
+                        CelkovaHodnotaSmluvSeSoukrSubj = CelkovaHodnotaSmluvSeSoukrSubj + (other?.CelkovaHodnotaSmluvSeSoukrSubj ?? 0),
                         PocetSmluvBezCenySeSoukrSubj = PocetSmluvBezCenySeSoukrSubj + (other?.PocetSmluvBezCenySeSoukrSubj ?? 0),
-                        PrumernaHodnotaSmluvSeSoukrSubj = PrumernaHodnotaSmluvSeSoukrSubj + (other?.PrumernaHodnotaSmluvSeSoukrSubj ?? 0),
                         PocetSmluvBezCeny = PocetSmluvBezCeny + (other?.PocetSmluvBezCeny ?? 0),
                         PocetSmluvBezSmluvniStrany = PocetSmluvBezSmluvniStrany + (other?.PocetSmluvBezSmluvniStrany ?? 0),
                         SumKcSmluvBezSmluvniStrany = SumKcSmluvBezSmluvniStrany + (other?.SumKcSmluvBezSmluvniStrany ?? 0),
