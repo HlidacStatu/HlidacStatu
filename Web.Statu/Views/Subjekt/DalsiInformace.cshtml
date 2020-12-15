@@ -122,7 +122,7 @@
             {
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    Color = "#AAAAAA",
+                    //Color = "#AAAAAA",
                     Name = "pokustón",
                     Type = Series.SeriesType.column,
                     Data = new SeriesData[]
@@ -155,7 +155,7 @@
                 },
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    Color = "#00AA00",
+                    //Color = "#00AA00",
                     Name = "bob",
                     Type = Series.SeriesType.line,
                     Data = new SeriesData[]
@@ -190,7 +190,7 @@
                 },
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    Color = "#00AAAA",
+                    //Color = "#00AAAA",
                     Name = "bobek",
                     YAxis = 0,
                     Type = Series.SeriesType.column,
@@ -223,6 +223,7 @@
         }
 
 
+         @* Tohle by mělo jít do skript části a pustit se jednou *@
         @Html.ColumnGraph("nazev grafu", serie)
         <hr /><hr />
     </div>

@@ -285,7 +285,7 @@ namespace HlidacStatu.Lib.Render
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("color")]
-        public string Color { get; set; } = "#888888";
+        public string Color { get; set; }
         [JsonProperty("type")]
         [JsonConverter(typeof(StringEnumConverter))]
         public SeriesType Type { get; set; } = SeriesType.column;
@@ -326,6 +326,8 @@ namespace HlidacStatu.Lib.Render
         public string ValuePrefix { get; set; }
         [JsonProperty("valueSuffix")]
         public string ValueSuffix { get; set; }
+        [JsonProperty("valueDecimals")]
+        public int ValueDecimals { get; set; }
     }
 
     public class SeriesData

@@ -345,12 +345,14 @@ namespace HlidacStatu.Web.Framework
             sb.AppendLine("<script type='text/javascript'>");
             sb.AppendLine($"var g_{random};");
             sb.AppendLine("$(document).ready(function () {");
+            //sb.AppendLine(GraphTheme());
             sb.AppendLine($"g_{random} = new Highcharts.Chart(");
 
             var anon = new
             {
                 chart = new
                 {
+                    spacingTop = 30,
                     renderTo = random,
                     height = height,
                     type = "column",
@@ -383,15 +385,16 @@ namespace HlidacStatu.Web.Framework
                 },
                 title = new
                 {
+                    y = -10,
                     useHtml = true,
                     align = "left",
                     text = $"<span class=\"chart-title-shared\">{title}</span>",
-                    
                 },
                 tooltip = new
                 {
                     useHTML = true,
                     shared = true,
+                    valueDecimals = 0,
                     headerFormat = $"<table class=\"chart-tooltip-shared\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
                     pointFormat = "<tr><td style=\"color:{series.color}\">{series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
                     footerFormat = "</table>",
@@ -412,9 +415,16 @@ namespace HlidacStatu.Web.Framework
                 {
                     new
                     {
+                        allowDecimals = false,
                         min = 0,
+                        lineWidth = 0,
+                        tickWidth = 1,
                         title = new
                         {
+                            align = "high",
+                            offset = 0,
+                            rotation = 0,
+                            y = -15,
                             text = yTitleLeft,
                         },
                         type = "linear",
@@ -422,9 +432,16 @@ namespace HlidacStatu.Web.Framework
                     new
                     {
                         opposite = true,
+                        allowDecimals = false,
                         min = 0,
+                        lineWidth = 0,
+                        tickWidth = 1,
                         title = new
                         {
+                            align = "high",
+                            offset = 0,
+                            rotation = 0,
+                            y = -15,
                             text = yTitleRight,
                         },
                         type = "linear",
@@ -437,11 +454,37 @@ namespace HlidacStatu.Web.Framework
             };
 
 
-
             var ser = Newtonsoft.Json.JsonConvert.SerializeObject(anon);
             sb.Append(ser);
             sb.Append(");});");
             sb.AppendLine("</script>");
+            return htmlHelper.Raw(sb.ToString());
+        }
+
+        public static IHtmlString GraphTheme(this HtmlHelper htmlHelper)
+        {
+            var sb = new System.Text.StringBuilder();
+
+            var options = new
+            {
+                colors = new[] {
+                    "#CCCCCC", "#550000", "#005500", "#000055", "#aaeeee",
+                    "#ff0066", "#eeaaee", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"
+                },
+                tooltip = new
+                {
+                    backgroundColor = "#FFFFFF",
+                    borderWidth = 0,
+                    shadow = false,
+                }
+            };
+
+            string optionsSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(options);
+            
+            sb.AppendLine("<script>");
+            sb.AppendLine($"Highcharts.setOptions({optionsSerialized});");
+            sb.AppendLine("</script>");
+            //return $"Highcharts.setOptions({optionsSerialized});";
             return htmlHelper.Raw(sb.ToString());
         }
 
