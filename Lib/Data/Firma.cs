@@ -1141,20 +1141,20 @@ namespace HlidacStatu.Lib.Data
                             }
                         }
 
-                        if (PatrimStatu() && stat[rok].PocetSmluvPolitiky > 0)
+                        if (PatrimStatu() && stat[rok].PocetSmluvSponzorujiciFirmy > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Lang.Plural.Get(stat[rok].PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
-                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok].SumKcSmluvPolitiky, html: true)}</b> "
+                                Devmasters.Lang.Plural.Get(stat[rok].PocetSmluvSponzorujiciFirmy, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok].SumKcSmluvSponzorujiciFirmy, html: true)}</b> "
                                 + $" (tj. {stat[rok].PercentKcSmluvPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
-                        else if (PatrimStatu() && stat[rok -1].PocetSmluvPolitiky > 0)
+                        else if (PatrimStatu() && stat[rok -1].PocetSmluvSponzorujiciFirmy > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok - 1}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Lang.Plural.Get(stat[rok -1].PocetSmluvPolitiky, "jednu smlouvu; {0} smlouvy;{0} smluv")
-                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok -1].SumKcSmluvPolitiky, html: true)}</b> "
+                                Devmasters.Lang.Plural.Get(stat[rok -1].PocetSmluvSponzorujiciFirmy, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok -1].SumKcSmluvSponzorujiciFirmy, html: true)}</b> "
                                 + $" (tj. {stat[rok].PercentKcSmluvPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );

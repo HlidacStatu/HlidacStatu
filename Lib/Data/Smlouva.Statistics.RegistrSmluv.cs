@@ -16,8 +16,6 @@ namespace HlidacStatu.Lib.Data
             {
                 public long PocetSmluv { get; set; } = 0;
                 public decimal CelkovaHodnotaSmluv { get; set; } = 0;
-                public long PocetSmluvSeSoukromymSubj { get; set; }
-                public decimal CelkovaHodnotaSmluvSeSoukrSubj { get; set; } = 0;
                 public long PocetSmluvBezCenySeSoukrSubj { get; set; }
                 public decimal PrumernaHodnotaSmluvSeSoukrSubj { get; set; }
 
@@ -25,8 +23,9 @@ namespace HlidacStatu.Lib.Data
                 public long PocetSmluvBezSmluvniStrany { get; set; } = 0;
                 public decimal SumKcSmluvBezSmluvniStrany { get; set; } = 0;
 
-                public long PocetSmluvPolitiky { get; set; } = 0;
-                public decimal SumKcSmluvPolitiky { get; set; } = 0;
+                public long PocetSmluvSponzorujiciFirmy { get; set; } = 0;
+                public long PocetSmluvBezCenySponzorujiciFirmy  { get; set; }
+                public decimal SumKcSmluvSponzorujiciFirmy { get; set; } = 0;
 
                 public long PocetSmluvSeZasadnimNedostatkem { get; set; }
                 public long PocetSmluvULimitu { get; set; }
@@ -39,9 +38,9 @@ namespace HlidacStatu.Lib.Data
 
                 public decimal PercentKcBezSmluvniStrany => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvBezSmluvniStrany / (decimal)CelkovaHodnotaSmluv);
 
-                public decimal PercentSmluvPolitiky => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvPolitiky / (decimal)PocetSmluv);
+                public decimal PercentSmluvPolitiky => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvSponzorujiciFirmy / (decimal)PocetSmluv);
 
-                public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvPolitiky / (decimal)CelkovaHodnotaSmluv);
+                public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvSponzorujiciFirmy / (decimal)CelkovaHodnotaSmluv);
 
                 public Data Add(Data other)
                 {
@@ -49,15 +48,13 @@ namespace HlidacStatu.Lib.Data
                     {
                         PocetSmluv = PocetSmluv + (other?.PocetSmluv ?? 0),
                         CelkovaHodnotaSmluv = CelkovaHodnotaSmluv + (other?.CelkovaHodnotaSmluv ?? 0),
-                        PocetSmluvSeSoukromymSubj = PocetSmluvSeSoukromymSubj + (other?.PocetSmluvSeSoukromymSubj ?? 0),
-                        CelkovaHodnotaSmluvSeSoukrSubj = CelkovaHodnotaSmluvSeSoukrSubj + (other?.CelkovaHodnotaSmluvSeSoukrSubj ?? 0),
                         PocetSmluvBezCenySeSoukrSubj = PocetSmluvBezCenySeSoukrSubj + (other?.PocetSmluvBezCenySeSoukrSubj ?? 0),
                         PrumernaHodnotaSmluvSeSoukrSubj = PrumernaHodnotaSmluvSeSoukrSubj + (other?.PrumernaHodnotaSmluvSeSoukrSubj ?? 0),
                         PocetSmluvBezCeny = PocetSmluvBezCeny + (other?.PocetSmluvBezCeny ?? 0),
                         PocetSmluvBezSmluvniStrany = PocetSmluvBezSmluvniStrany + (other?.PocetSmluvBezSmluvniStrany ?? 0),
                         SumKcSmluvBezSmluvniStrany = SumKcSmluvBezSmluvniStrany + (other?.SumKcSmluvBezSmluvniStrany ?? 0),
-                        PocetSmluvPolitiky = PocetSmluvPolitiky + (other?.PocetSmluvPolitiky ?? 0),
-                        SumKcSmluvPolitiky = SumKcSmluvPolitiky + (other?.SumKcSmluvPolitiky ?? 0),
+                        PocetSmluvSponzorujiciFirmy = PocetSmluvSponzorujiciFirmy + (other?.PocetSmluvSponzorujiciFirmy ?? 0),
+                        SumKcSmluvSponzorujiciFirmy = SumKcSmluvSponzorujiciFirmy + (other?.SumKcSmluvSponzorujiciFirmy ?? 0),
                         PocetSmluvSeZasadnimNedostatkem = PocetSmluvSeZasadnimNedostatkem + (other?.PocetSmluvSeZasadnimNedostatkem ?? 0),
                         PocetSmluvULimitu = PocetSmluvULimitu + (other?.PocetSmluvULimitu ?? 0),
                         PocetSmluvOVikendu = PocetSmluvOVikendu + (other?.PocetSmluvOVikendu ?? 0),

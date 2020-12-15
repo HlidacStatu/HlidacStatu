@@ -52,18 +52,6 @@
         },
         new HlidacStatu.Lib.Render.Series()
         {
-            Color = "#333333",
-            Name = "Hodnota smluv se soukromými subjekty",
-            Type = Series.SeriesType.column,
-            Data = statisticsAfter2016
-                .Select(x => new SeriesData(x.Year, x.Value.CelkovaHodnotaSmluvSeSoukrSubj)).ToArray(),
-            SeriesTooltip = new SeriesTooltip()
-            {
-                ValueSuffix = " Kč"
-            }
-        },
-        new HlidacStatu.Lib.Render.Series()
-        {
             Color = "#770077",
             Name = "Počet smluv bez ceny",
             Data = statisticsAfter2016
@@ -275,13 +263,13 @@
                 @* Pravý sub-sloupec *@
                 <div class="col-md-6">
                     @if (Model.PatrimStatu()
-                        && summaryAfter2016.PocetSmluvPolitiky > 0)
+                        && summaryAfter2016.PocetSmluvSponzorujiciFirmy > 0)
                     {
                         <div>
                             @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
                                     statistics
                                     .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.SumKcSmluvPolitiky)
+                                    .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.SumKcSmluvSponzorujiciFirmy)
                                     );
 
                                 @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
@@ -344,7 +332,7 @@
 
             <hr />
 
-            @if (Model.PatrimStatu() && summaryAfter2016.PocetSmluvPolitiky > 0)
+            @if (Model.PatrimStatu() && summaryAfter2016.PocetSmluvSponzorujiciFirmy > 0)
             {
                 <div>
                     <h4>Smlouvy s vazbou na politiky</h4>
@@ -368,9 +356,9 @@
                                 {
                                     <tr>
                                         <td>@bs.Year</td>
-                                        <td class="number">@bs.Value.PocetSmluvPolitiky</td>
+                                        <td class="number">@bs.Value.PocetSmluvSponzorujiciFirmy</td>
                                         <td class="number">@bs.Value.PercentSmluvPolitiky.ToString("P2")</td>
-                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSmluvPolitiky, html: true))</td>
+                                        <td class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(bs.Value.SumKcSmluvSponzorujiciFirmy, html: true))</td>
                                         <td class="number">@bs.Value.PercentKcSmluvPolitiky.ToString("P2")</td>
                                     </tr>
                                 }
@@ -378,9 +366,9 @@
                             <tfoot>
                                 <tr>
                                     <th>Celkem</th>
-                                    <th class="number">@summaryAfter2016.PocetSmluvPolitiky</th>
+                                    <th class="number">@summaryAfter2016.PocetSmluvSponzorujiciFirmy</th>
                                     <th class="number">@summaryAfter2016.PercentSmluvPolitiky.ToString("P2")</th>
-                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summaryAfter2016.SumKcSmluvPolitiky, html: true))</th>
+                                    <th class="number">@Html.Raw(HlidacStatu.Util.RenderData.ShortNicePrice(summaryAfter2016.SumKcSmluvSponzorujiciFirmy, html: true))</th>
                                     <th class="number">@summaryAfter2016.PercentKcSmluvPolitiky.ToString("P2")</th>
                                 </tr>
                             </tfoot>

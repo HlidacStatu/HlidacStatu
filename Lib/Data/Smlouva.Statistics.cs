@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data
 
             static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string> _cache
                 = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string>
-                                .GetSafeInstance("SmlouvyStatistics_Query",
+                                .GetSafeInstance("SmlouvyStatistics_Query_V2",
                                     (query) => Calculate(query),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
@@ -57,6 +57,11 @@ namespace HlidacStatu.Lib.Data
                 Dictionary<int, Lib.Analysis.BasicData> _calc_sVazbouNaPolitikyNedavne =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
+                Dictionary<int, Lib.Analysis.BasicData> _calc_soukrome =
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                Dictionary<int, Lib.Analysis.BasicData> _calc_sVazbouNaPolitikyBezCenyNedavne =
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( sVazbouNaPolitikyNedavne:true ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+
                 Dictionary<int, Data> data = new Dictionary<int, Data>();
                 foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
                 {
@@ -66,9 +71,10 @@ namespace HlidacStatu.Lib.Data
                         CelkovaHodnotaSmluv = _calc_smlouvy[year].CelkemCena,
                         PocetSmluvBezCeny = _calc_bezCeny[year].Pocet,
                         PocetSmluvBezSmluvniStrany = _calc_bezSmlStran[year].Pocet,
-                        PocetSmluvPolitiky = _calc_sVazbouNaPolitikyNedavne[year].Pocet,
                         SumKcSmluvBezSmluvniStrany = _calc_bezSmlStran[year].CelkemCena,
-                        SumKcSmluvPolitiky = _calc_sVazbouNaPolitikyNedavne[year].CelkemCena,
+                        PocetSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].Pocet,
+                        PocetSmluvBezCenySponzorujiciFirmy = _calc_sVazbouNaPolitikyBezCenyNedavne[year].Pocet,
+                        SumKcSmluvSponzorujiciFirmy = _calc_sVazbouNaPolitikyNedavne[year].CelkemCena,
                         PocetSmluvULimitu = _calc_ULimitu[year].Pocet,
                         PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
                         PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,

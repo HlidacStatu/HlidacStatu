@@ -404,10 +404,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Počet smluv s firmami s vazbou na politiky {sYear}",
-                HtmlRender = (s) => { return "<a href='/subjekt/" + s.ICO + "#vazbyNaPolitik'>" + s[iYear].PocetSmluvPolitiky.ToString() + "</a>"; },
-                TextRender = (s) => { return (s[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s[iYear].PocetSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return s[iYear].PocetSmluvPolitiky.ToString(); }
+                HtmlRender = (s) => { return "<a href='/subjekt/" + s.ICO + "#vazbyNaPolitik'>" + s[iYear].PocetSmluvSponzorujiciFirmy.ToString() + "</a>"; },
+                TextRender = (s) => { return (s[iYear].PocetSmluvSponzorujiciFirmy).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].PocetSmluvSponzorujiciFirmy).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return s[iYear].PocetSmluvSponzorujiciFirmy.ToString(); }
             };
 
 
@@ -435,10 +435,10 @@ else
             return new tblDataSource.Column()
             {
                 Name = $"Hodnota smluv s firmami s vazbou na politiky {sYear}",
-                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s[iYear].SumKcSmluvPolitiky, html: true); },
-                TextRender = (s) => { return (s[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                ValueRender = (s) => { return (s[iYear].SumKcSmluvPolitiky).ToString("G", HlidacStatu.Util.Consts.enCulture); },
-                OrderValueRender = (s) => { return s[iYear].SumKcSmluvPolitiky.ToString("G", HlidacStatu.Util.Consts.enCulture); }
+                HtmlRender = (s) => { return HlidacStatu.Util.RenderData.ShortNicePrice(s[iYear].SumKcSmluvSponzorujiciFirmy, html: true); },
+                TextRender = (s) => { return (s[iYear].SumKcSmluvSponzorujiciFirmy).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                ValueRender = (s) => { return (s[iYear].SumKcSmluvSponzorujiciFirmy).ToString("G", HlidacStatu.Util.Consts.enCulture); },
+                OrderValueRender = (s) => { return s[iYear].SumKcSmluvSponzorujiciFirmy.ToString("G", HlidacStatu.Util.Consts.enCulture); }
             };
 
         }

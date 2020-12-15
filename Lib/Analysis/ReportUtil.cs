@@ -94,10 +94,10 @@ namespace HlidacStatu.Lib.Analysis
                         {
                             Id = "SumKcSPolitiky_Y_" + year,
                             Name = $"Hodnota smluv s politiky za {year}",
-                            HtmlRender = (s) => s.Value[year].SumKcSmluvPolitiky.ToString("P2"),
-                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].SumKcSmluvPolitiky),
-                            ValueRender = (s) => (s.Value[year].SumKcSmluvPolitiky * 100).ToString(HlidacStatu.Util.Consts.enCulture),
-                            TextRender = (s) => s.Value[year].SumKcSmluvPolitiky.ToString("P2"),
+                            HtmlRender = (s) => s.Value[year].SumKcSmluvSponzorujiciFirmy.ToString("P2"),
+                            OrderValueRender = (s) => HlidacStatu.Util.RenderData.OrderValueFormat(s.Value[year].SumKcSmluvSponzorujiciFirmy),
+                            ValueRender = (s) => (s.Value[year].SumKcSmluvSponzorujiciFirmy * 100).ToString(HlidacStatu.Util.Consts.enCulture),
+                            TextRender = (s) => s.Value[year].SumKcSmluvSponzorujiciFirmy.ToString("P2"),
                             CssClass = "number"
                         });
 
