@@ -39,44 +39,44 @@
 </style>
 
     @* První sloupec *@
-    <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
 
-        @if (Model.KategorieOVM().Count() > 0)
-        {
-            <div>
-                <h4>Kategorie OVM (orgánů veřejné moci)</h4>
-                <p class="text-muted sub-header-info">Všechny kategorie, ve kterých je úřad veden v RPP (Registr práv a povinností). </p>
-                @foreach (var cat in Model.KategorieOVM())
+    @if (Model.KategorieOVM().Count() > 0)
+    {
+        <div>
+            <h4>Kategorie OVM (orgánů veřejné moci)</h4>
+            <p class="text-muted sub-header-info">Všechny kategorie, ve kterých je úřad veden v RPP (Registr práv a povinností). </p>
+            @foreach (var cat in Model.KategorieOVM())
+            {
+                <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)&subtitle=@(System.Net.WebUtility.UrlEncode($"Subjekty v kategorii {cat.nazev}"))"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>
+            }
+        </div>
+    }
+
+
+    @if (HlidacStatu.Lib.StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(Model.ICO, out var podrizeneOrg))
+    {
+        <div>
+            <h4>Organizační struktura</h4>
+            <ul>
+                @foreach (var org in podrizeneOrg)
                 {
-                    <div>@(cat.nazev)&nbsp;<a href="/HledatFirmy?q=kategorieid:@(cat.id)&subtitle=@(System.Net.WebUtility.UrlEncode($"Subjekty v kategorii {cat.nazev}"))"><i title="Najít další organizace v této kategorii" alt="Najít další organizace v této kategorii" class="fas fa-search"></i></a></div>
+                    <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
                 }
-            </div>
-        }
+            </ul>
+        </div>
+        <hr />
+    }
 
+    @{
+        var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
+            .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description),
+            (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0)))
+            .ToList();
 
-        @if (HlidacStatu.Lib.StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(Model.ICO, out var podrizeneOrg))
-        {
-            <div>
-                <h4>Organizační struktura</h4>
-                <ul>
-                    @foreach (var org in podrizeneOrg)
-                    {
-                        <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
-                    }
-                </ul>
-            </div>
-            <hr />
-        }
-
-        @{
-            var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
-                .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description),
-                (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0)))
-                .ToList();
-
-            var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
-                new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column[]
-                {
+        var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
+            new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column[]
+            {
                     new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
                     {
                         Name = "Rok",
@@ -101,32 +101,32 @@
                     },
 
                 });
-            foreach (var dar in sponzoring)
-            {
-                sponzoringData.AddRow(dar);
-            }
-            sponzoringData.Title = "Přehled darů politickým stranám";
-        }
-        @if (sponzoring.Count > 0)
+        foreach (var dar in sponzoring)
         {
-            <div>
-                <h4>Sponzorství politických stran</h4>
-                @Html.DataToHTMLTable(sponzoringData)
-            </div>
+            sponzoringData.AddRow(dar);
         }
+        sponzoringData.Title = "Přehled darů politickým stranám";
+    }
+    @if (sponzoring.Count > 0)
+    {
+        <div>
+            <h4>Sponzorství politických stran</h4>
+            @Html.DataToHTMLTable(sponzoringData)
+        </div>
+    }
 
-        <hr /><hr />
+    <hr /><hr />
 
-        @{ 
-            var serie = new HlidacStatu.Lib.Render.Series[]
-            {
+    @{
+        var serie = new HlidacStatu.Lib.Render.Series[]
+        {
                 new HlidacStatu.Lib.Render.Series()
                 {
                     //Color = "#AAAAAA",
                     Name = "pokustón",
                     Type = Series.SeriesType.column,
                     Data = new SeriesData[]
-                    {
+                {
                         new SeriesData()
                         {
                             X = 2000,
@@ -159,7 +159,7 @@
                     Name = "bob",
                     Type = Series.SeriesType.line,
                     Data = new SeriesData[]
-                    {
+                {
                         new SeriesData()
                         {
                             X = 2000,
@@ -195,7 +195,7 @@
                     YAxis = 0,
                     Type = Series.SeriesType.column,
                     Data = new SeriesData[]
-                    {
+                {
                         new SeriesData()
                         {
                             X = 2000,
@@ -220,10 +220,30 @@
                 }
 
             };
-        }
+    }
 
+    <script>
+        $(function () {
+            $('.random_first.btn').click(function () {
+                $('.random_first.content').show();
+                $('.random_second.content').hide();
+                $('.random_first.btn').addClass("active");
+                $('.random_second.btn').removeClass("active");
+            });
+            $('.random_second.btn').click(function () {
+                $('.random_first.content').hide();
+                $('.random_second.content').show();
+                $('.random_first.btn').removeClass("active");
+                $('.random_second.btn').addClass("active");
+            });
+        });
+    </script>
+    <div class="btn btn-default random_first">{firstButton}</div>
+    <div class="btn btn-default random_second active">{secondButton}</div>
+    <div class="random_first content">{first.ToHtmlString()}</div>
+    <div class="random_second content" style="display:none;">{second.ToHtmlString()}</div>
 
-         @* Tohle by mělo jít do skript části a pustit se jednou *@
-        @Html.ColumnGraph("nazev grafu", serie)
-        <hr /><hr />
-    </div>
+    @* Tohle by mělo jít do skript části a pustit se jednou *@
+    @Html.ColumnGraph("nazev grafu", serie)
+    <hr /><hr />
+</div>

@@ -317,15 +317,36 @@ namespace HlidacStatu.Web.Framework
             string random = Guid.NewGuid().ToString("N");
             var sb = new System.Text.StringBuilder();
 
-            sb.Append("<script>");
-            sb.Append("$(function () {");
-            sb.Append($"$('.{random}.btn').click(function () {{");
-            sb.Append($"$('.{random}').toggle();}});}});");
-            sb.Append("</script>");
-            sb.Append($"<div class=\"btn btn-default {random}\"><span style=\"color:black;\">{firstButton}/</span><small>{secondButton}</small></div>");
-            sb.Append($"<div class=\"btn btn-default {random}\" style=\"display:none;\"><small>{firstButton}</small><span style=\"color:black;\">/{secondButton}</span></div>");
-            sb.Append($"<div class=\"{random}\">{first.ToHtmlString()}</div>");
-            sb.Append($"<div class=\"{random}\" style=\"display:none;\">{second.ToHtmlString()}</div>");
+            sb.Append($"<script>");
+            sb.Append($"$(function () {{");
+            sb.Append($"$('.{random}_first.btn').click(function () {{");
+            sb.Append($"$('.{random}_first.content').show();");
+            sb.Append($"$('.{random}_second.content').hide();");
+            sb.Append($"$('.{random}_first.btn').addClass(\"active\");");
+            sb.Append($"$('.{random}_second.btn').removeClass(\"active\");");
+            sb.Append($"}});");
+            sb.Append($"$('.{random}_second.btn').click(function () {{");
+            sb.Append($"$('.{random}_first.content').hide();");
+            sb.Append($"$('.{random}_second.content').show();");
+            sb.Append($"$('.{random}_first.btn').removeClass(\"active\");");
+            sb.Append($"$('.{random}_second.btn').addClass(\"active\");");
+            sb.Append($"}});");
+            sb.Append($"}});");
+            sb.Append($"</script>");
+            sb.Append($"<div class=\"btn btn-default {random}_first active\">{firstButton}</div>");
+            sb.Append($"<div class=\"btn btn-default {random}_second\">{secondButton}</div>");
+            sb.Append($"<div class=\"{random}_first content\">{first.ToHtmlString()}</div>");
+            sb.Append($"<div class=\"{random}_second content\" style=\"display: none; \">{second.ToHtmlString()}</div>");
+
+            //sb.Append("<script>");
+            //sb.Append("$(function () {");
+            //sb.Append($"$('.{random}.btn').click(function () {{");
+            //sb.Append($"$('.{random}').toggle();}});}});");
+            //sb.Append("</script>");
+            //sb.Append($"<div class=\"btn btn-default {random}\"><span style=\"color:black;\">{firstButton}/</span><small>{secondButton}</small></div>");
+            //sb.Append($"<div class=\"btn btn-default {random}\" style=\"display:none;\"><small>{firstButton}</small><span style=\"color:black;\">/{secondButton}</span></div>");
+            //sb.Append($"<div class=\"{random}\">{first.ToHtmlString()}</div>");
+            //sb.Append($"<div class=\"{random}\" style=\"display:none;\">{second.ToHtmlString()}</div>");
 
             return htmlHelper.Raw(sb.ToString());
         }
@@ -468,8 +489,8 @@ namespace HlidacStatu.Web.Framework
             var options = new
             {
                 colors = new[] {
-                    "#CCCCCC", "#550000", "#005500", "#000055", "#aaeeee",
-                    "#ff0066", "#eeaaee", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"
+                    "#00B4AE", "#007CF5", "#0211C0", "#720198", "#980128",
+                    "#E73C05", "#E78105", "#FFC813", "#71BF14", "#048006", "#AEBCCB"
                 },
                 tooltip = new
                 {
