@@ -516,6 +516,16 @@ namespace HlidacStatu.Web.Framework
                         grouping = false,
                         groupPadding = 0,
                         shadow = false
+                    },
+                    series = new
+                    {
+                        states = new
+                        {
+                            hover = new
+                            {
+                                brightness = -0.3 // darken
+                            }
+                        }
                     }
                 },
                 xAxis = new
