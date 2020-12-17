@@ -18,7 +18,6 @@ namespace HlidacStatu.Lib.OCR.Api
         public decimal Progress { get; set; }
         public DateTime Created { get; set; }
         public DateTime? StartOfProcessing { get; set; }
-        public int NumOfPreviousTasks { get; set; }
         public string Result { get; set; } = null;
     }
 }
