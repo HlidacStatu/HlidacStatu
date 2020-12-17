@@ -34,7 +34,7 @@
         </p>
         <div class="row" style="padding-top:25px;">
             <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(kindex.LastReadyKIndex().KIndex)">
-                <a href="/kindex/detail/@Model.ICO">@Html.KIndexIcon(kindex.LastReadyKIndex().KIndexLabel, "width:100px")</a>
+                <a href="/kindex/detail/@Model.ICO">@Html.KIndexIcon(kindex.LastReadyKIndex().KIndexLabel, "width:66px")</a>
             </div>
             <div class="col-sm-10">
                 <div>
@@ -45,14 +45,7 @@
         <br />
         <a href="/kindex/detail/@Model.ICO">Jak jsme @Html.KIndexIcon(Model.ICO) spočítali podrobně popisujeme zde</a>
         <br />
-        @WebUtil.FeedbackUniversal("Přepočítat K-Index",
-             "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
-             "Důvod pro přepočítání",
-             "Přepočítat K-Index",
-             "/kindex/recalculateFeedback",
-             mustAuth: true,
-             addData: Model.ICO)
-        <br />
+        
         <a href="/kindex/detail/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti o K-Indexu</strong></a>
     </div>
             <hr />

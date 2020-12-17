@@ -428,7 +428,7 @@ namespace HlidacStatu.Web.Framework
                             align = "high",
                             offset = 0,
                             rotation = 0,
-                            y = -15,
+                            y = -20,
                             text = yTitleLeft,
                         },
                         type = "linear",
@@ -445,7 +445,7 @@ namespace HlidacStatu.Web.Framework
                             align = "high",
                             offset = 0,
                             rotation = 0,
-                            y = -15,
+                            y = -20,
                             text = yTitleRight,
                         },
                         type = "linear",
@@ -469,8 +469,19 @@ namespace HlidacStatu.Web.Framework
         {
             var sb = new System.Text.StringBuilder();
 
+            var fontStyle = new
+            {
+                fontFamily = "Cabin",
+                fontSize = 14,
+                color = "#AEBCCB"
+            };
+
             var options = new
             {
+                chart = new
+                {
+                    style = fontStyle
+                },
                 colors = new[]
                 {
                     "#DDE3E9", "#AFB9C5", "#2975DC", "#E76605"
@@ -478,8 +489,8 @@ namespace HlidacStatu.Web.Framework
                 tooltip = new
                 {
                     backgroundColor = "#FFFFFF",
-                    borderWidth = 0,
-                    shadow = true,
+                    borderWidth = 1,
+                    shadow = false,
                 },
                 plotOptions = new
                 {
@@ -507,6 +518,42 @@ namespace HlidacStatu.Web.Framework
                         shadow = false
                     }
                 },
+                xAxis = new
+                {
+                    labels = new
+                    {
+                        style = fontStyle
+                    },
+                    title = new
+                    {
+                        style = fontStyle
+                    }
+                },
+                yAxis = new
+                {
+                    labels = new
+                    {
+                        style = fontStyle
+                    },
+                    title = new
+                    {
+                        style = fontStyle
+                    }
+                },
+                legend = new
+                {
+                    itemStyle = fontStyle
+                },
+                title = new
+                {
+                    style = new 
+                    {
+                        fontFamily = "Cabin",
+                        fontSize = 18,
+                        color = "#28313B",
+                        fontWeight = "bold"
+                    }
+                }
 
             };
 
@@ -518,6 +565,7 @@ namespace HlidacStatu.Web.Framework
             sb.AppendLine("<style>");
             sb.AppendLine(".small-circle {height: 12px;width: 12px;border-radius: 50%;display: inline-block;}");
             sb.AppendLine(".zone-light {fill-opacity: 0.5;}");
+            //sb.AppendLine(".chart-style {font-family: \"Cabin\", \"sans-serif\"; fontSize: \"14px\"; color: \"#AEBCCB\" }");
             sb.AppendLine("</style>");
             //return $"Highcharts.setOptions({optionsSerialized});";
             return htmlHelper.Raw(sb.ToString());

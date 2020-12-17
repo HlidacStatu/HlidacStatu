@@ -103,7 +103,7 @@
         },
     };
 
-    //Graf počet smluv/počet smluv s utajenou cenou
+    //Graf procenta smluv/počet smluv s utajenou cenou
     var procentaSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
     {
         new HlidacStatu.Lib.Render.Series()
@@ -227,9 +227,11 @@
 
         @* GRAFY *@
         <h4>Souhrnné statistiky pro @Model.Jmeno</h4>
-        @Html.ColumnGraph("Hodnota smluv po letech", hodnotaSmluvGraphData, yTitleRight: "Počet smluv"),
-        @Html.ColumnGraph("Počet smluv po letech", pocetSmluvGraphData, yTitleLeft: "Počet smluv"),
-        @Html.ColumnGraph("Smlouvy s utajenou cenou a vazbou na politiky", procentaSmluvGraphData, yTitleLeft: "% smluv"),
+        @Html.ColumnGraph("Hodnota smluv po letech", hodnotaSmluvGraphData, yTitleRight: "Počet smluv")
+        <hr />
+        @Html.ColumnGraph("Počet smluv po letech", pocetSmluvGraphData, yTitleLeft: "Počet smluv")
+        <hr />
+        @Html.ColumnGraph("Smlouvy s utajenou cenou a vazbou na politiky", procentaSmluvGraphData, yTitleLeft: "% smluv")
         <hr />
 
         @for (int y = statistics.CurrentSeasonYear(); y > 2016; y--)
