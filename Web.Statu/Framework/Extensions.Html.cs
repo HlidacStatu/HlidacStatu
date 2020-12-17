@@ -333,8 +333,8 @@ namespace HlidacStatu.Web.Framework
             sb.Append($"}});");
             sb.Append($"}});");
             sb.Append($"</script>");
-            sb.Append($"<div class=\"btn btn-default {random}_first active\">{firstButton}</div>");
-            sb.Append($"<div class=\"btn btn-default {random}_second\">{secondButton}</div>");
+            sb.Append($"<div class=\"btn btn-default {random}_first active\" style=\"border-top-right-radius: 0px;border-bottom-right-radius: 0px;\">{firstButton}</div>");
+            sb.Append($"<div class=\"btn btn-default {random}_second\" style=\"border-top-left-radius: 0px;border-bottom-left-radius: 0px;\">{secondButton}</div>");
             sb.Append($"<div class=\"{random}_first content\">{first.ToHtmlString()}</div>");
             sb.Append($"<div class=\"{random}_second content\" style=\"display: none; \">{second.ToHtmlString()}</div>");
 
@@ -386,24 +386,7 @@ namespace HlidacStatu.Web.Framework
                     symbolWidth = 15,
                     squareSymbol = true
                 },
-                plotOptions = new
-                {
-                    line = new
-                    {
-                        animation = true,
-                        borderWidth = 0,
-                        groupPadding = 0,
-                        shadow = true
-                    },
-                    column = new
-                    {
-                        animation = true,
-                        borderWidth = 0,
-                        grouping = false,
-                        groupPadding = 0,
-                        shadow = true
-                    }
-                },
+                
                 title = new
                 {
                     y = -10,
@@ -417,7 +400,7 @@ namespace HlidacStatu.Web.Framework
                     shared = true,
                     valueDecimals = 0,
                     headerFormat = $"<table class=\"chart-tooltip-shared\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
-                    pointFormat = "<tr><td style=\"color:{series.color}\">{series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
+                    pointFormat = "<tr><td><span class=\"small-circle\" style=\" background-color: {series.color};\" ></span> {series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
                     footerFormat = "</table>",
                     
                 },
@@ -488,16 +471,43 @@ namespace HlidacStatu.Web.Framework
 
             var options = new
             {
-                colors = new[] {
-                    "#00B4AE", "#007CF5", "#0211C0", "#720198", "#980128",
-                    "#E73C05", "#E78105", "#FFC813", "#71BF14", "#048006", "#AEBCCB"
+                colors = new[]
+                {
+                    "#DDE3E9", "#AFB9C5", "#2975DC", "#E76605"
                 },
                 tooltip = new
                 {
                     backgroundColor = "#FFFFFF",
                     borderWidth = 0,
-                    shadow = false,
-                }
+                    shadow = true,
+                },
+                plotOptions = new
+                {
+                    line = new
+                    {
+                        animation = true,
+                        borderWidth = 0,
+                        groupPadding = 0,
+                        shadow = false
+                    },
+                    column = new
+                    {
+                        animation = true,
+                        borderWidth = 0,
+                        grouping = false,
+                        groupPadding = 0,
+                        shadow = false
+                    },
+                    bar = new
+                    {
+                        animation = true,
+                        borderWidth = 0,
+                        grouping = false,
+                        groupPadding = 0,
+                        shadow = false
+                    }
+                },
+
             };
 
             string optionsSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(options);
@@ -505,6 +515,10 @@ namespace HlidacStatu.Web.Framework
             sb.AppendLine("<script>");
             sb.AppendLine($"Highcharts.setOptions({optionsSerialized});");
             sb.AppendLine("</script>");
+            sb.AppendLine("<style>");
+            sb.AppendLine(".small-circle {height: 12px;width: 12px;border-radius: 50%;display: inline-block;}");
+            sb.AppendLine(".zone-light {fill-opacity: 0.5;}");
+            sb.AppendLine("</style>");
             //return $"Highcharts.setOptions({optionsSerialized});";
             return htmlHelper.Raw(sb.ToString());
         }

@@ -122,7 +122,7 @@
         {
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    //Color = "#AAAAAA",
+                    Color = "#AFB9C5",
                     Name = "pokustón",
                     Type = Series.SeriesType.column,
                     Data = new SeriesData[]
@@ -155,7 +155,37 @@
                 },
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    //Color = "#00AA00",
+                    Color = "#DDE3E9",
+                    Name = "bobek",
+                    YAxis = 0,
+                    Type = Series.SeriesType.column,
+                    Data = new SeriesData[]
+                {
+                        new SeriesData()
+                        {
+                            X = 2000,
+                            Y = 3000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2001,
+                            Y = 8000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2002,
+                            Y = 7000
+                        },
+                        new SeriesData()
+                        {
+                            X = 2003,
+                            Y = 5000
+                        }
+                    }
+                },
+                new HlidacStatu.Lib.Render.Series()
+                {
+                    Color = "#2975DC",
                     Name = "bob",
                     Type = Series.SeriesType.line,
                     Data = new SeriesData[]
@@ -190,35 +220,38 @@
                 },
                 new HlidacStatu.Lib.Render.Series()
                 {
-                    //Color = "#00AAAA",
-                    Name = "bobek",
-                    YAxis = 0,
-                    Type = Series.SeriesType.column,
+                    Color = "#E76605",
+                    Name = "boba",
+                    Type = Series.SeriesType.line,
                     Data = new SeriesData[]
                 {
                         new SeriesData()
                         {
                             X = 2000,
-                            Y = 3000
+                            Y = 30125
                         },
                         new SeriesData()
                         {
                             X = 2001,
-                            Y = 8000
+                            Y = 45254
                         },
                         new SeriesData()
                         {
                             X = 2002,
-                            Y = 7000
+                            Y = 22000
                         },
                         new SeriesData()
                         {
                             X = 2003,
-                            Y = 5000
+                            Y = 115211
                         }
+                    },
+                    SeriesTooltip = new SeriesTooltip()
+                    {
+                        ValueSuffix = " sss",
+                  
                     }
-                }
-
+                },
             };
     }
 
