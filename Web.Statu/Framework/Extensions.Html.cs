@@ -400,7 +400,7 @@ namespace HlidacStatu.Web.Framework
                     shared = true,
                     valueDecimals = 0,
                     headerFormat = $"<table class=\"chart-tooltip-shared\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
-                    pointFormat = "<tr><td><span class=\"small-circle\" style=\" background-color: {series.color};\" ></span> {series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
+                    pointFormat = "<tr><td><span class=\"chart_small-circle\" style=\" background-color: {series.color};\" ></span> {series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
                     footerFormat = "</table>",
                     
                 },
@@ -562,11 +562,7 @@ namespace HlidacStatu.Web.Framework
             sb.AppendLine("<script>");
             sb.AppendLine($"Highcharts.setOptions({optionsSerialized});");
             sb.AppendLine("</script>");
-            sb.AppendLine("<style>");
-            sb.AppendLine(".small-circle {height: 12px;width: 12px;border-radius: 50%;display: inline-block;}");
-            sb.AppendLine(".zone-light {fill-opacity: 0.5;}");
-            //sb.AppendLine(".chart-style {font-family: \"Cabin\", \"sans-serif\"; fontSize: \"14px\"; color: \"#AEBCCB\" }");
-            sb.AppendLine("</style>");
+            
             //return $"Highcharts.setOptions({optionsSerialized});";
             return htmlHelper.Raw(sb.ToString());
         }

@@ -1735,3 +1735,14 @@ pre.formatted.bigger {
     pre.formatted.smaller {
         font-size: 90%;
     }
+
+.chart_small-circle {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.chart_zone-light {
+    fill-opacity: 0.5;
+}
