@@ -554,16 +554,7 @@ namespace HlidacStatu.Web.Framework
                 {
                     itemStyle = fontStyle
                 },
-                title = new
-                {
-                    style = new 
-                    {
-                        fontFamily = "Cabin",
-                        fontSize = 18,
-                        color = "#28313B",
-                        fontWeight = "bold"
-                    }
-                }
+                //title - nastaven přes css
 
             };
 
