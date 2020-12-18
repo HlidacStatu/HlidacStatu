@@ -9,6 +9,5 @@ namespace HlidacStatu.Q.Simple.Tasks
         public const string QName = "voice2text";
         public string dataset { get; set; }
         public string itemid { get; set; }
-        public ulong internaltaskid { get; set; }
     }
 }

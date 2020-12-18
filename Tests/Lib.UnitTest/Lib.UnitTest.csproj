@@ -39,11 +39,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Core, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Core.2.1.8\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Core.2.1.9\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Logging, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Logging.2.1.1\lib\net48\Devmasters.Logging.dll</HintPath>
+    <Reference Include="Devmasters.Logging, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Logging.2.1.2\lib\net48\Devmasters.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Elasticsearch.Net.7.8.2\lib\net461\Elasticsearch.Net.dll</HintPath>

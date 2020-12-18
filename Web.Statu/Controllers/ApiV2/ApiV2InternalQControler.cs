@@ -72,7 +72,6 @@ namespace HlidacStatu.Web.Controllers
             using (HlidacStatu.Q.Simple.Queue<TaskResult<Voice2Text>> sq
                 = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
-                task.internaltaskid = 0;
                 TaskResult<Voice2Text> result = new TaskResult<Voice2Text>()
                 {
                     Payload = task,
