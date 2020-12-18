@@ -14,24 +14,28 @@ using HlidacStatu.Q.Simple.Tasks;
 namespace HlidacStatu.Web.Controllers
 {
 
-
     [SwaggerControllerTag("Voice 2 Text")]
     [RoutePrefix("api/v2/internalq")]
     public class ApiV2InternalQController : ApiV2AuthController
     {
 
+        static string[] Priorities = new string[] { "_2", "_1", "" };
 
 
         /// <summary>
         ///  Vytvori novy task
         /// </summary>
+        /// <param name="datasetId">id datasetu</param>
+        /// <param name="itemId">id zaznamu</param>
+        /// <param name="priority">0=normal; 1=fast lane; 2=express lane</param>
         /// <returns>taskid</returns>
         [AuthorizeAndAudit(Roles = "Admin,internalQ")]
         [HttpPost, Route("Voice2TextNewTask/{datasetId}/{itemId}")]
-        public string Voice2TextNewTask(string datasetId, string itemId)
+        public string Voice2TextNewTask(string datasetId, string itemId, int priority=0)
         {
+            string spriority = priority == 0 ? "" : "_" + priority.ToString();
             using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(
-                Voice2Text.QName,
+                Voice2Text.QName + spriority,
                 Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
                 )
             {
@@ -49,16 +53,23 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet, Route("Voice2TextGetTask")]
         public Voice2Text Voice2TextGetTask()
         {
-            using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+            Voice2Text task = null;
+            foreach (var p in Priorities)
             {
-                var task = sq.GetAndAck();
-                if (task == null)
-                {
-                    throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NoContent, $"No taks available"));
-                }
-                return task;
 
+                using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + p,
+                    Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+                {
+                    task = sq.GetAndAck();
+                    if (task != null)
+                        return task;
+                }
             }
+            if (task == null)
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.NoContent, $"No taks available"));
+            }
+            return task;
         }
 
         /// <summary>
