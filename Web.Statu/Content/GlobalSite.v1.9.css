@@ -1746,3 +1746,19 @@ pre.formatted.bigger {
 .chart_zone-light {
     fill-opacity: 0.5;
 }
+
+.chart_tooltip-table {
+    border-spacing: 10px;
+}
+
+table.chart_tooltip-table td {
+    padding: 5px;
+}
+
+.chart_title {
+    color: #28313B;
+    font-size: 18px;
+    font-family: Cabin;
+    font-weight: bold;
+    fill: #28313B;
+}

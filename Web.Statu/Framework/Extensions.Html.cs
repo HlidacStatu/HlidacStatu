@@ -392,14 +392,14 @@ namespace HlidacStatu.Web.Framework
                     y = -10,
                     useHtml = true,
                     align = "left",
-                    text = $"<span class=\"chart-title-shared\">{title}</span>",
+                    text = $"<span class=\"chart_title\">{title}</span>",
                 },
                 tooltip = new
                 {
                     useHTML = true,
                     shared = true,
                     valueDecimals = 0,
-                    headerFormat = $"<table class=\"chart-tooltip-shared\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
+                    headerFormat = $"<table class=\"chart_tooltip-table\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
                     pointFormat = "<tr><td><span class=\"chart_small-circle\" style=\" background-color: {series.color};\" ></span> {series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
                     footerFormat = "</table>",
                     
