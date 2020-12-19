@@ -132,6 +132,21 @@ namespace HlidacStatu.Lib.Render
                 return string.Empty;
             }
 
+            public static string fn_RenderCompanyName(string ico, string missingCompanyName = "")
+            {
+                if (!string.IsNullOrEmpty(ico))
+                {
+                    HlidacStatu.Lib.Data.Firma o = HlidacStatu.Lib.Data.Firmy.instanceByIco.Get(ico);
+                    if (o.Valid)
+                    {
+                        return $"<span>{o.Jmeno}</span>";
+                    }
+                    else
+                        return $"<span>{(string.IsNullOrEmpty(missingCompanyName) ? ico : missingCompanyName)}</span>";
+                }
+                return string.Empty;
+            }
+
             public static string fn_RenderCompanyWithLink(string ico, string missingCompanyName = "")
             {
                 if (!string.IsNullOrEmpty(ico))
