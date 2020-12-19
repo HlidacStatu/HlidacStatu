@@ -1,0 +1,100 @@
+﻿@model object
+@using Nest;
+@using System.Linq;
+@using Devmasters;
+@using Devmasters.Collections;
+
+@{
+    Layout = null;
+
+    HlidacStatu.Lib.Data.External.DataSets.DataSet ds =
+        HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get((string)Model);
+    var reg = ds.Registration();
+
+    var mestaVds = ds.ESClient.Search<object>(s => s
+        .MatchAll()
+        .Size(0)
+        .Aggregations(a => a
+            .Terms("mesta", m => m
+                .Size(100)
+                .Field("ico.keyword")
+                .Aggregations(aa => aa
+                    .Stats("stat", ss => ss.
+                         Field("datum")
+                    )
+                )
+            )
+
+        )
+    );
+
+
+    Dictionary<string, Nest.StatsAggregate> mesta = ((BucketAggregate)mestaVds.Aggregations["mesta"]).Items
+                    .Select(m => new
+                    {
+                        key = ((Nest.KeyedBucket<object>)m).Key.ToString(),
+                        num = (Nest.StatsAggregate)(((Nest.KeyedBucket<object>)m).Values.First())
+                    })
+                    .ToDictionary(k => k.key, v => v.num);
+
+}
+<p>
+    Přepisy audio záznamů zasedání zastupitelstev měst a krajů.
+</p>
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+
+        <h4>Města a kraje</h4>
+        <div class="row">
+            @{
+                bool first = true;
+                var oMesta = new Dictionary<HlidacStatu.Lib.Data.Firma, StatsAggregate>();
+                oMesta = mesta
+                    .Select(m => new { o = HlidacStatu.Lib.Data.Firmy.Get(m.Key), s = m.Value })
+                    .Where(m => m.o != null)
+                    .ToDictionary(k => k.o, v => v.s);
+            }
+            @foreach (var chunk in oMesta
+                .OrderBy(m => m.Key.JmenoOrderReady()).ThenBy(m => m.Key.ICO)
+                .Chunk((mesta.Count() / 3) + 1))
+            {
+                char firstChar = ' ';
+                <div class="col-xs-6 col-sm-4">
+
+                    @foreach (var kv in chunk)
+                    {
+                        string cas = Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Min.Value) / 1000).ToString("yyyy")
+                        + "-" + Devmasters.DT.Util.FromEpochTimeToUTC(Convert.ToInt64(kv.Value.Max.Value) / 1000).ToString("yy");
+                        var o = kv.Key;
+                        var fchar = o.JmenoOrderReady().First();
+                        if (o.JmenoOrderReady().ToLower().StartsWith("ch"))
+                        {
+                            fchar = HlidacStatu.Util.Consts.Ch;
+                        }
+                        if (fchar != firstChar)
+                        {
+                            firstChar = fchar;
+                            <div class="col-xs-12" style="padding-top:5px;"></div>
+                            <div class="col-xs-2">
+                                <div style="text-align:right;font-weight:bolder;font-size:2em;margin-top:-5px">@HlidacStatu.Util.RenderData.RenderCharWithCH(fchar)</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-2"></div>
+                        }
+                        <div class="col-xs-10">
+
+                                <div>
+                                    <a href="/data/Hledat/zasedani-zastupitelstev?Q=ico%3A@(o.ICO)&order=datum%20desc">@(o.Jmeno)</a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;zasedání, " + cas + ")", "&nbsp;({0}&nbsp;zasedání, " + cas + ")", "&nbsp;({0:### ###}&nbsp;zasedání, " + cas + ")"))
+                                </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <hr />
+    </div>
+</div>

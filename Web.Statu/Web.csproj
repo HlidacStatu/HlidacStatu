@@ -1748,6 +1748,7 @@
     <Content Include="Views\Subjekt\OrganizacniStruktura.cshtml" />
     <Content Include="Views\Subjekt\DalsiInformace.cshtml" />
     <Content Include="Views\Subjekt\_subjektLayout.cshtml" />
+    <Content Include="Views\Data\Promo\behind_zasedani-zastupitelstev.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

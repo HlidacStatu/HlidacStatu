@@ -132,6 +132,19 @@ namespace HlidacStatu.Lib.Data
         }
         public string JmenoAscii { get; set; }
 
+        public string JmenoOrderReady()
+        {
+            string[] prefixes = new string[] { "Statutární město ", "Město ", "Městská část ","Obec " };
+            string jmeno = this.Jmeno;
+            foreach (var pref in prefixes)
+            {
+                if (jmeno.StartsWith(pref) && jmeno != pref)
+                    return jmeno.ReplaceWithRegex("", pref).Trim();
+            }
+            return this.Jmeno;
+        }
+
+
         // https://wwwinfo.mfcr.cz/ares/aresPrFor.html.cz
 
         public int? Kod_PF { get; set; }
