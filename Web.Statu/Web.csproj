@@ -1686,7 +1686,7 @@
     <Content Include="Views\ApiV1\ModalClassification.cshtml" />
     <Content Include="Views\Data\CreateFromBackup.cshtml" />
     <Content Include="Views\Data\CreateFromBackup1.cshtml" />
-    <Content Include="Views\Data\Promo\behind_vyjadreni-politiku.cshtml" />
+    <Content Include="Views\Data\Promo\front_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
     <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
@@ -1748,7 +1748,7 @@
     <Content Include="Views\Subjekt\OrganizacniStruktura.cshtml" />
     <Content Include="Views\Subjekt\DalsiInformace.cshtml" />
     <Content Include="Views\Subjekt\_subjektLayout.cshtml" />
-    <Content Include="Views\Data\Promo\behind_zasedani-zastupitelstev.cshtml" />
+    <Content Include="Views\Data\Promo\front_zasedani-zastupitelstev.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -134,11 +135,11 @@ namespace HlidacStatu.Lib.Data
 
         public string JmenoOrderReady()
         {
-            string[] prefixes = new string[] { "Statutární město ", "Město ", "Městská část ","Obec " };
-            string jmeno = this.Jmeno;
+            string[] prefixes = new string[] { "^Statutární\\s*město\\s", "^Město\\s ", "^Městská\\s*část\\s ","^Obec\\s " };
+            string jmeno = this.Jmeno.Trim();
             foreach (var pref in prefixes)
             {
-                if (jmeno.StartsWith(pref) && jmeno != pref)
+                if (Regex.IsMatch(jmeno,pref, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant))
                     return jmeno.ReplaceWithRegex("", pref).Trim();
             }
             return this.Jmeno;

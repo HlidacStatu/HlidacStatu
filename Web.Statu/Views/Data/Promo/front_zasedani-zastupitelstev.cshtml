@@ -87,7 +87,7 @@
                         <div class="col-xs-10">
 
                                 <div>
-                                    <a href="/data/Hledat/zasedani-zastupitelstev?Q=ico%3A@(o.ICO)&order=datum%20desc">@(o.Jmeno)</a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;zasedání, " + cas + ")", "&nbsp;({0}&nbsp;zasedání, " + cas + ")", "&nbsp;({0:### ###}&nbsp;zasedání, " + cas + ")"))
+                                    <a href="/data/Hledat/zasedani-zastupitelstev?Q=ico%3A@(o.ICO)&order=datum%20desc">@(o.JmenoOrderReady())</a>@Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)kv.Value.Count, "", "&nbsp;(1&nbsp;zasedání, " + cas + ")", "&nbsp;({0}&nbsp;zasedání, " + cas + ")", "&nbsp;({0:### ###}&nbsp;zasedání, " + cas + ")"))
                                 </div>
                         </div>
                     }
