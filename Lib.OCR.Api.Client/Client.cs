@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+
 using System;
 using System.Threading.Tasks;
 
@@ -80,9 +81,41 @@ namespace HlidacStatu.Lib.OCR.Api
         #endregion
 
 
-
-
         public static async Task<Result> TextFromUrlAsync(string apikey, Uri url, string client, int priority,
+            MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
+            TimeSpan? restartTaskAfterTime = null /*, Api.CallbackData callBackData = null*/)
+        {
+            string fullUrl = null;
+            string taskId = null;
+
+            var tmpFile = TempIO.GetTemporaryFilename();
+            try
+            {
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url.AbsoluteUri))
+                {
+                    net.TimeInMsBetweenTries = 2000;
+                    net.Timeout = 60000;
+                    net.Tries = 5;
+                    net.IgnoreHttpErrors = true;
+                    System.IO.File.WriteAllBytes(tmpFile, net.GetBinary().Binary);
+                }
+                return await TextFromFileAsync(apikey, tmpFile, client, priority,
+                    intensity, origFilename, maxWaitingTime, restartTaskAfterTime);
+            }
+            catch (Exception e)
+            {
+                throw new ApiException("exception API TextFromFileAsync  ", e);
+                //return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
+            }
+            finally
+            {
+                TempIO.DeleteFile(tmpFile);
+            }
+
+        }
+
+
+        public static async Task<Result> TextFromUrlAsync_old(string apikey, Uri url, string client, int priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
             TimeSpan? restartTaskAfterTime = null /*, Api.CallbackData callBackData = null*/)
         {
@@ -91,7 +124,7 @@ namespace HlidacStatu.Lib.OCR.Api
 
             Api.CallbackData callBackData = null; //temporaty disable callBack
             byte[] resbyte;
-            string res="";
+            string res = "";
             try
             {
                 if (string.IsNullOrEmpty(origFilename))
@@ -164,6 +197,8 @@ namespace HlidacStatu.Lib.OCR.Api
 
 
         }
+
+
         public static async Task<Result> TextFromFileAsync(string apikey, string fileOnDisk, string client, int priority,
             MiningIntensity intensity, string origFilename = "", TimeSpan? maxWaitingTime = null,
             TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
@@ -208,7 +243,41 @@ namespace HlidacStatu.Lib.OCR.Api
                 return new Result() { Id = id, IsValid = Result.ResultStatus.InQueueWithCallback };
         }
 
+
         public static Result TextFromUrl(string apikey, Uri url, string client, int priority,
+           MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
+           TimeSpan? restartTaskAfterTime = null /*, Api.CallbackData callBackData = null*/)
+        {
+            string fullUrl = null;
+            string taskId = null;
+
+            var tmpFile = TempIO.GetTemporaryFilename();
+            try
+            {
+                using (Devmasters.Net.HttpClient.URLContent net = new Devmasters.Net.HttpClient.URLContent(url.AbsoluteUri))
+                {
+                    net.TimeInMsBetweenTries = 2000;
+                    net.Timeout = 60000;
+                    net.Tries = 5;
+                    net.IgnoreHttpErrors = true;
+                    System.IO.File.WriteAllBytes(tmpFile, net.GetBinary().Binary);
+                }
+                return TextFromFile(apikey, tmpFile, client, priority,
+                    intensity, origFilename, maxWaitingTime, restartTaskAfterTime);
+            }
+            catch (Exception e)
+            {
+                throw new ApiException("exception API TextFromFileAsync  ", e);
+                //return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
+            }
+            finally
+            {
+                TempIO.DeleteFile(tmpFile);
+            }
+
+        }
+
+        public static Result TextFromUrl_old(string apikey, Uri url, string client, int priority,
             MiningIntensity intensity, string origFilename = null, TimeSpan? maxWaitingTime = null,
             TimeSpan? restartTaskAfterTime = null/*, Api.CallbackData callBackData = null*/)
         {
@@ -258,7 +327,7 @@ namespace HlidacStatu.Lib.OCR.Api
                     else
                     {
                         logger.Error($"ExtApi.TextFromUrlAsync API Exception\nUrl:{url.AbsoluteUri}\n content: " + res);
-                        return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>()  };
+                        return new Result() { Id = taskId, IsValid = Result.ResultStatus.Invalid, Error = json["error"].Value<string>() };
                     }
 
                 }
