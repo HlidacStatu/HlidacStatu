@@ -213,6 +213,7 @@ namespace Vybory_PSP
             List<jednani.dokument> docs = new List<jednani.dokument>();
             List<jednani.mp3> mp3s = new List<jednani.mp3>();
 
+
             for (int ityp = 0; ityp < xtypes.Count; ityp++)
             {
                 var typDok = xtypes[ityp].InnerText;
@@ -243,11 +244,19 @@ namespace Vybory_PSP
                                 if (typDok.ToLower().Contains(".mp3"))
                                 {
                                     //direct link to file
-                                    mp3s.Add(new jednani.mp3()
+                                    var jmp3 = new jednani.mp3()
                                     {
                                         DocumentUrl = rootUrl + fUrl,
                                         jmeno = MakeValidFileName(fUrlNode.InnerText),
-                                    });
+                                    };
+                                    mp3s.Add(jmp3);
+                                    MP3 mp3 = new MP3(Program.mp3path, Program.apikey);
+                                    string smp3id = mp3s.Count == 0 ? "" : "_" + mp3s.Count;
+                                    var blocks = mp3.CheckDownloadAndStartV2TOrGet(Parse.datasetname,j.Id+ smp3id, rootUrl + fUrl);
+                                    if (blocks != null)
+                                    { 
+                                        jmp3.DocumentPlainText = Devmasters.SpeechToText.VoiceToTextFormatter.TextWithTimestampsToText(blocks);
+                                    }
                                 }
                                 else
                                 {

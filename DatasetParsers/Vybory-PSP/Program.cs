@@ -12,11 +12,12 @@ namespace Vybory_PSP
         static HlidacStatu.Api.Dataset.Connector.DatasetConnector dsc;
         public static Dictionary<string, string> args = new Dictionary<string, string>();
 
+        public static string apikey = System.Configuration.ConfigurationManager.AppSettings["apikey"];
+        public static string mp3path = System.Configuration.ConfigurationManager.AppSettings["mp3path"];
         static void Main(string[] arguments)
         {
-            dsc = new HlidacStatu.Api.Dataset.Connector.DatasetConnector(
-                System.Configuration.ConfigurationManager.AppSettings["apikey"]
-                );
+            dsc = new HlidacStatu.Api.Dataset.Connector.DatasetConnector(apikey);            
+
             //dsc.SetDeveleperUrl("http://local.hlidacstatu.cz/api/v1/");
             args = arguments
                 .Select(m => m.Split('='))

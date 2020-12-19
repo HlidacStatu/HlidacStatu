@@ -738,23 +738,25 @@ namespace HlidacStatu.Lib.Data.External.DataSets
         /// <param name="finalId"></param>
         private void SubscribeToAudio(JContainer[] jpathObjs, string finalId)
         {
-
+            int num = 0;
             foreach (var jo in jpathObjs)
             {
                 if (AUDIOCommands.Contains(jo["HsProcessType"].Value<string>()))
                 {
                     if (jo["AudioUrl"] != null && jo["PrepisAudia"] == null )
                     {
-                        if (Uri.TryCreate(jo["AudioUrl"].Value<string>(), UriKind.Absolute, out var uri2Ocr))
+                        if (Uri.TryCreate(jo["AudioUrl"].Value<string>(), UriKind.Absolute, out var uri2audio))
                         {
-                            using (HlidacStatu.Q.Simple.Queue<VoiceDownloadSave> sq = new Q.Simple.Queue<VoiceDownloadSave>(
-                                Voice2Text.QName,
-                                Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
-                                )
-                            {
-                                //TODO - check already done task
-                                //sq.Send(new VoiceDownloadSave() { dataset = datasetId, itemid = finalId, uri= jo["AudioUrl"].Value<string>() });
-                            }
+                            string snum = num == 0 ? "" : "_"+num.ToString();
+
+                            //using (HlidacStatu.Q.Simple.Queue<VoiceDownloadSave> sq = new Q.Simple.Queue<VoiceDownloadSave>(
+                            //    Voice2Text.QName,
+                            //    Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
+                            //    )
+                            //{
+                            //    sq.Send(new VoiceDownloadSave() { dataset = datasetId, itemid = finalId+snum, uri= jo["AudioUrl"].Value<string>() });
+                            //}
+                            num++;
                         }
                     }
                 }
