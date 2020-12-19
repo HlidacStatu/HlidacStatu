@@ -131,6 +131,7 @@
                     "fond-hejtmanky-pokorne-jermanove",
                     "rozhodnuti-uohs",
                     "veklep",
+                    "zasedani-zastupitelstev"
                 });
             }
             <div class="block-col ">
@@ -169,6 +170,18 @@
                             Schválené a neschválené a žádosti o dotaci z fondu hejtmanky ing. Jaroslavy Pokorné Jermanové od roku 2017.
                             Zdrojové údaje získány žádostí dle 106/1999 Sb.
                             Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("fond-hejtmanky-pokorne-jermanove")?.NumberOfRecords() ?? 0) rozhodnutí.
+                        </div>
+                    </li>
+                    <li>
+                        <span style="white-space:nowrap">
+                            <a href="/data/Index/zasedani-zastupitelstev" class="tag">
+                                Zasedání zastupitelstev
+                            </a>
+                            <span class="exclusive small">exkluzivně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                        </span>
+                        <div class="small" style="padding-left:1em;">
+                            Audio záznamy zasedání zastupitelstev, přepis audia do textu, plné fulltextové vyhledávání. 
+                            Obsahuje @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("zasedani-zastupitelstev")?.NumberOfRecords() ?? 0) zasedání.
                         </div>
                     </li>
                 </ul>
@@ -353,7 +366,9 @@
                     Další databáze
                 </h3>
             </div>
-
+            @{ 
+                string[] dsExclusive = new string[] { "rada-ceske-televize","kapacity-nemocnic","stav-mostu","transparentni-ucty-transakce","transparentni-ucty" };
+            }
             <div class="block-col ">
                 <ul class="block-list">
                     @foreach (var ds in Model
@@ -365,7 +380,10 @@
                         <li>
                             <span style="white-space:nowrap">
                                 <a href="/data/Index/@ds.Ds.id" class="tag">@ds.Ds.name</a>
-
+                                @if (dsExclusive.Contains(ds.Ds.id))
+                                { 
+                                    <span class="exclusive small">exkluzivně na <img style="height:12px;color:yellow" src="/Content/HlidacLoga/Hlidac-statu-ctverec%20invert%20transparent%20notext.svg" /></span>
+                                }
                             </span>
                             <div class="small" style="padding-left:1em;">
                                 @ds.Ds.description
