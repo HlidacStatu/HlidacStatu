@@ -19,7 +19,6 @@ namespace HlidacStatu.Web.Controllers
     public class ApiV2InternalQController : ApiV2AuthController
     {
 
-        static string[] Priorities = new string[] { "_2", "_1", "" };
 
 
         /// <summary>
@@ -33,9 +32,8 @@ namespace HlidacStatu.Web.Controllers
         [HttpPost, Route("Voice2TextNewTask/{datasetId}/{itemId}")]
         public string Voice2TextNewTask(string datasetId, string itemId, int priority=0)
         {
-            string spriority = priority == 0 ? "" : "_" + priority.ToString();
             using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(
-                Voice2Text.QName + spriority,
+                Voice2Text.QName_priority(priority),
                 Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString"))
                 )
             {
@@ -54,10 +52,10 @@ namespace HlidacStatu.Web.Controllers
         public Voice2Text Voice2TextGetTask()
         {
             Voice2Text task = null;
-            foreach (var p in Priorities)
+            foreach (var p in Voice2Text.Priorities)
             {
 
-                using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName + p,
+                using (HlidacStatu.Q.Simple.Queue<Voice2Text> sq = new Q.Simple.Queue<Voice2Text>(Voice2Text.QName_priority(p),
                     Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
                 {
                     task = sq.GetAndAck();
@@ -81,7 +79,7 @@ namespace HlidacStatu.Web.Controllers
         public string Voice2TextDone([FromBody] Voice2Text task)
         {
             using (HlidacStatu.Q.Simple.Queue<TaskResult<Voice2Text>> sq
-                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName + "_done", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName_done, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 TaskResult<Voice2Text> result = new TaskResult<Voice2Text>()
                 {
@@ -107,7 +105,7 @@ namespace HlidacStatu.Web.Controllers
         public string Voice2TextFailed(bool requeueAsTheLast, [FromBody] Voice2Text task)
         {
             using (HlidacStatu.Q.Simple.Queue<TaskResult<Voice2Text>> sq
-                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName + "_failed", Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
+                = new Q.Simple.Queue<TaskResult<Voice2Text>>(Voice2Text.QName_failed, Devmasters.Config.GetWebConfigValue("RabbitMqConnectionString")))
             {
                 TaskResult<Voice2Text> result = new TaskResult<Voice2Text>()
                 {
