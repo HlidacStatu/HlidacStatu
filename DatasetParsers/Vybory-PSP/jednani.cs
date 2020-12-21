@@ -23,6 +23,15 @@ namespace Vybory_PSP
             public string DocumentUrl { get; set; }
             public string DocumentPlainText { get; set; }
             public string jmeno { get; set; }
+
+            public blok[] prepisAudia { get; set; }
+
+            public class blok
+            {
+                public long sekundOdZacatku { get; set; }
+                public string text { get; set; }
+            }
+
         }
 
         public void SetId()
@@ -79,6 +88,19 @@ namespace Vybory_PSP
                             docs.Add(a);
                             changed = true;
                         }
+                    }
+                    for (int i = 0; i < docs.Count(); i++)
+                    {
+
+                        foreach (var a in sec.audio ?? new mp3[] { })
+                        {
+                            if (docs[i].DocumentUrl == a.DocumentUrl && docs[i].prepisAudia == null)
+                            {
+                                docs[i].prepisAudia = a.prepisAudia;
+                                changed = true;
+                            }
+                        }
+
                     }
                     prim.audio = docs.ToArray();
                 }

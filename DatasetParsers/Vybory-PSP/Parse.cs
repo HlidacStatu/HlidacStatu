@@ -133,7 +133,7 @@ namespace Vybory_PSP
                             }
                             return new Devmasters.Batch.ActionOutputData();
 
-                        }, null,null, true, prefix:$"Jednani {cisloJednani} OCR:");
+                        }, null,null, !System.Diagnostics.Debugger.IsAttached, prefix:$"Jednani {cisloJednani} OCR:");
 
 
                     string jedn = "zápis";
@@ -151,7 +151,7 @@ namespace Vybory_PSP
                     Console.WriteLine($"Saved vybor {jednani.vybor} jednani {jednani.Id} id {id}");
                     return new Devmasters.Batch.ActionOutputData();
 
-                }, null, null, true, maxDegreeOfParallelism:5, prefix: "cisloJednani: ");
+                }, null, null, !System.Diagnostics.Debugger.IsAttached, maxDegreeOfParallelism:5, prefix: "cisloJednani: ");
             }
 
         }
@@ -207,7 +207,7 @@ namespace Vybory_PSP
             j.vybor = Vybory[vyborId];
             j.vyborId = vyborId;
             j.vyborUrl = string.Format(_vyborHP, vyborId + 2);
-
+            j.SetId();
             //typy dokumentu
             var xtypes = xp.GetNodes("//div[@id='main-content']//h4");
             List<jednani.dokument> docs = new List<jednani.dokument>();
@@ -241,7 +241,7 @@ namespace Vybory_PSP
                             }
                             else if (fUrl.StartsWith("text/orig"))
                             {
-                                if (typDok.ToLower().Contains(".mp3"))
+                                if (typDok.ToLower().Contains("mp3"))
                                 {
                                     //direct link to file
                                     var jmp3 = new jednani.mp3()
@@ -251,11 +251,15 @@ namespace Vybory_PSP
                                     };
                                     mp3s.Add(jmp3);
                                     MP3 mp3 = new MP3(Program.mp3path, Program.apikey);
-                                    string smp3id = mp3s.Count == 0 ? "" : "_" + mp3s.Count;
+                                    string smp3id = mp3s.Count == 1 ? "" : "_" + mp3s.Count;
                                     var blocks = mp3.CheckDownloadAndStartV2TOrGet(Parse.datasetname,j.Id+ smp3id, rootUrl + fUrl);
                                     if (blocks != null)
                                     { 
                                         jmp3.DocumentPlainText = Devmasters.SpeechToText.VoiceToTextFormatter.TextWithTimestampsToText(blocks);
+                                        jmp3.prepisAudia = blocks
+                                            .Select(t => new jednani.mp3.blok() { sekundOdZacatku = (long)t.Start.TotalSeconds, text = t.Text })
+                                            .ToArray();
+
                                     }
                                 }
                                 else
