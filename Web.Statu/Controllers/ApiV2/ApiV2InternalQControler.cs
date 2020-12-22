@@ -112,7 +112,7 @@ namespace HlidacStatu.Web.Controllers
                     Payload = task,
                     Created = DateTime.Now,
                     Result = "failed",
-                    User = AuthUser().UserName,
+                    User = this.ApiAuth?.ApiCall?.User,
                     FromIP = this.HostIpAddress
                 };
                 sq.Send(result);
