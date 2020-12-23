@@ -13,7 +13,7 @@
     NemocniceOnlyData[] nemocnice = client.Search<NemocniceOnlyData>(s => s
         .Query(q => q.QueryString(qs => qs.Query("lastUpdated:[2020-09-26 TO *]")))
         .Size(100)
-        .Sort(so => so.Ascending(a => a.lastUpdated))
+        .Sort(so => so.Descending(a => a.lastUpdated))
     )
     .Hits
     .Select(m => m.Source)
