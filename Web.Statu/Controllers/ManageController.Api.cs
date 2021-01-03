@@ -53,186 +53,198 @@ namespace HlidacStatu.Web.Controllers
             }
         }
 
-        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int? num = null, string ds =null )
+        public ActionResult ExportResult(string id, string q, string h, string o, string ct, int? num = null, string ds = null)
         {
-            var apiAuth = Framework.ApiAuth.IsApiAuth(this,
+            try
+            {
+
+                var apiAuth = Framework.ApiAuth.IsApiAuth(this,
                 parameters: new Framework.ApiCall.CallParameter[] {
                                 new Framework.ApiCall.CallParameter("id", id),
                                 new Framework.ApiCall.CallParameter("q", q),
                                 new Framework.ApiCall.CallParameter("o", o),
-                                new Framework.ApiCall.CallParameter("ct", ct)
+                                new Framework.ApiCall.CallParameter("ct", ct),
+                                new Framework.ApiCall.CallParameter("num", num?.ToString()),
+                                new Framework.ApiCall.CallParameter("ds", ds)
                 });
 
-            if (!apiAuth.Authentificated)
-            {
-                //Response.StatusCode = 401;
-                return Redirect("/");
-            }
-
-            int numOfRecords = num ?? 1000;
-            if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
-                numOfRecords = 100;
-            if (this.User.IsInRole("Admin") || this.User.IsInRole("novinar"))
-            {
-                numOfRecords = 10000;
-            }
-
-
-            byte[] rawData = null;
-            string contentType = "";
-            string filename = "";
-            List<dynamic> data = new List<dynamic>();
-
-
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(q) || string.IsNullOrEmpty(h))
-            {
-                rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
-                contentType = "text/plain";
-                filename = "chyba.txt";
-                return File(rawData, contentType, filename);
-            }
-            else if (HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h) == false) //TODO salt in config
-            {
-                rawData = System.Text.Encoding.UTF8.GetBytes("nespravný požadavek");
-                contentType = "text/plain";
-                filename = "chyba.txt";
-                return File(rawData, contentType, filename);
-            }
-            else if (id == "smlouvy")
-            {
-                var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, numOfRecords, o, logError: false);
-
-                if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                if (!apiAuth.Authentificated)
                 {
-                    HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledej", this.HttpContext);
-                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    //Response.StatusCode = 401;
+                    return Redirect("/");
+                }
+
+                int numOfRecords = num ?? 1000;
+                if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
+                    numOfRecords = 100;
+                if (this.User.IsInRole("Admin") || this.User.IsInRole("novinar"))
+                {
+                    numOfRecords = 10000;
+                }
+
+
+                byte[] rawData = null;
+                string contentType = "";
+                string filename = "";
+                List<dynamic> data = new List<dynamic>();
+
+
+                if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(q) || string.IsNullOrEmpty(h))
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
                     contentType = "text/plain";
-                    filename = "export.txt";
+                    filename = "chyba.txt";
                     return File(rawData, contentType, filename);
                 }
-                foreach (var s in sres.Results)
-                    data.Add(s.FlatExport());
-            } //smlouvy
-            else if (id == "zakazky")
-            {
-
-                string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
-                var sres = VerejnaZakazka.Searching.SimpleSearch(q, cpvs, 1, numOfRecords,
-                    (Util.ParseTools.ToInt(o) ?? 0).ToString(), (Request.QueryString["zahajeny"] == "1")
-                    );
-
-                if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                else if (HlidacStatu.Lib.Data.Smlouva.Search.IsQueryHashCorrect(id, q, h) == false) //TODO salt in config
                 {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    rawData = System.Text.Encoding.UTF8.GetBytes("nespravný požadavek");
                     contentType = "text/plain";
-                    filename = "export.txt";
+                    filename = "chyba.txt";
                     return File(rawData, contentType, filename);
                 }
-                else
+                else if (id == "smlouvy")
                 {
+                    var sres = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(q, 0, numOfRecords, o, logError: false);
+
+                    if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                    {
+                        HlidacStatu.Lib.ES.Manager.LogQueryError<Smlouva>(sres.ElasticResults, "/hledej", this.HttpContext);
+                        rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                        contentType = "text/plain";
+                        filename = "export.txt";
+                        return File(rawData, contentType, filename);
+                    }
                     foreach (var s in sres.Results)
                         data.Add(s.FlatExport());
-                }
-            }
-            else if (id == "dataset")
-            {
-                if (string.IsNullOrEmpty(ds))
+                } //smlouvy
+                else if (id == "zakazky")
                 {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
-                    contentType = "text/plain";
-                    filename = "chyba.txt";
-                    return File(rawData, contentType, filename);
-                }
 
-                DataSet datasource = DataSet.CachedDatasets.Get(ds);
-                if (datasource==null)
-                {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
-                    contentType = "text/plain";
-                    filename = "chyba.txt";
-                    return File(rawData, contentType, filename);
-                }
-                if (datasource.IsFlatStructure()==false)
-                {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("Tato databáze nemá jednoduchou, plochou strukturu. Proto nemůže být exportována. Použijte API z hlidacstatu.cz/api");
-                    contentType = "text/plain";
-                    filename = "chyba.txt";
-                    return File(rawData, contentType, filename);
-                }
+                    string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
+                    var sres = VerejnaZakazka.Searching.SimpleSearch(q, cpvs, 1, numOfRecords,
+                        (Util.ParseTools.ToInt(o) ?? 0).ToString(), (Request.QueryString["zahajeny"] == "1")
+                        );
 
-                var sres = datasource.SearchData(q, 1, numOfRecords, (Util.ParseTools.ToInt(o) ?? 0).ToString());
-
-                if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
-                {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
-                    contentType = "text/plain";
-                    filename = "export.txt";
-                    return File(rawData, contentType, filename);
-                }
-                else
-                {
-                    foreach (var s in sres.Result)
+                    if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
                     {
-                        data.Add(datasource.ExportFlatObject(s));
+                        rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                        contentType = "text/plain";
+                        filename = "export.txt";
+                        return File(rawData, contentType, filename);
+                    }
+                    else
+                    {
+                        foreach (var s in sres.Results)
+                            data.Add(s.FlatExport());
                     }
                 }
-            }
-            else if (id == "dotace" )
-            {
-
-                string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
-                var sres = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch(q, 1, numOfRecords,
-                    (Util.ParseTools.ToInt(o) ?? 0).ToString());
-
-                if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                else if (id == "dataset")
                 {
-                    rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                    if (string.IsNullOrEmpty(ds))
+                    {
+                        rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                        contentType = "text/plain";
+                        filename = "chyba.txt";
+                        return File(rawData, contentType, filename);
+                    }
+
+                    DataSet datasource = DataSet.CachedDatasets.Get(ds);
+                    if (datasource == null)
+                    {
+                        rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
+                        contentType = "text/plain";
+                        filename = "chyba.txt";
+                        return File(rawData, contentType, filename);
+                    }
+                    if (datasource.IsFlatStructure() == false)
+                    {
+                        rawData = System.Text.Encoding.UTF8.GetBytes("Tato databáze nemá jednoduchou, plochou strukturu. Proto nemůže být exportována. Použijte API z hlidacstatu.cz/api");
+                        contentType = "text/plain";
+                        filename = "chyba.txt";
+                        return File(rawData, contentType, filename);
+                    }
+
+                    var sres = datasource.SearchData(q, 1, numOfRecords, (Util.ParseTools.ToInt(o) ?? 0).ToString());
+
+                    if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                    {
+                        rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                        contentType = "text/plain";
+                        filename = "export.txt";
+                        return File(rawData, contentType, filename);
+                    }
+                    else
+                    {
+                        foreach (var s in sres.Result)
+                        {
+                            data.Add(datasource.ExportFlatObject(s));
+                        }
+                    }
+                }
+                else if (id == "dotace")
+                {
+
+                    string[] cpvs = (Request.QueryString["cpv"] ?? "").Split(',');
+                    var sres = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch(q, 1, numOfRecords,
+                        (Util.ParseTools.ToInt(o) ?? 0).ToString());
+
+                    if (sres.IsValid == false && !string.IsNullOrEmpty(sres.Q))
+                    {
+                        rawData = System.Text.Encoding.UTF8.GetBytes("chyba při přípravě dat. Omlouváme se a řešíme to");
+                        contentType = "text/plain";
+                        filename = "export.txt";
+                        return File(rawData, contentType, filename);
+                    }
+                    else
+                    {
+                        foreach (var s in sres.Results)
+                            data.Add(s.FlatExport());
+                    }
+                }
+                if (data.Count == 0)
+                {
+                    rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
                     contentType = "text/plain";
-                    filename = "export.txt";
-                    return File(rawData, contentType, filename);
+                    filename = "chyba.txt";
                 }
                 else
                 {
-                    foreach (var s in sres.Results)
-                        data.Add(s.FlatExport());
-                }
-            }
-            if (data.Count == 0)
-            {
-                rawData = System.Text.Encoding.UTF8.GetBytes("žádná data nejsou k dispozici");
-                contentType = "text/plain";
-                filename = "chyba.txt";
-            }
-            else
-            {
-                if (ct == "tab")
-                {
-                    rawData = new HlidacStatu.ExportData.TabDelimited().ExportData(new ExportData.Data(data));
-                    contentType = "text/tab-separated-values";
-                    filename = "export.tab";
-                }
-                else if (ct == "csv")
-                {
-                    rawData = new HlidacStatu.ExportData.Csv().ExportData(new ExportData.Data(data));
-                    contentType = "text/csv";
-                    filename = "export.csv";
-                }
-                else if (ct == "numbers")
-                {
-                    rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
-                    contentType = "application/vnd.apple.numbers";
-                    filename = "export.numbers";
-                }
-                else
-                {
-                    rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
-                    contentType = "application/vnd.ms-excel";
-                    filename = "export.xlsx";
+                    if (ct == "tab")
+                    {
+                        rawData = new HlidacStatu.ExportData.TabDelimited().ExportData(new ExportData.Data(data));
+                        contentType = "text/tab-separated-values";
+                        filename = "export.tab";
+                    }
+                    else if (ct == "csv")
+                    {
+                        rawData = new HlidacStatu.ExportData.Csv().ExportData(new ExportData.Data(data));
+                        contentType = "text/csv";
+                        filename = "export.csv";
+                    }
+                    else if (ct == "numbers")
+                    {
+                        rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
+                        contentType = "application/vnd.apple.numbers";
+                        filename = "export.numbers";
+                    }
+                    else
+                    {
+                        rawData = new HlidacStatu.ExportData.Excel().ExportData(new ExportData.Data(data));
+                        contentType = "application/vnd.ms-excel";
+                        filename = "export.xlsx";
+
+                    }
 
                 }
-
+                return File(rawData, contentType, filename);
             }
-            return File(rawData, contentType, filename);
+            catch (Exception e)
+            {
+                HlidacStatu.Util.Consts.Logger.Error($"Export error:  id={id}, q={q}, h={h}, o={o}, ct={ct}, num={num}, ds={ds}", e);
+                return Content("Nastala chyba. Zkuste to pozdeji znovu", "text/plain");
+            }
+
         }
 
 
