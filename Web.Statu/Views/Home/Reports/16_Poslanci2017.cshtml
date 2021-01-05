@@ -14,6 +14,14 @@
 @using HlidacStatu.Lib.Render
 
 @{
+    //var showList = Osoba.GetByEvent(e =>
+    //        e.Type == (int)OsobaEvent.Types.VolenaFunkce
+    //        && (e.AddInfo.ToLower().StartsWith("poslanec") || e.AddInfo.ToLower().StartsWith("poslankyně"))
+    //        && e.Organizace.ToLower().StartsWith("poslanecká sněmovna pčr")
+    //        && (e.DatumDo == null || e.DatumDo >= DateTime.Now))
+    //    .OrderBy(o => o.Prijmeni)
+    //    .ThenBy(o => o.Jmeno)
+    //    .ToList();
 
     var allNames = StaticData.Poslanci2017Vsichni;
     var newNames = StaticData.Poslanci2017Novacci;
