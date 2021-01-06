@@ -76,7 +76,7 @@
                 data-action="create">
             Přidat událost
         </button>
-        @if (Model.Events().Count() > 0)
+        @if (Model.NoFilteredEvents().Count() > 0)
         {
 <table class="table tableStickyHeader">
     <thead>
@@ -217,11 +217,11 @@
             IEnumerable<OsobaEvent> udalosti;
             if (int.TryParse(Request.Params["descending"], out desc) && desc == 1)
             {
-                udalosti = Model.Events().OrderByDescending(sortExpression);
+                udalosti = Model.NoFilteredEvents().OrderByDescending(sortExpression);
             }
             else
             {
-                udalosti = Model.Events().OrderBy(sortExpression);
+                udalosti = Model.NoFilteredEvents().OrderBy(sortExpression);
             } }
 
         @foreach (var udalost in udalosti)
