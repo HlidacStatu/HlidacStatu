@@ -98,6 +98,12 @@ namespace HlidacStatu.Web
                 defaults: new { controller = "Subjekt", action = "Index", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "NewSearchController",
+                url: "NewSearch/{action}/{id}",
+                defaults: new { controller = "NewSearch", action = "Index", id = UrlParameter.Optional }
+            );
+
 
             routes.MapRoute(
                 name: "Default",

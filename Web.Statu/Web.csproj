@@ -572,6 +572,7 @@
     <Compile Include="Controllers\HomeController.Covid.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
+    <Compile Include="Controllers\NewSearchController.cs" />
     <Compile Include="Controllers\SubjektController.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\KindexController.cs" />
@@ -1749,6 +1750,7 @@
     <Content Include="Views\Subjekt\DalsiInformace.cshtml" />
     <Content Include="Views\Subjekt\_subjektLayout.cshtml" />
     <Content Include="Views\Data\Promo\front_zasedani-zastupitelstev.cshtml" />
+    <Content Include="Views\NewSearch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
