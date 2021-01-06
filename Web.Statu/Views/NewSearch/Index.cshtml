@@ -14,7 +14,7 @@
                 minimumInputLength: 1,
                 tags: true,
                 dataType: 'json',
-                tokenSeparators: [' '],
+                //tokenSeparators: [' '],
                 ajax: {
                     delay: 250,
                     url: function (params) {
@@ -33,8 +33,18 @@
                 },
                 
             });
+
+            //submit behaviour
+            $("#search-input").on('submit', function (e) {
+                var searchval = $('.js-example-basic-multiple').val().join(' ');
+                
+                $('.js-example-basic-multiple').val("");
+                $('#query-data').val(searchval);
+
+            });
         });
     </script>
+    
 }
 
 @section breadcrumb
@@ -50,10 +60,13 @@
 
 <div>
 
-    <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
-    </select>
+    <form id="search-input">
+        <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
+        </select>
+        <input id="query-data" name="q" type="hidden" />
+        <button formaction="">hledat</button>
+    </form>
 
-    
 
 
 </div>
