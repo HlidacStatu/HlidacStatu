@@ -23,11 +23,7 @@
                     processResults: function (data) {
                         // Transforms the top-level key of the response object from 'items' to 'results'
                         return {
-                            results: $.map(data, function (obj) {
-                                obj.id = obj.id || obj.Ico;
-                                obj.text = obj.text || obj.Name;
-                                return obj;
-                            })
+                            results: data
                         };
                     }
                 },
