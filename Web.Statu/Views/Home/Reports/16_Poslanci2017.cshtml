@@ -14,28 +14,28 @@
 @using HlidacStatu.Lib.Render
 
 @{
-    //var showList = Osoba.GetByEvent(e =>
-    //        e.Type == (int)OsobaEvent.Types.VolenaFunkce
-    //        && (e.AddInfo.ToLower().StartsWith("poslanec") || e.AddInfo.ToLower().StartsWith("poslankyně"))
-    //        && e.Organizace.ToLower().StartsWith("poslanecká sněmovna pčr")
-    //        && (e.DatumDo == null || e.DatumDo >= DateTime.Now))
-    //    .OrderBy(o => o.Prijmeni)
-    //    .ThenBy(o => o.Jmeno)
-    //    .ToList();
+    var showList = Osoba.GetByEvent(e =>
+            e.Type == (int)OsobaEvent.Types.VolenaFunkce
+            && (e.AddInfo.ToLower().StartsWith("poslanec") || e.AddInfo.ToLower().StartsWith("poslankyně"))
+            && e.Organizace.ToLower().StartsWith("poslanecká sněmovna pčr")
+            && (e.DatumDo == null || e.DatumDo >= DateTime.Now))
+        .OrderBy(o => o.Prijmeni)
+        .ThenBy(o => o.Jmeno)
+        .ToList();
 
-    var allNames = StaticData.Poslanci2017Vsichni;
+    //var allNames = StaticData.Poslanci2017Vsichni;
     var newNames = StaticData.Poslanci2017Novacci;
 
 
-    List<HlidacStatu.Lib.Data.Osoba> showList = null;
-    showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
-        .Where(p => allNames.Contains(p.NameId))
-        .OrderBy(m => m.Prijmeni)
-        .ThenBy(m => m.Jmeno)
-        .ToList();
+    //List<HlidacStatu.Lib.Data.Osoba> showList = null;
+    //showList = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get()
+    //    .Where(p => allNames.Contains(p.NameId))
+    //    .OrderBy(m => m.Prijmeni)
+    //    .ThenBy(m => m.Jmeno)
+    //    .ToList();
 
     ReportDataSource poslanciTable = new ReportDataSource(new ReportDataSource.Column[]
-   {
+    {
         new ReportDataSource.Column() { Name="novacek",
             HtmlRender = (s) =>
             {
@@ -80,15 +80,18 @@
 
                 if (o.Vazby() != null)
                 {
+                    string customUrl = $"/hledat?Q=osobaid:{o.NameId}";
                     foreach (var v in o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Take(2))
                     {
-                        sout = sout + v.Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true) + "<br/>";
+                        if(v.Value is null)
+                            continue;
+                        sout = sout + v.Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true, customUrl: customUrl) + "<br/>";
                     }
                     if (o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() == 3)
                     {
                         sout = sout + o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy
                         .Skip(2).First()
-                        .Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true);
+                        .Value.Summary(HlidacStatu.Lib.Analytics.CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow).ToNiceString(null,true, customUrl: customUrl);
                     }
                     else if (o.StatistikaRegistrSmluv(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).SoukromeFirmy.Count() > 2)
                     {
@@ -117,7 +120,7 @@
                 return HlidacStatu.Util.RenderData.OrderValueFormat(val);
             }
         },
-   });
+});
 
 
     foreach (var p in showList)
