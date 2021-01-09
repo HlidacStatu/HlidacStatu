@@ -135,6 +135,14 @@ namespace HlidacStatu.Lib.Data
             [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://portal.gov.cz/rejstriky/ISRS/1.2/")]
             public partial class indexDump
             {
+                public DateTime ForDate()
+                {
+                    if (this.den == 0)
+                        return new DateTime(this.rok, this.mesic, 1);
+                    else
+                        return new DateTime(this.rok, this.mesic, this.den);
+                }
+
                 private byte denField;
 
                 private byte mesicField;
