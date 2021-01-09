@@ -21,10 +21,11 @@ namespace HlidacStatu.Lib.Data
 
 
             string cnnStr = Devmasters.Config.GetWebConfigValue("CnnString");
-            string sql = @"select top 1 * from [DumpData] where mesic = @mesic and rok = @rok order by created desc";
+            string sql = @"select top 1 * from [DumpData] where mesic = @mesic and rok = @rok and den = @den order by created desc";
             using (var p = new Devmasters.PersistLib())
             {
                 var ds = p.ExecuteDataset(cnnStr, System.Data.CommandType.Text, sql, new IDataParameter[] {
+                            new System.Data.SqlClient.SqlParameter("den", (int)dump.den),
                             new System.Data.SqlClient.SqlParameter("mesic", (int)dump.mesic),
                             new System.Data.SqlClient.SqlParameter("rok", (int)dump.rok),
                 });
@@ -134,6 +135,7 @@ namespace HlidacStatu.Lib.Data
             [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://portal.gov.cz/rejstriky/ISRS/1.2/")]
             public partial class indexDump
             {
+                private byte denField;
 
                 private byte mesicField;
 
@@ -148,6 +150,18 @@ namespace HlidacStatu.Lib.Data
                 private byte dokoncenyMesicField;
 
                 private string odkazField;
+
+                public byte den
+                {
+                    get
+                    {
+                        return this.denField;
+                    }
+                    set
+                    {
+                        this.denField = value;
+                    }
+                }
 
                 /// <remarks/>
                 public byte mesic

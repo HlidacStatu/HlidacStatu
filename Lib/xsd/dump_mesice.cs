@@ -23,7 +23,10 @@ namespace HlidacStatu.Lib.XSD {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://portal.gov.cz/rejstriky/ISRS/1.2/")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="http://portal.gov.cz/rejstriky/ISRS/1.2/", IsNullable=false)]
     public partial class dump {
-        
+
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
+        public string den = "0";
+       
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
         public string mesic;
@@ -36,8 +39,10 @@ namespace HlidacStatu.Lib.XSD {
         public System.DateTime casGenerovani;
         
         /// <remarks/>
-        public bool dokoncenyMesic;
-        
+        public bool dokoncenyMesic = true;
+
+        /// <remarks/>
+        public bool dokoncenyDen = true;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("zaznam")]
         public dumpZaznam[] zaznam;
