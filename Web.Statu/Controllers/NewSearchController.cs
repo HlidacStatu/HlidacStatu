@@ -46,7 +46,7 @@ namespace HlidacStatu.Web.Controllers
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             
-            string sql = "select Jmeno, ICO from Firma where LEN(ico) = 8;";
+            string sql = "select Jmeno, ICO from Firma where IsInRS = 1 AND LEN(ico) = 8;";
             var results = DirectDB.GetList<string, string>(sql)
                 .Select(f => new ResultData()
                 {
