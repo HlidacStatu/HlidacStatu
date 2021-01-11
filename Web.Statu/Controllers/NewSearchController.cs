@@ -53,7 +53,9 @@ namespace HlidacStatu.Web.Controllers
                 {
                     id = $"ico:{f.Item2}",
                     text = f.Item1,
-                    type = "firma"
+                    type = "firma",
+                    description = "lorem ipsum",
+                    imageUrl = "https://www.hlidacstatu.cz/Content/img/Factory_Silhouette.png"
                 }).ToList();
             stopWatch.Stop();
             var firmyElapsed = stopWatch.Elapsed;
@@ -72,7 +74,7 @@ namespace HlidacStatu.Web.Controllers
                     imageUrl = o.GetPhotoUrl(false),
                     description = o.Events(e => e.Type != (int)OsobaEvent.Types.Sponzor && e.AddInfo != null)
                         .Select(e => e.AddInfo)
-                        .FirstOrDefault() ?? " - "
+                        .FirstOrDefault() ?? "osoba"
                     //InfoFact.RenderInfoFacts(
                     //    o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Summary).ToArray()
                     //    , 3, takeSummary: true, shuffle:false, "", "{0}")
