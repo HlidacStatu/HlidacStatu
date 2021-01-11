@@ -68,16 +68,16 @@ namespace HlidacStatu.Web.Controllers
                     
                 var politiciResult = politici.Select(o => new ResultData()
                 {
-                    id = $"nameid:{o.NameId}",
+                    id = $"osobaid:{o.NameId}",
                     text = o.FullName(false),
                     type = "osoba",
                     imageUrl = o.GetPhotoUrl(false),
-                    description = o.Events(e => e.Type != (int)OsobaEvent.Types.Sponzor && e.AddInfo != null)
-                        .Select(e => e.AddInfo)
-                        .FirstOrDefault() ?? "osoba"
-                    //InfoFact.RenderInfoFacts(
-                    //    o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Summary).ToArray()
-                    //    , 3, takeSummary: true, shuffle:false, "", "{0}")
+                    description = InfoFact.RenderInfoFacts(
+                        o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Summary).ToArray()
+                        , 3, takeSummary: true, shuffle: false, "", "{0}")
+                    //o.Events(e => e.Type != (int)OsobaEvent.Types.Sponzor && e.AddInfo != null)
+                    //    .Select(e => e.AddInfo)
+                    //    .FirstOrDefault() ?? "osoba"
                 });
 
                 results.AddRange(politiciResult);
