@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using FullTextSearch;
 using HlidacStatu.Lib;
 using System.Diagnostics;
+using HlidacStatu.Util;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -51,7 +52,8 @@ namespace HlidacStatu.Web.Controllers
                 .Select(f => new ResultData()
                 {
                     id = $"ico:{f.Item2}",
-                    text = f.Item1
+                    text = f.Item1,
+                    type = "firma"
                 }).ToList();
             stopWatch.Stop();
             var firmyElapsed = stopWatch.Elapsed;
@@ -65,7 +67,15 @@ namespace HlidacStatu.Web.Controllers
                 var politiciResult = politici.Select(o => new ResultData()
                 {
                     id = $"nameid:{o.NameId}",
-                    text = o.FullName(false)
+                    text = o.FullName(false),
+                    type = "osoba",
+                    imageUrl = o.GetPhotoUrl(false),
+                    description = o.Events(e => e.Type != (int)OsobaEvent.Types.Sponzor && e.AddInfo != null)
+                        .Select(e => e.AddInfo)
+                        .FirstOrDefault() ?? " - "
+                    //InfoFact.RenderInfoFacts(
+                    //    o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Summary).ToArray()
+                    //    , 3, takeSummary: true, shuffle:false, "", "{0}")
                 });
 
                 results.AddRange(politiciResult);
@@ -87,6 +97,9 @@ namespace HlidacStatu.Web.Controllers
             public string id { get; set; }
             [FullTextSearch.Search]
             public string text { get; set; }
+            public string imageUrl { get; set; }
+            public string type { get; set; }
+            public string description { get; set; }
         }
     }
 }
