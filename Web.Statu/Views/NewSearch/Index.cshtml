@@ -11,9 +11,10 @@
     <script>
         $(document).ready(function () {
             $('.js-example-basic-multiple').select2({
-                minimumInputLength: 1,
+                minimumInputLength: 3,
                 tags: true,
                 dataType: 'json',
+                placeholder: 'Zadejte dotaz',
                 //tokenSeparators: [' '],
                 ajax: {
                     delay: 250,
@@ -27,7 +28,7 @@
                         };
                     }
                 },
-                
+                templateResult: formatOptions
             });
 
             //submit behaviour
@@ -39,8 +40,84 @@
 
             });
         });
+
+        function formatOptions(data) {
+            if (data.loading) {
+                return 'Hledám…';
+            }
+
+            var $container = $(
+                "<div class='select2-result-repository clearfix'>" +
+                "<div class='select2-result-repository__avatar'><img src='" + data.imageUrl + "' /></div>" +
+                "<div class='select2-result-repository__meta'>" +
+                "<div class='select2-result-repository__title'>" + data.text +"</div>" +
+                "<div class='select2-result-repository__description'>" + data.description + "</div>" +
+                "<div class='select2-result-repository__statistics'>" +
+                "<div class='select2-result-repository__forks'><i>" + data.type + "</i> </div>" +
+                "</div>" +
+                "</div>" +
+                "</div>"
+            );
+
+            return $container;
+                //+ ' <small class="new-p new-p--gray new-p--small">(' + data.type + ')</small></div></div>');
+        }
     </script>
     
+    <style>
+        .select2-result-repository {
+            padding-top: 4px;
+            padding-bottom: 3px
+        }
+
+        .select2-result-repository__avatar {
+            float: left;
+            width: 60px;
+            margin-right: 10px
+        }
+
+            .select2-result-repository__avatar img {
+                width: 100%;
+                height: auto;
+                border-radius: 2px
+            }
+
+        .select2-result-repository__meta {
+            margin-left: 70px
+        }
+
+        .select2-result-repository__title {
+            color: black;
+            font-weight: 700;
+            word-wrap: break-word;
+            line-height: 1.1;
+            margin-bottom: 4px
+        }
+
+        .select2-result-repository__forks, .select2-result-repository__stargazers {
+            margin-right: 1em
+        }
+
+        .select2-result-repository__forks, .select2-result-repository__stargazers, .select2-result-repository__watchers {
+            display: inline-block;
+            color: #aaa;
+            font-size: 11px
+        }
+
+        .select2-result-repository__description {
+            font-size: 13px;
+            color: #777;
+            margin-top: 4px
+        }
+
+        .select2-results__option--highlighted .select2-result-repository__title {
+            color: white
+        }
+
+        .select2-results__option--highlighted .select2-result-repository__forks, .select2-results__option--highlighted .select2-result-repository__stargazers, .select2-results__option--highlighted .select2-result-repository__description, .select2-results__option--highlighted .select2-result-repository__watchers {
+            color: #c6dcef
+        }
+    </style>
 }
 
 @section breadcrumb

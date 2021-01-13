@@ -57,16 +57,19 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                     .Match(_match => _match
                                         .Field(_field => _field.FullName)
                                         .Query(modifQ)
+                                        .Operator(Operator.And)
                                     ),
                                     _boostExact => _boostExact
                                     .Match(_match => _match
                                         .Field("fullName.lower")
                                         .Query(modifQ)
+                                        .Operator(Operator.And)
                                     ),
                                     _boostAscii => _boostAscii
                                     .Match(_match => _match
                                         .Field("fullName.lowerascii")
                                         .Query(modifQ)
+                                        .Operator(Operator.And)
                                     )
                                 )
                             )
@@ -91,6 +94,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                             .Type(TextQueryType.MostFields)
                             .Fuzziness(Fuzziness.EditDistance(2))
                             .Query(modifQ)
+                            .Operator(Operator.And)
                             )
                         )
                         .TrackTotalHits(true)

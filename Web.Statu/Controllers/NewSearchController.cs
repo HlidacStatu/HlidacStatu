@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using FullTextSearch;
 using HlidacStatu.Lib;
 using System.Diagnostics;
+using HlidacStatu.Util;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -43,41 +44,11 @@ namespace HlidacStatu.Web.Controllers
 
         private Index<ResultData> BuildSearchIndex()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
+            var file = System.IO.File.ReadAllText(StaticData.App_Data_Path);
+
+            var results = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ResultData>>(file);
             
-            string sql = "select Jmeno, ICO from Firma where LEN(ico) = 8;";
-            var results = DirectDB.GetList<string, string>(sql)
-                .Select(f => new ResultData()
-                {
-                    id = $"ico:{f.Item2}",
-                    text = f.Item1
-                }).ToList();
-            stopWatch.Stop();
-            var firmyElapsed = stopWatch.Elapsed;
-
-            stopWatch.Restart();
-            using (DbEntities db = new DbEntities())
-            {
-                var politici = db.Osoba
-                    .Where(o => o.Status == (int)Osoba.StatusOsobyEnum.Politik).ToList();
-                    
-                var politiciResult = politici.Select(o => new ResultData()
-                {
-                    id = $"nameid:{o.NameId}",
-                    text = o.FullName(false)
-                });
-
-                results.AddRange(politiciResult);
-            }
-            stopWatch.Stop();
-
-            var osobyElapsed = stopWatch.Elapsed;
-
-            stopWatch.Restart();
             var index = new Index<ResultData>(results);
-            stopWatch.Stop();
-            var indexBuildElapsed = stopWatch.Elapsed;
 
             return index;
         }
@@ -87,6 +58,9 @@ namespace HlidacStatu.Web.Controllers
             public string id { get; set; }
             [FullTextSearch.Search]
             public string text { get; set; }
+            public string imageUrl { get; set; }
+            public string type { get; set; }
+            public string description { get; set; }
         }
     }
 }
