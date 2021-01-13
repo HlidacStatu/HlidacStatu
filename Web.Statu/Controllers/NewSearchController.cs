@@ -44,52 +44,11 @@ namespace HlidacStatu.Web.Controllers
 
         private Index<ResultData> BuildSearchIndex()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
+            var file = System.IO.File.ReadAllText(StaticData.App_Data_Path);
+
+            var results = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ResultData>>(file);
             
-            string sql = "select Jmeno, ICO from Firma where IsInRS = 1 AND LEN(ico) = 8;";
-            var results = DirectDB.GetList<string, string>(sql)
-                .Select(f => new ResultData()
-                {
-                    id = $"ico:{f.Item2}",
-                    text = f.Item1,
-                    type = "firma",
-                    description = "lorem ipsum",
-                    imageUrl = "https://www.hlidacstatu.cz/Content/img/Factory_Silhouette.png"
-                }).ToList();
-            stopWatch.Stop();
-            var firmyElapsed = stopWatch.Elapsed;
-
-            stopWatch.Restart();
-            using (DbEntities db = new DbEntities())
-            {
-                var politici = db.Osoba
-                    .Where(o => o.Status == (int)Osoba.StatusOsobyEnum.Politik).ToList();
-                    
-                var politiciResult = politici.Select(o => new ResultData()
-                {
-                    id = $"osobaid:{o.NameId}",
-                    text = o.FullName(false),
-                    type = "osoba",
-                    imageUrl = o.GetPhotoUrl(false),
-                    description = InfoFact.RenderInfoFacts(
-                        o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Summary).ToArray()
-                        , 3, takeSummary: true, shuffle: false, "", "{0}")
-                    //o.Events(e => e.Type != (int)OsobaEvent.Types.Sponzor && e.AddInfo != null)
-                    //    .Select(e => e.AddInfo)
-                    //    .FirstOrDefault() ?? "osoba"
-                });
-
-                results.AddRange(politiciResult);
-            }
-            stopWatch.Stop();
-
-            var osobyElapsed = stopWatch.Elapsed;
-
-            stopWatch.Restart();
             var index = new Index<ResultData>(results);
-            stopWatch.Stop();
-            var indexBuildElapsed = stopWatch.Elapsed;
 
             return index;
         }
