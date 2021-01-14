@@ -35,7 +35,7 @@ namespace HlidacStatu.Web.Controllers
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var searchResult = searchCache.Search(id, 6);
+            var searchResult = searchCache.Search(id, 5);
             sw.Stop();
 
 
@@ -44,7 +44,8 @@ namespace HlidacStatu.Web.Controllers
 
         private Index<ResultData> BuildSearchIndex()
         {
-            var file = System.IO.File.ReadAllText(StaticData.App_Data_Path);
+            var autocompleteFilePath = System.IO.Path.Combine(StaticData.App_Data_Path, "autocomplete.json");
+            var file = System.IO.File.ReadAllText(autocompleteFilePath);
 
             var results = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ResultData>>(file);
             
