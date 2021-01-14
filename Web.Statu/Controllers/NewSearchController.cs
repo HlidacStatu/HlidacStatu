@@ -35,7 +35,7 @@ namespace HlidacStatu.Web.Controllers
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var searchResult = searchCache.Search(id, 10);
+            var searchResult = searchCache.Search(id, 6);
             sw.Stop();
 
 

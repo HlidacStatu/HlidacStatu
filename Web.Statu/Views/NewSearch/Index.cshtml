@@ -10,6 +10,8 @@
 
     <script>
         $(document).ready(function () {
+            var menuOpened = false;
+
             $('.js-example-basic-multiple').select2({
                 minimumInputLength: 3,
                 tags: true,
@@ -39,13 +41,29 @@
                 $('#query-data').val(searchval);
 
             });
+
+            $('.js-example-basic-multiple').on("select2:open", function (e) {
+                menuOpened = true;
+            });
+            $('.js-example-basic-multiple').on("select2:close", function (e) {
+                menuOpened = false;
+            });
+
+            //on enter keypress
+            $('.select2-search__field').on('keydown', function (e) {
+                if (e.keyCode === 13 && menuOpened == false) {
+                    $("#search-input").submit();
+                }
+            });
         });
 
         function formatOptions(data) {
             if (data.loading) {
                 return 'Hledám…';
             }
-
+            if (typeof data.description === 'undefined') {
+                return data.text
+            }
             var $container = $(
                 "<div class='select2-result-repository clearfix'>" +
                 "<div class='select2-result-repository__avatar'><img src='" + data.imageUrl + "' /></div>" +
@@ -108,6 +126,10 @@
             font-size: 13px;
             color: #777;
             margin-top: 4px
+        }
+
+        ul.select2-results__options {
+            max-height: 500px !important;
         }
 
         .select2-results__option--highlighted .select2-result-repository__title {
