@@ -21,7 +21,7 @@ namespace HlidacStatu.Web.Controllers
 
         
         // Used for searching
-        public JsonResult Search(string id)
+        public JsonResult Search(string q)
         {
             
             Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<ResultData>> FullTextSearchCache =
@@ -35,7 +35,7 @@ namespace HlidacStatu.Web.Controllers
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var searchResult = searchCache.Search(id, 5);
+            var searchResult = searchCache.Search(q, 5);
             sw.Stop();
 
 

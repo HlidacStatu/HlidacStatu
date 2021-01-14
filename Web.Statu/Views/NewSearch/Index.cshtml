@@ -21,8 +21,15 @@
                 ajax: {
                     delay: 250,
                     url: function (params) {
-                        return '/newsearch/search/' + params.term;
+                        return '/newsearch/search/';// + params.term;
                     },
+                    //data: function (params) {
+                    //    var query = {
+                    //        search: encodeURIComponent(params.term),
+                    //        type: 'public'
+                    //    };
+                    //    return query;
+                    //},
                     processResults: function (data) {
                         // Transforms the top-level key of the response object from 'items' to 'results'
                         return {
