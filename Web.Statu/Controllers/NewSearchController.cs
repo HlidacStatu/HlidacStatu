@@ -25,7 +25,7 @@ namespace HlidacStatu.Web.Controllers
         {
             
             Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<ResultData>> FullTextSearchCache =
-                new Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<ResultData>>(TimeSpan.FromDays(1), "fcfs",
+                new Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<ResultData>>(TimeSpan.FromDays(7), "fcfs",
                 o =>
                 {
                     return BuildSearchIndex();

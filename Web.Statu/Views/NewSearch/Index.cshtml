@@ -19,17 +19,20 @@
                 placeholder: 'Zadejte dotaz',
                 //tokenSeparators: [' '],
                 ajax: {
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
                     delay: 250,
                     url: function (params) {
                         return '/newsearch/search/';// + params.term;
                     },
-                    //data: function (params) {
-                    //    var query = {
-                    //        search: encodeURIComponent(params.term),
-                    //        type: 'public'
-                    //    };
-                    //    return query;
-                    //},
+                    data: function (params) {
+                        var query = { q: params.term };
+                        return JSON.stringify(query);
+                    },
+                    params: { // extra parameters that will be passed to ajax
+                        contentType: "application/json; charset=utf-8",
+                    },
                     processResults: function (data) {
                         // Transforms the top-level key of the response object from 'items' to 'results'
                         return {
@@ -97,7 +100,7 @@
 
         .select2-result-repository__avatar {
             float: left;
-            width: 60px;
+            width: 45px;
             margin-right: 10px
         }
 
@@ -132,7 +135,11 @@
         .select2-result-repository__description {
             font-size: 13px;
             color: #777;
-            margin-top: 4px
+            margin-top: 4px;
+            /*max-height: 35px;*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         ul.select2-results__options {
