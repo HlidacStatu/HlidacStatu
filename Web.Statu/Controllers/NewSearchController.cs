@@ -59,7 +59,7 @@ namespace HlidacStatu.Web.Controllers
             public string id { get; set; }
             [FullTextSearch.Search]
             public string text { get; set; }
-            public string imageUrl { get; set; }
+            public string imageElement { get; set; }
             public string type { get; set; }
             public string description { get; set; }
         }

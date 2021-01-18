@@ -17,6 +17,11 @@
                 tags: true,
                 dataType: 'json',
                 placeholder: 'Zadejte dotaz',
+                language: {
+                    inputTooShort: function () {
+                        return 'Prosím, zadejte alespoň 3 znaky';
+                    }
+                },
                 //tokenSeparators: [' '],
                 ajax: {
                     type: 'POST',
@@ -72,11 +77,13 @@
                 return 'Hledám…';
             }
             if (typeof data.description === 'undefined') {
-                return data.text
+                data.imageElement = "<i class='fas fa-search'></i>";
+                data.description = "fulltextové vyhledávání";
+                data.type = "fulltext";
             }
             var $container = $(
                 "<div class='select2-result-repository clearfix'>" +
-                "<div class='select2-result-repository__avatar'><img src='" + data.imageUrl + "' /></div>" +
+                "<div class='select2-result-repository__avatar'>" + data.imageElement + "</div>" +
                 "<div class='select2-result-repository__meta'>" +
                 "<div class='select2-result-repository__title'>" + data.text +"</div>" +
                 "<div class='select2-result-repository__description'>" + data.description + "</div>" +
@@ -101,9 +108,16 @@
         .select2-result-repository__avatar {
             float: left;
             width: 45px;
-            margin-right: 10px
+            margin-right: 10px;
+            font-size: 45px;
+            color: #CCCCCC;
+            position: relative;
         }
+            .select2-result-repository__avatar > * {
+                position: absolute;
+                top: 0;
 
+            }
             .select2-result-repository__avatar img {
                 width: 100%;
                 height: auto;
@@ -165,7 +179,7 @@
 }
 
 <h1>Nové hledání</h1>
-<p>Tato stránka zatím funguje pro testování nové funkcionality pro našeptávání.</p>
+<p>Tato stránka zatím funguje pro testování nové funkcionality pro našeptávání.<i class="fas fa-search"></i></p>
 
 <div>
 
