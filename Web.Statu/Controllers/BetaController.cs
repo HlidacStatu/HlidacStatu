@@ -12,16 +12,21 @@ using HlidacStatu.Util;
 
 namespace HlidacStatu.Web.Controllers
 {
-    public class NewSearchController : GenericAuthController
+    public class BetaController : GenericAuthController
     {
         public ActionResult Index()
         {
             return View();
         }
 
-        
+        public ActionResult Search()
+        {
+            return View();
+        }
+
+
         // Used for searching
-        public JsonResult Search(string q)
+        public JsonResult Autocomplete(string q)
         {
             Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>> FullTextSearchCache =
                 new Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>>(TimeSpan.FromDays(7), "fcfs",

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "New search";
+    ViewBag.Title = "Beta search";
 }
 
 
@@ -29,7 +29,7 @@
                     dataType: 'json',
                     delay: 250,
                     url: function (params) {
-                        return '/newsearch/search/';// + params.term;
+                        return '/beta/autocomplete/';// + params.term;
                     },
                     data: function (params) {
                         var query = { q: params.term };
@@ -183,18 +183,13 @@
     </ol>
 }
 
-<h1>Nové hledání</h1>
-<p>Tato stránka zatím funguje pro testování nové funkcionality pro našeptávání.<i class="fas fa-search"></i></p>
+<h1>Našeptávání hledání - beta</h1>
 
 <div>
-
-    <form id="search-input">
+    <form id="search-input" action="/hledat" method="get">
         <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
         </select>
         <input id="query-data" name="q" type="hidden" />
-        <button formaction="">hledat</button>
+        <button>hledat</button>
     </form>
-
-
-
 </div>

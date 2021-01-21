@@ -99,9 +99,9 @@ namespace HlidacStatu.Web
             );
 
             routes.MapRoute(
-                name: "NewSearchController",
-                url: "NewSearch/{action}/{id}",
-                defaults: new { controller = "NewSearch", action = "Index", id = UrlParameter.Optional }
+                name: "BetaController",
+                url: "Beta/{action}/{id}",
+                defaults: new { controller = "Beta", action = "Index", id = UrlParameter.Optional }
             );
 
 
