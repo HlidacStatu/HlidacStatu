@@ -5,14 +5,16 @@
 
 @section scripts
 {
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <link href="/scripts/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/scripts/select2-bootstrap.min.css">
+    <script src="/scripts/select2.full.min.js"></script>
 
     <script>
         $(document).ready(function () {
             var menuOpened = false;
 
-            $('.js-example-basic-multiple').select2({
+            $('#autocomsearch').select2({
+                theme: "bootstrap",
                 minimumInputLength: 3,
                 tags: true,
                 dataType: 'json',
@@ -54,17 +56,17 @@
 
             //submit behaviour
             $("#search-input").on('submit', function (e) {
-                var searchval = $('.js-example-basic-multiple').val().join(' ');
+                var searchval = $('#autocomsearch').val().join(' ');
 
-                $('.js-example-basic-multiple').val("");
+                $('#autocomsearch').val("");
                 $('#query-data').val(searchval);
 
             });
 
-            $('.js-example-basic-multiple').on("select2:open", function (e) {
+            $('#autocomsearch').on("select2:open", function (e) {
                 menuOpened = true;
             });
-            $('.js-example-basic-multiple').on("select2:close", function (e) {
+            $('#autocomsearch').on("select2:close", function (e) {
                 menuOpened = false;
             });
 
@@ -174,6 +176,10 @@
             color: #c6dcef
         }
 
+        .select2.select2-container.select2-container--bootstrap
+        {
+            top: 5px;
+        }
         .search_button_new {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
@@ -192,7 +198,6 @@
             letter-spacing: 1px;
             transition: .3s;
         }
-
     </style>
 }
 
@@ -207,22 +212,34 @@
 <h1>Našeptávání hledání - beta</h1>
 
 <div>
-    <form id="search-input" action="/hledat" method="get">
-        <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
-        </select>
-        <input id="query-data" name="q" type="hidden" />
-        <button class="search_button_new">hledat</button>
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+
+                <form id="search-input" action="/hledat" method="get">
+                    <div class="select2-wrapper">
+                        <div class="input-group input-group-lg">
+                            <select class="form-control input-lg select2-multiple" id="autocomsearch" name="query" multiple="multiple"></select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" data-select2-open="autocomsearch" style="left:-7px"> hledat</button>
+                            </span>
+                            <input id="query-data" name="q" type="hidden" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <br />
 <br />
 <div>
     <div class="col-md-5">
-    <p>Pomozte nám zlepšit novou funkci! Napadá vás, co vylepšit a změnit? Budeme rádi za všechny vaše připomínky. V případě delších podnětů můžete psát také na podpora@hlidacstatu.cz</p>
+        <p>Pomozte nám zlepšit novou funkci! Napadá vás, co vylepšit a změnit? Budeme rádi za všechny vaše připomínky. V případě delších podnětů můžete psát také na podpora@hlidacstatu.cz</p>
 
     </div>
     <div class="col-md-12">
-    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
+        @WebUtil.FeedbackModal("Poslat opravu či připomínku")
 
     </div>
 
