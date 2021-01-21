@@ -55,7 +55,7 @@
             //submit behaviour
             $("#search-input").on('submit', function (e) {
                 var searchval = $('.js-example-basic-multiple').val().join(' ');
-                
+
                 $('.js-example-basic-multiple').val("");
                 $('#query-data').val(searchval);
 
@@ -90,7 +90,7 @@
                 "<div class='select2-result-repository clearfix'>" +
                 "<div class='select2-result-repository__avatar'>" + data.ImageElement + "</div>" +
                 "<div class='select2-result-repository__meta'>" +
-                "<div class='select2-result-repository__title'>" + data.Text +"</div>" +
+                "<div class='select2-result-repository__title'>" + data.Text + "</div>" +
                 "<div class='select2-result-repository__description'>" + data.Description + "</div>" +
                 "<div class='select2-result-repository__statistics'>" +
                 "<div class='select2-result-repository__forks'><i>" + data.Type + "</i> </div>" +
@@ -100,10 +100,10 @@
             );
 
             return $container;
-                //+ ' <small class="new-p new-p--gray new-p--small">(' + data.type + ')</small></div></div>');
+            //+ ' <small class="new-p new-p--gray new-p--small">(' + data.type + ')</small></div></div>');
         }
     </script>
-    
+
     <style>
         .select2-result-repository {
             padding-top: 4px;
@@ -118,11 +118,12 @@
             color: #CCCCCC;
             position: relative;
         }
+
             .select2-result-repository__avatar > * {
                 position: absolute;
                 top: 0;
-
             }
+
             .select2-result-repository__avatar img {
                 width: 100%;
                 height: auto;
@@ -192,4 +193,17 @@
         <input id="query-data" name="q" type="hidden" />
         <button>hledat</button>
     </form>
+</div>
+<br />
+<br />
+<div>
+    <div class="col-md-5">
+    <p>Pomozte nám zlepšit novou funkci! Napadá vás, co vylepšit a změnit? Budeme rádi za všechny vaše připomínky. V případě delších podnětů můžete psát také na podpora@hlidacstatu.cz</p>
+
+    </div>
+    <div class="col-md-12">
+    @WebUtil.FeedbackModal("Poslat opravu či připomínku")
+
+    </div>
+
 </div>
