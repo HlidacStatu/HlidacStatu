@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "New search";
+    ViewBag.Title = "Beta search";
 }
 
 
@@ -17,6 +17,11 @@
                 tags: true,
                 dataType: 'json',
                 placeholder: 'Zadejte dotaz',
+                language: {
+                    inputTooShort: function () {
+                        return 'Prosím, zadejte alespoň 3 znaky';
+                    }
+                },
                 //tokenSeparators: [' '],
                 ajax: {
                     type: 'POST',
@@ -24,7 +29,7 @@
                     dataType: 'json',
                     delay: 250,
                     url: function (params) {
-                        return '/newsearch/search/';// + params.term;
+                        return '/beta/autocomplete/';// + params.term;
                     },
                     data: function (params) {
                         var query = { q: params.term };
@@ -36,7 +41,11 @@
                     processResults: function (data) {
                         // Transforms the top-level key of the response object from 'items' to 'results'
                         return {
-                            results: data
+                            results: $.map(data, function (obj) {
+                                obj.id = obj.id || obj.Id;
+                                obj.text = obj.text || obj.Text;
+                                return obj;
+                            })
                         };
                     }
                 },
@@ -71,17 +80,20 @@
             if (data.loading) {
                 return 'Hledám…';
             }
-            if (typeof data.description === 'undefined') {
-                return data.text
+            if (typeof data.Description === 'undefined') {
+                data.ImageElement = "<i class='fas fa-search'></i>";
+                data.Description = "fulltextové vyhledávání";
+                data.Type = "fulltext";
+                data.Text = data.text;
             }
             var $container = $(
                 "<div class='select2-result-repository clearfix'>" +
-                "<div class='select2-result-repository__avatar'><img src='" + data.imageUrl + "' /></div>" +
+                "<div class='select2-result-repository__avatar'>" + data.ImageElement + "</div>" +
                 "<div class='select2-result-repository__meta'>" +
-                "<div class='select2-result-repository__title'>" + data.text +"</div>" +
-                "<div class='select2-result-repository__description'>" + data.description + "</div>" +
+                "<div class='select2-result-repository__title'>" + data.Text +"</div>" +
+                "<div class='select2-result-repository__description'>" + data.Description + "</div>" +
                 "<div class='select2-result-repository__statistics'>" +
-                "<div class='select2-result-repository__forks'><i>" + data.type + "</i> </div>" +
+                "<div class='select2-result-repository__forks'><i>" + data.Type + "</i> </div>" +
                 "</div>" +
                 "</div>" +
                 "</div>"
@@ -101,9 +113,16 @@
         .select2-result-repository__avatar {
             float: left;
             width: 45px;
-            margin-right: 10px
+            margin-right: 10px;
+            font-size: 45px;
+            color: #CCCCCC;
+            position: relative;
         }
+            .select2-result-repository__avatar > * {
+                position: absolute;
+                top: 0;
 
+            }
             .select2-result-repository__avatar img {
                 width: 100%;
                 height: auto;
@@ -164,18 +183,13 @@
     </ol>
 }
 
-<h1>Nové hledání</h1>
-<p>Tato stránka zatím funguje pro testování nové funkcionality pro našeptávání.</p>
+<h1>Našeptávání hledání - beta</h1>
 
 <div>
-
-    <form id="search-input">
+    <form id="search-input" action="/hledat" method="get">
         <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
         </select>
         <input id="query-data" name="q" type="hidden" />
-        <button formaction="">hledat</button>
+        <button>hledat</button>
     </form>
-
-
-
 </div>
