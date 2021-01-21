@@ -173,6 +173,44 @@
         .select2-results__option--highlighted .select2-result-repository__forks, .select2-results__option--highlighted .select2-result-repository__stargazers, .select2-results__option--highlighted .select2-result-repository__description, .select2-results__option--highlighted .select2-result-repository__watchers {
             color: #c6dcef
         }
+
+        .search_button_new {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            line-height: 54px;
+            margin: 0;
+            color: #fff;
+            border-color: #0074e4;
+            background-color: #0074e4;
+            white-space: nowrap;
+            padding: 0 40px;
+            border-radius: 4px;
+            border: 1px solid #e0e6ed;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: .3s;
+        }
+
+        #search-input > span > span.selection > span > span > input.select2-search__field {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            -webkit-box-flex: 1;
+            flex-grow: 1;
+            width: auto;
+            max-width: none;
+            height: 56px;
+            border: none;
+            color: #28313b;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24px;
+            padding: 11px 16px;
+            border-radius: 4px;
+            box-shadow: none;
+            position: relative;
+        }
     </style>
 }
 
@@ -191,7 +229,7 @@
         <select class="js-example-basic-multiple" name="query" multiple="multiple" style="width: 75%">
         </select>
         <input id="query-data" name="q" type="hidden" />
-        <button>hledat</button>
+        <button class="search_button_new">hledat</button>
     </form>
 </div>
 <br />
