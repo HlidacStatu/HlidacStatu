@@ -624,6 +624,7 @@
     <Compile Include="Models\Apiv2\FirmaDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDetailDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDTO.cs" />
+    <Compile Include="Models\Apiv2\SocialNetworkDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaEventDTO.cs" />
     <Compile Include="Models\Apiv2\SearchResultDTO.cs" />
     <Compile Include="Models\DataViewModels.cs" />
