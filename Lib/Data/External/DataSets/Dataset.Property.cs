@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                     return "datum";
                 if (this.Type == typeof(string)
                     )
-                    return "datum";
+                    return "text";
                 if (this.Type == typeof(Nullable<bool>)
                     || this.Type == typeof(bool)
                     )
