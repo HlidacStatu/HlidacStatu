@@ -3,6 +3,10 @@ using HlidacStatu.Web.Models.Apiv2;
 using System.Web.Http;
 using HlidacStatu.Lib.Data;
 using HlidacStatu.Web.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -38,6 +42,46 @@ namespace HlidacStatu.Web.Controllers
 
             return OsobaDetail;
         }
+
+        [AuthorizeAndAudit]
+        [HttpGet, Route("hledat")]
+        public List<OsobaDTO> Search([FromUri] string dotaz = null, [FromUri] int? strana = null)
+        {
+            if (string.IsNullOrEmpty(dotaz))
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Chybí query."));
+            }
+
+            if (strana is null || strana < 1)
+                strana = 1;
+            var osoby = Osoba.Search.SimpleSearch(dotaz, strana.Value, 30, Osoba.Search.OrderResult.Relevance);
+
+            var result = osoby.Results.Select(o => new OsobaDTO(o)).ToList();
+
+            return result;
+        }
+
+        // /osoby/social?typ=instagram&typ=twitter
+        [AuthorizeAndAudit]
+        [HttpGet, Route("social")]
+        public List<OsobaSocialDTO> Social([FromUri] OsobaEvent.SocialNetwork[] typ)
+        {
+
+            var socials = (typ is null || typ.Length == 0)
+                ? Enum.GetNames(typeof(OsobaEvent.SocialNetwork))
+                : typ.Select(t => t.ToString("G"));
+
+            Expression<Func<OsobaEvent, bool>> socialNetworkFilter = e =>
+                e.Type == (int)OsobaEvent.Types.SocialniSite
+                && socials.Contains(e.Organizace);
+
+            var osobaSocialDTOs = Osoba.GetByEvent(socialNetworkFilter)
+                .Select(o => new OsobaSocialDTO(o, socialNetworkFilter))
+                .ToList();
+
+            return osobaSocialDTOs;
+        }
+
 
         //todo: replace with better function (after we load people to ES)
         // /api/v2/osoby/?jmeno=andrej&prijmeni=babis&narozen=1963-08-02

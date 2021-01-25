@@ -623,6 +623,7 @@
     <Compile Include="Models\Apiv2\ErrorMessage.cs" />
     <Compile Include="Models\Apiv2\FirmaDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDetailDTO.cs" />
+    <Compile Include="Models\Apiv2\OsobaSocialDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaDTO.cs" />
     <Compile Include="Models\Apiv2\SocialNetworkDTO.cs" />
     <Compile Include="Models\Apiv2\OsobaEventDTO.cs" />

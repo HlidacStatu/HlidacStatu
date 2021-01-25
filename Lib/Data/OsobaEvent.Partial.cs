@@ -8,6 +8,8 @@ using Devmasters;
 using Devmasters.Enums;
 
 using HlidacStatu.Util;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -63,6 +65,17 @@ namespace HlidacStatu.Lib.Data
             SocialniSite = 12,
             [NiceDisplayName("Centrální registr oznámení")]
             CentralniRegistrOznameni = 13
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum SocialNetwork
+        {
+            Twitter,
+            Facebook_page,
+            Facebook_profile,
+            Instagram,
+            www,
+            Youtube
         }
 
         [Flags]

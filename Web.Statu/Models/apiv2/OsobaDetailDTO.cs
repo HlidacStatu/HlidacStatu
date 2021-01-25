@@ -48,11 +48,8 @@ namespace HlidacStatu.Web.Models.Apiv2
                 }).ToList();
 
             this.SocialniSite = o.NoFilteredEvents(ev => ev.Type == (int)OsobaEvent.Types.SocialniSite)
-                .Select(ev => new SocialNetworkDTO()
-                {
-                    Id = ev.AddInfo,
-                    Type = ev.Organizace
-                }).ToList();
+                .Select(ev => new SocialNetworkDTO(ev))
+                .ToList();
         }
         public string TitulPred { get; set; }
         public string Jmeno { get; set; }

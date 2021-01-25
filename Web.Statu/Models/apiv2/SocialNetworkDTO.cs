@@ -1,37 +1,41 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Data;
+using System;
 
 namespace HlidacStatu.Web.Models.Apiv2
 {
     public class SocialNetworkDTO
     {
-        private string _type;
-        public string Type 
+        public SocialNetworkDTO(OsobaEvent osobaEvent)
         {
-            get => _type;
-            set => _type = value.Trim().ToLower();
+            this.Id = osobaEvent.AddInfo;
+            this.Type = osobaEvent.Organizace;
         }
+
+        public string Type { get; set; }
         public string Id { get; set; }
         public string Url
         {
             get
             {
-                switch (this.Type)
+                if(Enum.TryParse<OsobaEvent.SocialNetwork>(Type, out var socialNetwork))
                 {
-                    case "twitter":
-                        return "https://twitter.com/" + Id;
-                    case "facebook_page":
-                        return "https://www.facebook.com/" + Id;
-                    case "facebook_profile":
-                        return "https://www.facebook.com/" + Id;
-                    case "facebook":
-                        return "https://www.facebook.com/" + Id;
-                    case "instagram":
-                        return "https://twitter.com/" + Id;
-                    case "www":
-                        return Id;
-                    default:
-                        return "";
+                    switch (socialNetwork)
+                    {
+                        case OsobaEvent.SocialNetwork.Twitter:
+                            return "https://twitter.com/" + Id;
+                        case OsobaEvent.SocialNetwork.Facebook_page:
+                            return "https://www.facebook.com/" + Id;
+                        case OsobaEvent.SocialNetwork.Facebook_profile:
+                            return "https://www.facebook.com/" + Id;
+                        case OsobaEvent.SocialNetwork.Instagram:
+                            return "https://www.instagram.com/" + Id;
+                        case OsobaEvent.SocialNetwork.www:
+                            return Id;
+                        default:
+                            return "";
+                    }
                 }
+                return "";
             }
         }
     }
