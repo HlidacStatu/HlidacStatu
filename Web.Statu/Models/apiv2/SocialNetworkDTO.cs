@@ -31,6 +31,8 @@ namespace HlidacStatu.Web.Models.Apiv2
                             return "https://www.instagram.com/" + Id;
                         case OsobaEvent.SocialNetwork.www:
                             return Id;
+                        case OsobaEvent.SocialNetwork.Youtube:
+                            return Id;
                         default:
                             return "";
                     }
