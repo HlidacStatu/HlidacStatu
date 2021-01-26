@@ -642,7 +642,7 @@ namespace HlidacStatu.Lib.Data
             if (this.JsemStatniFirma())
                 return false;
             return StaticData.SponzorujiciFirmy_Vsechny.Get()
-                .Where(m => m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor
+                .Where(m => m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor //zbytečná podmínka na sponzora, když už je ve staticData
                             && m.DatumOd < date)
                 .Any();
 

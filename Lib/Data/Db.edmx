@@ -82,23 +82,6 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
         </EntityType>
-        <EntityType Name="FirmaEvent">
-          <Key>
-            <PropertyRef Name="pk" />
-          </Key>
-          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ICO" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="200" />
-          <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="DatumOd" Type="date" />
-          <Property Name="DatumDo" Type="date" />
-          <Property Name="Type" Type="int" Nullable="false" />
-          <Property Name="AddInfo" Type="nvarchar(max)" />
-          <Property Name="AddInfoNum" Type="decimal" Precision="18" Scale="9" />
-          <Property Name="Created" Type="datetime" Nullable="false" />
-          <Property Name="Zdroj" Type="nvarchar(max)" />
-          <Property Name="Note" Type="nvarchar(max)" />
-        </EntityType>
         <EntityType Name="FirmaHint">
           <Key>
             <PropertyRef Name="Ico" />
@@ -462,7 +445,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="ClassificationOverride" EntityType="Self.ClassificationOverride" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatoveSchranky" EntityType="Self.DatoveSchranky" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EventType" EntityType="Self.EventType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FirmaEvent" EntityType="Self.FirmaEvent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaHint" EntityType="Self.FirmaHint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FirmaVazby" EntityType="Self.FirmaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceItems" EntityType="Self.InvoiceItems" Schema="dbo" store:Type="Tables" />
@@ -582,7 +564,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="Osoba" EntityType="FirmyModel.Osoba" />
           <EntitySet Name="OsobaExternalId" EntityType="FirmyModel.OsobaExternalId" />
           <EntitySet Name="OsobaVazby" EntityType="FirmyModel.OsobaVazby" />
-          <EntitySet Name="FirmaEvent" EntityType="FirmyModel.FirmaEvent" />
           <EntitySet Name="InvoiceItems" EntityType="FirmyModel.InvoiceItems" />
           <EntitySet Name="Invoices" EntityType="FirmyModel.Invoices" />
           <AssociationSet Name="FK_InvoiceItems_Invoices" Association="FirmyModel.FK_InvoiceItems_Invoices">
@@ -783,23 +764,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <Property Name="VazbakOsobaId" Type="Int32" />
           <Property Name="RucniZapis" Type="Int32" />
           <Property Name="Poznamka" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="FirmaEvent">
-          <Key>
-            <PropertyRef Name="pk" />
-          </Key>
-          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DatumOd" Type="DateTime" Precision="0" />
-          <Property Name="DatumDo" Type="DateTime" Precision="0" />
-          <Property Name="Type" Type="Int32" Nullable="false" />
-          <Property Name="AddInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AddInfoNum" Type="Decimal" Precision="18" Scale="9" />
-          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="InvoiceItems">
           <Key>
@@ -1202,24 +1166,6 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
                 <ScalarProperty Name="TypVazby" ColumnName="TypVazby" />
                 <ScalarProperty Name="VazbakICO" ColumnName="VazbakICO" />
                 <ScalarProperty Name="OsobaID" ColumnName="OsobaID" />
-                <ScalarProperty Name="pk" ColumnName="pk" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FirmaEvent">
-            <EntityTypeMapping TypeName="FirmyModel.FirmaEvent">
-              <MappingFragment StoreEntitySet="FirmaEvent">
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="AddInfoNum" ColumnName="AddInfoNum" />
-                <ScalarProperty Name="AddInfo" ColumnName="AddInfo" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="DatumDo" ColumnName="DatumDo" />
-                <ScalarProperty Name="DatumOd" ColumnName="DatumOd" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ICO" ColumnName="ICO" />
                 <ScalarProperty Name="pk" ColumnName="pk" />
               </MappingFragment>
             </EntityTypeMapping>

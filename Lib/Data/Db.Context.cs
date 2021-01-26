@@ -38,7 +38,6 @@ namespace HlidacStatu.Lib.Data
         public virtual DbSet<Osoba> Osoba { get; set; }
         public virtual DbSet<OsobaExternalId> OsobaExternalId { get; set; }
         public virtual DbSet<OsobaVazby> OsobaVazby { get; set; }
-        public virtual DbSet<FirmaEvent> FirmaEvent { get; set; }
         public virtual DbSet<InvoiceItems> InvoiceItems { get; set; }
         public virtual DbSet<Invoices> Invoices { get; set; }
         public virtual DbSet<NespolehlivyPlatceDPH> NespolehlivyPlatceDPH { get; set; }
