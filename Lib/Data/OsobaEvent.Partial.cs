@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Devmasters;
@@ -176,79 +177,115 @@ namespace HlidacStatu.Lib.Data
 
         public static OsobaEvent CreateOrUpdate(OsobaEvent osobaEvent, string user)
         {
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            using (DbEntities db = new DbEntities())
             {
-                // create
-                if (osobaEvent.pk == 0 && (osobaEvent.OsobaId > 0 || osobaEvent.Ico.Length > 0))
-                {
-                    osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
-                    osobaEvent.Created = DateTime.Now;
-
-                    // check if event exists so we are not creating duplicities...
-                    var oe = db.OsobaEvent
-                        .Where(ev =>
-                            ev.OsobaId == osobaEvent.OsobaId
-                            && ev.AddInfo == osobaEvent.AddInfo
-                            && ev.DatumOd == osobaEvent.DatumOd
-                            && ev.Type == osobaEvent.Type
-                            && ev.Organizace == osobaEvent.Organizace
-                            && ev.Ico == osobaEvent.Ico)
-                        .FirstOrDefault();
-
-                    if (oe != null)
-                        return oe;
-
-                    db.OsobaEvent.Add(osobaEvent);
-                    db.SaveChanges();
-                    if (osobaEvent.OsobaId > 0)
-                    {
-                        Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
-                    }
-                    Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
-                    return osobaEvent;
-                }
-
-                // update
+                OsobaEvent eventToUpdate = null;
+                // známe PK
                 if (osobaEvent.pk > 0)
                 {
-                    var eventToUpdate = db.OsobaEvent
-                    .Where(ev =>
-                        ev.pk == osobaEvent.pk
-                    ).FirstOrDefault();
+                    eventToUpdate = db.OsobaEvent
+                        .Where(ev =>
+                            ev.pk == osobaEvent.pk
+                        )
+                        .FirstOrDefault();
 
-                    var eventOriginal = eventToUpdate.ShallowCopy();
-
-                    if (eventToUpdate != null)
-                    {
-                        eventToUpdate.DatumOd = osobaEvent.DatumOd;
-                        eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                        eventToUpdate.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
-                        eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
-                        eventToUpdate.AddInfo = osobaEvent.AddInfo;
-                        eventToUpdate.Title = osobaEvent.Title;
-                        eventToUpdate.Type = osobaEvent.Type;
-                        eventToUpdate.Zdroj = osobaEvent.Zdroj;
-                        eventToUpdate.Status = osobaEvent.Status;
-                        eventToUpdate.CEO = osobaEvent.CEO;
-                        
-                        if(!string.IsNullOrWhiteSpace(osobaEvent.Ico))
-                            eventToUpdate.Ico = osobaEvent.Ico;
-                        if(osobaEvent.OsobaId > 0)
-                            eventToUpdate.OsobaId = osobaEvent.OsobaId;
-
-                        eventToUpdate.Created = DateTime.Now;
-
-                        db.SaveChanges();
-                        if (osobaEvent.OsobaId > 0)
-                        {
-                            Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
-                        }
-                        Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
-                        return eventToUpdate;
-                    }
+                    if(eventToUpdate != null)
+                        return UpdateEvent(eventToUpdate, osobaEvent, user, db);
                 }
+
+                eventToUpdate = GetDuplicate(osobaEvent, db);
+
+                if(eventToUpdate != null)
+                {
+                    return UpdateEvent(eventToUpdate, osobaEvent, user, db);
+                }
+
+                return CreateEvent(osobaEvent, user, db);
             }
+        }
+
+        private static OsobaEvent GetDuplicate(OsobaEvent osobaEvent, DbEntities db)
+        {
+            if (osobaEvent.Type == (int)OsobaEvent.Types.Sponzor)
+            {
+                // u sponzoringu nekontrolujeme organizaci, ani rok, protože to není historicky konzistentní
+                return db.OsobaEvent
+                    .Where(ev =>
+                        ev.OsobaId == osobaEvent.OsobaId
+                        && ev.Ico == osobaEvent.Ico
+                        && ev.Type == osobaEvent.Type
+                        && ev.AddInfo == osobaEvent.AddInfo
+                        && ev.AddInfoNum == osobaEvent.AddInfoNum
+                        && ev.DatumOd.HasValue
+                        && ev.DatumOd.Value.Year == osobaEvent.DatumOd.Value.Year)
+                    .FirstOrDefault();
+            }
+            
+            return db.OsobaEvent
+                .Where(ev =>
+                    ev.OsobaId == osobaEvent.OsobaId
+                    && ev.Ico == osobaEvent.Ico
+                    && ev.AddInfo == osobaEvent.AddInfo
+                    && ev.AddInfoNum == osobaEvent.AddInfoNum
+                    && ev.DatumOd == osobaEvent.DatumOd
+                    && ev.Type == osobaEvent.Type
+                    && ev.Organizace == osobaEvent.Organizace)
+                .FirstOrDefault();
+        }
+
+        private static OsobaEvent CreateEvent(OsobaEvent osobaEvent, string user, DbEntities db)
+        {
+            if (osobaEvent.OsobaId == 0 && string.IsNullOrWhiteSpace(osobaEvent.Ico))
+                throw new Exception("Cant attach event to a person or to a company since their reference is empty");
+
+            osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
+            osobaEvent.Created = DateTime.Now;
+            db.OsobaEvent.Add(osobaEvent);
+            db.SaveChanges();
+            if (osobaEvent.OsobaId > 0)
+            {
+                Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
+            }
+            Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
             return osobaEvent;
+            
+        }
+
+        private static OsobaEvent UpdateEvent(OsobaEvent eventToUpdate, OsobaEvent osobaEvent, string user, DbEntities db)
+        {
+            if (eventToUpdate is null)
+                throw new ArgumentNullException(nameof(eventToUpdate), "Argument can't be null");
+            if (osobaEvent is null)
+                throw new ArgumentNullException(nameof(osobaEvent), "Argument can't be null");
+            if (db is null)
+                throw new ArgumentNullException(nameof(db), "Argument can't be null");
+
+            var eventOriginal = eventToUpdate.ShallowCopy();
+
+            if (!string.IsNullOrWhiteSpace(osobaEvent.Ico))
+                eventToUpdate.Ico = osobaEvent.Ico;
+            if (osobaEvent.OsobaId > 0)
+                eventToUpdate.OsobaId = osobaEvent.OsobaId;
+            
+            eventToUpdate.DatumOd = osobaEvent.DatumOd;
+            eventToUpdate.DatumDo = osobaEvent.DatumDo;
+            eventToUpdate.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
+            eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
+            eventToUpdate.AddInfo = osobaEvent.AddInfo;
+            eventToUpdate.Title = osobaEvent.Title;
+            eventToUpdate.Type = osobaEvent.Type;
+            eventToUpdate.Zdroj = osobaEvent.Zdroj;
+            eventToUpdate.Status = osobaEvent.Status;
+            eventToUpdate.CEO = osobaEvent.CEO;
+            eventToUpdate.Created = DateTime.Now;
+
+            db.SaveChanges();
+            if (osobaEvent.OsobaId > 0)
+            {
+                Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
+            }
+            Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
+            return eventToUpdate;
         }
 
         public OsobaEvent ShallowCopy()

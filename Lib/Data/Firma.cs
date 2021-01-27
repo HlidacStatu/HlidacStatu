@@ -642,7 +642,7 @@ namespace HlidacStatu.Lib.Data
             if (this.JsemStatniFirma())
                 return false;
             return StaticData.SponzorujiciFirmy_Vsechny.Get()
-                .Where(m => m.ICO == this.ICO && m.Type == (int)FirmaEvent.Types.Sponzor //zbytečná podmínka na sponzora, když už je ve staticData
+                .Where(m => m.Ico == this.ICO && m.Type == (int)OsobaEvent.Types.Sponzor //zbytečná podmínka na sponzora, když už je ve staticData
                             && m.DatumOd < date)
                 .Any();
 
@@ -651,23 +651,23 @@ namespace HlidacStatu.Lib.Data
         public bool IsSponzor()
         {
             return this.Events(m =>
-                m.Type == (int)FirmaEvent.Types.Sponzor
+                m.Type == (int)OsobaEvent.Types.Sponzor
             ).Any();
         }
 
-        public IEnumerable<FirmaEvent> Events()
+        public IEnumerable<OsobaEvent> Events()
         {
             return Events(m => true);
         }
 
-        public IEnumerable<FirmaEvent> Events(Expression<Func<FirmaEvent, bool>> predicate)
+        public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             using (DbEntities db = new DbEntities())
             {
-                return db.FirmaEvent
+                return db.OsobaEvent
                     .AsNoTracking()
                     .Where(predicate)
-                    .Where(m => m.ICO == this.ICO)
+                    .Where(m => m.Ico == this.ICO)
                     .ToArray();
             }
         }
@@ -686,17 +686,17 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public FirmaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
+        public OsobaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
         {
             strana = ParseTools.NormalizaceStranaShortName(strana);
-            var t = FirmaEvent.Types.Sponzor;
+            var t = OsobaEvent.Types.Sponzor;
             if (zdroj?.Contains("https://www.hlidacstatu.cz/ucty/transakce/") == true)
-                t = FirmaEvent.Types.SponzorZuctu;
+                return null; // sponzoři z účtu byly kvůli chybám zrušeny
 
-            FirmaEvent oe = new FirmaEvent(this.ICO, string.Format("Sponzor {0}", strana), "", t);
+            OsobaEvent oe = new OsobaEvent(this.ICO, string.Format("Sponzor {0}", strana), "", t);
             oe.AddInfoNum = castka;
             oe.Zdroj = zdroj;
-            oe.Description = stranaico;
+            oe.Note = stranaico;
             oe.SetYearInterval(rok);
             oe.AddInfo = strana;
             oe.Created = DateTime.Now;
@@ -704,7 +704,7 @@ namespace HlidacStatu.Lib.Data
 
         }
 
-        public FirmaEvent AddOrUpdateEvent(FirmaEvent ev, string user, bool rewrite = false, bool checkDuplicates = true)
+        public OsobaEvent AddOrUpdateEvent(OsobaEvent ev, string user, bool rewrite = false, bool checkDuplicates = true)
         {
             if (ev == null)
                 return null;
@@ -717,19 +717,19 @@ namespace HlidacStatu.Lib.Data
             //check duplicates
             using (DbEntities db = new Data.DbEntities())
             {
-                FirmaEvent exists = null;
+                OsobaEvent exists = null;
                 if (ev.pk > 0 && checkDuplicates)
-                    exists = db.FirmaEvent
+                    exists = db.OsobaEvent
                                 .AsNoTracking()
                                 .FirstOrDefault(m =>
                                     m.pk == ev.pk
                                 );
                 else if (checkDuplicates)
                 {
-                    exists = db.FirmaEvent
+                    exists = db.OsobaEvent
                                 .AsNoTracking()
                                 .FirstOrDefault(m =>
-                                        m.ICO == this.ICO
+                                        m.Ico == this.ICO
                                         && m.Type == ev.Type
                                         && m.AddInfo == ev.AddInfo
                                         && m.AddInfoNum == ev.AddInfoNum
@@ -742,25 +742,25 @@ namespace HlidacStatu.Lib.Data
                 }
                 if (exists != null && rewrite)
                 {
-                    db.FirmaEvent.Remove(exists);
-                    Audit.Add<FirmaEvent>(Audit.Operations.Delete, user, exists, null);
+                    db.OsobaEvent.Remove(exists);
+                    Audit.Add<OsobaEvent>(Audit.Operations.Delete, user, exists, null);
                     db.SaveChanges();
                     exists = null;
                 }
 
                 if (exists == null)
                 {
-                    ev.ICO = this.ICO;
-                    db.FirmaEvent.Add(ev);
+                    ev.Ico = this.ICO;
+                    db.OsobaEvent.Add(ev);
                     Audit.Add(Audit.Operations.Create, user, ev, null);
                     db.SaveChanges();
                     return ev;
                 }
                 else
                 {
-                    ev.ICO = this.ICO;
+                    ev.Ico = this.ICO;
                     ev.pk = exists.pk;
-                    db.FirmaEvent.Attach(ev);
+                    db.OsobaEvent.Attach(ev);
                     db.Entry(ev).State = System.Data.Entity.EntityState.Modified;
                     Audit.Add(Audit.Operations.Update, user, ev, exists);
                     db.SaveChanges();
@@ -891,17 +891,19 @@ namespace HlidacStatu.Lib.Data
                 return Firma.NotFound;
             }
         }
+
+        [Obsolete]
         public static Firma FromTransactionId(Data.TransparentniUcty.BankovniPolozka transaction)
         {
             using (DbEntities db = new Data.DbEntities())
             {
                 string url = transaction.GetUrl(false);
-                var found = db.FirmaEvent
+                var found = db.OsobaEvent
                             .Where(m => m.Zdroj == url)
                             .FirstOrDefault();
                 if (found != null)
                 {
-                    return FromIco(found.ICO);
+                    return FromIco(found.Ico);
                 }
 
             }
@@ -909,12 +911,12 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-
         public string Description(bool html, string template = "{0}", string itemTemplate = "{0}", string itemDelimeter = "<br/>", int numOfRecords = int.MaxValue)
         {
             return Description(html, m => true, template, itemTemplate, itemDelimeter, numOfRecords);
         }
-        public string Description(bool html, Expression<Func<FirmaEvent, bool>> predicate,
+
+        public string Description(bool html, Expression<Func<OsobaEvent, bool>> predicate,
             string template = "{0}", string itemTemplate = "{0}",
             string itemDelimeter = "<br/>", int numOfRecords = int.MaxValue)
         {
@@ -1093,10 +1095,10 @@ namespace HlidacStatu.Lib.Data
                         DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
                         if (PatrimStatu() == false
                             && IsSponzor()
-                            && Events(m => m.Type == (int)FirmaEvent.Types.Sponzor && m.DatumOd >= datumOd).Count() > 0
+                            && Events(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.DatumOd >= datumOd).Count() > 0
                             )
                         {
-                            var sponzoring = this.Events(m => m.Type == (int)FirmaEvent.Types.Sponzor && m.DatumOd >= datumOd);
+                            var sponzoring = this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.DatumOd >= datumOd);
                             string[] strany = sponzoring.Select(m => m.AddInfo).Distinct().ToArray();
                             DateTime[] roky = sponzoring.Select(m => m.DatumOd.Value).Distinct().OrderBy(y => y).ToArray();
                             decimal celkem = sponzoring.Sum(m => m.AddInfoNum) ?? 0;

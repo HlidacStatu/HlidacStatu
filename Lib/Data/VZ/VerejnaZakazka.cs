@@ -911,7 +911,7 @@ namespace HlidacStatu.Lib.Data.VZ
                             {
                                 f.Add(new InfoFact(
                                     $"{firma.Jmeno}: " +
-                                    firma.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor, itemDelimeter: ", ", numOfRecords: 2)
+                                    firma.Description(true, m => m.Type == (int)Data.OsobaEvent.Types.Sponzor, itemDelimeter: ", ", numOfRecords: 2)
                                     , InfoFact.ImportanceLevel.Medium)
                                     );
                             }

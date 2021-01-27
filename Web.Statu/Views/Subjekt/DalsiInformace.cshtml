@@ -69,7 +69,7 @@
     }
 
     @{
-        var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
+        var sponzoring = Model.Events(e => e.Type == (int)OsobaEvent.Types.Sponzor)
             .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description),
             (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0)))
             .ToList();

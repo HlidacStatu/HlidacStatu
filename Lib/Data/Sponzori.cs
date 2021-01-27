@@ -92,7 +92,7 @@ namespace HlidacStatu.Lib.Data
                                     Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
                                 });
 
-                        var resultF = db.FirmaEvent
+                        var resultF = db.OsobaEvent
                                 .Where(m => m.Type == 3 && m.DatumOd.HasValue)
                                 .ToArray()
                                 .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
@@ -255,11 +255,11 @@ namespace HlidacStatu.Lib.Data
                 List<Sponsors.Sponzorstvi<Firma.Lazy>> result = new List<Sponsors.Sponzorstvi<Firma.Lazy>>();
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
-                    var res = db.FirmaEvent
-                        .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
+                    var res = db.OsobaEvent
+                        .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor)
                         .OrderByDescending(o => o.AddInfoNum)
                         .ToArray()
-                        .GroupBy(g => new { Ico = g.ICO, rok = g.DatumOd.Value.Year, strana = g.AddInfo }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
+                        .GroupBy(g => new { Ico = g.Ico, rok = g.DatumOd.Value.Year, strana = g.AddInfo }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
                         {
                             Sponzor = new Firma.Lazy(o.Ico),
                             CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,

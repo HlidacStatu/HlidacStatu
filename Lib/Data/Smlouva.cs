@@ -458,14 +458,14 @@ namespace HlidacStatu.Lib.Data
                     f.Add(new InfoFact(hlavni, InfoFact.ImportanceLevel.Summary));
 
                     //sponzori
-                    foreach (var subj in this.Prijemce.Union(new HlidacStatu.Lib.Data.Smlouva.Subjekt[] { this.Platce }))
+                    foreach (var subj in this.Prijemce.Union(new Subjekt[] { this.Platce }))
                     {
-                        var firma = HlidacStatu.Lib.Data.Firmy.Get(subj.ico);
+                        var firma = Firmy.Get(subj.ico);
                         if (firma.Valid && firma.IsSponzor() && firma.JsemSoukromaFirma())
                         {
                             f.Add(new InfoFact(
                                 $"{firma.Jmeno}: " +
-                                firma.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor, itemDelimeter: ", ", numOfRecords: 2)
+                                firma.Description(true, m => m.Type == (int)OsobaEvent.Types.Sponzor, itemDelimeter: ", ", numOfRecords: 2)
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
@@ -1503,19 +1503,19 @@ namespace HlidacStatu.Lib.Data
 
         static HashSet<string> ico_s_VazbouPolitik = new HashSet<string>(
                                                                                                                                     StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Vsechny.Get().Select(m => m.ICO))
+                .Union(StaticData.SponzorujiciFirmy_Vsechny.Get().Select(m => m.Ico))
                 .Distinct()
             );
 
         static HashSet<string> ico_s_VazbouPolitikAktualni = new HashSet<string>(
                     StaticData.FirmySVazbamiNaPolitiky_aktualni_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.ICO))
+                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.Ico))
                 .Distinct()
             );
 
         static HashSet<string> ico_s_VazbouPolitikNedavne = new HashSet<string>(
                     StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.ICO))
+                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.Ico))
                 .Distinct()
             );
 

@@ -33,8 +33,8 @@ namespace HlidacStatu.Lib.Data
                 {
                     using (DbEntities db = new DbEntities())
                     {
-                        var res = db.FirmaEvent.SqlQuery(@"
-                            select fe.* from firmaevent fe with (nolock)
+                        var res = db.OsobaEvent.SqlQuery(@"
+                            select fe.* from osobaevent fe with (nolock)
 	                            inner join osobaVazby ov with (nolock) on ov.vazbakico=fe.ico and fe.Type=" + (int)OsobaEvent.Types.Sponzor
                                         + @" and dbo.IsSomehowInInterval(fe.datumOd,fe.datumDo, ov.datumOd, ov.DatumDo)=1
                             and osobaid=" + osobaInternalId)
@@ -43,7 +43,7 @@ namespace HlidacStatu.Lib.Data
                         {
                             Osoba o = Osoby.GetById.Get(osobaInternalId);
                             //var v = o.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
-                            string vazba = $"Člen statut. orgánu ve firmě {Firmy.GetJmeno(m.ICO)} sponzorující";
+                            string vazba = $"Člen statut. orgánu ve firmě {Firmy.GetJmeno(m.Ico)} sponzorující";
                             //if (v != null)
                             //{
                             //    vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({o.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";

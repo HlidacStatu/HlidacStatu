@@ -204,7 +204,7 @@ namespace HlidacStatu.Lib.Data
         public static AnalysisCalculation.VazbyFiremNaUradyStat UradyObchodujiciSFirmami_s_vazbouNaPolitiky(Relation.AktualnostType aktualnost, bool showProgress = false)
         {
             HlidacStatu.Lib.Data.AnalysisCalculation.VazbyFiremNaPolitiky vazbyNaPolitiky = null;
-            List<Lib.Data.FirmaEvent> sponzorujiciFirmy = null;
+            List<Lib.Data.OsobaEvent> sponzorujiciFirmy = null;
 
             QueryContainer qc = null;
 
@@ -269,7 +269,7 @@ namespace HlidacStatu.Lib.Data
                               {
                                   foreach (var ico in icos)
                                   {
-                                      if (vazbyNaPolitiky.SoukromeFirmy.ContainsKey(ico) || sponzorujiciFirmy.Any(m => m.ICO == ico))
+                                      if (vazbyNaPolitiky.SoukromeFirmy.ContainsKey(ico) || sponzorujiciFirmy.Any(m => m.Ico == ico))
                                       {
                                           if (!uradySoukr.ContainsKey(objednatelIco))
                                           {
@@ -417,10 +417,10 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static string[] SmlouvyIdSPolitiky(Dictionary<string, List<int>> politicisVazbami, List<FirmaEvent> sponzorujiciFirmy, bool showProgress = false)
+        public static string[] SmlouvyIdSPolitiky(Dictionary<string, List<int>> politicisVazbami, List<OsobaEvent> sponzorujiciFirmy, bool showProgress = false)
         {
             HashSet<string> allIco = new HashSet<string>(
-                politicisVazbami.Select(m => m.Key).Union(sponzorujiciFirmy.Select(m => m.ICO)).Distinct()
+                politicisVazbami.Select(m => m.Key).Union(sponzorujiciFirmy.Select(m => m.Ico)).Distinct()
             );
             //smlouvy s politikama
             Func<int, int, Nest.ISearchResponse<Lib.Data.Smlouva>> searchFunc = null;

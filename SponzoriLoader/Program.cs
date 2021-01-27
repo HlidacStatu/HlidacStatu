@@ -243,27 +243,27 @@ namespace SponzoriLoader
                     continue;
                 }
 
-                var firmaEvents = firma.Events(ev => ev.Type == (int)FirmaEvent.Types.Sponzor).ToList();
+                var firmaEvents = firma.Events(ev => ev.Type == (int)OsobaEvent.Types.Sponzor).ToList();
 
                 foreach (var donation in companyDonations.Value)
                 {
                     var eventToRemove = firmaEvents.Where(oe => oe.AddInfoNum == donation.Amount
-                                            && oe.Description == donation.ICO
+                                            && oe.Note == donation.ICO
                                             && oe.DatumOd.HasValue
                                             && oe.DatumOd.Value.Year == donation.Date.Year).FirstOrDefault();
                     if (eventToRemove is null)
                     {
                         // add event
-                        var newEvent = new FirmaEvent()
+                        var newEvent = new OsobaEvent()
                         {
-                            AddInfo = NormalizePartyName(donation.Party, donation.ICO),
+                            Organizace = NormalizePartyName(donation.Party, donation.ICO),
                             DatumOd = donation.Date,
                             AddInfoNum = donation.Amount,
-                            Description = donation.ICO,
+                            AddInfo = donation.ICO,
                             Zdroj = _zdroj,
                             Note = donation.Description,
-                            Type = (int)FirmaEvent.Types.Sponzor
-                            
+                            Type = (int)OsobaEvent.Types.Sponzor
+
                         };
                         firma.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
                     }
