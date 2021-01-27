@@ -483,8 +483,12 @@
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
     <Compile Include="Data\Firmy.GlobalStatistics.cs" />
+    <Compile Include="Data\Sponzoring.Partial.cs" />
     <Compile Include="Data\Smlouva.Statistics.cs" />
     <Compile Include="Data\Smlouva.Statistics.RegistrSmluv.cs" />
+    <Compile Include="Data\Sponzoring.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
     <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
