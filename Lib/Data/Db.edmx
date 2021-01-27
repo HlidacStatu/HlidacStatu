@@ -281,6 +281,24 @@
           <Property Name="updated" Type="datetime" Nullable="false" />
           <Property Name="active" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Sponzoring">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OsobaIdDarce" Type="int" />
+          <Property Name="IcoDarce" Type="nvarchar" MaxLength="20" />
+          <Property Name="OsobaIdPrijemce" Type="int" />
+          <Property Name="IcoPrijemce" Type="nvarchar" MaxLength="20" />
+          <Property Name="Typ" Type="int" Nullable="false" />
+          <Property Name="Hodnota" Type="decimal" Precision="18" Scale="9" />
+          <Property Name="Popis" Type="nvarchar(max)" />
+          <Property Name="DarovanoDne" Type="date" />
+          <Property Name="Zdroj" Type="nvarchar(max)" />
+          <Property Name="Created" Type="date" />
+          <Property Name="Edited" Type="date" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="150" />
+        </EntityType>
         <EntityType Name="TipUrl">
           <Key>
             <PropertyRef Name="Name" />
@@ -458,6 +476,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="OsobaVazby" EntityType="Self.OsobaVazby" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SmlouvyIds" EntityType="Self.SmlouvyIds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sponzoring" EntityType="Self.Sponzoring" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TipUrl" EntityType="Self.TipUrl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserOptions" EntityType="Self.UserOptions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WatchDog" EntityType="Self.WatchDog" Schema="dbo" store:Type="Tables" />
@@ -598,6 +617,7 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           <EntitySet Name="TipUrl" EntityType="FirmyModel.TipUrl" />
           <EntitySet Name="ClassificationOverride" EntityType="FirmyModel.ClassificationOverride" />
           <EntitySet Name="ZkratkaStrany" EntityType="FirmyModel.ZkratkaStrany" />
+          <EntitySet Name="Sponzoring" EntityType="FirmyModel.Sponzoring" />
         </EntityContainer>
         <EntityType Name="DatoveSchranky">
           <Key>
@@ -990,6 +1010,24 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
           </Key>
           <Property Name="ICO" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="KratkyNazev" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Sponzoring">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OsobaIdDarce" Type="Int32" />
+          <Property Name="IcoDarce" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OsobaIdPrijemce" Type="Int32" />
+          <Property Name="IcoPrijemce" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Typ" Type="Int32" Nullable="false" />
+          <Property Name="Hodnota" Type="Decimal" Precision="18" Scale="9" />
+          <Property Name="Popis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DarovanoDne" Type="DateTime" Precision="0" />
+          <Property Name="Zdroj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Edited" Type="DateTime" Precision="0" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1399,6 +1437,25 @@ warning 6002: The table/view 'Firmy.dbo.UcetniJednotka' does not have a primary 
               <MappingFragment StoreEntitySet="ZkratkaStrany">
                 <ScalarProperty Name="KratkyNazev" ColumnName="KratkyNazev" />
                 <ScalarProperty Name="ICO" ColumnName="ICO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sponzoring">
+            <EntityTypeMapping TypeName="FirmyModel.Sponzoring">
+              <MappingFragment StoreEntitySet="Sponzoring">
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="Edited" ColumnName="Edited" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Zdroj" ColumnName="Zdroj" />
+                <ScalarProperty Name="DarovanoDne" ColumnName="DarovanoDne" />
+                <ScalarProperty Name="Popis" ColumnName="Popis" />
+                <ScalarProperty Name="Hodnota" ColumnName="Hodnota" />
+                <ScalarProperty Name="Typ" ColumnName="Typ" />
+                <ScalarProperty Name="IcoPrijemce" ColumnName="IcoPrijemce" />
+                <ScalarProperty Name="OsobaIdPrijemce" ColumnName="OsobaIdPrijemce" />
+                <ScalarProperty Name="IcoDarce" ColumnName="IcoDarce" />
+                <ScalarProperty Name="OsobaIdDarce" ColumnName="OsobaIdDarce" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
