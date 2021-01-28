@@ -88,8 +88,8 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> PolitickyAktivni = null;
         public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> Politici = null;
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.OsobaEvent>> SponzorujiciFirmy_Vsechny = null;
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.OsobaEvent>> SponzorujiciFirmy_Nedavne = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Sponzoring>> SponzorujiciFirmy_Vsechny = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Sponzoring>> SponzorujiciFirmy_Nedavne = null;
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<double>> BasicStatisticData = null;
 
@@ -383,32 +383,32 @@ namespace HlidacStatu.Lib
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_Vsechny ");
 
 
-                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.OsobaEvent>>(
+                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Sponzoring>>(
                                 TimeSpan.FromHours(3), (obj) =>
                                 {
-                                    List<OsobaEvent> firmy = null;
+                                    List<Sponzoring> dary = null;
                                     DateTime limit10let = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-10);
                                     using (Lib.Data.DbEntities db = new DbEntities())
                                     {
-                                        firmy = db.OsobaEvent
+                                        dary = db.Sponzoring
                                             .AsNoTracking()
-                                            .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.DatumDo > limit10let)
+                                            .Where(s => s.IcoDarce != null && s.DarovanoDne > limit10let)
                                             .ToList();
 
-                                        return firmy;
+                                        return dary;
                                     }
                                 }
                             );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_nedavne");
-                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.OsobaEvent>>(
+                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Sponzoring>>(
                         TimeSpan.FromHours(3), (obj) =>
                         {
                             return StaticData.SponzorujiciFirmy_Vsechny.Get()
                                     .Where(m =>
-                                        (m.DatumDo.HasValue && m.DatumDo.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
+                                        (m.DarovanoDne.HasValue && m.DarovanoDne.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
                                         ||
-                                        (m.DatumOd.HasValue && m.DatumOd.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
+                                        (m.DarovanoDne.HasValue && m.DarovanoDne.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
                                     )
                                     .ToList();
                         }

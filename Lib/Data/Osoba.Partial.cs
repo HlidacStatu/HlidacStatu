@@ -158,11 +158,33 @@ namespace HlidacStatu.Lib.Data
         }
         public bool IsSponzor()
         {
-            return this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor).Any();
+            return this.Sponzoring().Any();
         }
-        public IEnumerable<OsobaEvent> Sponzoring()
+
+        public IEnumerable<Sponzoring> Sponzoring()
         {
-            return this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor);
+            return Sponzoring(m => true);
+        }
+
+        private static DateTime minBigSponzoringDate = new DateTime(DateTime.Now.Year - 10, 1, 1);
+        private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
+        private static decimal smallSponzoringThreshold = 10000;
+
+        public static Expression<Func<Sponzoring, bool>> _sponzoringLimitsPredicate = s =>
+            (s.Hodnota > smallSponzoringThreshold && s.DarovanoDne >= minBigSponzoringDate)
+            || (s.Hodnota <= smallSponzoringThreshold && s.DarovanoDne >= minSmallSponzoringDate);
+
+        public IEnumerable<Sponzoring> Sponzoring(Expression<Func<Sponzoring, bool>> predicate)
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                return db.Sponzoring
+                    .AsNoTracking()
+                    .Where(s => s.OsobaIdDarce == this.InternalId)
+                    .Where(_sponzoringLimitsPredicate)
+                    .Where(predicate)
+                    .ToArray();
+            }
         }
 
         public IEnumerable<OsobaEvent> Events()
@@ -170,21 +192,6 @@ namespace HlidacStatu.Lib.Data
             return Events(m => true);
         }
 
-
-        private static DateTime minBigSponzoringDate = new DateTime(DateTime.Now.Year - 10, 1, 1);
-        private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
-        private static decimal smallSponzoringThreshold = 10000;
-
-        public static Expression<Func<OsobaEvent, bool>> _sponzoringLimitsPredicate = m =>
-                             (m.Type != (int)OsobaEvent.Types.Sponzor
-                                ||
-                                (m.Type == (int)OsobaEvent.Types.Sponzor
-                                && (
-                                    (m.AddInfoNum > smallSponzoringThreshold && m.DatumOd >= minBigSponzoringDate)
-                                    || (m.AddInfoNum <= smallSponzoringThreshold && m.DatumOd >= minSmallSponzoringDate)
-                                    )
-                                )
-                            );
 
         public IEnumerable<SocialContact> GetSocialContact()
         {
@@ -250,9 +257,8 @@ namespace HlidacStatu.Lib.Data
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             List<OsobaEvent> events = this.NoFilteredEvents()
-                                    .Where(_sponzoringLimitsPredicate)
-                                    .Where(predicate)
-                                    .ToList();
+                .Where(predicate)
+                .ToList();
 
 
             using (DbEntities db = new DbEntities())
@@ -984,21 +990,9 @@ namespace HlidacStatu.Lib.Data
                 }
             }
         }
-        public OsobaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
+        public Sponzoring AddSponsor()
         {
-            var t = OsobaEvent.Types.Sponzor;
-
-            // Pokud dobře chápu, tak tohle zaniká
-            //if (zdroj?.Contains("https://www.hlidacstatu.cz/ucty/transakce/") == true)
-            //    t = OsobaEvent.Types.SponzorZuctu;
-
-            OsobaEvent oe = new OsobaEvent(this.InternalId, string.Format("Sponzor {0}", strana), "", t);
-            oe.AddInfoNum = castka;
-            oe.Organizace = strana;
-            oe.AddInfo = stranaico;
-            oe.Zdroj = zdroj;
-            oe.SetYearInterval(rok);
-            return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);
+            //todo: přidat sponzora sem, i do firmy
         }
 
         public static Osoba Get(int Id)
@@ -1217,19 +1211,20 @@ namespace HlidacStatu.Lib.Data
                         f.Add(new InfoFact(statDesc, InfoFact.ImportanceLevel.Stat));
 
                     DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
-                    if (this.IsSponzor() && this.Sponzoring().Where(m => m.DatumOd >= datumOd).Count() > 0)
+                    var sponzoring = this.Sponzoring(s => s.IcoPrijemce != null && s.DarovanoDne >= datumOd);
+                    if (sponzoring != null && sponzoring.Count() > 0)
                     {
-                        var sponzoring = this.Sponzoring().Where(m => m.DatumOd >= datumOd).ToArray();
-                        string[] strany = sponzoring.Select(m => m.Organizace).Distinct().ToArray();
-                        DateTime[] roky = sponzoring.Select(m => m.DatumOd.Value).Distinct().OrderBy(y => y).ToArray();
-                        decimal celkem = sponzoring.Sum(m => m.AddInfoNum) ?? 0;
-                        decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;
+                        string[] strany = sponzoring.Select(m => m.IcoPrijemce).Distinct().ToArray();
+                        int[] roky = sponzoring.Select(m => m.DarovanoDne.Value.Year).Distinct().OrderBy(y => y).ToArray();
+                        decimal celkem = sponzoring.Sum(m => m.Hodnota) ?? 0;
+                        decimal top = sponzoring.Max(m => m.Hodnota) ?? 0;
+                        string prvniStrana = Firma.FromIco(strany[0]).Jmeno; //todo: přidat tabulku politických stran a změnit zde na název strany
 
                         f.Add(new InfoFact($"{this.FullName()} "
-                            + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}", $"mezi roky {roky.First().Year} - {roky.Last().Year - 2000}")
+                            + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0], $"mezi roky {roky.First()} - {roky.Last() - 2000}", $"mezi roky {roky.First()} - {roky.Last() - 2000}")
                             + $" sponzoroval{(this.Muz() ? "" : "a")} " +
-                            Devmasters.Lang.Plural.Get(strany.Length, "stranu " + strany[0], "{0} polit. strany", "{0} polit. stran")
-                            + $" v&nbsp;celkové výši <b>{HlidacStatu.Util.RenderData.ShortNicePrice(celkem, html: true)}</b>. "
+                            Devmasters.Lang.Plural.Get(strany.Length, "stranu " + prvniStrana, "{0} polit. strany", "{0} polit. stran")
+                            + $" v&nbsp;celkové výši <b>{RenderData.ShortNicePrice(celkem, html: true)}</b>. "
                             + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
                             , InfoFact.ImportanceLevel.Medium)
                             );

@@ -27,7 +27,6 @@ namespace HlidacStatu.Lib.Data
         public OsobaEvent()
         {
             this.Created = DateTime.Now;
-
         }
 
         //Event k osobě
@@ -59,8 +58,8 @@ namespace HlidacStatu.Lib.Data
             VolenaFunkce = 1,
             [NiceDisplayName("Soukromá pracovní")]
             SoukromaPracovni = 2,
-            [NiceDisplayName("Sponzor")]
-            Sponzor = 3,
+            //[NiceDisplayName("Sponzor")]
+            //Sponzor = 3,
             [NiceDisplayName("Osobní")]
             Osobni = 4,
             [NiceDisplayName("Veřejná správa pracovní")]
@@ -206,21 +205,6 @@ namespace HlidacStatu.Lib.Data
 
         private static OsobaEvent GetDuplicate(OsobaEvent osobaEvent, DbEntities db)
         {
-            if (osobaEvent.Type == (int)OsobaEvent.Types.Sponzor)
-            {
-                // u sponzoringu nekontrolujeme organizaci, ani rok, protože to není historicky konzistentní
-                return db.OsobaEvent
-                    .Where(ev =>
-                        ev.OsobaId == osobaEvent.OsobaId
-                        && ev.Ico == osobaEvent.Ico
-                        && ev.Type == osobaEvent.Type
-                        && ev.AddInfo == osobaEvent.AddInfo
-                        && ev.AddInfoNum == osobaEvent.AddInfoNum
-                        && ev.DatumOd.HasValue
-                        && ev.DatumOd.Value.Year == osobaEvent.DatumOd.Value.Year)
-                    .FirstOrDefault();
-            }
-            
             return db.OsobaEvent
                 .Where(ev =>
                     ev.OsobaId == osobaEvent.OsobaId
@@ -309,13 +293,13 @@ namespace HlidacStatu.Lib.Data
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
-                case Types.Sponzor:
-                    if (!string.IsNullOrEmpty(Note) 
-                        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
-                    }
-                    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //case Types.Sponzor:
+                //    if (!string.IsNullOrEmpty(Note) 
+                //        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                //    {
+                //        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //    }
+                //    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -358,8 +342,8 @@ namespace HlidacStatu.Lib.Data
             StringBuilder sb = new StringBuilder();
             switch ((Types)this.Type)
             {
-                case Types.Sponzor:
-                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "");
+                //case Types.Sponzor:
+                //    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "");
                 case Types.Osobni:  //žádné nejsou, ale mohou být
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -409,13 +393,13 @@ namespace HlidacStatu.Lib.Data
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
-                case Types.Sponzor:
-                    if (!string.IsNullOrEmpty(Note) 
-                        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
-                    }
-                    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
+                //case Types.Sponzor:
+                //    if (!string.IsNullOrEmpty(Note) 
+                //        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                //    {
+                //        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //    }
+                //    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -467,8 +451,8 @@ namespace HlidacStatu.Lib.Data
             StringBuilder sb = new StringBuilder();
             switch ((Types)this.Type)
             {
-                case Types.Sponzor:
-                    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
+                //case Types.Sponzor:
+                //    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni: //nejsou a můžou být
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {

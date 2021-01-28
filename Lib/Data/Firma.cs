@@ -223,7 +223,7 @@ namespace HlidacStatu.Lib.Data
                 var osoby = VazbyNaPolitiky();
                 foreach (var o in osoby)
                 {
-                    var found = o.Sponzoring().Any(m => m.DatumOd < date);
+                    var found = o.Sponzoring().Any(m => m.DarovanoDne < date);
                     if (found)
                         return true;
                 }
@@ -553,22 +553,6 @@ namespace HlidacStatu.Lib.Data
             return aggregate;
         }
 
-        // šlo by to udělat obecně, ale na použití je to hodně upsané. použití by bylo:
-        // f.HoldingStatistics<Firma.Smlouva.Statistics.Data>(Relation.AktualnostType.Nedavny,
-        //   s => s.StatistikaRegistruSmluv(Smlouva.SClassification.ClassificationsTypes.agro_zahrada));
-        //
-        //public Analytics.StatisticsSubjectPerYear<T> HoldingStatistics<T>(Relation.AktualnostType aktualnost,
-        //    Func<Firma, StatisticsSubjectPerYear<T>> selector) where T : IAddable<T>, new() 
-        //{
-        //    var firmy = Holding(aktualnost);
-
-        //    var statistiky = firmy.Select(selector);
-
-        //    var aggregate = Analytics.StatisticsSubjectPerYear<T>.Aggregate(statistiky);
-
-        //    return aggregate;
-        //}
-
 
         public bool JsemSoukromaFirma()
         {
@@ -641,23 +625,24 @@ namespace HlidacStatu.Lib.Data
                 return false;
             if (this.JsemStatniFirma())
                 return false;
-            return StaticData.SponzorujiciFirmy_Vsechny.Get()
-                .Where(m => m.Ico == this.ICO && m.Type == (int)OsobaEvent.Types.Sponzor //zbytečná podmínka na sponzora, když už je ve staticData
-                            && m.DatumOd < date)
+            return StaticData.SponzorujiciFirmy_Vsechny.Get()  //todo: nemyslím si, že primární entita by měla čerpat info z cache
+                .Where(m => m.IcoDarce == this.ICO && m.DarovanoDne < date)
                 .Any();
-
         }
 
         public bool IsSponzor()
         {
-            return this.Events(m =>
-                m.Type == (int)OsobaEvent.Types.Sponzor
-            ).Any();
+            return this.Sponzoring().Any();
         }
 
         public IEnumerable<OsobaEvent> Events()
         {
             return Events(m => true);
+        }
+
+        public IEnumerable<Sponzoring> Sponzoring()
+        {
+            return Sponzoring(m => true);
         }
 
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
@@ -668,6 +653,18 @@ namespace HlidacStatu.Lib.Data
                     .AsNoTracking()
                     .Where(predicate)
                     .Where(m => m.Ico == this.ICO)
+                    .ToArray();
+            }
+        }
+
+        public IEnumerable<Sponzoring> Sponzoring(Expression<Func<Sponzoring, bool>> predicate)
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                return db.Sponzoring
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .Where(s => s.IcoDarce == this.ICO)
                     .ToArray();
             }
         }
@@ -683,24 +680,6 @@ namespace HlidacStatu.Lib.Data
             string koncovka;
             Firma.JmenoBezKoncovkyFull(this.Jmeno, out koncovka);
             return koncovka;
-
-        }
-
-        public OsobaEvent AddSponsoring(string strana, string stranaico, int rok, decimal castka, string zdroj, string user, bool rewrite = false, bool checkDuplicates = true)
-        {
-            strana = ParseTools.NormalizaceStranaShortName(strana);
-            var t = OsobaEvent.Types.Sponzor;
-            if (zdroj?.Contains("https://www.hlidacstatu.cz/ucty/transakce/") == true)
-                return null; // sponzoři z účtu byly kvůli chybám zrušeny
-
-            OsobaEvent oe = new OsobaEvent(this.ICO, string.Format("Sponzor {0}", strana), "", t);
-            oe.AddInfoNum = castka;
-            oe.Zdroj = zdroj;
-            oe.Note = stranaico;
-            oe.SetYearInterval(rok);
-            oe.AddInfo = strana;
-            oe.Created = DateTime.Now;
-            return AddOrUpdateEvent(oe, user, checkDuplicates: checkDuplicates);
 
         }
 
@@ -928,7 +907,7 @@ namespace HlidacStatu.Lib.Data
             {
                 List<string> evs = events
                     .OrderBy(e => e.DatumOd)
-                    .Select(e => html ? e.RenderHtml(", ") : e.RenderText(", "))
+                    .Select(e => html ? e.RenderHtmlFirma(", ") : e.RenderTextFirma(", "))
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrEmpty(s))
                     .Take(numOfRecords)
@@ -1092,26 +1071,27 @@ namespace HlidacStatu.Lib.Data
                                         );
                         }
 
-                        DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
-                        if (PatrimStatu() == false
-                            && IsSponzor()
-                            && Events(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.DatumOd >= datumOd).Count() > 0
-                            )
+                        if (PatrimStatu() == false)
                         {
-                            var sponzoring = this.Events(m => m.Type == (int)OsobaEvent.Types.Sponzor && m.DatumOd >= datumOd);
-                            string[] strany = sponzoring.Select(m => m.AddInfo).Distinct().ToArray();
-                            DateTime[] roky = sponzoring.Select(m => m.DatumOd.Value).Distinct().OrderBy(y => y).ToArray();
-                            decimal celkem = sponzoring.Sum(m => m.AddInfoNum) ?? 0;
-                            decimal top = sponzoring.Max(m => m.AddInfoNum) ?? 0;
+                            DateTime datumOd = new DateTime(DateTime.Now.Year - 10, 1, 1);
+                            var sponzoring = this.Sponzoring(s => s.IcoPrijemce != null && s.DarovanoDne >= datumOd); // sponzoring pol. stran
+                            if (sponzoring != null && sponzoring.Count() > 0)
+                            {
+                                string[] strany = sponzoring.Select(m => m.IcoPrijemce).Distinct().ToArray();
+                                int[] roky = sponzoring.Select(m => m.DarovanoDne.Value.Year).Distinct().OrderBy(y => y).ToArray();
+                                decimal celkem = sponzoring.Sum(m => m.Hodnota) ?? 0;
+                                decimal top = sponzoring.Max(m => m.Hodnota) ?? 0;
+                                string prvniStrana = Firma.FromIco(strany[0]).Jmeno; //todo: přidat tabulku politických stran a změnit zde na název strany
 
-                            f.Add(new InfoFact($"{sName} "
-                                + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0].Year, $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}", $"mezi roky {roky.First().Year}-{roky.Last().Year - 2000}")
-                                + $" sponzoroval{(sMuzsky ? "" : "a")} " +
-                                Devmasters.Lang.Plural.Get(strany.Length, strany[0], "{0} polit.strany", "{0} polit.stran")
-                                + $" v&nbsp;celkové výši <b>{HlidacStatu.Util.RenderData.ShortNicePrice(celkem, html: true)}</b>. "
-                                + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
-                                , InfoFact.ImportanceLevel.Medium)
-                                );
+                                f.Add(new InfoFact($"{sName} "
+                                    + Devmasters.Lang.Plural.Get(roky.Count(), "v roce " + roky[0], $"mezi roky {roky.First()}-{roky.Last() - 2000}", $"mezi roky {roky.First()}-{roky.Last() - 2000}")
+                                    + $" sponzoroval{(sMuzsky ? "" : "a")} " +
+                                    Devmasters.Lang.Plural.Get(strany.Length, prvniStrana, "{0} polit.strany", "{0} polit.stran")
+                                    + $" v&nbsp;celkové výši <b>{RenderData.ShortNicePrice(celkem, html: true)}</b>. "
+                                    + $"Nejvyšší sponzorský dar byl ve výši {RenderData.ShortNicePrice(top, html: true)}. "
+                                    , InfoFact.ImportanceLevel.Medium)
+                                    );
+                            }
                         }
 
                         if (PatrimStatu() == false

@@ -241,42 +241,6 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-
-        public ActionResult AddPersonSponzoring(
-            string titulpred, string jmeno, string prijmeni, string titulpo, string datumNarozeni,
-            string strana, string rok, string castka
-            )
-        {
-            DateTime? dat = Devmasters.DT.Util.ToDateTimeFromCode(datumNarozeni);
-            if (dat.HasValue == false)
-            {
-                return new HttpStatusCodeResult(500, "Use date format yyyy-MM-dd");
-            }
-            var apires = Framework.ApiAuth.IsApiAuth(this);
-            if (apires.Authentificated &&
-                    (apires.ApiCall.User == "petr@stastny.eu"
-                    || apires.ApiCall.User == "michal@michalblaha.cz"
-                    )
-                )
-            {
-                Osoba o = Osoba.Searching.GetByName(jmeno, prijmeni, dat.Value);
-                if (o == null)
-                {
-                    o = new Osoba() { TitulPred = titulpred, Jmeno = jmeno, Prijmeni = prijmeni, TitulPo = titulpo, Narozeni = dat.Value };
-                    o.Status = (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky;
-                    o.Save();
-                }
-
-                var oe = o.AddSponsoring(strana,null, Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { ok = true }), "application/json");
-
-            }
-            else
-                return new HttpStatusCodeResult(401);
-
-        }
-
-
         class VZProfilesListRes { public string profileId { get; set; } public string url { get; set; } public long? count { get; set; } }
         public ActionResult VZProfilesList()
         {
@@ -442,33 +406,7 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        public ActionResult AddCompanySponzoring(
-            string ico,
-            string strana, string rok, string castka, string udalost
-            )
-        {
-            var apires = Framework.ApiAuth.IsApiAuth(this);
-            if (apires.Authentificated &&
-                    (apires.ApiCall.User == "petr@stastny.eu"
-                    || apires.ApiCall.User == "michal@michalblaha.cz"
-                    )
-                )
-            {
-                Firma f = Firma.FromIco(ico, true);
-                if (f == null)
-                {
-                    HlidacStatu.Util.Consts.Logger.Error("API AddCompanySponzoring: ICO " + ico + " not found");
-                    return new HttpStatusCodeResult(500, "ICO not found.");
-                }
-
-                f.AddSponsoring(strana, null,Convert.ToInt32(rok), ParseTools.ToDecimal(castka).Value, "https://udhpsh.cz/5290-2/", this.User.Identity.Name, checkDuplicates: false);
-                return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { ok = true }), "application/json");
-
-            }
-            else
-                return new HttpStatusCodeResult(401);
-
-        }
+        
         public ActionResult Status()
         {
             ClusterHealthResponse res = null;
