@@ -197,6 +197,37 @@ namespace HlidacStatu.Lib.Data
             };
         }
 
+        public string ToHtml()
+        {
+            bool prijemceJeFirma = !string.IsNullOrWhiteSpace(IcoPrijemce);
+            bool prijemcejeOsoba = OsobaIdPrijemce != null && OsobaIdPrijemce > 0;
+            string kohoSponzoroval = "";
+            if (prijemceJeFirma)
+            {
+                kohoSponzoroval = Firma.FromIco(IcoPrijemce).Jmeno;
+            } 
+            else if (prijemcejeOsoba)
+            {
+                kohoSponzoroval = Osoba.GetByInternalId(OsobaIdPrijemce.Value).FullName(html: true);
+            }
+            else
+            {
+                //todo: log corrupted data
+                return "";
+            }
+
+            //var kohoSponzoroval = "";
+            var kdySponzoroval = DarovanoDne.HasValue ? $"v roce {DarovanoDne?.Year}" : "v neznámém datu";
+
+            var hodnotaDaruKc = Util.RenderData.NicePrice(Hodnota ?? 0, html: true);
+            var dar = (Typ == (int)TypDaru.FinancniDar) ? 
+                $"částkou {hodnotaDaruKc}" : 
+                $"nepeněžním darem ({Popis}) v hodnotě {hodnotaDaruKc}";
+            var zdroj = $"(<a target=\"_blank\" href=\"{Zdroj}\"><span class=\"glyphicon glyphicon-link\" aria-hidden=\"true\"></span>zdroj<\\a>)";
+
+            return $"Sponzor {kohoSponzoroval} {kdySponzoroval} {dar} {zdroj}";
+        }
+
         //public static bool Compare(Sponzoring a, Sponzoring b)
         //{
         //    return a.AddInfo == b.AddInfo

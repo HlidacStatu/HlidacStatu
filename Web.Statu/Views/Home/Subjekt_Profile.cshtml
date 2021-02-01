@@ -148,7 +148,7 @@ else
                             addData: Model.ICO)
                         </td>
                     </tr>
-                    
+
                 }
 
 
@@ -338,7 +338,7 @@ else
                 </td>
                 <td>
                     <script>
-    window.onload = function () {
+                        window.onload = function () {
                             $('#graf').toggle();
                         }</script>
 
@@ -350,10 +350,10 @@ else
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             @{ ReportDataSource rdsSumPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                    statistics
-                                        .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.CelkovaHodnotaSmluv)
-                                    );
+                                     statistics
+                                         .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                         .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.CelkovaHodnotaSmluv)
+                                     );
 
                                 @UtilChart.RenderReportChart("Hodnota smluv", UtilChart.SimpleBarChart(
                                                    true, true, 150, "rdsSumPerY",
@@ -363,10 +363,10 @@ else
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             @{ ReportDataSource rdsCountPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "Počet smluv",
-                                    statistics
-                                        .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PocetSmluv)
-                                    );
+                                     statistics
+                                         .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                         .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PocetSmluv)
+                                     );
 
                                 @UtilChart.RenderReportChart("Počet smluv", UtilChart.SimpleBarChart(
                                                   true, true, 150, "rdsCountPerY",
@@ -376,10 +376,10 @@ else
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             @{ ReportDataSource rdsbezCenyPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                    statistics
-                                        .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny * 100)
-                                    );
+                                     statistics
+                                         .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                         .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvBezCeny * 100)
+                                     );
 
                                 @UtilChart.RenderReportChart("% smluv s utajenou cenou ", UtilChart.SimpleBarChart(
                                                 true, true, 150, "rdsbezCenyPerY",
@@ -391,10 +391,10 @@ else
                         {
                             <div class="col-xs-12 col-sm-6 col-md-4">
                                 @{ ReportDataSource rdsPolitikPerYKc = ReportDataSource.SimpleReportDataForDateChart("Rok", "Hodnota smluv",
-                                        statistics
-                                        .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.SumKcSmluvSponzorujiciFirmy)
-                                        );
+                                         statistics
+                                         .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                         .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.SumKcSmluvSponzorujiciFirmy)
+                                         );
 
                                     @UtilChart.RenderReportChart("Hodnota smluv s vazbou na politiky", UtilChart.SimpleBarChart(
                                                 true, true, 150, "rdsPolitikPerYKc",
@@ -404,10 +404,10 @@ else
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-4">
                                 @{ ReportDataSource rdsPolitikPerY = ReportDataSource.SimpleReportDataForDateChart("Rok", "% smluv",
-                                        statistics
-                                        .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
-                                        .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky * 100)
-                                        );
+                                         statistics
+                                         .Where(k => k.Year >= chartMinDate && k.Year <= chartMaxDate)
+                                         .ToDictionary(k => new DateTime(k.Year, 1, 1), v => (decimal)v.Value.PercentSmluvPolitiky * 100)
+                                         );
 
                                     @UtilChart.RenderReportChart("% smluv s vazbou na politiky", UtilChart.SimpleBarChart(
                                                                true, true, 150, "rdsPolitikPerY",
@@ -438,10 +438,10 @@ else
                 </tr>
             }
 
-            @if (Model.PatrimStatu() 
+            @if (Model.PatrimStatu()
                 && summarryAfter2016.PocetSmluvSponzorujiciFirmy > 0)
             {
-                
+
                 <tr>
                     <th>Smlouvy s vazbou na politiky</th>
                     <td id="_smlouvy_s_politiky">
@@ -460,7 +460,7 @@ else
                             <tbody>
                                 @foreach (var bs in statistics
                                     .Where(y => statistics.YearsAfter2016().Contains(y.Year))
-                                    .OrderBy(y=>y.Year) )
+                                    .OrderBy(y => y.Year))
                                 {
                                     <tr>
                                         <td>@bs.Year</td>
@@ -484,17 +484,34 @@ else
                     </td>
                 </tr>
             }
-            @if (!string.IsNullOrEmpty(Model.Description(false)))
+
+            @{
+                string dalsiInfo = Model.Description(false);
+            }
+            @if (!string.IsNullOrEmpty(dalsiInfo))
             {
 
                 <tr>
                     <th>Další info</th>
                     <td>
-                        @Html.Raw(Model.Description(true))
+                        @Html.Raw(dalsiInfo)
                     </td>
                 </tr>
             }
 
+            @{ 
+                string sponzoring = Model.SponzoringToHtml();
+            }
+            @if (!string.IsNullOrEmpty(sponzoring))
+            {
+
+                <tr>
+                    <th>Sponzoring</th>
+                    <td>
+                        @Html.Raw(sponzoring)
+                    </td>
+                </tr>
+            }
 
 
             @if (Model.IsNespolehlivyPlatceDPH())
@@ -568,9 +585,9 @@ else
 
 
             @{ var dotaceAggs = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
-                                          .Sum("souhrn", s => s
-                                              .Field(f => f.DotaceCelkem)
-                                          );
+                                           .Sum("souhrn", s => s
+                                               .Field(f => f.DotaceCelkem)
+                                           );
                 var dotaceSearch = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("ico:" + Model.ICO, 1, 1,
                     HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll, false,
                     dotaceAggs, exactNumOfResults: true);

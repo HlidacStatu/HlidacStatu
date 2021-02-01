@@ -645,6 +645,24 @@ namespace HlidacStatu.Lib.Data
             return Sponzoring(m => true);
         }
 
+        public string SponzoringToHtml(int take = int.MaxValue)
+        {
+            return string.Join("<br />",
+                Sponzoring()
+                    .OrderByDescending(s => s.DarovanoDne)
+                    .Select(s => s.ToHtml())
+                    .Take(take));
+        }
+
+        public string EventsToHtml(Expression<Func<OsobaEvent, bool>> predicate, int take = int.MaxValue)
+        {
+            return string.Join("<br />",
+                Events(predicate)
+                    .OrderByDescending(s => s.DatumDo == null ? s.DatumDo : s.DatumOd)
+                    .Select(e => e.RenderHtml())
+                    .Take(take));
+        }
+
         public IEnumerable<OsobaEvent> Events(Expression<Func<OsobaEvent, bool>> predicate)
         {
             using (DbEntities db = new DbEntities())
