@@ -26,7 +26,9 @@ namespace HlidacStatu.Lib.Data
             FinancniDar = 0,
             [NiceDisplayName("Nefinanční dar")]
             NefinancniDar = 1,
-            
+            [NiceDisplayName("Dar firmy")]
+            DarFirmy = 2,
+
         }
 
         public static IEnumerable<Sponzoring> GetByDarce(int osobaId)
@@ -176,39 +178,19 @@ namespace HlidacStatu.Lib.Data
             return this.Id.ToString();
         }
 
-        [Obsolete("please do not use")]
-        public OsobaEvent ToOsobaEvent()
-        {
-            string prijemce = Firma.FromIco(this.IcoPrijemce).Jmeno;
-            if (string.IsNullOrWhiteSpace(prijemce))
-                prijemce = this.IcoPrijemce + this.OsobaIdPrijemce;
-            return new OsobaEvent()
-            {
-                DatumOd = this.DarovanoDne,
-                DatumDo = this.DarovanoDne,
-                AddInfoNum = this.Hodnota,
-                Organizace = prijemce,
-                //Status = OsobaEvent.Types.Sponzor,
-                Zdroj = this.Zdroj,
-                Title = $"Sponzor {prijemce}",
-                OsobaId = this.OsobaIdDarce ?? 0,
-                Ico = this.IcoDarce
-
-            };
-        }
-
         public string JmenoPrijemce()
         {
             bool prijemceJeFirma = !string.IsNullOrWhiteSpace(IcoPrijemce);
             if (prijemceJeFirma)
             {
-                return Firma.FromIco(IcoPrijemce).Jmeno;
+                return Firmy.GetJmeno(IcoPrijemce);
             }
             
             bool prijemcejeOsoba = OsobaIdPrijemce != null && OsobaIdPrijemce > 0;
             if (prijemcejeOsoba)
             {
-                return Osoba.GetByInternalId(OsobaIdPrijemce.Value).FullName();
+                return Osoby.GetById.Get(OsobaIdPrijemce.Value).FullName();
+                //return Osoba.GetByInternalId(OsobaIdPrijemce.Value).FullName();
             }
             
             //todo: log corrupted data
@@ -224,14 +206,16 @@ namespace HlidacStatu.Lib.Data
                 return ""; 
             }
 
-            //var kohoSponzoroval = "";
             var kdySponzoroval = DarovanoDne.HasValue ? $"v roce {DarovanoDne?.Year}" : "v neznámém datu";
-
+            
             var hodnotaDaruKc = Util.RenderData.NicePrice(Hodnota ?? 0, html: true);
             var dar = (Typ == (int)TypDaru.FinancniDar) ? 
                 $"částkou {hodnotaDaruKc}" : 
                 $"nepeněžním darem ({Popis}) v hodnotě {hodnotaDaruKc}";
             var zdroj = $"(<a target=\"_blank\" href=\"{Zdroj}\"><span class=\"glyphicon glyphicon-link\" aria-hidden=\"true\"></span>zdroj<\\a>)";
+
+            if (Typ == (int)TypDaru.DarFirmy)
+                return $"Člen statut. orgánu ve firmě sponzorující {kohoSponzoroval} {kdySponzoroval}, hodnota daru {hodnotaDaruKc}";
 
             return $"Sponzor {kohoSponzoroval} {kdySponzoroval} {dar} {zdroj}";
         }

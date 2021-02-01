@@ -108,7 +108,7 @@
         new ReportDataSource.Column() { Name="Sponzor",
             HtmlRender = (s) => {
                 Osoba o = (Osoba)s;
-                var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
+                var sum = o.Sponzoring().Sum(m=>m.Hodnota);
                 if (sum==0)
                     return "Ne";
                 else
@@ -116,7 +116,7 @@
             },
             OrderValueRender = (s) => {
                 Osoba o = (Osoba)s;
-                var val= o.Sponzoring().Sum(m=>m.AddInfoNum) ;
+                var val= o.Sponzoring().Sum(m=>m.Hodnota) ;
                 return HlidacStatu.Util.RenderData.OrderValueFormat(val);
             }
         },

@@ -124,7 +124,7 @@ return HlidacStatu.Util.RenderData.OrderValueFormat(sum);
 new ReportDataSource.Column() { Name="Sponzor polit.stran",
 HtmlRender = (s) => {
 Osoba o = (Osoba)s;
-var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
+var sum = o.Sponzoring().Sum(m=>m.Hodnota);
 if (sum==0)
 return "Ne";
 else
@@ -132,7 +132,7 @@ return "Celkem&nbsp;" + HlidacStatu.Util.RenderData.NicePrice(sum.Value,html:tru
 },
 OrderValueRender = (s) => {
 Osoba o = (Osoba)s;
-return HlidacStatu.Util.RenderData.OrderValueFormat(o.Sponzoring().Sum(m=>m.AddInfoNum)) ;
+return HlidacStatu.Util.RenderData.OrderValueFormat(o.Sponzoring().Sum(m=>m.Hodnota)) ;
 }
 },
            };

@@ -26,8 +26,8 @@ namespace HlidacStatu.Lib.Data
                 },
                 TimeSpan.FromMinutes(2));
 
-        internal static volatile MemoryCacheManager<IEnumerable<OsobaEvent>, int> CachedFirmySponzoring
-            = MemoryCacheManager<IEnumerable<OsobaEvent>, int>
+        internal static volatile MemoryCacheManager<IEnumerable<Sponzoring>, int> CachedFirmySponzoring
+            = MemoryCacheManager<IEnumerable<Sponzoring>, int>
                 .GetSafeInstance("osobyFirmySponzoring",
                 osobaInternalId =>
                 {
@@ -39,27 +39,22 @@ namespace HlidacStatu.Lib.Data
                                and dbo.IsSomehowInInterval(fe.DarovanoDne,fe.DarovanoDne, ov.datumOd, ov.DatumDo)=1
                             and osobaid=" + osobaInternalId)
                             .AsNoTracking();
+
                         var res1 = res.Select(m =>
                         {
-                            Osoba o = Osoby.GetById.Get(osobaInternalId);
-                            //var v = o.VazbyProICO(m.ICO, m.DatumOd, m.DatumDo).FirstOrDefault();
-                            string nazevFirmy = Firmy.GetJmeno(m.IcoDarce);
-                            string vazba = $"Člen statut. orgánu ve firmě {nazevFirmy} sponzorující";
-                            //if (v != null)
-                            //{
-                            //    vazba = $"{Firmy.GetJmeno(m.ICO)} sponzor {m.AddInfo} ({o.ShortName()} {v.Descr?.ToLower()} {v.Doba("{0}")})";
-                            //}
-                            return new OsobaEvent()
+                            return new Sponzoring()
                             {
-                                OsobaId = osobaInternalId,
-                                Organizace = nazevFirmy,
-                                AddInfoNum = m.Hodnota,
-                                Created = m.Edited ?? DateTime.Now,
-                                DatumDo = m.DarovanoDne,
-                                DatumOd = m.DarovanoDne,
-                                Note = vazba,
-                                Title = "",
-                                Type = OsobaEvent.Types.Sponzor,
+                                OsobaIdDarce = osobaInternalId,
+                                IcoDarce = m.IcoDarce,
+                                OsobaIdPrijemce = m.OsobaIdPrijemce,
+                                UpdatedBy = m.UpdatedBy,
+                                IcoPrijemce = m.IcoPrijemce,
+                                Hodnota = m.Hodnota,
+                                Created = m.Created,
+                                Edited = m.Edited,
+                                DarovanoDne = m.DarovanoDne,
+                                Typ = (int)Sponzoring.TypDaru.DarFirmy,
+                                Popis = m.Popis,
                                 Zdroj = m.Zdroj
                             };
                         })

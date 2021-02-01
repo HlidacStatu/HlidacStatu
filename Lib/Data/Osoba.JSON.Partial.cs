@@ -37,8 +37,19 @@ namespace HlidacStatu.Lib.Data
             r.Status = (Osoba.StatusOsobyEnum)t.Status;
             var events = this.Events();
             if (allData == false)
-                events = this.Sponzoring(s => s.IcoPrijemce != null)
-                    .Select(s => s.ToOsobaEvent());
+                events = Enumerable.Empty<OsobaEvent>();
+
+            r.Sponzoring = this.Sponzoring(s => s.IcoPrijemce != null)
+                    .Select(s => new JSON.sponzoring()
+                    {
+                        Id = s.Id,
+                        DarovanoDne = s.DarovanoDne?.ToString("yyyy-MM-dd") ?? "",
+                        Hodnota = s.Hodnota,
+                        IcoPrijemce = s.IcoPrijemce,
+                        Popis = s.Popis,
+                        Typ = (Sponzoring.TypDaru)s.Typ,
+                        Zdroj = s.Zdroj
+                    }).ToArray();
 
             r.Event = events.Select(m =>
                 new JSON.ev()
@@ -211,6 +222,12 @@ namespace HlidacStatu.Lib.Data
                 get; set;
             }
 
+            [JsonProperty("sponzoring", Required = Required.Default)]
+            public sponzoring[] Sponzoring
+            {
+                get; set;
+            }
+
             [JsonProperty("vazbyfirmy", Required = Required.Default)]
             public vazba[] Vazbyfirmy
             {
@@ -298,6 +315,33 @@ namespace HlidacStatu.Lib.Data
                 {
                     get; set;
                 }
+
+            }
+
+            public partial class sponzoring
+            {
+                [JsonProperty("id", Required = Required.Default)]
+                public int Id { get; set; } = 0;
+                
+                [JsonProperty("hodnota", Required = Required.Default)]
+                public decimal? Hodnota { get; set; }
+
+                [JsonProperty("typ", Required = Required.Default)]
+                [JsonConverter(typeof(StringEnumConverter))]
+                public Sponzoring.TypDaru Typ { get; set; }
+
+                [JsonProperty("icoPrijemce", Required = Required.Default)]
+                public string IcoPrijemce { get; set; }
+
+                [JsonProperty("popis", Required = Required.Default)]
+                public string Popis { get; set; }
+
+                /// <summary>Ve formatu yyyy-MM-dd (1983-03-26)</summary>
+                [JsonProperty("darovanoDne", Required = Required.Default)]
+                public string DarovanoDne { get; set; }
+
+                [JsonProperty("zdroj", Required = Required.Default)]
+                public string Zdroj { get; set; }
 
             }
 

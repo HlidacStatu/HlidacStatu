@@ -178,12 +178,21 @@ namespace HlidacStatu.Lib.Data
         {
             using (DbEntities db = new DbEntities())
             {
-                return db.Sponzoring
+                var osobySponzoring = db.Sponzoring
                     .AsNoTracking()
                     .Where(s => s.OsobaIdDarce == this.InternalId)
                     .Where(SponzoringLimitsPredicate)
                     .Where(predicate)
-                    .ToArray();
+                    .ToList();
+
+                //sponzoring z navazanych firem kdyz byl statutar
+                var firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
+                    .AsQueryable()
+                    .Where(SponzoringLimitsPredicate)
+                    .Where(predicate)
+                    .ToList();
+
+                return osobySponzoring.AddRange(firmySponzoring);
             }
         }
 
@@ -268,20 +277,6 @@ namespace HlidacStatu.Lib.Data
             List<OsobaEvent> events = this.NoFilteredEvents()
                 .Where(predicate)
                 .ToList();
-
-
-            using (DbEntities db = new DbEntities())
-            {
-                //todo: patri tohle do sponzoringu?
-                //sponzoring z navazanych firem kdyz byl statutar
-                IEnumerable<OsobaEvent> firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
-                    .AsQueryable()
-                    .Where(SponzoringLimitsPredicate)
-                    .Where(predicate)
-                    .ToArray();
-
-                events.AddRange(firmySponzoring);
-            }
 
             return events;
         }
