@@ -925,7 +925,7 @@ namespace HlidacStatu.Lib.Data
             {
                 List<string> evs = events
                     .OrderBy(e => e.DatumOd)
-                    .Select(e => html ? e.RenderHtmlFirma(", ") : e.RenderTextFirma(", "))
+                    .Select(e => html ? e.RenderHtml(", ") : e.RenderText(", "))
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrEmpty(s))
                     .Take(numOfRecords)

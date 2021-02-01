@@ -485,45 +485,44 @@
 
 
 @helper RenderOsoby(int numOfOsob)
-{string osobaStatDescription = "";
-                    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Results.FirstOrDefault();
-                    if (osoba1 == null)
-                    {
-                        return;
-                    }
+{
+    string osobaStatDescription = "";
+    HlidacStatu.Lib.Data.Osoba osoba1 = Model.Osoby.Results.FirstOrDefault();
+    if (osoba1 == null)
+    {
+        return;
+    }
 
-                    var alldata = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
+    var alldata = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny);
 
-                    var data = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
-                                    .Where(v => !string.IsNullOrEmpty(v.To.Id))
-                                    .GroupBy(f => f.To.Id, v => v, (ico, v) => new
-                                    {
-                                        ICO = ico,
-                            //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-                            //VazbyPerIco = osoba.VazbyProICO(ico),
-                            stat = Firmy.Get(ico).StatistikaRegistruSmluv()
-                                    })
-                                    .OrderByDescending(m => m.stat.Summary().CelkovaHodnotaSmluv).ThenBy(m => m.ICO)
-                                    .ToArray();
+    var data = osoba1.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny)
+        .Where(v => !string.IsNullOrEmpty(v.To.Id))
+        .GroupBy(f => f.To.Id, v => v, (ico, v) => new
+        {
+            ICO = ico,
+            //FirmaName = v.First().To?.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
+            //VazbyPerIco = osoba.VazbyProICO(ico),
+            stat = Firmy.Get(ico).StatistikaRegistruSmluv()
+        })
+        .OrderByDescending(m => m.stat.Summary().CelkovaHodnotaSmluv).ThenBy(m => m.ICO)
+        .ToArray();
 
-                    var osobaStatDescTotalKc = HlidacStatu.Lib.Data.Smlouva.NicePrice(data.Sum(d => d.stat.Summary().CelkovaHodnotaSmluv), html: true, shortFormat: true);
-                    osobaStatDescription = string.Format("{0}{1}",
-                        Devmasters.Lang.Plural.GetWithZero((int)alldata.Count(), "Žádná vazba na firmy", "Celkem vazba na <b>{0} firmu</b>", "Celkem vazba na <b>{0} firmy</b>", "Celkem vazba na <b>{0} firem</b>"),
-                        Devmasters.Lang.Plural.GetWithZero((int)data.Sum(d => d.stat.Summary().PocetSmluv), "."
-                            , ", <b>{0} smlouva</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
-                            , ";, <b>{0} smlouvy</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
-                            , ";, <b>{0} smluv</b> v registru smluv za <b>" + osobaStatDescTotalKc) + "</b>"
-                    );
-                    var funkceOsoba = osoba1.Description(true,
-                                   m => m.Type != (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor,
-                                   2);
-                    string box1Css = "col-sm-4 col-md-3";
-                    string box2Css = "col-sm-8 col-md-9";
-                    if (numOfOsob == 0)
-                    {
-                        box1Css = "col-sm-12";
-                        box2Css = "col-sm-12";
-                    }
+    var osobaStatDescTotalKc = HlidacStatu.Lib.Data.Smlouva.NicePrice(data.Sum(d => d.stat.Summary().CelkovaHodnotaSmluv), html: true, shortFormat: true);
+    osobaStatDescription = string.Format("{0}{1}",
+        Devmasters.Lang.Plural.GetWithZero((int)alldata.Count(), "Žádná vazba na firmy", "Celkem vazba na <b>{0} firmu</b>", "Celkem vazba na <b>{0} firmy</b>", "Celkem vazba na <b>{0} firem</b>"),
+        Devmasters.Lang.Plural.GetWithZero((int)data.Sum(d => d.stat.Summary().PocetSmluv), "."
+            , ", <b>{0} smlouva</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
+            , ";, <b>{0} smlouvy</b> v registru smluv za <b>" + osobaStatDescTotalKc + "</b>"
+            , ";, <b>{0} smluv</b> v registru smluv za <b>" + osobaStatDescTotalKc) + "</b>"
+    );
+    var funkceOsoba = osoba1.Description(true, e => true, numOfRecords: 2);
+    string box1Css = "col-sm-4 col-md-3";
+    string box2Css = "col-sm-8 col-md-9";
+    if (numOfOsob == 0)
+    {
+        box1Css = "col-sm-12";
+        box2Css = "col-sm-12";
+    }
 
 
     <div class="row" id="osoby">
@@ -576,9 +575,7 @@
                     Podpora politických stran
                 </div>
                 <div class="new-p">
-                    @Html.Raw(osoba1.Description(true,
-                            m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor,
-                            5))
+                    @Html.Raw(osoba1.SponzoringToHtml(5))
                 </div>
             }
             <div class="search-result-label">

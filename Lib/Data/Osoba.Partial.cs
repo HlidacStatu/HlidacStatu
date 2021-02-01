@@ -187,6 +187,15 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public string SponzoringToHtml(int take = int.MaxValue)
+        {
+            return string.Join("<br />",
+                Sponzoring()
+                    .OrderByDescending(s => s.DarovanoDne)
+                    .Select(s => s.ToHtml())
+                    .Take(take));
+        }
+
         public IEnumerable<OsobaEvent> Events()
         {
             return Events(m => true);
@@ -263,29 +272,21 @@ namespace HlidacStatu.Lib.Data
 
             using (DbEntities db = new DbEntities())
             {
-
+                //todo: patri tohle do sponzoringu?
                 //sponzoring z navazanych firem kdyz byl statutar
                 IEnumerable<OsobaEvent> firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
                     .AsQueryable()
                     .Where(SponzoringLimitsPredicate)
                     .Where(predicate)
-                    .ToArray()
-                    ;
+                    .ToArray();
+
                 events.AddRange(firmySponzoring);
             }
 
             return events;
         }
 
-        public string EventsToHtml(Expression<Func<OsobaEvent, bool>> predicate, int take = int.MaxValue)
-        {
-            return string.Join("<br />",
-                Events(predicate)
-                    .OrderByDescending(s => s.DatumDo == null ? s.DatumDo : s.DatumOd)
-                    .Select(e => e.RenderHtml())
-                    .Take(take));
-        }
-
+        
         public static int[] VerejnopravniUdalosti = new int[] {
                 (int)OsobaEvent.Types.VolenaFunkce,
                 (int)OsobaEvent.Types.PolitickaPracovni,

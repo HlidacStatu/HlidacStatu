@@ -263,7 +263,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-muted">Sponzorství</h5>
                         <p class="card-text">
-                            @WebUtil.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Sponzor, 6))
+                            @WebUtil.LowBox(80, Model.SponzoringToHtml(6))
                         </p>
                         <a href="#" class="card-link">Další podrobnosti</a>
                     </div>

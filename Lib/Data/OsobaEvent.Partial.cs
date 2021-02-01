@@ -337,38 +337,6 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public string RenderTextFirma(string delimeter = "\n") //přidat jako RenderTextFirma
-        {
-            StringBuilder sb = new StringBuilder();
-            switch ((Types)this.Type)
-            {
-                //case Types.Sponzor:
-                //    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "");
-                case Types.Osobni:  //žádné nejsou, ale mohou být
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
-                    {
-                        Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
-                        if (o != null)
-                            return this.Title + " s " + o.FullName();
-                        else
-                            return this.Title + " " + Note;
-                    }
-                    else
-                        return this.Title + " " + Note;
-
-                case Types.Specialni:  //žádné nejsou a nejsem si jistý, že budou
-                default:
-                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
-                        return this.Title + delimeter + this.Note;
-                    else if (!string.IsNullOrEmpty(this.Title))
-                        return this.Title;
-                    else if (!string.IsNullOrEmpty(this.Note))
-                        return this.Note;
-                    else
-                        return string.Empty;
-            }
-        }
-
         public string RenderHtml(string delimeter = ", ")
         {
             string zdroj = "";
@@ -437,46 +405,6 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public string RenderHtmlFirma(string delimeter = ", ")
-        {
-            string zdroj = "";
-            if (!string.IsNullOrEmpty(this.Zdroj))
-            {
-                if (this.Zdroj.ToLower().StartsWith("http"))
-                    zdroj = string.Format(" <a target='_blank' href='{0}'>{1}</a>", this.Zdroj, "<span class='text-muted' title='Jedná se o peněžní nebo nepeněžní dar' alt='Jedná se o peněžní nebo nepeněžní dar'>(<span class='glyphicon glyphicon-link' aria-hidden='true'></span> zdroj</span>)");
-                else
-                    zdroj = string.Format(" ({0})", this.Zdroj);
-
-            }
-            StringBuilder sb = new StringBuilder();
-            switch ((Types)this.Type)
-            {
-                //case Types.Sponzor:
-                //    return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
-                case Types.Osobni: //nejsou a můžou být
-                    if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
-                    {
-                        Osoba o = Osoby.GetById.Get(Convert.ToInt32(AddInfo));
-                        if (o != null)
-                            return this.Title + " s " + string.Format("<a href=\"{0}\">{1}</a>", o.GetUrl(), o.FullName()) + zdroj;
-                        else
-                            return this.Title + " " + Note + zdroj;
-                    }
-                    else
-                        return this.Title + " " + Note + zdroj;
-
-                case Types.Specialni:  //nejsou a asi nebudou
-                default:
-                    if (!string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(this.Note))
-                        return this.Title + delimeter + this.Note + zdroj;
-                    else if (!string.IsNullOrEmpty(this.Title))
-                        return this.Title + zdroj;
-                    else if (!string.IsNullOrEmpty(this.Note))
-                        return this.Note + zdroj;
-                    else
-                        return string.Empty;
-            }
-        }
 
         public void Delete(string user)
         {

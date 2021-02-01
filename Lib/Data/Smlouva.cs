@@ -1507,19 +1507,19 @@ namespace HlidacStatu.Lib.Data
 
         static HashSet<string> ico_s_VazbouPolitik = new HashSet<string>(
                                                                                                                                     StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Vsechny.Get().Select(m => m.Ico))
+                .Union(StaticData.SponzorujiciFirmy_Vsechny.Get().Select(m => m.IcoDarce))
                 .Distinct()
             );
 
         static HashSet<string> ico_s_VazbouPolitikAktualni = new HashSet<string>(
                     StaticData.FirmySVazbamiNaPolitiky_aktualni_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.Ico))
+                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.IcoDarce))
                 .Distinct()
             );
 
         static HashSet<string> ico_s_VazbouPolitikNedavne = new HashSet<string>(
                     StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.Select(m => m.Key)
-                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.Ico))
+                .Union(StaticData.SponzorujiciFirmy_Nedavne.Get().Select(m => m.IcoDarce))
                 .Distinct()
             );
 

@@ -85,7 +85,7 @@ HtmlRender = (s) => {
 Osoba o = (Osoba)s;
 return string.Format("<a href='{0}'>{1}</a>", o.GetUrl(), o.FullNameWithYear(true))
 + "<br />"
-+ Devmasters.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3), 250).Replace("\n", "<br />");
++ Devmasters.TextUtil.ShortenText(o.Description(false,m=> true, numOfRecords: 3), 250).Replace("\n", "<br />");
 },
 OrderValueRender = (s) => {
 Osoba o = (Osoba)s;

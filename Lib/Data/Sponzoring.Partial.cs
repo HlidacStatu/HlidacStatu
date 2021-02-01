@@ -197,23 +197,31 @@ namespace HlidacStatu.Lib.Data
             };
         }
 
-        public string ToHtml()
+        public string JmenoPrijemce()
         {
             bool prijemceJeFirma = !string.IsNullOrWhiteSpace(IcoPrijemce);
-            bool prijemcejeOsoba = OsobaIdPrijemce != null && OsobaIdPrijemce > 0;
-            string kohoSponzoroval = "";
             if (prijemceJeFirma)
             {
-                kohoSponzoroval = Firma.FromIco(IcoPrijemce).Jmeno;
-            } 
-            else if (prijemcejeOsoba)
-            {
-                kohoSponzoroval = Osoba.GetByInternalId(OsobaIdPrijemce.Value).FullName(html: true);
+                return Firma.FromIco(IcoPrijemce).Jmeno;
             }
-            else
+            
+            bool prijemcejeOsoba = OsobaIdPrijemce != null && OsobaIdPrijemce > 0;
+            if (prijemcejeOsoba)
             {
-                //todo: log corrupted data
-                return "";
+                return Osoba.GetByInternalId(OsobaIdPrijemce.Value).FullName();
+            }
+            
+            //todo: log corrupted data
+            return "";
+        }
+
+        public string ToHtml()
+        {
+            string kohoSponzoroval = JmenoPrijemce();
+            if(string.IsNullOrWhiteSpace(kohoSponzoroval))
+            {
+                // nevime
+                return ""; 
             }
 
             //var kohoSponzoroval = "";
@@ -228,19 +236,7 @@ namespace HlidacStatu.Lib.Data
             return $"Sponzor {kohoSponzoroval} {kdySponzoroval} {dar} {zdroj}";
         }
 
-        //public static bool Compare(Sponzoring a, Sponzoring b)
-        //{
-        //    return a.AddInfo == b.AddInfo
-        //        && a.AddInfoNum == b.AddInfoNum
-        //        && a.DatumDo == b.DatumDo
-        //        && a.DatumOd == b.DatumOd
-        //        && a.Organizace == b.Organizace
-        //        && a.OsobaId == b.OsobaId
-        //        && a.Status == b.Status
-        //        && a.Title == b.Title
-        //        && a.Type == b.Type;
-        //}
-
+        
     }
 }
 
