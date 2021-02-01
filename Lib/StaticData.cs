@@ -283,12 +283,11 @@ namespace HlidacStatu.Lib
                         {
                             List<Osoba> osoby = new List<Osoba>();
 
-                            using (Lib.Data.DbEntities db = new DbEntities())
+                            using (DbEntities db = new DbEntities())
                             {
-
                                 osoby.AddRange(Politici.Get());
                                 var osobyQ = db.Osoba
-                                    .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
+                                    .Where(m => db.Sponzoring.Any(Osoba.SponzoringLimitsPredicate))
                                     .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
                                     .AsNoTracking()
                                     .ToArray()
@@ -392,7 +391,9 @@ namespace HlidacStatu.Lib
                                     {
                                         dary = db.Sponzoring
                                             .AsNoTracking()
-                                            .Where(s => s.IcoDarce != null && s.DarovanoDne > limit10let)
+                                            .Where(s => s.IcoDarce != null 
+                                                && s.DarovanoDne > limit10let
+                                                && s.IcoPrijemce != null) //pro zachování funkčnosti
                                             .ToList();
 
                                         return dary;

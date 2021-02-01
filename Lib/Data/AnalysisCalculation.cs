@@ -204,7 +204,7 @@ namespace HlidacStatu.Lib.Data
         public static AnalysisCalculation.VazbyFiremNaUradyStat UradyObchodujiciSFirmami_s_vazbouNaPolitiky(Relation.AktualnostType aktualnost, bool showProgress = false)
         {
             HlidacStatu.Lib.Data.AnalysisCalculation.VazbyFiremNaPolitiky vazbyNaPolitiky = null;
-            List<Lib.Data.OsobaEvent> sponzorujiciFirmy = null;
+            List<Sponzoring> sponzorujiciFirmy = null;
 
             QueryContainer qc = null;
 
@@ -269,7 +269,7 @@ namespace HlidacStatu.Lib.Data
                               {
                                   foreach (var ico in icos)
                                   {
-                                      if (vazbyNaPolitiky.SoukromeFirmy.ContainsKey(ico) || sponzorujiciFirmy.Any(m => m.Ico == ico))
+                                      if (vazbyNaPolitiky.SoukromeFirmy.ContainsKey(ico) || sponzorujiciFirmy.Any(m => m.IcoDarce == ico))
                                       {
                                           if (!uradySoukr.ContainsKey(objednatelIco))
                                           {

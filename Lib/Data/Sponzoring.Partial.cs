@@ -176,6 +176,27 @@ namespace HlidacStatu.Lib.Data
             return this.Id.ToString();
         }
 
+        [Obsolete("please do not use")]
+        public OsobaEvent ToOsobaEvent()
+        {
+            string prijemce = Firma.FromIco(this.IcoPrijemce).Jmeno;
+            if (string.IsNullOrWhiteSpace(prijemce))
+                prijemce = this.IcoPrijemce + this.OsobaIdPrijemce;
+            return new OsobaEvent()
+            {
+                DatumOd = this.DarovanoDne,
+                DatumDo = this.DarovanoDne,
+                AddInfoNum = this.Hodnota,
+                Organizace = prijemce,
+                //Status = OsobaEvent.Types.Sponzor,
+                Zdroj = this.Zdroj,
+                Title = $"Sponzor {prijemce}",
+                OsobaId = this.OsobaIdDarce ?? 0,
+                Ico = this.IcoDarce
+
+            };
+        }
+
         //public static bool Compare(Sponzoring a, Sponzoring b)
         //{
         //    return a.AddInfo == b.AddInfo

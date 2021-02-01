@@ -283,7 +283,7 @@ namespace HlidacStatu.Web.Controllers
         [Authorize(Roles = "canEditData")]
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditOsoba(string Id, FormCollection form)
+        public ActionResult EditOsoba(string Id, FormCollection form)  //todo: disable this method
         {
 
             var jsonOsoba = Newtonsoft.Json.JsonConvert.DeserializeObject<HlidacStatu.Lib.Data.Osoba.JSON>(form["json"]);

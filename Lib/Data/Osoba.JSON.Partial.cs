@@ -37,7 +37,8 @@ namespace HlidacStatu.Lib.Data
             r.Status = (Osoba.StatusOsobyEnum)t.Status;
             var events = this.Events();
             if (allData == false)
-                events = events.Where(m => m.Type == (int)OsobaEvent.Types.Sponzor);
+                events = this.Sponzoring(s => s.IcoPrijemce != null)
+                    .Select(s => s.ToOsobaEvent());
 
             r.Event = events.Select(m =>
                 new JSON.ev()

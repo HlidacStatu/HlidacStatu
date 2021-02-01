@@ -170,7 +170,7 @@ namespace HlidacStatu.Lib.Data
         private static DateTime minSmallSponzoringDate = new DateTime(DateTime.Now.Year - 5, 1, 1);
         private static decimal smallSponzoringThreshold = 10000;
 
-        public static Expression<Func<Sponzoring, bool>> _sponzoringLimitsPredicate = s =>
+        public static Expression<Func<Sponzoring, bool>> SponzoringLimitsPredicate = s =>
             (s.Hodnota > smallSponzoringThreshold && s.DarovanoDne >= minBigSponzoringDate)
             || (s.Hodnota <= smallSponzoringThreshold && s.DarovanoDne >= minSmallSponzoringDate);
 
@@ -181,7 +181,7 @@ namespace HlidacStatu.Lib.Data
                 return db.Sponzoring
                     .AsNoTracking()
                     .Where(s => s.OsobaIdDarce == this.InternalId)
-                    .Where(_sponzoringLimitsPredicate)
+                    .Where(SponzoringLimitsPredicate)
                     .Where(predicate)
                     .ToArray();
             }
@@ -267,7 +267,7 @@ namespace HlidacStatu.Lib.Data
                 //sponzoring z navazanych firem kdyz byl statutar
                 IEnumerable<OsobaEvent> firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
                     .AsQueryable()
-                    .Where(_sponzoringLimitsPredicate)
+                    .Where(SponzoringLimitsPredicate)
                     .Where(predicate)
                     .ToArray()
                     ;
