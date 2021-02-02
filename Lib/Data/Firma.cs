@@ -857,30 +857,17 @@ namespace HlidacStatu.Lib.Data
             if (Firma.IsValid(f))
                 return f;
 
-
-            //f = External.OR_Elastic.FromIco(ico);
-            //if (Firma.IsValid(f))
-            //    return f;
-
             else if (getMissingFromExternal)
             {
                 f = External.Merk.FromIco(ico);
                 if (Firma.IsValid(f))
                     return f;
-
-                //f = External.Firmo.GetFirmaFromIco(ico);
-                //if (Firma.IsValid(f))
-                //    return f;
-                //f = Lib.Data.External.GovData.FromIco(ico);
-
+            
                 if (!Firma.IsValid(f)) //try firmo
                 {
                     f = External.RZP.FromIco(ico);
                 }
-                //if (!Firma.IsValid(f)) //try firmo
-                //{
-                //    f = Lib.Data.External.Firmo.GetFirmaFromIco(ico);
-                //}
+            
                 if (f == null)
                     return Firma.NotFound;
                 else if (f == Firma.NotFound || f == Firma.LoadError)
