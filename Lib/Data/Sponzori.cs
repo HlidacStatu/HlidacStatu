@@ -253,6 +253,7 @@ namespace HlidacStatu.Lib.Data
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
                     var res = db.Sponzoring
+                        .Where(s => s.IcoDarce != null)
                         .OrderByDescending(o => o.Hodnota)
                         .ToArray()
                         .GroupBy(g => new { Ico = g.IcoDarce, rok = g.DarovanoDne.Value.Year, strana = g.JmenoPrijemce() }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
@@ -264,15 +265,9 @@ namespace HlidacStatu.Lib.Data
                         })
                         .OrderByDescending(o => o.CastkaCelkem);
                     result.AddRange(res);
-
                 }
-
-
                 return result;
-
             });
-
-        
 
         public class Sponzorstvi<T>
             where T : class, HlidacStatu.Lib.Data.Bookmark.IBookmarkable //T Osoba nebo Firma
