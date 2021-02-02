@@ -11,7 +11,7 @@
                                   .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
                                   .ToList();
 
-                var castkuZobrazitPro = new[] { (int)OsobaEvent.Types.Sponzor }; }
+}
 
 @section scripts
 {
@@ -249,12 +249,7 @@
                 @Html.DisplayFor(modelItem => udalost.CEO)
             </td>
             <td>
-                @if (castkuZobrazitPro.Contains(udalost.Type))
-                {
-                    @Html.DisplayFor(modelItem => udalost.AddInfoNum) }
-                else
-                {
-                    @Html.DisplayFor(modelItem => udalost.AddInfo)}
+                @Html.DisplayFor(modelItem => udalost.AddInfo)
             </td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                 @Html.DisplayFor(modelItem => udalost.Zdroj)
@@ -590,22 +585,10 @@
     }
 
     function drawSubtype(eventTypeId) {
-        var eventTypeIdInt = parseInt(eventTypeId, 10);
-        const castkaForTypes = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(castkuZobrazitPro));
-
-        if (castkaForTypes.includes(eventTypeIdInt)) {
-            //display addinfonum instead of selectbox
-            console.log("should display castka");
-            $("#castka_toggle").show();
-            $("#addInfo_toggle").hide();
-            $("#addInfo").val("");
-        } else {
-            console.log("should display addinfo");
-            $("#castka_toggle").hide();
-            $("#addInfo_toggle").show();
-            $("#castka").val("");
-        }
-
+        console.log("should display addinfo");
+        $("#castka_toggle").hide();
+        $("#addInfo_toggle").show();
+        $("#castka").val("");
     }
 
     // našeptávání
@@ -648,27 +631,5 @@
         });
 
     });
-
-    //// scroll top
-    //$(document).ready(function(){
-    // $(window).scroll(function () {
-    //        if ($(this).scrollTop() > 800) {
-    //            $('#back-to-top').fadeIn();
-    //        } else {
-    //            $('#back-to-top').fadeOut();
-    //        }
-    //    });
-    //    // scroll body to 0px on click
-    //    $('#back-to-top').click(function () {
-    //        $('#back-to-top').tooltip('hide');
-    //        $('body,html').animate({
-    //            scrollTop: 0
-    //        }, 800);
-    //        return false;
-    //    });
-
-    //    $('#back-to-top').tooltip('show');
-
-    //});
 
 </script>
