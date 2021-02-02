@@ -766,6 +766,13 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public Sponzoring AddSponsoring(Sponzoring sponzoring, string user)
+        {
+            sponzoring.IcoDarce = this.ICO;
+            var result = Lib.Data.Sponzoring.CreateOrUpdate(sponzoring, user);
+            return result;
+        }
+
         public static string[] Koncovky = new string[] {
             "a.s.",
             "a. s.",

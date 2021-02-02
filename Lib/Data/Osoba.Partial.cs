@@ -192,7 +192,9 @@ namespace HlidacStatu.Lib.Data
                     .Where(predicate)
                     .ToList();
 
-                return osobySponzoring.AddRange(firmySponzoring);
+                osobySponzoring.AddRange(firmySponzoring);
+
+                return osobySponzoring;
             }
         }
 
@@ -995,9 +997,11 @@ namespace HlidacStatu.Lib.Data
                 }
             }
         }
-        public Sponzoring AddSponsor()
+        public Sponzoring AddSponsoring(Sponzoring sponzoring, string user)
         {
-            //todo: přidat sponzora sem, i do firmy
+            sponzoring.OsobaIdDarce = this.InternalId;
+            var result = Lib.Data.Sponzoring.CreateOrUpdate(sponzoring, user);
+            return result;
         }
 
         public static Osoba Get(int Id)
