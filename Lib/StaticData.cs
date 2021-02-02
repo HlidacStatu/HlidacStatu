@@ -106,6 +106,8 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<Lib.Data.Darujme.Stats> DarujmeStats = null;
 
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>> ZkratkyStran_cache = null;
+
 
         public static string[] HejtmaniOd2016 = new string[] {
             "jaroslava-jermanova",
@@ -571,6 +573,13 @@ namespace HlidacStatu.Lib
                    {
                        return Autocomplete.GenerateAutocomplete();
                    });
+
+                ZkratkyStran_cache = new Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>>
+                    (TimeSpan.FromHours(24), "ZkratkyStran",
+                    (o) =>
+                    {
+                        return Lib.Data.ZkratkaStrany.PopulateCache();
+                    });
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - UradyObchodujiciSFirmami_s_vazbouNaPolitiky_*");

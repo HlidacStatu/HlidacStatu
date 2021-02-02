@@ -81,26 +81,26 @@ namespace HlidacStatu.Lib.Data
                 {
                     using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                     {
-                        var resultO = db.OsobaEvent
-                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                        var resultO = db.Sponzoring
+                                .Where(m => m.DarovanoDne != null && m.OsobaIdDarce != null)
                                 .ToArray()
-                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                                .GroupBy(g => new { rok = g.rok, strana = g.oe.Organizace }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                .Select(m => new { rok = m.DarovanoDne.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.JmenoPrijemce() }, oe => oe.oe, (r, oe) => new StranaPerYear()
                                 {
                                     Rok = r.rok,
                                     Strana = r.strana,
-                                    Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                    Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.Hodnota) ?? 0 }
                                 });
 
-                        var resultF = db.OsobaEvent
-                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                        var resultF = db.Sponzoring
+                                .Where(m => m.DarovanoDne != null && m.IcoDarce != null)
                                 .ToArray()
-                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                                .GroupBy(g => new { rok = g.rok, strana = g.oe.AddInfo }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                .Select(m => new { rok = m.DarovanoDne.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.JmenoPrijemce() }, oe => oe.oe, (r, oe) => new StranaPerYear()
                                 {
                                     Rok = r.rok,
                                     Strana = r.strana,
-                                    Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                    Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.Hodnota) ?? 0 }
                                 });
 
                         var roky = resultO.FullOuterJoin(resultF, o => o, f => f,

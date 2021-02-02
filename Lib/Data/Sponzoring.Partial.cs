@@ -183,9 +183,10 @@ namespace HlidacStatu.Lib.Data
             bool prijemceJeFirma = !string.IsNullOrWhiteSpace(IcoPrijemce);
             if (prijemceJeFirma)
             {
-                return Firmy.GetJmeno(IcoPrijemce);
+                var zkratkyStran = StaticData.ZkratkyStran_cache.Get();
+                return zkratkyStran.TryGetValue(IcoPrijemce, out string nazev) ? nazev : Firmy.GetJmeno(IcoPrijemce);
             }
-            
+
             bool prijemcejeOsoba = OsobaIdPrijemce != null && OsobaIdPrijemce > 0;
             if (prijemcejeOsoba)
             {
