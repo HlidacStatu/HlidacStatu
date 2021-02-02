@@ -272,23 +272,7 @@ namespace HlidacStatu.Lib.Data
 
             });
 
-        public static Dictionary<int, Osoba> GetAllSponsors()
-        {
-            using (DbEntities db = new Data.DbEntities())
-            {
-                var ids = db.Sponzoring
-                        .Where(Osoba.SponzoringLimitsPredicate)
-                        .Select(m => m.OsobaIdDarce)
-                        .Distinct()
-                        .ToArray();
-
-                return ids
-                    .Join(StaticData.PolitickyAktivni.Get(), i => i, p => p.InternalId, (i, p) => p)
-                    .ToDictionary(k => k.InternalId, o => o);
-            }
-        }
-
-
+        
 
         public class Sponzorstvi<T>
             where T : class, HlidacStatu.Lib.Data.Bookmark.IBookmarkable //T Osoba nebo Firma
