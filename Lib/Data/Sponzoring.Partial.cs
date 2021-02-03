@@ -217,7 +217,7 @@ namespace HlidacStatu.Lib.Data
                 $"(<a target=\"_blank\" href=\"{Zdroj}\"><span class=\"glyphicon glyphicon-link\" aria-hidden=\"true\"></span>zdroj</a>)";
 
             if (Typ == (int)TypDaru.DarFirmy)
-                return $"Člen statut. orgánu ve firmě sponzorující {kohoSponzoroval} {kdySponzoroval}, hodnota daru {hodnotaDaruKc}";
+                return $"Člen statut. orgánu ve firmě {Firmy.GetJmeno(IcoDarce)} sponzorující {kohoSponzoroval} {kdySponzoroval}, hodnota daru {hodnotaDaruKc}";
 
             return $"Sponzor {kohoSponzoroval} {kdySponzoroval} {dar} {zdroj}";
         }
