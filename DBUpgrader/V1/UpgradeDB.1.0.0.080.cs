@@ -27,7 +27,6 @@ SELECT fe.ICO, fe.Description, 0, fe.AddInfoNum, fe.DatumOd, fe.Zdroj, fe.Create
 Delete from OsobaEvent where Type = 3;
 Delete from FirmaEvent where Type = 3;
 Delete from FirmaEvent where Type = 33;
-GO
 ";
 				du.RunDDLCommands(sql);
 

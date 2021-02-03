@@ -29,7 +29,6 @@ Create table Sponzoring(
     Edited date,
     UpdatedBy nvarchar(150)
 );
-GO
 ";
 				du.RunDDLCommands(sql);
 
