@@ -14,7 +14,6 @@ namespace HlidacStatu.DBUpgrades
 			{
 
 				string sql = @"
-BEGIN
 Create table Sponzoring(
     Id int identity(1,1) Primary key,
     OsobaIdDarce int,
@@ -30,9 +29,7 @@ Create table Sponzoring(
     Edited date,
     UpdatedBy nvarchar(150)
 );
-END
 GO
-COMMIT
 ";
 				du.RunDDLCommands(sql);
 

@@ -14,7 +14,6 @@ namespace HlidacStatu.DBUpgrades
 			{
 
 				string sql = @"
-BEGIN
 INSERT INTO Sponzoring ( OsobaIdDarce, IcoPrijemce, Typ, Hodnota, DarovanoDne, Zdroj, Created, Edited)
 SELECT oe.OsobaId, oe.AddInfo, 0, oe.AddInfoNum, oe.DatumOd, oe.Zdroj, oe.Created, GETDATE()
   FROM OsobaEvent oe
@@ -28,9 +27,7 @@ SELECT fe.ICO, fe.Description, 0, fe.AddInfoNum, fe.DatumOd, fe.Zdroj, fe.Create
 Delete from OsobaEvent where Type = 3;
 Delete from FirmaEvent where Type = 3;
 Delete from FirmaEvent where Type = 33;
-END
 GO
-COMMIT
 ";
 				du.RunDDLCommands(sql);
 
