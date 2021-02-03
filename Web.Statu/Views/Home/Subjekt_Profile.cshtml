@@ -176,7 +176,7 @@ else
                 <tr>
                     <th>Majetkové vazby společnosti</th>
                     <td>
-                        <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřinných společností</a>
+                        <a href="/subjektVazby/@Model.ICO">Hierarchický přehled dceřiných společností</a>
                     </td>
                 </tr>
             }
@@ -210,7 +210,7 @@ else
                         <br />
                         @WebUtil.AddWatchDog(this.User, "holding:" + Model.ICO, null,
                                          $"Hlídat změny i "
-                                         + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřinné společnosti</b>", "ve <b>{0} dceřinných společnostech</b>", "v <b>{0} dceřinných společnostech</b>")
+                                         + Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "v <b>jedné dceřiné společnosti</b>", "ve <b>{0} dceřiných společnostech</b>", "v <b>{0} dceřiných společnostech</b>")
                                          + "", prefillWDname: "Novinky pro " + Model.Jmeno, btnCss: "btn btn-warning btn-xs", showWDList: false, preBtnText: "")}
                 </td>
             </tr>
@@ -424,7 +424,7 @@ else
                 )
             {
                 <tr>
-                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřinné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
+                    <th>Souhrnné statistiky<br />pro subjekt a všechny<br />dceřiné společnosti (@HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))<br />od 2016</th>
                     <td>
                         @Html.Raw(NiceString($"/hledat?q=holding:{Model.ICO}", (int)holdingSummaryAfter2016.PocetSmluv, holdingSummaryAfter2016.CelkovaHodnotaSmluv))<br />
                         @(holdingSummaryAfter2016.PercentSmluvBezCeny.ToString("P1")) smluv se skrytou cenou<br />
@@ -670,7 +670,7 @@ else
                             else
                             {
                                 <p>
-                                    <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                    <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna dceřiná společnost", "{0} dceřiné společnosti", "{0} dceřiných společností")</b>
                                     (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
                                     firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
 
@@ -702,7 +702,7 @@ else
                             else
                             {
                                 <p>
-                                    <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                                    <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna dceřiná společnost", "{0} dceřiné společnosti", "{0} dceřiných společností")</b>
                                     firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
                                 </p>}
                         }

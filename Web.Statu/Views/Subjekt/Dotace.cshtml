@@ -218,7 +218,7 @@
                     else
                     {
                         <p>
-                            <b>@Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount, "Jedna dceřinná společnost", "{0} dceřinné společnosti", "{0} dceřinných společností")</b>
+                            <b>@Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount, "Jedna dceřiná společnost", "{0} dceřiné společnosti", "{0} dceřiných společností")</b>
                             (z celkem @HlidacStatu.Util.RenderData.NiceNumber(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Length))
                             firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35)
 
@@ -258,9 +258,9 @@
                         <p>
                             <b>
                                 @Devmasters.Lang.Plural.Get(subCompaniesWithSubsidiesCount,
-                                   "Jedna dceřinná společnost",
-                                   "{0} dceřinné společnosti",
-                                   "{0} dceřinných společností")
+                                   "Jedna dceřiná společnost",
+                                   "{0} dceřiné společnosti",
+                                   "{0} dceřiných společností")
                             </b>
                             firmy @Devmasters.TextUtil.ShortenText(Model.Jmeno, 35) nedostaly žádné dotace.
                         </p>
