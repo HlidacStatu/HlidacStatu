@@ -311,7 +311,8 @@ namespace HlidacStatu.Lib.Data
         }
         public string Description(bool html, Expression<Func<OsobaEvent, bool>> predicate,
             int numOfRecords = int.MaxValue, string template = "{0}",
-            string itemTemplate = "{0}", string itemDelimeter = "<br/>")
+            string itemTemplate = "{0}", string itemDelimeter = "<br/>",
+            bool withSponzoring = false)
         {
             var fixedOrder = new List<int>() {
                 (int)OsobaEvent.Types.VolenaFunkce,
@@ -324,33 +325,44 @@ namespace HlidacStatu.Lib.Data
             };
 
             var events = this.Events(predicate);
-            if (events.Count() == 0)
+            
+            List<string> evs = events
+                .OrderBy(o =>
+                {
+                    var index = fixedOrder.IndexOf(o.Type);
+                    return index == -1 ? int.MaxValue : index;
+                })
+                .ThenByDescending(o => o.DatumOd)
+                .Take(numOfRecords)
+                .Select(e => html ? e.RenderHtml(", ") : e.RenderText(" "))
+                .ToList();
+
+            if (withSponzoring && html)
+            {
+                var numOfSponzoring = numOfRecords - evs.Count;
+                var sponzoringList = Sponzoring()
+                    .OrderByDescending(s => s.DarovanoDne)
+                    .Take(numOfSponzoring)
+                    .Select(s => s.ToHtml());
+                evs.AddRange(sponzoringList);
+            }
+
+            if (evs.Count() == 0)
                 return string.Empty;
+
+            if (html)
+            {
+                return string.Format(template,
+                        evs.Aggregate((f, s) => f + itemDelimeter + s)
+                    );
+            }
             else
             {
-                List<string> evs = events
-                    .OrderBy(o =>
-                    {
-                        var index = fixedOrder.IndexOf(o.Type);
-                        return index == -1 ? int.MaxValue : index;
-                    })
-                    .ThenByDescending(o => o.DatumOd)
-                    .Take(numOfRecords)
-                    .Select(e => html ? e.RenderHtml(", ") : e.RenderText(" ")).ToList();
-
-                if (html)
-                {
-                    return string.Format(template,
-                         evs.Aggregate((f, s) => f + itemDelimeter + s)
-                        );
-                }
-                else
-                {
-                    return string.Format(template,
-                        evs.Aggregate((f, s) => f + itemDelimeter + s)
-                        );
-                }
+                return string.Format(template,
+                    evs.Aggregate((f, s) => f + itemDelimeter + s)
+                    );
             }
+            
         }
 
         public void Delete(string user)
