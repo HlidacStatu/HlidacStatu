@@ -71,7 +71,8 @@ namespace HlidacStatu.Lib.Searching
                     return val;
 
                 //allow ~ or ~5 on the end of word
-
+                //replace ~ with chr(254)
+                val = System.Text.RegularExpressions.Regex.Replace(val, @"(?<w>\w*) ~ (?<n>\d{0,2})", "${w}"+Devmasters.Core.Chr(254)+"${n}", Util.Consts.DefaultRegexQueryOption);
 
 
                 for (int i = 0; i < val.Length; i++)
@@ -115,7 +116,16 @@ namespace HlidacStatu.Lib.Searching
                         sout.Add(val[i]);
                 }
 
-                return String.Join("", sout);
+                var ret = String.Join("", sout.Select(c=> {
+                    switch (c)
+                    {
+                        case (char)254: return '~';
+                        default:
+                            return c;
+                    }
+                }));
+
+                return ret;
             }
 
         }
