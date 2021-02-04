@@ -706,11 +706,6 @@ namespace HlidacStatu.Lib.Data
             if (ev == null)
                 return null;
 
-            //if (ev.Type == (int)OsobaEvent.Types.Sponzor)
-            //{
-            //    return AddSponsoring(ev.AddInfo, ev.DatumOd.Value.Year, ev.AddInfoNum.Value, ev.Zdroj, user);
-            //}
-
             //check duplicates
             using (DbEntities db = new Data.DbEntities())
             {
