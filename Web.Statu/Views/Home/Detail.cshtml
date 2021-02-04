@@ -308,7 +308,7 @@
     @if (priloha.WordCount > 10)
     {
 @Html.Raw(";&nbsp;")
-                            <a href="@Url.Action("TextSmlouvy", new { id = @Model.Id, hash = priloha.hash.Value, q = Request.QueryString["Q"] })">zobrazit čistý text přílohy</a>
+                            <a href="@Url.Action("TextSmlouvy", new { id = @Model.Id, hash = priloha.hash?.Value, q = Request.QueryString["Q"] })">zobrazit čistý text přílohy</a>
                                                         <span>(@priloha.WordCount slov)</span>}
 
     @WebUtil.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,

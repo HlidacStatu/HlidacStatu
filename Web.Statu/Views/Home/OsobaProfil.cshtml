@@ -316,7 +316,7 @@
                         }
 
 
-                        var dsQuery = $"( OsobaId:{Model.NameId} ) OR (\"{Model.FullName()}\")";
+                        var dsQuery = $"( OsobaId:{Model.NameId} ) OR {Model.FullNameToQuery(true)} ";
                         var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
                         var ftxQuery = Model.FullName();
                         tabs.AddRange(dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(m => m.Total)

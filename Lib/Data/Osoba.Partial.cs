@@ -684,6 +684,20 @@ namespace HlidacStatu.Lib.Data
             return result;
         }
 
+        public string FullNameToQuery(bool exact = true)
+        {
+            if (exact)
+            {
+                List<string> parts = new List<string>();
+                parts.AddRange(this.Jmeno.Split(' '));
+                parts.AddRange(this.Prijmeni.Split(' '));
+                string q = $" ( {string.Join(" ", parts.Select(m => m + "~0"))} ) ";
+                return q;
+            }
+            else
+                return $"(\"{this.FullName()}\")";
+        }
+
         public string FullName(bool html = false)
         {
             string ret = string.Format("{0} {1} {2}{3}", this.TitulPred, this.Jmeno, this.Prijmeni, string.IsNullOrEmpty(this.TitulPo) ? "" : ", " + this.TitulPo).Trim();
