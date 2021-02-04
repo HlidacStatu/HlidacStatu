@@ -30,8 +30,8 @@ namespace SponzoriLoader
         static async Task Main(string[] args)
         {
             _partyNames = LoadPartyNames();
-            var peopleDonations = new Donations(new PersonDonorEqualityComparer());
-            var companyDonations = new Donations(new CompanyDonorEqualityComparer());
+            var peopleDonations = new Donations(new DonorEqualityComparer());
+            var companyDonations = new Donations(new DonorEqualityComparer());
 
             #region loading from web
             foreach (string indexUrl in _addresses)
@@ -45,14 +45,14 @@ namespace SponzoriLoader
                     IEnumerable<dynamic> files = party.files;
                     // osoby
                     string penizeFoUrl = files.Where(f => f.subject == "penizefo").Select(f => f.url).FirstOrDefault();
-                    await LoadPeopleDonationsAsync(penizeFoUrl, peopleDonations, party, year);
+                    await LoadDonationsAsync(penizeFoUrl, peopleDonations, party, year);
                     string nepenizeFoUrl = files.Where(f => f.subject == "bupfo").Select(f => f.url).FirstOrDefault();
-                    await LoadPeopleDonationsAsync(nepenizeFoUrl, peopleDonations, party, year);
+                    await LoadDonationsAsync(nepenizeFoUrl, peopleDonations, party, year);
                     //firmy
                     string penizePoUrl = files.Where(f => f.subject == "penizepo").Select(f => f.url).FirstOrDefault();
-                    await LoadCompanyDonationsAsync(penizePoUrl, companyDonations, party, year);
+                    await LoadDonationsAsync(penizePoUrl, companyDonations, party, year);
                     string nepenizePoUrl = files.Where(f => f.subject == "buppo").Select(f => f.url).FirstOrDefault();
-                    await LoadCompanyDonationsAsync(nepenizePoUrl, companyDonations, party, year);
+                    await LoadDonationsAsync(nepenizePoUrl, companyDonations, party, year);
                 }
 
 
@@ -94,12 +94,7 @@ namespace SponzoriLoader
         /// <summary>
         /// Loads all people donations from web
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="donations"></param>
-        /// <param name="party"></param>
-        /// <param name="year"></param>
-        /// <returns></returns>
-        public static async Task LoadPeopleDonationsAsync(string url, Donations donations, dynamic party, int year)
+        public static async Task LoadDonationsAsync(string url, Donations donations, dynamic party, int year)
         {
             dynamic donationRecords = await LoadIndexAsync(url);
             foreach (var record in donationRecords)
@@ -107,6 +102,7 @@ namespace SponzoriLoader
                 Donor donor = new Donor()
                 {
                     City = record.addrCity,
+                    CompanyId = record.companyId ?? 0,
                     Name = record.firstName,
                     Surname = record.lastName,
                     TitleBefore = record.titleBefore,
@@ -119,63 +115,18 @@ namespace SponzoriLoader
                     ICO = party.ic,
                     Party = party.longName,
                     Description = record.description,
-                    Date = record.date ?? new DateTime(year, 1, 1)
+                    Date = record.date ?? new DateTime(year, 1, 1),
+                    GiftType = (record.money is null) ? Sponzoring.TypDaru.NefinancniDar : Sponzoring.TypDaru.FinancniDar
                 };
 
                 donations.AddDonation(donor, gift);
             }
         }
 
-        /// <summary>
-        /// Loads all company donations from web
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="donations"></param>
-        /// <param name="party"></param>
-        /// <param name="year"></param>
-        /// <returns></returns>
-        public static async Task LoadCompanyDonationsAsync(string url, Donations donations, dynamic party, int year)
-        {
-            dynamic donationRecords = await LoadIndexAsync(url);
-            foreach (var record in donationRecords)
-            {
-                Donor donor = null;
-                try
-                {
-                    donor = new Donor()
-                    {
-                        City = record.addrCity,
-                        Name = record.company,
-                        CompanyId = record.companyId
-                    };
-                }
-                catch (Exception)
-                {
-                    donor = new Donor()
-                    {
-                        City = record.addrCity,
-                        Name = record.company,
-                    };
-                    Console.WriteLine($"Špatný formát IČO: [{record.companyId}], url:[{url}]");
-                }
-
-                Gift gift = new Gift()
-                {
-                    Amount = record.money ?? record.value,
-                    ICO = party.ic,
-                    Party = party.longName,
-                    Description = record.description,
-                    Date = record.date ?? new DateTime(year, 1, 1)
-                };
-
-                donations.AddDonation(donor, gift);
-            }
-        }
 
         /// <summary>
         /// Uploads new donations to OsobaEvent table
         /// </summary>
-        /// <param name="donations"></param>
         public static void UploadPeopleDonations(Donations donations)
         {
             foreach (var personDonations in donations.GetDonations())
@@ -185,34 +136,19 @@ namespace SponzoriLoader
                 Osoba osoba = Osoba.GetOrCreateNew(donor.TitleBefore, donor.Name, donor.Surname, donor.TitleAfter,
                                                    donor.DateOfBirth, Osoba.StatusOsobyEnum.Sponzor, _user);
 
-                var osobaEvents = osoba.NoFilteredEvents(ev => ev.Type == (int)OsobaEvent.Types.Sponzor).ToList();
-
                 foreach (var donation in personDonations.Value)
                 {
-                    var eventToRemove = osobaEvents.Where(oe => oe.AddInfoNum == donation.Amount
-                                            && oe.AddInfo == donation.ICO
-                                            && oe.DatumOd.HasValue
-                                            && oe.DatumOd.Value.Year == donation.Date.Year).FirstOrDefault();
-                    if (eventToRemove is null)
+                    // add event
+                    var sponzoring = new Sponzoring()
                     {
-                        // add event
-                        var newEvent = new OsobaEvent()
-                        {
-                            Organizace = NormalizePartyName(donation.Party, donation.ICO),
-                            DatumOd = donation.Date,
-                            AddInfoNum = donation.Amount,
-                            AddInfo = donation.ICO,
-                            Zdroj = _zdroj,
-                            Note = donation.Description,
-                            Type = (int)OsobaEvent.Types.Sponzor
-                        };
-                        osoba.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
-                    }
-                    else
-                    {
-                        osobaEvents.Remove(eventToRemove);
-                    }
-
+                        DarovanoDne = donation.Date,
+                        Hodnota = donation.Amount,
+                        IcoPrijemce = donation.ICO,
+                        Zdroj = _zdroj,
+                        Popis = donation.Description,
+                        Typ = (int)donation.GiftType
+                    };
+                    osoba.AddOrUpdateSponsoring(sponzoring, _user);
                 }
 
             }
@@ -221,7 +157,6 @@ namespace SponzoriLoader
         /// <summary>
         /// Uploads new donations to FirmaEvent table
         /// </summary>
-        /// <param name="donations"></param>
         public static void UploadCompanyDonations(Donations donations)
         {
             foreach (var companyDonations in donations.GetDonations())
@@ -243,34 +178,19 @@ namespace SponzoriLoader
                     continue;
                 }
 
-                var firmaEvents = firma.Events(ev => ev.Type == (int)FirmaEvent.Types.Sponzor).ToList();
-
                 foreach (var donation in companyDonations.Value)
                 {
-                    var eventToRemove = firmaEvents.Where(oe => oe.AddInfoNum == donation.Amount
-                                            && oe.Description == donation.ICO
-                                            && oe.DatumOd.HasValue
-                                            && oe.DatumOd.Value.Year == donation.Date.Year).FirstOrDefault();
-                    if (eventToRemove is null)
+                    // add event
+                    var sponzoring = new Sponzoring()
                     {
-                        // add event
-                        var newEvent = new FirmaEvent()
-                        {
-                            AddInfo = NormalizePartyName(donation.Party, donation.ICO),
-                            DatumOd = donation.Date,
-                            AddInfoNum = donation.Amount,
-                            Description = donation.ICO,
-                            Zdroj = _zdroj,
-                            Note = donation.Description,
-                            Type = (int)FirmaEvent.Types.Sponzor
-                            
-                        };
-                        firma.AddOrUpdateEvent(newEvent, _user, checkDuplicates: false);
-                    }
-                    else
-                    {
-                        firmaEvents.Remove(eventToRemove);
-                    }
+                        DarovanoDne = donation.Date,
+                        Hodnota = donation.Amount,
+                        IcoPrijemce = donation.ICO,
+                        Zdroj = _zdroj,
+                        Popis = donation.Description,
+                        Typ = (int)donation.GiftType
+                    };
+                    firma.AddSponsoring(sponzoring, _user);
                 }
             }
         }

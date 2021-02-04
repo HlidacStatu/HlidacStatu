@@ -59,7 +59,7 @@
                        )
         </td>
         <td>
-            @Html.Raw(item.Description(true, m => true, 3))
+            @Html.Raw(item.Description(true, m => true, 3, withSponzoring: true))
         </td>
         <td>
             @if (item.Vazby() != null)

@@ -9,10 +9,6 @@ namespace HlidacStatu.Lib.Data
     public static class EventUtil
     {
 
-        public static string RenderDatum(this FirmaEvent oEvent, string txtOd = "", string txtDo = " - ", string dateFormat = "yyyy", string template = "{0}")
-        {
-            return RenderDatum(oEvent.DatumOd, oEvent.DatumDo, txtOd, txtDo, dateFormat, template);
-        }
         public static string RenderDatum(this OsobaEvent oEvent, string txtOd = "", string txtDo = " - ", string dateFormat = "yyyy", string template = "{0}")
         {
             return RenderDatum(oEvent.DatumOd, oEvent.DatumDo, txtOd, txtDo, dateFormat, template);

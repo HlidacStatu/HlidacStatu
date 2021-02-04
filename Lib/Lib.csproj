@@ -483,8 +483,13 @@
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
     <Compile Include="Data\Firmy.GlobalStatistics.cs" />
+    <Compile Include="Data\Sponzoring.Partial.cs" />
     <Compile Include="Data\Smlouva.Statistics.cs" />
     <Compile Include="Data\Smlouva.Statistics.RegistrSmluv.cs" />
+    <Compile Include="Data\Sponzoring.cs">
+      <DependentUpon>Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ZkratkaStrany.Partial.cs" />
     <Compile Include="ES\QueryGrouped.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Backup.cs" />
     <Compile Include="Analysis\KorupcniRiziko\Calculator.Indexy.cs" />
@@ -658,10 +663,6 @@
     <Compile Include="EqualityComparerFactory.cs" />
     <Compile Include="Data\AnalysisCalculation.cs" />
     <Compile Include="Data\EventUtil.cs" />
-    <Compile Include="Data\FirmaEvent.cs">
-      <DependentUpon>Db.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\FirmaEvent.Partial.cs" />
     <Compile Include="Data\Firmy.cs" />
     <Compile Include="Data\OsobaEvent.Partial.cs" />
     <Compile Include="Data\OsobaVazby.Partial.cs" />

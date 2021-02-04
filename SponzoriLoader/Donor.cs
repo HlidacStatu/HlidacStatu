@@ -14,31 +14,20 @@ namespace SponzoriLoader
         public DateTime? DateOfBirth { get; set; }
     }
 
-    public class PersonDonorEqualityComparer : IEqualityComparer<Donor>
+    public class DonorEqualityComparer : IEqualityComparer<Donor>
     {
         public bool Equals(Donor x, Donor y)
         {
-            return x.Name == y.Name
+            return x.CompanyId == y.CompanyId
+                && x.Name == y.Name
                 && x.Surname == y.Surname
                 && x.DateOfBirth == y.DateOfBirth;
         }
 
         public int GetHashCode(Donor obj)
         {
-            return (obj.Name, obj.Surname, obj.DateOfBirth).GetHashCode();
+            return (obj.CompanyId, obj.Name, obj.Surname, obj.DateOfBirth).GetHashCode();
         }
     }
 
-    public class CompanyDonorEqualityComparer : IEqualityComparer<Donor>
-    {
-        public bool Equals(Donor x, Donor y)
-        {
-            return x.CompanyId == y.CompanyId;
-        }
-
-        public int GetHashCode(Donor obj)
-        {
-            return obj.CompanyId.GetHashCode();
-        }
-    }
 }

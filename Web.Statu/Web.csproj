@@ -604,7 +604,6 @@
     <Compile Include="Framework\Report\covid_pomoc.cs" />
     <Compile Include="Framework\Restricted.cs" />
     <Compile Include="Framework\RobotFromIP.cs" />
-    <Compile Include="Framework\Shared\Data.cs" />
     <Compile Include="Framework\LimitedAccess.cs" />
     <Compile Include="Framework\SwaggerControllerTagAttribute.cs" />
     <Compile Include="Framework\Visit.cs" />

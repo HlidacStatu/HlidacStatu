@@ -156,9 +156,7 @@ namespace HlidacStatu.Web.Controllers
                     (int)OsobaEvent.Types.VerejnaSpravaJine,
                     (int)OsobaEvent.Types.VerejnaSpravaPracovni,
                 };
-                //var funkceOsoba = o.Description(true,
-                //        m => types.Contains(m.Type),
-                //        20);
+                
 
                 var roleOsoba = o.Events(m => 
                         types.Contains(m.Type)
@@ -214,17 +212,15 @@ namespace HlidacStatu.Web.Controllers
 
                 var photo = o.GetPhotoUrl(false) + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=photo";
 
-                var sponzorstvi = o.Events(m => 
-                        m.Type == (int)OsobaEvent.Types.Sponzor
-                        && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
+                var sponzorstvi = o.Sponzoring()
                     .Select(m => new
-                                {
-                                    party = m.Organizace,
-                                    donatedAmount = m.AddInfoNum,
-                                    year = m.DatumOd?.Year,
-                                    source = m.Zdroj
-                                }
-                                ).ToArray();
+                    {
+                        party = m.JmenoPrijemce(),
+                        donatedAmount = m.Hodnota,
+                        year = m.DarovanoDne?.Year,
+                        source = m.Zdroj
+                    })
+                    .ToArray();
 
                 var insPerson = new
                 {

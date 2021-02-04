@@ -911,9 +911,13 @@ namespace HlidacStatu.Lib.Data.VZ
                             {
                                 f.Add(new InfoFact(
                                     $"{firma.Jmeno}: " +
-                                    firma.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor, itemDelimeter: ", ", numOfRecords: 2)
-                                    , InfoFact.ImportanceLevel.Medium)
-                                    );
+                                    string.Join("<br />",
+                                        firma.Sponzoring()
+                                            .OrderByDescending(s => s.DarovanoDne)
+                                            .Select(s => s.ToHtml())
+                                            .Take(2)),
+                                    InfoFact.ImportanceLevel.Medium)
+                                );
                             }
                         }
                     }
