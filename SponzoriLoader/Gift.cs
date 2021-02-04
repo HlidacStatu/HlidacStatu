@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HlidacStatu.Lib.Data;
+using System;
 
 namespace SponzoriLoader
 {
@@ -9,6 +10,6 @@ namespace SponzoriLoader
         public string ICO { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
-        
+        public Sponzoring.TypDaru GiftType { get; set; }
     }
 }

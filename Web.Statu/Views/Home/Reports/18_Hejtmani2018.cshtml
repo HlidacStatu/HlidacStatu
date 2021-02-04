@@ -37,7 +37,7 @@
                         Osoba o = (Osoba)s;
                         return string.Format("<a href='{0}'>{1}</a>", o.GetUrl(), o.FullNameWithYear(true))
                         + "<br />"
-                        + Devmasters.TextUtil.ShortenText(o.Description(false,m=>m.Type != (int)OsobaEvent.Types.Sponzor,3),250).Replace("\n", "<br />");
+                        + Devmasters.TextUtil.ShortenText(o.Description(false,m=> true, numOfRecords: 3), 250).Replace("\n", "<br />");
                     },
                     OrderValueRender = (s) => {
                         Osoba o = (Osoba)s;
@@ -91,7 +91,7 @@
                 new ReportDataSource.Column() { Name="Sponzor",
                     HtmlRender = (s) => {
                         Osoba o = (Osoba)s;
-                        var sum = o.Sponzoring().Sum(m=>m.AddInfoNum);
+                        var sum = o.Sponzoring().Sum(m=>m.Hodnota);
                         if (sum==0)
                             return "Ne";
                         else
@@ -99,7 +99,7 @@
                     },
                     OrderValueRender = (s) => {
                         Osoba o = (Osoba)s;
-                        var val= o.Sponzoring().Sum(m=>m.AddInfoNum) ;
+                        var val= o.Sponzoring().Sum(m=>m.Hodnota) ;
                         return HlidacStatu.Util.RenderData.OrderValueFormat(val);
                     }
                 },

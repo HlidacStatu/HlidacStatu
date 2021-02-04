@@ -69,9 +69,9 @@
     }
 
     @{
-        var sponzoring = Model.Events(e => e.Type == (int)FirmaEvent.Types.Sponzor)
-            .GroupBy(s => (rok: s.DatumOd?.Year ?? 0, ico: s.Description),
-            (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.AddInfoNum ?? 0)))
+        var sponzoring = Model.Sponzoring()
+            .GroupBy(s => (rok: s.DarovanoDne?.Year ?? 0, ico: s.IcoPrijemce),
+            (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.Hodnota ?? 0)))
             .ToList();
 
         var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(

@@ -18,14 +18,14 @@ namespace HlidacStatu.Web.Models.Apiv2
             this.Narozeni = o.Narozeni;
             this.NameId = o.NameId;
             this.Profile = o.GetUrl();
-            this.Sponzoring = o.Events(ev => ev.Type == (int)OsobaEvent.Types.Sponzor)
+            this.Sponzoring = o.Sponzoring()
                 .Select(ev => new OsobaEventDTO()
                 {
-                    Castka = ev.AddInfoNum,
-                    DatumOd = ev.DatumOd,
-                    DatumDo = ev.DatumDo,
+                    Castka = ev.Hodnota,
+                    DatumOd = ev.DarovanoDne,
+                    DatumDo = ev.DarovanoDne,
                     Typ = "sponzor",
-                    Organizace = ev.Organizace
+                    Organizace = ev.JmenoPrijemce()
                 }).ToList() ;
 
             var unwantedEvents = new int[]
@@ -33,7 +33,6 @@ namespace HlidacStatu.Web.Models.Apiv2
                 (int)OsobaEvent.Types.Osobni,
                 (int)OsobaEvent.Types.CentralniRegistrOznameni,
                 (int)OsobaEvent.Types.SocialniSite,
-                (int)OsobaEvent.Types.Sponzor
             };
 
             this.Udalosti = o.NoFilteredEvents(ev => !unwantedEvents.Contains(ev.Type))

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Devmasters;
@@ -21,17 +22,27 @@ namespace HlidacStatu.Lib.Data
         //private static ObjectsComparer.Comparer<OsobaEvent> comparer = new ObjectsComparer.Comparer<OsobaEvent>();
         static OsobaEvent()
         {
-            //comparer.AddComparerOverride("pk", ObjectsComparer.DoNotCompareValueComparer.Instance);
         }
+
         public OsobaEvent()
         {
             this.Created = DateTime.Now;
-
         }
 
+        //Event k osobě
         public OsobaEvent(int osobaId, string title, string note, Types type)
         {
             this.OsobaId = osobaId;
+            this.Title = title;
+            this.Note = note;
+            this.Type = (int)type;
+            this.Created = DateTime.Now;
+        }
+
+        //Event k firmě
+        public OsobaEvent(string ICO, string title, string note, Types type)
+        {
+            this.Ico = ICO;
             this.Title = title;
             this.Note = note;
             this.Type = (int)type;
@@ -47,8 +58,8 @@ namespace HlidacStatu.Lib.Data
             VolenaFunkce = 1,
             [NiceDisplayName("Soukromá pracovní")]
             SoukromaPracovni = 2,
-            [NiceDisplayName("Sponzor")]
-            Sponzor = 3,
+            //[NiceDisplayName("Sponzor")]
+            //Sponzor = 3,
             [NiceDisplayName("Osobní")]
             Osobni = 4,
             [NiceDisplayName("Veřejná správa pracovní")]
@@ -165,69 +176,100 @@ namespace HlidacStatu.Lib.Data
 
         public static OsobaEvent CreateOrUpdate(OsobaEvent osobaEvent, string user)
         {
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            using (DbEntities db = new DbEntities())
             {
-                // create
-                if (osobaEvent.pk == 0 && osobaEvent.OsobaId > 0)
-                {
-                    osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
-                    osobaEvent.Created = DateTime.Now;
-
-                    // check if event exists so we are not creating duplicities...
-                    var oe = db.OsobaEvent
-                        .Where(ev =>
-                            ev.OsobaId == osobaEvent.OsobaId
-                            && ev.AddInfo == osobaEvent.AddInfo
-                            && ev.DatumOd == osobaEvent.DatumOd
-                            && ev.Type == osobaEvent.Type
-                            && ev.Organizace == osobaEvent.Organizace)
-                        .FirstOrDefault();
-
-                    if (oe != null)
-                        return oe;
-
-                    db.OsobaEvent.Add(osobaEvent);
-                    db.SaveChanges();
-                    Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
-                    Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
-                    return osobaEvent;
-                }
-
-                // update
+                OsobaEvent eventToUpdate = null;
+                // známe PK
                 if (osobaEvent.pk > 0)
                 {
-                    var eventToUpdate = db.OsobaEvent
-                    .Where(ev =>
-                        ev.pk == osobaEvent.pk
-                    ).FirstOrDefault();
+                    eventToUpdate = db.OsobaEvent
+                        .Where(ev =>
+                            ev.pk == osobaEvent.pk
+                        )
+                        .FirstOrDefault();
 
-                    var eventOriginal = eventToUpdate.ShallowCopy();
-
-                    if (eventToUpdate != null)
-                    {
-                        eventToUpdate.DatumOd = osobaEvent.DatumOd;
-                        eventToUpdate.DatumDo = osobaEvent.DatumDo;
-                        eventToUpdate.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
-                        eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
-                        eventToUpdate.AddInfo = osobaEvent.AddInfo;
-                        eventToUpdate.Title = osobaEvent.Title;
-                        eventToUpdate.Type = osobaEvent.Type;
-                        eventToUpdate.Zdroj = osobaEvent.Zdroj;
-                        eventToUpdate.Status = osobaEvent.Status;
-                        eventToUpdate.Ico = osobaEvent.Ico;
-                        eventToUpdate.CEO = osobaEvent.CEO;
-
-                        eventToUpdate.Created = DateTime.Now;
-
-                        db.SaveChanges();
-                        Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
-                        Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
-
-                        return eventToUpdate;
-                    }
+                    if(eventToUpdate != null)
+                        return UpdateEvent(eventToUpdate, osobaEvent, user, db);
                 }
+
+                eventToUpdate = GetDuplicate(osobaEvent, db);
+
+                if(eventToUpdate != null)
+                {
+                    return UpdateEvent(eventToUpdate, osobaEvent, user, db);
+                }
+
+                return CreateEvent(osobaEvent, user, db);
             }
+        }
+
+        private static OsobaEvent GetDuplicate(OsobaEvent osobaEvent, DbEntities db)
+        {
+            return db.OsobaEvent
+                .Where(ev =>
+                    ev.OsobaId == osobaEvent.OsobaId
+                    && ev.Ico == osobaEvent.Ico
+                    && ev.AddInfo == osobaEvent.AddInfo
+                    && ev.AddInfoNum == osobaEvent.AddInfoNum
+                    && ev.DatumOd == osobaEvent.DatumOd
+                    && ev.Type == osobaEvent.Type
+                    && ev.Organizace == osobaEvent.Organizace)
+                .FirstOrDefault();
+        }
+
+        private static OsobaEvent CreateEvent(OsobaEvent osobaEvent, string user, DbEntities db)
+        {
+            if (osobaEvent.OsobaId == 0 && string.IsNullOrWhiteSpace(osobaEvent.Ico))
+                throw new Exception("Cant attach event to a person or to a company since their reference is empty");
+
+            osobaEvent.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
+            osobaEvent.Created = DateTime.Now;
+            db.OsobaEvent.Add(osobaEvent);
+            db.SaveChanges();
+            if (osobaEvent.OsobaId > 0)
+            {
+                Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
+            }
+            Audit.Add(Audit.Operations.Update, user, osobaEvent, null);
             return osobaEvent;
+            
+        }
+
+        private static OsobaEvent UpdateEvent(OsobaEvent eventToUpdate, OsobaEvent osobaEvent, string user, DbEntities db)
+        {
+            if (eventToUpdate is null)
+                throw new ArgumentNullException(nameof(eventToUpdate), "Argument can't be null");
+            if (osobaEvent is null)
+                throw new ArgumentNullException(nameof(osobaEvent), "Argument can't be null");
+            if (db is null)
+                throw new ArgumentNullException(nameof(db), "Argument can't be null");
+
+            var eventOriginal = eventToUpdate.ShallowCopy();
+
+            if (!string.IsNullOrWhiteSpace(osobaEvent.Ico))
+                eventToUpdate.Ico = osobaEvent.Ico;
+            if (osobaEvent.OsobaId > 0)
+                eventToUpdate.OsobaId = osobaEvent.OsobaId;
+            
+            eventToUpdate.DatumOd = osobaEvent.DatumOd;
+            eventToUpdate.DatumDo = osobaEvent.DatumDo;
+            eventToUpdate.Organizace = ParseTools.NormalizaceStranaShortName(osobaEvent.Organizace);
+            eventToUpdate.AddInfoNum = osobaEvent.AddInfoNum;
+            eventToUpdate.AddInfo = osobaEvent.AddInfo;
+            eventToUpdate.Title = osobaEvent.Title;
+            eventToUpdate.Type = osobaEvent.Type;
+            eventToUpdate.Zdroj = osobaEvent.Zdroj;
+            eventToUpdate.Status = osobaEvent.Status;
+            eventToUpdate.CEO = osobaEvent.CEO;
+            eventToUpdate.Created = DateTime.Now;
+
+            db.SaveChanges();
+            if (osobaEvent.OsobaId > 0)
+            {
+                Osoby.GetById.Get(osobaEvent.OsobaId).FlushCache();
+            }
+            Audit.Add(Audit.Operations.Update, user, eventToUpdate, eventOriginal);
+            return eventToUpdate;
         }
 
         public OsobaEvent ShallowCopy()
@@ -242,9 +284,6 @@ namespace HlidacStatu.Lib.Data
             {
 
                 case Types.Politicka:
-                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:" do ", template:"({0})"), this.Organizace);
-                //    return sb.ToString();
-                //// poslanec a senátor sloučeni
                 case Types.PolitickaPracovni:
                 case Types.VerejnaSpravaJine:
                 case Types.VerejnaSpravaPracovni:
@@ -254,13 +293,13 @@ namespace HlidacStatu.Lib.Data
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
-                case Types.Sponzor:
-                    if (!string.IsNullOrEmpty(Note) 
-                        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
-                    }
-                    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //case Types.Sponzor:
+                //    if (!string.IsNullOrEmpty(Note) 
+                //        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                //    {
+                //        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //    }
+                //    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -295,9 +334,7 @@ namespace HlidacStatu.Lib.Data
                         return this.Note ;
                     else
                         return string.Empty;
-
             }
-
         }
 
         public string RenderHtml(string delimeter = ", ")
@@ -315,9 +352,6 @@ namespace HlidacStatu.Lib.Data
             switch ((Types)this.Type)
             {
                 case Types.Politicka:
-                //    sb.AppendFormat("Člen strany {1} {0} ", this.RenderDatum(txtOd:"od", txtDo:" do ", template:"({0})"), this.Organizace);
-                //    return sb.ToString();
-                //// poslanec a senátor sloučeni
                 case Types.PolitickaPracovni:
                 case Types.VerejnaSpravaJine:
                 case Types.VerejnaSpravaPracovni:
@@ -327,14 +361,13 @@ namespace HlidacStatu.Lib.Data
                     if (!string.IsNullOrEmpty(this.Organizace))
                         sb.Append(" - " + Organizace);
                     return sb.ToString();
-                case Types.Sponzor:
-                    if (!string.IsNullOrEmpty(Note) 
-                        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
-                    }
-                    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
-                    //return Title + " v " + this.RenderDatum() + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
+                //case Types.Sponzor:
+                //    if (!string.IsNullOrEmpty(Note) 
+                //        && Note.StartsWith("Člen statut.", StringComparison.InvariantCultureIgnoreCase))
+                //    {
+                //        return $"{Note} {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "");
+                //    }
+                //    return $"Sponzor {Organizace} v {DatumOd?.Year}" + (AddInfoNum.HasValue ? ", hodnota daru " + Smlouva.NicePrice(AddInfoNum) : "") + zdroj;
                 case Types.Osobni:
                     if (!string.IsNullOrEmpty(AddInfo) && Devmasters.TextUtil.IsNumeric(AddInfo))
                     {
@@ -369,10 +402,9 @@ namespace HlidacStatu.Lib.Data
                         return this.Note + zdroj;
                     else
                         return string.Empty;
-
             }
-
         }
+
 
         public void Delete(string user)
         {

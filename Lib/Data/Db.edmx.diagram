@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="FirmyModel.Osoba" Width="3.25" PointX="9.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FirmyModel.OsobaExternalId" Width="1.5" PointX="9.625" PointY="0.5" />
         <EntityTypeShape EntityType="FirmyModel.OsobaVazby" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="FirmyModel.FirmaEvent" Width="1.5" PointX="11.75" PointY="3.75" />
         <EntityTypeShape EntityType="FirmyModel.InvoiceItems" Width="1.5" PointX="3.125" PointY="1.5" />
         <EntityTypeShape EntityType="FirmyModel.Invoices" Width="1.5" PointX="0.75" PointY="1.125" />
         <AssociationConnector Association="FirmyModel.FK_InvoiceItems_Invoices" />
@@ -33,6 +32,7 @@
         <EntityTypeShape EntityType="FirmyModel.TipUrl" Width="1.5" PointX="7.375" PointY="15.75" />
         <EntityTypeShape EntityType="FirmyModel.ClassificationOverride" Width="1.5" PointX="9.375" PointY="15.75" />
         <EntityTypeShape EntityType="FirmyModel.ZkratkaStrany" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="FirmyModel.Sponzoring" Width="1.5" PointX="0.75" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

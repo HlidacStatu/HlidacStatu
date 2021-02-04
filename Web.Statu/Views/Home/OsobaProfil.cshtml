@@ -23,6 +23,13 @@
         <h1 class="new-title text-left" style="margin-top: 10px;">
             @WebUtil.AddBookmark(this.User, Model)
             @Model.FullNameWithYear()
+
+            @if (this.User?.IsInRole("canEditData") == true)
+            {
+                <a href="/manage/PersonDetail/@Model.InternalId" style="font-size:0.8em">
+                    <i class="far fa-axe"></i>
+                </a>
+            }
         </h1>
         <hr />
         <div class="col-sm-4 col-md-3">
@@ -110,7 +117,7 @@
             Podpora politických stran
         </div>
         <div class="new-p">
-            @WebUtil.LowBox(80, Model.Description(true, m => m.Type == (int)HlidacStatu.Lib.Data.FirmaEvent.Types.Sponzor))
+            @WebUtil.LowBox(80, Model.SponzoringToHtml())
         </div>
     </div>}
             </div>

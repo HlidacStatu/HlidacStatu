@@ -88,8 +88,8 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> PolitickyAktivni = null;
         public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Osoba>> Politici = null;
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Vsechny = null;
-        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>> SponzorujiciFirmy_Nedavne = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Sponzoring>> SponzorujiciFirmy_Vsechny = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.Sponzoring>> SponzorujiciFirmy_Nedavne = null;
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<List<double>> BasicStatisticData = null;
 
@@ -105,6 +105,8 @@ namespace HlidacStatu.Lib
         //public static SingletonManagerWithSetup<Data.External.TwitterPublisher, Tweetinvi.Models.TwitterCredentials> TweetingManager = null;
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<Lib.Data.Darujme.Stats> DarujmeStats = null;
+
+        public static Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>> ZkratkyStran_cache = null;
 
 
         public static string[] HejtmaniOd2016 = new string[] {
@@ -283,12 +285,11 @@ namespace HlidacStatu.Lib
                         {
                             List<Osoba> osoby = new List<Osoba>();
 
-                            using (Lib.Data.DbEntities db = new DbEntities())
+                            using (DbEntities db = new DbEntities())
                             {
-
                                 osoby.AddRange(Politici.Get());
                                 var osobyQ = db.Osoba
-                                    .Where(m => db.OsobaEvent.Any(Osoba._sponzoringLimitsPredicate))
+                                    .Where(m => db.Sponzoring.Any(Osoba.SponzoringLimitsPredicate))
                                     .Where(m => m.Status == (int)Osoba.StatusOsobyEnum.VazbyNaPolitiky || m.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
                                     .AsNoTracking()
                                     .ToArray()
@@ -383,36 +384,34 @@ namespace HlidacStatu.Lib
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_Vsechny ");
 
 
-                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
+                SponzorujiciFirmy_Vsechny = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Sponzoring>>(
                                 TimeSpan.FromHours(3), (obj) =>
                                 {
-                                    List<FirmaEvent> firmy = null;
+                                    List<Sponzoring> dary = null;
                                     DateTime limit10let = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-10);
                                     using (Lib.Data.DbEntities db = new DbEntities())
                                     {
-                                        firmy = db.FirmaEvent
+                                        dary = db.Sponzoring
                                             .AsNoTracking()
-                                            .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor && m.DatumDo > limit10let)
-                                            //.Where(m=>m.)
-                                            //.Select(m=>m.ICO)
+                                            .Where(s => s.IcoDarce != null 
+                                                && s.DarovanoDne > limit10let
+                                                && s.IcoPrijemce != null) //pro zachování funkčnosti
                                             .ToList();
 
-                                        return firmy;
-
+                                        return dary;
                                     }
-
                                 }
                             );
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - SponzorujiciFirmy_nedavne");
-                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Lib.Data.FirmaEvent>>(
+                SponzorujiciFirmy_Nedavne = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<List<Sponzoring>>(
                         TimeSpan.FromHours(3), (obj) =>
                         {
                             return StaticData.SponzorujiciFirmy_Vsechny.Get()
                                     .Where(m =>
-                                        (m.DatumDo.HasValue && m.DatumDo.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
+                                        (m.DarovanoDne.HasValue && m.DarovanoDne.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
                                         ||
-                                        (m.DatumOd.HasValue && m.DatumOd.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
+                                        (m.DarovanoDne.HasValue && m.DarovanoDne.Value.Add(Relation.NedavnyVztahDelka) > DateTime.Now)
                                     )
                                     .ToList();
                         }
@@ -463,7 +462,6 @@ namespace HlidacStatu.Lib
                             List<double> pol = new List<double>();
                             try
                             {
-
                                 var res = HlidacStatu.Lib.Data.Smlouva.Search.RawSearch("", 1, 0, platnyZaznam: true, anyAggregation:
                                     new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                                         .Sum("totalPrice", m => m
@@ -575,6 +573,13 @@ namespace HlidacStatu.Lib
                    {
                        return Autocomplete.GenerateAutocomplete();
                    });
+
+                ZkratkyStran_cache = new Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>>
+                    (TimeSpan.FromHours(24), "ZkratkyStran",
+                    (o) =>
+                    {
+                        return Lib.Data.ZkratkaStrany.PopulateCache();
+                    });
 
 
                 HlidacStatu.Util.Consts.Logger.Info("Static data - UradyObchodujiciSFirmami_s_vazbouNaPolitiky_*");

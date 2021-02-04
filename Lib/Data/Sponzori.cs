@@ -81,26 +81,26 @@ namespace HlidacStatu.Lib.Data
                 {
                     using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                     {
-                        var resultO = db.OsobaEvent
-                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                        var resultO = db.Sponzoring
+                                .Where(m => m.DarovanoDne != null && m.OsobaIdDarce != null)
                                 .ToArray()
-                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                                .GroupBy(g => new { rok = g.rok, strana = g.oe.Organizace }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                .Select(m => new { rok = m.DarovanoDne.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.JmenoPrijemce() }, oe => oe.oe, (r, oe) => new StranaPerYear()
                                 {
                                     Rok = r.rok,
                                     Strana = r.strana,
-                                    Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                    Osoby = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.Hodnota) ?? 0 }
                                 });
 
-                        var resultF = db.FirmaEvent
-                                .Where(m => m.Type == 3 && m.DatumOd.HasValue)
+                        var resultF = db.Sponzoring
+                                .Where(m => m.DarovanoDne != null && m.IcoDarce != null)
                                 .ToArray()
-                                .Select(m => new { rok = m.DatumOd.Value.Year, oe = m })
-                                .GroupBy(g => new { rok = g.rok, strana = g.oe.AddInfo }, oe => oe.oe, (r, oe) => new StranaPerYear()
+                                .Select(m => new { rok = m.DarovanoDne.Value.Year, oe = m })
+                                .GroupBy(g => new { rok = g.rok, strana = g.oe.JmenoPrijemce() }, oe => oe.oe, (r, oe) => new StranaPerYear()
                                 {
                                     Rok = r.rok,
                                     Strana = r.strana,
-                                    Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.AddInfoNum) ?? 0 }
+                                    Firmy = new AggSum() { Num = oe.Count(), Sum = oe.Sum(s => s.Hodnota) ?? 0 }
                                 });
 
                         var roky = resultO.FullOuterJoin(resultF, o => o, f => f,
@@ -225,16 +225,15 @@ namespace HlidacStatu.Lib.Data
                     List<Sponsors.Sponzorstvi<Osoba>> result = new List<Sponsors.Sponzorstvi<Osoba>>();
                     using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                     {
-                        var res = db.OsobaEvent
-                            .Where(Osoba._sponzoringLimitsPredicate)
-                            .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor)
-                            .Join(db.Osoba, oe => oe.OsobaId, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
-                            .OrderByDescending(o => o.oe.AddInfoNum)
+                        var res = db.Sponzoring
+                            .Where(Osoba.SponzoringLimitsPredicate)
+                            .Join(db.Osoba, oe => oe.OsobaIdDarce, o => o.InternalId, (oe, o) => new { osoba = o, oe = oe })
+                            .OrderByDescending(o => o.oe.Hodnota)
                             .ToArray()
-                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DatumOd.Value.Year, strana = g.oe.Organizace }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
+                            .GroupBy(g => new { osoba = g.osoba, rok = g.oe.DarovanoDne.Value.Year, strana = g.oe.JmenoPrijemce() }, oe => oe.oe, (o, oe) => new Sponsors.Sponzorstvi<Osoba>()
                             {
                                 Sponzor = o.osoba,
-                                CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
+                                CastkaCelkem = oe.Sum(e => e.Hodnota) ?? 0,
                                 Rok = o.rok,
                                 Strana = o.strana
                             })
@@ -243,9 +242,7 @@ namespace HlidacStatu.Lib.Data
 
                     }
 
-
                     return result;
-
                 });
 
         public static Devmasters.Cache.LocalMemory.LocalMemoryCache<IEnumerable<Sponsors.Sponzorstvi<Firma.Lazy>>> AllSponzorsPerYearPerStranaFirmy
@@ -255,44 +252,22 @@ namespace HlidacStatu.Lib.Data
                 List<Sponsors.Sponzorstvi<Firma.Lazy>> result = new List<Sponsors.Sponzorstvi<Firma.Lazy>>();
                 using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
                 {
-                    var res = db.FirmaEvent
-                        .Where(m => m.Type == (int)FirmaEvent.Types.Sponzor)
-                        .OrderByDescending(o => o.AddInfoNum)
+                    var res = db.Sponzoring
+                        .Where(s => s.IcoDarce != null)
+                        .OrderByDescending(o => o.Hodnota)
                         .ToArray()
-                        .GroupBy(g => new { Ico = g.ICO, rok = g.DatumOd.Value.Year, strana = g.AddInfo }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
+                        .GroupBy(g => new { Ico = g.IcoDarce, rok = g.DarovanoDne.Value.Year, strana = g.JmenoPrijemce() }, oe => oe, (o, oe) => new Sponsors.Sponzorstvi<Firma.Lazy>()
                         {
                             Sponzor = new Firma.Lazy(o.Ico),
-                            CastkaCelkem = oe.Sum(e => e.AddInfoNum) ?? 0,
+                            CastkaCelkem = oe.Sum(e => e.Hodnota) ?? 0,
                             Rok = o.rok,
                             Strana = o.strana
                         })
                         .OrderByDescending(o => o.CastkaCelkem);
                     result.AddRange(res);
-
                 }
-
-
                 return result;
-
             });
-
-        public static Dictionary<int, Osoba> GetAllSponsors()
-        {
-            using (DbEntities db = new Data.DbEntities())
-            {
-                var ids = db.OsobaEvent
-                        .Where(Osoba._sponzoringLimitsPredicate)
-                        .Where(m => m.Type == (int)OsobaEvent.Types.Sponzor).Distinct().Select(m => m.OsobaId)
-                        .Distinct()
-                        .ToArray();
-
-                return ids
-                    .Join(StaticData.PolitickyAktivni.Get(), i => i, p => p.InternalId, (i, p) => p)
-                    .ToDictionary(k => k.InternalId, o => o);
-            }
-        }
-
-
 
         public class Sponzorstvi<T>
             where T : class, HlidacStatu.Lib.Data.Bookmark.IBookmarkable //T Osoba nebo Firma
