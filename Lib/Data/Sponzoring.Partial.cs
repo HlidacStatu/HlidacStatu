@@ -86,16 +86,19 @@ namespace HlidacStatu.Lib.Data
         private static Sponzoring FindDuplicate(Sponzoring sponzoring, DbEntities db)
         {
             // u sponzoringu nekontrolujeme organizaci, ani rok, protože to není historicky konzistentní
+            var result = db.Sponzoring.Where(s => s.Id == sponzoring.Id).FirstOrDefault();
+            if (result != null)
+                return result;
+
             return db.Sponzoring
                 .Where(s =>
-                    s.Id == sponzoring.Id
-                    || (s.IcoDarce == sponzoring.IcoDarce
+                    s.IcoDarce == sponzoring.IcoDarce
                     && s.IcoPrijemce == sponzoring.IcoPrijemce
                     && s.OsobaIdDarce == sponzoring.OsobaIdDarce
                     && s.OsobaIdPrijemce == sponzoring.OsobaIdPrijemce
                     && s.Typ == sponzoring.Typ
                     && s.Hodnota == sponzoring.Hodnota
-                    && s.DarovanoDne == sponzoring.DarovanoDne)
+                    && s.DarovanoDne == sponzoring.DarovanoDne
                 )
                 .FirstOrDefault();
         }

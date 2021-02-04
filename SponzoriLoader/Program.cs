@@ -148,7 +148,7 @@ namespace SponzoriLoader
                         Popis = donation.Description,
                         Typ = (int)donation.GiftType
                     };
-                    osoba.AddSponsoring(sponzoring, _user);
+                    osoba.AddOrUpdateSponsoring(sponzoring, _user);
                 }
 
             }

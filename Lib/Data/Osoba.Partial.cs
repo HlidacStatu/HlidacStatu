@@ -198,6 +198,28 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public IEnumerable<Sponzoring> SponzoringsUnfiltered(Expression<Func<Sponzoring, bool>> predicate)
+        {
+            using (DbEntities db = new DbEntities())
+            {
+                var osobySponzoring = db.Sponzoring
+                    .AsNoTracking()
+                    .Where(s => s.OsobaIdDarce == this.InternalId)
+                    .Where(predicate)
+                    .ToList();
+
+                //sponzoring z navazanych firem kdyz byl statutar
+                var firmySponzoring = Osoby.CachedFirmySponzoring.Get(this.InternalId)
+                    .AsQueryable()
+                    .Where(predicate)
+                    .ToList();
+
+                osobySponzoring.AddRange(firmySponzoring);
+
+                return osobySponzoring;
+            }
+        }
+
         public string SponzoringToHtml(int take = int.MaxValue)
         {
             return string.Join("<br />",
@@ -431,11 +453,16 @@ namespace HlidacStatu.Lib.Data
             if (this.InternalId == duplicated.InternalId)
                 return this;
 
-            OsobaEvent[] dEvs = duplicated.NoFilteredEvents().ToArray();
-            OsobaExternalId[] dEids = duplicated.ExternalIds().Where(m => m.ExternalSource != (int)OsobaExternalId.Source.HlidacSmluvGuid).ToArray();
             using (DbEntities db = new Data.DbEntities())
             {
+                var duplicateSponzoring = duplicated
+                    .SponzoringsUnfiltered(s => s.Typ != (int)Data.Sponzoring.TypDaru.DarFirmy).ToList();
+                foreach (var ds in duplicateSponzoring)
+                {
+                    this.AddOrUpdateSponsoring(ds, user);
+                }
 
+                OsobaEvent[] dEvs = duplicated.NoFilteredEvents().ToArray();
                 foreach (var dEv in dEvs)
                 {
                     //check duplicates
@@ -456,6 +483,9 @@ namespace HlidacStatu.Lib.Data
                     }
                 }
             }
+            OsobaExternalId[] dEids = duplicated.ExternalIds()
+                .Where(m => m.ExternalSource != (int)OsobaExternalId.Source.HlidacSmluvGuid)
+                .ToArray();
             List<OsobaExternalId> addExternalIds = new List<OsobaExternalId>();
             foreach (var dEid in dEids)
             {
@@ -1009,7 +1039,7 @@ namespace HlidacStatu.Lib.Data
                 }
             }
         }
-        public Sponzoring AddSponsoring(Sponzoring sponzoring, string user)
+        public Sponzoring AddOrUpdateSponsoring(Sponzoring sponzoring, string user)
         {
             sponzoring.OsobaIdDarce = this.InternalId;
             var result = Lib.Data.Sponzoring.CreateOrUpdate(sponzoring, user);
