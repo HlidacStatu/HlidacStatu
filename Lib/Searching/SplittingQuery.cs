@@ -70,6 +70,10 @@ namespace HlidacStatu.Lib.Searching
                 if (val.EndsWith("*"))
                     return val;
 
+                //allow ~ or ~5 on the end of word
+
+
+
                 for (int i = 0; i < val.Length; i++)
                 {
                     if (!string.IsNullOrEmpty(Prefix) && skipIfPrefix.Contains(val[i]))
