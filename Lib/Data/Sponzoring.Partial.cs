@@ -213,7 +213,7 @@ namespace HlidacStatu.Lib.Data
             var dar = (Typ == (int)TypDaru.FinancniDar) ? 
                 $"částkou {hodnotaDaruKc}" : 
                 $"nepeněžním darem ({Popis}) v hodnotě {hodnotaDaruKc}";
-            var zdroj = this.Zdroj is null ? "" :
+            var zdroj = string.IsNullOrWhiteSpace(this.Zdroj) ? "" :
                 $"(<a target=\"_blank\" href=\"{Zdroj}\"><span class=\"glyphicon glyphicon-link\" aria-hidden=\"true\"></span>zdroj</a>)";
 
             if (Typ == (int)TypDaru.DarFirmy)
