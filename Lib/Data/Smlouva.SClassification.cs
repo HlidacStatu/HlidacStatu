@@ -14,7 +14,7 @@ namespace HlidacStatu.Lib.Data
 {
     public partial class Smlouva
     {
-        public class SClassification
+        public partial class SClassification
         {
             public class ClassifField
             {
@@ -82,108 +82,17 @@ namespace HlidacStatu.Lib.Data
             public SClassification(Classification[] types)
             {
                 this.LastUpdate = DateTime.Now;
-                this.Types = types;
+                SetTypes(types);
             }
 
-
-
-            public class Classification
+            private void SetTypes(Classification[] types)
             {
-                [Nest.Number]
-                public int TypeValue { get; set; }
-                [Nest.Number]
-                public decimal ClassifProbability { get; set; }
-
-                public ClassificationsTypes ClassifType() { return (ClassificationsTypes)TypeValue; }
-
-                public string ClassifTypeName()
-                {
-                    return ClassifTypeName(this.TypeValue);
-                }
-
-                public bool RootClassification
-                {
-                    get
-                    {
-                        return (this.TypeValue % 100) == 0;
-                    }
-                }
-                public static string ClassifTypeName(int value)
-                {
-                    ClassificationsTypes t;
-                    if (Enum.TryParse(value.ToString(), out t))
-                    {
-                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
-                        {
-                            Util.Consts.Logger.Warning("Missing Classification value" + value);
-                            return "(neznámý)";
-                        }
-                        return t.ToNiceDisplayName();
-                    }
-                    else
-                    {
-                        Util.Consts.Logger.Warning("Missing Classification value" + value);
-                        return "(neznámý)";
-                    }
-                }
-                public static ClassificationsTypes? ToClassifType(int value)
-                {
-                    ClassificationsTypes t;
-                    if (Enum.TryParse(value.ToString(), out t))
-                    {
-                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
-                            return null;
-                        else
-                            return t;
-                    }
-                    else
-                        return null;
-                }
-                public static ClassificationsTypes? ToClassifType(string value, ClassificationsTypes? ifNotFound = null)
-                {
-                    ClassificationsTypes t;
-                    if (value.Contains("_") == false)
-                        value = value + "_obecne";
-                    if (Enum.TryParse(value, out t))
-                    {
-                        if (Devmasters.TextUtil.IsNumeric(t.ToString()))
-                            return ifNotFound;
-                        else
-                            return t;
-                    }
-                    else
-                        return ifNotFound;
-                }
-
-                public string ClassifSearchQuery()
-                {
-                    return ClassifSearchQuery(ClassifType());
-                }
-                public static string ClassifSearchQuery(ClassificationsTypes t)
-                {
-                    var val = t.ToString();
-                    if (val.EndsWith("_obecne"))
-                        val = val.Replace("_obecne", "");
-                    return val;
-                }
-                public static string ClassifSearchQuery(int it)
-                {
-                    var val = ((ClassificationsTypes)it);
-                    return ClassifSearchQuery(val);
-                }
-
-                public static string GetSearchUrl(ClassificationsTypes t, bool local = true)
-                {
-                    string url = "/HledatSmlouvy?Q=oblast:" + ClassifSearchQuery(t);
-                    if (local == false)
-                        return "https://www.hlidacstatu.cz" + url;
-                    else
-                        return url;
-                }
-
+                if (types == null)
+                    return;
+                if (types.Count() == 0)
+                    return;
 
             }
-
 
 
 
@@ -488,15 +397,57 @@ namespace HlidacStatu.Lib.Data
             public DateTime? LastUpdate { get; set; } = null;
 
             [Nest.Number]
-            public int Version { get; set; } = 1;
+            public int Version { get; set; } = 2;
 
+
+            [Obsolete()]
             public Classification[] Types { get; set; } = null;
+
+            public Classification[] GetClassif()
+            {
+                    List<SClassification.Classification> types = new List<SClassification.Classification>();
+                    if (this.Class1 != null)
+                        types.Add(this.Class1);
+                    if (this.Class2 != null)
+                        types.Add(this.Class2);
+                    if (this.Class3 != null)
+                        types.Add(this.Class3);
+                    return types.ToArray();
+
+                
+            }
+            
+
+            public Classification Class1 { get; set; } = null;
+            public Classification Class2 { get; set; } = null;
+            public Classification Class3 { get; set; } = null;
+
+            public void ConvertToV2()
+            {
+                if (this.Version == 1)
+                {
+                    TypesToProperties(this.Types); 
+                    Types = null;
+                }
+            }
+
+            internal void TypesToProperties(Classification[] types)
+            {
+                if (types?.Count() > 0)
+                {
+                    this.Class1 = types.OrderByDescending(o => o.ClassifProbability).First();
+                    if (types.Count() > 1)
+                        this.Class2 = types.OrderByDescending(o => o.ClassifProbability).Skip(1).First();
+                    if (types?.Count() > 3)
+                        this.Class3 = types.OrderByDescending(o => o.ClassifProbability).Skip(2).First();
+                }
+            }
 
             public override string ToString()
             {
-                if (this.Types != null)
+                if (this.GetClassif() != null)
                 {
-                    return $"Types:{Types.Select(m => m.ClassifType().ToString() + " (" + m.ClassifProbability.ToString("P2") + ")").Aggregate((f, s) => f + "; " + s)}"
+                    return $"Types:{GetClassif().Select(m => m.ClassifType().ToString() + " (" + m.ClassifProbability.ToString("P2") + ")").Aggregate((f, s) => f + "; " + s)}"
                         + $" updated:{LastUpdate.ToString()}";
                 }
                 else
@@ -739,8 +690,8 @@ namespace HlidacStatu.Lib.Data
                         IdSmlouvy = this.Id,
                         Created = DateTime.Now,
                         CreatedBy = username,
-                        OriginalCat1 = this.Classification.Types.Length > 0 ? (int?)this.Classification.Types[0].TypeValue : null,
-                        OriginalCat2 = this.Classification.Types.Length > 1 ? (int?)this.Classification.Types[1].TypeValue : null,
+                        OriginalCat1 = this.Classification.GetClassif().Length > 0 ? (int?)this.Classification.GetClassif()[0].TypeValue : null,
+                        OriginalCat2 = this.Classification.GetClassif().Length > 1 ? (int?)this.Classification.GetClassif()[1].TypeValue : null,
                         CorrectCat1 = newClassification.Count > 0 ? (int?)newClassification[0].TypeValue : null,
                         CorrectCat2 = newClassification.Count > 1 ? (int?)newClassification[1].TypeValue : null
                     });
@@ -749,7 +700,7 @@ namespace HlidacStatu.Lib.Data
 
             var idsmlouvy = this.Id;
 
-            this.Classification.Types = newClassification.ToArray();
+            this.Classification.TypesToProperties(newClassification.ToArray());
             this.Classification.LastUpdate = DateTime.Now;
             this.Save();
         }

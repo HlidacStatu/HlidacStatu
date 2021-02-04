@@ -483,6 +483,7 @@
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />
     <Compile Include="Data\Firmy.GlobalStatistics.cs" />
+    <Compile Include="Data\Smlouva.SClassification.Classification.cs" />
     <Compile Include="Data\Sponzoring.Partial.cs" />
     <Compile Include="Data\Smlouva.Statistics.cs" />
     <Compile Include="Data\Smlouva.Statistics.RegistrSmluv.cs" />

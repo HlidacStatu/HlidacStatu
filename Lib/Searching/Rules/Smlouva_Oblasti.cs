@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Searching.Rules
 {
-    public class Smlouva_Oblast
+    public class Smlouva_Oblasti
         : RuleBase
     {
-        public Smlouva_Oblast(bool stopFurtherProcessing = false, string addLastCondition = "")
+        public Smlouva_Oblasti(bool stopFurtherProcessing = false, string addLastCondition = "")
             : base("", stopFurtherProcessing, addLastCondition)
         { }
 
@@ -17,7 +17,7 @@ namespace HlidacStatu.Lib.Searching.Rules
         {
             get
             {
-                return new string[] { "oblast:" };
+                return new string[] { "oblasti:" };
             }
         }
 
@@ -49,14 +49,15 @@ namespace HlidacStatu.Lib.Searching.Rules
             if (part == null)
                 return null;
 
-            if (part.Prefix.Equals("oblast:", StringComparison.InvariantCultureIgnoreCase))
+            if (part.Prefix.Equals("oblasti:", StringComparison.InvariantCultureIgnoreCase))
             {
                 var oblastVal = part.Value;
                 foreach (var key in AllValues.Keys)
                 {
                     if (oblastVal.Equals(key, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var q_obl = "classification.class1:" + AllValues[key];
+                        var q_obl = $" ( classification.class1:${AllValues[key]} OR classification.class2:${AllValues[key]} OR classification.class3:${AllValues[key]} ) ";
+
                         return new RuleResult(SplittingQuery.SplitQuery($" {q_obl} "), this.NextStep);
                     }
                 }

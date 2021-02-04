@@ -413,8 +413,8 @@ namespace HlidacStatu.Lib.Data
         public SClassification.Classification[] GetRelevantClassification()
         {
             this.Classification = this.Classification ?? new SClassification();
-            var types = this.Classification?.Types ?? new SClassification.Classification[] { };
-            return types;
+            var types = this.Classification.GetClassif();
+            return types.ToArray();
         }
 
         public string GetUrl(bool local = true)
@@ -948,7 +948,7 @@ namespace HlidacStatu.Lib.Data
                 if (rewrite
                 || rewriteStems
                 || this.Classification?.LastUpdate == null
-                || (this.Classification?.Types != null && this.Classification.Types.Count() == 0)
+                || (this.Classification?.GetClassif() != null && this.Classification.GetClassif().Count() == 0)
 
                 )
                 {
@@ -1393,8 +1393,20 @@ namespace HlidacStatu.Lib.Data
 
             return s;
         }
-
         public static Smlouva Load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
+        {
+            var s = _load(idVerze, client, includePrilohy);
+            if (s == null)
+                return s;
+            var sclass = s.GetRelevantClassification();
+            if (s.Classification?.Version == 1)
+            {
+                s.Classification.ConvertToV2();
+                s.Save(null, false);
+            }
+            return s;
+        }
+            private static Smlouva _load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
         {
             bool specClient = client != null;
             try
