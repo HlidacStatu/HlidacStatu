@@ -1371,6 +1371,9 @@ namespace HlidacStatu.Lib.Data
                     && this.IsSponzor() == false
                 );
 
+            if (this.NameId == "radek-jonke")
+                return true;
+
             return res;
         }
 
