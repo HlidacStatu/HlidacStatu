@@ -90,7 +90,15 @@
 
 
 <div class="head">
-    <h3>@Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.title</h3>
+    <h3>
+        @Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.title
+        @if (this.User?.IsInRole("canEditData") == true)
+        {
+            <a href="/manage/CompanyDetail?ico=@Model.firma.ICO" style="font-size:0.8em">
+                <i class="far fa-axe"></i>
+            </a>
+        }
+    </h3>
     @WebUtil.CompanySummary(Model.firma)
 </div>
     <hr />

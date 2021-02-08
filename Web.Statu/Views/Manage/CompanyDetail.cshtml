@@ -1,0 +1,620 @@
+﻿@model HlidacStatu.Lib.Data.Firma
+@using Devmasters
+@using HlidacStatu.Lib.Data
+@using HlidacStatu.Util
+@using Devmasters.Enums;
+
+
+@{ 
+    ViewBag.Title = "Company Detail";
+    var typeList = Devmasters.Enums.EnumTools
+        .EnumToEnumerable(typeof(HlidacStatu.Lib.Data.OsobaEvent.Types))
+        .Select(m => new System.Web.Mvc.SelectListItem() { Value = m.Value, Text = "" + m.Key })
+        .ToList();
+
+}
+
+@section scripts
+{
+    <script src="/Scripts/typeahead.jquery.min.js"></script>
+    <script src="/Scripts/bloodhound.min.js"></script>
+    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
+}
+
+<h2>Detail firmy</h2>
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Forma</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>@Html.DisplayNameFor(model => model.ICO)</dt>
+            <dd>@Model.ICO</dd>
+            <dt>@Html.DisplayNameFor(model => model.Jmeno)</dt>
+            <dd>@Model.Jmeno</dd>
+        </dl>
+    </div>
+    <div class="col-xs-12">
+        <h4>Události</h4>
+        <hr />
+        <button type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#eventModal"
+                data-personid="0"
+                data-eventid="0"
+                data-datumod=""
+                data-datumdo=""
+                data-titulek=""
+                data-organizace=""
+                data-castka=""
+                data-addinfo=""
+                data-typ=""
+                data-zdroj=""
+                data-status=""
+                data-ico="@Model.ICO"
+                data-ceo=""
+                data-action="create">
+            Přidat událost
+        </button>
+        @if (Model.Events().Count() > 0)
+        {
+            <table class="table tableStickyHeader">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap">
+                            Datum od
+                            <a href="?columnOrdering=datumod">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=datumod&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Datum do
+                            <a href="?columnOrdering=datumdo">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=datumdo&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Titulek
+                            <a href="?columnOrdering=titulek">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=titulek&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Typ události
+                            <a href="?columnOrdering=typ">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=typ&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Organizace
+                            <a href="?columnOrdering=organizace">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=organizace&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Ico
+                            <a href="?columnOrdering=ico">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=ico&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            CEO
+                            <a href="?columnOrdering=ceo">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=ceo&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Role
+                            <a href="?columnOrdering=role">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=role&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Zdroj
+                            <a href="?columnOrdering=zdroj">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=zdroj&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th class="text-nowrap">
+                            Stav
+                            <a href="?columnOrdering=stav">
+                                <i class="fas fa-long-arrow-up"></i>
+                            </a>
+                            <a href="?columnOrdering=stav&descending=1">
+                                <i class="fas fa-long-arrow-down"></i>
+                            </a>
+                        </th>
+                        <th>akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ 
+                        var co = Request.Params["columnOrdering"];
+
+                        Func<OsobaEvent, object> sortExpression;
+                        switch (co)
+                        {
+                            case "datumdo":
+                                sortExpression = (x => x.DatumDo);
+                                break;
+                            case "titulek":
+                                sortExpression = (x => x.Title);
+                                break;
+                            case "typ":
+                                sortExpression = (x => x.TypeName);
+                                break;
+                            case "organizace":
+                                sortExpression = (x => x.Organizace);
+                                break;
+                            case "role":
+                                sortExpression = (x => x.AddInfo);
+                                break;
+                            case "zdroj":
+                                sortExpression = (x => x.Zdroj);
+                                break;
+                            case "stav":
+                                sortExpression = (x => x.Status);
+                                break;
+                            case "ico":
+                                sortExpression = (x => x.Ico);
+                                break;
+                            case "ceo":
+                                sortExpression = (x => x.CEO);
+                                break;
+                            case "datumod":
+                            default:
+                                sortExpression = (x => x.DatumOd);
+                                break;
+                        }
+
+                        int desc;
+                        IEnumerable<OsobaEvent> udalosti;
+                        if (int.TryParse(Request.Params["descending"], out desc) && desc == 1)
+                        {
+                            udalosti = Model.Events().OrderByDescending(sortExpression);
+                        }
+                        else
+                        {
+                            udalosti = Model.Events().OrderBy(sortExpression);
+                        } 
+                    }
+
+                    @foreach (var udalost in udalosti)
+                    {
+                    <tr>
+                        <td>
+                            @(udalost.DatumOd?.ToString("dd.MM.yyyy") ?? " ??? ")
+                        </td>
+                        <td>
+                            @(udalost.DatumDo?.ToString("dd.MM.yyyy") ?? " ??? ")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.Organizace)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.Ico)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.CEO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => udalost.AddInfo)
+                        </td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                            @Html.DisplayFor(modelItem => udalost.Zdroj)
+                        </td>
+                        <td>
+                            @{ 
+                                if (udalost.Status.HasValue)
+                                {
+                                    var flags = udalost.Status.Value
+                                        .ConvertToEnum<OsobaEvent.Statuses>()
+                                        .GetUniqueFlags<OsobaEvent.Statuses>();
+
+                                    foreach (var flag in flags)
+                                    {
+                                        <p>@flag.ToNiceDisplayName()</p> 
+                                    }
+                                } 
+                            }
+
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-primary btn-sm"
+                                    data-toggle="modal"
+                                    data-target="#eventModal"
+                                    data-personid="@udalost.OsobaId"
+                                    data-eventid="@udalost.pk"
+                                    data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                                    data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                                    data-titulek="@udalost.Title"
+                                    data-organizace="@udalost.Organizace"
+                                    data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                                    data-addinfo="@udalost.AddInfo"
+                                    data-typ="@udalost.Type"
+                                    data-zdroj="@udalost.Zdroj"
+                                    data-status="@udalost.Status"
+                                    data-ico="@udalost.Ico"
+                                    data-ceo="@udalost.CEO"
+                                    data-action="edit">
+                                Editovat
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-sm"
+                                    data-toggle="modal"
+                                    data-target="#eventModal"
+                                    data-personid="@udalost.OsobaId"
+                                    data-eventid="@udalost.pk"
+                                    data-datumod="@(udalost.DatumOd?.ToString("dd.MM.yyyy"))"
+                                    data-datumdo="@(udalost.DatumDo?.ToString("dd.MM.yyyy"))"
+                                    data-titulek="@udalost.Title"
+                                    data-organizace="@udalost.Organizace"
+                                    data-castka="@(udalost.AddInfoNum?.ToString("0"))"
+                                    data-addinfo="@udalost.AddInfo"
+                                    data-typ="@udalost.Type"
+                                    data-zdroj="@udalost.Zdroj"
+                                    data-status="@udalost.Status"
+                                    data-ico="@udalost.Ico"
+                                    data-ceo="@udalost.CEO"
+                                    data-action="delete">
+                                Smazat
+                            </button>
+                        </td>
+                    </tr>}
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+<p>
+    <a href="/subjekt2/@Model.ICO">Zpět na firmu</a>
+</p>
+
+
+<!-- ------------------------------MODAL WINDOW------------------------------ -->
+<!-- Edit Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="eventModalLabel">Editovat událost</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <fieldset id="modalForm">
+                        <input type="hidden" id="eventId" value="0" />
+                        <input type="hidden" id="personId" value="0" />
+                        <div class="form-group">
+                            <label for="datumOd" class="col-form-label text-box single-line">Datum od:</label>
+                            <input type="datetime" class="form-control" id="datumOd" placeholder="dd.mm.yyyy">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="DatumOd" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="datumDo" class="col-form-label text-box single-line">Datum do:</label>
+                            <input type="datetime" class="form-control" id="datumDo" placeholder="dd.mm.yyyy">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="DatumDo" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="titulek" class="col-form-label">Titulek:</label>
+                            <input type="text" class="form-control" id="titulek">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="typ" class="col-form-label">Typ události:</label>
+                            <select class="form-control" id="typ" onchange="drawSubtype(this.value);">
+                                @for (int i = 0; i < typeList.Count; i++)
+                                {
+                                    <option value="@typeList[i].Value">@typeList[i].Text</option>
+                                }
+                            </select>
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Type" data-valmsg-replace="true"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organizace" class="col-form-label">Organizace:</label>
+                            <input type="text" class="form-control orgahead input-lg" id="organizace">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Organizace" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ico" class="col-form-label">Ico:</label>
+                            <input type="text" class="form-control" id="ico">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Ico" data-valmsg-replace="true"></span>
+                            <div class="form-inline">
+                                <input type="checkbox" class="form-control" id="ceo">
+                                <label for="ceo">Je CEO</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="castka_toggle">
+                            <label for="castka" class="col-form-label">Částka:</label>
+                            <input type="text" class="form-control" id="castka">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="AddInfoNum" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group" id="addInfo_toggle">
+                            <label for="addInfo" class="col-form-label">Podrobnosti:</label>
+                            <input type="text" class="form-control roleahead input-lg" id="addInfo">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="AddInfo" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="col-form-label">Stavy:</label><br />
+                            @foreach (Enum value in Enum.GetValues(typeof(OsobaEvent.Statuses)))
+                            {
+                                <div class="form-inline">
+                                    <input type="checkbox"
+                                           class="form-control statusbox"
+                                           value="@value.ToString("D")"
+                                           name="@value.ToString("G")">
+                                    <label for="@value.ToString("G")">@value.ToNiceDisplayName()</label>
+                                </div>}
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="zdroj" class="col-form-label">Zdroj:</label>
+                            <input type="text" class="form-control" id="zdroj">
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Zdroj" data-valmsg-replace="true"></span>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zrušit</button>
+                <button type="button" class="btn btn-primary" id="sendButton">Uložit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+
+<script>
+    // setup modal window
+    $('#eventModal').on('show.bs.modal', function (event) {
+        // clear previous error messages
+        clearErrorMessages();
+
+        // load data
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var personId = button.data('personid') // Extract info from data-* attributes
+        var eventId = button.data('eventid') // Extract info from data-* attributes
+        var datumOd = button.data('datumod')
+        var datumDo = button.data('datumdo')
+        var titulek = button.data('titulek')
+        var organizace = button.data('organizace')
+        var ico = button.data('ico')
+        var ceo = button.data('ceo')
+        var castka = button.data('castka')
+        var addinfo = button.data('addinfo')
+        var typ = button.data('typ')
+        var status = button.data('status')
+        var zdroj = button.data('zdroj')
+
+        // set modal window
+        var modal = $(this)
+        if (button.data('action') === 'create') {
+            modal.find('#eventModalLabel').text("Vytvořit novou událost");
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { editEvent() })
+                .text("Vytvořit")
+                .removeClass("btn-warning")
+                .addClass("btn-primary");
+            modal.find('#modalForm').attr("disabled", false);
+
+            modal.find('.modal-header').removeClass("alert-danger");
+            modal.find('.modal-footer').removeClass("alert-danger");
+        }
+        else if (button.data('action') === 'edit') {
+            modal.find('#eventModalLabel').text("Editovat událost");
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { editEvent() })
+                .text("Změnit")
+                .removeClass("btn-warning")
+                .addClass("btn-primary");
+            modal.find('#modalForm').attr("disabled", false);
+
+            modal.find('.modal-header').removeClass("alert-danger");
+            modal.find('.modal-footer').removeClass("alert-danger");
+        } else if (button.data('action') === 'delete') {
+            modal.find('#eventModalLabel').text("Opravdu chcete smazat tuto událost?");
+            modal.find('#sendButton')
+                .off("click")
+                .on("click", function () { deleteEvent() })
+                .text("Smazat")
+                .removeClass("btn-primary")
+                .addClass("btn-danger");
+            modal.find('#modalForm').attr("disabled", true);
+
+            modal.find('.modal-header').addClass("alert-danger");
+            modal.find('.modal-footer').addClass("alert-danger");
+        } else {
+            this.console.log("Neznámá akce");
+        }
+
+
+        modal.find('#eventId').val(eventId)
+        modal.find('#personId').val(personId)
+        modal.find('#datumOd').val(datumOd)
+        modal.find('#datumDo').val(datumDo)
+        modal.find('#titulek').val(titulek)
+        modal.find('#organizace').val(organizace)
+        modal.find('#ico').val(ico)
+        modal.find('#ceo').val(ceo)
+        modal.find('#typ').val(typ)
+        drawSubtype(typ)
+        modal.find('#castka').val(castka)
+        modal.find('#addInfo').val(addinfo)
+        modal.find('#zdroj').val(zdroj)
+
+        if (ceo > 0) {
+            $('#ceo').prop('checked', true)
+        }
+        else {
+            $('#ceo').prop('checked', false)
+        }
+
+        // set statusboxes correctly
+        $('.statusbox').each( (i,el) => {
+            if (parseInt(el.value).toString(2) & status.toString(2)) {
+                el.checked = true;
+            }
+            else {
+                el.checked = false;
+            }
+        });
+    })
+
+    function editEvent() {
+
+        statusValue = 0;
+        ceoValue = null;
+
+        $('.statusbox').each( (i,el) => {
+            if( el.checked == true ) {
+                statusValue = statusValue + parseInt(el.value);
+            }
+        });
+
+        if ($('#ceo').is(":checked")) {
+            ceoValue = 1;
+        }
+        
+        var osobaEvent = {
+            "OsobaId": $("#personId").val(),
+            "pk": $("#eventId").val(),
+            "Title": $("#titulek").val(),
+            "Organizace": $("#organizace").val(),
+            "Ico": $("#ico").val(),
+            "CEO": ceoValue,
+            "AddInfoNum": $("#castka").val(),
+            "AddInfo": $("#addInfo").val(),
+            "DatumOd": $("#datumOd").val(),
+            "DatumDo": $("#datumDo").val(),
+            "Type": $("#typ").val(),
+            "Status": statusValue,
+            "Zdroj": $("#zdroj").val()
+        }
+
+        clearErrorMessages();
+        $.post("/manage/UpdateEvent", osobaEvent)
+            .done(function (data) {
+                window.location.reload();
+            })
+            .fail(function (data) {
+                displayValidationErrors(data.responseJSON);
+
+                // something like $('input[name="' + err.key + '"]')
+            });
+    }
+
+    function deleteEvent() {
+        var osobaEvent = {
+            "id": $("#eventId").val(),
+        }
+        clearErrorMessages();
+        $.post("/manage/DeleteEvent", osobaEvent)
+            .done(function (data) {
+                window.location.reload();
+            })
+            .fail(function (data) {
+                console.log(data.responseJSON);
+            });
+    }
+
+
+    function displayValidationErrors(errors) {
+        for (var i = 0; i < errors.length; i++) {
+            $('span[data-valmsg-for="' + errors[i].key + '"]').text(errors[i].errors[0]);
+        }
+    }
+
+    function clearErrorMessages() {
+        document.querySelectorAll("#eventModal .modal-body .field-validation-valid").forEach(item => item.innerText = "");
+    }
+
+    function drawSubtype(eventTypeId) {
+        console.log("should display addinfo");
+        $("#castka_toggle").hide();
+        $("#addInfo_toggle").show();
+        $("#castka").val("");
+    }
+
+    // našeptávání
+    $(function () {
+
+        roles = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/v1/addInfo?',
+                replace: function (url, query) {
+                    var selectedType = $("#typ").val();
+                    return url + 't=' + selectedType + '&q=' + query;
+                }
+            }
+        });
+
+        organisations = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/v1/organisations?',
+                replace: function (url, query) {
+                    var selectedType = $("#typ").val();
+                    return url + 't=' + selectedType + '&q=' + query;
+                }
+            }
+        });
+
+        $('.roleahead').typeahead(null, {
+            name: "roles",
+            source: roles,
+            limit: 8,
+        });
+
+        $('.orgahead').typeahead(null, {
+            name: "organisations",
+            source: organisations,
+            limit: 8,
+        });
+
+    });
+
+</script>
