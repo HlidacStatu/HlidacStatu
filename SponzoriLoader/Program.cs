@@ -136,6 +136,17 @@ namespace SponzoriLoader
                 Osoba osoba = Osoba.GetOrCreateNew(donor.TitleBefore, donor.Name, donor.Surname, donor.TitleAfter,
                                                    donor.DateOfBirth, Osoba.StatusOsobyEnum.Sponzor, _user);
 
+                // Výjimka pro Radek Jonke 24.12.1970
+                if (osoba.Jmeno == "Radek"
+                    && osoba.Prijmeni == "Jonke"
+                    && osoba.Narozeni != null
+                    && osoba.Narozeni.Value.Year == 1970
+                    && osoba.Narozeni.Value.Month == 12
+                    && osoba.Narozeni.Value.Day == 24)
+                {
+                    continue;
+                }
+
                 foreach (var donation in personDonations.Value)
                 {
                     // add event
