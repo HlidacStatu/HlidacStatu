@@ -757,6 +757,7 @@
     <Compile Include="Searching\Rule.cs" />
     <Compile Include="Searching\Rules\RemoveAllOperators.cs" />
     <Compile Include="Searching\Rules\Firmy_OVMKategorie.cs" />
+    <Compile Include="Searching\Rules\Smlouva_Oblasti.cs" />
     <Compile Include="Searching\Rules\TransformPrefixSimple.cs" />
     <Compile Include="Searching\Rules\VZ_CPV.cs" />
     <Compile Include="Searching\Rules\TransformPrefixWithValue.cs" />

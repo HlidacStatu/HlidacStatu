@@ -1399,7 +1399,7 @@ namespace HlidacStatu.Lib.Data
             if (s == null)
                 return s;
             var sclass = s.GetRelevantClassification();
-            if (s.Classification?.Version == 1)
+            if (s.Classification?.Version == 1 &&  s.Classification?.Types != null)
             {
                 s.Classification.ConvertToV2();
                 s.Save(null, false);

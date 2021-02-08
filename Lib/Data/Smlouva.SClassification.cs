@@ -424,9 +424,9 @@ namespace HlidacStatu.Lib.Data
 
             public void ConvertToV2()
             {
-                if (this.Version == 1)
+                if (this.Version == 1 && this.Types != null)
                 {
-                    TypesToProperties(this.Types); 
+                    TypesToProperties(this.Types);
                     Types = null;
                 }
             }

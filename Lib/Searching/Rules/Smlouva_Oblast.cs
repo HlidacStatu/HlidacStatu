@@ -9,15 +9,22 @@ namespace HlidacStatu.Lib.Searching.Rules
     public class Smlouva_Oblast
         : RuleBase
     {
-        public Smlouva_Oblast(bool stopFurtherProcessing = false, string addLastCondition = "")
+        int place = 0;
+        public Smlouva_Oblast(int place, bool stopFurtherProcessing = false, string addLastCondition = "")
             : base("", stopFurtherProcessing, addLastCondition)
-        { }
+        {
+            this.place = place;
+            if (this.place < 1)
+                this.place = 1;
+            if (this.place > 2)
+                this.place = 2;
+        }
 
         public override string[] Prefixes
         {
             get
             {
-                return new string[] { "oblast:" };
+                return new string[] { $"oblast{(this.place==1 ? "" : "2")}:" };
             }
         }
 
@@ -49,14 +56,14 @@ namespace HlidacStatu.Lib.Searching.Rules
             if (part == null)
                 return null;
 
-            if (part.Prefix.Equals("oblast:", StringComparison.InvariantCultureIgnoreCase))
+            if (part.Prefix.Equals(this.Prefixes.First(), StringComparison.InvariantCultureIgnoreCase))
             {
                 var oblastVal = part.Value;
                 foreach (var key in AllValues.Keys)
                 {
                     if (oblastVal.Equals(key, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var q_obl = "classification.class1:" + AllValues[key];
+                        var q_obl = $"classification.class{this.place}:" + AllValues[key];
                         return new RuleResult(SplittingQuery.SplitQuery($" {q_obl} "), this.NextStep);
                     }
                 }
