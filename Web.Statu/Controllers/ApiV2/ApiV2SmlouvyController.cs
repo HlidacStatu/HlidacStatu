@@ -35,8 +35,11 @@ namespace HlidacStatu.Web.Controllers
         [AuthorizeAndAudit]
         public SearchResultDTO<Lib.Data.Smlouva> Hledat([FromUri] string dotaz = null, [FromUri] int? strana = null, [FromUri] int? razeni = null)
         {
-            if (strana < 1)
+            if (strana is null || strana < 1)
                 strana = 1;
+            if (razeni is null)
+                razeni = 0;
+
             if (strana * ApiV2Controller.DefaultResultPageSize > ApiV2Controller.MaxResultsFromES)
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Hodnota 'strana' nemůže být větší než {ApiV2Controller.MaxResultsFromES / ApiV2Controller.DefaultResultPageSize}"));

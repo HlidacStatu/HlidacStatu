@@ -32,6 +32,21 @@ namespace HlidacStatu.Web.Controllers
             return View(osoba);
         }
 
+        [Authorize(Roles = "canEditData")]
+        public ActionResult CompanyDetail(string ico, string columOrdering, int? descending)
+        {
+            if (string.IsNullOrWhiteSpace(ico)) 
+                return NotFound();
+
+            Firma firma = Firma.FromIco(ico);
+
+            if (firma is null || !firma.Valid)
+                return NotFound();
+
+
+            return View(firma);
+        }
+
 
         [Authorize(Roles = "NasiPoliticiAdmin")]
         public ActionResult CreatePerson()

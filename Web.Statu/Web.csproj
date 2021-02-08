@@ -1753,6 +1753,7 @@
     <Content Include="Views\Data\Promo\front_zasedani-zastupitelstev.cshtml" />
     <Content Include="Views\Beta\Index.cshtml" />
     <Content Include="Views\Beta\Search.cshtml" />
+    <Content Include="Views\Manage\CompanyDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
