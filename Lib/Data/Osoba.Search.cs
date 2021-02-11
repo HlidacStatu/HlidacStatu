@@ -76,7 +76,15 @@ namespace HlidacStatu.Lib.Data
                 return SimpleSearch(query, page, pageSize, eorder,exactNumOfResults);
 
             }
-            public static OsobaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order
+
+
+            static string[] dontIndexOsoby = Devmasters.Config
+                 .GetWebConfigValue("DontIndexOsoby")
+                 .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
+                 .Select(m => m.ToLower())
+                 .ToArray();
+
+        public static OsobaSearchResult SimpleSearch(string query, int page, int pageSize, OrderResult order
                 , bool exactNumOfResults = false)
             {
 
@@ -103,13 +111,16 @@ namespace HlidacStatu.Lib.Data
                 
                 foreach (var id in peopleIds)
                 {
-                    var foundPerson = Osoba.GetByNameId(id);
-                    if (foundPerson != null)
+                    if (dontIndexOsoby.Contains(id) == false)
                     {
-                        foundPepole.Add(foundPerson);
+                        var foundPerson = Osoba.GetByNameId(id);
+                        if (foundPerson != null)
+                        {
+                            foundPepole.Add(foundPerson);
+                        }
+                        else
+                            total = total - 1; // odecti neplatne osoby
                     }
-                    else
-                        total = total - 1; // odecti neplatne osoby
                 }
 
                 var result = new OsobaSearchResult();

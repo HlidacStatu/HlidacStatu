@@ -27,6 +27,7 @@ namespace HlidacStatu.Web.Controllers
     public partial class HomeController : GenericAuthController
     {
 
+        public static string[] DontIndexICOS = null;
         public static string[] DontIndexOsoby = null;
         static HomeController()
         {
@@ -35,6 +36,12 @@ namespace HlidacStatu.Web.Controllers
                  .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
                  .Select(m => m.ToLower())
                  .ToArray();
+            DontIndexICOS = Devmasters.Config
+                 .GetWebConfigValue("DontIndexFirmy")
+                 .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
+                 .Select(m => m.ToLower())
+                 .ToArray();
+
         }
 
         public HomeController()

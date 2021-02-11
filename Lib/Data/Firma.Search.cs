@@ -58,6 +58,12 @@ namespace HlidacStatu.Lib.Data
             "AND","OR"
         };
 
+            static string[] ignoredIcos = Devmasters.Config
+                 .GetWebConfigValue("DontIndexFirmy")
+                 .Split(new string[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries)
+                 .Select(m => m.ToLower())
+                 .ToArray();
+
             public static Lib.Data.Search.GeneralResult<Firma> SimpleSearch(string query, int page, int size)
             {
                 List<Firma> found = new List<Firma>();
@@ -72,7 +78,7 @@ namespace HlidacStatu.Lib.Data
                     foreach (var ic in specifiedIcosInQuery.Skip((page-1)*size).Take(size))
                     {
                         Firma f = Firmy.Get(ic);
-                        if (f.Valid)
+                        if (f.Valid && ignoredIcos.Contains(f.ICO)==false)
                         {
                             ///nalezene ICO
                             found.Add(f);
@@ -124,6 +130,7 @@ namespace HlidacStatu.Lib.Data
                     {
                         foreach (var i in res.Hits)
                         {
+                            if(ignoredIcos.Contains(i.Source.Ico) == false)
                             found.Add(Firmy.Get(i.Source.Ico));
                         }
                         return new Data.Search.GeneralResult<Firma>(query, res.Total, found, size,true) { Page = page };
