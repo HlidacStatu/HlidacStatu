@@ -85,7 +85,7 @@ namespace HlidacStatu.Lib.Data
             Facebook_page,
             Facebook_profile,
             Instagram,
-            www,
+            WWW,
             Youtube
         }
 

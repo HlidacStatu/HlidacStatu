@@ -29,7 +29,7 @@ namespace HlidacStatu.Web.Models.Apiv2
                             return "https://www.facebook.com/" + Id;
                         case OsobaEvent.SocialNetwork.Instagram:
                             return "https://www.instagram.com/" + Id;
-                        case OsobaEvent.SocialNetwork.www:
+                        case OsobaEvent.SocialNetwork.WWW:
                             return Id;
                         case OsobaEvent.SocialNetwork.Youtube:
                             return Id;
