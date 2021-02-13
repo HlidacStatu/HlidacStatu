@@ -47,16 +47,21 @@
         umrti.Select(m => new ReportDataTimeValue() { Date = m.Item1, Value = m.Item2 })
         ); }
 
-<div style="width:700px;text-align:center">
-<h2>Počet úmrtí v souvislosti s COVID-19</h2>
+<div style="margin-left:100px;width:700px;text-align:center">
+<h2 style="padding-top:2px;margin-top:0px">Počet úmrtí v souvislosti s COVID-19</h2>
 <p class="text-info" style="font-size:17px">Andrej Babiš 24. dubna 2020:"Zachránili jsme tisíce mrtvých".</p>
 <p class="text-warning" style="font-size:19px"><b>V první vlně</b>(22.3. - 31.8.) zemřelo <b>@untilSep1 osob</b>.
 <br/><span class="text-danger"><b>Od 1.9.</b> zemřelo <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr - untilSep1) osob</b>, za poslední 2 týdny <b>@HlidacStatu.Util.RenderData.NiceNumber(lastUmr7) lidí</b>.</span>
-    </p>
+</p>
 <div style="width:600px">
     @SimpleColumnChart(new (string name, 
     IEnumerable<HlidacStatu.Lib.Render.ReportDataTimeValue> values)[] { (name: "Úmrtí ", values: data.Where(m => m.Date < sept1.AddYears(1))) }, 
     "COVID-19 úmrtí", "Úmrtí", 500, chartType:"area")
+
+    <p>
+    <span style="color:red;font-weight:bold">Červeně</span> je období, ve kterém vláda vyhlásila nouzový stav
+</p>
+
 </div>
 
 </div>
@@ -66,38 +71,42 @@
     string title, string valueName,
     int height, string addStyle ="", string chartType = "column")
 {
-string containerId = "chart_" + Guid.NewGuid().ToString("N");
-List<string> sdata = new List<string>();
-foreach (var d in data)
-{
-    var vmax = d.values.Max(max => max.Value);
-    var count = d.values.Count();
-    sdata.Add(
-        $"{{ name : '{d.name}', data :["
-        + d.values
-            .Select((m,i) =>
-            {
-                if (m.Value == 427)
+    string containerId = "chart_" + Guid.NewGuid().ToString("N");
+    List<string> sdata = new List<string>();
+    foreach (var d in data)
+    {
+        var vmax = d.values.Max(max => max.Value);
+        var count = d.values.Count();
+        sdata.Add(
+            $"{{ name : '{d.name}', data :["
+            + d.values
+                .Select((m, i) =>
                 {
-                    return $"{{x:{i},y:{m.Value:#####0},  color:'#505050', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
-                }
-                else if (i == count - 1)
-                { 
-                    return $"{{x:{i},y:{m.Value:#####0}, color: '#ff0000', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
-                }
-                else if (i >= count - 15)
-                {
-                    return $"{{x:{i},y:{m.Value:#####0}, color: '#ef820d' }}";
-                }
-                else if (m.Value > 427)
-                {
-                    return $"{{x:{i},y:{m.Value:#####0}, color: '#5F9DE7' }}";
-                }
-                else
-                {
-                    return $"[{i},{m.Value.ToString("#####0", HlidacStatu.Util.Consts.enCulture)}]";
-                };
-            }
+                    if (m.Value == 427)
+                    {
+                        return $"{{x:{i},y:{m.Value:#####0},  color:'#505050', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                    }
+                    else if (i == count - 1)
+                    { 
+                        return $"{{x:{i},y:{m.Value:#####0}, color: '#FFA500', marker:{{enabled:true}}, dataLabels: {{enabled: true}} }}";
+                    }
+                    else if ((i >= 0 && i <= 57) || (i >= 196 && i <= 328))
+                    {
+                        return $"{{x:{i},y:{m.Value:#####0}, color: '#ff0000' }}";
+                    }
+                    else if (i >= count - 15)
+                    {
+                        return $"{{x:{i},y:{m.Value:#####0}, color: '#ef820d' }}";
+                    }
+                    else if (m.Value > 427)
+                    {
+                        return $"{{x:{i},y:{m.Value:#####0}, color: '#5F9DE7' }}";
+                    }
+                    else
+                    {
+                        return $"[{i},{m.Value.ToString("#####0", HlidacStatu.Util.Consts.enCulture)}]";
+    };
+}
             )
             .Aggregate((f, s) => f + "," + s)
         + " ]}"
@@ -148,8 +157,8 @@ Highcharts.chart('@containerId',
         backgroundColor: 'rgba(255,255,255,0.8)',
         borderColor: "#000",
         style: {fontSize: '13px'},
-        x: -220,
-        y: 100,
+        x: -125,
+        y: 50,
         allowOverlap: true
       },
       labels: [{
@@ -159,7 +168,7 @@ Highcharts.chart('@containerId',
           x: 156,
           y: 421
         },
-        text: '<b>Babiš 19.srpna<b><br/>„Jsem trochu v šoku z toho,<br/>co vypadlo z ministerstva zdravotnictví.<br/>Vůbec se mi to nelíbí“.'
+        text: '<b>Babiš 19.srpna</b> <br /> „Jsem trochu v šoku z toho,<br/>co vypadlo<br/>z ministerstva zdravotnictví.<br/>Vůbec se mi to nelíbí“.'
       }],
     }
     ,
@@ -169,8 +178,8 @@ Highcharts.chart('@containerId',
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderColor: "#FFAAAA",
         style: {fontSize: '13px'},
-        x: 200,
-        y: 200,
+        x: -140,
+        y: 180,
         allowOverlap: true
     },
       labels: [{
@@ -180,7 +189,7 @@ Highcharts.chart('@containerId',
           x: 171,
           y: 457
         },
-        text: '<b>Babiš 8.září<b><br/>„Čtu, co teď vydala WHO.<br/>Ta WHO, která ani nevěděla, že je pandemie.<br/>Podle mě by měla mlčet.<br/>A posílám statistiku počtu úmrtí.<br/>Jsme na tom velmi dobře.“.'
+        text: '<b>Babiš 8.září</b><br/>Posílám statistiku počtu úmrtí.<br/>Jsme na tom velmi dobře.“.'
       }],
     },
     {
@@ -189,8 +198,8 @@ Highcharts.chart('@containerId',
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderColor: "#000000",
         style: {fontSize: '13px'},
-        x: -180,
-        y: -270,
+        x: -150,
+        y: 270,
         allowOverlap: true
     },
       labels: [{
@@ -200,7 +209,7 @@ Highcharts.chart('@containerId',
           x: 181,
           y: 512
         },
-        text: '<b>Babiš 18.září<b><br/>„Neřešte stále covid-19,<br/>Dneska i mladí lidé mají zájem o zahrady.<br/>Schvalme zahrádkářský zákon“.'
+        text: '<b>Babiš 18.září</b><br/>„Neřešte stále covid-19,<br/>Dneska i mladí lidé<br/>mají zájem o zahrady.<br/>Schvalme zahrádkářský zákon“.'
       }],
     }
     
@@ -234,5 +243,4 @@ Highcharts.chart('@containerId',
     );</script>
 
 }
-
 
